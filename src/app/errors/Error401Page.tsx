@@ -1,0 +1,45 @@
+import { AlertCircle } from 'lucide-react';
+
+export default function Error401Page() {
+  return (
+    <div className="min-h-screen w-full bg-background flex items-center justify-center p-8">
+      <div className="max-w-md w-full text-center space-y-6">
+        {/* Icon */}
+        <div className="flex justify-center">
+          <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center">
+            <AlertCircle className="w-10 h-10 text-destructive" />
+          </div>
+        </div>
+
+        {/* Error code */}
+        <div className="space-y-2">
+          <h1 className="text-6xl font-semibold text-foreground/40">401</h1>
+          <h2 className="text-2xl font-semibold text-foreground">
+            Требуется авторизация
+          </h2>
+        </div>
+
+        {/* Explanation */}
+        <p className="text-muted-foreground">
+          Для доступа к этой странице необходимо войти в систему. Пожалуйста, авторизуйтесь и повторите попытку.
+        </p>
+
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+          <button
+            onClick={() => window.location.hash = '/login'}
+            className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
+          >
+            Войти
+          </button>
+          <button
+            onClick={() => window.location.hash = '/'}
+            className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
+          >
+            На главную
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

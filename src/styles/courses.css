@@ -1,0 +1,32 @@
+/**
+ * Courses List Page Grid Layout
+ * 
+ * Responsive Grid System:
+ * Mobile (<800px): 1 column, gap 16px
+ * Tablet (800-1199px): 2 columns, gap 20px
+ * Desktop (≥1200px): 4 columns, gap 24px
+ * 
+ * Cards are constrained by max-width container (1200px)
+ */
+
+.courses-grid {
+  display: grid;
+  gap: 1rem; /* 16px */
+  grid-template-columns: 1fr;
+}
+
+/* Tablet: 800-1199px - 2 columns */
+@media (min-width: 800px) {
+  .courses-grid {
+    gap: 1.25rem; /* 20px */
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: ≥1200px - 4 columns for optimal use of space */
+@media (min-width: 1200px) {
+  .courses-grid {
+    gap: 1.5rem; /* 24px */
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -1,0 +1,406 @@
+import { useState } from 'react';
+import { X, Upload, UserPlus, Key, AlertCircle, CheckCircle } from 'lucide-react';
+
+/**
+ * ParticipantImportModal - Модальное окно импорта участников
+ * 
+ * Возможности:
+ * 1. CSV paste (name, surname, login) с preview
+ * 2. Ручное добавление одного пользователя
+ * 3. Генерация инвайт-кодов (демо)
+ * 
+ * Валидация:
+ * - Дубликаты логина
+ * - Отсутствующие поля
+ * - Inline-ошибки
+ */
+
+interface ParticipantImportModalProps {
+  courseId: string;
+  onClose: () => void;
+}
+
+interface ParsedUser {
+  name: string;
+  surname: string;
+  login: string;
+  error?: string;
+}
+
+type ImportMode = 'csv' | 'manual' | 'invite';
+
+export function ParticipantImportModal({ courseId, onClose }: ParticipantImportModalProps) {
+  const [mode, setMode] = useState<ImportMode>('csv');
+  const [csvText, setCsvText] = useState('');
+  const [parsedUsers, setParsedUsers] = useState<ParsedUser[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+  
+  // Manual add fields
+  const [manualName, setManualName] = useState('');
+  const [manualSurname, setManualSurname] = useState('');
+  const [manualLogin, setManualLogin] = useState('');
+  
+  // Invite codes
+  const [inviteCount, setInviteCount] = useState(5);
+  const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
+
+  // Parse CSV text
+  const handleParseCSV = () => {
+    const lines = csvText.trim().split('\n');
+    const users: ParsedUser[] = [];
+    const seenLogins = new Set<string>();
+
+    lines.forEach((line, index) => {
+      const parts = line.split(',').map(p => p.trim());
+      
+      if (parts.length < 3) {
+        users.push({
+          name: parts[0] || '',
+          surname: parts[1] || '',
+          login: parts[2] || '',
+          error: 'Не все поля заполнены',
+        });
+        return;
+      }
+
+      const [name, surname, login] = parts;
+      
+      // Validation
+      let error: string | undefined;
+      
+      if (!name || !surname || !login) {
+        error = 'Не все поля заполнены';
+      } else if (seenLogins.has(login)) {
+        error = `Дубликат логина: ${login}`;
+      } else if (login.length < 3) {
+        error = 'Логин слишком короткий (мин. 3 символа)';
+      }
+
+      if (!error) {
+        seenLogins.add(login);
+      }
+
+      users.push({ name, surname, login, error });
+    });
+
+    setParsedUsers(users);
+    setShowPreview(true);
+  };
+
+  // Add manual user
+  const handleAddManual = () => {
+    if (!manualName || !manualSurname || !manualLogin) {
+      alert('Заполните все поля');
+      return;
+    }
+
+    alert(`Добавлен пользователь: ${manualName} ${manualSurname} (${manualLogin})`);
+    setManualName('');
+    setManualSurname('');
+    setManualLogin('');
+  };
+
+  // Generate invite codes
+  const handleGenerateInvites = () => {
+    const codes: string[] = [];
+    for (let i = 0; i < inviteCount; i++) {
+      const code = `PEER-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      codes.push(code);
+    }
+    setGeneratedCodes(codes);
+  };
+
+  // Import CSV users
+  const handleImportCSV = () => {
+    const validUsers = parsedUsers.filter(u => !u.error);
+    if (validUsers.length === 0) {
+      alert('Нет валидных пользователей для импорта');
+      return;
+    }
+    alert(`Импортировано ${validUsers.length} пользователей`);
+    onClose();
+  };
+
+  const validCount = parsedUsers.filter(u => !u.error).length;
+  const errorCount = parsedUsers.filter(u => u.error).length;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b-2 border-[#e6e8ee]">
+          <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px]">
+            Импорт участников
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-[8px] transition-colors"
+          >
+            <X className="w-5 h-5 text-[#767692]" />
+          </button>
+        </div>
+
+        {/* Mode Tabs */}
+        <div className="flex border-b-2 border-[#e6e8ee]">
+          <button
+            onClick={() => setMode('csv')}
+            className={`
+              flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
+              ${mode === 'csv' ? 'text-[#5b8def]' : 'text-[#767692] hover:text-[#21214f]'}
+            `}
+          >
+            <Upload className="w-4 h-4 inline-block mr-2" />
+            CSV импорт
+            {mode === 'csv' && (
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
+            )}
+          </button>
+          <button
+            onClick={() => setMode('manual')}
+            className={`
+              flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
+              ${mode === 'manual' ? 'text-[#5b8def]' : 'text-[#767692] hover:text-[#21214f]'}
+            `}
+          >
+            <UserPlus className="w-4 h-4 inline-block mr-2" />
+            Добавить вручную
+            {mode === 'manual' && (
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
+            )}
+          </button>
+          <button
+            onClick={() => setMode('invite')}
+            className={`
+              flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
+              ${mode === 'invite' ? 'text-[#5b8def]' : 'text-[#767692] hover:text-[#21214f]'}
+            `}
+          >
+            <Key className="w-4 h-4 inline-block mr-2" />
+            Инвайт-коды
+            {mode === 'invite' && (
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
+            )}
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {/* CSV Import Mode */}
+          {mode === 'csv' && (
+            <div>
+              <p className="text-[14px] text-[#767692] mb-4">
+                Вставьте CSV данные в формате: <code className="bg-[#f9f9f9] px-2 py-1 rounded">имя,фамилия,логин</code>
+              </p>
+              
+              <textarea
+                value={csvText}
+                onChange={(e) => setCsvText(e.target.value)}
+                placeholder="Иван,Петров,ivan.petrov&#10;Мария,Сидорова,maria.sidorova&#10;Алексей,Смирнов,alex.smirnov"
+                className="w-full h-[200px] p-4 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] font-mono resize-none focus:outline-none focus:border-[#5b8def] transition-colors"
+              />
+
+              <button
+                onClick={handleParseCSV}
+                disabled={!csvText.trim()}
+                className="mt-4 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
+              >
+                Проверить и показать preview
+              </button>
+
+              {/* Preview */}
+              {showPreview && parsedUsers.length > 0 && (
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[18px] font-medium text-[#21214f]">
+                      Предпросмотр ({parsedUsers.length})
+                    </h3>
+                    <div className="flex items-center gap-4 text-[13px]">
+                      <span className="text-[#4caf50] flex items-center gap-1">
+                        <CheckCircle className="w-4 h-4" />
+                        {validCount} валидных
+                      </span>
+                      {errorCount > 0 && (
+                        <span className="text-[#d4183d] flex items-center gap-1">
+                          <AlertCircle className="w-4 h-4" />
+                          {errorCount} ошибок
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="border-2 border-[#e6e8ee] rounded-[12px] overflow-hidden max-h-[300px] overflow-y-auto">
+                    <table className="w-full text-[14px]">
+                      <thead className="bg-[#f9f9f9] sticky top-0">
+                        <tr>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Имя</th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Фамилия</th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Логин</th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Статус</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {parsedUsers.map((user, index) => (
+                          <tr 
+                            key={index}
+                            className={`border-t border-[#e6e8ee] ${user.error ? 'bg-[#fff5f5]' : ''}`}
+                          >
+                            <td className="px-3 py-2">{user.name || '-'}</td>
+                            <td className="px-3 py-2">{user.surname || '-'}</td>
+                            <td className="px-3 py-2 font-mono text-[13px]">{user.login || '-'}</td>
+                            <td className="px-3 py-2">
+                              {user.error ? (
+                                <span className="text-[#d4183d] text-[12px] flex items-center gap-1">
+                                  <AlertCircle className="w-3 h-3" />
+                                  {user.error}
+                                </span>
+                              ) : (
+                                <span className="text-[#4caf50] text-[12px] flex items-center gap-1">
+                                  <CheckCircle className="w-3 h-3" />
+                                  OK
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <button
+                    onClick={handleImportCSV}
+                    disabled={validCount === 0}
+                    className="mt-4 px-6 py-2 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
+                  >
+                    Импортировать {validCount} пользователей
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Manual Add Mode */}
+          {mode === 'manual' && (
+            <div>
+              <p className="text-[14px] text-[#767692] mb-4">
+                Добавьте одного пользователя вручную
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                    Имя *
+                  </label>
+                  <input
+                    type="text"
+                    value={manualName}
+                    onChange={(e) => setManualName(e.target.value)}
+                    placeholder="Иван"
+                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                    Фамилия *
+                  </label>
+                  <input
+                    type="text"
+                    value={manualSurname}
+                    onChange={(e) => setManualSurname(e.target.value)}
+                    placeholder="Петров"
+                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                    Логин *
+                  </label>
+                  <input
+                    type="text"
+                    value={manualLogin}
+                    onChange={(e) => setManualLogin(e.target.value)}
+                    placeholder="ivan.petrov"
+                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] font-mono focus:outline-none focus:border-[#5b8def] transition-colors"
+                  />
+                </div>
+
+                <button
+                  onClick={handleAddManual}
+                  className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+                >
+                  Добавить участника
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Invite Codes Mode */}
+          {mode === 'invite' && (
+            <div>
+              <p className="text-[14px] text-[#767692] mb-4">
+                Сгенерируйте одноразовые инвайт-коды для самостоятельной регистрации
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                    Количество кодов
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={inviteCount}
+                    onChange={(e) => setInviteCount(parseInt(e.target.value) || 1)}
+                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                  />
+                </div>
+
+                <button
+                  onClick={handleGenerateInvites}
+                  className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+                >
+                  Сгенерировать коды
+                </button>
+
+                {generatedCodes.length > 0 && (
+                  <div className="mt-6">
+                    <h3 className="text-[16px] font-medium text-[#21214f] mb-3">
+                      Сгенерированные коды ({generatedCodes.length})
+                    </h3>
+                    <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4 max-h-[300px] overflow-y-auto">
+                      <div className="space-y-2 font-mono text-[14px]">
+                        {generatedCodes.map((code, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-white rounded-[8px]">
+                            <span className="text-[#21214f]">{code}</span>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(code)}
+                              className="text-[13px] text-[#5b8def] hover:underline"
+                            >
+                              Копировать
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-[#e6e8ee]">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-[#767692] hover:bg-[#f9f9f9] rounded-[12px] transition-colors"
+          >
+            Закрыть
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

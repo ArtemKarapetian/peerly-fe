@@ -1,0 +1,60 @@
+/**
+ * Task Page Layout Styles
+ * 
+ * Grid Layout with Right Rail:
+ * - Mobile/Tablet: Single column (1fr)
+ * - Desktop (≥980px available width): 2 columns (main + right rail ~360-420px, sticky)
+ * - Use min-width threshold to enable right rail, not just viewport width
+ */
+
+/* Base: Single column for mobile/tablet */
+.task-layout {
+  display: grid;
+  gap: 1rem; /* 16px */
+  grid-template-columns: 1fr;
+}
+
+/* Desktop: 2 columns with right rail */
+/* Use wider breakpoint to account for sidebar width */
+@media (min-width: 1200px) {
+  .task-layout {
+    gap: 2rem; /* 32px gap between columns */
+    grid-template-columns: 1fr minmax(360px, 420px); /* Main column + fixed-width right rail */
+  }
+}
+
+/* Sticky right rail on Desktop */
+@media (min-width: 1200px) {
+  .task-sidebar-sticky {
+    position: sticky;
+    top: 1.5rem; /* 24px from top when scrolling */
+    align-self: start; /* Prevent stretching */
+  }
+}
+
+/* Spacing для контентных блоков */
+.task-content-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* 16px default */
+}
+
+@media (min-width: 1200px) {
+  .task-content-spacing {
+    gap: 1.5rem; /* 24px на Desktop */
+  }
+}
+
+/* Скрыть элемент на mobile/tablet */
+@media (max-width: 1199px) {
+  .hide-below-desktop {
+    display: none;
+  }
+}
+
+/* Скрыть элемент на desktop */
+@media (min-width: 1200px) {
+  .hide-on-desktop {
+    display: none;
+  }
+}
