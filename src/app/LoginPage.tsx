@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/button';
-import { Input, PasswordInput } from '@/app/components/ui/Input';
+import { Button } from '@/app/components/ui/button.tsx';
+import { Input, PasswordInput } from '@/app/components/ui/input.tsx';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { isFlagEnabled } from '@/app/utils/featureFlags';
 import { authenticateUser } from '@/app/utils/userStorage';

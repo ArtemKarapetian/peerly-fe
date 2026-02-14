@@ -105,7 +105,7 @@ export default function SupportChatPage() {
   }, {} as Record<string, Message[]>);
 
   return (
-    <AppShell title="Чат с поддержкой" hideFooter>
+    <AppShell title="Чат с поддержкой">
       {/* Mobile/Tablet: Show conversation list or chat */}
       <div className="hide-on-desktop h-[calc(100vh-64px)]">
         {showConversationList ? (

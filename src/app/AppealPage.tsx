@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { Button } from '@/app/components/ui/Button';
+import { Button } from '@/app/components/ui/button.tsx';
 import { AlertCircle, Send } from 'lucide-react';
+import {ROUTES} from "@/app/routes";
 
 /**
  * AppealPage - Страница подачи апелляции на оценку
@@ -58,10 +59,10 @@ export default function AppealPage({ taskId = '1', reviewId = '1' }: AppealPageP
   return (
     <AppShell>
       <Breadcrumbs
-        items={['Журнал оценок', 'Апелляция']}
-        onItemClick={(index) => {
-          if (index === 0) window.location.hash = '/gradebook';
-        }}
+          items={[
+            { label: 'Журнал оценок', href: ROUTES.gradebook },
+            { label: 'Апелляция' }
+          ]}
       />
 
       <div className="max-w-[800px] mx-auto">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/Button';
-import { Input } from '@/app/components/ui/Input';
+import { Button } from '@/app/components/ui/button.tsx';
+import { Input } from '@/app/components/ui/input.tsx';
 import { CheckCircle, Mail, AlertCircle, X } from 'lucide-react';
 import { toast } from 'sonner';
 

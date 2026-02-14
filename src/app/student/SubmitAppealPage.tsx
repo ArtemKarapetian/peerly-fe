@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { MessageSquare, AlertCircle, Send, ArrowLeft } from 'lucide-react';
 
 /**
@@ -54,7 +55,12 @@ export default function SubmitAppealPage() {
 
   return (
     <AppShell title="Submit Appeal">
-      <Breadcrumbs items={['Courses', 'Web Development', 'Final Project', 'Appeal']} />
+      <Breadcrumbs items={[
+        { label: 'Курсы', href: ROUTES.courses },
+        { label: 'Web Development', href: ROUTES.course('1') },
+        { label: 'Final Project', href: ROUTES.task('1', '1') },
+        { label: 'Апелляция' }
+      ]} />
 
       <div className="mt-6 max-w-[800px]">
         <a

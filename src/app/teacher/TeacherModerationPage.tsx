@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {JSX, useState} from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
 import { ROUTES } from '@/app/routes';

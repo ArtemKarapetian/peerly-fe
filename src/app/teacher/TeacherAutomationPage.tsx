@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Plus, Power, Pencil, Trash2, Zap, CheckCircle2, XCircle } from 'lucide-react';
 import {
   AutomationRule,
@@ -72,14 +73,11 @@ export default function TeacherAutomationPage() {
       <div className="max-w-[1400px]">
         <Breadcrumbs
           items={[
-            'Дашборд преподавателя',
-            'Конструктор заданий',
-            'Задание',
-            'Автоматизация',
+            { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+            { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
+            { label: 'Задание', href: ROUTES.teacherDashboard },
+            { label: 'Автоматизация' }
           ]}
-          onItemClick={(index) => {
-            if (index === 0) window.location.hash = '#/teacher/dashboard';
-          }}
         />
 
         <div className="mt-6">

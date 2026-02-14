@@ -115,8 +115,8 @@ const mockRecentItems: RecentItem[] = [
 ];
 
 const mockTodayData: TodaySummaryData = {
-  dueSoon: 3,
   reviewsPending: 2,
+  tasksToday: 3,
 };
 
 const mockNotifications: Notification[] = [

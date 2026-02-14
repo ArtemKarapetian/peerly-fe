@@ -70,9 +70,9 @@ export type Route = 'landing' | 'login' | 'register' | 'dashboard' | 'courses' |
 export function Router() {
   const { isAuthenticated } = useAuth();
   const [currentRoute, setCurrentRoute] = useState<Route>('landing');
-  const [courseId, setCourseId] = useState<string | null>(null);
-  const [taskId, setTaskId] = useState<string | null>(null);
-  const [reviewId, setReviewId] = useState<string | null>(null);
+  const [courseId, setCourseId] = useState<string | undefined>(undefined);
+  const [taskId, setTaskId] = useState<string | undefined>(undefined);
+  const [reviewId, setReviewId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -80,9 +80,9 @@ export function Router() {
       
       // Парсинг роута
       let parsedRoute: Route = 'landing';
-      let parsedCourseId: string | null = null;
-      let parsedTaskId: string | null = null;
-      let parsedReviewId: string | null = null;
+      let parsedCourseId: string | undefined = undefined;
+      let parsedTaskId: string | undefined = undefined;
+      let parsedReviewId: string | undefined = undefined;
 
       // Route matching - order matters! Check most specific routes first.
       // IMPORTANT: Exact string matches MUST come before regex/pattern matches to avoid conflicts.

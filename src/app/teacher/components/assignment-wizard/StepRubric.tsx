@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Search, Plus, Layers, ChevronRight } from 'lucide-react';
-import type { AssignmentFormData } from '../../TeacherCreateAssignmentPage';
+import {useState} from 'react';
+import {ChevronRight, Layers, Plus, Search} from 'lucide-react';
+import type {AssignmentFormData} from '../../TeacherCreateAssignmentPage';
 
 /**
  * StepRubric - Шаг 3: Рубрика оценивания
@@ -15,13 +15,21 @@ interface StepRubricProps {
   onUpdate: (updates: Partial<AssignmentFormData>) => void;
 }
 
-// Mock rubrics data (в реальности загружалось бы из localStorage/API)
-const getMockRubrics = () => {
+interface RubricItem {
+  id: string;
+  name: string;
+  description: string;
+  taskType: string;
+  criteriaCount: number;
+  tags: string[];
+}
+
+const getMockRubrics = (): RubricItem[] => {
   const stored = localStorage.getItem('peerly_rubrics_library');
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
-      return parsed.map((r: any) => ({
+      return parsed.map((r: any): RubricItem => ({
         id: r.id,
         name: r.name,
         description: r.description,
@@ -67,13 +75,10 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
   const rubrics = getMockRubrics();
 
   const filteredRubrics = rubrics.filter((rubric) => {
-    const matchesSearch =
-      rubric.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      rubric.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      rubric.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-
     // Prefer matching task type
-    return matchesSearch;
+    return rubric.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rubric.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rubric.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
   });
 
   // Sort by task type match first

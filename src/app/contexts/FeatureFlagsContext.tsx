@@ -6,6 +6,7 @@ interface FeatureFlags {
     twoFactor: boolean;
     enableEmailConfirmation: boolean;
     enablePasswordReset: boolean;
+    deleteAccount: boolean;
 }
 
 interface FeatureFlagsContextType {
@@ -19,6 +20,7 @@ const defaultFlags: FeatureFlags = {
     twoFactor: false,
     enableEmailConfirmation: false,
     enablePasswordReset: false,
+    deleteAccount: false,
 };
 
 const FeatureFlagsContext = createContext<FeatureFlagsContextType | undefined>(undefined);

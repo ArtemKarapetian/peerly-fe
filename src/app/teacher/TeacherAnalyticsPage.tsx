@@ -42,7 +42,7 @@ export default function TeacherAnalyticsPage() {
   const assignments = demoDataStore.getAssignments();
   const submissions = demoDataStore.getSubmissions();
   const reviews = demoDataStore.getReviews();
-  const users = demoDataStore.getUsers().filter(u => u.role === 'student');
+  const users = demoDataStore.getUsers().filter(u => u.role === 'Student');
 
   const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || '');
   const [selectedAssignment, setSelectedAssignment] = useState<string>('all');

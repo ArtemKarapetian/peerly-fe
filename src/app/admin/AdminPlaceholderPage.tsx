@@ -1,6 +1,7 @@
 import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { Breadcrumbs, BreadcrumbItem } from '@/app/components/Breadcrumbs';
 import { LucideIcon } from 'lucide-react';
+import {ROUTES} from "@/app/routes";
 
 /**
  * AdminPlaceholderPage - Шаблон для страниц администратора
@@ -10,15 +11,15 @@ interface AdminPlaceholderPageProps {
   title: string;
   description: string;
   icon: LucideIcon;
-  breadcrumbs?: string[];
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-export function AdminPlaceholderPage({ 
-  title, 
-  description, 
-  icon: Icon,
-  breadcrumbs = ['Admin']
-}: AdminPlaceholderPageProps) {
+export function AdminPlaceholderPage({
+                                       title,
+                                       description,
+                                       icon: Icon,
+                                       breadcrumbs = [{ label: 'Admin', href: ROUTES.adminOverview }]
+                                     }: AdminPlaceholderPageProps) {
   return (
     <AppShell title={title}>
       <Breadcrumbs items={breadcrumbs} />
