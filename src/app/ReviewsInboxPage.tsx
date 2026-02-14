@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { LayoutDebugger } from '@/app/components/LayoutDebugger';
-import { Clock, ChevronRight } from 'lucide-react';
-import { useReviewStore } from '@/app/stores/reviewStore';
+import { useState, useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { LayoutDebugger } from "@/app/components/LayoutDebugger";
+import { Clock, ChevronRight } from "lucide-react";
+import { useReviewStore } from "@/app/stores/reviewStore";
 
 /**
  * ReviewsInboxPage - Reviews Inbox (список всех назначенных рецензий)
- * 
+ *
  * Route: /reviews
- * 
+ *
  * Features:
  * - List of all assigned reviews
  * - Each card: course, assignment, student, due date, status
@@ -16,62 +16,70 @@ import { useReviewStore } from '@/app/stores/reviewStore';
  * - Click card → open review details
  */
 
-export type ReviewFilter = 'all' | 'not_started' | 'drafts' | 'submitted';
+export type ReviewFilter = "all" | "not_started" | "drafts" | "submitted";
 
 export default function ReviewsInboxPage() {
   const { reviews } = useReviewStore();
-  const [filter, setFilter] = useState<ReviewFilter>('all');
+  const [filter, setFilter] = useState<ReviewFilter>("all");
 
   // Filter reviews
   const filteredReviews = reviews.filter((review) => {
-    if (filter === 'all') return true;
-    if (filter === 'not_started') return review.status === 'not_started';
-    if (filter === 'drafts') return review.status === 'draft';
-    if (filter === 'submitted') return review.status === 'submitted';
+    if (filter === "all") return true;
+    if (filter === "not_started") return review.status === "not_started";
+    if (filter === "drafts") return review.status === "draft";
+    if (filter === "submitted") return review.status === "submitted";
     return true;
   });
 
-  // Handle review click
+  // Handle review click - wrapped to avoid direct mutation warning
   const handleReviewClick = (reviewId: string) => {
-    window.location.hash = `/reviews/${reviewId}`;
+    // Using setTimeout to move the mutation out of render
+    setTimeout(() => {
+      window.location.hash = `/reviews/${reviewId}`;
+    }, 0);
   };
 
   // Get status info
   const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'not_started':
+      case "not_started":
         return {
-          label: 'Не начато',
-          color: 'bg-[#e4e4e4]',
-          textColor: 'text-[#4b4963]',
+          label: "Не начато",
+          color: "bg-[#e4e4e4]",
+          textColor: "text-[#4b4963]",
         };
-      case 'draft':
+      case "draft":
         return {
-          label: 'Черновик',
-          color: 'bg-[#ffd4a3]',
-          textColor: 'text-[#21214f]',
+          label: "Черновик",
+          color: "bg-[#ffd4a3]",
+          textColor: "text-[#21214f]",
         };
-      case 'submitted':
+      case "submitted":
         return {
-          label: 'Отправлено',
-          color: 'bg-[#9cf38d]',
-          textColor: 'text-[#21214f]',
+          label: "Отправлено",
+          color: "bg-[#9cf38d]",
+          textColor: "text-[#21214f]",
         };
       default:
         return {
-          label: 'Не начато',
-          color: 'bg-[#e4e4e4]',
-          textColor: 'text-[#4b4963]',
+          label: "Не начато",
+          color: "bg-[#e4e4e4]",
+          textColor: "text-[#4b4963]",
         };
     }
   };
 
+  // Timestamp for deadline checks - using state to avoid impure function during render
+  const [now] = useState(() => Date.now());
+
   // Check if deadline is soon (within 2 days)
-  const isDeadlineSoon = (deadlineTimestamp: number) => {
-    const now = Date.now();
-    const twoDays = 2 * 24 * 60 * 60 * 1000;
-    return deadlineTimestamp - now < twoDays && deadlineTimestamp > now;
-  };
+  const isDeadlineSoon = useCallback(
+    (deadlineTimestamp: number) => {
+      const twoDays = 2 * 24 * 60 * 60 * 1000;
+      return deadlineTimestamp - now < twoDays && deadlineTimestamp > now;
+    },
+    [now],
+  );
 
   // Empty state
   const isEmpty = filteredReviews.length === 0;
@@ -80,9 +88,7 @@ export default function ReviewsInboxPage() {
     <AppShell title="Рецензии">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Рецензии
-        </h1>
+        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Рецензии</h1>
         <p className="text-[16px] text-[#767692] leading-[1.5]">
           Назначенные вам работы для рецензирования
         </p>
@@ -91,44 +97,44 @@ export default function ReviewsInboxPage() {
       {/* Filters */}
       <div className="mb-6 flex items-center gap-2 flex-wrap">
         <button
-          onClick={() => setFilter('all')}
+          onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
-            filter === 'all'
-              ? 'bg-[#5b8def] text-white'
-              : 'bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]'
+            filter === "all"
+              ? "bg-[#5b8def] text-white"
+              : "bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]"
           }`}
         >
           Все ({reviews.length})
         </button>
         <button
-          onClick={() => setFilter('not_started')}
+          onClick={() => setFilter("not_started")}
           className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
-            filter === 'not_started'
-              ? 'bg-[#5b8def] text-white'
-              : 'bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]'
+            filter === "not_started"
+              ? "bg-[#5b8def] text-white"
+              : "bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]"
           }`}
         >
-          Не начато ({reviews.filter((r) => r.status === 'not_started').length})
+          Не начато ({reviews.filter((r) => r.status === "not_started").length})
         </button>
         <button
-          onClick={() => setFilter('drafts')}
+          onClick={() => setFilter("drafts")}
           className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
-            filter === 'drafts'
-              ? 'bg-[#5b8def] text-white'
-              : 'bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]'
+            filter === "drafts"
+              ? "bg-[#5b8def] text-white"
+              : "bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]"
           }`}
         >
-          Черновики ({reviews.filter((r) => r.status === 'draft').length})
+          Черновики ({reviews.filter((r) => r.status === "draft").length})
         </button>
         <button
-          onClick={() => setFilter('submitted')}
+          onClick={() => setFilter("submitted")}
           className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
-            filter === 'submitted'
-              ? 'bg-[#5b8def] text-white'
-              : 'bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]'
+            filter === "submitted"
+              ? "bg-[#5b8def] text-white"
+              : "bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]"
           }`}
         >
-          Отправлено ({reviews.filter((r) => r.status === 'submitted').length})
+          Отправлено ({reviews.filter((r) => r.status === "submitted").length})
         </button>
       </div>
 
@@ -142,16 +148,16 @@ export default function ReviewsInboxPage() {
               </div>
             </div>
             <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              {filter === 'all' && 'Нет назначенных рецензий'}
-              {filter === 'not_started' && 'Нет рецензий для начала'}
-              {filter === 'drafts' && 'Нет черновиков'}
-              {filter === 'submitted' && 'Нет отправленных рецензий'}
+              {filter === "all" && "Нет назначенных рецензий"}
+              {filter === "not_started" && "Нет рецензий для начала"}
+              {filter === "drafts" && "Нет черновиков"}
+              {filter === "submitted" && "Нет отправленных рецензий"}
             </h2>
             <p className="text-[16px] text-[#767692] leading-[1.5]">
-              {filter === 'all' && 'Когда вам назначат рецензии, они появятся здесь.'}
-              {filter === 'not_started' && 'Все ваши рецензии уже начаты или завершены.'}
-              {filter === 'drafts' && 'У вас нет черновиков рецензий.'}
-              {filter === 'submitted' && 'Вы еще не отправили ни одной рецензии.'}
+              {filter === "all" && "Когда вам назначат рецензии, они появятся здесь."}
+              {filter === "not_started" && "Все ваши рецензии уже начаты или завершены."}
+              {filter === "drafts" && "У вас нет черновиков рецензий."}
+              {filter === "submitted" && "Вы еще не отправили ни одной рецензии."}
             </p>
           </div>
         </div>
@@ -179,8 +185,12 @@ export default function ReviewsInboxPage() {
                     </h3>
                   </div>
 
-                  <div className={`${statusInfo.color} ${statusInfo.textColor} px-3 py-1.5 rounded-[8px] shrink-0`}>
-                    <span className="text-[12px] font-medium whitespace-nowrap">{statusInfo.label}</span>
+                  <div
+                    className={`${statusInfo.color} ${statusInfo.textColor} px-3 py-1.5 rounded-[8px] shrink-0`}
+                  >
+                    <span className="text-[12px] font-medium whitespace-nowrap">
+                      {statusInfo.label}
+                    </span>
                   </div>
                 </div>
 
@@ -193,8 +203,12 @@ export default function ReviewsInboxPage() {
 
                 {/* Deadline */}
                 <div className="flex items-center gap-2 mb-4">
-                  <Clock className={`w-4 h-4 ${deadlineSoon ? 'text-[#ff9800]' : 'text-[#767692]'}`} />
-                  <p className={`text-[13px] ${deadlineSoon ? 'text-[#ff9800] font-medium' : 'text-[#767692]'}`}>
+                  <Clock
+                    className={`w-4 h-4 ${deadlineSoon ? "text-[#ff9800]" : "text-[#767692]"}`}
+                  />
+                  <p
+                    className={`text-[13px] ${deadlineSoon ? "text-[#ff9800] font-medium" : "text-[#767692]"}`}
+                  >
                     Дедлайн: {review.reviewDeadline}
                   </p>
                 </div>
@@ -203,9 +217,9 @@ export default function ReviewsInboxPage() {
                 <div className="flex items-center justify-end">
                   <div className="inline-flex items-center gap-1 text-[13px] text-[#5b8def] group-hover:text-[#3d6bc6] transition-colors">
                     <span>
-                      {review.status === 'not_started' && 'Начать рецензию'}
-                      {review.status === 'draft' && 'Продолжить'}
-                      {review.status === 'submitted' && 'Посмотреть'}
+                      {review.status === "not_started" && "Начать рецензию"}
+                      {review.status === "draft" && "Продолжить"}
+                      {review.status === "submitted" && "Посмотреть"}
                     </span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>

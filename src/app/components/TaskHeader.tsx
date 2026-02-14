@@ -1,4 +1,4 @@
-import { Calendar, Award, FileText, Clock } from 'lucide-react';
+import { Calendar, Award, FileText, Clock } from "lucide-react";
 
 interface TaskHeaderProps {
   title: string;
@@ -15,7 +15,17 @@ interface TaskHeaderProps {
   };
 }
 
-export function TaskHeader({ title, courseName, teacher, deadline, points, type, status, statusColor, extensionInfo }: TaskHeaderProps) {
+export function TaskHeader({
+  title,
+  courseName,
+  teacher,
+  deadline,
+  points,
+  type,
+  status,
+  statusColor,
+  extensionInfo,
+}: TaskHeaderProps) {
   return (
     <div className="bg-[#f9f9f9] dark:bg-card rounded-[16px] p-4 desktop:p-8 mb-6 desktop:mb-8">
       <div className="flex flex-col desktop:flex-row items-start desktop:items-start desktop:justify-between gap-4 mb-4">
@@ -33,7 +43,7 @@ export function TaskHeader({ title, courseName, teacher, deadline, points, type,
           </span>
         </div>
       </div>
-      
+
       <div className="flex flex-col desktop:flex-row items-start desktop:items-center gap-4 desktop:gap-6 mt-4 desktop:mt-6">
         <div className="flex items-center gap-2">
           <Calendar className="size-5 text-[#4b4963] dark:text-muted-foreground" />

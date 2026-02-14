@@ -2,7 +2,7 @@
  * TaskFilters - Чипы фильтров для списка заданий
  */
 
-export type TaskFilter = 'all' | 'due-soon' | 'completed';
+export type TaskFilter = "all" | "due-soon" | "completed";
 
 interface TaskFiltersProps {
   activeFilter: TaskFilter;
@@ -11,9 +11,9 @@ interface TaskFiltersProps {
 
 export function TaskFilters({ activeFilter, onFilterChange }: TaskFiltersProps) {
   const filters: { id: TaskFilter; label: string }[] = [
-    { id: 'all', label: 'Все' },
-    { id: 'due-soon', label: 'Истекает срок сдачи' },
-    { id: 'completed', label: 'Завершенные' },
+    { id: "all", label: "Все" },
+    { id: "due-soon", label: "Истекает срок сдачи" },
+    { id: "completed", label: "Завершенные" },
   ];
 
   return (
@@ -27,8 +27,8 @@ export function TaskFilters({ activeFilter, onFilterChange }: TaskFiltersProps) 
             transition-colors
             ${
               activeFilter === filter.id
-                ? 'bg-[#d2def8] text-[#21214f]'
-                : 'bg-[#e4e4e4] text-[#4b4963] hover:bg-[#d7d7d7]'
+                ? "bg-[#d2def8] text-[#21214f]"
+                : "bg-[#e4e4e4] text-[#4b4963] hover:bg-[#d7d7d7]"
             }
           `}
         >

@@ -1,8 +1,8 @@
-import { CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { CheckCircle, AlertCircle, Info } from "lucide-react";
 
 /**
  * ReviewProgress - Индикатор прогресса рецензии и подсказки
- * 
+ *
  * Displays:
  * - Progress: filled criteria count
  * - Validation tips
@@ -47,7 +47,7 @@ export function ReviewProgress({
         <div className="w-full h-2 bg-[#e6e8ee] rounded-full overflow-hidden">
           <div
             className={`h-full transition-all duration-300 ${
-              isComplete ? 'bg-[#4caf50]' : 'bg-[#5b8def]'
+              isComplete ? "bg-[#4caf50]" : "bg-[#5b8def]"
             }`}
             style={{ width: `${progress}%` }}
           />
@@ -65,11 +65,7 @@ export function ReviewProgress({
             )}
             <span className="text-[13px] text-[#4b4963]">Общий комментарий</span>
           </div>
-          <p
-            className={`text-[13px] ${
-              isCommentValid ? 'text-[#4caf50]' : 'text-[#767692]'
-            }`}
-          >
+          <p className={`text-[13px] ${isCommentValid ? "text-[#4caf50]" : "text-[#767692]"}`}>
             {overallCommentLength} / {minOverallCommentLength} символов
           </p>
         </div>
@@ -84,7 +80,7 @@ export function ReviewProgress({
             ) : (
               <div className="w-4 h-4 rounded-full border-2 border-[#d2def8] shrink-0 mt-0.5" />
             )}
-            <span className={`text-[13px] ${isComplete ? 'text-[#4caf50]' : 'text-[#4b4963]'}`}>
+            <span className={`text-[13px] ${isComplete ? "text-[#4caf50]" : "text-[#4b4963]"}`}>
               Все критерии оценены
             </span>
           </div>
@@ -95,12 +91,10 @@ export function ReviewProgress({
             ) : (
               <div className="w-4 h-4 rounded-full border-2 border-[#d2def8] shrink-0 mt-0.5" />
             )}
-            <span
-              className={`text-[13px] ${isCommentValid ? 'text-[#4caf50]' : 'text-[#4b4963]'}`}
-            >
+            <span className={`text-[13px] ${isCommentValid ? "text-[#4caf50]" : "text-[#4b4963]"}`}>
               {minOverallCommentLength > 0
-                ? 'Общий комментарий достаточно длинный'
-                : 'Общий комментарий написан'}
+                ? "Общий комментарий достаточно длинный"
+                : "Общий комментарий написан"}
             </span>
           </div>
         </div>

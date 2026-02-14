@@ -1,20 +1,20 @@
-import { MessageCircle, Send } from 'lucide-react';
-import { useState } from 'react';
+import { MessageCircle, Send } from "lucide-react";
+import { useState } from "react";
 
 export function TaskQuestionsComments() {
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   const comments = [
     {
-      author: 'Преподаватель',
-      text: 'Обратите внимание на критерии оценивания',
-      date: '18 января, 15:30'
+      author: "Преподаватель",
+      text: "Обратите внимание на критерии оценивания",
+      date: "18 января, 15:30",
     },
     {
-      author: 'Студент',
-      text: 'Можно ли использовать дополнительные источники?',
-      date: '17 января, 10:20'
-    }
+      author: "Студент",
+      text: "Можно ли использовать дополнительные источники?",
+      date: "17 января, 10:20",
+    },
   ];
 
   return (

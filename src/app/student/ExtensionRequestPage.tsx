@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { Clock, Calendar, MessageSquare, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
-import { ExtensionType, requestExtension } from '@/app/utils/extensions';
-import { useAuth } from '@/app/contexts/AuthContext';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { Clock, Calendar, MessageSquare, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
+import { ExtensionType, requestExtension } from "@/app/utils/extensions";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 /**
  * ExtensionRequestPage - Student page to request deadline extension
@@ -11,15 +11,15 @@ import { useAuth } from '@/app/contexts/AuthContext';
 export default function ExtensionRequestPage() {
   const { user } = useAuth();
   const [submitted, setSubmitted] = useState(false);
-  const [type, setType] = useState<ExtensionType>('submission');
-  const [desiredDate, setDesiredDate] = useState('');
-  const [reason, setReason] = useState('');
+  const [type, setType] = useState<ExtensionType>("submission");
+  const [desiredDate, setDesiredDate] = useState("");
+  const [reason, setReason] = useState("");
 
   // Extract params from hash (demo)
   const hash = window.location.hash;
   const match = hash.match(/\/courses\/([^/]+)\/tasks\/([^/]+)\/extension-request/);
-  const courseId = match?.[1] || '1';
-  const taskId = match?.[2] || '1';
+  const courseId = match?.[1] || "1";
+  const taskId = match?.[2] || "1";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,12 +31,12 @@ export default function ExtensionRequestPage() {
     // Create extension request
     requestExtension(
       taskId,
-      user?.id || '1',
-      user?.name || 'Текущий студент',
+      user?.id || "1",
+      user?.name || "Текущий студент",
       type,
-      type !== 'review' ? desiredDate : undefined,
-      type !== 'submission' ? desiredDate : undefined,
-      reason
+      type !== "review" ? desiredDate : undefined,
+      type !== "submission" ? desiredDate : undefined,
+      reason,
     );
 
     setSubmitted(true);
@@ -56,11 +56,10 @@ export default function ExtensionRequestPage() {
 
             {/* Success message */}
             <div className="space-y-2">
-              <h1 className="text-2xl font-semibold text-foreground">
-                Запрос отправлен
-              </h1>
+              <h1 className="text-2xl font-semibold text-foreground">Запрос отправлен</h1>
               <p className="text-muted-foreground">
-                Ваш запрос на продление дедлайна получен преподавателем. Вы получите уведомление, когда он будет рассмотрен.
+                Ваш запрос на продление дедлайна получен преподавателем. Вы получите уведомление,
+                когда он будет рассмотрен.
               </p>
             </div>
 
@@ -71,7 +70,8 @@ export default function ExtensionRequestPage() {
                 <div className="text-sm text-foreground/80">
                   <strong>Что дальше?</strong>
                   <p className="mt-1 text-muted-foreground">
-                    Преподаватель рассмотрит ваш запрос в ближайшее время. Статус запроса вы можете отслеживать на странице задания.
+                    Преподаватель рассмотрит ваш запрос в ближайшее время. Статус запроса вы можете
+                    отслеживать на странице задания.
                   </p>
                 </div>
               </div>
@@ -101,12 +101,14 @@ export default function ExtensionRequestPage() {
   return (
     <AppShell title="Запрос продления">
       <div className="max-w-[700px]">
-        <Breadcrumbs items={[
-          { label: 'Курсы', href: '#/courses' },
-          { label: 'Course 1', href: `#/course/${courseId}` },
-          { label: 'Task 1', href: `#/task/${taskId}` },
-          { label: 'Запрос продления' }
-        ]} />
+        <Breadcrumbs
+          items={[
+            { label: "Курсы", href: "#/courses" },
+            { label: "Course 1", href: `#/course/${courseId}` },
+            { label: "Task 1", href: `#/task/${taskId}` },
+            { label: "Запрос продления" },
+          ]}
+        />
 
         <div className="mt-6 space-y-6">
           {/* Back link */}
@@ -135,18 +137,21 @@ export default function ExtensionRequestPage() {
                 <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h2 className="font-semibold text-foreground mb-2">
-                  О запросе продления
-                </h2>
+                <h2 className="font-semibold text-foreground mb-2">О запросе продления</h2>
                 <p className="text-sm text-muted-foreground">
-                  Запрос будет рассмотрен преподавателем. Обоснованные причины (болезнь, личные обстоятельства, технические проблемы) имеют больше шансов на одобрение. Вы получите уведомление о решении.
+                  Запрос будет рассмотрен преподавателем. Обоснованные причины (болезнь, личные
+                  обстоятельства, технические проблемы) имеют больше шансов на одобрение. Вы
+                  получите уведомление о решении.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-card border border-border rounded-[20px] p-6 space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-card border border-border rounded-[20px] p-6 space-y-6"
+          >
             {/* Extension Type */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-3">
@@ -158,7 +163,7 @@ export default function ExtensionRequestPage() {
                     type="radio"
                     name="type"
                     value="submission"
-                    checked={type === 'submission'}
+                    checked={type === "submission"}
                     onChange={(e) => setType(e.target.value as ExtensionType)}
                     className="w-4 h-4 text-primary"
                   />
@@ -174,7 +179,7 @@ export default function ExtensionRequestPage() {
                     type="radio"
                     name="type"
                     value="review"
-                    checked={type === 'review'}
+                    checked={type === "review"}
                     onChange={(e) => setType(e.target.value as ExtensionType)}
                     className="w-4 h-4 text-primary"
                   />
@@ -190,7 +195,7 @@ export default function ExtensionRequestPage() {
                     type="radio"
                     name="type"
                     value="both"
-                    checked={type === 'both'}
+                    checked={type === "both"}
                     onChange={(e) => setType(e.target.value as ExtensionType)}
                     className="w-4 h-4 text-primary"
                   />
@@ -247,9 +252,7 @@ export default function ExtensionRequestPage() {
 
             {/* Guidelines */}
             <div className="bg-muted/50 rounded-[12px] p-4">
-              <h3 className="text-sm font-medium text-foreground mb-2">
-                Рекомендации
-              </h3>
+              <h3 className="text-sm font-medium text-foreground mb-2">Рекомендации</h3>
               <ul className="space-y-1.5 text-xs text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-0.5">•</span>

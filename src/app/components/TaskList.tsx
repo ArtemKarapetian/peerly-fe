@@ -1,5 +1,5 @@
-import { TaskListItem } from './TaskListItem';
-import { TaskStatus } from './StatusCard';
+import { TaskListItem } from "./TaskListItem";
+import { TaskStatus } from "./StatusCard";
 
 /**
  * TaskList - Список заданий с разделителями
@@ -38,9 +38,7 @@ export function TaskList({ tasks, onTaskClick }: TaskListProps) {
             onClick={() => onTaskClick?.(task.id)}
           />
           {/* Divider - не показываем после последнего элемента */}
-          {index < tasks.length - 1 && (
-            <div className="border-b border-[#e6e8ee]" />
-          )}
+          {index < tasks.length - 1 && <div className="border-b border-[#e6e8ee]" />}
         </div>
       ))}
     </div>

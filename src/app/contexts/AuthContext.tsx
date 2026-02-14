@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface User {
   id: string;
@@ -17,25 +17,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('peerly_auth') === 'true';
+    return localStorage.getItem("peerly_auth") === "true";
   });
 
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('peerly_user');
+    const saved = localStorage.getItem("peerly_user");
     return saved ? JSON.parse(saved) : null;
   });
 
   useEffect(() => {
-    localStorage.setItem('peerly_auth', String(isAuthenticated));
+    localStorage.setItem("peerly_auth", String(isAuthenticated));
     if (user) {
-      localStorage.setItem('peerly_user', JSON.stringify(user));
+      localStorage.setItem("peerly_user", JSON.stringify(user));
     } else {
-      localStorage.removeItem('peerly_user');
+      localStorage.removeItem("peerly_user");
     }
   }, [isAuthenticated, user]);
 
   const login = (userData?: User) => {
-    const defaultUser: User = { id: 'student-1', name: 'Студент', email: 'student@example.com' };
+    const defaultUser: User = { id: "student-1", name: "Студент", email: "student@example.com" };
     setUser(userData ?? defaultUser);
     setIsAuthenticated(true);
   };
@@ -43,20 +43,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    window.location.hash = '/';
+    window.location.hash = "/";
   };
 
   return (
-      <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
-        {children}
-      </AuthContext.Provider>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

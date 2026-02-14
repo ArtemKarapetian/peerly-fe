@@ -1,23 +1,37 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
+import { useState, useEffect } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
 import {
-  Send, Filter, Search, Download, Clock, AlertTriangle, 
-  CheckCircle, FileText, X, ChevronRight, Shield, Code,
-  FileCheck, EyeOff, History, StickyNote, Save
-} from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+  Send,
+  Filter,
+  Search,
+  Download,
+  Clock,
+  AlertTriangle,
+  CheckCircle,
+  FileText,
+  X,
+  ChevronRight,
+  Shield,
+  Code,
+  FileCheck,
+  EyeOff,
+  History,
+  StickyNote,
+  Save,
+} from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 
 /**
  * TeacherSubmissionsPage - Просмотр сабмишенов (работ студентов)
- * 
+ *
  * Фильтрация по:
  * - Статус (draft/submitted/late)
  * - Риск плагиата (low/med/high)
  * - Наличие failed checks
  * - Поиск по студенту
- * 
+ *
  * Детальный просмотр:
  * - Список файлов с кнопками скачивания
  * - Временная шкала версий
@@ -25,14 +39,14 @@ import { demoDataStore } from '@/app/stores/demoDataStore';
  * - Внутренние заметки преподавателя
  */
 
-type SubmissionStatus = 'draft' | 'submitted' | 'late';
-type PlagiarismRisk = 'low' | 'medium' | 'high';
+type SubmissionStatus = "draft" | "submitted" | "late";
+type PlagiarismRisk = "low" | "medium" | "high";
 
 interface PluginReport {
   id: string;
   pluginName: string;
-  pluginType: 'plagiarism' | 'lint' | 'format' | 'anonymization';
-  status: 'passed' | 'warning' | 'failed';
+  pluginType: "plagiarism" | "lint" | "format" | "anonymization";
+  status: "passed" | "warning" | "failed";
   score?: number;
   message: string;
   timestamp: Date;
@@ -78,46 +92,48 @@ export default function TeacherSubmissionsPage() {
   // Get pre-filter from URL hash params
   const getPreFilterAssignmentId = (): string => {
     const hash = window.location.hash.slice(1); // Remove #
-    const queryStart = hash.indexOf('?');
-    if (queryStart === -1) return '';
-    
+    const queryStart = hash.indexOf("?");
+    if (queryStart === -1) return "";
+
     const queryString = hash.substring(queryStart + 1);
     const params = new URLSearchParams(queryString);
-    return params.get('assignmentId') || '';
+    return params.get("assignmentId") || "";
   };
 
   // Generate comprehensive submission data
   const generateSubmissions = (): Submission[] => {
     return demoSubmissions.map((sub, idx) => {
-      const assignment = assignments.find(a => a.id === sub.assignmentId);
-      const student = users.find(u => u.id === sub.studentId);
-      
-      const isLate = sub.submittedAt && sub.submittedAt > new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
-      const status: SubmissionStatus = sub.status === 'draft' ? 'draft' : isLate ? 'late' : 'submitted';
-      
-      const plagiarismRisks: PlagiarismRisk[] = ['low', 'medium', 'high'];
+      const assignment = assignments.find((a) => a.id === sub.assignmentId);
+      const student = users.find((u) => u.id === sub.studentId);
+
+      const isLate =
+        sub.submittedAt && sub.submittedAt > new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+      const status: SubmissionStatus =
+        sub.status === "draft" ? "draft" : isLate ? "late" : "submitted";
+
+      const plagiarismRisks: PlagiarismRisk[] = ["low", "medium", "high"];
       const plagiarismRisk = plagiarismRisks[idx % 3];
 
       // Generate files
       const files: SubmissionFile[] = [
         {
           id: `f1-${sub.id}`,
-          name: 'main.py',
-          size: '2.4 KB',
-          uploadedAt: sub.submittedAt
+          name: "main.py",
+          size: "2.4 KB",
+          uploadedAt: sub.submittedAt,
         },
         {
           id: `f2-${sub.id}`,
-          name: 'utils.py',
-          size: '1.8 KB',
-          uploadedAt: sub.submittedAt
+          name: "utils.py",
+          size: "1.8 KB",
+          uploadedAt: sub.submittedAt,
         },
         {
           id: `f3-${sub.id}`,
-          name: 'README.md',
-          size: '856 B',
-          uploadedAt: sub.submittedAt
-        }
+          name: "README.md",
+          size: "856 B",
+          uploadedAt: sub.submittedAt,
+        },
       ];
 
       // Generate versions
@@ -127,73 +143,87 @@ export default function TeacherSubmissionsPage() {
           version: 1,
           submittedAt: new Date(sub.submittedAt.getTime() - 2 * 60 * 60 * 1000),
           filesCount: 2,
-          changes: 'Первоначальная версия'
+          changes: "Первоначальная версия",
         },
         {
           id: `v2-${sub.id}`,
           version: 2,
           submittedAt: new Date(sub.submittedAt.getTime() - 1 * 60 * 60 * 1000),
           filesCount: 3,
-          changes: 'Добавлен README.md'
+          changes: "Добавлен README.md",
         },
         {
           id: `v3-${sub.id}`,
           version: 3,
           submittedAt: sub.submittedAt,
           filesCount: 3,
-          changes: 'Исправлены опечатки в main.py'
-        }
+          changes: "Исправлены опечатки в main.py",
+        },
       ];
 
       // Generate plugin reports
       const pluginReports: PluginReport[] = [
         {
           id: `pr1-${sub.id}`,
-          pluginName: 'Turnitin',
-          pluginType: 'plagiarism',
-          status: plagiarismRisk === 'high' ? 'failed' : plagiarismRisk === 'medium' ? 'warning' : 'passed',
-          score: plagiarismRisk === 'high' ? 78 : plagiarismRisk === 'medium' ? 45 : 12,
-          message: plagiarismRisk === 'high' 
-            ? 'Обнаружено высокое сходство с другими работами' 
-            : plagiarismRisk === 'medium' 
-            ? 'Умеренное сходство с опубликованными материалами'
-            : 'Работа оригинальна',
+          pluginName: "Turnitin",
+          pluginType: "plagiarism",
+          status:
+            plagiarismRisk === "high"
+              ? "failed"
+              : plagiarismRisk === "medium"
+                ? "warning"
+                : "passed",
+          score: plagiarismRisk === "high" ? 78 : plagiarismRisk === "medium" ? 45 : 12,
+          message:
+            plagiarismRisk === "high"
+              ? "Обнаружено высокое сходство с другими работами"
+              : plagiarismRisk === "medium"
+                ? "Умеренное сходство с опубликованными материалами"
+                : "Работа оригинальна",
           timestamp: new Date(sub.submittedAt.getTime() + 5 * 60 * 1000),
-          details: `Совпадений с другими источниками: ${plagiarismRisk === 'high' ? '78%' : plagiarismRisk === 'medium' ? '45%' : '12%'}`
+          details: `Совпадений с другими источниками: ${plagiarismRisk === "high" ? "78%" : plagiarismRisk === "medium" ? "45%" : "12%"}`,
         },
         {
           id: `pr2-${sub.id}`,
-          pluginName: 'ESLint',
-          pluginType: 'lint',
-          status: idx % 3 === 0 ? 'failed' : idx % 3 === 1 ? 'warning' : 'passed',
-          message: idx % 3 === 0 ? '12 ошибок обнаружено' : idx % 3 === 1 ? '3 предупреждения' : 'Код соответствует стандартам',
+          pluginName: "ESLint",
+          pluginType: "lint",
+          status: idx % 3 === 0 ? "failed" : idx % 3 === 1 ? "warning" : "passed",
+          message:
+            idx % 3 === 0
+              ? "12 ошибок обнаружено"
+              : idx % 3 === 1
+                ? "3 предупреждения"
+                : "Код соответствует стандартам",
           timestamp: new Date(sub.submittedAt.getTime() + 2 * 60 * 1000),
-          details: idx % 3 === 0 ? 'Необходимо исправить синтаксические ошибки' : 'Незначительные проблемы со стилем'
+          details:
+            idx % 3 === 0
+              ? "Необходимо исправить синтаксические ошибки"
+              : "Незначительные проблемы со стилем",
         },
         {
           id: `pr3-${sub.id}`,
-          pluginName: 'Prettier',
-          pluginType: 'format',
-          status: 'passed',
-          message: 'Форматирование соответствует стандартам',
-          timestamp: new Date(sub.submittedAt.getTime() + 3 * 60 * 1000)
+          pluginName: "Prettier",
+          pluginType: "format",
+          status: "passed",
+          message: "Форматирование соответствует стандартам",
+          timestamp: new Date(sub.submittedAt.getTime() + 3 * 60 * 1000),
         },
         {
           id: `pr4-${sub.id}`,
-          pluginName: 'Anonymous Check',
-          pluginType: 'anonymization',
-          status: 'passed',
-          message: 'Персональная информация не обнаружена',
-          timestamp: new Date(sub.submittedAt.getTime() + 1 * 60 * 1000)
-        }
+          pluginName: "Anonymous Check",
+          pluginType: "anonymization",
+          status: "passed",
+          message: "Персональная информация не обнаружена",
+          timestamp: new Date(sub.submittedAt.getTime() + 1 * 60 * 1000),
+        },
       ];
 
       return {
         id: sub.id,
         assignmentId: sub.assignmentId,
-        assignmentTitle: assignment?.title || 'Unknown Assignment',
+        assignmentTitle: assignment?.title || "Unknown Assignment",
         studentId: sub.studentId,
-        studentName: student?.name || 'Unknown Student',
+        studentName: student?.name || "Unknown Student",
         status,
         plagiarismRisk,
         submittedAt: sub.submittedAt,
@@ -201,110 +231,139 @@ export default function TeacherSubmissionsPage() {
         files,
         versions,
         pluginReports,
-        teacherNotes: ''
+        teacherNotes: "",
       };
     });
   };
 
   const [submissions, setSubmissions] = useState<Submission[]>(generateSubmissions());
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
-  
+
   // Filters
-  const [filterStatus, setFilterStatus] = useState<SubmissionStatus | 'all'>('all');
-  const [filterPlagiarism, setFilterPlagiarism] = useState<PlagiarismRisk | 'all'>('all');
+  const [filterStatus, setFilterStatus] = useState<SubmissionStatus | "all">("all");
+  const [filterPlagiarism, setFilterPlagiarism] = useState<PlagiarismRisk | "all">("all");
   const [filterFailedChecks, setFilterFailedChecks] = useState(false);
   const [filterAssignment, setFilterAssignment] = useState<string>(getPreFilterAssignmentId());
-  const [searchStudent, setSearchStudent] = useState('');
+  const [searchStudent, setSearchStudent] = useState("");
 
   // Teacher notes editing
   const [editingNotes, setEditingNotes] = useState(false);
-  const [notesText, setNotesText] = useState('');
+  // Notes are synced via key prop pattern instead of useEffect
+  const notesInitialValue = selectedSubmission?.teacherNotes || "";
+  const [notesText, setNotesText] = useState(notesInitialValue);
 
   useEffect(() => {
-    if (selectedSubmission) {
+    // Update notesText when selected submission changes.
+    // Schedule setState asynchronously to avoid cascading renders (ESLint rule).
+    if (!selectedSubmission) return;
+    const t = setTimeout(() => {
       setNotesText(selectedSubmission.teacherNotes);
-    }
+    }, 0);
+    return () => clearTimeout(t);
   }, [selectedSubmission]);
 
   // Apply filters
-  const filteredSubmissions = submissions.filter(sub => {
-    if (filterStatus !== 'all' && sub.status !== filterStatus) return false;
-    if (filterPlagiarism !== 'all' && sub.plagiarismRisk !== filterPlagiarism) return false;
+  const filteredSubmissions = submissions.filter((sub) => {
+    if (filterStatus !== "all" && sub.status !== filterStatus) return false;
+    if (filterPlagiarism !== "all" && sub.plagiarismRisk !== filterPlagiarism) return false;
     if (filterFailedChecks) {
-      const hasFailed = sub.pluginReports.some(r => r.status === 'failed');
+      const hasFailed = sub.pluginReports.some((r) => r.status === "failed");
       if (!hasFailed) return false;
     }
-    if (filterAssignment !== 'all' && sub.assignmentId !== filterAssignment) return false;
-    if (searchStudent && !sub.studentName.toLowerCase().includes(searchStudent.toLowerCase())) return false;
+    if (filterAssignment !== "all" && sub.assignmentId !== filterAssignment) return false;
+    if (searchStudent && !sub.studentName.toLowerCase().includes(searchStudent.toLowerCase()))
+      return false;
     return true;
   });
 
   const getStatusBadge = (status: SubmissionStatus) => {
     switch (status) {
-      case 'submitted':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
-          <CheckCircle className="w-3 h-3" />
-          Сдано
-        </span>;
-      case 'late':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
-          <Clock className="w-3 h-3" />
-          Просрочено
-        </span>;
-      case 'draft':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
-          <FileText className="w-3 h-3" />
-          Черновик
-        </span>;
+      case "submitted":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+            <CheckCircle className="w-3 h-3" />
+            Сдано
+          </span>
+        );
+      case "late":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+            <Clock className="w-3 h-3" />
+            Просрочено
+          </span>
+        );
+      case "draft":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
+            <FileText className="w-3 h-3" />
+            Черновик
+          </span>
+        );
     }
   };
 
   const getPlagiarismBadge = (risk: PlagiarismRisk) => {
     switch (risk) {
-      case 'high':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[12px] font-medium">
-          <AlertTriangle className="w-3 h-3" />
-          Высокий
-        </span>;
-      case 'medium':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
-          <AlertTriangle className="w-3 h-3" />
-          Средний
-        </span>;
-      case 'low':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
-          <CheckCircle className="w-3 h-3" />
-          Низкий
-        </span>;
+      case "high":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[12px] font-medium">
+            <AlertTriangle className="w-3 h-3" />
+            Высокий
+          </span>
+        );
+      case "medium":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+            <AlertTriangle className="w-3 h-3" />
+            Средний
+          </span>
+        );
+      case "low":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+            <CheckCircle className="w-3 h-3" />
+            Низкий
+          </span>
+        );
     }
   };
 
-  const getPluginIcon = (type: PluginReport['pluginType']) => {
+  const getPluginIcon = (type: PluginReport["pluginType"]) => {
     switch (type) {
-      case 'plagiarism': return <Shield className="w-4 h-4" />;
-      case 'lint': return <Code className="w-4 h-4" />;
-      case 'format': return <FileCheck className="w-4 h-4" />;
-      case 'anonymization': return <EyeOff className="w-4 h-4" />;
+      case "plagiarism":
+        return <Shield className="w-4 h-4" />;
+      case "lint":
+        return <Code className="w-4 h-4" />;
+      case "format":
+        return <FileCheck className="w-4 h-4" />;
+      case "anonymization":
+        return <EyeOff className="w-4 h-4" />;
     }
   };
 
-  const getPluginStatusBadge = (status: PluginReport['status']) => {
+  const getPluginStatusBadge = (status: PluginReport["status"]) => {
     switch (status) {
-      case 'passed':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
-          <CheckCircle className="w-3 h-3" />
-          Passed
-        </span>;
-      case 'warning':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
-          <AlertTriangle className="w-3 h-3" />
-          Warning
-        </span>;
-      case 'failed':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
-          <X className="w-3 h-3" />
-          Failed
-        </span>;
+      case "passed":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+            <CheckCircle className="w-3 h-3" />
+            Passed
+          </span>
+        );
+      case "warning":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
+            <AlertTriangle className="w-3 h-3" />
+            Warning
+          </span>
+        );
+      case "failed":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
+            <X className="w-3 h-3" />
+            Failed
+          </span>
+        );
     }
   };
 
@@ -314,27 +373,29 @@ export default function TeacherSubmissionsPage() {
 
   const handleSaveNotes = () => {
     if (selectedSubmission) {
-      setSubmissions(prev => prev.map(sub => 
-        sub.id === selectedSubmission.id 
-          ? { ...sub, teacherNotes: notesText }
-          : sub
-      ));
+      setSubmissions((prev) =>
+        prev.map((sub) =>
+          sub.id === selectedSubmission.id ? { ...sub, teacherNotes: notesText } : sub,
+        ),
+      );
       setSelectedSubmission({ ...selectedSubmission, teacherNotes: notesText });
       setEditingNotes(false);
-      alert('Заметки сохранены');
+      alert("Заметки сохранены");
     }
   };
 
   const hasFailedChecks = (sub: Submission) => {
-    return sub.pluginReports.some(r => r.status === 'failed');
+    return sub.pluginReports.some((r) => r.status === "failed");
   };
 
   return (
     <AppShell title="Просмотр сабмишенов">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Работы студентов' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Работы студентов" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -366,7 +427,7 @@ export default function TeacherSubmissionsPage() {
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
                 <option value="all">Все задания ({submissions.length})</option>
-                {assignments.map(assignment => (
+                {assignments.map((assignment) => (
                   <option key={assignment.id} value={assignment.id}>
                     {assignment.title}
                   </option>
@@ -381,7 +442,7 @@ export default function TeacherSubmissionsPage() {
               </label>
               <select
                 value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value as SubmissionStatus | 'all')}
+                onChange={(e) => setFilterStatus(e.target.value as SubmissionStatus | "all")}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
                 <option value="all">Все статусы</option>
@@ -398,7 +459,7 @@ export default function TeacherSubmissionsPage() {
               </label>
               <select
                 value={filterPlagiarism}
-                onChange={(e) => setFilterPlagiarism(e.target.value as PlagiarismRisk | 'all')}
+                onChange={(e) => setFilterPlagiarism(e.target.value as PlagiarismRisk | "all")}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
                 <option value="all">Любой риск</option>
@@ -437,25 +498,28 @@ export default function TeacherSubmissionsPage() {
                   onChange={(e) => setFilterFailedChecks(e.target.checked)}
                   className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-0"
                 />
-                <span className="text-[15px] text-[#21214f]">
-                  Только с ошибками проверок
-                </span>
+                <span className="text-[15px] text-[#21214f]">Только с ошибками проверок</span>
               </label>
             </div>
           </div>
 
           <div className="mt-4 flex items-center justify-between">
             <p className="text-[14px] text-[#767692]">
-              Найдено работ: <strong className="text-[#21214f]">{filteredSubmissions.length}</strong>
+              Найдено работ:{" "}
+              <strong className="text-[#21214f]">{filteredSubmissions.length}</strong>
             </p>
-            {(filterStatus !== 'all' || filterPlagiarism !== 'all' || filterFailedChecks || searchStudent || filterAssignment !== 'all') && (
+            {(filterStatus !== "all" ||
+              filterPlagiarism !== "all" ||
+              filterFailedChecks ||
+              searchStudent ||
+              filterAssignment !== "all") && (
               <button
                 onClick={() => {
-                  setFilterStatus('all');
-                  setFilterPlagiarism('all');
+                  setFilterStatus("all");
+                  setFilterPlagiarism("all");
                   setFilterFailedChecks(false);
-                  setFilterAssignment('all');
-                  setSearchStudent('');
+                  setFilterAssignment("all");
+                  setSearchStudent("");
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-[#5b8def] hover:bg-[#e9f5ff] rounded-[8px] transition-colors text-[14px]"
               >
@@ -500,13 +564,12 @@ export default function TeacherSubmissionsPage() {
                           {submission.files.length} файлов
                         </span>
                         <span className="flex items-center gap-1">
-                          <History className="w-3 h-3" />
-                          v{submission.versions.length}
+                          <History className="w-3 h-3" />v{submission.versions.length}
                         </span>
                         {submission.submittedAt && (
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            {submission.submittedAt.toLocaleString('ru-RU')}
+                            {submission.submittedAt.toLocaleString("ru-RU")}
                           </span>
                         )}
                       </div>
@@ -519,12 +582,8 @@ export default function TeacherSubmissionsPage() {
           ) : (
             <div className="text-center py-12">
               <Send className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-                Работы не найдены
-              </h3>
-              <p className="text-[14px] text-[#767692]">
-                Попробуйте изменить фильтры
-              </p>
+              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Работы не найдены</h3>
+              <p className="text-[14px] text-[#767692]">Попробуйте изменить фильтры</p>
             </div>
           )}
         </div>
@@ -570,23 +629,29 @@ export default function TeacherSubmissionsPage() {
               <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Статус</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      Статус
+                    </p>
                     {getStatusBadge(selectedSubmission.status)}
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Риск плагиата</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      Риск плагиата
+                    </p>
                     {getPlagiarismBadge(selectedSubmission.plagiarismRisk)}
                   </div>
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Сдано</p>
                     <p className="text-[14px] text-[#21214f]">
-                      {selectedSubmission.submittedAt?.toLocaleString('ru-RU') || 'Не сдано'}
+                      {selectedSubmission.submittedAt?.toLocaleString("ru-RU") || "Не сдано"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Дедлайн</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      Дедлайн
+                    </p>
                     <p className="text-[14px] text-[#21214f]">
-                      {selectedSubmission.deadline.toLocaleString('ru-RU')}
+                      {selectedSubmission.deadline.toLocaleString("ru-RU")}
                     </p>
                   </div>
                 </div>
@@ -599,12 +664,15 @@ export default function TeacherSubmissionsPage() {
                   Файлы ({selectedSubmission.files.length})
                 </h3>
                 <div className="space-y-2">
-                  {selectedSubmission.files.map(file => (
-                    <div key={file.id} className="flex items-center justify-between p-3 bg-[#f9f9f9] border border-[#e6e8ee] rounded-[8px]">
+                  {selectedSubmission.files.map((file) => (
+                    <div
+                      key={file.id}
+                      className="flex items-center justify-between p-3 bg-[#f9f9f9] border border-[#e6e8ee] rounded-[8px]"
+                    >
                       <div className="flex-1">
                         <p className="text-[14px] font-medium text-[#21214f]">{file.name}</p>
                         <p className="text-[12px] text-[#767692]">
-                          {file.size} • Загружено {file.uploadedAt.toLocaleString('ru-RU')}
+                          {file.size} • Загружено {file.uploadedAt.toLocaleString("ru-RU")}
                         </p>
                       </div>
                       <button
@@ -627,7 +695,10 @@ export default function TeacherSubmissionsPage() {
                 </h3>
                 <div className="space-y-3">
                   {selectedSubmission.versions.map((version, index) => (
-                    <div key={version.id} className="relative pl-6 pb-3 border-l-2 border-[#e6e8ee] last:border-0">
+                    <div
+                      key={version.id}
+                      className="relative pl-6 pb-3 border-l-2 border-[#e6e8ee] last:border-0"
+                    >
                       <div className="absolute left-[-5px] top-0 w-2 h-2 bg-[#5b8def] rounded-full" />
                       <div className="flex items-start justify-between">
                         <div>
@@ -639,7 +710,8 @@ export default function TeacherSubmissionsPage() {
                           </p>
                           <p className="text-[13px] text-[#767692] mt-1">{version.changes}</p>
                           <p className="text-[12px] text-[#767692] mt-1">
-                            {version.filesCount} файлов • {version.submittedAt.toLocaleString('ru-RU')}
+                            {version.filesCount} файлов •{" "}
+                            {version.submittedAt.toLocaleString("ru-RU")}
                           </p>
                         </div>
                       </div>
@@ -655,8 +727,11 @@ export default function TeacherSubmissionsPage() {
                   Отчеты плагинов
                 </h3>
                 <div className="space-y-3">
-                  {selectedSubmission.pluginReports.map(report => (
-                    <div key={report.id} className="p-4 bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px]">
+                  {selectedSubmission.pluginReports.map((report) => (
+                    <div
+                      key={report.id}
+                      className="p-4 bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px]"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
                           {getPluginIcon(report.pluginType)}
@@ -676,7 +751,7 @@ export default function TeacherSubmissionsPage() {
                         <p className="text-[12px] text-[#767692] mb-2">{report.details}</p>
                       )}
                       <p className="text-[11px] text-[#767692]">
-                        Проверено: {report.timestamp.toLocaleString('ru-RU')}
+                        Проверено: {report.timestamp.toLocaleString("ru-RU")}
                       </p>
                     </div>
                   ))}
@@ -735,7 +810,9 @@ export default function TeacherSubmissionsPage() {
                     </div>
                   ) : (
                     <p className="text-[14px] text-[#21214f] leading-relaxed">
-                      {selectedSubmission.teacherNotes || <span className="text-[#767692] italic">Заметок пока нет</span>}
+                      {selectedSubmission.teacherNotes || (
+                        <span className="text-[#767692] italic">Заметок пока нет</span>
+                      )}
                     </p>
                   )}
                 </div>

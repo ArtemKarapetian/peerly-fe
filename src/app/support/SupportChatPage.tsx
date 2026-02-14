@@ -1,78 +1,76 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Send, ArrowLeft, Clock, CheckCheck } from 'lucide-react';
-import { useAuth } from '@/app/contexts/AuthContext';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Send, ArrowLeft, Clock, CheckCheck } from "lucide-react";
 
 interface Message {
   id: string;
-  sender: 'user' | 'support';
+  sender: "user" | "support";
   text: string;
   timestamp: string;
-  status?: 'sent' | 'delivered' | 'read';
+  status?: "sent" | "delivered" | "read";
 }
 
 const DEMO_MESSAGES: Message[] = [
   {
-    id: '1',
-    sender: 'support',
-    text: 'Здравствуйте! Чем могу помочь?',
-    timestamp: '2025-01-25T10:00:00',
-    status: 'read'
+    id: "1",
+    sender: "support",
+    text: "Здравствуйте! Чем могу помочь?",
+    timestamp: "2025-01-25T10:00:00",
+    status: "read",
   },
   {
-    id: '2',
-    sender: 'user',
-    text: 'Здравствуйте! У меня вопрос по peer review процессу.',
-    timestamp: '2025-01-25T10:05:00',
-    status: 'read'
+    id: "2",
+    sender: "user",
+    text: "Здравствуйте! У меня вопрос по peer review процессу.",
+    timestamp: "2025-01-25T10:05:00",
+    status: "read",
   },
   {
-    id: '3',
-    sender: 'support',
-    text: 'Конечно, задавайте ваш вопрос. Я постараюсь помочь.',
-    timestamp: '2025-01-25T10:06:00',
-    status: 'read'
-  }
+    id: "3",
+    sender: "support",
+    text: "Конечно, задавайте ваш вопрос. Я постараюсь помочь.",
+    timestamp: "2025-01-25T10:06:00",
+    status: "read",
+  },
 ];
 
 /**
  * SupportChatPage - Live chat with support team
  */
 export default function SupportChatPage() {
-  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>(DEMO_MESSAGES);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [showConversationList, setShowConversationList] = useState(true);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newMessage.trim()) return;
 
     const message: Message = {
       id: `msg-${Date.now()}`,
-      sender: 'user',
+      sender: "user",
       text: newMessage,
       timestamp: new Date().toISOString(),
-      status: 'sent'
+      status: "sent",
     };
 
     setMessages([...messages, message]);
-    setNewMessage('');
+    setNewMessage("");
 
     // Simulate message delivery
     setTimeout(() => {
-      setMessages(prev => prev.map(m => 
-        m.id === message.id ? { ...m, status: 'delivered' as const } : m
-      ));
+      setMessages((prev) =>
+        prev.map((m) => (m.id === message.id ? { ...m, status: "delivered" as const } : m)),
+      );
     }, 500);
   };
 
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('ru-RU', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return date.toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -83,26 +81,29 @@ export default function SupportChatPage() {
     yesterday.setDate(yesterday.getDate() - 1);
 
     if (date.toDateString() === today.toDateString()) {
-      return 'Сегодня';
+      return "Сегодня";
     } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Вчера';
+      return "Вчера";
     } else {
-      return date.toLocaleDateString('ru-RU', { 
-        day: 'numeric', 
-        month: 'long' 
+      return date.toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
       });
     }
   };
 
   // Group messages by date
-  const groupedMessages = messages.reduce((groups, message) => {
-    const date = formatDate(message.timestamp);
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(message);
-    return groups;
-  }, {} as Record<string, Message[]>);
+  const groupedMessages = messages.reduce(
+    (groups, message) => {
+      const date = formatDate(message.timestamp);
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(message);
+      return groups;
+    },
+    {} as Record<string, Message[]>,
+  );
 
   return (
     <AppShell title="Чат с поддержкой">
@@ -170,21 +171,25 @@ export default function SupportChatPage() {
                   {msgs.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex mb-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      className={`flex mb-3 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                     >
                       <div
                         className={`max-w-[80%] rounded-[16px] px-4 py-2.5 ${
-                          message.sender === 'user'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-foreground'
+                          message.sender === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-foreground"
                         }`}
                       >
                         <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
-                        <div className={`flex items-center gap-1 justify-end mt-1 ${
-                          message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'
-                        }`}>
+                        <div
+                          className={`flex items-center gap-1 justify-end mt-1 ${
+                            message.sender === "user"
+                              ? "text-primary-foreground/70"
+                              : "text-muted-foreground"
+                          }`}
+                        >
                           <span className="text-xs">{formatTime(message.timestamp)}</span>
-                          {message.sender === 'user' && message.status === 'delivered' && (
+                          {message.sender === "user" && message.status === "delivered" && (
                             <CheckCheck className="w-3 h-3" />
                           )}
                         </div>
@@ -271,21 +276,27 @@ export default function SupportChatPage() {
                   {msgs.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex mb-4 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      className={`flex mb-4 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                     >
                       <div
                         className={`max-w-[70%] rounded-[16px] px-5 py-3 ${
-                          message.sender === 'user'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-foreground'
+                          message.sender === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-foreground"
                         }`}
                       >
-                        <p className="text-[15px] whitespace-pre-wrap break-words leading-relaxed">{message.text}</p>
-                        <div className={`flex items-center gap-1.5 justify-end mt-2 ${
-                          message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'
-                        }`}>
+                        <p className="text-[15px] whitespace-pre-wrap break-words leading-relaxed">
+                          {message.text}
+                        </p>
+                        <div
+                          className={`flex items-center gap-1.5 justify-end mt-2 ${
+                            message.sender === "user"
+                              ? "text-primary-foreground/70"
+                              : "text-muted-foreground"
+                          }`}
+                        >
                           <span className="text-xs">{formatTime(message.timestamp)}</span>
-                          {message.sender === 'user' && message.status === 'delivered' && (
+                          {message.sender === "user" && message.status === "delivered" && (
                             <CheckCheck className="w-3.5 h-3.5" />
                           )}
                         </div>

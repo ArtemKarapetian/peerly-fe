@@ -120,7 +120,7 @@ export function AdvancedPagination({
                   "flex h-8 w-8 items-center justify-center rounded-[8px] text-[14px] font-medium transition-all",
                   currentPage === page
                     ? "bg-[#2563eb] text-white shadow-[0_2px_4px_rgba(37,99,235,0.3)]"
-                    : "text-[#21214f] hover:bg-[#f0f6ff] hover:text-[#2563eb]"
+                    : "text-[#21214f] hover:bg-[#f0f6ff] hover:text-[#2563eb]",
                 )}
                 aria-label={`Страница ${page}`}
                 aria-current={currentPage === page ? "page" : undefined}

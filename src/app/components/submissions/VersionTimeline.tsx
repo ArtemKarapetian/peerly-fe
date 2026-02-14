@@ -1,9 +1,9 @@
-import { VersionCard } from './VersionCard';
-import type { Version } from './VersionCard';
+import { VersionCard } from "./VersionCard";
+import type { Version } from "./VersionCard";
 
 /**
  * VersionTimeline - Хронологический список версий работы
- * 
+ *
  * Displays:
  * - Versions in reverse chronological order (newest first)
  * - Timeline connector between versions
@@ -60,7 +60,7 @@ export function VersionTimeline({
               onDownload={() => onDownload(version.id)}
               onViewReports={() => onViewReports(version.id)}
               onMakeCurrent={
-                version.status === 'draft' && onMakeCurrent
+                version.status === "draft" && onMakeCurrent
                   ? () => onMakeCurrent(version.id)
                   : undefined
               }

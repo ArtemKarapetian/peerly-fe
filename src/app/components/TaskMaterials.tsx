@@ -1,4 +1,4 @@
-import { FileText, Download } from 'lucide-react';
+import { FileText, Download } from "lucide-react";
 
 interface Material {
   name: string;
@@ -7,9 +7,9 @@ interface Material {
 }
 
 const materials: Material[] = [
-  { name: 'Методические указания.pdf', size: '2.3 МБ', type: 'PDF' },
-  { name: 'Примеры прототипов.fig', size: '1.8 МБ', type: 'Figma' },
-  { name: 'Чек-лист требований.docx', size: '124 КБ', type: 'DOCX' }
+  { name: "Методические указания.pdf", size: "2.3 МБ", type: "PDF" },
+  { name: "Примеры прототипов.fig", size: "1.8 МБ", type: "Figma" },
+  { name: "Чек-лист требований.docx", size: "124 КБ", type: "DOCX" },
 ];
 
 export function TaskMaterials() {
@@ -18,10 +18,10 @@ export function TaskMaterials() {
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
         Материалы
       </h2>
-      
+
       <div className="space-y-2">
         {materials.map((material, index) => (
-          <div 
+          <div
             key={index}
             className="flex items-center justify-between p-3 rounded-[12px] hover:bg-[#e4e4e4] transition-colors cursor-pointer"
           >

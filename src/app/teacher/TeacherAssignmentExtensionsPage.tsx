@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Clock, Plus, Pencil, Trash2, User, Calendar, MessageSquare, X, Check } from 'lucide-react';
+import { useState, useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Clock, Plus, Pencil, Trash2, User, Calendar, MessageSquare, X, Check } from "lucide-react";
 import {
   Extension,
   ExtensionStatus,
@@ -11,10 +11,10 @@ import {
   approveExtension,
   denyExtension,
   getExtensionStatusLabel,
-  getExtensionTypeLabel
-} from '@/app/utils/extensions';
-import { AddExtensionModal } from '@/app/components/AddExtensionModal';
-import { toast } from 'sonner';
+  getExtensionTypeLabel,
+} from "@/app/utils/extensions";
+import { AddExtensionModal } from "@/app/components/AddExtensionModal";
+import { toast } from "sonner";
 
 interface TeacherAssignmentExtensionsPageProps {
   assignmentId: string;
@@ -23,40 +23,40 @@ interface TeacherAssignmentExtensionsPageProps {
 /**
  * TeacherAssignmentExtensionsPage - Manage deadline extensions for an assignment
  */
-export default function TeacherAssignmentExtensionsPage({ assignmentId }: TeacherAssignmentExtensionsPageProps) {
-  const [extensions, setExtensions] = useState<Extension[]>([]);
+export default function TeacherAssignmentExtensionsPage({
+  assignmentId,
+}: TeacherAssignmentExtensionsPageProps) {
+  const [extensions, setExtensions] = useState<Extension[]>(() =>
+    getExtensionsByAssignment(assignmentId),
+  );
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingExtension, setEditingExtension] = useState<Extension | null>(null);
-  const [filterStatus, setFilterStatus] = useState<ExtensionStatus | 'all'>('all');
+  const [filterStatus, setFilterStatus] = useState<ExtensionStatus | "all">("all");
 
-  useEffect(() => {
-    loadExtensions();
-  }, [assignmentId]);
-
-  const loadExtensions = () => {
+  const loadExtensions = useCallback(() => {
     const data = getExtensionsByAssignment(assignmentId);
     setExtensions(data);
-  };
+  }, [assignmentId]);
 
   const handleDelete = (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить это продление?')) {
+    if (confirm("Вы уверены, что хотите удалить это продление?")) {
       deleteExtension(id);
       loadExtensions();
-      toast.success('Продление удалено');
+      toast.success("Продление удалено");
     }
   };
 
   const handleApprove = (id: string) => {
-    approveExtension(id, 'teacher1'); // demo teacher id
+    approveExtension(id, "teacher1"); // demo teacher id
     loadExtensions();
-    toast.success('Продление одобрено');
+    toast.success("Продление одобрено");
   };
 
   const handleDeny = (id: string) => {
-    if (confirm('Вы уверены, что хотите отклонить запрос на продление?')) {
-      denyExtension(id, 'teacher1'); // demo teacher id
+    if (confirm("Вы уверены, что хотите отклонить запрос на продление?")) {
+      denyExtension(id, "teacher1"); // demo teacher id
       loadExtensions();
-      toast.info('Запрос отклонён');
+      toast.info("Запрос отклонён");
     }
   };
 
@@ -71,34 +71,39 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
     loadExtensions();
   };
 
-  const filteredExtensions = filterStatus === 'all' 
-    ? extensions 
-    : extensions.filter(ext => ext.status === filterStatus);
+  const filteredExtensions =
+    filterStatus === "all" ? extensions : extensions.filter((ext) => ext.status === filterStatus);
 
   const getStatusBadge = (status: ExtensionStatus) => {
     const styles: Record<ExtensionStatus, string> = {
-      manual: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
-      requested: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-      approved: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800',
-      denied: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800'
+      manual:
+        "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+      requested:
+        "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800",
+      approved:
+        "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800",
+      denied:
+        "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800",
     };
 
     return (
-      <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium border ${styles[status]}`}>
+      <span
+        className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium border ${styles[status]}`}
+      >
         {getExtensionStatusLabel(status)}
       </span>
     );
   };
 
   const formatDateTime = (dateStr?: string) => {
-    if (!dateStr) return '—';
+    if (!dateStr) return "—";
     const date = new Date(dateStr);
-    return date.toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -107,10 +112,10 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
       <div className="max-w-[1200px]">
         <Breadcrumbs
           items={[
-            { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-            { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
-            { label: 'Задание', href: ROUTES.teacherDashboard },
-            { label: 'Продления дедлайнов' }
+            { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+            { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
+            { label: "Задание", href: ROUTES.teacherDashboard },
+            { label: "Продления дедлайнов" },
           ]}
         />
 
@@ -139,17 +144,17 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-muted-foreground">Фильтр:</span>
               <div className="flex gap-2">
-                {(['all', 'requested', 'approved', 'manual', 'denied'] as const).map(status => (
+                {(["all", "requested", "approved", "manual", "denied"] as const).map((status) => (
                   <button
                     key={status}
                     onClick={() => setFilterStatus(status)}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                       filterStatus === status
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground hover:bg-accent'
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-accent"
                     }`}
                   >
-                    {status === 'all' ? 'Все' : getExtensionStatusLabel(status as ExtensionStatus)}
+                    {status === "all" ? "Все" : getExtensionStatusLabel(status as ExtensionStatus)}
                   </button>
                 ))}
               </div>
@@ -163,10 +168,9 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
                 <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                 <p className="text-muted-foreground mb-2">Нет продлений</p>
                 <p className="text-sm text-muted-foreground">
-                  {filterStatus === 'all' 
-                    ? 'Добавьте продление для студента или дождитесь запросов'
-                    : `Нет продлений со статусом "${getExtensionStatusLabel(filterStatus as ExtensionStatus)}"`
-                  }
+                  {filterStatus === "all"
+                    ? "Добавьте продление для студента или дождитесь запросов"
+                    : `Нет продлений со статусом "${getExtensionStatusLabel(filterStatus as ExtensionStatus)}"`}
                 </p>
               </div>
             ) : (
@@ -199,7 +203,10 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
                   </thead>
                   <tbody>
                     {filteredExtensions.map((ext) => (
-                      <tr key={ext.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                      <tr
+                        key={ext.id}
+                        className="border-b border-border hover:bg-muted/30 transition-colors"
+                      >
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
@@ -249,12 +256,10 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
                             </span>
                           </div>
                         </td>
-                        <td className="py-4 px-4">
-                          {getStatusBadge(ext.status)}
-                        </td>
+                        <td className="py-4 px-4">{getStatusBadge(ext.status)}</td>
                         <td className="py-4 px-4">
                           <div className="flex items-center justify-end gap-2">
-                            {ext.status === 'requested' && (
+                            {ext.status === "requested" && (
                               <>
                                 <button
                                   onClick={() => handleApprove(ext.id)}
@@ -299,26 +304,24 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
           {/* Summary */}
           <div className="mt-6 grid grid-cols-2 tablet:grid-cols-4 gap-4">
             <div className="bg-card border border-border rounded-[12px] p-4">
-              <div className="text-2xl font-semibold text-foreground mb-1">
-                {extensions.length}
-              </div>
+              <div className="text-2xl font-semibold text-foreground mb-1">{extensions.length}</div>
               <div className="text-sm text-muted-foreground">Всего продлений</div>
             </div>
             <div className="bg-card border border-border rounded-[12px] p-4">
               <div className="text-2xl font-semibold text-yellow-600 dark:text-yellow-400 mb-1">
-                {extensions.filter(e => e.status === 'requested').length}
+                {extensions.filter((e) => e.status === "requested").length}
               </div>
               <div className="text-sm text-muted-foreground">Ожидают ответа</div>
             </div>
             <div className="bg-card border border-border rounded-[12px] p-4">
               <div className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-1">
-                {extensions.filter(e => e.status === 'approved').length}
+                {extensions.filter((e) => e.status === "approved").length}
               </div>
               <div className="text-sm text-muted-foreground">Одобрено</div>
             </div>
             <div className="bg-card border border-border rounded-[12px] p-4">
               <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-1">
-                {extensions.filter(e => e.status === 'manual').length}
+                {extensions.filter((e) => e.status === "manual").length}
               </div>
               <div className="text-sm text-muted-foreground">Вручную</div>
             </div>

@@ -14,7 +14,8 @@ const badgeVariants = cva(
         warning: "bg-[var(--warning-light)] text-[var(--warning)]",
         error: "bg-[var(--error-light)] text-[var(--error)]",
         info: "bg-[var(--info-light)] text-[var(--info)]",
-        secondary: "bg-[var(--surface)] text-[var(--text-secondary)] border border-[var(--surface-border)]",
+        secondary:
+          "bg-[var(--surface)] text-[var(--text-secondary)] border border-[var(--surface-border)]",
         outline: "bg-transparent text-[var(--text-primary)] border border-[var(--surface-border)]",
       },
     },
@@ -29,16 +30,11 @@ function Badge({
   variant,
   asChild = false,
   ...props
-}: React.ComponentProps<"span"> &
-  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+}: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "span";
 
   return (
-    <Comp
-      data-slot="badge"
-      className={cn(badgeVariants({ variant }), className)}
-      {...props}
-    />
+    <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
   );
 }
 

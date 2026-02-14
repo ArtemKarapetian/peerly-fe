@@ -1,17 +1,12 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
-  Users, Search, Filter, X, Edit3, Shield, 
-  Power, Key, Calendar, Monitor, CheckCircle, 
-  XCircle, AlertTriangle, Building
-} from 'lucide-react';
-import { demoDataStore, DemoUser } from '@/app/stores/demoDataStore';
-import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagination';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Users, Search, X, CheckCircle, XCircle } from "lucide-react";
+import { demoDataStore, DemoUser } from "@/app/stores/demoDataStore";
+import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
 
 /**
  * AdminUsersPage - Управление пользователями и ролями
- * 
+ *
  * Функции:
  * - Поиск по имени/логину
  * - Фильтры: роль (student/teacher/admin), статус (active/disabled)
@@ -21,7 +16,7 @@ import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagi
  */
 
 interface UserWithStatus extends DemoUser {
-  status: 'active' | 'disabled';
+  status: "active" | "disabled";
   lastLogin?: Date;
   sessions?: UserSession[];
 }
@@ -36,47 +31,42 @@ interface UserSession {
   isCurrent: boolean;
 }
 
-interface AuditLogEntry {
-  id: string;
-  userId: string;
-  adminId: string;
-  action: string;
-  resource: string;
-  details: string;
-  timestamp: Date;
-}
-
 export default function AdminUsersPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [setSelectedUser] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [, setSelectedUser] = useState<UserWithStatus | null>(null);
 
-  // Вместо mockUsers используйте реальные данные
-  const users = demoDataStore.getUsers();
-
-  const usersWithStatus: UserWithStatus[] = demoDataStore.getUsers().map(user => ({
+  const usersWithStatus: UserWithStatus[] = demoDataStore.getUsers().map((user) => ({
     ...user,
-    status: 'active' as const,
+    status: "active" as const,
     lastLogin: new Date(),
   }));
 
-  const filteredUsers = usersWithStatus.filter(user =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = usersWithStatus.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(filteredUsers, 10);
+  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
+    filteredUsers,
+    10,
+  );
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
-      case 'Admin': return 'bg-[#f3e5f5] text-[#7b1fa2]';
-      case 'Teacher': return 'bg-[#e3f2fd] text-[#1976d2]';
-      case 'Student': return 'bg-[#e8f5e9] text-[#388e3c]';
-      default: return 'bg-gray-100 text-gray-600';
+      case "Admin":
+        return "bg-[#f3e5f5] text-[#7b1fa2]";
+      case "Teacher":
+        return "bg-[#e3f2fd] text-[#1976d2]";
+      case "Student":
+        return "bg-[#e8f5e9] text-[#388e3c]";
+      default:
+        return "bg-gray-100 text-gray-600";
     }
   };
 
   const getStatusBadge = (status: string) => {
-    if (status === 'active') {
+    if (status === "active") {
       return (
         <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
           <CheckCircle className="w-3 h-3" />
@@ -99,9 +89,7 @@ export default function AdminUsersPage() {
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
           Пользователи
         </h1>
-        <p className="text-[--text-secondary]">
-          Управление пользователями системы
-        </p>
+        <p className="text-[--text-secondary]">Управление пользователями системы</p>
       </div>
 
       {/* Search and Filters */}
@@ -126,13 +114,13 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Active filters */}
-        {(searchQuery) && (
+        {searchQuery && (
           <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
             <span className="text-[13px] text-[#767692]">Фильтры:</span>
             {searchQuery && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
                 Поиск: "{searchQuery}"
-                <button onClick={() => setSearchQuery('')} className="hover:text-[#d4183d]">
+                <button onClick={() => setSearchQuery("")} className="hover:text-[#d4183d]">
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -169,12 +157,12 @@ export default function AdminUsersPage() {
             </thead>
             <tbody>
               {currentItems.map((user, index) => {
-                const org = demoDataStore.getOrganizations().find(o => o.id === user.orgId);
+                const org = demoDataStore.getOrganizations().find((o) => o.id === user.orgId);
                 return (
-                  <tr 
+                  <tr
                     key={user.id}
                     className={`border-b border-[#e6e8ee] last:border-0 hover:bg-[#fafbfc] transition-colors ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'
+                      index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"
                     }`}
                   >
                     <td className="px-6 py-4">
@@ -191,16 +179,14 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-[14px] text-[#21214f]">{org?.name || 'Unknown'}</p>
+                      <p className="text-[14px] text-[#21214f]">{org?.name || "Unknown"}</p>
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-[14px] text-[#767692]">
-                        {user.lastLogin?.toLocaleString('ru-RU')}
+                        {user.lastLogin?.toLocaleString("ru-RU")}
                       </p>
                     </td>
-                    <td className="px-6 py-4">
-                      {getStatusBadge(user.status)}
-                    </td>
+                    <td className="px-6 py-4">{getStatusBadge(user.status)}</td>
                     <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => setSelectedUser(user)}
@@ -219,9 +205,7 @@ export default function AdminUsersPage() {
         {filteredUsers.length === 0 && (
           <div className="text-center py-12">
             <Users className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-              Пользователи не найдены
-            </h3>
+            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Пользователи не найдены</h3>
             <p className="text-[14px] text-[#767692]">
               Попробуйте изменить параметры поиска или фильтры
             </p>

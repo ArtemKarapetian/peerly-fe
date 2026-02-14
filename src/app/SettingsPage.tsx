@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Monitor, Sun, Moon, Globe, Clock, Info, ExternalLink, Shield } from 'lucide-react';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { Monitor, Sun, Moon, Globe, Clock, Info, ExternalLink } from "lucide-react";
 
 /**
  * SettingsPage - Application Settings
- * 
+ *
  * Sections:
  * - Appearance: Theme selection (Light/Dark/System) - UI only, Light theme only for now
  * - Language: RU/EN selector
@@ -14,34 +13,32 @@ import { Monitor, Sun, Moon, Globe, Clock, Info, ExternalLink, Shield } from 'lu
  * - About: App version, Status page, Terms/Policy links
  */
 
-type ThemeMode = 'light' | 'dark' | 'system';
-type Language = 'ru' | 'en';
+type ThemeMode = "light" | "dark" | "system";
+type Language = "ru" | "en";
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useState<ThemeMode>('light');
-  const [language, setLanguage] = useState<Language>('ru');
-  const [timezone, setTimezone] = useState('auto');
+  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [language, setLanguage] = useState<Language>("ru");
+  const [timezone, setTimezone] = useState("auto");
 
   const timezones = [
-    { value: 'auto', label: 'Автоматически' },
-    { value: 'Europe/Moscow', label: 'Москва (UTC+3)' },
-    { value: 'Europe/London', label: 'Лондон (UTC+0)' },
-    { value: 'America/New_York', label: 'Нью-Йорк (UTC-5)' },
-    { value: 'America/Los_Angeles', label: 'Лос-Анджелес (UTC-8)' },
-    { value: 'Asia/Tokyo', label: 'Токио (UTC+9)' },
+    { value: "auto", label: "Автоматически" },
+    { value: "Europe/Moscow", label: "Москва (UTC+3)" },
+    { value: "Europe/London", label: "Лондон (UTC+0)" },
+    { value: "America/New_York", label: "Нью-Йорк (UTC-5)" },
+    { value: "America/Los_Angeles", label: "Лос-Анджелес (UTC-8)" },
+    { value: "Asia/Tokyo", label: "Токио (UTC+9)" },
   ];
 
   return (
     <AppShell title="Настройки">
-      <Breadcrumbs items={[{ label: 'Настройки' }]} />
+      <Breadcrumbs items={[{ label: "Настройки" }]} />
 
       <div className="mt-6 max-w-[800px]">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
           Настройки
         </h1>
-        <p className="text-[16px] text-muted-foreground mb-8">
-          Управление настройками приложения
-        </p>
+        <p className="text-[16px] text-muted-foreground mb-8">Управление настройками приложения</p>
 
         {/* Appearance Section */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
@@ -59,23 +56,21 @@ export default function SettingsPage() {
           {/* Theme Selector - Segmented Control */}
           <div className="inline-flex bg-muted rounded-[12px] p-1">
             <button
-              onClick={() => setTheme('light')}
+              onClick={() => setTheme("light")}
               className={`flex items-center gap-2 px-4 py-2 rounded-[8px] text-[14px] font-medium transition-all ${
-                theme === 'light'
-                  ? 'bg-card text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                theme === "light"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Sun className="w-4 h-4" />
               Светлая
             </button>
             <button
-              onClick={() => setTheme('dark')}
+              onClick={() => setTheme("dark")}
               disabled
               className={`flex items-center gap-2 px-4 py-2 rounded-[8px] text-[14px] font-medium transition-all opacity-40 cursor-not-allowed ${
-                theme === 'dark'
-                  ? 'bg-card text-foreground shadow-sm'
-                  : 'text-muted-foreground'
+                theme === "dark" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
               }`}
               title="Темная тема скоро будет доступна"
             >
@@ -83,12 +78,10 @@ export default function SettingsPage() {
               Тёмная
             </button>
             <button
-              onClick={() => setTheme('system')}
+              onClick={() => setTheme("system")}
               disabled
               className={`flex items-center gap-2 px-4 py-2 rounded-[8px] text-[14px] font-medium transition-all opacity-40 cursor-not-allowed ${
-                theme === 'system'
-                  ? 'bg-card text-foreground shadow-sm'
-                  : 'text-muted-foreground'
+                theme === "system" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
               }`}
               title="Автоматическая тема скоро будет доступна"
             >
@@ -111,27 +104,25 @@ export default function SettingsPage() {
             <h2 className="text-[20px] font-medium text-foreground">Язык</h2>
           </div>
 
-          <p className="text-[14px] text-muted-foreground mb-4">
-            Выберите язык интерфейса
-          </p>
+          <p className="text-[14px] text-muted-foreground mb-4">Выберите язык интерфейса</p>
 
           <div className="inline-flex bg-muted rounded-[12px] p-1">
             <button
-              onClick={() => setLanguage('ru')}
+              onClick={() => setLanguage("ru")}
               className={`px-6 py-2 rounded-[8px] text-[14px] font-medium transition-all ${
-                language === 'ru'
-                  ? 'bg-card text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                language === "ru"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               🇷🇺 Русский
             </button>
             <button
-              onClick={() => setLanguage('en')}
+              onClick={() => setLanguage("en")}
               className={`px-6 py-2 rounded-[8px] text-[14px] font-medium transition-all ${
-                language === 'en'
-                  ? 'bg-card text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                language === "en"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               🇬🇧 English

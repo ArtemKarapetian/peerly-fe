@@ -1,15 +1,14 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { User, Edit2, LogOut, AlertTriangle, MessageCircle } from 'lucide-react';
-import { useAuth } from '@/app/contexts/AuthContext';
-import { useRole } from '@/app/contexts/RoleContext';
-import { useFeatureFlags } from '@/app/contexts/FeatureFlagsContext';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { User, Edit2, LogOut, AlertTriangle, MessageCircle } from "lucide-react";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { useRole } from "@/app/contexts/RoleContext";
+import { useFeatureFlags } from "@/app/contexts/FeatureFlagsContext";
 
 /**
  * ProfilePage - User Profile Information
- * 
+ *
  * Shows user info card with avatar, name, username, role badge and edit functionality
  * Includes Danger Zone with Log out button
  */
@@ -18,14 +17,14 @@ export default function ProfilePage() {
   const { logout } = useAuth();
   const { currentRole } = useRole();
   const { flags } = useFeatureFlags();
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: 'Иван',
-    lastName: 'Петров',
-    username: 'ivan.petrov',
+    firstName: "Иван",
+    lastName: "Петров",
+    username: "ivan.petrov",
   });
-  
+
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSave = () => {
@@ -35,33 +34,33 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    if (confirm('Вы уверены, что хотите выйти из системы?')) {
+    if (confirm("Вы уверены, что хотите выйти из системы?")) {
       logout();
-      window.location.hash = '/login';
+      window.location.hash = "/login";
     }
   };
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
-      case 'Student':
-        return 'bg-accent text-accent-foreground';
-      case 'Teacher':
-        return 'bg-accent text-accent-foreground';
-      case 'Admin':
-        return 'bg-destructive/20 text-destructive-foreground';
+      case "Student":
+        return "bg-accent text-accent-foreground";
+      case "Teacher":
+        return "bg-accent text-accent-foreground";
+      case "Admin":
+        return "bg-destructive/20 text-destructive-foreground";
       default:
-        return 'bg-muted text-muted-foreground';
+        return "bg-muted text-muted-foreground";
     }
   };
 
   const getRoleLabel = (role: string) => {
     switch (role) {
-      case 'Student':
-        return 'Студент';
-      case 'Teacher':
-        return 'Преподаватель';
-      case 'Admin':
-        return 'Администратор';
+      case "Student":
+        return "Студент";
+      case "Teacher":
+        return "Преподаватель";
+      case "Admin":
+        return "Администратор";
       default:
         return role;
     }
@@ -69,15 +68,11 @@ export default function ProfilePage() {
 
   return (
     <AppShell title="Профиль">
-      <Breadcrumbs items={[{ label: 'Профиль' }]} />
+      <Breadcrumbs items={[{ label: "Профиль" }]} />
 
       <div className="mt-6 max-w-[800px]">
-        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
-          Профиль
-        </h1>
-        <p className="text-[16px] text-muted-foreground mb-8">
-          Управление личной информацией
-        </p>
+        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">Профиль</h1>
+        <p className="text-[16px] text-muted-foreground mb-8">Управление личной информацией</p>
 
         {showSuccess && (
           <div className="mb-6 p-4 bg-accent rounded-[12px] flex items-center gap-3">
@@ -111,7 +106,9 @@ export default function ProfilePage() {
                 <h3 className="text-[24px] font-medium text-foreground tracking-[-0.5px]">
                   {formData.firstName} {formData.lastName}
                 </h3>
-                <span className={`inline-flex px-3 py-1 rounded-[8px] text-[13px] font-medium ${getRoleBadgeColor(currentRole)}`}>
+                <span
+                  className={`inline-flex px-3 py-1 rounded-[8px] text-[13px] font-medium ${getRoleBadgeColor(currentRole)}`}
+                >
                   {getRoleLabel(currentRole)}
                 </span>
               </div>
@@ -132,9 +129,9 @@ export default function ProfilePage() {
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground transition-colors ${
-                    isEditing 
-                      ? 'bg-card focus:border-accent focus:outline-none' 
-                      : 'bg-muted text-muted-foreground cursor-not-allowed'
+                    isEditing
+                      ? "bg-card focus:border-accent focus:outline-none"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
                   }`}
                 />
               </div>
@@ -148,9 +145,9 @@ export default function ProfilePage() {
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground transition-colors ${
-                    isEditing 
-                      ? 'bg-card focus:border-accent focus:outline-none' 
-                      : 'bg-muted text-muted-foreground cursor-not-allowed'
+                    isEditing
+                      ? "bg-card focus:border-accent focus:outline-none"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
                   }`}
                 />
               </div>
@@ -166,9 +163,9 @@ export default function ProfilePage() {
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 disabled={!isEditing}
                 className={`w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground transition-colors ${
-                  isEditing 
-                    ? 'bg-card focus:border-accent focus:outline-none' 
-                    : 'bg-muted text-muted-foreground cursor-not-allowed'
+                  isEditing
+                    ? "bg-card focus:border-accent focus:outline-none"
+                    : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
               />
             </div>
@@ -213,7 +210,7 @@ export default function ProfilePage() {
                 {flags.deleteAccount && (
                   <button
                     onClick={() => {
-                      window.location.hash = '/offboarding/delete-account';
+                      window.location.hash = "/offboarding/delete-account";
                     }}
                     className="inline-flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-[12px] hover:bg-destructive/80 transition-colors text-[14px] font-medium"
                   >

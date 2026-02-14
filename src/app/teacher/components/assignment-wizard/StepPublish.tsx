@@ -1,10 +1,10 @@
-import { Check, Calendar, Users, Layers, Shield, Save, Send } from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
-import type { AssignmentFormData } from '../../TeacherCreateAssignmentPage';
+import { Check, Calendar, Users, Layers, Shield, Save, Send } from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
+import type { AssignmentFormData } from "../../TeacherCreateAssignmentPage";
 
 /**
  * StepPublish - Шаг 6: Публикация
- * 
+ *
  * - Итоговая сводка всех настроек
  * - Кнопки "Опубликовать" и "Сохранить черновик"
  */
@@ -19,26 +19,26 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
   const course = courses.find((c) => c.id === data.courseId);
 
   const formatDate = (date: Date | null) => {
-    if (!date) return 'Не указано';
-    return new Intl.DateTimeFormat('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    if (!date) return "Не указано";
+    return new Intl.DateTimeFormat("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
   };
 
   const getTaskTypeLabel = (type: string) => {
     switch (type) {
-      case 'text':
-        return 'Текст';
-      case 'code':
-        return 'Код';
-      case 'project':
-        return 'Проект';
-      case 'files':
-        return 'Файлы';
+      case "text":
+        return "Текст";
+      case "code":
+        return "Код";
+      case "project":
+        return "Проект";
+      case "files":
+        return "Файлы";
       default:
         return type;
     }
@@ -46,12 +46,12 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
 
   const getDistributionLabel = (mode: string) => {
     switch (mode) {
-      case 'random':
-        return 'Случайное';
-      case 'skill-based':
-        return 'На основе навыков';
-      case 'manual':
-        return 'Вручную';
+      case "random":
+        return "Случайное";
+      case "skill-based":
+        return "На основе навыков";
+      case "manual":
+        return "Вручную";
       default:
         return mode;
     }
@@ -59,12 +59,12 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
 
   const getAnonymityLabel = (mode: string) => {
     switch (mode) {
-      case 'full':
-        return 'Полная';
-      case 'partial':
-        return 'Частичная';
-      case 'none':
-        return 'Без анонимности';
+      case "full":
+        return "Полная";
+      case "partial":
+        return "Частичная";
+      case "none":
+        return "Без анонимности";
       default:
         return mode;
     }
@@ -72,9 +72,9 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
 
   const enabledPlugins = [
     data.enablePlagiarismCheck && `Плагиат (порог ${data.plagiarismThreshold}%)`,
-    data.enableLinter && 'Линтинг кода',
-    data.enableFormatCheck && 'Проверка форматов',
-    data.enableAnonymization && 'Анонимизация',
+    data.enableLinter && "Линтинг кода",
+    data.enableFormatCheck && "Проверка форматов",
+    data.enableAnonymization && "Анонимизация",
   ].filter(Boolean);
 
   return (
@@ -97,9 +97,7 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Check className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Основная информация
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Основная информация</h3>
             </div>
           </div>
 
@@ -107,37 +105,28 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Курс</p>
               <p className="text-[14px] text-[#21214f] font-medium">
-                {course?.name || 'Не выбран'}
+                {course?.name || "Не выбран"}
               </p>
             </div>
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Название</p>
-              <p className="text-[14px] text-[#21214f] font-medium">
-                {data.title || 'Не указано'}
-              </p>
+              <p className="text-[14px] text-[#21214f] font-medium">{data.title || "Не указано"}</p>
             </div>
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Тип задания</p>
-              <p className="text-[14px] text-[#21214f]">
-                {getTaskTypeLabel(data.taskType)}
-              </p>
+              <p className="text-[14px] text-[#21214f]">{getTaskTypeLabel(data.taskType)}</p>
             </div>
             {data.description && (
               <div>
                 <p className="text-[12px] text-[#767692] mb-1">Описание</p>
-                <p className="text-[13px] text-[#21214f] line-clamp-3">
-                  {data.description}
-                </p>
+                <p className="text-[13px] text-[#21214f] line-clamp-3">{data.description}</p>
               </div>
             )}
             {data.attachments.length > 0 && (
               <div>
-                <p className="text-[12px] text-[#767692] mb-1">
-                  Прикрепленные файлы
-                </p>
+                <p className="text-[12px] text-[#767692] mb-1">Прикрепленные файлы</p>
                 <p className="text-[13px] text-[#21214f]">
-                  {data.attachments.length}{' '}
-                  {data.attachments.length === 1 ? 'файл' : 'файлов'}
+                  {data.attachments.length} {data.attachments.length === 1 ? "файл" : "файлов"}
                 </p>
               </div>
             )}
@@ -151,35 +140,25 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Calendar className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Дедлайны
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Дедлайны</h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
-                Дедлайн сдачи работы
-              </p>
-              <p className="text-[14px] text-[#21214f]">
-                {formatDate(data.submissionDeadline)}
-              </p>
+              <p className="text-[12px] text-[#767692] mb-1">Дедлайн сдачи работы</p>
+              <p className="text-[14px] text-[#21214f]">{formatDate(data.submissionDeadline)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
-                Дедлайн рецензирования
-              </p>
-              <p className="text-[14px] text-[#21214f]">
-                {formatDate(data.reviewDeadline)}
-              </p>
+              <p className="text-[12px] text-[#767692] mb-1">Дедлайн рецензирования</p>
+              <p className="text-[14px] text-[#21214f]">{formatDate(data.reviewDeadline)}</p>
             </div>
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Политика опозданий</p>
               <p className="text-[14px] text-[#21214f]">
-                {data.latePolicy === 'soft'
+                {data.latePolicy === "soft"
                   ? `Мягкая (${data.latePenalty}% штрафа в день)`
-                  : 'Жесткая (работы не принимаются)'}
+                  : "Жесткая (работы не принимаются)"}
               </p>
             </div>
           </div>
@@ -192,16 +171,12 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Layers className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Рубрика оценивания
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Рубрика оценивания</h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
-            <p className="text-[14px] text-[#21214f]">
-              {data.rubricName || 'Не выбрана'}
-            </p>
+            <p className="text-[14px] text-[#21214f]">{data.rubricName || "Не выбрана"}</p>
           </div>
         </div>
 
@@ -212,18 +187,14 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Users className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Peer Review
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Peer Review</h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Рецензий на работу</p>
-              <p className="text-[14px] text-[#21214f]">
-                {data.reviewsPerSubmission}
-              </p>
+              <p className="text-[14px] text-[#21214f]">{data.reviewsPerSubmission}</p>
             </div>
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Распределение</p>
@@ -233,14 +204,12 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
             </div>
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Анонимность</p>
-              <p className="text-[14px] text-[#21214f]">
-                {getAnonymityLabel(data.anonymityMode)}
-              </p>
+              <p className="text-[14px] text-[#21214f]">{getAnonymityLabel(data.anonymityMode)}</p>
             </div>
             <div>
               <p className="text-[12px] text-[#767692] mb-1">Переназначение</p>
               <p className="text-[14px] text-[#21214f]">
-                {data.allowReassignment ? 'Разрешено' : 'Запрещено'}
+                {data.allowReassignment ? "Разрешено" : "Запрещено"}
               </p>
             </div>
           </div>
@@ -253,17 +222,13 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Shield className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Плагины и проверки
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Плагины и проверки</h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
             {enabledPlugins.length === 0 ? (
-              <p className="text-[14px] text-[#767692]">
-                Автоматические проверки отключены
-              </p>
+              <p className="text-[14px] text-[#767692]">Автоматические проверки отключены</p>
             ) : (
               <ul className="space-y-2">
                 {enabledPlugins.map((plugin, index) => (
@@ -281,9 +246,9 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
       {/* Warning */}
       <div className="bg-[#fff8e1] border border-[#ffe082] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Обратите внимание:</strong> После публикации задание станет
-          видимым для студентов. Вы сможете редактировать настройки, но некоторые
-          изменения (например, дедлайны) могут повлиять на уже начатые работы.
+          <strong>Обратите внимание:</strong> После публикации задание станет видимым для студентов.
+          Вы сможете редактировать настройки, но некоторые изменения (например, дедлайны) могут
+          повлиять на уже начатые работы.
         </p>
       </div>
 

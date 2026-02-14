@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
-import { StepBasics } from './components/assignment-wizard/StepBasics';
-import { StepDeadlines } from './components/assignment-wizard/StepDeadlines';
-import { StepRubric } from './components/assignment-wizard/StepRubric';
-import { StepPeerSession } from './components/assignment-wizard/StepPeerSession';
-import { StepPlugins } from './components/assignment-wizard/StepPlugins';
-import { StepPublish } from './components/assignment-wizard/StepPublish';
+import { useState, useEffect } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { StepBasics } from "./components/assignment-wizard/StepBasics";
+import { StepDeadlines } from "./components/assignment-wizard/StepDeadlines";
+import { StepRubric } from "./components/assignment-wizard/StepRubric";
+import { StepPeerSession } from "./components/assignment-wizard/StepPeerSession";
+import { StepPlugins } from "./components/assignment-wizard/StepPlugins";
+import { StepPublish } from "./components/assignment-wizard/StepPublish";
 
 /**
  * TeacherCreateAssignmentPage - Мастер создания задания
- * 
+ *
  * 6-шаговый визард:
  * 1. Основная информация
  * 2. Дедлайны
@@ -27,27 +27,27 @@ export interface AssignmentFormData {
   courseId: string;
   title: string;
   description: string;
-  taskType: 'text' | 'code' | 'project' | 'files';
+  taskType: "text" | "code" | "project" | "files";
   attachments: Array<{ id: string; name: string; url: string; size: number }>;
-  
+
   // Step 2: Deadlines
   submissionDeadline: Date | null;
   reviewDeadline: Date | null;
-  latePolicy: 'soft' | 'hard';
+  latePolicy: "soft" | "hard";
   latePenalty: number; // percentage per day
   timezone: string;
-  
+
   // Step 3: Rubric
   rubricId: string | null;
   rubricName?: string;
-  
+
   // Step 4: Peer Session
   reviewsPerSubmission: number;
-  distributionMode: 'random' | 'skill-based' | 'manual';
-  anonymityMode: 'full' | 'partial' | 'none';
+  distributionMode: "random" | "skill-based" | "manual";
+  anonymityMode: "full" | "partial" | "none";
   allowReassignment: boolean;
   reassignmentDeadline: Date | null;
-  
+
   // Step 5: Plugins
   enablePlagiarismCheck: boolean;
   plagiarismThreshold: number;
@@ -56,23 +56,23 @@ export interface AssignmentFormData {
   enableFormatCheck: boolean;
   formatRules: string[];
   enableAnonymization: boolean;
-  
+
   // Metadata
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   createdAt: Date;
   updatedAt: Date;
 }
 
 const STEPS = [
-  { id: 1, name: 'Основное', shortName: 'Основное' },
-  { id: 2, name: 'Дедлайны', shortName: 'Дедлайны' },
-  { id: 3, name: 'Рубрика', shortName: 'Рубрика' },
-  { id: 4, name: 'Peer Review', shortName: 'Peer Review' },
-  { id: 5, name: 'Плагины', shortName: 'Плагины' },
-  { id: 6, name: 'Публикация', shortName: 'Публикация' },
+  { id: 1, name: "Основное", shortName: "Основное" },
+  { id: 2, name: "Дедлайны", shortName: "Дедлайны" },
+  { id: 3, name: "Рубрика", shortName: "Рубрика" },
+  { id: 4, name: "Peer Review", shortName: "Peer Review" },
+  { id: 5, name: "Плагины", shortName: "Плагины" },
+  { id: 6, name: "Публикация", shortName: "Публикация" },
 ];
 
-const STORAGE_KEY = 'peerly_assignment_draft';
+const STORAGE_KEY = "peerly_assignment_draft";
 
 const getInitialFormData = (): AssignmentFormData => {
   // Try to load draft from localStorage
@@ -85,41 +85,43 @@ const getInitialFormData = (): AssignmentFormData => {
         ...parsed,
         submissionDeadline: parsed.submissionDeadline ? new Date(parsed.submissionDeadline) : null,
         reviewDeadline: parsed.reviewDeadline ? new Date(parsed.reviewDeadline) : null,
-        reassignmentDeadline: parsed.reassignmentDeadline ? new Date(parsed.reassignmentDeadline) : null,
+        reassignmentDeadline: parsed.reassignmentDeadline
+          ? new Date(parsed.reassignmentDeadline)
+          : null,
         createdAt: new Date(parsed.createdAt),
         updatedAt: new Date(parsed.updatedAt),
       };
     } catch (e) {
-      console.error('Failed to parse assignment draft', e);
+      console.error("Failed to parse assignment draft", e);
     }
   }
 
   // Default values
   return {
-    courseId: '',
-    title: '',
-    description: '',
-    taskType: 'project',
+    courseId: "",
+    title: "",
+    description: "",
+    taskType: "project",
     attachments: [],
     submissionDeadline: null,
     reviewDeadline: null,
-    latePolicy: 'soft',
+    latePolicy: "soft",
     latePenalty: 10,
-    timezone: 'Europe/Moscow',
+    timezone: "Europe/Moscow",
     rubricId: null,
     reviewsPerSubmission: 3,
-    distributionMode: 'random',
-    anonymityMode: 'full',
+    distributionMode: "random",
+    anonymityMode: "full",
     allowReassignment: true,
     reassignmentDeadline: null,
     enablePlagiarismCheck: true,
     plagiarismThreshold: 15,
     enableLinter: false,
-    linterConfig: '',
+    linterConfig: "",
     enableFormatCheck: true,
-    formatRules: ['pdf', 'docx', 'zip'],
+    formatRules: ["pdf", "docx", "zip"],
     enableAnonymization: true,
-    status: 'draft',
+    status: "draft",
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -129,7 +131,9 @@ interface TeacherCreateAssignmentPageProps {
   courseId?: string;
 }
 
-export default function TeacherCreateAssignmentPage({ courseId }: TeacherCreateAssignmentPageProps) {
+export default function TeacherCreateAssignmentPage({
+  courseId,
+}: TeacherCreateAssignmentPageProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<AssignmentFormData>(() => {
     const initial = getInitialFormData();
@@ -155,26 +159,26 @@ export default function TeacherCreateAssignmentPage({ courseId }: TeacherCreateA
   const handleNext = () => {
     if (currentStep < STEPS.length) {
       setCurrentStep(currentStep + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handlePrev = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handlePublish = (asDraft: boolean) => {
     const finalData = {
       ...formData,
-      status: asDraft ? 'draft' : 'published',
+      status: asDraft ? "draft" : "published",
       updatedAt: new Date(),
     };
 
     // Save to localStorage or backend
-    console.log('Publishing assignment:', finalData);
+    console.log("Publishing assignment:", finalData);
 
     // Clear draft
     localStorage.removeItem(STORAGE_KEY);
@@ -226,9 +230,9 @@ export default function TeacherCreateAssignmentPage({ courseId }: TeacherCreateA
     <AppShell title="Создание задания">
       <Breadcrumbs
         items={[
-          { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-          { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
-          { label: 'Новое задание' }
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
+          { label: "Новое задание" },
         ]}
       />
 
@@ -245,24 +249,20 @@ export default function TeacherCreateAssignmentPage({ courseId }: TeacherCreateA
                       w-10 h-10 rounded-full flex items-center justify-center text-[14px] font-medium transition-all
                       ${
                         currentStep > step.id
-                          ? 'bg-[#4caf50] text-white'
+                          ? "bg-[#4caf50] text-white"
                           : currentStep === step.id
-                          ? 'bg-[#5b8def] text-white'
-                          : 'bg-[#f9f9f9] text-[#767692] border-2 border-[#e6e8ee]'
+                            ? "bg-[#5b8def] text-white"
+                            : "bg-[#f9f9f9] text-[#767692] border-2 border-[#e6e8ee]"
                       }
                     `}
                   >
-                    {currentStep > step.id ? (
-                      <Check className="w-5 h-5" />
-                    ) : (
-                      step.id
-                    )}
+                    {currentStep > step.id ? <Check className="w-5 h-5" /> : step.id}
                   </div>
                   {/* Step Label */}
                   <span
                     className={`
                       mt-2 text-[12px] desktop:text-[13px] text-center
-                      ${currentStep === step.id ? 'text-[#21214f] font-medium' : 'text-[#767692]'}
+                      ${currentStep === step.id ? "text-[#21214f] font-medium" : "text-[#767692]"}
                     `}
                   >
                     {step.shortName}
@@ -274,7 +274,7 @@ export default function TeacherCreateAssignmentPage({ courseId }: TeacherCreateA
                   <div
                     className={`
                       h-0.5 flex-1 mx-2 transition-all
-                      ${currentStep > step.id ? 'bg-[#4caf50]' : 'bg-[#e6e8ee]'}
+                      ${currentStep > step.id ? "bg-[#4caf50]" : "bg-[#e6e8ee]"}
                     `}
                   />
                 )}

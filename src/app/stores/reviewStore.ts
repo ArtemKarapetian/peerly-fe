@@ -1,6 +1,6 @@
 /**
  * reviewStore - Mock state management for reviews
- * 
+ *
  * Features:
  * - Store all reviews with status (not_started / draft / submitted)
  * - Update review status and data
@@ -17,7 +17,7 @@ export interface Review {
   isAnonymous: boolean;
   reviewDeadline: string;
   reviewDeadlineTimestamp: number;
-  status: 'not_started' | 'draft' | 'submitted';
+  status: "not_started" | "draft" | "submitted";
   // Draft data
   scores?: Record<string, { score: number | null; comment: string }>;
   overallComment?: string;
@@ -27,52 +27,52 @@ export interface Review {
 // Mock initial data
 const INITIAL_REVIEWS: Review[] = [
   {
-    id: 'r1',
-    taskTitle: 'Задание 1: Создание лендинга',
-    courseName: 'Веб-разработка',
-    courseId: '1',
-    taskId: '1',
-    studentName: 'Студент #1',
+    id: "r1",
+    taskTitle: "Задание 1: Создание лендинга",
+    courseName: "Веб-разработка",
+    courseId: "1",
+    taskId: "1",
+    studentName: "Студент #1",
     isAnonymous: true,
-    reviewDeadline: '28 января 2026, 23:59',
-    reviewDeadlineTimestamp: new Date('2026-01-28T23:59:00').getTime(),
-    status: 'not_started',
+    reviewDeadline: "28 января 2026, 23:59",
+    reviewDeadlineTimestamp: new Date("2026-01-28T23:59:00").getTime(),
+    status: "not_started",
   },
   {
-    id: 'r2',
-    taskTitle: 'Задание 2: Backend API',
-    courseName: 'Веб-разработка',
-    courseId: '1',
-    taskId: '2',
-    studentName: 'Студент #2',
+    id: "r2",
+    taskTitle: "Задание 2: Backend API",
+    courseName: "Веб-разработка",
+    courseId: "1",
+    taskId: "2",
+    studentName: "Студент #2",
     isAnonymous: true,
-    reviewDeadline: '29 января 2026, 23:59',
-    reviewDeadlineTimestamp: new Date('2026-01-29T23:59:00').getTime(),
-    status: 'not_started',
+    reviewDeadline: "29 января 2026, 23:59",
+    reviewDeadlineTimestamp: new Date("2026-01-29T23:59:00").getTime(),
+    status: "not_started",
   },
   {
-    id: 'r3',
-    taskTitle: 'Лабораторная 3: Алгоритмы сортировки',
-    courseName: 'Алгоритмы',
-    courseId: '2',
-    taskId: '3',
-    studentName: 'Анна Иванова',
+    id: "r3",
+    taskTitle: "Лабораторная 3: Алгоритмы сортировки",
+    courseName: "Алгоритмы",
+    courseId: "2",
+    taskId: "3",
+    studentName: "Анна Иванова",
     isAnonymous: false,
-    reviewDeadline: '30 января 2026, 23:59',
-    reviewDeadlineTimestamp: new Date('2026-01-30T23:59:00').getTime(),
-    status: 'not_started',
+    reviewDeadline: "30 января 2026, 23:59",
+    reviewDeadlineTimestamp: new Date("2026-01-30T23:59:00").getTime(),
+    status: "not_started",
   },
   {
-    id: 'r4',
-    taskTitle: 'Эссе: История России',
-    courseName: 'История',
-    courseId: '3',
-    taskId: '4',
-    studentName: 'Студент #3',
+    id: "r4",
+    taskTitle: "Эссе: История России",
+    courseName: "История",
+    courseId: "3",
+    taskId: "4",
+    studentName: "Студент #3",
     isAnonymous: true,
-    reviewDeadline: '2 февраля 2026, 23:59',
-    reviewDeadlineTimestamp: new Date('2026-02-02T23:59:00').getTime(),
-    status: 'not_started',
+    reviewDeadline: "2 февраля 2026, 23:59",
+    reviewDeadlineTimestamp: new Date("2026-02-02T23:59:00").getTime(),
+    status: "not_started",
   },
 ];
 
@@ -91,27 +91,25 @@ export const useReviewStore = () => {
     },
 
     // Update review status
-    updateReviewStatus: (id: string, status: 'not_started' | 'draft' | 'submitted') => {
-      reviews = reviews.map((r) =>
-        r.id === id ? { ...r, status } : r
-      );
+    updateReviewStatus: (id: string, status: "not_started" | "draft" | "submitted") => {
+      reviews = reviews.map((r) => (r.id === id ? { ...r, status } : r));
     },
 
     // Save draft
     saveDraft: (
       id: string,
       scores: Record<string, { score: number | null; comment: string }>,
-      overallComment: string
+      overallComment: string,
     ) => {
       reviews = reviews.map((r) =>
         r.id === id
           ? {
               ...r,
-              status: 'draft' as const,
+              status: "draft" as const,
               scores,
               overallComment,
             }
-          : r
+          : r,
       );
     },
 
@@ -119,18 +117,18 @@ export const useReviewStore = () => {
     submitReview: (
       id: string,
       scores: Record<string, { score: number | null; comment: string }>,
-      overallComment: string
+      overallComment: string,
     ) => {
       reviews = reviews.map((r) =>
         r.id === id
           ? {
               ...r,
-              status: 'submitted' as const,
+              status: "submitted" as const,
               scores,
               overallComment,
               submittedAt: new Date().toISOString(),
             }
-          : r
+          : r,
       );
     },
 
@@ -141,7 +139,7 @@ export const useReviewStore = () => {
 
     // Get first not started review for a task
     getFirstNotStartedForTask: (taskId: string): Review | undefined => {
-      return reviews.find((r) => r.taskId === taskId && r.status === 'not_started');
+      return reviews.find((r) => r.taskId === taskId && r.status === "not_started");
     },
   };
 };

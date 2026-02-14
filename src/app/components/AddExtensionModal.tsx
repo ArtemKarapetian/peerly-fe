@@ -1,12 +1,7 @@
-import { useState, useEffect } from 'react';
-import { X, Calendar, User, MessageSquare, Bell } from 'lucide-react';
-import {
-  Extension,
-  ExtensionType,
-  createExtension,
-  updateExtension
-} from '@/app/utils/extensions';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { X, Calendar, User, MessageSquare, Bell } from "lucide-react";
+import { Extension, ExtensionType, createExtension, updateExtension } from "@/app/utils/extensions";
+import { toast } from "sonner";
 
 interface AddExtensionModalProps {
   assignmentId: string;
@@ -16,28 +11,32 @@ interface AddExtensionModalProps {
 
 // Mock students data
 const MOCK_STUDENTS = [
-  { id: '1', name: 'Анна Смирнова' },
-  { id: '2', name: 'Иван Петров' },
-  { id: '3', name: 'Дмитрий Козлов' },
-  { id: '4', name: 'Мария Сидорова' },
-  { id: '5', name: 'Ольга Петрова' },
-  { id: '6', name: 'Алексей Новikov' },
+  { id: "1", name: "Анна Смирнова" },
+  { id: "2", name: "Иван Петров" },
+  { id: "3", name: "Дмитрий Козлов" },
+  { id: "4", name: "Мария Сидорова" },
+  { id: "5", name: "Ольга Петрова" },
+  { id: "6", name: "Алексей Новikov" },
 ];
 
-export function AddExtensionModal({ assignmentId, existingExtension, onClose }: AddExtensionModalProps) {
-  const [selectedStudent, setSelectedStudent] = useState(existingExtension?.studentId || '');
-  const [type, setType] = useState<ExtensionType>(existingExtension?.type || 'submission');
+export function AddExtensionModal({
+  assignmentId,
+  existingExtension,
+  onClose,
+}: AddExtensionModalProps) {
+  const [selectedStudent, setSelectedStudent] = useState(existingExtension?.studentId || "");
+  const [type, setType] = useState<ExtensionType>(existingExtension?.type || "submission");
   const [submissionDeadline, setSubmissionDeadline] = useState(
-    existingExtension?.submissionDeadlineOverride 
-      ? new Date(existingExtension.submissionDeadlineOverride).toISOString().slice(0, 16) 
-      : ''
+    existingExtension?.submissionDeadlineOverride
+      ? new Date(existingExtension.submissionDeadlineOverride).toISOString().slice(0, 16)
+      : "",
   );
   const [reviewDeadline, setReviewDeadline] = useState(
-    existingExtension?.reviewDeadlineOverride 
-      ? new Date(existingExtension.reviewDeadlineOverride).toISOString().slice(0, 16) 
-      : ''
+    existingExtension?.reviewDeadlineOverride
+      ? new Date(existingExtension.reviewDeadlineOverride).toISOString().slice(0, 16)
+      : "",
   );
-  const [reason, setReason] = useState(existingExtension?.reason || '');
+  const [reason, setReason] = useState(existingExtension?.reason || "");
   const [notifyStudent, setNotifyStudent] = useState(existingExtension?.notifyStudent ?? true);
 
   const isEditing = !!existingExtension;
@@ -46,60 +45,56 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
     e.preventDefault();
 
     if (!selectedStudent) {
-      toast.error('Выберите студента');
+      toast.error("Выберите студента");
       return;
     }
 
-    if (type === 'submission' && !submissionDeadline) {
-      toast.error('Укажите новый дедлайн сдачи');
+    if (type === "submission" && !submissionDeadline) {
+      toast.error("Укажите новый дедлайн сдачи");
       return;
     }
 
-    if (type === 'review' && !reviewDeadline) {
-      toast.error('Укажите новый дедлайн проверки');
+    if (type === "review" && !reviewDeadline) {
+      toast.error("Укажите новый дедлайн проверки");
       return;
     }
 
-    if (type === 'both' && (!submissionDeadline || !reviewDeadline)) {
-      toast.error('Укажите оба дедлайна');
+    if (type === "both" && (!submissionDeadline || !reviewDeadline)) {
+      toast.error("Укажите оба дедлайна");
       return;
     }
 
     if (!reason.trim()) {
-      toast.error('Укажите причину продления');
+      toast.error("Укажите причину продления");
       return;
     }
 
-    const studentName = MOCK_STUDENTS.find(s => s.id === selectedStudent)?.name || '';
+    const studentName = MOCK_STUDENTS.find((s) => s.id === selectedStudent)?.name || "";
 
     if (isEditing && existingExtension) {
       updateExtension(existingExtension.id, {
         type,
-        submissionDeadlineOverride: type !== 'review' ? submissionDeadline : undefined,
-        reviewDeadlineOverride: type !== 'submission' ? reviewDeadline : undefined,
+        submissionDeadlineOverride: type !== "review" ? submissionDeadline : undefined,
+        reviewDeadlineOverride: type !== "submission" ? reviewDeadline : undefined,
         reason,
-        notifyStudent
+        notifyStudent,
       });
-      toast.success('Продление обновлено');
+      toast.success("Продление обновлено");
     } else {
       createExtension({
         assignmentId,
         studentId: selectedStudent,
         studentName,
         type,
-        submissionDeadlineOverride: type !== 'review' ? submissionDeadline : undefined,
-        reviewDeadlineOverride: type !== 'submission' ? reviewDeadline : undefined,
+        submissionDeadlineOverride: type !== "review" ? submissionDeadline : undefined,
+        reviewDeadlineOverride: type !== "submission" ? reviewDeadline : undefined,
         reason,
-        status: 'manual',
+        status: "manual",
         processedAt: new Date().toISOString(),
-        processedBy: 'teacher1',
-        notifyStudent
+        processedBy: "teacher1",
+        notifyStudent,
       });
-      toast.success(
-        notifyStudent 
-          ? 'Продление создано, студент уведомлён' 
-          : 'Продление создано'
-      );
+      toast.success(notifyStudent ? "Продление создано, студент уведомлён" : "Продление создано");
     }
 
     onClose();
@@ -111,12 +106,9 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
         {/* Header */}
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-[20px]">
           <h2 className="text-xl font-semibold text-foreground">
-            {isEditing ? 'Редактировать продление' : 'Добавить продление'}
+            {isEditing ? "Редактировать продление" : "Добавить продление"}
           </h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-accent rounded-lg transition-colors"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-accent rounded-lg transition-colors">
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
@@ -138,7 +130,7 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
               className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground disabled:opacity-50 disabled:cursor-not-allowed focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
             >
               <option value="">Выберите студента</option>
-              {MOCK_STUDENTS.map(student => (
+              {MOCK_STUDENTS.map((student) => (
                 <option key={student.id} value={student.id}>
                   {student.name}
                 </option>
@@ -153,16 +145,14 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
 
           {/* Extension Type */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-3">
-              Тип продления
-            </label>
+            <label className="block text-sm font-medium text-foreground mb-3">Тип продления</label>
             <div className="space-y-2">
               <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
                 <input
                   type="radio"
                   name="type"
                   value="submission"
-                  checked={type === 'submission'}
+                  checked={type === "submission"}
                   onChange={(e) => setType(e.target.value as ExtensionType)}
                   className="w-4 h-4 text-primary"
                 />
@@ -176,7 +166,7 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
                   type="radio"
                   name="type"
                   value="review"
-                  checked={type === 'review'}
+                  checked={type === "review"}
                   onChange={(e) => setType(e.target.value as ExtensionType)}
                   className="w-4 h-4 text-primary"
                 />
@@ -190,7 +180,7 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
                   type="radio"
                   name="type"
                   value="both"
-                  checked={type === 'both'}
+                  checked={type === "both"}
                   onChange={(e) => setType(e.target.value as ExtensionType)}
                   className="w-4 h-4 text-primary"
                 />
@@ -203,7 +193,7 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
           </div>
 
           {/* Submission Deadline */}
-          {(type === 'submission' || type === 'both') && (
+          {(type === "submission" || type === "both") && (
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 <div className="flex items-center gap-2 mb-2">
@@ -221,7 +211,7 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
           )}
 
           {/* Review Deadline */}
-          {(type === 'review' || type === 'both') && (
+          {(type === "review" || type === "both") && (
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 <div className="flex items-center gap-2 mb-2">
@@ -281,7 +271,7 @@ export function AddExtensionModal({ assignmentId, existingExtension, onClose }: 
               type="submit"
               className="flex-1 px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
             >
-              {isEditing ? 'Сохранить изменения' : 'Создать продление'}
+              {isEditing ? "Сохранить изменения" : "Создать продление"}
             </button>
             <button
               type="button"

@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Book, Settings, Users, Archive, ExternalLink, Plus, ArchiveRestore } from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
-import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagination';
-import { CourseSearch } from '@/app/components/CourseSearch';
+import { useState, useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
+import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
+import { CourseSearch } from "@/app/components/CourseSearch";
 
 /**
  * TeacherCoursesPage - Управление курсами (Teacher)
- * 
+ *
  * Административный вид списка курсов для преподавателя
  * - Таблица/сетка с информацией о курсах
  * - Действия: Открыть, Настройки, Участники, Архивировать
@@ -24,58 +24,55 @@ interface CourseRow {
   term: string;
   participantsCount: number;
   activeAssignments: number;
-  status: 'active' | 'archived';
+  status: "active" | "archived";
 }
 
 export default function TeacherCoursesPage() {
   const [showArchived, setShowArchived] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Load demo courses
   const courses = demoDataStore.getCourses();
-  
-  const courseRows: CourseRow[] = courses.map(course => ({
+
+  const courseRows: CourseRow[] = courses.map((course) => ({
     id: course.id,
     name: course.title,
     code: course.code,
-    term: 'Весна 2025',
+    term: "Весна 2025",
     participantsCount: course.enrollmentCount,
     activeAssignments: course.assignmentIds?.length || 0,
-    status: course.archived ? 'archived' : 'active',
+    status: course.archived ? "archived" : "active",
   }));
 
   // Filter courses based on archived status and search
-  const filteredCourses = courseRows.filter(course => {
+  const filteredCourses = courseRows.filter((course) => {
     // Filter by archived status
-    if (!showArchived && course.status === 'archived') {
+    if (!showArchived && course.status === "archived") {
       return false;
     }
 
     // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      return (
-        course.name.toLowerCase().includes(query) ||
-        course.code.toLowerCase().includes(query)
-      );
+      return course.name.toLowerCase().includes(query) || course.code.toLowerCase().includes(query);
     }
 
     return true;
   });
 
-  const handleOpenCourse = (courseId: string) => {
+  const handleOpenCourse = useCallback((courseId: string) => {
     window.location.hash = `/teacher/course/${courseId}`;
-  };
+  }, []);
 
   const handleArchive = (courseId: string) => {
-    if (confirm('Архивировать этот курс? Он будет скрыт из основного списка.')) {
+    if (confirm("Архивировать этот курс? Он будет скрыт из основного списка.")) {
       demoDataStore.archiveCourse(courseId, true);
       window.location.reload(); // Reload to show updated state
     }
   };
 
   const handleUnarchive = (courseId: string) => {
-    if (confirm('Восстановить курс из архива?')) {
+    if (confirm("Восстановить курс из архива?")) {
       demoDataStore.archiveCourse(courseId, false);
       window.location.reload();
     }
@@ -86,7 +83,7 @@ export default function TeacherCoursesPage() {
   };
 
   const handleRowKeyDown = (e: React.KeyboardEvent, courseId: string) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       handleOpenCourse(courseId);
     }
@@ -96,21 +93,19 @@ export default function TeacherCoursesPage() {
 
   return (
     <AppShell title="Упрвление курсами">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Курсы' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Курсы" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="page-title mb-2">
-              Управление курсами
-            </h1>
-            <p className="text-base text-[--text-secondary]">
-              Ваши курсы, студенты и задания
-            </p>
+            <h1 className="page-title mb-2">Управление курсами</h1>
+            <p className="text-base text-[--text-secondary]">Ваши курсы, студенты и задания</p>
           </div>
           <div className="flex items-center gap-3">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -123,8 +118,8 @@ export default function TeacherCoursesPage() {
               <Archive className="w-4 h-4 text-[--text-secondary]" />
               <span className="text-sm text-[--text-primary]">Показать архивные</span>
             </label>
-            <button 
-              onClick={() => window.location.hash = '/teacher/course/create'}
+            <button
+              onClick={() => (window.location.hash = "/teacher/course/create")}
               className="flex items-center gap-2 px-4 py-2 bg-[--brand-primary] text-white rounded-[var(--radius-md)] hover:bg-[--brand-primary-hover] transition-colors"
             >
               <Plus className="w-5 h-5" />
@@ -135,14 +130,12 @@ export default function TeacherCoursesPage() {
 
         {/* Search and Stats */}
         <div className="mb-6 space-y-4">
-          <CourseSearch 
-            value={searchQuery} 
+          <CourseSearch
+            value={searchQuery}
             onChange={setSearchQuery}
             placeholder="Поиск по названию или коду курса..."
           />
-          <div className="text-[14px] text-[#767692]">
-            Найдено курсов: {filteredCourses.length}
-          </div>
+          <div className="text-[14px] text-[#767692]">Найдено курсов: {filteredCourses.length}</div>
         </div>
 
         {/* Courses Table */}
@@ -172,87 +165,85 @@ export default function TeacherCoursesPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredCourses.slice((currentPage - 1) * 10, currentPage * 10).map((course, index) => (
-                  <tr 
-                    key={course.id}
-                    className={`
+                {filteredCourses
+                  .slice((currentPage - 1) * 10, currentPage * 10)
+                  .map((course, index) => (
+                    <tr
+                      key={course.id}
+                      className={`
                       border-b border-[#e6e8ee] last:border-0 
                       hover:bg-[#f0f6ff] transition-all duration-200 cursor-pointer
                       shadow-[0_1px_3px_rgba(0,0,0,0.02)]
                       hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                      ${index % 2 === 0 ? 'bg-white' : 'bg-[#fafbfc]'}
+                      ${index % 2 === 0 ? "bg-white" : "bg-[#fafbfc]"}
                     `}
-                    onClick={() => handleRowClick(course.id)}
-                    onKeyDown={(e) => handleRowKeyDown(e, course.id)}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Открыть курс ${course.name}`}
-                  >
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="text-[16px] font-medium text-[#21214f] tracking-[-0.3px]">
-                          {course.name}
-                        </p>
-                        <p className="text-[13px] text-[#767692] mt-1">
-                          {course.code}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-[15px] text-[#21214f]">
-                        {course.term}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 bg-[#e9f5ff] text-[#2563eb] rounded-[8px] text-[14px] font-medium">
-                        {course.participantsCount}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[14px] font-medium">
-                        {course.activeAssignments}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      {course.status === 'active' ? (
-                        <span className="inline-flex px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
-                          Активен
+                      onClick={() => handleRowClick(course.id)}
+                      onKeyDown={(e) => handleRowKeyDown(e, course.id)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Открыть курс ${course.name}`}
+                    >
+                      <td className="px-6 py-4">
+                        <div>
+                          <p className="text-[16px] font-medium text-[#21214f] tracking-[-0.3px]">
+                            {course.name}
+                          </p>
+                          <p className="text-[13px] text-[#767692] mt-1">{course.code}</p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-[15px] text-[#21214f]">{course.term}</p>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 bg-[#e9f5ff] text-[#2563eb] rounded-[8px] text-[14px] font-medium">
+                          {course.participantsCount}
                         </span>
-                      ) : (
-                        <span className="inline-flex px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[13px] font-medium">
-                          Архив
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[14px] font-medium">
+                          {course.activeAssignments}
                         </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-end gap-2">
-                        {course.status === 'active' ? (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleArchive(course.id);
-                            }}
-                            className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
-                            title="Архивировать"
-                          >
-                            <Archive className="w-4 h-4 text-[--text-secondary]" />
-                          </button>
+                      </td>
+                      <td className="px-6 py-4">
+                        {course.status === "active" ? (
+                          <span className="inline-flex px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
+                            Активен
+                          </span>
                         ) : (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleUnarchive(course.id);
-                            }}
-                            className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
-                            title="Восстановить"
-                          >
-                            <ArchiveRestore className="w-4 h-4 text-[--text-secondary]" />
-                          </button>
+                          <span className="inline-flex px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[13px] font-medium">
+                            Архив
+                          </span>
                         )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-end gap-2">
+                          {course.status === "active" ? (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleArchive(course.id);
+                              }}
+                              className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
+                              title="Архивировать"
+                            >
+                              <Archive className="w-4 h-4 text-[--text-secondary]" />
+                            </button>
+                          ) : (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleUnarchive(course.id);
+                              }}
+                              className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
+                              title="Восстановить"
+                            >
+                              <ArchiveRestore className="w-4 h-4 text-[--text-secondary]" />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -275,9 +266,7 @@ export default function TeacherCoursesPage() {
             <div className="w-16 h-16 bg-[#f9f9f9] rounded-[16px] flex items-center justify-center mx-auto mb-4">
               <Book className="w-8 h-8 text-[#767692]" />
             </div>
-            <h3 className="text-[20px] font-medium text-[#21214f] mb-2">
-              Нет курсов
-            </h3>
+            <h3 className="text-[20px] font-medium text-[#21214f] mb-2">Нет курсов</h3>
             <p className="text-[15px] text-[#767692] mb-6">
               Создайте первый курс, чтобы начать работу
             </p>

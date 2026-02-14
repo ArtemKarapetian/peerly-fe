@@ -1,17 +1,17 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from "react";
 
 /**
  * RoleContext - Управление ролями пользователя для демо
- * 
+ *
  * Roles:
  * - Student: студент (по умолчанию)
  * - Teacher: преподаватель
  * - Admin: администратор
- * 
+ *
  * Сохраняется в localStorage как 'peerly_role'
  */
 
-export type UserRole = 'Student' | 'Teacher' | 'Admin';
+export type UserRole = "Student" | "Teacher" | "Admin";
 
 interface RoleContextType {
   currentRole: UserRole;
@@ -20,43 +20,40 @@ interface RoleContextType {
 
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
-export function RoleProvider({ children }: { children: ReactNode }) {
-  const [currentRole, setCurrentRole] = useState<UserRole>('Student');
-
-  // Load role from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedRole = localStorage.getItem('peerly_role') as UserRole;
-      if (savedRole && ['Student', 'Teacher', 'Admin'].includes(savedRole)) {
-        setCurrentRole(savedRole);
-      }
-    } catch (error) {
-      console.error('Failed to load role from localStorage:', error);
+// Initialize role from localStorage
+const getInitialRole = (): UserRole => {
+  try {
+    const savedRole = localStorage.getItem("peerly_role") as UserRole;
+    if (savedRole && ["Student", "Teacher", "Admin"].includes(savedRole)) {
+      return savedRole;
     }
-  }, []);
+  } catch (error) {
+    console.error("Failed to load role from localStorage:", error);
+  }
+  return "Student";
+};
+
+export function RoleProvider({ children }: { children: ReactNode }) {
+  const [currentRole, setCurrentRole] = useState<UserRole>(getInitialRole);
 
   // Save role to localStorage when it changes
   const setRole = (role: UserRole) => {
     try {
-      localStorage.setItem('peerly_role', role);
+      localStorage.setItem("peerly_role", role);
       setCurrentRole(role);
     } catch (error) {
-      console.error('Failed to save role to localStorage:', error);
+      console.error("Failed to save role to localStorage:", error);
       setCurrentRole(role); // Still update state even if localStorage fails
     }
   };
 
-  return (
-    <RoleContext.Provider value={{ currentRole, setRole }}>
-      {children}
-    </RoleContext.Provider>
-  );
+  return <RoleContext.Provider value={{ currentRole, setRole }}>{children}</RoleContext.Provider>;
 }
 
 export function useRole() {
   const context = useContext(RoleContext);
   if (context === undefined) {
-    throw new Error('useRole must be used within a RoleProvider');
+    throw new Error("useRole must be used within a RoleProvider");
   }
   return context;
 }
@@ -66,12 +63,12 @@ export function useRole() {
  */
 export function getRoleDisplayName(role: UserRole): string {
   switch (role) {
-    case 'Student':
-      return 'Студент';
-    case 'Teacher':
-      return 'Преподаватель';
-    case 'Admin':
-      return 'Администратор';
+    case "Student":
+      return "Студент";
+    case "Teacher":
+      return "Преподаватель";
+    case "Admin":
+      return "Администратор";
   }
 }
 
@@ -80,11 +77,11 @@ export function getRoleDisplayName(role: UserRole): string {
  */
 export function getRoleBadgeColor(role: UserRole): string {
   switch (role) {
-    case 'Student':
-      return 'bg-[#e9f5ff] text-[#5b8def]';
-    case 'Teacher':
-      return 'bg-[#fff8e1] text-[#f57c00]';
-    case 'Admin':
-      return 'bg-[#f3e5f5] text-[#8e24aa]';
+    case "Student":
+      return "bg-[#e9f5ff] text-[#5b8def]";
+    case "Teacher":
+      return "bg-[#fff8e1] text-[#f57c00]";
+    case "Admin":
+      return "bg-[#f3e5f5] text-[#8e24aa]";
   }
 }

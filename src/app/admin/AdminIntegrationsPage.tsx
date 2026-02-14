@@ -1,15 +1,25 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
+import { useState, useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
 import {
-  Link2, Lock, AlertCircle, Plus, X, Edit3, Trash2, 
-  CheckCircle, XCircle, Send, Clock, ExternalLink, Eye, EyeOff
-} from 'lucide-react';
+  Link2,
+  Lock,
+  AlertCircle,
+  Plus,
+  X,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Send,
+  Clock,
+  ExternalLink,
+  Eye,
+} from "lucide-react";
 
 /**
  * AdminIntegrationsPage - Ключи интеграций и вебхуки
- * 
+ *
  * Функции:
  * - Секции интеграций: Moodle (отключена, "Out of MVP"), Office 365 (отключена)
  * - Webhooks: создание, список, статусы, последняя доставка
@@ -23,7 +33,7 @@ interface Webhook {
   url: string;
   secret: string;
   events: string[];
-  status: 'active' | 'inactive' | 'error';
+  status: "active" | "inactive" | "error";
   lastDelivery?: WebhookDelivery;
   createdAt: Date;
 }
@@ -31,58 +41,108 @@ interface Webhook {
 interface WebhookDelivery {
   timestamp: Date;
   event: string;
-  status: 'success' | 'failed';
+  status: "success" | "failed";
   responseCode?: number;
   responseTime?: number;
 }
 
 const WEBHOOK_EVENTS = [
-  { value: 'assignment.created', label: 'Assignment Created', description: 'Когда создаётся новое задание' },
-  { value: 'submission.uploaded', label: 'Submission Uploaded', description: 'Когда студент загружает работу' },
-  { value: 'review.submitted', label: 'Review Submitted', description: 'Когда отправляется рецензия' },
-  { value: 'course.updated', label: 'Course Updated', description: 'Когда обновляется курс' },
-  { value: 'user.registered', label: 'User Registered', description: 'Когда регистрируется пользователь' }
+  {
+    value: "assignment.created",
+    label: "Assignment Created",
+    description: "Когда создаётся новое задание",
+  },
+  {
+    value: "submission.uploaded",
+    label: "Submission Uploaded",
+    description: "Когда студент загружает работу",
+  },
+  {
+    value: "review.submitted",
+    label: "Review Submitted",
+    description: "Когда отправляется рецензия",
+  },
+  { value: "course.updated", label: "Course Updated", description: "Когда обновляется курс" },
+  {
+    value: "user.registered",
+    label: "User Registered",
+    description: "Когда регистрируется пользователь",
+  },
 ];
 
+interface StoredWebhook {
+  id: string;
+  name: string;
+  url: string;
+  secret: string;
+  events: string[];
+  status: "active" | "inactive" | "error";
+  createdAt: string;
+  lastDelivery?: {
+    timestamp: string;
+    event: string;
+    status: "success" | "failed";
+    responseCode?: number;
+    responseTime?: number;
+  };
+}
+
+// Initialize webhooks from localStorage
+const getInitialWebhooks = (): Webhook[] => {
+  const stored = localStorage.getItem("admin_webhooks");
+  if (stored) {
+    const parsed: StoredWebhook[] = JSON.parse(stored);
+    return parsed.map((w) => ({
+      ...w,
+      createdAt: new Date(w.createdAt),
+      lastDelivery: w.lastDelivery
+        ? {
+            ...w.lastDelivery,
+            timestamp: new Date(w.lastDelivery.timestamp),
+          }
+        : undefined,
+    }));
+  }
+  return [];
+};
+
 export default function AdminIntegrationsPage() {
-  const [webhooks, setWebhooks] = useState<Webhook[]>([]);
+  const [webhooks, setWebhooks] = useState<Webhook[]>(getInitialWebhooks);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSecretModal, setShowSecretModal] = useState<string | null>(null);
-  const [showDeliveryLog, setShowDeliveryLog] = useState<Webhook | null>(null);
 
   // Form state
-  const [formName, setFormName] = useState('');
-  const [formUrl, setFormUrl] = useState('');
-  const [formSecret, setFormSecret] = useState('');
+  const [formName, setFormName] = useState("");
+  const [formUrl, setFormUrl] = useState("");
+  const [formSecret, setFormSecret] = useState("");
   const [formEvents, setFormEvents] = useState<string[]>([]);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  // Load webhooks from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem('admin_webhooks');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setWebhooks(parsed.map((w: any) => ({
-        ...w,
-        createdAt: new Date(w.createdAt),
-        lastDelivery: w.lastDelivery ? {
-          ...w.lastDelivery,
-          timestamp: new Date(w.lastDelivery.timestamp)
-        } : undefined
-      })));
-    }
+  // Audit logging - define first to use in other functions
+  const logAuditEntry = useCallback((action: string, resource: string, details: string) => {
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
+    logs.unshift({
+      id: `audit-${Date.now()}`,
+      userId: "webhook-system",
+      adminId: "u3",
+      action,
+      resource,
+      details,
+      timestamp: new Date().toISOString(),
+    });
+    localStorage.setItem("admin_audit_logs", JSON.stringify(logs));
   }, []);
 
   // Save webhooks to localStorage
-  const saveWebhooks = (newWebhooks: Webhook[]) => {
+  const saveWebhooks = useCallback((newWebhooks: Webhook[]) => {
     setWebhooks(newWebhooks);
-    localStorage.setItem('admin_webhooks', JSON.stringify(newWebhooks));
-  };
+    localStorage.setItem("admin_webhooks", JSON.stringify(newWebhooks));
+  }, []);
 
   // Generate random secret
   const generateSecret = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let secret = 'whsec_';
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let secret = "whsec_";
     for (let i = 0; i < 32; i++) {
       secret += chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -94,17 +154,17 @@ export default function AdminIntegrationsPage() {
     const errors: Record<string, string> = {};
 
     if (!formName.trim()) {
-      errors.name = 'Введите название';
+      errors.name = "Введите название";
     }
 
     if (!formUrl.trim()) {
-      errors.url = 'Введите URL';
-    } else if (!formUrl.startsWith('http://') && !formUrl.startsWith('https://')) {
-      errors.url = 'URL должен начинаться с http:// или https://';
+      errors.url = "Введите URL";
+    } else if (!formUrl.startsWith("http://") && !formUrl.startsWith("https://")) {
+      errors.url = "URL должен начинаться с http:// или https://";
     }
 
     if (formEvents.length === 0) {
-      errors.events = 'Выберите хотя бы одно событие';
+      errors.events = "Выберите хотя бы одно событие";
     }
 
     setFormErrors(errors);
@@ -121,17 +181,17 @@ export default function AdminIntegrationsPage() {
       url: formUrl,
       secret: formSecret || generateSecret(),
       events: formEvents,
-      status: 'active',
-      createdAt: new Date()
+      status: "active",
+      createdAt: new Date(),
     };
 
     saveWebhooks([...webhooks, newWebhook]);
-    logAuditEntry('CREATE_WEBHOOK', 'Webhook', `Webhook ${formName} создан`);
+    logAuditEntry("CREATE_WEBHOOK", "Webhook", `Webhook ${formName} создан`);
 
     // Reset form
-    setFormName('');
-    setFormUrl('');
-    setFormSecret('');
+    setFormName("");
+    setFormUrl("");
+    setFormSecret("");
     setFormEvents([]);
     setFormErrors({});
     setShowCreateModal(false);
@@ -143,95 +203,85 @@ export default function AdminIntegrationsPage() {
   const handleDelete = (webhook: Webhook) => {
     if (!confirm(`Удалить webhook "${webhook.name}"?`)) return;
 
-    saveWebhooks(webhooks.filter(w => w.id !== webhook.id));
-    logAuditEntry('DELETE_WEBHOOK', 'Webhook', `Webhook ${webhook.name} удалён`);
+    saveWebhooks(webhooks.filter((w) => w.id !== webhook.id));
+    logAuditEntry("DELETE_WEBHOOK", "Webhook", `Webhook ${webhook.name} удалён`);
     alert(`🗑️ Webhook "${webhook.name}" удалён`);
   };
 
   // Handle toggle status
   const handleToggleStatus = (webhook: Webhook) => {
-    const newStatus = webhook.status === 'active' ? 'inactive' as const : 'active' as const;
-    const updated = webhooks.map(w =>
-        w.id === webhook.id ? { ...w, status: newStatus } : w
-    );
+    const newStatus = webhook.status === "active" ? ("inactive" as const) : ("active" as const);
+    const updated = webhooks.map((w) => (w.id === webhook.id ? { ...w, status: newStatus } : w));
     saveWebhooks(updated);
     logAuditEntry(
-      newStatus === 'active' ? 'ENABLE_WEBHOOK' : 'DISABLE_WEBHOOK',
-      'Webhook',
-      `Webhook ${webhook.name} ${newStatus === 'active' ? 'активирован' : 'отключён'}`
+      newStatus === "active" ? "ENABLE_WEBHOOK" : "DISABLE_WEBHOOK",
+      "Webhook",
+      `Webhook ${webhook.name} ${newStatus === "active" ? "активирован" : "отключён"}`,
     );
   };
 
   // Handle test webhook
-  const handleTestWebhook = (webhook: Webhook) => {
-    const testEvent = webhook.events[0] || 'test.event';
-    const isSuccess = Math.random() > 0.2; // 80% success rate
+  const handleTestWebhook = useCallback(
+    (webhook: Webhook) => {
+      const testEvent = webhook.events[0] || "test.event";
+      const isSuccess = Math.random() > 0.2; // 80% success rate
 
-    const delivery: WebhookDelivery = {
-      timestamp: new Date(),
-      event: testEvent,
-      status: isSuccess ? 'success' : 'failed',
-      responseCode: isSuccess ? 200 : 500,
-      responseTime: Math.floor(Math.random() * 500) + 100
-    };
+      const delivery: WebhookDelivery = {
+        timestamp: new Date(),
+        event: testEvent,
+        status: isSuccess ? "success" : "failed",
+        responseCode: isSuccess ? 200 : 500,
+        responseTime: Math.floor(Math.random() * 500) + 100,
+      };
 
-    const updated = webhooks.map(w => 
-      w.id === webhook.id 
-        ? { ...w, lastDelivery: delivery, status: isSuccess ? 'active' as const : 'error' as const }
-        : w
-    );
-    saveWebhooks(updated);
+      const updated = webhooks.map((w) =>
+        w.id === webhook.id
+          ? {
+              ...w,
+              lastDelivery: delivery,
+              status: isSuccess ? ("active" as const) : ("error" as const),
+            }
+          : w,
+      );
+      saveWebhooks(updated);
 
-    logAuditEntry('TEST_WEBHOOK', 'Webhook', `Тестовый запрос отправлен на ${webhook.name}`);
+      logAuditEntry("TEST_WEBHOOK", "Webhook", `Тестовый запрос отправлен на ${webhook.name}`);
 
-    alert(
-      isSuccess 
-        ? `✅ Webhook протестирован успешно\nСтатус: 200 OK\nВремя ответа: ${delivery.responseTime}ms`
-        : `❌ Webhook вернул ошибку\nСтатус: ${delivery.responseCode}\nВремя ответа: ${delivery.responseTime}ms`
-    );
-  };
+      alert(
+        isSuccess
+          ? `✅ Webhook протестирован успешно\nСтатус: 200 OK\nВремя ответа: ${delivery.responseTime}ms`
+          : `❌ Webhook вернул ошибку\nСтатус: ${delivery.responseCode}\nВремя ответа: ${delivery.responseTime}ms`,
+      );
+    },
+    [webhooks, logAuditEntry, saveWebhooks],
+  );
 
   // Toggle event selection
   const toggleEvent = (event: string) => {
     if (formEvents.includes(event)) {
-      setFormEvents(formEvents.filter(e => e !== event));
+      setFormEvents(formEvents.filter((e) => e !== event));
     } else {
       setFormEvents([...formEvents, event]);
     }
   };
 
-  // Audit logging
-  const logAuditEntry = (action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem('admin_audit_logs') || '[]');
-    logs.unshift({
-      id: `audit-${Date.now()}`,
-      userId: 'webhook-system',
-      adminId: 'u3',
-      action,
-      resource,
-      details,
-      timestamp: new Date().toISOString()
-    });
-    localStorage.setItem('admin_audit_logs', JSON.stringify(logs));
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
+      case "active":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             Активен
           </span>
         );
-      case 'inactive':
+      case "inactive":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
             <Clock className="w-3 h-3" />
             Отключён
           </span>
         );
-      case 'error':
+      case "error":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
             <XCircle className="w-3 h-3" />
@@ -245,10 +295,9 @@ export default function AdminIntegrationsPage() {
 
   return (
     <AppShell title="Интеграции и Webhooks">
-      <Breadcrumbs items={[
-        { label: 'Администратор', href: ROUTES.adminOverview },
-        { label: 'Интеграции' }
-      ]} />
+      <Breadcrumbs
+        items={[{ label: "Администратор", href: ROUTES.adminOverview }, { label: "Интеграции" }]}
+      />
 
       <div className="mt-6 space-y-8">
         {/* Header */}
@@ -264,7 +313,7 @@ export default function AdminIntegrationsPage() {
         {/* External Integrations Section */}
         <div>
           <h2 className="text-[20px] font-medium text-[#21214f] mb-4">Внешние интеграции</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-6">
             {/* Moodle Integration */}
             <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 opacity-60">
@@ -400,8 +449,11 @@ export default function AdminIntegrationsPage() {
           {/* Webhooks List */}
           {webhooks.length > 0 ? (
             <div className="space-y-4">
-              {webhooks.map(webhook => (
-                <div key={webhook.id} className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
+              {webhooks.map((webhook) => (
+                <div
+                  key={webhook.id}
+                  className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6"
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
@@ -413,10 +465,13 @@ export default function AdminIntegrationsPage() {
                         <span className="font-mono">{webhook.url}</span>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {webhook.events.map(event => {
-                          const eventInfo = WEBHOOK_EVENTS.find(e => e.value === event);
+                        {webhook.events.map((event) => {
+                          const eventInfo = WEBHOOK_EVENTS.find((e) => e.value === event);
                           return (
-                            <span key={event} className="px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[11px]">
+                            <span
+                              key={event}
+                              className="px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[11px]"
+                            >
                               {eventInfo?.label || event}
                             </span>
                           );
@@ -432,7 +487,7 @@ export default function AdminIntegrationsPage() {
                         <span className="text-[12px] font-medium text-[#767692] uppercase tracking-wide">
                           Последняя доставка
                         </span>
-                        {webhook.lastDelivery.status === 'success' ? (
+                        {webhook.lastDelivery.status === "success" ? (
                           <span className="text-[11px] text-[#4caf50] font-medium">✓ Успешно</span>
                         ) : (
                           <span className="text-[11px] text-[#d4183d] font-medium">✗ Ошибка</span>
@@ -441,19 +496,25 @@ export default function AdminIntegrationsPage() {
                       <div className="grid grid-cols-3 gap-4 text-[12px]">
                         <div>
                           <span className="text-[#767692]">Событие:</span>
-                          <p className="text-[#21214f] font-medium mt-1">{webhook.lastDelivery.event}</p>
+                          <p className="text-[#21214f] font-medium mt-1">
+                            {webhook.lastDelivery.event}
+                          </p>
                         </div>
                         <div>
                           <span className="text-[#767692]">Код ответа:</span>
-                          <p className="text-[#21214f] font-medium mt-1">{webhook.lastDelivery.responseCode}</p>
+                          <p className="text-[#21214f] font-medium mt-1">
+                            {webhook.lastDelivery.responseCode}
+                          </p>
                         </div>
                         <div>
                           <span className="text-[#767692]">Время:</span>
-                          <p className="text-[#21214f] font-medium mt-1">{webhook.lastDelivery.responseTime}ms</p>
+                          <p className="text-[#21214f] font-medium mt-1">
+                            {webhook.lastDelivery.responseTime}ms
+                          </p>
                         </div>
                       </div>
                       <p className="text-[11px] text-[#767692] mt-2">
-                        {webhook.lastDelivery.timestamp.toLocaleString('ru-RU')}
+                        {webhook.lastDelivery.timestamp.toLocaleString("ru-RU")}
                       </p>
                     </div>
                   )}
@@ -470,12 +531,12 @@ export default function AdminIntegrationsPage() {
                     <button
                       onClick={() => handleToggleStatus(webhook)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-[8px] transition-colors text-[13px] font-medium ${
-                        webhook.status === 'active'
-                          ? 'border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]'
-                          : 'bg-[#4caf50] text-white hover:bg-[#45a049]'
+                        webhook.status === "active"
+                          ? "border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]"
+                          : "bg-[#4caf50] text-white hover:bg-[#45a049]"
                       }`}
                     >
-                      {webhook.status === 'active' ? 'Отключить' : 'Включить'}
+                      {webhook.status === "active" ? "Отключить" : "Включить"}
                     </button>
                     <button
                       onClick={() => setShowSecretModal(webhook.secret)}
@@ -520,13 +581,11 @@ export default function AdminIntegrationsPage() {
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-[#5b8def] flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
-                О Webhooks
-              </h4>
+              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">О Webhooks</h4>
               <p className="text-[13px] text-[#767692]">
-                Webhooks позволяют получать HTTP-уведомления при возникновении событий в системе. 
-                Убедитесь, что ваш endpoint доступен и возвращает статус 200 OK. 
-                Все запросы подписываются secret ключом для безопасности.
+                Webhooks позволяют получать HTTP-уведомления при возникновении событий в системе.
+                Убедитесь, что ваш endpoint доступен и возвращает статус 200 OK. Все запросы
+                подписываются secret ключом для безопасности.
               </p>
             </div>
           </div>
@@ -569,8 +628,8 @@ export default function AdminIntegrationsPage() {
                     placeholder="Мой webhook"
                     className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors ${
                       formErrors.name
-                        ? 'border-[#d4183d] focus:border-[#d4183d]'
-                        : 'border-[#e6e8ee] focus:border-[#5b8def]'
+                        ? "border-[#d4183d] focus:border-[#d4183d]"
+                        : "border-[#e6e8ee] focus:border-[#5b8def]"
                     }`}
                   />
                   {formErrors.name && (
@@ -593,8 +652,8 @@ export default function AdminIntegrationsPage() {
                     placeholder="https://example.com/webhook"
                     className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors font-mono ${
                       formErrors.url
-                        ? 'border-[#d4183d] focus:border-[#d4183d]'
-                        : 'border-[#e6e8ee] focus:border-[#5b8def]'
+                        ? "border-[#d4183d] focus:border-[#d4183d]"
+                        : "border-[#e6e8ee] focus:border-[#5b8def]"
                     }`}
                   />
                   {formErrors.url && (
@@ -636,7 +695,7 @@ export default function AdminIntegrationsPage() {
                     События <span className="text-[#d4183d]">*</span>
                   </label>
                   <div className="space-y-2">
-                    {WEBHOOK_EVENTS.map(event => (
+                    {WEBHOOK_EVENTS.map((event) => (
                       <label
                         key={event.value}
                         className="flex items-start gap-3 p-3 border-2 border-[#e6e8ee] rounded-[12px] cursor-pointer hover:bg-[#f9f9f9] transition-colors"
@@ -707,15 +766,15 @@ export default function AdminIntegrationsPage() {
                 <p className="text-[14px] font-mono text-[#21214f] break-all">{showSecretModal}</p>
               </div>
               <p className="text-[13px] text-[#767692]">
-                Используйте этот secret для проверки подписи входящих webhook запросов. 
-                Храните его в безопасности и не передавайте третьим лицам.
+                Используйте этот secret для проверки подписи входящих webhook запросов. Храните его
+                в безопасности и не передавайте третьим лицам.
               </p>
             </div>
             <div className="px-6 py-4 border-t-2 border-[#e6e8ee]">
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(showSecretModal);
-                  alert('✓ Secret скопирован в буфер обмена');
+                  alert("✓ Secret скопирован в буфер обмена");
                 }}
                 className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
               >

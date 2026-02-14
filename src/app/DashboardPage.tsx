@@ -1,33 +1,33 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { LayoutDebugger } from '@/app/components/LayoutDebugger';
-import { 
-  DeadlinesList, 
-  ActionCards, 
-  RecentActivity, 
-  TodaySummary, 
-  NotificationsList 
-} from '@/app/components/dashboard';
-import type { 
-  DeadlineItem, 
-  ActionCardData, 
-  RecentItem, 
-  TodaySummaryData, 
-  Notification 
-} from '@/app/components/dashboard';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { LayoutDebugger } from "@/app/components/LayoutDebugger";
+import {
+  DeadlinesList,
+  ActionCards,
+  RecentActivity,
+  TodaySummary,
+  NotificationsList,
+} from "@/app/components/dashboard";
+import type {
+  DeadlineItem,
+  ActionCardData,
+  RecentItem,
+  TodaySummaryData,
+  Notification,
+} from "@/app/components/dashboard";
 
 /**
  * DashboardPage - Студенческий дашборд "что делать дальше"
- * 
+ *
  * Layout:
  * Desktop (≥1200px): 2 columns (Main + Right Rail sticky)
  * Tablet/Mobile: Single column, right rail becomes collapsible
- * 
+ *
  * Main column:
  * - Ближайшие дедлайны (5-8 items)
  * - Требуют действия (action cards)
  * - Недавнее (recent activity)
- * 
+ *
  * Right rail (sticky):
  * - Сегодня (summary)
  * - Уведомления (latest 3)
@@ -36,51 +36,51 @@ import type {
 // Mock data
 const mockDeadlines: DeadlineItem[] = [
   {
-    id: '1',
-    courseId: '1',
-    courseName: 'Веб-разработка',
-    taskId: '1',
-    taskTitle: 'Задание 1: Создание лендинга',
-    dueDate: '31 января, 23:59',
-    status: 'NOT_STARTED',
+    id: "1",
+    courseId: "1",
+    courseName: "Веб-разработка",
+    taskId: "1",
+    taskTitle: "Задание 1: Создание лендинга",
+    dueDate: "31 января, 23:59",
+    status: "NOT_STARTED",
     isUrgent: true,
   },
   {
-    id: '2',
-    courseId: '2',
-    courseName: 'Дизайн интерфейсов',
-    taskId: '2',
-    taskTitle: 'Задание 2: Прототипирование',
-    dueDate: '1 февраля, 18:00',
-    status: 'DRAFT',
+    id: "2",
+    courseId: "2",
+    courseName: "Дизайн интерфейсов",
+    taskId: "2",
+    taskTitle: "Задание 2: Прототипирование",
+    dueDate: "1 февраля, 18:00",
+    status: "DRAFT",
     isUrgent: true,
   },
   {
-    id: '3',
-    courseId: '1',
-    courseName: 'Веб-разработка',
-    taskId: '3',
-    taskTitle: 'Задание 3: React компоненты',
-    dueDate: '3 февраля, 23:59',
-    status: 'NEED_YOUR_REVIEW',
+    id: "3",
+    courseId: "1",
+    courseName: "Веб-разработка",
+    taskId: "3",
+    taskTitle: "Задание 3: React компоненты",
+    dueDate: "3 февраля, 23:59",
+    status: "NEED_YOUR_REVIEW",
   },
   {
-    id: '4',
-    courseId: '3',
-    courseName: 'Алгоритмы и структуры данных',
-    taskId: '4',
-    taskTitle: 'Задание 1: Сортировки',
-    dueDate: '5 февраля, 20:00',
-    status: 'SUBMITTED',
+    id: "4",
+    courseId: "3",
+    courseName: "Алгоритмы и структуры данных",
+    taskId: "4",
+    taskTitle: "Задание 1: Сортировки",
+    dueDate: "5 февраля, 20:00",
+    status: "SUBMITTED",
   },
   {
-    id: '5',
-    courseId: '2',
-    courseName: 'Дизайн интерфейсов',
-    taskId: '5',
-    taskTitle: 'Задание 3: UI Kit',
-    dueDate: '7 февраля, 23:59',
-    status: 'IN_REVIEW',
+    id: "5",
+    courseId: "2",
+    courseName: "Дизайн интерфейсов",
+    taskId: "5",
+    taskTitle: "Задание 3: UI Kit",
+    dueDate: "7 февраля, 23:59",
+    status: "IN_REVIEW",
   },
 ];
 
@@ -91,26 +91,26 @@ const mockActionData: ActionCardData = {
 
 const mockRecentItems: RecentItem[] = [
   {
-    id: '1',
-    type: 'task',
-    title: 'Задание 1: Создание лендинга',
-    subtitle: 'Веб-разработка',
-    timestamp: '2 часа назад',
+    id: "1",
+    type: "task",
+    title: "Задание 1: Создание лендинга",
+    subtitle: "Веб-разработка",
+    timestamp: "2 часа назад",
   },
   {
-    id: '2',
-    type: 'course',
-    title: 'Дизайн интерфейсов',
-    subtitle: 'Иванова А.П.',
-    timestamp: '5 часов назад',
-    coverColor: '#b7bdff',
+    id: "2",
+    type: "course",
+    title: "Дизайн интерфейсов",
+    subtitle: "Иванова А.П.",
+    timestamp: "5 часов назад",
+    coverColor: "#b7bdff",
   },
   {
-    id: '3',
-    type: 'task',
-    title: 'Задание 3: React компоненты',
-    subtitle: 'Веб-разработка',
-    timestamp: 'вчера',
+    id: "3",
+    type: "task",
+    title: "Задание 3: React компоненты",
+    subtitle: "Веб-разработка",
+    timestamp: "вчера",
   },
 ];
 
@@ -121,31 +121,31 @@ const mockTodayData: TodaySummaryData = {
 
 const mockNotifications: Notification[] = [
   {
-    id: '1',
-    type: 'feedback',
+    id: "1",
+    type: "feedback",
     title: 'Новый отзыв на задание "Создание лендинга"',
-    time: '10 минут назад',
+    time: "10 минут назад",
     isRead: false,
   },
   {
-    id: '2',
-    type: 'reminder',
+    id: "2",
+    type: "reminder",
     title: 'Дедлайн "Прототипирование" через 24 часа',
-    time: '2 часа назад',
+    time: "2 часа назад",
     isRead: false,
   },
   {
-    id: '3',
-    type: 'grade',
+    id: "3",
+    type: "grade",
     title: 'Оценка выставлена за "Сортировки"',
-    time: '5 часов назад',
+    time: "5 часов назад",
     isRead: true,
   },
   {
-    id: '4',
-    type: 'info',
-    title: 'Добавлены новые материалы к курсу',
-    time: 'вчера',
+    id: "4",
+    type: "info",
+    title: "Добавлены новые материалы к курсу",
+    time: "вчера",
     isRead: true,
   },
 ];
@@ -153,10 +153,10 @@ const mockNotifications: Notification[] = [
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  
+
   // Mock data - will be replaced with real API calls
   const hasCourses = true; // Toggle to test empty state
-  
+
   // Empty state
   if (!isLoading && !hasError && !hasCourses) {
     return (
@@ -172,10 +172,11 @@ export default function DashboardPage() {
               Вас ещё не добавили в курс
             </h2>
             <p className="text-[16px] text-[#767692] leading-[1.5] mb-4">
-              Попросите преподавателя выдать вам доступ к курсу, и здесь появятся ваши задания и дедлайны.
+              Попросите преподавателя выдать вам доступ к курсу, и здесь появятся ваши задания и
+              дедлайны.
             </p>
             <button
-              onClick={() => window.location.hash = '/courses'}
+              onClick={() => (window.location.hash = "/courses")}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#d2def8] hover:bg-[#c5d5f5] text-[#21214f] rounded-[8px] transition-colors text-[15px] font-medium"
             >
               Перейти к курсам
@@ -224,9 +225,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <AppShell title="Дашборд">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Дашборд
-        </h1>
+        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Дашборд</h1>
 
         {/* Loading skeletons */}
         <div className="task-layout">
@@ -264,9 +263,7 @@ export default function DashboardPage() {
   // Main content
   return (
     <AppShell title="Дашборд">
-      <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-        Дашборд
-      </h1>
+      <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Дашборд</h1>
 
       {/* 2-column layout: Main + Right Rail (sticky) */}
       <div className="task-layout">
@@ -277,8 +274,8 @@ export default function DashboardPage() {
             <h2 className="text-[20px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
               Ближайшие дедлайны
             </h2>
-            <DeadlinesList 
-              items={mockDeadlines} 
+            <DeadlinesList
+              items={mockDeadlines}
               onTaskClick={(taskId) => {
                 window.location.hash = `/task/${taskId}`;
               }}
@@ -290,15 +287,15 @@ export default function DashboardPage() {
             <h2 className="text-[20px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
               Требуют действия
             </h2>
-            <ActionCards 
+            <ActionCards
               data={mockActionData}
               onReviewsClick={() => {
                 // TODO: Navigate to reviews list
-                console.log('Navigate to reviews');
+                console.log("Navigate to reviews");
               }}
               onFeedbackClick={() => {
                 // TODO: Navigate to feedback list
-                console.log('Navigate to feedback');
+                console.log("Navigate to feedback");
               }}
             />
           </section>
@@ -308,10 +305,10 @@ export default function DashboardPage() {
             <h2 className="text-[20px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
               Недавнее
             </h2>
-            <RecentActivity 
+            <RecentActivity
               items={mockRecentItems}
               onItemClick={(id, type) => {
-                if (type === 'course') {
+                if (type === "course") {
                   window.location.hash = `/course/${id}`;
                 } else {
                   window.location.hash = `/task/${id}`;
@@ -335,15 +332,15 @@ export default function DashboardPage() {
               <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
                 Уведомления
               </h2>
-              <NotificationsList 
+              <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
                   // TODO: Navigate to notification detail
-                  console.log('Notification clicked:', id);
+                  console.log("Notification clicked:", id);
                 }}
                 onViewAllClick={() => {
                   // TODO: Navigate to all notifications
-                  console.log('View all notifications');
+                  console.log("View all notifications");
                 }}
               />
             </section>
@@ -366,15 +363,15 @@ export default function DashboardPage() {
               <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
                 Уведомления
               </h2>
-              <NotificationsList 
+              <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
                   // TODO: Navigate to notification detail
-                  console.log('Notification clicked:', id);
+                  console.log("Notification clicked:", id);
                 }}
                 onViewAllClick={() => {
                   // TODO: Navigate to all notifications
-                  console.log('View all notifications');
+                  console.log("View all notifications");
                 }}
               />
             </section>

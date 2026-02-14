@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { VersionTimeline, ComparisonView } from '@/app/components/submissions';
-import type { Version } from '@/app/components/submissions';
-import { LayoutDebugger } from '@/app/components/LayoutDebugger';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { VersionTimeline, ComparisonView } from "@/app/components/submissions";
+import type { Version } from "@/app/components/submissions";
+import { LayoutDebugger } from "@/app/components/LayoutDebugger";
 
 /**
  * SubmissionsPage - История версий работы
- * 
+ *
  * Route: /courses/:courseId/tasks/:taskId/submissions
- * 
+ *
  * Features:
  * - Timeline of all versions (v1, v2, ...)
  * - Each version shows: timestamp, status, files, note, checks
@@ -30,121 +30,121 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
   // Mock data - will be replaced with API
-  const courseName = 'Веб-разработка';
-  const taskTitle = 'Задание 1: Создание лендинга';
+  const courseName = "Веб-разработка";
+  const taskTitle = "Задание 1: Создание лендинга";
   const allowResubmissions = true; // If false, hide "Create new version"
   const maxSubmissions = 3; // 0 = unlimited
 
   // Mock versions data
-  const [versions, setVersions] = useState<Version[]>([
+  const [versions] = useState<Version[]>([
     {
-      id: 'v3',
+      id: "v3",
       versionNumber: 3,
-      status: 'submitted',
-      timestamp: '27 января 2026, 16:45',
+      status: "submitted",
+      timestamp: "27 января 2026, 16:45",
       files: [
-        { id: 'f1', name: 'landing-final-v3.zip', size: 2457600 },
-        { id: 'f2', name: 'screenshots.pdf', size: 512000 },
+        { id: "f1", name: "landing-final-v3.zip", size: 2457600 },
+        { id: "f2", name: "screenshots.pdf", size: 512000 },
       ],
-      note: 'Финальная версия с исправлениями по всем замечаниям',
+      note: "Финальная версия с исправлениями по всем замечаниям",
       validationChecks: [
         {
-          id: 'c1',
-          name: 'Проверка на плагиат',
-          description: 'Сравнение с базой работ',
-          status: 'passed',
-          message: 'Совпадений не обнаружено',
+          id: "c1",
+          name: "Проверка на плагиат",
+          description: "Сравнение с базой работ",
+          status: "passed",
+          message: "Совпадений не обнаружено",
         },
         {
-          id: 'c2',
-          name: 'Линтинг кода',
-          description: 'Проверка стиля и качества кода',
-          status: 'passed',
-          message: 'Ошибок не найдено',
+          id: "c2",
+          name: "Линтинг кода",
+          description: "Проверка стиля и качества кода",
+          status: "passed",
+          message: "Ошибок не найдено",
         },
         {
-          id: 'c3',
-          name: 'Формат файлов',
-          description: 'Соответствие требованиям задания',
-          status: 'passed',
-          message: 'Все файлы в порядке',
+          id: "c3",
+          name: "Формат файлов",
+          description: "Соответствие требованиям задания",
+          status: "passed",
+          message: "Все файлы в порядке",
         },
         {
-          id: 'c4',
-          name: 'Анонимизация',
-          description: 'Проверка на личные данные',
-          status: 'passed',
-          message: 'Личных данных не найдено',
+          id: "c4",
+          name: "Анонимизация",
+          description: "Проверка на личные данные",
+          status: "passed",
+          message: "Личных данных не найдено",
         },
       ],
     },
     {
-      id: 'v2',
+      id: "v2",
       versionNumber: 2,
-      status: 'accepted',
-      timestamp: '26 января 2026, 10:30',
-      files: [{ id: 'f3', name: 'landing-v2.zip', size: 2048000 }],
-      note: 'Исправлена адаптивная версия',
+      status: "accepted",
+      timestamp: "26 января 2026, 10:30",
+      files: [{ id: "f3", name: "landing-v2.zip", size: 2048000 }],
+      note: "Исправлена адаптивная версия",
       validationChecks: [
         {
-          id: 'c5',
-          name: 'Проверка на плагиат',
-          description: 'Сравнение с базой работ',
-          status: 'passed',
+          id: "c5",
+          name: "Проверка на плагиат",
+          description: "Сравнение с базой работ",
+          status: "passed",
         },
         {
-          id: 'c6',
-          name: 'Линтинг кода',
-          description: 'Проверка стиля и качества кода',
-          status: 'warning',
-          message: '3 предупреждения о стиле кода',
+          id: "c6",
+          name: "Линтинг кода",
+          description: "Проверка стиля и качества кода",
+          status: "warning",
+          message: "3 предупреждения о стиле кода",
         },
         {
-          id: 'c7',
-          name: 'Формат файлов',
-          description: 'Соответствие требованиям задания',
-          status: 'passed',
+          id: "c7",
+          name: "Формат файлов",
+          description: "Соответствие требованиям задания",
+          status: "passed",
         },
         {
-          id: 'c8',
-          name: 'Анонимизация',
-          description: 'Проверка на личные данные',
-          status: 'passed',
+          id: "c8",
+          name: "Анонимизация",
+          description: "Проверка на личные данные",
+          status: "passed",
         },
       ],
     },
     {
-      id: 'v1',
+      id: "v1",
       versionNumber: 1,
-      status: 'submitted',
-      timestamp: '25 января 2026, 14:30',
-      files: [{ id: 'f4', name: 'landing-draft.zip', size: 1536000 }],
+      status: "submitted",
+      timestamp: "25 января 2026, 14:30",
+      files: [{ id: "f4", name: "landing-draft.zip", size: 1536000 }],
       validationChecks: [
         {
-          id: 'c9',
-          name: 'Проверка на плагиат',
-          description: 'Сравнение с базой работ',
-          status: 'passed',
+          id: "c9",
+          name: "Проверка на плагиат",
+          description: "Сравнение с базой работ",
+          status: "passed",
         },
         {
-          id: 'c10',
-          name: 'Линтинг кода',
-          description: 'Проверка стиля и качества кода',
-          status: 'warning',
-          message: '5 предупреждений о стиле кода',
+          id: "c10",
+          name: "Линтинг кода",
+          description: "Проверка стиля и качества кода",
+          status: "warning",
+          message: "5 предупреждений о стиле кода",
         },
         {
-          id: 'c11',
-          name: 'Формат файлов',
-          description: 'Соответствие требованиям задания',
-          status: 'failed',
-          message: 'Отсутствует README.md',
+          id: "c11",
+          name: "Формат файлов",
+          description: "Соответствие требованиям задания",
+          status: "failed",
+          message: "Отсутствует README.md",
         },
         {
-          id: 'c12',
-          name: 'Анонимизация',
-          description: 'Проверка на личные данные',
-          status: 'passed',
+          id: "c12",
+          name: "Анонимизация",
+          description: "Проверка на личные данные",
+          status: "passed",
         },
       ],
     },
@@ -176,18 +176,18 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
 
   // Actions
   const handleDownload = (versionId: string) => {
-    console.log('Download version:', versionId);
+    console.log("Download version:", versionId);
     alert(`Скачивание версии ${versionId}`);
   };
 
   const handleViewReports = (versionId: string) => {
-    console.log('View reports for version:', versionId);
+    console.log("View reports for version:", versionId);
     alert(`Просмотр отчётов для версии ${versionId}`);
   };
 
   const handleMakeCurrent = (versionId: string) => {
-    console.log('Make version current:', versionId);
-    if (confirm('Сделать эту версию текущей?')) {
+    console.log("Make version current:", versionId);
+    if (confirm("Сделать эту версию текущей?")) {
       alert(`Версия ${versionId} теперь текущая`);
     }
   };
@@ -213,10 +213,10 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
       <AppShell title="История версий">
         <Breadcrumbs
           items={[
-            { label: 'Курсы', href: ROUTES.courses },
+            { label: "Курсы", href: ROUTES.courses },
             { label: courseName, href: ROUTES.course(courseId) },
             { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-            { label: 'Версии' }
+            { label: "Версии" },
           ]}
         />
 
@@ -253,10 +253,10 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
     <AppShell title="История версий">
       <Breadcrumbs
         items={[
-          { label: 'Курсы', href: ROUTES.courses },
+          { label: "Курсы", href: ROUTES.courses },
           { label: courseName, href: ROUTES.course(courseId) },
           { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-          { label: 'Версии' }
+          { label: "Версии" },
         ]}
       />
 
@@ -277,11 +277,11 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
           }}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-[12px] text-[14px] font-medium transition-colors ${
             comparisonMode
-              ? 'bg-[#5b8def] text-white hover:bg-[#4a7ddf]'
-              : 'bg-[#d2def8] text-[#21214f] hover:bg-[#c5d5f5]'
+              ? "bg-[#5b8def] text-white hover:bg-[#4a7ddf]"
+              : "bg-[#d2def8] text-[#21214f] hover:bg-[#c5d5f5]"
           }`}
         >
-          {comparisonMode ? 'Отменить сравнение' : 'Сравнить версии'}
+          {comparisonMode ? "Отменить сравнение" : "Сравнить версии"}
         </button>
 
         {comparisonMode && (

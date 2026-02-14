@@ -1,26 +1,26 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Button } from '@/app/components/ui/button.tsx';
-import { Save, X } from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Button } from "@/app/components/ui/button.tsx";
+import { Save, X } from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 
 export default function CreateCoursePage() {
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [semester, setSemester] = useState('');
-  const [description, setDescription] = useState('');
-  const [visibility, setVisibility] = useState<'public' | 'private'>('public');
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [semester, setSemester] = useState("");
+  const [description, setDescription] = useState("");
+  const [visibility, setVisibility] = useState<"public" | "private">("public");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Create new course
     const newCourse = demoDataStore.createCourse({
       title: name,
       code,
-      instructorId: 'teacher-1',
+      instructorId: "teacher-1",
       semester,
       description,
       archived: false,
@@ -32,11 +32,13 @@ export default function CreateCoursePage() {
 
   return (
     <AppShell title="Создание курса">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Курсы', href: ROUTES.teacherDashboard },
-        { label: 'Создать курс' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Курсы", href: ROUTES.teacherDashboard },
+          { label: "Создать курс" },
+        ]}
+      />
 
       <div className="max-w-[800px] mx-auto mt-4">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
@@ -118,8 +120,8 @@ export default function CreateCoursePage() {
                     type="radio"
                     name="visibility"
                     value="public"
-                    checked={visibility === 'public'}
-                    onChange={(e) => setVisibility(e.target.value as 'public')}
+                    checked={visibility === "public"}
+                    onChange={(e) => setVisibility(e.target.value as "public")}
                     className="w-4 h-4 text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
                   />
                   <div>
@@ -132,8 +134,8 @@ export default function CreateCoursePage() {
                     type="radio"
                     name="visibility"
                     value="private"
-                    checked={visibility === 'private'}
-                    onChange={(e) => setVisibility(e.target.value as 'private')}
+                    checked={visibility === "private"}
+                    onChange={(e) => setVisibility(e.target.value as "private")}
                     className="w-4 h-4 text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
                   />
                   <div>
@@ -150,7 +152,7 @@ export default function CreateCoursePage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => window.location.hash = '/teacher/courses'}
+              onClick={() => (window.location.hash = "/teacher/courses")}
             >
               <X className="w-4 h-4" />
               Отмена

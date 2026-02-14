@@ -5,22 +5,34 @@ interface Criterion {
 }
 
 const criteria: Criterion[] = [
-  { name: 'Качество дизайна', points: 25, description: 'Визуальная целостность, следование принципам дизайна' },
-  { name: 'Функциональность', points: 25, description: 'Полнота реализации требуемых экранов и функций' },
-  { name: 'UX проработка', points: 20, description: 'Удобство использования, логичность навигации' },
-  { name: 'Адаптивность', points: 15, description: 'Корректное отображение на разных устройствах' },
-  { name: 'Презентация', points: 15, description: 'Качество презентации и защиты проекта' }
+  {
+    name: "Качество дизайна",
+    points: 25,
+    description: "Визуальная целостность, следование принципам дизайна",
+  },
+  {
+    name: "Функциональность",
+    points: 25,
+    description: "Полнота реализации требуемых экранов и функций",
+  },
+  {
+    name: "UX проработка",
+    points: 20,
+    description: "Удобство использования, логичность навигации",
+  },
+  { name: "Адаптивность", points: 15, description: "Корректное отображение на разных устройствах" },
+  { name: "Презентация", points: 15, description: "Качество презентации и защиты проекта" },
 ];
 
 export function TaskCriteria() {
   const totalPoints = criteria.reduce((sum, c) => sum + c.points, 0);
-  
+
   return (
     <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
         Критерии оценки
       </h2>
-      
+
       <div className="overflow-x-auto rounded-[12px] border border-[#c7c7c7]">
         <table className="w-full">
           <thead className="bg-[#e4e4e4]">
@@ -38,7 +50,10 @@ export function TaskCriteria() {
           </thead>
           <tbody>
             {criteria.map((criterion, index) => (
-              <tr key={index} className="border-t border-[#c7c7c7] hover:bg-[#f2f2f2] transition-colors">
+              <tr
+                key={index}
+                className="border-t border-[#c7c7c7] hover:bg-[#f2f2f2] transition-colors"
+              >
                 <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
                   {criterion.name}
                 </td>

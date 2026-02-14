@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { MessageSquare, AlertCircle, Send, ArrowLeft } from 'lucide-react';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { MessageSquare, AlertCircle, Send, ArrowLeft } from "lucide-react";
 
 /**
  * SubmitAppealPage - Submit an appeal for a specific task
  */
 
 export default function SubmitAppealPage() {
-  const [reason, setReason] = useState('');
-  const [details, setDetails] = useState('');
+  const [reason, setReason] = useState("");
+  const [details, setDetails] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,12 +26,10 @@ export default function SubmitAppealPage() {
             <div className="w-16 h-16 bg-[#e8f5e9] rounded-full flex items-center justify-center mx-auto mb-6">
               <Send className="w-8 h-8 text-[#4caf50]" />
             </div>
-            <h1 className="text-[28px] font-medium text-[#21214f] mb-3">
-              Апелляция отправлена!
-            </h1>
+            <h1 className="text-[28px] font-medium text-[#21214f] mb-3">Апелляция отправлена!</h1>
             <p className="text-[15px] text-[#767692] mb-6">
-              Ваш запрос получен и будет рассмотрен преподавателем в течение 3-5 рабочих дней. 
-              Вы получите уведомление, когда решение будет принято.
+              Ваш запрос получен и будет рассмотрен преподавателем в течение 3-5 рабочих дней. Вы
+              получите уведомление, когда решение будет принято.
             </p>
             <div className="flex gap-3">
               <a
@@ -55,12 +53,14 @@ export default function SubmitAppealPage() {
 
   return (
     <AppShell title="Submit Appeal">
-      <Breadcrumbs items={[
-        { label: 'Курсы', href: ROUTES.courses },
-        { label: 'Web Development', href: ROUTES.course('1') },
-        { label: 'Final Project', href: ROUTES.task('1', '1') },
-        { label: 'Апелляция' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Курсы", href: ROUTES.courses },
+          { label: "Web Development", href: ROUTES.course("1") },
+          { label: "Final Project", href: ROUTES.task("1", "1") },
+          { label: "Апелляция" },
+        ]}
+      />
 
       <div className="mt-6 max-w-[800px]">
         <a
@@ -90,9 +90,7 @@ export default function SubmitAppealPage() {
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-[#ff9800] flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
-                Важная информация
-              </h4>
+              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">Важная информация</h4>
               <ul className="text-[13px] text-[#767692] space-y-1">
                 <li>• Апелляция может быть подана только один раз для каждого задания</li>
                 <li>• Рассмотрение занимает 3-5 рабочих дней</li>
@@ -107,7 +105,7 @@ export default function SubmitAppealPage() {
         <form onSubmit={handleSubmit}>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
             <h2 className="text-[20px] font-medium text-[#21214f] mb-6">Детали апелляции</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
@@ -121,7 +119,9 @@ export default function SubmitAppealPage() {
                 >
                   <option value="">Выберите причину...</option>
                   <option value="grading_error">Ошибка в оценивании</option>
-                  <option value="criteria_misunderstanding">Неправильное понимание критериев</option>
+                  <option value="criteria_misunderstanding">
+                    Неправильное понимание критериев
+                  </option>
                   <option value="technical_issues">Технические проблемы</option>
                   <option value="partial_credit">Частичный зачёт не учтён</option>
                   <option value="other">Другое</option>
@@ -141,7 +141,8 @@ export default function SubmitAppealPage() {
                   className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors resize-none"
                 />
                 <p className="mt-2 text-[12px] text-[#767692]">
-                  Минимум 100 символов. Чем подробнее опишете проблему, тем быстрее будет рассмотрение.
+                  Минимум 100 символов. Чем подробнее опишете проблему, тем быстрее будет
+                  рассмотрение.
                 </p>
               </div>
             </div>
@@ -150,7 +151,7 @@ export default function SubmitAppealPage() {
           {/* Review Info */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
             <h2 className="text-[20px] font-medium text-[#21214f] mb-4">Текущая оценка</h2>
-            
+
             <div className="grid md:grid-cols-3 gap-4">
               <div className="p-4 bg-[#f9f9f9] rounded-[12px]">
                 <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
@@ -165,9 +166,7 @@ export default function SubmitAppealPage() {
                 <p className="text-[24px] font-medium text-[#21214f]">72%</p>
               </div>
               <div className="p-4 bg-[#e9f5ff] rounded-[12px]">
-                <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                  Средняя
-                </p>
+                <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Средняя</p>
                 <p className="text-[24px] font-medium text-[#5b8def]">75%</p>
               </div>
             </div>
@@ -180,8 +179,8 @@ export default function SubmitAppealPage() {
               disabled={!reason || details.length < 100}
               className={`flex-1 px-6 py-4 rounded-[12px] text-[15px] font-medium transition-colors ${
                 reason && details.length >= 100
-                  ? 'bg-[#5b8def] text-white hover:bg-[#4a7de8]'
-                  : 'bg-[#f0f0f0] text-[#d7d7d7] cursor-not-allowed'
+                  ? "bg-[#5b8def] text-white hover:bg-[#4a7de8]"
+                  : "bg-[#f0f0f0] text-[#d7d7d7] cursor-not-allowed"
               }`}
             >
               Отправить апелляцию

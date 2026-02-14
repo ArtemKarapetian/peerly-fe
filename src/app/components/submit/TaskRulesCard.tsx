@@ -1,8 +1,8 @@
-import { Clock, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Clock, RefreshCw, AlertTriangle } from "lucide-react";
 
 /**
  * TaskRulesCard - Карточка с правилами задания
- * 
+ *
  * Displays:
  * - Deadline
  * - Allowed resubmissions
@@ -28,18 +28,18 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
     <div className="space-y-4">
       {/* Deadline */}
       <div className="flex items-start gap-3">
-        <div className={`w-10 h-10 ${rules.isDeadlinePassed ? 'bg-[#ffb8b8]' : 'bg-[#ffd4a3]'} rounded-[8px] flex items-center justify-center shrink-0`}>
+        <div
+          className={`w-10 h-10 ${rules.isDeadlinePassed ? "bg-[#ffb8b8]" : "bg-[#ffd4a3]"} rounded-[8px] flex items-center justify-center shrink-0`}
+        >
           <Clock className="w-5 h-5 text-[#21214f]" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-[#767692] mb-0.5">
-            Дедлайн
-          </div>
-          <div className={`text-[15px] font-medium ${rules.isDeadlinePassed ? 'text-[#d4183d]' : 'text-[#21214f]'}`}>
+          <div className="text-[13px] text-[#767692] mb-0.5">Дедлайн</div>
+          <div
+            className={`text-[15px] font-medium ${rules.isDeadlinePassed ? "text-[#d4183d]" : "text-[#21214f]"}`}
+          >
             {rules.deadline}
-            {rules.isDeadlinePassed && (
-              <span className="ml-2 text-[13px]">(просрочен)</span>
-            )}
+            {rules.isDeadlinePassed && <span className="ml-2 text-[13px]">(просрочен)</span>}
           </div>
         </div>
       </div>
@@ -50,9 +50,7 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
           <RefreshCw className="w-5 h-5 text-[#21214f]" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-[#767692] mb-0.5">
-            Пересдачи
-          </div>
+          <div className="text-[13px] text-[#767692] mb-0.5">Пересдачи</div>
           <div className="text-[15px] font-medium text-[#21214f]">
             {remainingResubmissions > 0 ? (
               <>
@@ -77,12 +75,8 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
             <AlertTriangle className="w-5 h-5 text-[#21214f]" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] text-[#767692] mb-0.5">
-              Политика опозданий
-            </div>
-            <div className="text-[13px] text-[#21214f] leading-[1.5]">
-              {rules.latePolicy}
-            </div>
+            <div className="text-[13px] text-[#767692] mb-0.5">Политика опозданий</div>
+            <div className="text-[13px] text-[#21214f] leading-[1.5]">{rules.latePolicy}</div>
           </div>
         </div>
       )}

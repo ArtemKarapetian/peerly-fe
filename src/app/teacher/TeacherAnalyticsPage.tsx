@@ -1,12 +1,20 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
 import {
-  BarChart3, Download, FileText, TrendingUp, 
-  MessageSquare, AlertTriangle, Shield, Code, CheckCircle, Users
-} from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+  BarChart3,
+  Download,
+  FileText,
+  TrendingUp,
+  MessageSquare,
+  AlertTriangle,
+  Shield,
+  Code,
+  CheckCircle,
+  Users,
+} from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 import {
   BarChart,
   Bar,
@@ -17,12 +25,12 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell
-} from 'recharts';
+  Cell,
+} from "recharts";
 
 /**
  * TeacherAnalyticsPage - Отчёты и аналитика
- * 
+ *
  * Секции:
  * - Аналитика заданий: завершённость, завершённость рецензий, распределение оценок
  * - Индикаторы качества: средняя длина комментария, процент помеченных рецензий
@@ -42,39 +50,44 @@ export default function TeacherAnalyticsPage() {
   const assignments = demoDataStore.getAssignments();
   const submissions = demoDataStore.getSubmissions();
   const reviews = demoDataStore.getReviews();
-  const users = demoDataStore.getUsers().filter(u => u.role === 'Student');
+  const users = demoDataStore.getUsers().filter((u) => u.role === "Student");
 
-  const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || '');
-  const [selectedAssignment, setSelectedAssignment] = useState<string>('all');
+  const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || "");
+  const [selectedAssignment, setSelectedAssignment] = useState<string>("all");
 
   // Generate analytics data
-  const courseAssignments = assignments.filter(a => 
-    courses.find(c => c.id === selectedCourse)?.assignmentIds?.includes(a.id)
+  const courseAssignments = assignments.filter((a) =>
+    courses.find((c) => c.id === selectedCourse)?.assignmentIds?.includes(a.id),
   );
 
-  const assignmentAnalytics = courseAssignments.map(assignment => {
-    const assignmentSubmissions = submissions.filter(s => s.assignmentId === assignment.id);
+  const assignmentAnalytics = courseAssignments.map((assignment) => {
+    const assignmentSubmissions = submissions.filter((s) => s.assignmentId === assignment.id);
     const totalStudents = users.length;
-    const completedSubmissions = assignmentSubmissions.filter(s => s.status === 'submitted').length;
+    const completedSubmissions = assignmentSubmissions.filter(
+      (s) => s.status === "submitted",
+    ).length;
     const completionRate = totalStudents > 0 ? (completedSubmissions / totalStudents) * 100 : 0;
 
-    const assignmentReviews = reviews.filter(r => 
-      assignmentSubmissions.some(s => s.id === r.submissionId)
+    const assignmentReviews = reviews.filter((r) =>
+      assignmentSubmissions.some((s) => s.id === r.submissionId),
     );
     const expectedReviews = completedSubmissions * 3; // 3 reviews per submission
     const completedReviews = assignmentReviews.length;
-    const reviewCompletionRate = expectedReviews > 0 ? (completedReviews / expectedReviews) * 100 : 0;
+    const reviewCompletionRate =
+      expectedReviews > 0 ? (completedReviews / expectedReviews) * 100 : 0;
 
     // Calculate average scores
-    const allScores = assignmentReviews.flatMap(r => Object.values(r.scores));
-    const avgScore = allScores.length > 0 
-      ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length 
-      : 0;
+    const allScores = assignmentReviews.flatMap((r) => Object.values(r.scores));
+    const avgScore =
+      allScores.length > 0
+        ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length
+        : 0;
 
     // Calculate average comment length
-    const avgCommentLength = assignmentReviews.length > 0
-      ? assignmentReviews.reduce((sum, r) => sum + r.comment.length, 0) / assignmentReviews.length
-      : 0;
+    const avgCommentLength =
+      assignmentReviews.length > 0
+        ? assignmentReviews.reduce((sum, r) => sum + r.comment.length, 0) / assignmentReviews.length
+        : 0;
 
     // Demo flagged rate (5-15%)
     const flaggedRate = 5 + Math.random() * 10;
@@ -100,46 +113,55 @@ export default function TeacherAnalyticsPage() {
       totalSubmissions: completedSubmissions,
       totalReviews: completedReviews,
       plagiarism: { high: plagiarismHigh, medium: plagiarismMedium, low: plagiarismLow },
-      linter: { failed: lintFailed, warning: lintWarning, passed: lintPassed }
+      linter: { failed: lintFailed, warning: lintWarning, passed: lintPassed },
     };
   });
 
   // Overall course analytics
   const overallAnalytics = {
     totalAssignments: courseAssignments.length,
-    avgCompletionRate: assignmentAnalytics.length > 0
-      ? assignmentAnalytics.reduce((sum, a) => sum + a.completionRate, 0) / assignmentAnalytics.length
-      : 0,
-    avgReviewCompletionRate: assignmentAnalytics.length > 0
-      ? assignmentAnalytics.reduce((sum, a) => sum + a.reviewCompletionRate, 0) / assignmentAnalytics.length
-      : 0,
-    avgScore: assignmentAnalytics.length > 0
-      ? assignmentAnalytics.reduce((sum, a) => sum + a.avgScore, 0) / assignmentAnalytics.length
-      : 0,
-    avgCommentLength: assignmentAnalytics.length > 0
-      ? assignmentAnalytics.reduce((sum, a) => sum + a.avgCommentLength, 0) / assignmentAnalytics.length
-      : 0,
-    avgFlaggedRate: assignmentAnalytics.length > 0
-      ? assignmentAnalytics.reduce((sum, a) => sum + a.flaggedRate, 0) / assignmentAnalytics.length
-      : 0
+    avgCompletionRate:
+      assignmentAnalytics.length > 0
+        ? assignmentAnalytics.reduce((sum, a) => sum + a.completionRate, 0) /
+          assignmentAnalytics.length
+        : 0,
+    avgReviewCompletionRate:
+      assignmentAnalytics.length > 0
+        ? assignmentAnalytics.reduce((sum, a) => sum + a.reviewCompletionRate, 0) /
+          assignmentAnalytics.length
+        : 0,
+    avgScore:
+      assignmentAnalytics.length > 0
+        ? assignmentAnalytics.reduce((sum, a) => sum + a.avgScore, 0) / assignmentAnalytics.length
+        : 0,
+    avgCommentLength:
+      assignmentAnalytics.length > 0
+        ? assignmentAnalytics.reduce((sum, a) => sum + a.avgCommentLength, 0) /
+          assignmentAnalytics.length
+        : 0,
+    avgFlaggedRate:
+      assignmentAnalytics.length > 0
+        ? assignmentAnalytics.reduce((sum, a) => sum + a.flaggedRate, 0) /
+          assignmentAnalytics.length
+        : 0,
   };
 
   // Gradebook data
   const generateGradebook = (): GradebookEntry[] => {
-    return users.map(student => {
+    return users.map((student) => {
       const scores: Record<string, number | null> = {};
       let totalScore = 0;
       let gradedAssignments = 0;
 
-      courseAssignments.forEach(assignment => {
+      courseAssignments.forEach((assignment) => {
         const submission = submissions.find(
-          s => s.assignmentId === assignment.id && s.studentId === student.id
+          (s) => s.assignmentId === assignment.id && s.studentId === student.id,
         );
 
-        if (submission && submission.status === 'submitted') {
-          const studentReviews = reviews.filter(r => r.submissionId === submission.id);
+        if (submission && submission.status === "submitted") {
+          const studentReviews = reviews.filter((r) => r.submissionId === submission.id);
           if (studentReviews.length > 0) {
-            const allScores = studentReviews.flatMap(r => Object.values(r.scores));
+            const allScores = studentReviews.flatMap((r) => Object.values(r.scores));
             const avgScore = allScores.reduce((sum, s) => sum + s, 0) / allScores.length;
             scores[assignment.id] = Math.round(avgScore * 10) / 10;
             totalScore += avgScore;
@@ -158,7 +180,7 @@ export default function TeacherAnalyticsPage() {
         studentId: student.id,
         studentName: student.name,
         scores,
-        finalScore: Math.round(finalScore * 10) / 10
+        finalScore: Math.round(finalScore * 10) / 10,
       };
     });
   };
@@ -166,58 +188,61 @@ export default function TeacherAnalyticsPage() {
   const gradebook = generateGradebook();
 
   // Chart data
-  const completionChartData = assignmentAnalytics.map(a => ({
-    name: a.title.length > 20 ? a.title.substring(0, 20) + '...' : a.title,
-    'Сдано работ': Math.round(a.completionRate),
-    'Завершено рецензий': Math.round(a.reviewCompletionRate)
+  const completionChartData = assignmentAnalytics.map((a) => ({
+    name: a.title.length > 20 ? a.title.substring(0, 20) + "..." : a.title,
+    "Сдано работ": Math.round(a.completionRate),
+    "Завершено рецензий": Math.round(a.reviewCompletionRate),
   }));
 
   const scoreDistributionData = [
-    { name: '1-2', value: Math.floor(Math.random() * 10) + 5, fill: '#d4183d' },
-    { name: '2-3', value: Math.floor(Math.random() * 15) + 10, fill: '#ff9800' },
-    { name: '3-4', value: Math.floor(Math.random() * 25) + 20, fill: '#f59e0b' },
-    { name: '4-5', value: Math.floor(Math.random() * 30) + 35, fill: '#4caf50' }
+    { name: "1-2", value: Math.floor(Math.random() * 10) + 5, fill: "#d4183d" },
+    { name: "2-3", value: Math.floor(Math.random() * 15) + 10, fill: "#ff9800" },
+    { name: "3-4", value: Math.floor(Math.random() * 25) + 20, fill: "#f59e0b" },
+    { name: "4-5", value: Math.floor(Math.random() * 30) + 35, fill: "#4caf50" },
   ];
 
   // Export functions
   const handleExportCSV = () => {
-    const course = courses.find(c => c.id === selectedCourse);
-    
+    const course = courses.find((c) => c.id === selectedCourse);
+
     // Build CSV content
-    const headers = ['Студент', ...courseAssignments.map(a => a.title), 'Итоговая оценка'];
-    const rows = gradebook.map(entry => [
+    const headers = ["Студент", ...courseAssignments.map((a) => a.title), "Итоговая оценка"];
+    const rows = gradebook.map((entry) => [
       entry.studentName,
-      ...courseAssignments.map(a => entry.scores[a.id]?.toString() || '-'),
-      entry.finalScore.toString()
+      ...courseAssignments.map((a) => entry.scores[a.id]?.toString() || "-"),
+      entry.finalScore.toString(),
     ]);
 
     const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
 
     // Create and download file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `gradebook_${course?.title || 'course'}_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `gradebook_${course?.title || "course"}_${new Date().toISOString().split("T")[0]}.csv`;
     link.click();
   };
 
   const handleExportPDF = () => {
-    alert('PDF экспорт: Файл будет подготовлен и отправлен на вашу почту');
+    alert("PDF экспорт: Файл будет подготовлен и отправлен на вашу почту");
   };
 
-  const selectedAnalytics = selectedAssignment === 'all' 
-    ? null 
-    : assignmentAnalytics.find(a => a.id === selectedAssignment);
+  const selectedAnalytics =
+    selectedAssignment === "all"
+      ? null
+      : assignmentAnalytics.find((a) => a.id === selectedAssignment);
 
   return (
     <AppShell title="Отчёты и аналитика">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Аналитика' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Аналитика" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -242,7 +267,7 @@ export default function TeacherAnalyticsPage() {
                 onChange={(e) => setSelectedCourse(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
-                {courses.map(course => (
+                {courses.map((course) => (
                   <option key={course.id} value={course.id}>
                     {course.title} ({course.code})
                   </option>
@@ -259,7 +284,7 @@ export default function TeacherAnalyticsPage() {
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
                 <option value="all">Все задания (общая аналитика)</option>
-                {courseAssignments.map(assignment => (
+                {courseAssignments.map((assignment) => (
                   <option key={assignment.id} value={assignment.id}>
                     {assignment.title}
                   </option>
@@ -283,7 +308,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Сдача работ</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                Сдача работ
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {Math.round(overallAnalytics.avgCompletionRate)}%
@@ -303,9 +330,7 @@ export default function TeacherAnalyticsPage() {
               <Users className="w-4 h-4 text-[#5b8def]" />
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">Студентов</span>
             </div>
-            <p className="text-[24px] font-medium text-[#21214f]">
-              {users.length}
-            </p>
+            <p className="text-[24px] font-medium text-[#21214f]">{users.length}</p>
           </div>
         </div>
 
@@ -315,27 +340,25 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
-                Завершённость по заданиям
-              </h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">Завершённость по заданиям</h2>
             </div>
             {completionChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={completionChartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e6e8ee" />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fill: '#767692', fontSize: 12 }}
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fill: "#767692", fontSize: 12 }}
                     angle={-45}
                     textAnchor="end"
                     height={80}
                   />
-                  <YAxis tick={{ fill: '#767692', fontSize: 12 }} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'white', 
-                      border: '2px solid #e6e8ee',
-                      borderRadius: '8px'
+                  <YAxis tick={{ fill: "#767692", fontSize: 12 }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "white",
+                      border: "2px solid #e6e8ee",
+                      borderRadius: "8px",
                     }}
                   />
                   <Bar dataKey="Сдано работ" fill="#5b8def" radius={[8, 8, 0, 0]} />
@@ -353,9 +376,7 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
-                Распределение оценок
-              </h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">Распределение оценок</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -382,9 +403,7 @@ export default function TeacherAnalyticsPage() {
         <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-[#5b8def]" />
-            <h2 className="text-[18px] font-medium text-[#21214f]">
-              Индикаторы качества рецензий
-            </h2>
+            <h2 className="text-[18px] font-medium text-[#21214f]">Индикаторы качества рецензий</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
@@ -507,24 +526,24 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
-                Сводка по плагинам
-              </h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">Сводка по плагинам</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {assignmentAnalytics.slice(0, 4).map(analytics => (
+              {assignmentAnalytics.slice(0, 4).map((analytics) => (
                 <div key={analytics.id} className="p-4 border-2 border-[#e6e8ee] rounded-[12px]">
-                  <h3 className="text-[14px] font-medium text-[#21214f] mb-3">
-                    {analytics.title}
-                  </h3>
+                  <h3 className="text-[14px] font-medium text-[#21214f] mb-3">{analytics.title}</h3>
                   <div className="grid grid-cols-2 gap-3 text-[12px]">
                     <div>
                       <p className="text-[#767692] mb-1">Плагиат (высокий)</p>
-                      <p className="text-[16px] font-medium text-[#d4183d]">{analytics.plagiarism.high}</p>
+                      <p className="text-[16px] font-medium text-[#d4183d]">
+                        {analytics.plagiarism.high}
+                      </p>
                     </div>
                     <div>
                       <p className="text-[#767692] mb-1">Линтер (ошибки)</p>
-                      <p className="text-[16px] font-medium text-[#d4183d]">{analytics.linter.failed}</p>
+                      <p className="text-[16px] font-medium text-[#d4183d]">
+                        {analytics.linter.failed}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -538,9 +557,7 @@ export default function TeacherAnalyticsPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
-                Журнал оценок
-              </h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">Журнал оценок</h2>
             </div>
             <div className="flex gap-2">
               <button
@@ -568,14 +585,14 @@ export default function TeacherAnalyticsPage() {
                   <th className="text-left p-3 text-[13px] font-medium text-[#767692] uppercase tracking-wide sticky left-0 bg-white">
                     Студент
                   </th>
-                  {courseAssignments.map(assignment => (
-                    <th 
-                      key={assignment.id} 
+                  {courseAssignments.map((assignment) => (
+                    <th
+                      key={assignment.id}
                       className="text-center p-3 text-[13px] font-medium text-[#767692] uppercase tracking-wide min-w-[100px]"
                       title={assignment.title}
                     >
-                      {assignment.title.length > 15 
-                        ? assignment.title.substring(0, 15) + '...' 
+                      {assignment.title.length > 15
+                        ? assignment.title.substring(0, 15) + "..."
                         : assignment.title}
                     </th>
                   ))}
@@ -586,25 +603,29 @@ export default function TeacherAnalyticsPage() {
               </thead>
               <tbody>
                 {gradebook.map((entry, index) => (
-                  <tr 
+                  <tr
                     key={entry.studentId}
                     className={`border-b border-[#e6e8ee] hover:bg-[#fafbfc] transition-colors ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'
+                      index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"
                     }`}
                   >
                     <td className="p-3 text-[14px] text-[#21214f] font-medium sticky left-0 bg-inherit">
                       {entry.studentName}
                     </td>
-                    {courseAssignments.map(assignment => {
+                    {courseAssignments.map((assignment) => {
                       const score = entry.scores[assignment.id];
                       return (
                         <td key={assignment.id} className="p-3 text-center">
                           {score !== null ? (
-                            <span className={`inline-flex items-center justify-center w-12 h-8 rounded-[6px] text-[14px] font-medium ${
-                              score >= 4 ? 'bg-[#e8f5e9] text-[#4caf50]' :
-                              score >= 3 ? 'bg-[#fff4e5] text-[#ff9800]' :
-                              'bg-[#fff5f5] text-[#d4183d]'
-                            }`}>
+                            <span
+                              className={`inline-flex items-center justify-center w-12 h-8 rounded-[6px] text-[14px] font-medium ${
+                                score >= 4
+                                  ? "bg-[#e8f5e9] text-[#4caf50]"
+                                  : score >= 3
+                                    ? "bg-[#fff4e5] text-[#ff9800]"
+                                    : "bg-[#fff5f5] text-[#d4183d]"
+                              }`}
+                            >
                               {score.toFixed(1)}
                             </span>
                           ) : (
@@ -614,13 +635,18 @@ export default function TeacherAnalyticsPage() {
                       );
                     })}
                     <td className="p-3 text-center bg-[#f9f9f9]">
-                      <span className={`inline-flex items-center justify-center w-14 h-9 rounded-[8px] text-[15px] font-medium ${
-                        entry.finalScore >= 4 ? 'bg-[#4caf50] text-white' :
-                        entry.finalScore >= 3 ? 'bg-[#ff9800] text-white' :
-                        entry.finalScore > 0 ? 'bg-[#d4183d] text-white' :
-                        'bg-[#e6e8ee] text-[#767692]'
-                      }`}>
-                        {entry.finalScore > 0 ? entry.finalScore.toFixed(1) : '—'}
+                      <span
+                        className={`inline-flex items-center justify-center w-14 h-9 rounded-[8px] text-[15px] font-medium ${
+                          entry.finalScore >= 4
+                            ? "bg-[#4caf50] text-white"
+                            : entry.finalScore >= 3
+                              ? "bg-[#ff9800] text-white"
+                              : entry.finalScore > 0
+                                ? "bg-[#d4183d] text-white"
+                                : "bg-[#e6e8ee] text-[#767692]"
+                        }`}
+                      >
+                        {entry.finalScore > 0 ? entry.finalScore.toFixed(1) : "—"}
                       </span>
                     </td>
                   </tr>

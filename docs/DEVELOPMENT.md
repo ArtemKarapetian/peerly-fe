@@ -17,43 +17,47 @@
 ### Компоненты навигации
 
 **Router.tsx** - главный роутер приложения:
+
 ```tsx
 // Автоматически определяет текущий маршрут из window.location.hash
 // Переключается между CoursesListPage, CoursePage и TaskPage
 ```
 
 **Breadcrumbs** - навигационные хлебные крошки:
+
 ```tsx
-<Breadcrumbs 
-  items={['Курсы', 'Название курса', 'Задания', 'Задание 1']}
+<Breadcrumbs
+  items={["Курсы", "Название курса", "Задания", "Задание 1"]}
   onItemClick={(index) => {
     if (index === 0) {
-      window.location.hash = '/courses';
+      window.location.hash = "/courses";
     } else if (index === 1 || index === 2) {
-      window.location.hash = '/course/1';
+      window.location.hash = "/course/1";
     }
   }}
 />
 ```
 
 **CourseCard** - клик открывает страницу курса:
+
 ```tsx
 <CourseCard
   id="1"
   title="Название курса"
   teacher="Преподаватель"
   coverColor="#f2b2d6"
-  onClick={() => window.location.hash = '/course/1'}
+  onClick={() => (window.location.hash = "/course/1")}
 />
 ```
 
 **TaskListItem** - клик открывает страницу задания:
+
 ```tsx
 <TaskListItem
   title="Задание 1"
   deadline="Дедлайн: 31 января"
   status="SUBMITTED"
-  onClick={() => window.location.hash = '/task/1'}
+  onClick={() => (window.location.hash = "/task/1")}
 />
 ```
 
@@ -61,12 +65,15 @@
 
 1. Создайте компонент страницы в `/src/app/`
 2. Добавьте маршрут в `Router.tsx`:
+
 ```tsx
-if (hash.startsWith('/new-page/')) {
-  setCurrentRoute('new-page');
+if (hash.startsWith("/new-page/")) {
+  setCurrentRoute("new-page");
 }
 ```
+
 3. Добавьте обработчик в switch:
+
 ```tsx
 case 'new-page':
   return <NewPage />;
@@ -90,14 +97,15 @@ AppShell (flex horizontal)
 
 ### Брейкпоинты
 
-| Брейкпоинт | Диапазон | Sidebar | Layout колонок | Sticky | Gutters |
-|------------|----------|---------|----------------|--------|---------|
-| **Desktop** | ≥1100px | 260px expanded | 2 колонки (2fr + 1fr) | Active | 32px |
-| **Mid** | 900-1099px | 80px collapsed | 2 колонки (плотнее) | Active | 24px |
-| **Tablet** | 800-899px | 80px collapsed | 1 колонка | Disabled | 24px |
-| **Mobile** | <800px | Drawer (скрыт) | 1 колонка | Disabled | 16px |
+| Брейкпоинт  | Диапазон   | Sidebar        | Layout колонок        | Sticky   | Gutters |
+| ----------- | ---------- | -------------- | --------------------- | -------- | ------- |
+| **Desktop** | ≥1100px    | 260px expanded | 2 колонки (2fr + 1fr) | Active   | 32px    |
+| **Mid**     | 900-1099px | 80px collapsed | 2 колонки (плотнее)   | Active   | 24px    |
+| **Tablet**  | 800-899px  | 80px collapsed | 1 колонка             | Disabled | 24px    |
+| **Mobile**  | <800px     | Drawer (скрыт) | 1 колонка             | Disabled | 16px    |
 
 **Tailwind брейкпоинты в theme.css:**
+
 ```css
 @breakpoint mobile (width >= 0px);
 @breakpoint tablet (width >= 800px);
@@ -160,6 +168,7 @@ AppShell (flex horizontal)
 ```
 
 **Почему `min-w-0` важен**:
+
 - По умолчанию flex-items имеют `min-width: auto`
 - Это предотвращает уменьшение элемента меньше его контента
 - `min-w-0` позволяет элементу сжиматься и включает text wrapping
@@ -178,8 +187,9 @@ AppShell (flex horizontal)
 ```
 
 **Gutters**:
+
 - Mobile: 16px
-- Tablet: 24px  
+- Tablet: 24px
 - Desktop: 32px
 
 ### 3. Sticky positioning
@@ -192,6 +202,7 @@ AppShell (flex horizontal)
 ```
 
 **Правила**:
+
 - Родитель НЕ должен иметь `overflow: hidden`
 - Родитель должен иметь достаточную высоту
 - На mobile отключаем sticky
@@ -199,9 +210,11 @@ AppShell (flex horizontal)
 ## 🧩 Компоненты
 
 ### AppShell
+
 Главный layout wrapper всего приложения
 
 **Props**:
+
 ```tsx
 interface AppShellProps {
   children: React.ReactNode;
@@ -210,32 +223,39 @@ interface AppShellProps {
 ```
 
 **Состояния**:
+
 - `sidebarMode`: 'fixed' | 'collapsed' | 'hidden'
 - `drawerOpen`: boolean (для mobile)
 
 ### SideNav
+
 Боковая навигация с 4 вариантами отображения
 
 **Варианты**:
+
 1. **Desktop Fixed** (≥1200px): 260px, всегда виден
 2. **Desktop Collapsed** (≥1200px): 80px, можно развернуть
 3. **Tablet Collapsed** (800-1199px): 80px, раскрывается overlay
 4. **Mobile Drawer** (<800px): скрыт, открывается drawer
 
 ### TopBar
+
 Мобильная верхняя панель
 
 **Отображается**: только на <1200px
 
 **Содержит**:
+
 - Hamburger menu (открывает drawer)
 - Заголовок страницы
 - Иконки действий (опционально)
 
 ### StatusCard
+
 Карточка статуса задания с 7 состояниями
 
 **Статусы**:
+
 - `NOT_STARTED` - Не начато
 - `SUBMITTED` - Сдана работа
 - `PEER_REVIEW` - Взаимная проверка
@@ -250,17 +270,17 @@ interface AppShellProps {
 
 ```css
 /* Из Figma дизайна */
---color-primary: #21214f;      /* Темно-синий */
---color-secondary: #4b4963;    /* Серый */
---color-text-light: #767692;   /* Светло-серый текст */
---color-border: #c7c7c7;       /* Границы */
---color-background: #f9f9f9;   /* Светлый фон */
+--color-primary: #21214f; /* Темно-синий */
+--color-secondary: #4b4963; /* Серый */
+--color-text-light: #767692; /* Светло-серый текст */
+--color-border: #c7c7c7; /* Границы */
+--color-background: #f9f9f9; /* Светлый фон */
 
 /* Акцентные цвета */
---color-accent-blue: #b7bdff;  /* Светло-голубой */
---color-accent-cyan: #b0e9fb;  /* Голубой */
+--color-accent-blue: #b7bdff; /* Светло-голубой */
+--color-accent-cyan: #b0e9fb; /* Голубой */
 --color-accent-green: #9cf38d; /* Зеленый */
---color-accent-red: #ffb8b8;   /* Красный */
+--color-accent-red: #ffb8b8; /* Красный */
 ```
 
 ### 8pt Grid система
@@ -338,6 +358,7 @@ Mobile:
 **Причина**: Flex-элементы без `min-w-0`
 
 **Решение**:
+
 ```tsx
 <div className="flex-1 min-w-0"> {/* добавьте min-w-0 */}
 ```
@@ -347,6 +368,7 @@ Mobile:
 **Причина**: Отсутствует `shrink-0` на sidebar
 
 **Решение**:
+
 ```tsx
 <SideNav className="shrink-0" />
 ```
@@ -354,11 +376,13 @@ Mobile:
 ### Проблема: Sticky не работает
 
 **Причины**:
+
 1. Родитель имеет `overflow: hidden/auto`
 2. Нет достаточной высоты для scroll
 3. Неправильный брейкпоинт
 
 **Решение**:
+
 ```tsx
 // Проверьте родителя
 <main className="flex-1 overflow-y-auto"> {/* НЕ overflow-hidden */}
@@ -372,6 +396,7 @@ Mobile:
 **Причина**: Использование обычных классов вместо responsive
 
 **Решение**:
+
 ```tsx
 // ❌ Неправильно
 <div className="grid-cols-2">
@@ -428,7 +453,7 @@ npm run preview
 
 ```tsx
 // ✅ Правильно
-import { AppShell, StatusCard } from '@/app/components';
+import { AppShell, StatusCard } from "@/app/components";
 
 // ❌ Неправильно - создавать свои варианты
 ```
@@ -437,10 +462,10 @@ import { AppShell, StatusCard } from '@/app/components';
 
 ```tsx
 // ✅ Правильно - mobile-first
-className="p-4 tablet:p-6 desktop:p-8"
+className = "p-4 tablet:p-6 desktop:p-8";
 
 // ❌ Неправильно
-className="desktop:p-8 tablet:p-6 p-4"
+className = "desktop:p-8 tablet:p-6 p-4";
 ```
 
 ### 3. Всегда тестируйте на 3 брейкпоинтах
@@ -452,12 +477,12 @@ className="desktop:p-8 tablet:p-6 p-4"
 ### 4. Используйте LayoutDebugger при разработке
 
 ```tsx
-import { LayoutDebugger } from '@/app/components';
+import { LayoutDebugger } from "@/app/components";
 
 <AppShell>
   {/* контент */}
   <LayoutDebugger /> {/* показывает текущий брейкпоинт */}
-</AppShell>
+</AppShell>;
 ```
 
 ## 📚 Дополнительные ресурсы

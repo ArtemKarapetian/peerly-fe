@@ -11,6 +11,7 @@
 ## 🔐 Features
 
 ### 1. **Change Password Section**
+
 - **Fields**:
   - Current password (with show/hide toggle)
   - New password (with show/hide toggle)
@@ -28,32 +29,34 @@
 - **Demo Mode**: Uses local state only, no real auth changes
 
 ### 2. **Two-Factor Authentication (2FA)**
+
 - **Feature Flag**: Behind `flags.twoFactor` (OFF by default)
 - **States**:
-  
+
   **When Feature Flag is OFF**:
   - Shows disabled state
   - Message: "2FA не включена в вашей организации"
   - Instructions to contact admin
-  
+
   **When Feature Flag is ON and 2FA Not Enabled**:
   - "2FA не настроена" message
   - Button to set up 2FA
-  
+
   **Setup Flow** (Demo):
   - Step 1: QR code placeholder for authenticator app
   - Manual key displayed
   - Step 2: Recovery codes (6 codes displayed)
   - Complete setup button
-  
+
   **When 2FA is Enabled**:
   - Success indicator with checkmark
   - "2FA активирована" status
   - Button to disable 2FA
-  
+
 - **Demo Mode**: All actions are UI-only, no real 2FA implementation
 
 ### 3. **Active Sessions Management**
+
 - **Session Information**:
   - Device type (Chrome на Windows, Safari на iPhone, etc.)
   - Location (Москва, Россия, etc.)
@@ -70,6 +73,7 @@
 ## 🎨 Design Consistency
 
 ### **Visual Style**
+
 - Follows Peerly UI patterns
 - Semantic color tokens: `bg-card`, `text-foreground`, `border-border`, `text-muted-foreground`
 - Rounded corners: `rounded-[20px]`, `rounded-[12px]`, `rounded-[8px]`
@@ -78,6 +82,7 @@
 - Destructive colors for danger actions
 
 ### **Layout**
+
 - Max-width container (800px)
 - Consistent section spacing
 - Card-based layout for each section
@@ -85,6 +90,7 @@
 - Responsive grid for recovery codes
 
 ### **Interaction**
+
 - Hover states on all interactive elements
 - Show/hide password toggles
 - Confirmation dialogs for destructive actions
@@ -96,6 +102,7 @@
 ## 📋 Russian Copy
 
 All text is in Russian:
+
 - Section headers and descriptions
 - Form labels and placeholders
 - Error messages and validation feedback
@@ -108,11 +115,13 @@ All text is in Russian:
 ## 🔗 Navigation Integration
 
 ### **Settings Page Link**
+
 - Added "Безопасность" link in Settings → About section
 - Link text: "Пароль и 2FA"
 - Points to `#/security`
 
 ### **Router Configuration**
+
 - Route: `/security` → SecurityPage
 - Updated in `/src/app/RouterExtended.tsx`
 - Protected route (requires authentication)
@@ -122,11 +131,13 @@ All text is in Russian:
 ## 🚀 Usage
 
 ### **Accessing Security Page**
+
 1. Navigate to Settings (`#/settings`)
 2. Click "Безопасность" link in About section
 3. Or navigate directly to `#/security`
 
 ### **Testing 2FA Feature**
+
 1. Go to Admin → Feature Flags (`#/admin/flags`)
 2. Enable `twoFactor` flag
 3. Return to Security page
@@ -155,6 +166,7 @@ All text is in Russian:
 ## 🎯 Demo State Management
 
 All functionality uses local React state:
+
 - Password fields: `useState` for form data
 - Password errors: `useState` for validation messages
 - 2FA status: `useState` for enabled/disabled state

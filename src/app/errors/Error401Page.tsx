@@ -1,4 +1,4 @@
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle } from "lucide-react";
 
 export default function Error401Page() {
   return (
@@ -14,26 +14,25 @@ export default function Error401Page() {
         {/* Error code */}
         <div className="space-y-2">
           <h1 className="text-6xl font-semibold text-foreground/40">401</h1>
-          <h2 className="text-2xl font-semibold text-foreground">
-            Требуется авторизация
-          </h2>
+          <h2 className="text-2xl font-semibold text-foreground">Требуется авторизация</h2>
         </div>
 
         {/* Explanation */}
         <p className="text-muted-foreground">
-          Для доступа к этой странице необходимо войти в систему. Пожалуйста, авторизуйтесь и повторите попытку.
+          Для доступа к этой странице необходимо войти в систему. Пожалуйста, авторизуйтесь и
+          повторите попытку.
         </p>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
           <button
-            onClick={() => window.location.hash = '/login'}
+            onClick={() => (window.location.hash = "/login")}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             Войти
           </button>
           <button
-            onClick={() => window.location.hash = '/'}
+            onClick={() => (window.location.hash = "/")}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
             На главную

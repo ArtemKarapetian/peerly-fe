@@ -1,17 +1,25 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
 import {
-  GitBranch, Plus, UserPlus, Lock, Unlock, Bell, 
-  X, Clock, AlertCircle, CheckCircle, Eye, EyeOff,
-  MoreVertical, ChevronRight
-} from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+  GitBranch,
+  UserPlus,
+  Lock,
+  Unlock,
+  Bell,
+  X,
+  Clock,
+  AlertCircle,
+  CheckCircle,
+  EyeOff,
+  MoreVertical,
+} from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 
 /**
  * TeacherDistributionPage - Распределение рецензий
- * 
+ *
  * Управление распределением рецензий:
  * - Фильтрация по курсу и заданию
  * - Таблица с информацией о распределении
@@ -28,9 +36,9 @@ interface DistributionRow {
   assignedReviewers: Array<{
     id: string;
     name: string;
-    status: 'pending' | 'draft' | 'submitted';
+    status: "pending" | "draft" | "submitted";
   }>;
-  overallStatus: 'not-started' | 'in-progress' | 'completed';
+  overallStatus: "not-started" | "in-progress" | "completed";
   lastActivity: Date;
   isLocked: boolean;
 }
@@ -49,50 +57,48 @@ export default function TeacherDistributionPage() {
   const submissions = demoDataStore.getSubmissions();
   const reviews = demoDataStore.getReviews();
 
-  const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || '');
-  const [selectedAssignment, setSelectedAssignment] = useState<string>('');
+  const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || "");
+  const [selectedAssignment, setSelectedAssignment] = useState<string>("");
   const [selectedDistribution, setSelectedDistribution] = useState<DistributionRow | null>(null);
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [showAddReviewerModal, setShowAddReviewerModal] = useState(false);
   const [activeRowAction, setActiveRowAction] = useState<string | null>(null);
 
   // Get assignments for selected course
-  const assignments = selectedCourse 
-    ? demoDataStore.getAssignmentsByCourse(selectedCourse)
-    : [];
+  const assignments = selectedCourse ? demoDataStore.getAssignmentsByCourse(selectedCourse) : [];
 
   // Generate distribution data
   const generateDistributions = (): DistributionRow[] => {
     if (!selectedAssignment) return [];
 
-    const assignmentSubmissions = submissions.filter(s => s.assignmentId === selectedAssignment);
-    
+    const assignmentSubmissions = submissions.filter((s) => s.assignmentId === selectedAssignment);
+
     return assignmentSubmissions.map((submission, idx) => {
-      const author = users.find(u => u.id === submission.studentId);
-      const submissionReviews = reviews.filter(r => r.submissionId === submission.id);
-      
-      const assignedReviewers = submissionReviews.map(review => {
-        const reviewer = users.find(u => u.id === review.reviewerId);
+      const author = users.find((u) => u.id === submission.studentId);
+      const submissionReviews = reviews.filter((r) => r.submissionId === submission.id);
+
+      const assignedReviewers = submissionReviews.map((review) => {
+        const reviewer = users.find((u) => u.id === review.reviewerId);
         return {
           id: review.reviewerId,
-          name: reviewer?.name || 'Unknown',
-          status: review.status
+          name: reviewer?.name || "Unknown",
+          status: review.status,
         };
       });
 
-      const completedReviews = assignedReviewers.filter(r => r.status === 'submitted').length;
-      let overallStatus: 'not-started' | 'in-progress' | 'completed' = 'not-started';
+      const completedReviews = assignedReviewers.filter((r) => r.status === "submitted").length;
+      let overallStatus: "not-started" | "in-progress" | "completed" = "not-started";
       if (completedReviews === assignedReviewers.length && assignedReviewers.length > 0) {
-        overallStatus = 'completed';
+        overallStatus = "completed";
       } else if (completedReviews > 0) {
-        overallStatus = 'in-progress';
+        overallStatus = "in-progress";
       }
 
       return {
         id: `dist-${submission.id}`,
         submissionId: submission.id,
-        anonymousId: `SUB-${String(idx + 1).padStart(3, '0')}`,
-        authorName: author?.name || 'Unknown',
+        anonymousId: `SUB-${String(idx + 1).padStart(3, "0")}`,
+        authorName: author?.name || "Unknown",
         isAnonymous: Math.random() > 0.5, // Demo: random anonymity
         assignedReviewers,
         overallStatus,
@@ -104,46 +110,63 @@ export default function TeacherDistributionPage() {
 
   const distributions = generateDistributions();
 
-  const getStatusBadge = (status: 'not-started' | 'in-progress' | 'completed') => {
+  const getStatusBadge = (status: "not-started" | "in-progress" | "completed") => {
     switch (status) {
-      case 'completed':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
-          <CheckCircle className="w-3 h-3" />
-          Завершено
-        </span>;
-      case 'in-progress':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
-          <Clock className="w-3 h-3" />
-          В процессе
-        </span>;
-      case 'not-started':
-        return <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
-          <AlertCircle className="w-3 h-3" />
-          Не начато
-        </span>;
+      case "completed":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+            <CheckCircle className="w-3 h-3" />
+            Завершено
+          </span>
+        );
+      case "in-progress":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+            <Clock className="w-3 h-3" />В процессе
+          </span>
+        );
+      case "not-started":
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
+            <AlertCircle className="w-3 h-3" />
+            Не начато
+          </span>
+        );
     }
   };
 
-  const getReviewerStatusBadge = (status: 'pending' | 'draft' | 'submitted') => {
+  const getReviewerStatusBadge = (status: "pending" | "draft" | "submitted") => {
     switch (status) {
-      case 'submitted':
-        return <span className="inline-flex px-1.5 py-0.5 bg-[#e8f5e9] text-[#4caf50] rounded-[4px] text-[11px] font-medium">✓</span>;
-      case 'draft':
-        return <span className="inline-flex px-1.5 py-0.5 bg-[#fff4e5] text-[#ff9800] rounded-[4px] text-[11px] font-medium">⋯</span>;
-      case 'pending':
-        return <span className="inline-flex px-1.5 py-0.5 bg-[#f5f5f5] text-[#767692] rounded-[4px] text-[11px] font-medium">○</span>;
+      case "submitted":
+        return (
+          <span className="inline-flex px-1.5 py-0.5 bg-[#e8f5e9] text-[#4caf50] rounded-[4px] text-[11px] font-medium">
+            ✓
+          </span>
+        );
+      case "draft":
+        return (
+          <span className="inline-flex px-1.5 py-0.5 bg-[#fff4e5] text-[#ff9800] rounded-[4px] text-[11px] font-medium">
+            ⋯
+          </span>
+        );
+      case "pending":
+        return (
+          <span className="inline-flex px-1.5 py-0.5 bg-[#f5f5f5] text-[#767692] rounded-[4px] text-[11px] font-medium">
+            ○
+          </span>
+        );
     }
   };
 
   const handleReassignReviewer = (distributionId: string) => {
-    const dist = distributions.find(d => d.id === distributionId);
+    const dist = distributions.find((d) => d.id === distributionId);
     setSelectedDistribution(dist || null);
     setShowReassignModal(true);
     setActiveRowAction(null);
   };
 
   const handleAddReviewer = (distributionId: string) => {
-    const dist = distributions.find(d => d.id === distributionId);
+    const dist = distributions.find((d) => d.id === distributionId);
     setSelectedDistribution(dist || null);
     setShowAddReviewerModal(true);
     setActiveRowAction(null);
@@ -163,43 +186,46 @@ export default function TeacherDistributionPage() {
     setSelectedDistribution(distribution);
   };
 
+  // Demo history with fixed dates
   const mockHistory: DistributionHistory[] = [
     {
-      id: 'h1',
-      action: 'Распределение создано',
-      performedBy: 'Система (автоматически)',
-      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-      details: 'Автоматическое распределение на основе алгоритма round-robin'
+      id: "h1",
+      action: "Распределение создано",
+      performedBy: "Система (автоматически)",
+      timestamp: new Date("2024-02-10"),
+      details: "Автоматическое распределение на основе алгоритма round-robin",
     },
     {
-      id: 'h2',
-      action: 'Рецензент назначен',
-      performedBy: 'Иванов П.С.',
-      timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-      details: 'Добавлен дополнительный рецензент вручную'
+      id: "h2",
+      action: "Рецензент назначен",
+      performedBy: "Иванов П.С.",
+      timestamp: new Date("2024-02-11"),
+      details: "Добавлен дополнительный рецензент вручную",
     },
     {
-      id: 'h3',
-      action: 'Напоминание отправлено',
-      performedBy: 'Иванов П.С.',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      details: 'Уведомление отправлено рецензентам'
+      id: "h3",
+      action: "Напоминание отправлено",
+      performedBy: "Иванов П.С.",
+      timestamp: new Date("2024-02-13"),
+      details: "Уведомление отправлено рецензентам",
     },
     {
-      id: 'h4',
-      action: 'Рецензия отправлена',
-      performedBy: 'Студент #1',
-      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-      details: 'Рецензия успешно отправлена'
-    }
+      id: "h4",
+      action: "Рецензия отправлена",
+      performedBy: "Студент #1",
+      timestamp: new Date("2024-02-14"),
+      details: "Рецензия успешно отправлена",
+    },
   ];
 
   return (
     <AppShell title="Распределение рецензий">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Распределение' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Распределение" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -224,12 +250,12 @@ export default function TeacherDistributionPage() {
                 value={selectedCourse}
                 onChange={(e) => {
                   setSelectedCourse(e.target.value);
-                  setSelectedAssignment('');
+                  setSelectedAssignment("");
                 }}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
                 <option value="">Выберите курс</option>
-                {courses.map(course => (
+                {courses.map((course) => (
                   <option key={course.id} value={course.id}>
                     {course.name} ({course.code})
                   </option>
@@ -249,7 +275,7 @@ export default function TeacherDistributionPage() {
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors disabled:bg-[#f5f5f5] disabled:cursor-not-allowed"
               >
                 <option value="">Выберите задание</option>
-                {assignments.map(assignment => (
+                {assignments.map((assignment) => (
                   <option key={assignment.id} value={assignment.id}>
                     {assignment.title}
                   </option>
@@ -294,7 +320,7 @@ export default function TeacherDistributionPage() {
                         key={dist.id}
                         className={`
                           border-b border-[#e6e8ee] last:border-0 hover:bg-[#e9f5ff] transition-colors cursor-pointer
-                          ${index % 2 === 0 ? 'bg-white' : 'bg-[#fafbfc]'}
+                          ${index % 2 === 0 ? "bg-white" : "bg-[#fafbfc]"}
                         `}
                         onClick={() => handleRowClick(dist)}
                       >
@@ -303,9 +329,7 @@ export default function TeacherDistributionPage() {
                             <span className="text-[15px] font-medium text-[#21214f]">
                               {dist.anonymousId}
                             </span>
-                            {dist.isLocked && (
-                              <Lock className="w-4 h-4 text-[#d4183d]" />
-                            )}
+                            {dist.isLocked && <Lock className="w-4 h-4 text-[#d4183d]" />}
                           </div>
                         </td>
                         <td className="px-6 py-4">
@@ -322,23 +346,23 @@ export default function TeacherDistributionPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex flex-wrap gap-2">
-                            {dist.assignedReviewers.map(reviewer => (
+                            {dist.assignedReviewers.map((reviewer) => (
                               <div key={reviewer.id} className="flex items-center gap-1">
                                 <span className="text-[13px] text-[#21214f]">{reviewer.name}</span>
                                 {getReviewerStatusBadge(reviewer.status)}
                               </div>
                             ))}
                             {dist.assignedReviewers.length === 0 && (
-                              <span className="text-[13px] text-[#767692] italic">Нет рецензентов</span>
+                              <span className="text-[13px] text-[#767692] italic">
+                                Нет рецензентов
+                              </span>
                             )}
                           </div>
                         </td>
-                        <td className="px-6 py-4">
-                          {getStatusBadge(dist.overallStatus)}
-                        </td>
+                        <td className="px-6 py-4">{getStatusBadge(dist.overallStatus)}</td>
                         <td className="px-6 py-4">
                           <span className="text-[13px] text-[#767692]">
-                            {dist.lastActivity.toLocaleDateString('ru-RU')}
+                            {dist.lastActivity.toLocaleDateString("ru-RU")}
                           </span>
                         </td>
                         <td className="px-6 py-4">
@@ -356,7 +380,7 @@ export default function TeacherDistributionPage() {
 
                             {/* Actions Dropdown */}
                             {activeRowAction === dist.id && (
-                              <div 
+                              <div
                                 className="absolute right-0 top-full mt-1 bg-white border-2 border-[#e6e8ee] rounded-[12px] shadow-lg z-10 min-w-[200px]"
                                 onClick={(e) => e.stopPropagation()}
                               >
@@ -372,7 +396,9 @@ export default function TeacherDistributionPage() {
                                   className="w-full flex items-center gap-2 px-4 py-3 hover:bg-[#f9f9f9] text-left transition-colors border-t border-[#e6e8ee]"
                                 >
                                   <UserPlus className="w-4 h-4 text-[#4caf50]" />
-                                  <span className="text-[14px] text-[#21214f]">Добавить рецензента</span>
+                                  <span className="text-[14px] text-[#21214f]">
+                                    Добавить рецензента
+                                  </span>
                                 </button>
                                 <button
                                   onClick={() => handleToggleLock(dist.id)}
@@ -381,12 +407,16 @@ export default function TeacherDistributionPage() {
                                   {dist.isLocked ? (
                                     <>
                                       <Unlock className="w-4 h-4 text-[#ff9800]" />
-                                      <span className="text-[14px] text-[#21214f]">Разблокировать</span>
+                                      <span className="text-[14px] text-[#21214f]">
+                                        Разблокировать
+                                      </span>
                                     </>
                                   ) : (
                                     <>
                                       <Lock className="w-4 h-4 text-[#d4183d]" />
-                                      <span className="text-[14px] text-[#21214f]">Заблокировать</span>
+                                      <span className="text-[14px] text-[#21214f]">
+                                        Заблокировать
+                                      </span>
                                     </>
                                   )}
                                 </button>
@@ -410,16 +440,14 @@ export default function TeacherDistributionPage() {
               {distributions.length === 0 && (
                 <div className="text-center py-12">
                   <GitBranch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-                  <p className="text-[15px] text-[#767692]">
-                    Нет данных о распределении
-                  </p>
+                  <p className="text-[15px] text-[#767692]">Нет данных о распределении</p>
                 </div>
               )}
             </div>
 
             {/* Mobile Cards (<800px) */}
             <div className="block md:hidden space-y-3">
-              {distributions.map(dist => (
+              {distributions.map((dist) => (
                 <div
                   key={dist.id}
                   className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-4 hover:border-[#5b8def] transition-colors cursor-pointer"
@@ -430,9 +458,7 @@ export default function TeacherDistributionPage() {
                       <span className="text-[16px] font-medium text-[#21214f]">
                         {dist.anonymousId}
                       </span>
-                      {dist.isLocked && (
-                        <Lock className="w-4 h-4 text-[#d4183d]" />
-                      )}
+                      {dist.isLocked && <Lock className="w-4 h-4 text-[#d4183d]" />}
                     </div>
                     {getStatusBadge(dist.overallStatus)}
                   </div>
@@ -453,7 +479,7 @@ export default function TeacherDistributionPage() {
                     <div>
                       <span className="text-[13px] text-[#767692] block mb-1">Рецензенты:</span>
                       <div className="flex flex-wrap gap-2">
-                        {dist.assignedReviewers.map(reviewer => (
+                        {dist.assignedReviewers.map((reviewer) => (
                           <div key={reviewer.id} className="flex items-center gap-1 text-[12px]">
                             <span className="text-[#21214f]">{reviewer.name}</span>
                             {getReviewerStatusBadge(reviewer.status)}
@@ -468,7 +494,7 @@ export default function TeacherDistributionPage() {
                     <div className="flex items-center gap-2 text-[13px]">
                       <Clock className="w-3 h-3 text-[#767692]" />
                       <span className="text-[#767692]">
-                        {dist.lastActivity.toLocaleDateString('ru-RU')}
+                        {dist.lastActivity.toLocaleDateString("ru-RU")}
                       </span>
                     </div>
                   </div>
@@ -545,9 +571,7 @@ export default function TeacherDistributionPage() {
               {distributions.length === 0 && (
                 <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
                   <GitBranch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-                  <p className="text-[15px] text-[#767692]">
-                    Нет данных о распределении
-                  </p>
+                  <p className="text-[15px] text-[#767692]">Нет данных о распределении</p>
                 </div>
               )}
             </div>
@@ -578,9 +602,7 @@ export default function TeacherDistributionPage() {
                 <h2 className="text-[20px] font-medium text-[#21214f]">
                   {selectedDistribution.anonymousId}
                 </h2>
-                <p className="text-[13px] text-[#767692] mt-1">
-                  Детали распределения
-                </p>
+                <p className="text-[13px] text-[#767692] mt-1">Детали распределения</p>
               </div>
               <button
                 onClick={() => setSelectedDistribution(null)}
@@ -596,11 +618,17 @@ export default function TeacherDistributionPage() {
               <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Работа</p>
-                    <p className="text-[15px] font-medium text-[#21214f]">{selectedDistribution.anonymousId}</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      Работа
+                    </p>
+                    <p className="text-[15px] font-medium text-[#21214f]">
+                      {selectedDistribution.anonymousId}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Статус</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      Статус
+                    </p>
                     {getStatusBadge(selectedDistribution.overallStatus)}
                   </div>
                   <div>
@@ -611,13 +639,17 @@ export default function TeacherDistributionPage() {
                         Скрыто
                       </p>
                     ) : (
-                      <p className="text-[14px] text-[#21214f]">{selectedDistribution.authorName}</p>
+                      <p className="text-[14px] text-[#21214f]">
+                        {selectedDistribution.authorName}
+                      </p>
                     )}
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Активность</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      Активность
+                    </p>
                     <p className="text-[14px] text-[#21214f]">
-                      {selectedDistribution.lastActivity.toLocaleDateString('ru-RU')}
+                      {selectedDistribution.lastActivity.toLocaleDateString("ru-RU")}
                     </p>
                   </div>
                 </div>
@@ -629,14 +661,19 @@ export default function TeacherDistributionPage() {
                   Назначенные рецензенты ({selectedDistribution.assignedReviewers.length})
                 </h3>
                 <div className="space-y-2">
-                  {selectedDistribution.assignedReviewers.map(reviewer => (
-                    <div key={reviewer.id} className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
+                  {selectedDistribution.assignedReviewers.map((reviewer) => (
+                    <div
+                      key={reviewer.id}
+                      className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]"
+                    >
                       <span className="text-[14px] text-[#21214f]">{reviewer.name}</span>
                       {getReviewerStatusBadge(reviewer.status)}
                     </div>
                   ))}
                   {selectedDistribution.assignedReviewers.length === 0 && (
-                    <p className="text-[14px] text-[#767692] italic py-2">Рецензенты не назначены</p>
+                    <p className="text-[14px] text-[#767692] italic py-2">
+                      Рецензенты не назначены
+                    </p>
                   )}
                 </div>
               </div>
@@ -689,17 +726,22 @@ export default function TeacherDistributionPage() {
               <div>
                 <h3 className="text-[16px] font-medium text-[#21214f] mb-3">История изменений</h3>
                 <div className="space-y-3">
-                  {mockHistory.map((item, index) => (
-                    <div key={item.id} className="relative pl-6 pb-4 border-l-2 border-[#e6e8ee] last:border-0 last:pb-0">
+                  {mockHistory.map((item, _index) => (
+                    <div
+                      key={item.id}
+                      className="relative pl-6 pb-4 border-l-2 border-[#e6e8ee] last:border-0 last:pb-0"
+                    >
                       <div className="absolute left-[-5px] top-0 w-2 h-2 bg-[#5b8def] rounded-full" />
                       <div className="mb-1">
-                        <span className="text-[14px] font-medium text-[#21214f]">{item.action}</span>
+                        <span className="text-[14px] font-medium text-[#21214f]">
+                          {item.action}
+                        </span>
                       </div>
                       <p className="text-[13px] text-[#767692] mb-1">{item.details}</p>
                       <div className="flex items-center gap-2 text-[12px] text-[#767692]">
                         <span>{item.performedBy}</span>
                         <span>•</span>
-                        <span>{item.timestamp.toLocaleString('ru-RU')}</span>
+                        <span>{item.timestamp.toLocaleString("ru-RU")}</span>
                       </div>
                     </div>
                   ))}
@@ -721,9 +763,7 @@ export default function TeacherDistributionPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[20px] font-medium text-[#21214f]">
-                Переназначить рецензента
-              </h2>
+              <h2 className="text-[20px] font-medium text-[#21214f]">Переназначить рецензента</h2>
               <button
                 onClick={() => setShowReassignModal(false)}
                 className="p-1 hover:bg-[#f9f9f9] rounded transition-colors"
@@ -734,7 +774,8 @@ export default function TeacherDistributionPage() {
 
             <div className="mb-6">
               <p className="text-[14px] text-[#767692] mb-4">
-                Работа: <strong className="text-[#21214f]">{selectedDistribution.anonymousId}</strong>
+                Работа:{" "}
+                <strong className="text-[#21214f]">{selectedDistribution.anonymousId}</strong>
               </p>
 
               {/* Current Reviewers */}
@@ -743,10 +784,16 @@ export default function TeacherDistributionPage() {
                   Текущие рецензенты
                 </label>
                 <div className="space-y-2">
-                  {selectedDistribution.assignedReviewers.map(reviewer => (
-                    <div key={reviewer.id} className="flex items-center gap-2 p-2 bg-[#f9f9f9] rounded-[8px]">
+                  {selectedDistribution.assignedReviewers.map((reviewer) => (
+                    <div
+                      key={reviewer.id}
+                      className="flex items-center gap-2 p-2 bg-[#f9f9f9] rounded-[8px]"
+                    >
                       <input type="radio" name="reviewer-to-replace" id={reviewer.id} />
-                      <label htmlFor={reviewer.id} className="flex-1 text-[14px] text-[#21214f] cursor-pointer">
+                      <label
+                        htmlFor={reviewer.id}
+                        className="flex-1 text-[14px] text-[#21214f] cursor-pointer"
+                      >
                         {reviewer.name}
                       </label>
                       {getReviewerStatusBadge(reviewer.status)}
@@ -762,9 +809,13 @@ export default function TeacherDistributionPage() {
                 </label>
                 <select className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors">
                   <option value="">Выберите студента</option>
-                  {users.filter(u => u.role === 'Student').map(user => (
-                    <option key={user.id} value={user.id}>{user.name}</option>
-                  ))}
+                  {users
+                    .filter((u) => u.role === "Student")
+                    .map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>
@@ -778,7 +829,7 @@ export default function TeacherDistributionPage() {
               </button>
               <button
                 onClick={() => {
-                  alert('Рецензент переназначен');
+                  alert("Рецензент переназначен");
                   setShowReassignModal(false);
                 }}
                 className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[15px]"
@@ -801,9 +852,7 @@ export default function TeacherDistributionPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[20px] font-medium text-[#21214f]">
-                Добавить рецензента
-              </h2>
+              <h2 className="text-[20px] font-medium text-[#21214f]">Добавить рецензента</h2>
               <button
                 onClick={() => setShowAddReviewerModal(false)}
                 className="p-1 hover:bg-[#f9f9f9] rounded transition-colors"
@@ -814,7 +863,8 @@ export default function TeacherDistributionPage() {
 
             <div className="mb-6">
               <p className="text-[14px] text-[#767692] mb-4">
-                Работа: <strong className="text-[#21214f]">{selectedDistribution.anonymousId}</strong>
+                Работа:{" "}
+                <strong className="text-[#21214f]">{selectedDistribution.anonymousId}</strong>
               </p>
 
               <div>
@@ -823,9 +873,13 @@ export default function TeacherDistributionPage() {
                 </label>
                 <select className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors">
                   <option value="">Выберите студента</option>
-                  {users.filter(u => u.role === 'Student').map(user => (
-                    <option key={user.id} value={user.id}>{user.name}</option>
-                  ))}
+                  {users
+                    .filter((u) => u.role === "Student")
+                    .map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -845,7 +899,7 @@ export default function TeacherDistributionPage() {
               </button>
               <button
                 onClick={() => {
-                  alert('Рецензент добавлен');
+                  alert("Рецензент добавлен");
                   setShowAddReviewerModal(false);
                 }}
                 className="flex-1 px-4 py-3 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors text-[15px]"

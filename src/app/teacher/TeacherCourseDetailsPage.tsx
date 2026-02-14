@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { demoDataStore } from '@/app/stores/demoDataStore';
-import { TeacherCourseAssignments } from './components/TeacherCourseAssignments';
-import { TeacherCourseParticipants } from './components/TeacherCourseParticipants';
-import { TeacherCourseAnnouncements } from './components/TeacherCourseAnnouncements';
-import { TeacherCourseSettings } from './components/TeacherCourseSettings';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { demoDataStore } from "@/app/stores/demoDataStore";
+import { TeacherCourseAssignments } from "./components/TeacherCourseAssignments";
+import { TeacherCourseParticipants } from "./components/TeacherCourseParticipants";
+import { TeacherCourseAnnouncements } from "./components/TeacherCourseAnnouncements";
+import { TeacherCourseSettings } from "./components/TeacherCourseSettings";
 
 /**
  * TeacherCourseDetailsPage - Детальный вид курса для преподавателя
- * 
+ *
  * Вкладки с straight underline indicator:
  * 1. Задания
  * 2. Участники
@@ -18,17 +18,19 @@ import { TeacherCourseSettings } from './components/TeacherCourseSettings';
  * 4. Настройки
  */
 
-type TabKey = 'assignments' | 'participants' | 'announcements' | 'settings';
+type TabKey = "assignments" | "participants" | "announcements" | "settings";
 
 interface TeacherCourseDetailsPageProps {
   courseId?: string | null;
 }
 
-export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCourseDetailsPageProps) {
-  const [activeTab, setActiveTab] = useState<TabKey>('assignments');
-  
+export default function TeacherCourseDetailsPage({
+  courseId = "c1",
+}: TeacherCourseDetailsPageProps) {
+  const [activeTab, setActiveTab] = useState<TabKey>("assignments");
+
   // Load course data
-  const course = demoDataStore.getCourseById(courseId || 'c1');
+  const course = demoDataStore.getCourseById(courseId || "c1");
   const teacher = course ? demoDataStore.getUserById(course.teacherId) : null;
 
   if (!course) {
@@ -42,19 +44,21 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
   }
 
   const tabs = [
-    { key: 'assignments' as TabKey, label: 'Задания' },
-    { key: 'participants' as TabKey, label: 'Участники' },
-    { key: 'announcements' as TabKey, label: 'Анонсы' },
-    { key: 'settings' as TabKey, label: 'Настройки' },
+    { key: "assignments" as TabKey, label: "Задания" },
+    { key: "participants" as TabKey, label: "Участники" },
+    { key: "announcements" as TabKey, label: "Анонсы" },
+    { key: "settings" as TabKey, label: "Настройки" },
   ];
 
   return (
     <AppShell title={course.name}>
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Курсы', href: ROUTES.teacherDashboard },
-        { label: course.name }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Курсы", href: ROUTES.teacherDashboard },
+          { label: course.name },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -65,7 +69,7 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
                 <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
                   {course.name}
                 </h1>
-                {course.status === 'active' ? (
+                {course.status === "active" ? (
                   <span className="px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
                     Активен
                   </span>
@@ -75,9 +79,7 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
                   </span>
                 )}
               </div>
-              <p className="text-[15px] text-[#767692] mb-3">
-                {course.code} • Весна 2025
-              </p>
+              <p className="text-[15px] text-[#767692] mb-3">{course.code} • Весна 2025</p>
               {teacher && (
                 <p className="text-[14px] text-[#767692]">
                   Преподаватель: <span className="text-[#21214f] font-medium">{teacher.name}</span>
@@ -92,7 +94,11 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
               <div className="w-px h-12 bg-[#e6e8ee]"></div>
               <div>
                 <p className="text-[24px] font-medium text-[#21214f]">
-                  {demoDataStore.getAssignmentsByCourse(course.id).filter(a => a.status === 'published').length}
+                  {
+                    demoDataStore
+                      .getAssignmentsByCourse(course.id)
+                      .filter((a) => a.status === "published").length
+                  }
                 </p>
                 <p className="text-[13px] text-[#767692]">Заданий</p>
               </div>
@@ -110,9 +116,10 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
                   onClick={() => setActiveTab(tab.key)}
                   className={`
                     relative px-6 py-4 text-[16px] font-medium transition-colors
-                    ${activeTab === tab.key 
-                      ? 'text-[#2563eb]' 
-                      : 'text-[#767692] hover:text-[#21214f]'
+                    ${
+                      activeTab === tab.key
+                        ? "text-[#2563eb]"
+                        : "text-[#767692] hover:text-[#21214f]"
                     }
                   `}
                 >
@@ -128,10 +135,10 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
 
           {/* Tab Content */}
           <div className="p-6">
-            {activeTab === 'assignments' && <TeacherCourseAssignments courseId={course.id} />}
-            {activeTab === 'participants' && <TeacherCourseParticipants courseId={course.id} />}
-            {activeTab === 'announcements' && <TeacherCourseAnnouncements courseId={course.id} />}
-            {activeTab === 'settings' && <TeacherCourseSettings course={course} />}
+            {activeTab === "assignments" && <TeacherCourseAssignments courseId={course.id} />}
+            {activeTab === "participants" && <TeacherCourseParticipants courseId={course.id} />}
+            {activeTab === "announcements" && <TeacherCourseAnnouncements courseId={course.id} />}
+            {activeTab === "settings" && <TeacherCourseSettings course={course} />}
           </div>
         </div>
       </div>

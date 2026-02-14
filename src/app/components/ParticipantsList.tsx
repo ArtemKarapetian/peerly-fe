@@ -1,4 +1,4 @@
-import { MoreVertical } from 'lucide-react';
+import { MoreVertical } from "lucide-react";
 
 /**
  * ParticipantsList - Список участников курса
@@ -8,8 +8,8 @@ export interface Participant {
   id: string;
   firstName: string;
   lastName: string;
-  role: 'student' | 'teacher' | 'assistant';
-  status: 'active' | 'inactive';
+  role: "student" | "teacher" | "assistant";
+  status: "active" | "inactive";
   avatarColor?: string;
 }
 
@@ -19,37 +19,28 @@ interface ParticipantsListProps {
 }
 
 export function ParticipantsList({ participants, onParticipantClick }: ParticipantsListProps) {
-  const getRoleLabel = (role: Participant['role']) => {
+  const getRoleLabel = (role: Participant["role"]) => {
     switch (role) {
-      case 'student':
-        return 'Студент';
-      case 'teacher':
-        return 'Преподаватель';
-      case 'assistant':
-        return 'Ассистент';
+      case "student":
+        return "Студент";
+      case "teacher":
+        return "Преподаватель";
+      case "assistant":
+        return "Ассистент";
     }
   };
 
-  const getRoleBadgeColor = (role: Participant['role']) => {
+  const getRoleBadgeColor = (role: Participant["role"]) => {
     switch (role) {
-      case 'teacher':
-        return 'bg-[#3d6bc6] text-white';
-      case 'assistant':
-        return 'bg-[#f57c00] text-white';
-      case 'student':
+      case "teacher":
+        return "bg-[#3d6bc6] text-white";
+      case "assistant":
+        return "bg-[#f57c00] text-white";
+      case "student":
       default:
-        return 'bg-[#e6e8ee] text-[#21214f]';
+        return "bg-[#e6e8ee] text-[#21214f]";
     }
   };
-
-  const getStatusLabel = (status: Participant['status']) => {
-    return status === 'active' ? 'Активен' : 'Неактивен';
-  };
-
-  const getStatusColor = (status: Participant['status']) => {
-    return status === 'active' ? 'text-[#4b4963]' : 'text-[#c7c7c7]';
-  };
-
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`;
   };
@@ -84,7 +75,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
                 text-[14px] font-semibold text-white
                 shrink-0
               "
-              style={{ backgroundColor: participant.avatarColor || '#b7bdff' }}
+              style={{ backgroundColor: participant.avatarColor || "#b7bdff" }}
             >
               {getInitials(participant.firstName, participant.lastName)}
             </div>
@@ -95,14 +86,14 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
                 <h3 className="text-[15px] leading-[1.3] tracking-[-0.3px] text-[#21214f] font-semibold truncate">
                   {participant.firstName} {participant.lastName}
                 </h3>
-                <span className={`px-2 py-0.5 rounded-[6px] text-[11px] font-medium ${getRoleBadgeColor(participant.role)}`}>
+                <span
+                  className={`px-2 py-0.5 rounded-[6px] text-[11px] font-medium ${getRoleBadgeColor(participant.role)}`}
+                >
                   {getRoleLabel(participant.role)}
                 </span>
               </div>
-              {participant.status === 'inactive' && (
-                <p className="text-[13px] leading-[1.4] text-[#c7c7c7]">
-                  Неактивен
-                </p>
+              {participant.status === "inactive" && (
+                <p className="text-[13px] leading-[1.4] text-[#c7c7c7]">Неактивен</p>
               )}
             </div>
 
@@ -113,9 +104,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
           </button>
 
           {/* Divider - не показываем после последнего элемента */}
-          {index < participants.length - 1 && (
-            <div className="border-b border-[#e6e8ee]" />
-          )}
+          {index < participants.length - 1 && <div className="border-b border-[#e6e8ee]" />}
         </div>
       ))}
     </div>

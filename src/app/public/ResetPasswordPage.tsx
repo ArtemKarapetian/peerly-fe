@@ -1,12 +1,12 @@
-import { useState, FormEvent } from 'react';
-import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/button.tsx';
-import { Input, PasswordInput } from '@/app/components/ui/input.tsx';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+import { useState, FormEvent } from "react";
+import { PublicLayout } from "@/app/components/PublicLayout";
+import { Button } from "@/app/components/ui/button.tsx";
+import { Input, PasswordInput } from "@/app/components/ui/input.tsx";
+import { CheckCircle } from "lucide-react";
 
 /**
  * ResetPasswordPage - Password reset flow
- * 
+ *
  * Step 1: Enter login
  * Step 2: Enter new password + confirm
  * Step 3: Success message
@@ -18,18 +18,18 @@ interface FormErrors {
   confirmPassword?: string;
 }
 
-type Step = 'login' | 'password' | 'success';
+type Step = "login" | "password" | "success";
 
 export default function ResetPasswordPage() {
-  const [step, setStep] = useState<Step>('login');
-  const [login, setLogin] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [step, setStep] = useState<Step>("login");
+  const [login, setLogin] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
-  const [touched, setTouched] = useState({ 
-    login: false, 
-    newPassword: false, 
-    confirmPassword: false 
+  const [touched, setTouched] = useState({
+    login: false,
+    newPassword: false,
+    confirmPassword: false,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,36 +37,36 @@ export default function ResetPasswordPage() {
   const validateField = (field: keyof FormErrors, value: string) => {
     const newErrors = { ...errors };
 
-    if (field === 'login') {
+    if (field === "login") {
       if (!value.trim()) {
-        newErrors.login = 'Введите логин';
+        newErrors.login = "Введите логин";
       } else {
         delete newErrors.login;
       }
     }
 
-    if (field === 'newPassword') {
+    if (field === "newPassword") {
       if (!value) {
-        newErrors.newPassword = 'Введите новый пароль';
+        newErrors.newPassword = "Введите новый пароль";
       } else if (value.length < 8) {
-        newErrors.newPassword = 'Пароль должен содержать минимум 8 символов';
+        newErrors.newPassword = "Пароль должен содержать минимум 8 символов";
       } else {
         delete newErrors.newPassword;
       }
-      
+
       // Проверяем совпадение, если уже введён confirmPassword
       if (confirmPassword && value !== confirmPassword) {
-        newErrors.confirmPassword = 'Пароли не совпадают';
+        newErrors.confirmPassword = "Пароли не совпадают";
       } else if (confirmPassword && value === confirmPassword) {
         delete newErrors.confirmPassword;
       }
     }
 
-    if (field === 'confirmPassword') {
+    if (field === "confirmPassword") {
       if (!value) {
-        newErrors.confirmPassword = 'Подтвердите пароль';
+        newErrors.confirmPassword = "Подтвердите пароль";
       } else if (value !== newPassword) {
-        newErrors.confirmPassword = 'Пароли не совпадают';
+        newErrors.confirmPassword = "Пароли не совпадают";
       } else {
         delete newErrors.confirmPassword;
       }
@@ -78,22 +78,22 @@ export default function ResetPasswordPage() {
   // Обработка потери фокуса
   const handleBlur = (field: keyof FormErrors) => {
     setTouched({ ...touched, [field]: true });
-    
-    if (field === 'login') {
-      validateField('login', login);
-    } else if (field === 'newPassword') {
-      validateField('newPassword', newPassword);
-    } else if (field === 'confirmPassword') {
-      validateField('confirmPassword', confirmPassword);
+
+    if (field === "login") {
+      validateField("login", login);
+    } else if (field === "newPassword") {
+      validateField("newPassword", newPassword);
+    } else if (field === "confirmPassword") {
+      validateField("confirmPassword", confirmPassword);
     }
   };
 
   // Шаг 1: Продолжить с логином
   const handleContinue = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     setTouched({ ...touched, login: true });
-    validateField('login', login);
+    validateField("login", login);
 
     if (!login.trim() || errors.login) {
       return;
@@ -101,25 +101,25 @@ export default function ResetPasswordPage() {
 
     setIsLoading(true);
     // Имитация проверки пользователя
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setIsLoading(false);
-    
+
     // Переход к шагу 2
-    setStep('password');
+    setStep("password");
   };
 
   // Шаг 2: Сохранить новый пароль
   const handleResetPassword = async (e: FormEvent) => {
     e.preventDefault();
-    
-    setTouched({ 
-      ...touched, 
-      newPassword: true, 
-      confirmPassword: true 
+
+    setTouched({
+      ...touched,
+      newPassword: true,
+      confirmPassword: true,
     });
-    
-    validateField('newPassword', newPassword);
-    validateField('confirmPassword', confirmPassword);
+
+    validateField("newPassword", newPassword);
+    validateField("confirmPassword", confirmPassword);
 
     if (!newPassword || !confirmPassword || errors.newPassword || errors.confirmPassword) {
       return;
@@ -127,15 +127,15 @@ export default function ResetPasswordPage() {
 
     setIsLoading(true);
     // Имитация сохранения пароля
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await new Promise((resolve) => setTimeout(resolve, 800));
     setIsLoading(false);
-    
+
     // Переход к успеху
-    setStep('success');
+    setStep("success");
   };
 
   // Шаг 3: Успех
-  if (step === 'success') {
+  if (step === "success") {
     return (
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
@@ -148,9 +148,7 @@ export default function ResetPasswordPage() {
 
               {/* Success Message */}
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold text-foreground">
-                  Пароль обновлён
-                </h1>
+                <h1 className="text-2xl font-semibold text-foreground">Пароль обновлён</h1>
                 <p className="text-sm text-muted-foreground">
                   Ваш пароль успешно изменён. Теперь вы можете войти с новым паролем.
                 </p>
@@ -160,7 +158,7 @@ export default function ResetPasswordPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => window.location.hash = '/login'}
+                onClick={() => (window.location.hash = "/login")}
               >
                 Вернуться ко входу
               </Button>
@@ -172,7 +170,7 @@ export default function ResetPasswordPage() {
   }
 
   // Шаг 1: Ввод логина
-  if (step === 'login') {
+  if (step === "login") {
     return (
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
@@ -180,9 +178,7 @@ export default function ResetPasswordPage() {
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6">
               {/* Header */}
               <div className="space-y-1">
-                <h1 className="text-2xl font-semibold text-foreground">
-                  Сброс пароля
-                </h1>
+                <h1 className="text-2xl font-semibold text-foreground">Сброс пароля</h1>
                 <p className="text-sm text-muted-foreground">
                   Введите ваш логин для восстановления доступа
                 </p>
@@ -197,10 +193,10 @@ export default function ResetPasswordPage() {
                   onChange={(e) => {
                     setLogin(e.target.value);
                     if (touched.login) {
-                      validateField('login', e.target.value);
+                      validateField("login", e.target.value);
                     }
                   }}
-                  onBlur={() => handleBlur('login')}
+                  onBlur={() => handleBlur("login")}
                   placeholder="Введите логин"
                   error={touched.login ? errors.login : undefined}
                   disabled={isLoading}
@@ -217,16 +213,13 @@ export default function ResetPasswordPage() {
                   disabled={!login.trim() || !!errors.login}
                   isLoading={isLoading}
                 >
-                  {isLoading ? 'Проверка...' : 'Продолжить'}
+                  {isLoading ? "Проверка..." : "Продолжить"}
                 </Button>
               </form>
 
               {/* Back to Login Link */}
               <div className="text-center">
-                <a
-                  href="#/login"
-                  className="text-sm text-primary hover:underline"
-                >
+                <a href="#/login" className="text-sm text-primary hover:underline">
                   Вернуться к входу
                 </a>
               </div>
@@ -245,9 +238,7 @@ export default function ResetPasswordPage() {
           <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6">
             {/* Header */}
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold text-foreground">
-                Новый пароль
-              </h1>
+              <h1 className="text-2xl font-semibold text-foreground">Новый пароль</h1>
               <p className="text-sm text-muted-foreground">
                 Пользователь: <strong>{login}</strong>
               </p>
@@ -262,10 +253,10 @@ export default function ResetPasswordPage() {
                 onChange={(e) => {
                   setNewPassword(e.target.value);
                   if (touched.newPassword) {
-                    validateField('newPassword', e.target.value);
+                    validateField("newPassword", e.target.value);
                   }
                 }}
-                onBlur={() => handleBlur('newPassword')}
+                onBlur={() => handleBlur("newPassword")}
                 placeholder="Минимум 8 символов"
                 error={touched.newPassword ? errors.newPassword : undefined}
                 disabled={isLoading}
@@ -280,10 +271,10 @@ export default function ResetPasswordPage() {
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                   if (touched.confirmPassword) {
-                    validateField('confirmPassword', e.target.value);
+                    validateField("confirmPassword", e.target.value);
                   }
                 }}
-                onBlur={() => handleBlur('confirmPassword')}
+                onBlur={() => handleBlur("confirmPassword")}
                 placeholder="Повторите новый пароль"
                 error={touched.confirmPassword ? errors.confirmPassword : undefined}
                 disabled={isLoading}
@@ -296,17 +287,21 @@ export default function ResetPasswordPage() {
                   Требования к паролю:
                 </p>
                 <ul className="space-y-1">
-                  <li className={`text-xs flex items-center gap-2 ${
-                    newPassword.length >= 8 ? 'text-green-600' : 'text-muted-foreground'
-                  }`}>
+                  <li
+                    className={`text-xs flex items-center gap-2 ${
+                      newPassword.length >= 8 ? "text-green-600" : "text-muted-foreground"
+                    }`}
+                  >
                     <span className="text-lg leading-none">•</span>
                     Минимум 8 символов
                   </li>
-                  <li className={`text-xs flex items-center gap-2 ${
-                    newPassword && confirmPassword && newPassword === confirmPassword 
-                      ? 'text-green-600' 
-                      : 'text-muted-foreground'
-                  }`}>
+                  <li
+                    className={`text-xs flex items-center gap-2 ${
+                      newPassword && confirmPassword && newPassword === confirmPassword
+                        ? "text-green-600"
+                        : "text-muted-foreground"
+                    }`}
+                  >
                     <span className="text-lg leading-none">•</span>
                     Пароли совпадают
                   </li>
@@ -320,14 +315,14 @@ export default function ResetPasswordPage() {
                 size="lg"
                 fullWidth
                 disabled={
-                  !newPassword || 
-                  !confirmPassword || 
-                  !!errors.newPassword || 
+                  !newPassword ||
+                  !confirmPassword ||
+                  !!errors.newPassword ||
                   !!errors.confirmPassword
                 }
                 isLoading={isLoading}
               >
-                {isLoading ? 'Сохранение...' : 'Сохранить новый пароль'}
+                {isLoading ? "Сохранение..." : "Сохранить новый пароль"}
               </Button>
             </form>
 
@@ -335,7 +330,7 @@ export default function ResetPasswordPage() {
             <div className="text-center">
               <button
                 type="button"
-                onClick={() => setStep('login')}
+                onClick={() => setStep("login")}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 disabled={isLoading}
               >

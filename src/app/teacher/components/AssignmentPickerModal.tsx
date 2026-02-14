@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { X, Search, CheckCircle, FileText } from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+import { useState } from "react";
+import { X, Search, CheckCircle, FileText } from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 
 /**
  * AssignmentPickerModal - Модальное окно выбора задания для привязки рубрики
- * 
+ *
  * Features:
  * - Список заданий из курсов преподавателя
  * - Поиск по названию
@@ -19,12 +19,12 @@ interface AssignmentPickerModalProps {
 }
 
 export function AssignmentPickerModal({
-  rubricId,
+  rubricId: _rubricId,
   rubricName,
   onClose,
 }: AssignmentPickerModalProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCourseId, setSelectedCourseId] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("all");
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
 
   // Get courses and assignments
@@ -33,25 +33,20 @@ export function AssignmentPickerModal({
 
   // Filter assignments
   const filteredAssignments = assignments.filter((assignment) => {
-    const matchesSearch = assignment.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCourse =
-      selectedCourseId === 'all' || assignment.courseId === selectedCourseId;
+    const matchesSearch = assignment.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCourse = selectedCourseId === "all" || assignment.courseId === selectedCourseId;
     return matchesSearch && matchesCourse;
   });
 
   const handleAttach = () => {
     if (!selectedAssignmentId) {
-      alert('Выберите задание');
+      alert("Выберите задание");
       return;
     }
 
     const assignment = assignments.find((a) => a.id === selectedAssignmentId);
     if (assignment) {
-      alert(
-        `Рубрика "${rubricName}" успешно привязана к заданию "${assignment.title}"`
-      );
+      alert(`Рубрика "${rubricName}" успешно привязана к заданию "${assignment.title}"`);
       onClose();
     }
   };
@@ -62,19 +57,19 @@ export function AssignmentPickerModal({
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published':
+      case "published":
         return (
           <span className="px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
             Опубликовано
           </span>
         );
-      case 'draft':
+      case "draft":
         return (
           <span className="px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
             Черновик
           </span>
         );
-      case 'closed':
+      case "closed":
         return (
           <span className="px-2 py-1 bg-[#ffe9e9] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
             Закрыто
@@ -140,9 +135,7 @@ export function AssignmentPickerModal({
           {filteredAssignments.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <p className="text-[15px] text-[#767692]">
-                Задания не найдены
-              </p>
+              <p className="text-[15px] text-[#767692]">Задания не найдены</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -159,8 +152,8 @@ export function AssignmentPickerModal({
                       w-full text-left p-4 border-2 rounded-[12px] transition-all
                       ${
                         isSelected
-                          ? 'border-[#5b8def] bg-[#e9f5ff]'
-                          : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                          ? "border-[#5b8def] bg-[#e9f5ff]"
+                          : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
                       }
                     `}
                   >
@@ -170,9 +163,7 @@ export function AssignmentPickerModal({
                           <h3 className="text-[16px] font-medium text-[#21214f]">
                             {assignment.title}
                           </h3>
-                          {isSelected && (
-                            <CheckCircle className="w-4 h-4 text-[#5b8def]" />
-                          )}
+                          {isSelected && <CheckCircle className="w-4 h-4 text-[#5b8def]" />}
                         </div>
 
                         <p className="text-[13px] text-[#767692] mb-2">
@@ -182,7 +173,7 @@ export function AssignmentPickerModal({
                         <div className="flex items-center gap-2 flex-wrap">
                           {getStatusBadge(assignment.status)}
                           <span className="text-[12px] text-[#767692]">
-                            Дедлайн: {assignment.dueDate.toLocaleDateString('ru-RU')}
+                            Дедлайн: {assignment.dueDate.toLocaleDateString("ru-RU")}
                           </span>
                           {hasRubric && (
                             <span className="px-2 py-1 bg-[#fff8e1] text-[#f57c00] rounded-[6px] text-[11px] font-medium">
@@ -204,7 +195,7 @@ export function AssignmentPickerModal({
           <p className="text-[13px] text-[#767692]">
             {selectedAssignmentId
               ? 'Нажмите "Привязать" для подтверждения'
-              : 'Выберите задание из списка выше'}
+              : "Выберите задание из списка выше"}
           </p>
           <div className="flex items-center gap-2">
             <button

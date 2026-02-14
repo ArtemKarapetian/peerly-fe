@@ -2,7 +2,7 @@
  * Utilities for managing review drafts in localStorage
  */
 
-import type { CriterionScore } from '@/app/components/review';
+import type { CriterionScore } from "@/app/components/review";
 
 export interface ReviewDraft {
   scores: CriterionScore[];
@@ -13,11 +13,7 @@ export interface ReviewDraft {
 /**
  * Generate a stable key for localStorage
  */
-export function getDraftKey(
-  courseId: string,
-  taskId: string,
-  reviewId: string
-): string {
+export function getDraftKey(courseId: string, taskId: string, reviewId: string): string {
   return `review_draft_${courseId}_${taskId}_${reviewId}`;
 }
 
@@ -29,7 +25,7 @@ export function saveDraftToStorage(
   taskId: string,
   reviewId: string,
   scores: CriterionScore[],
-  overallComment: string
+  overallComment: string,
 ): boolean {
   try {
     const draft: ReviewDraft = {
@@ -41,7 +37,7 @@ export function saveDraftToStorage(
     localStorage.setItem(key, JSON.stringify(draft));
     return true;
   } catch (error) {
-    console.error('Failed to save draft to localStorage:', error);
+    console.error("Failed to save draft to localStorage:", error);
     return false;
   }
 }
@@ -52,7 +48,7 @@ export function saveDraftToStorage(
 export function loadDraftFromStorage(
   courseId: string,
   taskId: string,
-  reviewId: string
+  reviewId: string,
 ): ReviewDraft | null {
   try {
     const key = getDraftKey(courseId, taskId, reviewId);
@@ -60,7 +56,7 @@ export function loadDraftFromStorage(
     if (!data) return null;
     return JSON.parse(data) as ReviewDraft;
   } catch (error) {
-    console.error('Failed to load draft from localStorage:', error);
+    console.error("Failed to load draft from localStorage:", error);
     return null;
   }
 }
@@ -68,16 +64,12 @@ export function loadDraftFromStorage(
 /**
  * Clear draft from localStorage
  */
-export function clearDraftFromStorage(
-  courseId: string,
-  taskId: string,
-  reviewId: string
-): void {
+export function clearDraftFromStorage(courseId: string, taskId: string, reviewId: string): void {
   try {
     const key = getDraftKey(courseId, taskId, reviewId);
     localStorage.removeItem(key);
   } catch (error) {
-    console.error('Failed to clear draft from localStorage:', error);
+    console.error("Failed to clear draft from localStorage:", error);
   }
 }
 
@@ -86,7 +78,7 @@ export function clearDraftFromStorage(
  */
 export function formatSaveTime(timestamp: number): string {
   const date = new Date(timestamp);
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 }

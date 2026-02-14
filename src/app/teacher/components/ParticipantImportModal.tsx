@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { X, Upload, UserPlus, Key, AlertCircle, CheckCircle } from 'lucide-react';
+import { useState } from "react";
+import { X, Upload, UserPlus, Key, AlertCircle, CheckCircle } from "lucide-react";
 
 /**
  * ParticipantImportModal - Модальное окно импорта участников
- * 
+ *
  * Возможности:
  * 1. CSV paste (name, surname, login) с preview
  * 2. Ручное добавление одного пользователя
  * 3. Генерация инвайт-кодов (демо)
- * 
+ *
  * Валидация:
  * - Дубликаты логина
  * - Отсутствующие поля
@@ -27,53 +27,56 @@ interface ParsedUser {
   error?: string;
 }
 
-type ImportMode = 'csv' | 'manual' | 'invite';
+type ImportMode = "csv" | "manual" | "invite";
 
-export function ParticipantImportModal({ courseId, onClose }: ParticipantImportModalProps) {
-  const [mode, setMode] = useState<ImportMode>('csv');
-  const [csvText, setCsvText] = useState('');
+export function ParticipantImportModal({
+  courseId: _courseId,
+  onClose,
+}: ParticipantImportModalProps) {
+  const [mode, setMode] = useState<ImportMode>("csv");
+  const [csvText, setCsvText] = useState("");
   const [parsedUsers, setParsedUsers] = useState<ParsedUser[]>([]);
   const [showPreview, setShowPreview] = useState(false);
-  
+
   // Manual add fields
-  const [manualName, setManualName] = useState('');
-  const [manualSurname, setManualSurname] = useState('');
-  const [manualLogin, setManualLogin] = useState('');
-  
+  const [manualName, setManualName] = useState("");
+  const [manualSurname, setManualSurname] = useState("");
+  const [manualLogin, setManualLogin] = useState("");
+
   // Invite codes
   const [inviteCount, setInviteCount] = useState(5);
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
 
   // Parse CSV text
   const handleParseCSV = () => {
-    const lines = csvText.trim().split('\n');
+    const lines = csvText.trim().split("\n");
     const users: ParsedUser[] = [];
     const seenLogins = new Set<string>();
 
-    lines.forEach((line, index) => {
-      const parts = line.split(',').map(p => p.trim());
-      
+    lines.forEach((line, _index) => {
+      const parts = line.split(",").map((p) => p.trim());
+
       if (parts.length < 3) {
         users.push({
-          name: parts[0] || '',
-          surname: parts[1] || '',
-          login: parts[2] || '',
-          error: 'Не все поля заполнены',
+          name: parts[0] || "",
+          surname: parts[1] || "",
+          login: parts[2] || "",
+          error: "Не все поля заполнены",
         });
         return;
       }
 
       const [name, surname, login] = parts;
-      
+
       // Validation
       let error: string | undefined;
-      
+
       if (!name || !surname || !login) {
-        error = 'Не все поля заполнены';
+        error = "Не все поля заполнены";
       } else if (seenLogins.has(login)) {
         error = `Дубликат логина: ${login}`;
       } else if (login.length < 3) {
-        error = 'Логин слишком короткий (мин. 3 символа)';
+        error = "Логин слишком короткий (мин. 3 символа)";
       }
 
       if (!error) {
@@ -90,14 +93,14 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
   // Add manual user
   const handleAddManual = () => {
     if (!manualName || !manualSurname || !manualLogin) {
-      alert('Заполните все поля');
+      alert("Заполните все поля");
       return;
     }
 
     alert(`Добавлен пользователь: ${manualName} ${manualSurname} (${manualLogin})`);
-    setManualName('');
-    setManualSurname('');
-    setManualLogin('');
+    setManualName("");
+    setManualSurname("");
+    setManualLogin("");
   };
 
   // Generate invite codes
@@ -112,17 +115,17 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
 
   // Import CSV users
   const handleImportCSV = () => {
-    const validUsers = parsedUsers.filter(u => !u.error);
+    const validUsers = parsedUsers.filter((u) => !u.error);
     if (validUsers.length === 0) {
-      alert('Нет валидных пользователей для импорта');
+      alert("Нет валидных пользователей для импорта");
       return;
     }
     alert(`Импортировано ${validUsers.length} пользователей`);
     onClose();
   };
 
-  const validCount = parsedUsers.filter(u => !u.error).length;
-  const errorCount = parsedUsers.filter(u => u.error).length;
+  const validCount = parsedUsers.filter((u) => !u.error).length;
+  const errorCount = parsedUsers.filter((u) => u.error).length;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -143,41 +146,41 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
         {/* Mode Tabs */}
         <div className="flex border-b-2 border-[#e6e8ee]">
           <button
-            onClick={() => setMode('csv')}
+            onClick={() => setMode("csv")}
             className={`
               flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
-              ${mode === 'csv' ? 'text-[#5b8def]' : 'text-[#767692] hover:text-[#21214f]'}
+              ${mode === "csv" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"}
             `}
           >
             <Upload className="w-4 h-4 inline-block mr-2" />
             CSV импорт
-            {mode === 'csv' && (
+            {mode === "csv" && (
               <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
             )}
           </button>
           <button
-            onClick={() => setMode('manual')}
+            onClick={() => setMode("manual")}
             className={`
               flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
-              ${mode === 'manual' ? 'text-[#5b8def]' : 'text-[#767692] hover:text-[#21214f]'}
+              ${mode === "manual" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"}
             `}
           >
             <UserPlus className="w-4 h-4 inline-block mr-2" />
             Добавить вручную
-            {mode === 'manual' && (
+            {mode === "manual" && (
               <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
             )}
           </button>
           <button
-            onClick={() => setMode('invite')}
+            onClick={() => setMode("invite")}
             className={`
               flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
-              ${mode === 'invite' ? 'text-[#5b8def]' : 'text-[#767692] hover:text-[#21214f]'}
+              ${mode === "invite" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"}
             `}
           >
             <Key className="w-4 h-4 inline-block mr-2" />
             Инвайт-коды
-            {mode === 'invite' && (
+            {mode === "invite" && (
               <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
             )}
           </button>
@@ -186,12 +189,13 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {/* CSV Import Mode */}
-          {mode === 'csv' && (
+          {mode === "csv" && (
             <div>
               <p className="text-[14px] text-[#767692] mb-4">
-                Вставьте CSV данные в формате: <code className="bg-[#f9f9f9] px-2 py-1 rounded">имя,фамилия,логин</code>
+                Вставьте CSV данные в формате:{" "}
+                <code className="bg-[#f9f9f9] px-2 py-1 rounded">имя,фамилия,логин</code>
               </p>
-              
+
               <textarea
                 value={csvText}
                 onChange={(e) => setCsvText(e.target.value)}
@@ -232,21 +236,29 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
                     <table className="w-full text-[14px]">
                       <thead className="bg-[#f9f9f9] sticky top-0">
                         <tr>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Имя</th>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Фамилия</th>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Логин</th>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">Статус</th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                            Имя
+                          </th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                            Фамилия
+                          </th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                            Логин
+                          </th>
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                            Статус
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
                         {parsedUsers.map((user, index) => (
-                          <tr 
+                          <tr
                             key={index}
-                            className={`border-t border-[#e6e8ee] ${user.error ? 'bg-[#fff5f5]' : ''}`}
+                            className={`border-t border-[#e6e8ee] ${user.error ? "bg-[#fff5f5]" : ""}`}
                           >
-                            <td className="px-3 py-2">{user.name || '-'}</td>
-                            <td className="px-3 py-2">{user.surname || '-'}</td>
-                            <td className="px-3 py-2 font-mono text-[13px]">{user.login || '-'}</td>
+                            <td className="px-3 py-2">{user.name || "-"}</td>
+                            <td className="px-3 py-2">{user.surname || "-"}</td>
+                            <td className="px-3 py-2 font-mono text-[13px]">{user.login || "-"}</td>
                             <td className="px-3 py-2">
                               {user.error ? (
                                 <span className="text-[#d4183d] text-[12px] flex items-center gap-1">
@@ -279,7 +291,7 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
           )}
 
           {/* Manual Add Mode */}
-          {mode === 'manual' && (
+          {mode === "manual" && (
             <div>
               <p className="text-[14px] text-[#767692] mb-4">
                 Добавьте одного пользователя вручную
@@ -287,9 +299,7 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    Имя *
-                  </label>
+                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">Имя *</label>
                   <input
                     type="text"
                     value={manualName}
@@ -336,7 +346,7 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
           )}
 
           {/* Invite Codes Mode */}
-          {mode === 'invite' && (
+          {mode === "invite" && (
             <div>
               <p className="text-[14px] text-[#767692] mb-4">
                 Сгенерируйте одноразовые инвайт-коды для самостоятельной регистрации
@@ -372,7 +382,10 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
                     <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4 max-h-[300px] overflow-y-auto">
                       <div className="space-y-2 font-mono text-[14px]">
                         {generatedCodes.map((code, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-white rounded-[8px]">
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-2 bg-white rounded-[8px]"
+                          >
                             <span className="text-[#21214f]">{code}</span>
                             <button
                               onClick={() => navigator.clipboard.writeText(code)}

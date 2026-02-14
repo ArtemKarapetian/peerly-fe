@@ -1,6 +1,15 @@
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { Book, FileCheck, Clock, Settings, BarChart, TrendingUp, CheckCircle, ArrowRight } from 'lucide-react';
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import {
+  Book,
+  FileCheck,
+  Clock,
+  Settings,
+  BarChart,
+  TrendingUp,
+  CheckCircle,
+  ArrowRight,
+} from "lucide-react";
 
 /**
  * TeacherDashboardPage - Главная панель преподавателя
@@ -8,90 +17,90 @@ import { Book, FileCheck, Clock, Settings, BarChart, TrendingUp, CheckCircle, Ar
 
 export default function TeacherDashboardPage() {
   const quickActions = [
-    { 
-      id: 'courses',
-      icon: Book, 
-      label: 'Курсы', 
-      sublabel: '4 активных',
-      description: 'Управление курсами и заданиями',
-      color: '#5b8def',
-      bgColor: 'bg-[#e9f5ff]',
-      iconColor: 'text-[#5b8def]',
-      link: '#/teacher/courses'
+    {
+      id: "courses",
+      icon: Book,
+      label: "Курсы",
+      sublabel: "4 активных",
+      description: "Управление курсами и заданиями",
+      color: "#5b8def",
+      bgColor: "bg-[#e9f5ff]",
+      iconColor: "text-[#5b8def]",
+      link: "#/teacher/courses",
     },
-    { 
-      id: 'works',
-      icon: FileCheck, 
-      label: 'Работы студентов', 
-      sublabel: '23 на проверке',
-      description: 'Просмотр и оценка работ',
-      color: '#ff9800',
-      bgColor: 'bg-[#fff4e5]',
-      iconColor: 'text-[#ff9800]',
-      link: '#/teacher/submissions'
+    {
+      id: "works",
+      icon: FileCheck,
+      label: "Работы студентов",
+      sublabel: "23 на проверке",
+      description: "Просмотр и оценка работ",
+      color: "#ff9800",
+      bgColor: "bg-[#fff4e5]",
+      iconColor: "text-[#ff9800]",
+      link: "#/teacher/submissions",
     },
-    { 
-      id: 'extensions',
-      icon: Clock, 
-      label: 'Продления', 
-      sublabel: '3 запроса',
-      description: 'Запросы на продление дедлайнов',
-      color: '#4caf50',
-      bgColor: 'bg-[#e8f5e9]',
-      iconColor: 'text-[#4caf50]',
-      link: '#/teacher/extensions'
+    {
+      id: "extensions",
+      icon: Clock,
+      label: "Продления",
+      sublabel: "3 запроса",
+      description: "Запросы на продление дедлайнов",
+      color: "#4caf50",
+      bgColor: "bg-[#e8f5e9]",
+      iconColor: "text-[#4caf50]",
+      link: "#/teacher/extensions",
     },
-    { 
-      id: 'automation',
-      icon: Settings, 
-      label: 'Автоматизация', 
-      sublabel: '8 правил',
-      description: 'Настройка правил и триггеров',
-      color: '#8e24aa',
-      bgColor: 'bg-[#f3e5f5]',
-      iconColor: 'text-[#8e24aa]',
-      link: '#/teacher/automation'
+    {
+      id: "automation",
+      icon: Settings,
+      label: "Автоматизация",
+      sublabel: "8 правил",
+      description: "Настройка правил и триггеров",
+      color: "#8e24aa",
+      bgColor: "bg-[#f3e5f5]",
+      iconColor: "text-[#8e24aa]",
+      link: "#/teacher/automation",
     },
-    { 
-      id: 'analytics',
-      icon: BarChart, 
-      label: 'Отчеты', 
-      sublabel: 'Аналитика',
-      description: 'Статистика и аналитика курсов',
-      color: '#06b6d4',
-      bgColor: 'bg-[#e0f7fa]',
-      iconColor: 'text-[#06b6d4]',
-      link: '#/teacher/analytics'
+    {
+      id: "analytics",
+      icon: BarChart,
+      label: "Отчеты",
+      sublabel: "Аналитика",
+      description: "Статистика и аналитика курсов",
+      color: "#06b6d4",
+      bgColor: "bg-[#e0f7fa]",
+      iconColor: "text-[#06b6d4]",
+      link: "#/teacher/analytics",
     },
   ];
 
   const recentActivities = [
-    { 
-      text: 'Новая работа сдана в курсе «Веб-разработка»', 
-      time: '5 минут назад',
+    {
+      text: "Новая работа сдана в курсе «Веб-разработка»",
+      time: "5 минут назад",
       icon: FileCheck,
-      bgColor: 'bg-[#e9f5ff]',
-      iconColor: 'text-[#5b8def]'
+      bgColor: "bg-[#e9f5ff]",
+      iconColor: "text-[#5b8def]",
     },
-    { 
-      text: 'Студент запросил продление дедлайна', 
-      time: '1 час назад',
+    {
+      text: "Студент запросил продление дедлайна",
+      time: "1 час назад",
       icon: Clock,
-      bgColor: 'bg-[#fff4e5]',
-      iconColor: 'text-[#ff9800]'
+      bgColor: "bg-[#fff4e5]",
+      iconColor: "text-[#ff9800]",
     },
-    { 
-      text: '3 рецензии завершены в курсе «Дизайн»', 
-      time: '2 часа назад',
+    {
+      text: "3 рецензии завершены в курсе «Дизайн»",
+      time: "2 часа назад",
       icon: CheckCircle,
-      bgColor: 'bg-[#e8f5e9]',
-      iconColor: 'text-[#4caf50]'
+      bgColor: "bg-[#e8f5e9]",
+      iconColor: "text-[#4caf50]",
     },
   ];
 
   return (
     <AppShell title="Панель преподавателя">
-      <Breadcrumbs items={[{ label: 'Панель преподавателя' }]} />
+      <Breadcrumbs items={[{ label: "Панель преподавателя" }]} />
 
       <div className="mt-6">
         {/* Header */}
@@ -111,10 +120,12 @@ export default function TeacherDashboardPage() {
             return (
               <button
                 key={action.id}
-                onClick={() => window.location.hash = action.link}
+                onClick={() => (window.location.hash = action.link)}
                 className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-[#2563eb] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
               >
-                <div className={`w-12 h-12 ${action.bgColor} rounded-[12px] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <div
+                  className={`w-12 h-12 ${action.bgColor} rounded-[12px] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                >
                   <Icon className={`w-6 h-6 ${action.iconColor}`} />
                 </div>
                 <h3 className="text-[16px] font-medium text-[#21214f] mb-1">{action.label}</h3>
@@ -140,8 +151,13 @@ export default function TeacherDashboardPage() {
             {recentActivities.map((activity, i) => {
               const Icon = activity.icon;
               return (
-                <div key={i} className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
-                  <div className={`w-8 h-8 ${activity.bgColor} rounded-[8px] flex items-center justify-center flex-shrink-0`}>
+                <div
+                  key={i}
+                  className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors"
+                >
+                  <div
+                    className={`w-8 h-8 ${activity.bgColor} rounded-[8px] flex items-center justify-center flex-shrink-0`}
+                  >
                     <Icon className={`w-4 h-4 ${activity.iconColor}`} />
                   </div>
                   <div className="flex-1">

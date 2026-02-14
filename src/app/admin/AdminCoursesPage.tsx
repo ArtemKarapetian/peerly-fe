@@ -1,35 +1,35 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Book, ExternalLink, Search } from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
-import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagination';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Book, ExternalLink, Search } from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
+import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
 
 /**
  * AdminCoursesPage - Просмотр всех курсов в системе (Admin)
  */
 
 export default function AdminCoursesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  
+  const [searchQuery, setSearchQuery] = useState("");
+
   const courses = demoDataStore.getCourses();
-  
+
   // Filter courses by search
-  const filteredCourses = courses.filter(course => 
-    course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    course.code.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.code.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(filteredCourses, 15);
+  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
+    filteredCourses,
+    15,
+  );
 
   return (
     <AppShell title="Все курсы">
       <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Все курсы
-        </h1>
-        <p className="text-[--text-secondary]">
-          Просмотр всех курсов в системе
-        </p>
+        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Все курсы</h1>
+        <p className="text-[--text-secondary]">Просмотр всех курсов в системе</p>
       </div>
 
       {/* Search */}
@@ -74,25 +74,21 @@ export default function AdminCoursesPage() {
             </thead>
             <tbody>
               {currentItems.map((course, index) => (
-                <tr 
+                <tr
                   key={course.id}
                   className={`border-b border-[--surface-border] last:border-0 hover:bg-[--surface-hover] transition-colors ${
-                    index % 2 === 0 ? '' : 'bg-[--surface-hover]/50'
+                    index % 2 === 0 ? "" : "bg-[--surface-hover]/50"
                   }`}
                 >
                   <td className="px-6 py-4">
                     <div>
-                      <p className="text-sm font-medium text-[--text-primary]">
-                        {course.title}
-                      </p>
-                      <p className="text-xs text-[--text-secondary] mt-0.5">
-                        {course.code}
-                      </p>
+                      <p className="text-sm font-medium text-[--text-primary]">{course.title}</p>
+                      <p className="text-xs text-[--text-secondary] mt-0.5">{course.code}</p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <p className="text-sm text-[--text-primary]">
-                      {course.teacherId === 'teacher-1' ? 'Иванов И.И.' : 'Преподаватель'}
+                      {course.teacherId === "teacher-1" ? "Иванов И.И." : "Преподаватель"}
                     </p>
                   </td>
                   <td className="px-6 py-4 text-center">
@@ -119,7 +115,7 @@ export default function AdminCoursesPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end">
                       <button
-                        onClick={() => window.location.hash = `/teacher/course/${course.id}`}
+                        onClick={() => (window.location.hash = `/teacher/course/${course.id}`)}
                         className="p-2 hover:bg-[--surface-hover] rounded-[var(--radius-sm)] transition-colors"
                         title="Открыть курс"
                       >
@@ -149,11 +145,9 @@ export default function AdminCoursesPage() {
       {filteredCourses.length === 0 && (
         <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-lg)] p-12 text-center">
           <Book className="w-12 h-12 text-[--text-tertiary] mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-[--text-primary] mb-2">
-            Курсы не найдены
-          </h3>
+          <h3 className="text-lg font-medium text-[--text-primary] mb-2">Курсы не найдены</h3>
           <p className="text-sm text-[--text-secondary]">
-            {searchQuery ? 'Попробуйте изменить поисковый запрос' : 'В системе пока нет курсов'}
+            {searchQuery ? "Попробуйте изменить поисковый запрос" : "В системе пока нет курсов"}
           </p>
         </div>
       )}

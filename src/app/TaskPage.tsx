@@ -1,100 +1,101 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { TaskHeader } from '@/app/components/TaskHeader';
-import { TaskDescription } from '@/app/components/TaskDescription';
-import { TaskRequirements } from '@/app/components/TaskRequirements';
-import { TaskMaterials } from '@/app/components/TaskMaterials';
-import { TaskQuestionsComments } from '@/app/components/TaskQuestionsComments';
-import { StatusCard, TaskStatus } from '@/app/components/StatusCard';
-import { LayoutDebugger } from '@/app/components/LayoutDebugger';
-import { getExtensionForStudent, getExtensionStatusLabel } from '@/app/utils/extensions';
-import { useAuth } from '@/app/contexts/AuthContext';
-import { Clock, AlertCircle } from 'lucide-react';
+import { useState, useMemo } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { TaskHeader } from "@/app/components/TaskHeader";
+import { TaskDescription } from "@/app/components/TaskDescription";
+import { TaskRequirements } from "@/app/components/TaskRequirements";
+import { TaskMaterials } from "@/app/components/TaskMaterials";
+import { TaskQuestionsComments } from "@/app/components/TaskQuestionsComments";
+import { StatusCard, TaskStatus } from "@/app/components/StatusCard";
+import { LayoutDebugger } from "@/app/components/LayoutDebugger";
+import { getExtensionForStudent } from "@/app/utils/extensions";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { Clock, AlertCircle } from "lucide-react";
 
 interface TaskPageProps {
   taskId?: string | null;
 }
 
-export default function TaskPage({ taskId = '1' }: TaskPageProps) {
+export default function TaskPage({ taskId = "1" }: TaskPageProps) {
   const { user } = useAuth();
-  const [taskStatus, setTaskStatus] = useState<TaskStatus>('NOT_STARTED');
-  const [extension, setExtension] = useState(getExtensionForStudent(taskId || '1', user?.id || '1'));
+  const [taskStatus, setTaskStatus] = useState<TaskStatus>("NOT_STARTED");
 
-  const taskTitle = `Задание ${taskId || '1'}`;
-  const courseId = '1'; // Mock course ID
+  // Use useMemo instead of useState + useEffect to avoid cascading renders
+  const extension = useMemo(
+    () => getExtensionForStudent(taskId || "1", user?.id || "1"),
+    [taskId, user?.id],
+  );
 
-  useEffect(() => {
-    // Reload extension info when page loads
-    setExtension(getExtensionForStudent(taskId || '1', user?.id || '1'));
-  }, [taskId, user?.id]);
+  const taskTitle = `Задание ${taskId || "1"}`;
+  const courseId = "1"; // Mock course ID
 
   const getStatusColor = () => {
     switch (taskStatus) {
-      case 'NOT_STARTED':
-        return 'bg-[#e4e4e4]';
-      case 'SUBMITTED':
-        return 'bg-[#b7bdff]';
-      case 'PEER_REVIEW':
-        return 'bg-[#b0e9fb]';
-      case 'TEACHER_REVIEW':
-        return 'bg-[#b7bdff]';
-      case 'GRADING':
-        return 'bg-[#b7bdff]';
-      case 'GRADED':
-        return 'bg-[#9cf38d]';
-      case 'OVERDUE':
-        return 'bg-[#ffb8b8]';
+      case "NOT_STARTED":
+        return "bg-[#e4e4e4]";
+      case "SUBMITTED":
+        return "bg-[#b7bdff]";
+      case "PEER_REVIEW":
+        return "bg-[#b0e9fb]";
+      case "TEACHER_REVIEW":
+        return "bg-[#b7bdff]";
+      case "GRADING":
+        return "bg-[#b7bdff]";
+      case "GRADED":
+        return "bg-[#9cf38d]";
+      case "OVERDUE":
+        return "bg-[#ffb8b8]";
     }
   };
 
   const getStatusLabel = () => {
     switch (taskStatus) {
-      case 'NOT_STARTED':
-        return 'Не начато';
-      case 'SUBMITTED':
-        return 'Сдана работа';
-      case 'PEER_REVIEW':
-        return 'Взаимная проверка';
-      case 'TEACHER_REVIEW':
-        return 'Проверка преподавателем';
-      case 'GRADING':
-        return 'Выставление оценок';
-      case 'GRADED':
-        return 'Оценки выставлены';
-      case 'OVERDUE':
-        return 'Просрочено';
+      case "NOT_STARTED":
+        return "Не начато";
+      case "SUBMITTED":
+        return "Сдана работа";
+      case "PEER_REVIEW":
+        return "Взаимная проверка";
+      case "TEACHER_REVIEW":
+        return "Проверка преподавателем";
+      case "GRADING":
+        return "Выставление оценок";
+      case "GRADED":
+        return "Оценки выставлены";
+      case "OVERDUE":
+        return "Просрочено";
     }
   };
 
   const formatExtensionDeadline = (deadline?: string) => {
-    if (!deadline) return '';
+    if (!deadline) return "";
     const date = new Date(deadline);
-    return date.toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
-  const showExtensionBanner = extension && (extension.status === 'approved' || extension.status === 'manual');
-  const showRequestedBanner = extension && extension.status === 'requested';
-  const canRequestExtension = !extension || extension.status === 'denied';
+  const showExtensionBanner =
+    extension && (extension.status === "approved" || extension.status === "manual");
+  const showRequestedBanner = extension && extension.status === "requested";
+  const canRequestExtension = !extension || extension.status === "denied";
 
   return (
     <AppShell title={taskTitle}>
       {/* Breadcrumbs - стандартизированная навигация: Курсы → Название курса → Задание */}
-      <Breadcrumbs 
+      <Breadcrumbs
         items={[
-          { label: 'Курсы', href: ROUTES.courses },
-          { label: 'Веб-программирование', href: ROUTES.course(courseId) },
-          { label: taskTitle }
+          { label: "Курсы", href: ROUTES.courses },
+          { label: "Веб-программирование", href: ROUTES.course(courseId) },
+          { label: taskTitle },
         ]}
       />
-      
+
       {/* Extension Banner - Approved/Manual */}
       {showExtensionBanner && (
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-[12px] p-4 mb-6">
@@ -106,11 +107,17 @@ export default function TaskPage({ taskId = '1' }: TaskPageProps) {
               </h3>
               <p className="text-sm text-green-700 dark:text-green-300">
                 {extension.submissionDeadlineOverride && (
-                  <>Новый дедлайн сдачи: <strong>{formatExtensionDeadline(extension.submissionDeadlineOverride)}</strong></>
+                  <>
+                    Новый дедлайн сдачи:{" "}
+                    <strong>{formatExtensionDeadline(extension.submissionDeadlineOverride)}</strong>
+                  </>
                 )}
-                {extension.type === 'both' && extension.reviewDeadlineOverride && <br />}
+                {extension.type === "both" && extension.reviewDeadlineOverride && <br />}
                 {extension.reviewDeadlineOverride && (
-                  <>Новый дедлайн проверки: <strong>{formatExtensionDeadline(extension.reviewDeadlineOverride)}</strong></>
+                  <>
+                    Новый дедлайн проверки:{" "}
+                    <strong>{formatExtensionDeadline(extension.reviewDeadlineOverride)}</strong>
+                  </>
                 )}
               </p>
               {extension.reason && (
@@ -133,13 +140,14 @@ export default function TaskPage({ taskId = '1' }: TaskPageProps) {
                 Запрос на продление ожидает рассмотрения
               </h3>
               <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                Ваш запрос на продление дедлайна отправлен преподавателю. Вы получите уведомление, когда он будет рассмотрен.
+                Ваш запрос на продление дедлайна отправлен преподавателю. Вы получите уведомление,
+                когда он будет рассмотрен.
               </p>
             </div>
           </div>
         </div>
       )}
-      
+
       {/* Page Header - H1 после breadcrumbs */}
       <TaskHeader
         title={taskTitle}
@@ -150,12 +158,16 @@ export default function TaskPage({ taskId = '1' }: TaskPageProps) {
         type="Индивидуальное с взаимопроверкой"
         status={getStatusLabel()}
         statusColor={getStatusColor()}
-        extensionInfo={showExtensionBanner ? {
-          isExtended: true,
-          newDeadline: formatExtensionDeadline(
-            extension.submissionDeadlineOverride || extension.reviewDeadlineOverride
-          )
-        } : undefined}
+        extensionInfo={
+          showExtensionBanner
+            ? {
+                isExtended: true,
+                newDeadline: formatExtensionDeadline(
+                  extension.submissionDeadlineOverride || extension.reviewDeadlineOverride,
+                ),
+              }
+            : undefined
+        }
       />
 
       {/* Двухколоночный layout для Desktop с фиксированным right rail */}
@@ -183,14 +195,14 @@ export default function TaskPage({ taskId = '1' }: TaskPageProps) {
         └──────────────────────────────────────────┘
         Gap: 16px between items
       */}
-      
+
       {/* StatusCard на Tablet/Mobile - показываем вверху */}
       <div className="hide-on-desktop mb-4">
-        <StatusCard 
-          status={taskStatus} 
+        <StatusCard
+          status={taskStatus}
           deadline="31 января 2026, 23:59"
           courseId={courseId}
-          taskId={taskId || '1'}
+          taskId={taskId || "1"}
           hasSubmission={false}
           isDraft={false}
           allowResubmissions={true}
@@ -223,11 +235,11 @@ export default function TaskPage({ taskId = '1' }: TaskPageProps) {
         <div className="w-full min-w-0 flex flex-col task-content-spacing hide-below-desktop">
           {/* Статус и действия - STICKY на Desktop (≥1200px) */}
           <div className="task-sidebar-sticky">
-            <StatusCard 
-              status={taskStatus} 
+            <StatusCard
+              status={taskStatus}
               deadline="31 января 2026, 23:59"
               courseId={courseId}
-              taskId={taskId || '1'}
+              taskId={taskId || "1"}
               hasSubmission={false}
               isDraft={false}
               allowResubmissions={true}
