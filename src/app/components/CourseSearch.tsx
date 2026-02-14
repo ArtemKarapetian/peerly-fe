@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
 /**
  * CourseSearch - Поиск курсов
@@ -10,10 +10,10 @@ interface CourseSearchProps {
   placeholder?: string;
 }
 
-export function CourseSearch({ 
-  value, 
-  onChange, 
-  placeholder = 'Поиск курсов...' 
+export function CourseSearch({
+  value,
+  onChange,
+  placeholder = "Поиск курсов...",
 }: CourseSearchProps) {
   return (
     <div className="relative">

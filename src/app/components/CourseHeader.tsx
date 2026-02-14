@@ -8,15 +8,12 @@ interface CourseHeaderProps {
   coverColor?: string;
 }
 
-export function CourseHeader({ title, teacher, coverColor = '#f2b2d6' }: CourseHeaderProps) {
+export function CourseHeader({ title, teacher, coverColor = "#f2b2d6" }: CourseHeaderProps) {
   return (
     <div className="bg-[#f9f9f9] w-full rounded-[20px] overflow-hidden">
       {/* Cover Image */}
-      <div 
-        className="w-full h-[100px] rounded-t-[20px]" 
-        style={{ backgroundColor: coverColor }}
-      />
-      
+      <div className="w-full h-[100px] rounded-t-[20px]" style={{ backgroundColor: coverColor }} />
+
       {/* Text Content */}
       <div className="px-5 pb-5 pt-3 space-y-1">
         <h1 className="text-[32px] font-medium leading-[1.05] tracking-[-0.5px] text-[#21214f]">

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Bug, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from "react";
+import { Bug, ChevronDown, ChevronUp } from "lucide-react";
 
 /**
  * Dev-only panel for testing error pages
@@ -14,10 +14,10 @@ export function DevErrorPanel() {
   }
 
   const errorLinks = [
-    { code: '401', path: '/401', label: 'Unauthorized' },
-    { code: '403', path: '/403', label: 'Forbidden' },
-    { code: '404', path: '/404', label: 'Not Found' },
-    { code: '500', path: '/500', label: 'Server Error' },
+    { code: "401", path: "/401", label: "Unauthorized" },
+    { code: "403", path: "/403", label: "Forbidden" },
+    { code: "404", path: "/404", label: "Not Found" },
+    { code: "500", path: "/500", label: "Server Error" },
   ];
 
   return (
@@ -43,7 +43,7 @@ export function DevErrorPanel() {
             {errorLinks.map((error) => (
               <button
                 key={error.code}
-                onClick={() => window.location.hash = error.path}
+                onClick={() => (window.location.hash = error.path)}
                 className="w-full px-3 py-2 text-left rounded hover:bg-accent transition-colors flex items-center justify-between group"
               >
                 <span className="text-sm">{error.label}</span>

@@ -1,16 +1,13 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import {
-  Flag, Save, Search, Filter, X, ChevronDown, 
-  AlertCircle, CheckCircle, Clock
-} from 'lucide-react';
-import { useFeatureFlags } from '@/app/contexts/FeatureFlagsContext';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Flag, Save, Search, X, ChevronDown, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { useFeatureFlags } from "@/app/contexts/FeatureFlagsContext";
 
 /**
  * AdminFlagsPage - Фиче-флаги и настройки платформы
- * 
+ *
  * Функции:
  * - Переключение экспериментальных функций
  * - Поиск и фильтрация флагов
@@ -23,8 +20,8 @@ interface FeatureFlag {
   key: string;
   name: string;
   description: string;
-  category: 'ui' | 'performance' | 'experimental' | 'integration';
-  status: 'stable' | 'beta' | 'alpha';
+  category: "ui" | "performance" | "experimental" | "integration";
+  status: "stable" | "beta" | "alpha";
   enabled: boolean;
   tenantOverrides?: Record<string, boolean>;
 }
@@ -32,157 +29,157 @@ interface FeatureFlag {
 const FEATURE_FLAGS: FeatureFlag[] = [
   // Real platform feature flags
   {
-    id: 'ff-support-chat',
-    key: 'supportChat',
-    name: 'Чат поддержки',
-    description: 'Включить виджет чата для связи с поддержкой',
-    category: 'integration',
-    status: 'stable',
-    enabled: false
+    id: "ff-support-chat",
+    key: "supportChat",
+    name: "Чат поддержки",
+    description: "Включить виджет чата для связи с поддержкой",
+    category: "integration",
+    status: "stable",
+    enabled: false,
   },
   {
-    id: 'ff-two-factor',
-    key: 'twoFactor',
-    name: 'Двухфакторная аутентификация',
-    description: 'Включить 2FA для дополнительной безопасности учетных записей',
-    category: 'integration',
-    status: 'beta',
-    enabled: false
+    id: "ff-two-factor",
+    key: "twoFactor",
+    name: "Двухфакторная аутентификация",
+    description: "Включить 2FA для дополнительной безопасности учетных записей",
+    category: "integration",
+    status: "beta",
+    enabled: false,
   },
   {
-    id: 'ff-email-confirm',
-    key: 'enableEmailConfirmation',
-    name: 'Подтверждение email',
-    description: 'Требовать подтверждение email при регистрации',
-    category: 'integration',
-    status: 'stable',
-    enabled: false
+    id: "ff-email-confirm",
+    key: "enableEmailConfirmation",
+    name: "Подтверждение email",
+    description: "Требовать подтверждение email при регистрации",
+    category: "integration",
+    status: "stable",
+    enabled: false,
   },
   {
-    id: 'ff-password-reset',
-    key: 'enablePasswordReset',
-    name: 'Восстановление пароля',
-    description: 'Включить функцию восстановления пароля через email',
-    category: 'integration',
-    status: 'stable',
-    enabled: false
+    id: "ff-password-reset",
+    key: "enablePasswordReset",
+    name: "Восстановление пароля",
+    description: "Включить функцию восстановления пароля через email",
+    category: "integration",
+    status: "stable",
+    enabled: false,
   },
   // Demo feature flags
   {
-    id: 'ff1',
-    key: 'review_hotkeys',
-    name: 'Горячие клавиши для рецензирования',
-    description: 'Быстрые клавиши для навигации и действий в интерфейсе рецензирования',
-    category: 'ui',
-    status: 'stable',
-    enabled: true
+    id: "ff1",
+    key: "review_hotkeys",
+    name: "Горячие клавиши для рецензирования",
+    description: "Быстрые клавиши для навигации и действий в интерфейсе рецензирования",
+    category: "ui",
+    status: "stable",
+    enabled: true,
   },
   {
-    id: 'ff2',
-    key: 'autosave',
-    name: 'Автосохранение',
-    description: 'Автоматическое сохранение черновиков рецензий каждые 30 секунд',
-    category: 'ui',
-    status: 'stable',
-    enabled: true
+    id: "ff2",
+    key: "autosave",
+    name: "Автосохранение",
+    description: "Автоматическое сохранение черновиков рецензий каждые 30 секунд",
+    category: "ui",
+    status: "stable",
+    enabled: true,
   },
   {
-    id: 'ff3',
-    key: 'dark_mode',
-    name: 'Тёмная тема',
-    description: 'Тёмная цветовая схема для всего интерфейса',
-    category: 'ui',
-    status: 'beta',
-    enabled: false
+    id: "ff3",
+    key: "dark_mode",
+    name: "Тёмная тема",
+    description: "Тёмная цветовая схема для всего интерфейса",
+    category: "ui",
+    status: "beta",
+    enabled: false,
   },
   {
-    id: 'ff4',
-    key: 'inline_comments',
-    name: 'Комментарии в коде',
-    description: 'Возможность оставлять комментарии прямо в коде работы',
-    category: 'ui',
-    status: 'alpha',
-    enabled: false
+    id: "ff4",
+    key: "inline_comments",
+    name: "Комментарии в коде",
+    description: "Возможность оставлять комментарии прямо в коде работы",
+    category: "ui",
+    status: "alpha",
+    enabled: false,
   },
   {
-    id: 'ff5',
-    key: 'ai_suggestions',
-    name: 'AI-подсказки',
-    description: 'Автоматические рекомендации по улучшению рецензий с помощью ИИ',
-    category: 'experimental',
-    status: 'alpha',
-    enabled: false
+    id: "ff5",
+    key: "ai_suggestions",
+    name: "AI-подсказки",
+    description: "Автоматические рекомендации по улучшению рецензий с помощью ИИ",
+    category: "experimental",
+    status: "alpha",
+    enabled: false,
   },
   {
-    id: 'ff6',
-    key: 'lazy_loading',
-    name: 'Ленивая загрузка',
-    description: 'Отложенная загрузка больших списков для ускорения интерфейса',
-    category: 'performance',
-    status: 'beta',
-    enabled: true
+    id: "ff6",
+    key: "lazy_loading",
+    name: "Ленивая загрузка",
+    description: "Отложенная загрузка больших списков для ускорения интерфейса",
+    category: "performance",
+    status: "beta",
+    enabled: true,
   },
   {
-    id: 'ff7',
-    key: 'virtual_scrolling',
-    name: 'Виртуальный скроллинг',
-    description: 'Оптимизация рендеринга для длинных списков работ и рецензий',
-    category: 'performance',
-    status: 'stable',
-    enabled: true
+    id: "ff7",
+    key: "virtual_scrolling",
+    name: "Виртуальный скроллинг",
+    description: "Оптимизация рендеринга для длинных списков работ и рецензий",
+    category: "performance",
+    status: "stable",
+    enabled: true,
   },
   {
-    id: 'ff8',
-    key: 'video_reviews',
-    name: 'Видео-рецензии',
-    description: 'Возможность записывать видео-объяснения к рецензиям',
-    category: 'experimental',
-    status: 'alpha',
-    enabled: false
+    id: "ff8",
+    key: "video_reviews",
+    name: "Видео-рецензии",
+    description: "Возможность записывать видео-объяснения к рецензиям",
+    category: "experimental",
+    status: "alpha",
+    enabled: false,
   },
   {
-    id: 'ff9',
-    key: 'github_sync',
-    name: 'Синхронизация с GitHub',
-    description: 'Автоматическая синхронизация работ из GitHub репозиториев',
-    category: 'integration',
-    status: 'beta',
-    enabled: false
+    id: "ff9",
+    key: "github_sync",
+    name: "Синхронизация с GitHub",
+    description: "Автоматическая синхронизация работ из GitHub репозиториев",
+    category: "integration",
+    status: "beta",
+    enabled: false,
   },
   {
-    id: 'ff10',
-    key: 'real_time_collab',
-    name: 'Совместное редактирование',
-    description: 'Рецензирование нескольких человек одновременно в реальном времени',
-    category: 'experimental',
-    status: 'alpha',
-    enabled: false
+    id: "ff10",
+    key: "real_time_collab",
+    name: "Совместное редактирование",
+    description: "Рецензирование нескольких человек одновременно в реальном времени",
+    category: "experimental",
+    status: "alpha",
+    enabled: false,
   },
   {
-    id: 'ff11',
-    key: 'advanced_analytics',
-    name: 'Расширенная аналитика',
-    description: 'Детальная статистика и визуализация данных о рецензировании',
-    category: 'ui',
-    status: 'beta',
-    enabled: true
+    id: "ff11",
+    key: "advanced_analytics",
+    name: "Расширенная аналитика",
+    description: "Детальная статистика и визуализация данных о рецензировании",
+    category: "ui",
+    status: "beta",
+    enabled: true,
   },
   {
-    id: 'ff12',
-    key: 'batch_operations',
-    name: 'Пакетные операции',
-    description: 'Массовые действия над несколькими работами или рецензиями',
-    category: 'ui',
-    status: 'stable',
-    enabled: true
-  }
+    id: "ff12",
+    key: "batch_operations",
+    name: "Пакетные операции",
+    description: "Массовые действия над несколькими работами или рецензиями",
+    category: "ui",
+    status: "stable",
+    enabled: true,
+  },
 ];
 
 export default function AdminFlagsPage() {
   const [flags, setFlags] = useState<FeatureFlag[]>(FEATURE_FLAGS);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterCategory, setFilterCategory] = useState<string>('all');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -190,109 +187,112 @@ export default function AdminFlagsPage() {
 
   // Available tenants
   const availableTenants = [
-    { id: 'org1', name: 'HSE' },
-    { id: 'org2', name: 'MGUSiT' },
-    { id: 'org3', name: 'Demo University' }
+    { id: "org1", name: "HSE" },
+    { id: "org2", name: "MGUSiT" },
+    { id: "org3", name: "Demo University" },
   ];
 
-  useEffect(() => {
-    const stored = localStorage.getItem('admin_feature_flags');
-    if (stored) {
-      const parsedFlags = JSON.parse(stored);
-      setFlags(flags.map(flag => {
-        const stored = parsedFlags.find((f: FeatureFlag) => f.id === flag.id);
-        return stored || flag;
-      }));
-    }
-  }, []);
-
   const handleToggleGlobal = (flagId: string) => {
-    setFlags(flags.map(flag => 
-      flag.id === flagId ? { ...flag, enabled: !flag.enabled } : flag
-    ));
+    setFlags(
+      flags.map((flag) => (flag.id === flagId ? { ...flag, enabled: !flag.enabled } : flag)),
+    );
     setHasChanges(true);
   };
 
   const handleToggleTenant = (flagId: string, tenantId: string) => {
-    setFlags(flags.map(flag => {
-      if (flag.id !== flagId) return flag;
-      
-      const currentOverrides = flag.tenantOverrides || {};
-      const newOverrides = { ...currentOverrides };
-      
-      if (tenantId in newOverrides) {
-        delete newOverrides[tenantId];
-      } else {
-        newOverrides[tenantId] = !flag.enabled;
-      }
-      
-      return { ...flag, tenantOverrides: newOverrides };
-    }));
+    setFlags(
+      flags.map((flag) => {
+        if (flag.id !== flagId) return flag;
+
+        const currentOverrides = flag.tenantOverrides || {};
+        const newOverrides = { ...currentOverrides };
+
+        if (tenantId in newOverrides) {
+          delete newOverrides[tenantId];
+        } else {
+          newOverrides[tenantId] = !flag.enabled;
+        }
+
+        return { ...flag, tenantOverrides: newOverrides };
+      }),
+    );
     setHasChanges(true);
   };
 
   const handleSave = () => {
     // Save to localStorage for demo flags
-    localStorage.setItem('admin_feature_flags', JSON.stringify(flags));
-    
+    localStorage.setItem("admin_feature_flags", JSON.stringify(flags));
+
     // Sync real feature flags with FeatureFlagsContext
-    flags.forEach(flag => {
-      if (flag.key === 'supportChat' || flag.key === 'twoFactor' || 
-          flag.key === 'enableEmailConfirmation' || flag.key === 'enablePasswordReset') {
-        updateRealFlag(flag.key as 'supportChat' | 'twoFactor' | 'enableEmailConfirmation' | 'enablePasswordReset', flag.enabled);
+    flags.forEach((flag) => {
+      if (
+        flag.key === "supportChat" ||
+        flag.key === "twoFactor" ||
+        flag.key === "enableEmailConfirmation" ||
+        flag.key === "enablePasswordReset"
+      ) {
+        updateRealFlag(
+          flag.key as
+            | "supportChat"
+            | "twoFactor"
+            | "enableEmailConfirmation"
+            | "enablePasswordReset",
+          flag.enabled,
+        );
       }
     });
-    
-    logAuditEntry('UPDATE_FEATURE_FLAGS', 'FeatureFlags', 'Фиче-флаги обновлены');
+
+    logAuditEntry("UPDATE_FEATURE_FLAGS", "FeatureFlags", "Фиче-флаги обновлены");
     setHasChanges(false);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
   const logAuditEntry = (action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem('admin_audit_logs') || '[]');
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
     logs.unshift({
       id: `audit-${Date.now()}`,
-      userId: 'flags-system',
-      adminId: 'u3',
+      userId: "flags-system",
+      adminId: "u3",
       action,
       resource,
       details,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    localStorage.setItem('admin_audit_logs', JSON.stringify(logs));
+    localStorage.setItem("admin_audit_logs", JSON.stringify(logs));
   };
 
   // Filter flags
-  const filteredFlags = flags.filter(flag => {
-    const matchesSearch = searchQuery === '' || 
+  const filteredFlags = flags.filter((flag) => {
+    const matchesSearch =
+      searchQuery === "" ||
       flag.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       flag.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
       flag.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesCategory = filterCategory === 'all' || flag.category === filterCategory;
-    const matchesStatus = filterStatus === 'all' || flag.status === filterStatus;
-    
+
+    const matchesCategory = filterCategory === "all" || flag.category === filterCategory;
+    const matchesStatus = filterStatus === "all" || flag.status === filterStatus;
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'stable':
+      case "stable":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             Стабильно
           </span>
         );
-      case 'beta':
+      case "beta":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
             <Clock className="w-3 h-3" />
             Beta
           </span>
         );
-      case 'alpha':
+      case "alpha":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f3e5f5] text-[#8e24aa] rounded-[6px] text-[11px] font-medium">
             <AlertCircle className="w-3 h-3" />
@@ -306,21 +306,23 @@ export default function AdminFlagsPage() {
 
   const getCategoryBadge = (category: string) => {
     const styles = {
-      ui: 'bg-[#e9f5ff] text-[#5b8def]',
-      performance: 'bg-[#e8f5e9] text-[#4caf50]',
-      experimental: 'bg-[#f3e5f5] text-[#8e24aa]',
-      integration: 'bg-[#fff4e5] text-[#ff9800]'
+      ui: "bg-[#e9f5ff] text-[#5b8def]",
+      performance: "bg-[#e8f5e9] text-[#4caf50]",
+      experimental: "bg-[#f3e5f5] text-[#8e24aa]",
+      integration: "bg-[#fff4e5] text-[#ff9800]",
     };
 
     const labels = {
-      ui: 'UI',
-      performance: 'Производительность',
-      experimental: 'Экспериментальное',
-      integration: 'Интеграция'
+      ui: "UI",
+      performance: "Производительность",
+      experimental: "Экспериментальное",
+      integration: "Интеграция",
     };
 
     return (
-      <span className={`inline-flex px-2 py-1 rounded-[6px] text-[11px] font-medium ${styles[category as keyof typeof styles]}`}>
+      <span
+        className={`inline-flex px-2 py-1 rounded-[6px] text-[11px] font-medium ${styles[category as keyof typeof styles]}`}
+      >
         {labels[category as keyof typeof labels]}
       </span>
     );
@@ -328,19 +330,21 @@ export default function AdminFlagsPage() {
 
   const stats = {
     total: flags.length,
-    enabled: flags.filter(f => f.enabled).length,
-    stable: flags.filter(f => f.status === 'stable').length,
-    beta: flags.filter(f => f.status === 'beta').length,
-    alpha: flags.filter(f => f.status === 'alpha').length
+    enabled: flags.filter((f) => f.enabled).length,
+    stable: flags.filter((f) => f.status === "stable").length,
+    beta: flags.filter((f) => f.status === "beta").length,
+    alpha: flags.filter((f) => f.status === "alpha").length,
   };
 
   return (
     <AppShell title="Фиче-флаги">
-      <Breadcrumbs items={[
-        { label: 'Администратор', href: ROUTES.adminOverview },
-        { label: 'Настройки', href: ROUTES.adminSettings },
-        { label: 'Фиче-флаги' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Администратор", href: ROUTES.adminOverview },
+          { label: "Настройки", href: ROUTES.adminSettings },
+          { label: "Фиче-флаги" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -448,29 +452,29 @@ export default function AdminFlagsPage() {
           </div>
 
           {/* Active filters */}
-          {(searchQuery || filterCategory !== 'all' || filterStatus !== 'all') && (
+          {(searchQuery || filterCategory !== "all" || filterStatus !== "all") && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
               <span className="text-[13px] text-[#767692]">Фильтры:</span>
               {searchQuery && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
                   "{searchQuery}"
-                  <button onClick={() => setSearchQuery('')} className="hover:text-[#d4183d]">
+                  <button onClick={() => setSearchQuery("")} className="hover:text-[#d4183d]">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               )}
-              {filterCategory !== 'all' && (
+              {filterCategory !== "all" && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
                   {filterCategory}
-                  <button onClick={() => setFilterCategory('all')} className="hover:text-[#d4183d]">
+                  <button onClick={() => setFilterCategory("all")} className="hover:text-[#d4183d]">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               )}
-              {filterStatus !== 'all' && (
+              {filterStatus !== "all" && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
                   {filterStatus}
-                  <button onClick={() => setFilterStatus('all')} className="hover:text-[#d4183d]">
+                  <button onClick={() => setFilterStatus("all")} className="hover:text-[#d4183d]">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -481,12 +485,16 @@ export default function AdminFlagsPage() {
 
         {/* Flags List */}
         <div className="space-y-3 mb-6">
-          {filteredFlags.map(flag => {
+          {filteredFlags.map((flag) => {
             const isExpanded = expandedFlag === flag.id;
-            const hasOverrides = flag.tenantOverrides && Object.keys(flag.tenantOverrides).length > 0;
+            const hasOverrides =
+              flag.tenantOverrides && Object.keys(flag.tenantOverrides).length > 0;
 
             return (
-              <div key={flag.id} className="bg-white border-2 border-[#e6e8ee] rounded-[16px] overflow-hidden">
+              <div
+                key={flag.id}
+                className="bg-white border-2 border-[#e6e8ee] rounded-[16px] overflow-hidden"
+              >
                 {/* Main Row */}
                 <div className="p-6">
                   <div className="flex items-start justify-between gap-4">
@@ -516,13 +524,15 @@ export default function AdminFlagsPage() {
                         />
                         <div className="w-14 h-8 bg-[#e6e8ee] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#4caf50]"></div>
                       </label>
-                      
+
                       {/* Expand Button */}
                       <button
                         onClick={() => setExpandedFlag(isExpanded ? null : flag.id)}
                         className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
                       >
-                        <ChevronDown className={`w-5 h-5 text-[#767692] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                        <ChevronDown
+                          className={`w-5 h-5 text-[#767692] transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                        />
                       </button>
                     </div>
                   </div>
@@ -536,21 +546,29 @@ export default function AdminFlagsPage() {
                         Переопределения по организациям
                       </h4>
                       <div className="space-y-2">
-                        {availableTenants.map(tenant => {
-                          const hasOverride = flag.tenantOverrides && tenant.id in flag.tenantOverrides;
-                          const overrideValue = hasOverride ? flag.tenantOverrides![tenant.id] : flag.enabled;
+                        {availableTenants.map((tenant) => {
+                          const hasOverride =
+                            flag.tenantOverrides && tenant.id in flag.tenantOverrides;
+                          const overrideValue = hasOverride
+                            ? flag.tenantOverrides![tenant.id]
+                            : flag.enabled;
 
                           return (
-                            <div key={tenant.id} className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
+                            <div
+                              key={tenant.id}
+                              className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]"
+                            >
                               <div className="flex items-center gap-3">
-                                <span className="text-[14px] text-[#21214f] font-medium">{tenant.name}</span>
+                                <span className="text-[14px] text-[#21214f] font-medium">
+                                  {tenant.name}
+                                </span>
                                 {hasOverride ? (
                                   <span className="text-[11px] px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] font-medium">
                                     Переопределено
                                   </span>
                                 ) : (
                                   <span className="text-[11px] text-[#767692]">
-                                    (глобальное: {flag.enabled ? 'вкл' : 'выкл'})
+                                    (глобальное: {flag.enabled ? "вкл" : "выкл"})
                                   </span>
                                 )}
                               </div>
@@ -568,8 +586,8 @@ export default function AdminFlagsPage() {
                         })}
                       </div>
                       <p className="text-[12px] text-[#767692] mt-3">
-                        💡 Переопределения позволяют включить/выключить функцию для конкретной организации, 
-                        независимо от глобальной настройки.
+                        💡 Переопределения позволяют включить/выключить функцию для конкретной
+                        организации, независимо от глобальной настройки.
                       </p>
                     </div>
                   </div>
@@ -583,9 +601,7 @@ export default function AdminFlagsPage() {
         {filteredFlags.length === 0 && (
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
             <Flag className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-              Флаги не найдены
-            </h3>
+            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Флаги не найдены</h3>
             <p className="text-[14px] text-[#767692]">
               Попробуйте изменить параметры поиска или фильтры
             </p>
@@ -601,8 +617,8 @@ export default function AdminFlagsPage() {
                 Экспериментальные функции
               </h4>
               <p className="text-[13px] text-[#767692]">
-                Функции со статусом Alpha и Beta находятся в разработке и могут работать нестабильно. 
-                Используйте их с осторожностью в production-среде.
+                Функции со статусом Alpha и Beta находятся в разработке и могут работать
+                нестабильно. Используйте их с осторожностью в production-среде.
               </p>
             </div>
           </div>
@@ -615,8 +631,8 @@ export default function AdminFlagsPage() {
             disabled={!hasChanges}
             className={`flex items-center gap-2 px-6 py-3 rounded-[12px] text-[14px] font-medium transition-all ${
               hasChanges
-                ? 'bg-[#5b8def] text-white hover:bg-[#4a7de8]'
-                : 'bg-[#e6e8ee] text-[#767692] cursor-not-allowed'
+                ? "bg-[#5b8def] text-white hover:bg-[#4a7de8]"
+                : "bg-[#e6e8ee] text-[#767692] cursor-not-allowed"
             }`}
           >
             <Save className="w-5 h-5" />

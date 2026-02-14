@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Plus, Power, Pencil, Trash2, Zap, CheckCircle2, XCircle } from 'lucide-react';
+import { useState, useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Plus, Pencil, Trash2, Zap, CheckCircle2, XCircle } from "lucide-react";
 import {
   AutomationRule,
   getAllRules,
@@ -10,10 +10,10 @@ import {
   deleteRule,
   getTriggerLabel,
   getConditionLabel,
-  getActionLabel
-} from '@/app/utils/automationRules';
-import { CreateRuleModal } from '@/app/components/CreateRuleModal';
-import { toast } from 'sonner';
+  getActionLabel,
+} from "@/app/utils/automationRules";
+import { CreateRuleModal } from "@/app/components/CreateRuleModal";
+import { toast } from "sonner";
 
 /**
  * TeacherAutomationPage - Manage automation rules
@@ -23,27 +23,23 @@ export default function TeacherAutomationPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingRule, setEditingRule] = useState<AutomationRule | null>(null);
 
-  useEffect(() => {
-    loadRules();
-  }, []);
-
-  const loadRules = () => {
+  const loadRules = useCallback(() => {
     setRules(getAllRules());
-  };
+  }, []);
 
   const handleToggleEnabled = (id: string) => {
     const updated = toggleRuleEnabled(id);
     if (updated) {
       loadRules();
-      toast.success(updated.enabled ? 'Правило включено' : 'Правило выключено');
+      toast.success(updated.enabled ? "Правило включено" : "Правило выключено");
     }
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить это правило?')) {
+    if (confirm("Вы уверены, что хотите удалить это правило?")) {
       deleteRule(id);
       loadRules();
-      toast.success('Правило удалено');
+      toast.success("Правило удалено");
     }
   };
 
@@ -59,13 +55,13 @@ export default function TeacherAutomationPage() {
   };
 
   const getConditionsSummary = (rule: AutomationRule) => {
-    if (rule.conditions.length === 0) return 'Нет условий';
-    return rule.conditions.map(c => getConditionLabel(c)).join(', ');
+    if (rule.conditions.length === 0) return "Нет условий";
+    return rule.conditions.map((c) => getConditionLabel(c)).join(", ");
   };
 
   const getActionsSummary = (rule: AutomationRule) => {
-    if (rule.actions.length === 0) return 'Нет действий';
-    return rule.actions.map(a => getActionLabel(a)).join(', ');
+    if (rule.actions.length === 0) return "Нет действий";
+    return rule.actions.map((a) => getActionLabel(a)).join(", ");
   };
 
   return (
@@ -73,10 +69,10 @@ export default function TeacherAutomationPage() {
       <div className="max-w-[1400px]">
         <Breadcrumbs
           items={[
-            { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-            { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
-            { label: 'Задание', href: ROUTES.teacherDashboard },
-            { label: 'Автоматизация' }
+            { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+            { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
+            { label: "Задание", href: ROUTES.teacherDashboard },
+            { label: "Автоматизация" },
           ]}
         />
 
@@ -109,7 +105,9 @@ export default function TeacherAutomationPage() {
                   Как работают правила автоматизации
                 </h3>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Правила автоматически в��полняются при наступлении событий (триггеров). Вы можете задать условия для более точного контроля и определить действия, которые будут применены.
+                  Правила автоматически в��полняются при наступлении событий (триггеров). Вы можете
+                  задать условия для более точного контроля и определить действия, которые будут
+                  применены.
                 </p>
               </div>
             </div>
@@ -162,16 +160,19 @@ export default function TeacherAutomationPage() {
                   </thead>
                   <tbody>
                     {rules.map((rule) => (
-                      <tr key={rule.id} className="border-b border-border hover:bg-muted/30 transition-colors">
+                      <tr
+                        key={rule.id}
+                        className="border-b border-border hover:bg-muted/30 transition-colors"
+                      >
                         <td className="py-4 px-4">
                           <button
                             onClick={() => handleToggleEnabled(rule.id)}
                             className={`p-1.5 rounded transition-colors ${
-                              rule.enabled 
-                                ? 'text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30' 
-                                : 'text-muted-foreground hover:bg-muted'
+                              rule.enabled
+                                ? "text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30"
+                                : "text-muted-foreground hover:bg-muted"
                             }`}
-                            title={rule.enabled ? 'Включено' : 'Выключено'}
+                            title={rule.enabled ? "Включено" : "Выключено"}
                           >
                             {rule.enabled ? (
                               <CheckCircle2 className="w-5 h-5" />
@@ -240,20 +241,18 @@ export default function TeacherAutomationPage() {
           {rules.length > 0 && (
             <div className="mt-6 grid grid-cols-2 tablet:grid-cols-4 gap-4">
               <div className="bg-card border border-border rounded-[12px] p-4">
-                <div className="text-2xl font-semibold text-foreground mb-1">
-                  {rules.length}
-                </div>
+                <div className="text-2xl font-semibold text-foreground mb-1">{rules.length}</div>
                 <div className="text-sm text-muted-foreground">Всего правил</div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
                 <div className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-1">
-                  {rules.filter(r => r.enabled).length}
+                  {rules.filter((r) => r.enabled).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Активных</div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
                 <div className="text-2xl font-semibold text-muted-foreground mb-1">
-                  {rules.filter(r => !r.enabled).length}
+                  {rules.filter((r) => !r.enabled).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Отключено</div>
               </div>
@@ -269,12 +268,7 @@ export default function TeacherAutomationPage() {
       </div>
 
       {/* Create/Edit Modal */}
-      {showCreateModal && (
-        <CreateRuleModal
-          existingRule={editingRule}
-          onClose={handleModalClose}
-        />
-      )}
+      {showCreateModal && <CreateRuleModal existingRule={editingRule} onClose={handleModalClose} />}
     </AppShell>
   );
 }

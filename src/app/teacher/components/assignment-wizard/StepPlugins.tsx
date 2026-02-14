@@ -1,9 +1,9 @@
-import { Shield, Code, FileCheck, UserX, Settings } from 'lucide-react';
-import type { AssignmentFormData } from '../../TeacherCreateAssignmentPage';
+import { Shield, Code, FileCheck, UserX, Settings } from "lucide-react";
+import type { AssignmentFormData } from "../../TeacherCreateAssignmentPage";
 
 /**
  * StepPlugins - Шаг 5: Плагины и автоматические проверки
- * 
+ *
  * - Проверка на плагиат
  * - Линтинг кода
  * - Проверка форматов файлов
@@ -44,9 +44,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
               <Shield className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Проверка на плагиат
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Проверка на плагиат</h3>
               <p className="text-[13px] text-[#767692]">
                 Автоматическая проверка работ на заимствования и совпадения
               </p>
@@ -56,9 +54,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
             <input
               type="checkbox"
               checked={data.enablePlagiarismCheck}
-              onChange={(e) =>
-                onUpdate({ enablePlagiarismCheck: e.target.checked })
-              }
+              onChange={(e) => onUpdate({ enablePlagiarismCheck: e.target.checked })}
               className="sr-only peer"
             />
             <div className="w-11 h-6 bg-[#e6e8ee] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#5b8def]"></div>
@@ -77,9 +73,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
                 max="50"
                 step="5"
                 value={data.plagiarismThreshold}
-                onChange={(e) =>
-                  onUpdate({ plagiarismThreshold: parseInt(e.target.value) })
-                }
+                onChange={(e) => onUpdate({ plagiarismThreshold: parseInt(e.target.value) })}
                 className="flex-1"
               />
               <span className="text-[16px] font-medium text-[#21214f] w-12 text-right">
@@ -87,8 +81,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
               </span>
             </div>
             <p className="text-[12px] text-[#767692] mt-2">
-              Работы с совпадением выше {data.plagiarismThreshold}% будут отмечены
-              для проверки
+              Работы с совпадением выше {data.plagiarismThreshold}% будут отмечены для проверки
             </p>
           </div>
         )}
@@ -102,9 +95,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
               <Code className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Линтинг кода
-              </h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Линтинг кода</h3>
               <p className="text-[13px] text-[#767692]">
                 Проверка кода на соответствие стандартам и best practices
               </p>
@@ -153,12 +144,8 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
               <FileCheck className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-                Проверка форматов
-              </h3>
-              <p className="text-[13px] text-[#767692]">
-                Ограничение допустимых форматов файлов
-              </p>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Проверка форматов</h3>
+              <p className="text-[13px] text-[#767692]">Ограничение допустимых форматов файлов</p>
             </div>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -179,32 +166,27 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
             </label>
             <div className="grid grid-cols-3 gap-2">
               {[
-                'pdf',
-                'docx',
-                'txt',
-                'zip',
-                'rar',
-                'jpg',
-                'png',
-                'py',
-                'js',
-                'html',
-                'css',
-                'md',
+                "pdf",
+                "docx",
+                "txt",
+                "zip",
+                "rar",
+                "jpg",
+                "png",
+                "py",
+                "js",
+                "html",
+                "css",
+                "md",
               ].map((format) => (
-                <label
-                  key={format}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
+                <label key={format} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={data.formatRules?.includes(format) || false}
                     onChange={() => toggleFormatRule(format)}
                     className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-[#5b8def]"
                   />
-                  <span className="text-[13px] text-[#21214f] uppercase">
-                    .{format}
-                  </span>
+                  <span className="text-[13px] text-[#21214f] uppercase">.{format}</span>
                 </label>
               ))}
             </div>
@@ -245,13 +227,11 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
         {data.enableAnonymization && (
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
             <p className="text-[13px] text-[#767692]">
-              Система автоматически заменит имена студентов и другие идентификаторы
-              на анонимные коды перед отправкой на рецензирование.
+              Система автоматически заменит имена студентов и другие идентификаторы на анонимные
+              коды перед отправкой на рецензирование.
             </p>
             <div className="mt-3 bg-[#f9f9f9] rounded-[8px] p-3">
-              <p className="text-[12px] text-[#21214f] mb-1 font-medium">
-                Будут заменены:
-              </p>
+              <p className="text-[12px] text-[#21214f] mb-1 font-medium">Будут заменены:</p>
               <ul className="text-[12px] text-[#767692] space-y-1 ml-4 list-disc">
                 <li>ФИО студента</li>
                 <li>Email адреса</li>
@@ -270,8 +250,8 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
           <div className="text-[13px] text-[#21214f]">
             <p className="font-medium mb-1">Все плагины опциональны</p>
             <p className="text-[#767692]">
-              Вы можете включить или отключить любые проверки. Настройки можно
-              изменить и после публикации задания.
+              Вы можете включить или отключить любые проверки. Настройки можно изменить и после
+              публикации задания.
             </p>
           </div>
         </div>

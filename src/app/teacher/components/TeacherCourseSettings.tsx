@@ -1,5 +1,5 @@
-import { Save } from 'lucide-react';
-import type { DemoCourse } from '@/app/stores/demoDataStore';
+import { Save } from "lucide-react";
+import type { DemoCourse } from "@/app/stores/demoDataStore";
 
 interface TeacherCourseSettingsProps {
   course: DemoCourse;
@@ -7,14 +7,12 @@ interface TeacherCourseSettingsProps {
 
 export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
   const handleSave = () => {
-    alert('Настройки сохранены');
+    alert("Настройки сохранены");
   };
 
   return (
     <div className="max-w-[600px]">
-      <p className="text-[15px] text-[#767692] mb-6">
-        Основные настройки курса
-      </p>
+      <p className="text-[15px] text-[#767692] mb-6">Основные настройки курса</p>
 
       <div className="space-y-6">
         <div>
@@ -29,9 +27,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-            Код курса
-          </label>
+          <label className="block text-[13px] font-medium text-[#21214f] mb-2">Код курса</label>
           <input
             type="text"
             defaultValue={course.code}
@@ -40,9 +36,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-            Описание
-          </label>
+          <label className="block text-[13px] font-medium text-[#21214f] mb-2">Описание</label>
           <textarea
             defaultValue="Курс по веб-разработке с фокусом на современные фреймворки и best practices"
             rows={4}
@@ -51,9 +45,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-            Статус курса
-          </label>
+          <label className="block text-[13px] font-medium text-[#21214f] mb-2">Статус курса</label>
           <select
             defaultValue={course.status}
             className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] bg-white focus:outline-none focus:border-[#5b8def] transition-colors"
@@ -75,9 +67,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
       </div>
 
       <div className="mt-8 pt-6 border-t-2 border-[#e6e8ee]">
-        <h3 className="text-[16px] font-medium text-[#d4183d] mb-2">
-          Опасная зона
-        </h3>
+        <h3 className="text-[16px] font-medium text-[#d4183d] mb-2">Опасная зона</h3>
         <p className="text-[14px] text-[#767692] mb-4">
           Удаление курса необратимо и удалит все связанные задания, работы и рецензии.
         </p>

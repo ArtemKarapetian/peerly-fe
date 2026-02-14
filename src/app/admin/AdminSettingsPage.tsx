@@ -1,14 +1,12 @@
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import {
-  Shield, Lock, Clock, Database, AlertTriangle, 
-  FileText, Settings, ArrowRight, CheckCircle
-} from 'lucide-react';
+import { useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Shield, Database, AlertTriangle, Settings, ArrowRight, CheckCircle } from "lucide-react";
 
 /**
  * AdminSettingsPage - Центр настроек системы
- * 
+ *
  * Содержит ссылки на все разделы настроек:
  * - Политики безопасности
  * - Лимиты и квоты
@@ -19,92 +17,91 @@ import {
 export default function AdminSettingsPage() {
   const settingsSections = [
     {
-      id: 'policies',
-      title: 'Политики безопасности',
-      description: 'Настройка паролей, сессий и безопасности',
+      id: "policies",
+      title: "Политики безопасности",
+      description: "Настройка паролей, сессий и безопасности",
       icon: Shield,
-      href: '/admin/policies',
-      bgColor: 'bg-[#e9f5ff]',
-      iconColor: 'text-[#5b8def]',
-      stats: '8 политик'
+      href: "/admin/policies",
+      bgColor: "bg-[#e9f5ff]",
+      iconColor: "text-[#5b8def]",
+      stats: "8 политик",
     },
     {
-      id: 'limits',
-      title: 'Лимиты и квоты',
-      description: 'Ограничения на курсы, файлы и пользователей',
+      id: "limits",
+      title: "Лимиты и квоты",
+      description: "Ограничения на курсы, файлы и пользователей",
       icon: AlertTriangle,
-      href: '/admin/limits',
-      bgColor: 'bg-[#fff4e5]',
-      iconColor: 'text-[#ff9800]',
-      stats: '12 лимитов'
+      href: "/admin/limits",
+      bgColor: "bg-[#fff4e5]",
+      iconColor: "text-[#ff9800]",
+      stats: "12 лимитов",
     },
     {
-      id: 'retention',
-      title: 'Хранение данных',
-      description: 'Политики retention и удаления данных',
+      id: "retention",
+      title: "Хранение данных",
+      description: "Политики retention и удаления данных",
       icon: Database,
-      href: '/admin/retention',
-      bgColor: 'bg-[#f3e5f5]',
-      iconColor: 'text-[#8e24aa]',
-      stats: '5 правил'
+      href: "/admin/retention",
+      bgColor: "bg-[#f3e5f5]",
+      iconColor: "text-[#8e24aa]",
+      stats: "5 правил",
     },
     {
-      id: 'integrations',
-      title: 'Интеграции',
-      description: 'Настройка внешних сервисов и API',
+      id: "integrations",
+      title: "Интеграции",
+      description: "Настройка внешних сервисов и API",
       icon: Settings,
-      href: '/admin/integrations',
-      bgColor: 'bg-[#e0f7fa]',
-      iconColor: 'text-[#06b6d4]',
-      stats: '4 интеграции'
-    }
+      href: "/admin/integrations",
+      bgColor: "bg-[#e0f7fa]",
+      iconColor: "text-[#06b6d4]",
+      stats: "4 интеграции",
+    },
   ];
 
   const quickStats = [
     {
-      label: 'Активных политик',
-      value: '8',
+      label: "Активных политик",
+      value: "8",
       icon: Shield,
-      bgColor: 'bg-[#e9f5ff]',
-      iconColor: 'text-[#5b8def]',
-      textColor: 'text-[#5b8def]'
+      bgColor: "bg-[#e9f5ff]",
+      iconColor: "text-[#5b8def]",
+      textColor: "text-[#5b8def]",
     },
     {
-      label: 'Установленных лимитов',
-      value: '12',
+      label: "Установленных лимитов",
+      value: "12",
       icon: AlertTriangle,
-      bgColor: 'bg-[#fff4e5]',
-      iconColor: 'text-[#ff9800]',
-      textColor: 'text-[#ff9800]'
+      bgColor: "bg-[#fff4e5]",
+      iconColor: "text-[#ff9800]",
+      textColor: "text-[#ff9800]",
     },
     {
-      label: 'Правил retention',
-      value: '5',
+      label: "Правил retention",
+      value: "5",
       icon: Database,
-      bgColor: 'bg-[#f3e5f5]',
-      iconColor: 'text-[#8e24aa]',
-      textColor: 'text-[#8e24aa]'
+      bgColor: "bg-[#f3e5f5]",
+      iconColor: "text-[#8e24aa]",
+      textColor: "text-[#8e24aa]",
     },
     {
-      label: 'Интеграций',
-      value: '4',
+      label: "Интеграций",
+      value: "4",
       icon: Settings,
-      bgColor: 'bg-[#e0f7fa]',
-      iconColor: 'text-[#06b6d4]',
-      textColor: 'text-[#06b6d4]'
-    }
+      bgColor: "bg-[#e0f7fa]",
+      iconColor: "text-[#06b6d4]",
+      textColor: "text-[#06b6d4]",
+    },
   ];
 
-  const handleNavigate = (href: string) => {
+  const handleNavigate = useCallback((href: string) => {
     window.location.hash = `#${href}`;
-  };
+  }, []);
 
   return (
     <AppShell title="Настройки системы">
-      <Breadcrumbs items={[
-        { label: 'Admin', href: ROUTES.adminOverview },
-        { label: 'Настройки системы' }
-      ]} />
+      <Breadcrumbs
+        items={[{ label: "Admin", href: ROUTES.adminOverview }, { label: "Настройки системы" }]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -122,8 +119,13 @@ export default function AdminSettingsPage() {
           {quickStats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <div key={stat.label} className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
-                <div className={`w-12 h-12 ${stat.bgColor} rounded-[12px] flex items-center justify-center mb-4`}>
+              <div
+                key={stat.label}
+                className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6"
+              >
+                <div
+                  className={`w-12 h-12 ${stat.bgColor} rounded-[12px] flex items-center justify-center mb-4`}
+                >
                   <Icon className={`w-6 h-6 ${stat.iconColor}`} />
                 </div>
                 <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
@@ -150,16 +152,16 @@ export default function AdminSettingsPage() {
                   className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-[#2563eb] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
                 >
                   <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 ${section.bgColor} rounded-[12px] flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`w-12 h-12 ${section.bgColor} rounded-[12px] flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}
+                    >
                       <Icon className={`w-6 h-6 ${section.iconColor}`} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
                         {section.title}
                       </h3>
-                      <p className="text-[13px] text-[#767692] mb-3">
-                        {section.description}
-                      </p>
+                      <p className="text-[13px] text-[#767692] mb-3">{section.description}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-[13px] font-medium text-[#767692]">
                           {section.stats}

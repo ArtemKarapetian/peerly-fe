@@ -1,5 +1,5 @@
-import { forwardRef, InputHTMLAttributes, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { forwardRef, InputHTMLAttributes, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className = '', error, label, helperText, ...props }, ref) => {
+  ({ className = "", error, label, helperText, ...props }, ref) => {
     return (
       <div className="w-full">
         {label && (
@@ -32,37 +32,31 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             disabled:opacity-50 
             disabled:cursor-not-allowed
             transition-all
-            ${error ? 'border-[var(--error)] focus:ring-[var(--error)]/30 focus:border-[var(--error)]' : ''}
+            ${error ? "border-[var(--error)] focus:ring-[var(--error)]/30 focus:border-[var(--error)]" : ""}
             ${className}
           `}
           {...props}
         />
-        {error && (
-          <p className="mt-1.5 text-xs text-[var(--error)]">
-            {error}
-          </p>
-        )}
+        {error && <p className="mt-1.5 text-xs text-[var(--error)]">{error}</p>}
         {!error && helperText && (
-          <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">
-            {helperText}
-          </p>
+          <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">{helperText}</p>
         )}
       </div>
     );
-  }
+  },
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 // PasswordInput component with show/hide toggle
-interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   error?: string;
   label?: string;
   helperText?: string;
 }
 
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ className = '', error, label, helperText, ...props }, ref) => {
+  ({ className = "", error, label, helperText, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -75,7 +69,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         <div className="relative">
           <input
             ref={ref}
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             className={`
               w-full px-4 py-2.5 pr-12
               bg-[var(--surface)] 
@@ -90,7 +84,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
               disabled:opacity-50 
               disabled:cursor-not-allowed
               transition-all
-              ${error ? 'border-[var(--error)] focus:ring-[var(--error)]/30 focus:border-[var(--error)]' : ''}
+              ${error ? "border-[var(--error)] focus:ring-[var(--error)]/30 focus:border-[var(--error)]" : ""}
               ${className}
             `}
             {...props}
@@ -101,26 +95,14 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
             tabIndex={-1}
           >
-            {showPassword ? (
-              <EyeOff className="w-5 h-5" />
-            ) : (
-              <Eye className="w-5 h-5" />
-            )}
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         </div>
-        {error && (
-          <p className="mt-1.5 text-xs text-[var(--error)]">
-            {error}
-          </p>
-        )}
-        {helperText && (
-          <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">
-            {helperText}
-          </p>
-        )}
+        {error && <p className="mt-1.5 text-xs text-[var(--error)]">{error}</p>}
+        {helperText && <p className="mt-1.5 text-xs text-[var(--text-tertiary)]">{helperText}</p>}
       </div>
     );
-  }
+  },
 );
 
-PasswordInput.displayName = 'PasswordInput';
+PasswordInput.displayName = "PasswordInput";

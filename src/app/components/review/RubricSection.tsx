@@ -1,9 +1,9 @@
-import { RubricCriterion } from './RubricCriterion';
-import type { Criterion, CriterionScore } from './RubricCriterion';
+import { RubricCriterion } from "./RubricCriterion";
+import type { Criterion, CriterionScore } from "./RubricCriterion";
 
 /**
  * RubricSection - Секция рубрики с несколькими критериями
- * 
+ *
  * Features:
  * - Section header with description
  * - List of criteria
@@ -42,21 +42,18 @@ export function RubricSection({
           {section.name}
         </h3>
         {section.description && (
-          <p className="text-[14px] text-[#767692] leading-[1.5]">
-            {section.description}
-          </p>
+          <p className="text-[14px] text-[#767692] leading-[1.5]">{section.description}</p>
         )}
       </div>
 
       {/* Criteria */}
       <div className="space-y-6">
         {section.criteria.map((criterion) => {
-          const criterionScore =
-            scores.find((s) => s.criterionId === criterion.id) || {
-              criterionId: criterion.id,
-              score: null,
-              comment: '',
-            };
+          const criterionScore = scores.find((s) => s.criterionId === criterion.id) || {
+            criterionId: criterion.id,
+            score: null,
+            comment: "",
+          };
 
           return (
             <RubricCriterion

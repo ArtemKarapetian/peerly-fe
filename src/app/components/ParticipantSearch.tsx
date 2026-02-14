@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
 /**
  * ParticipantSearch - Поиск участников
@@ -10,10 +10,10 @@ interface ParticipantSearchProps {
   placeholder?: string;
 }
 
-export function ParticipantSearch({ 
-  value, 
-  onChange, 
-  placeholder = 'Поиск участников...' 
+export function ParticipantSearch({
+  value,
+  onChange,
+  placeholder = "Поиск участников...",
 }: ParticipantSearchProps) {
   return (
     <div className="relative">

@@ -1,15 +1,15 @@
-import { useState, FormEvent } from 'react';
-import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/button.tsx';
-import { Input, PasswordInput } from '@/app/components/ui/input.tsx';
-import { useAuth } from '@/app/contexts/AuthContext';
-import { isFlagEnabled } from '@/app/utils/featureFlags';
-import { authenticateUser } from '@/app/utils/userStorage';
-import { AlertCircle } from 'lucide-react';
+import { useState, FormEvent } from "react";
+import { PublicLayout } from "@/app/components/PublicLayout";
+import { Button } from "@/app/components/ui/button.tsx";
+import { Input, PasswordInput } from "@/app/components/ui/input.tsx";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { isFlagEnabled } from "@/app/utils/featureFlags";
+import { authenticateUser } from "@/app/utils/userStorage";
+import { AlertCircle } from "lucide-react";
 
 /**
  * LoginPage - Authentication screen
- * 
+ *
  * Features:
  * - Single identifier field (email OR username)
  * - Demo credentials support
@@ -19,20 +19,20 @@ import { AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const { login: authLogin } = useAuth();
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [touched, setTouched] = useState({
     identifier: false,
-    password: false
+    password: false,
   });
 
-  const enablePasswordReset = isFlagEnabled('enablePasswordReset');
+  const enablePasswordReset = isFlagEnabled("enablePasswordReset");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     // Mark all fields as touched
     setTouched({ identifier: true, password: true });
@@ -45,7 +45,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 600));
+    await new Promise((resolve) => setTimeout(resolve, 600));
 
     // Attempt authentication
     const user = authenticateUser(identifier, password);
@@ -53,25 +53,25 @@ export default function LoginPage() {
     if (user) {
       // Success - login and navigate
       authLogin();
-      window.location.hash = '/courses';
+      window.location.hash = "/courses";
     } else {
       // Failed - show error
       setIsLoading(false);
-      setError('Invalid credentials. Please check your username/email and password.');
+      setError("Invalid credentials. Please check your username/email and password.");
     }
   };
 
   // Show field-level errors only when touched
   const getIdentifierError = () => {
-    if (!touched.identifier) return '';
-    if (!identifier.trim()) return 'Required field';
-    return '';
+    if (!touched.identifier) return "";
+    if (!identifier.trim()) return "Required field";
+    return "";
   };
 
   const getPasswordError = () => {
-    if (!touched.password) return '';
-    if (!password.trim()) return 'Required field';
-    return '';
+    if (!touched.password) return "";
+    if (!password.trim()) return "Required field";
+    return "";
   };
 
   return (
@@ -82,9 +82,7 @@ export default function LoginPage() {
           <div className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 space-y-6">
             {/* Header */}
             <div className="space-y-2">
-              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
-                Вход
-              </h1>
+              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">Вход</h1>
               <p className="text-[15px] text-muted-foreground">
                 Войдите в свой аккаунт для доступа к курсам
               </p>
@@ -93,7 +91,8 @@ export default function LoginPage() {
             {/* Demo credentials hint */}
             <div className="bg-accent/50 border border-border rounded-lg px-3.5 py-2.5">
               <p className="text-[13px] text-muted-foreground">
-                <strong className="font-medium">Demo:</strong> demo / demo или ivan.petrov / password123
+                <strong className="font-medium">Demo:</strong> demo / demo или ivan.petrov /
+                password123
               </p>
             </div>
 
@@ -114,7 +113,7 @@ export default function LoginPage() {
                 value={identifier}
                 onChange={(e) => {
                   setIdentifier(e.target.value);
-                  setError(''); // Clear error on change
+                  setError(""); // Clear error on change
                 }}
                 onBlur={() => setTouched({ ...touched, identifier: true })}
                 placeholder="demo or demo@example.com"
@@ -129,7 +128,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setError(''); // Clear error on change
+                  setError(""); // Clear error on change
                 }}
                 onBlur={() => setTouched({ ...touched, password: true })}
                 placeholder="••••••••"
@@ -148,7 +147,7 @@ export default function LoginPage() {
                   isLoading={isLoading}
                   disabled={!identifier.trim() || !password.trim()}
                 >
-                  {isLoading ? 'Вход...' : 'Войти'}
+                  {isLoading ? "Вход..." : "Войти"}
                 </Button>
               </div>
             </form>
@@ -169,13 +168,8 @@ export default function LoginPage() {
 
               {/* Register link */}
               <div className="text-center border-t border-border pt-4">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Нет аккаунта?
-                </p>
-                <a
-                  href="#/register"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
+                <p className="text-sm text-muted-foreground mb-2">Нет аккаунта?</p>
+                <a href="#/register" className="text-sm font-medium text-primary hover:underline">
                   Создать аккаунт
                 </a>
               </div>

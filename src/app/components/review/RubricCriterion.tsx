@@ -1,8 +1,8 @@
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle } from "lucide-react";
 
 /**
  * RubricCriterion - Критерий рубрики с выбором оценки и комментарием
- * 
+ *
  * Features:
  * - Score selector (0-5 or custom scale)
  * - Comment field
@@ -57,8 +57,8 @@ export function RubricCriterion({
   const scoreOptions = Array.from({ length: criterion.maxScore + 1 }, (_, i) => i);
 
   return (
-    <div 
-      className={`${readonly ? 'opacity-75' : ''}`}
+    <div
+      className={`${readonly ? "opacity-75" : ""}`}
       data-criterion-id={criterion.id}
       tabIndex={readonly ? -1 : 0}
       onFocus={onFocus}
@@ -75,9 +75,7 @@ export function RubricCriterion({
           </span>
         </div>
         {criterion.description && (
-          <p className="text-[13px] text-[#767692] leading-[1.4]">
-            {criterion.description}
-          </p>
+          <p className="text-[13px] text-[#767692] leading-[1.4]">{criterion.description}</p>
         )}
       </div>
 
@@ -102,10 +100,10 @@ export function RubricCriterion({
                 w-10 h-10 rounded-[8px] text-[14px] font-medium transition-all
                 ${
                   value.score === score
-                    ? 'bg-[#5b8def] text-white shadow-sm'
-                    : 'bg-[#f9f9f9] text-[#21214f] hover:bg-[#e6e8ee]'
+                    ? "bg-[#5b8def] text-white shadow-sm"
+                    : "bg-[#f9f9f9] text-[#21214f] hover:bg-[#e6e8ee]"
                 }
-                ${readonly ? 'cursor-not-allowed' : 'cursor-pointer'}
+                ${readonly ? "cursor-not-allowed" : "cursor-pointer"}
               `}
             >
               {score}
@@ -134,8 +132,8 @@ export function RubricCriterion({
           className={`
             w-full px-3 py-2 border-2 rounded-[8px] text-[14px] text-[#21214f] 
             placeholder:text-[#b4b4b4] transition-colors resize-none
-            ${error ? 'border-[#d4183d] bg-[#fff5f5]' : 'border-[#e6e8ee] focus:border-[#a0b8f1]'}
-            ${readonly ? 'bg-[#f9f9f9] cursor-not-allowed' : 'bg-white'}
+            ${error ? "border-[#d4183d] bg-[#fff5f5]" : "border-[#e6e8ee] focus:border-[#a0b8f1]"}
+            ${readonly ? "bg-[#f9f9f9] cursor-not-allowed" : "bg-white"}
           `}
           onFocus={onFocus}
         />
@@ -143,8 +141,8 @@ export function RubricCriterion({
           <p
             className={`text-[12px] mt-1 ${
               value.comment.length >= criterion.minCommentLength
-                ? 'text-[#4caf50]'
-                : 'text-[#767692]'
+                ? "text-[#4caf50]"
+                : "text-[#767692]"
             }`}
           >
             {value.comment.length} / {criterion.minCommentLength} символов

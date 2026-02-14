@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { X, ChevronRight, ChevronLeft, Play, AlertCircle } from 'lucide-react';
+import { useState } from "react";
+import { X, ChevronRight, ChevronLeft, Play, AlertCircle } from "lucide-react";
 import {
   AutomationRule,
   TriggerType,
@@ -13,9 +13,9 @@ import {
   updateRule,
   getTriggerLabel,
   getRuleHumanReadable,
-  testRule
-} from '@/app/utils/automationRules';
-import { toast } from 'sonner';
+  testRule,
+} from "@/app/utils/automationRules";
+import { toast } from "sonner";
 
 interface CreateRuleModalProps {
   existingRule?: AutomationRule | null;
@@ -23,55 +23,54 @@ interface CreateRuleModalProps {
 }
 
 const TRIGGERS: TriggerType[] = [
-  'AssignmentCreated',
-  'SubmissionUploaded',
-  'SubmissionUpdated',
-  'BeforeReviewAssign',
-  'ReviewSubmitted',
-  'BeforeGradePublish',
-  'Scheduled'
+  "AssignmentCreated",
+  "SubmissionUploaded",
+  "SubmissionUpdated",
+  "BeforeReviewAssign",
+  "ReviewSubmitted",
+  "BeforeGradePublish",
+  "Scheduled",
 ];
 
 const CONDITION_TYPES: ConditionType[] = [
-  'plagiarism_score',
-  'missing_reviews',
-  'submission_delay_days',
-  'review_comment_length',
-  'grade_deviation',
-  'peer_scores_variance'
+  "plagiarism_score",
+  "missing_reviews",
+  "submission_delay_days",
+  "review_comment_length",
+  "grade_deviation",
+  "peer_scores_variance",
 ];
 
 const ACTION_TYPES: ActionType[] = [
-  'flag_submission',
-  'flag_review',
-  'require_moderation',
-  'reassign_reviewer',
-  'apply_penalty',
-  'send_notification'
+  "flag_submission",
+  "flag_review",
+  "require_moderation",
+  "reassign_reviewer",
+  "apply_penalty",
+  "send_notification",
 ];
 
-const OPERATORS: ConditionOperator[] = ['>', '<', '>=', '<=', '==', '!='];
+const OPERATORS: ConditionOperator[] = [">", "<", ">=", "<=", "==", "!="];
 
 export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps) {
   const isEditing = !!existingRule;
   const [step, setStep] = useState(1);
-  
-  const [name, setName] = useState(existingRule?.name || '');
-  const [description, setDescription] = useState(existingRule?.description || '');
-  const [trigger, setTrigger] = useState<TriggerType>(existingRule?.trigger || 'ReviewSubmitted');
+
+  const [name, setName] = useState(existingRule?.name || "");
+  const [description, setDescription] = useState(existingRule?.description || "");
+  const [trigger, setTrigger] = useState<TriggerType>(existingRule?.trigger || "ReviewSubmitted");
   const [conditions, setConditions] = useState<Condition[]>(existingRule?.conditions || []);
   const [actions, setActions] = useState<Action[]>(existingRule?.actions || []);
   const [scope, setScope] = useState<RuleScope>(existingRule?.scope || { applyToAll: true });
   const [priority, setPriority] = useState(existingRule?.priority || 1);
   const [enabled, setEnabled] = useState(existingRule?.enabled ?? true);
-  
-  const [testResults, setTestResults] = useState<{ matches: number; samples: string[] } | null>(null);
+
+  const [testResults, setTestResults] = useState<{ matches: number; samples: string[] } | null>(
+    null,
+  );
 
   const handleAddCondition = () => {
-    setConditions([
-      ...conditions,
-      { type: 'plagiarism_score', operator: '>', value: 0 }
-    ]);
+    setConditions([...conditions, { type: "plagiarism_score", operator: ">", value: 0 }]);
   };
 
   const handleUpdateCondition = (index: number, updates: Partial<Condition>) => {
@@ -85,10 +84,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
   };
 
   const handleAddAction = () => {
-    setActions([
-      ...actions,
-      { type: 'flag_review' }
-    ]);
+    setActions([...actions, { type: "flag_review" }]);
   };
 
   const handleUpdateAction = (index: number, updates: Partial<Action>) => {
@@ -102,33 +98,19 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
   };
 
   const handleTestRule = () => {
-    const rule: AutomationRule = {
-      id: existingRule?.id || 'test',
-      name,
-      description,
-      enabled,
-      priority,
-      trigger,
-      conditions,
-      actions,
-      scope,
-      createdAt: existingRule?.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    const results = testRule(rule);
+    const results = testRule();
     setTestResults(results);
     toast.info(`Найдено совпадений: ${results.matches}`);
   };
 
   const handleSave = () => {
     if (!name.trim()) {
-      toast.error('Введите название правила');
+      toast.error("Введите название правила");
       return;
     }
 
     if (actions.length === 0) {
-      toast.error('Добавьте хотя бы одно действие');
+      toast.error("Добавьте хотя бы одно действие");
       return;
     }
 
@@ -140,15 +122,15 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
       trigger,
       conditions,
       actions,
-      scope
+      scope,
     };
 
     if (isEditing && existingRule) {
       updateRule(existingRule.id, ruleData);
-      toast.success('Правило обновлено');
+      toast.success("Правило обновлено");
     } else {
       createRule(ruleData);
-      toast.success('Правило создано');
+      toast.success("Правило создано");
     }
 
     onClose();
@@ -156,24 +138,24 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
 
   const getConditionTypeLabel = (type: ConditionType): string => {
     const labels: Record<ConditionType, string> = {
-      plagiarism_score: 'Балл плагиата',
-      missing_reviews: 'Пропущенных рецензий',
-      submission_delay_days: 'Дней опоздания',
-      review_comment_length: 'Длина комментария',
-      grade_deviation: 'Отклонение оценки',
-      peer_scores_variance: 'Разброс оценок'
+      plagiarism_score: "Балл плагиата",
+      missing_reviews: "Пропущенных рецензий",
+      submission_delay_days: "Дней опоздания",
+      review_comment_length: "Длина комментария",
+      grade_deviation: "Отклонение оценки",
+      peer_scores_variance: "Разброс оценок",
     };
     return labels[type];
   };
 
   const getActionTypeLabel = (type: ActionType): string => {
     const labels: Record<ActionType, string> = {
-      flag_submission: 'Отметить работу',
-      flag_review: 'Отметить рецензию',
-      require_moderation: 'Требовать модерацию',
-      reassign_reviewer: 'Переназначить рецензента',
-      apply_penalty: 'Применить штраф',
-      send_notification: 'Отправить уведомление'
+      flag_submission: "Отметить работу",
+      flag_review: "Отметить рецензию",
+      require_moderation: "Требовать модерацию",
+      reassign_reviewer: "Переназначить рецензента",
+      apply_penalty: "Применить штраф",
+      send_notification: "Отправить уведомление",
     };
     return labels[type];
   };
@@ -181,11 +163,11 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
   // Build human-readable summary
   const buildSummary = () => {
     if (!trigger || actions.length === 0) {
-      return 'Настройте триггер и действия для просмотра правила';
+      return "Настройте триггер и действия для просмотра правила";
     }
 
     const rule: AutomationRule = {
-      id: 'preview',
+      id: "preview",
       name,
       description,
       enabled,
@@ -195,7 +177,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
       actions,
       scope,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     return getRuleHumanReadable(rule);
@@ -210,7 +192,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
             {/* Header */}
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">
-                {isEditing ? 'Редактировать правило' : 'Создать правило'}
+                {isEditing ? "Редактировать правило" : "Создать правило"}
               </h2>
               <button
                 onClick={onClose}
@@ -229,25 +211,23 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                       onClick={() => setStep(s)}
                       className={`flex items-center justify-center w-8 h-8 rounded-full font-medium transition-colors ${
                         step === s
-                          ? 'bg-primary text-primary-foreground'
+                          ? "bg-primary text-primary-foreground"
                           : step > s
-                          ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                          : 'bg-muted text-muted-foreground'
+                            ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+                            : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {s}
                     </button>
-                    {s < 4 && (
-                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                    )}
+                    {s < 4 && <ChevronRight className="w-4 h-4 text-muted-foreground" />}
                   </div>
                 ))}
               </div>
               <div className="mt-2 text-sm text-muted-foreground">
-                {step === 1 && 'Шаг 1: Триггер'}
-                {step === 2 && 'Шаг 2: Условия'}
-                {step === 3 && 'Шаг 3: Действия'}
-                {step === 4 && 'Шаг 4: Область применения'}
+                {step === 1 && "Шаг 1: Триггер"}
+                {step === 2 && "Шаг 2: Условия"}
+                {step === 3 && "Шаг 3: Действия"}
+                {step === 4 && "Шаг 4: Область применения"}
               </div>
             </div>
 
@@ -284,9 +264,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {/* Step 1: Trigger */}
               {step === 1 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-4">
-                    Выберите триггер
-                  </h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-4">Выберите триггер</h3>
                   <div className="space-y-2">
                     {TRIGGERS.map((t) => (
                       <label
@@ -301,9 +279,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                           className="w-4 h-4 text-primary"
                         />
                         <div className="flex-1">
-                          <div className="font-medium text-foreground">
-                            {getTriggerLabel(t)}
-                          </div>
+                          <div className="font-medium text-foreground">{getTriggerLabel(t)}</div>
                         </div>
                       </label>
                     ))}
@@ -315,9 +291,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {step === 2 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Условия (опционально)
-                    </h3>
+                    <h3 className="text-lg font-semibold text-foreground">Условия (опционально)</h3>
                     <button
                       onClick={handleAddCondition}
                       className="text-sm text-primary hover:underline"
@@ -334,13 +308,20 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                   ) : (
                     <div className="space-y-3">
                       {conditions.map((condition, index) => (
-                        <div key={index} className="flex items-center gap-3 p-4 border border-border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center gap-3 p-4 border border-border rounded-lg"
+                        >
                           <select
                             value={condition.type}
-                            onChange={(e) => handleUpdateCondition(index, { type: e.target.value as ConditionType })}
+                            onChange={(e) =>
+                              handleUpdateCondition(index, {
+                                type: e.target.value as ConditionType,
+                              })
+                            }
                             className="flex-1 px-3 py-2 border border-border rounded-lg bg-background text-foreground"
                           >
-                            {CONDITION_TYPES.map(type => (
+                            {CONDITION_TYPES.map((type) => (
                               <option key={type} value={type}>
                                 {getConditionTypeLabel(type)}
                               </option>
@@ -348,17 +329,27 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                           </select>
                           <select
                             value={condition.operator}
-                            onChange={(e) => handleUpdateCondition(index, { operator: e.target.value as ConditionOperator })}
+                            onChange={(e) =>
+                              handleUpdateCondition(index, {
+                                operator: e.target.value as ConditionOperator,
+                              })
+                            }
                             className="w-20 px-3 py-2 border border-border rounded-lg bg-background text-foreground"
                           >
-                            {OPERATORS.map(op => (
-                              <option key={op} value={op}>{op}</option>
+                            {OPERATORS.map((op) => (
+                              <option key={op} value={op}>
+                                {op}
+                              </option>
                             ))}
                           </select>
                           <input
                             type="number"
                             value={condition.value}
-                            onChange={(e) => handleUpdateCondition(index, { value: parseFloat(e.target.value) || 0 })}
+                            onChange={(e) =>
+                              handleUpdateCondition(index, {
+                                value: parseFloat(e.target.value) || 0,
+                              })
+                            }
                             className="w-24 px-3 py-2 border border-border rounded-lg bg-background text-foreground"
                           />
                           <button
@@ -378,9 +369,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {step === 3 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Действия *
-                    </h3>
+                    <h3 className="text-lg font-semibold text-foreground">Действия *</h3>
                     <button
                       onClick={handleAddAction}
                       className="text-sm text-primary hover:underline"
@@ -393,7 +382,9 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                     <div className="text-center py-8">
                       <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-2 opacity-50" />
                       <p className="text-muted-foreground mb-2">Нет действий</p>
-                      <p className="text-sm text-muted-foreground">Добавьте хотя бы одно действие</p>
+                      <p className="text-sm text-muted-foreground">
+                        Добавьте хотя бы одно действие
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -402,10 +393,12 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                           <div className="flex items-start gap-3 mb-3">
                             <select
                               value={action.type}
-                              onChange={(e) => handleUpdateAction(index, { type: e.target.value as ActionType })}
+                              onChange={(e) =>
+                                handleUpdateAction(index, { type: e.target.value as ActionType })
+                              }
                               className="flex-1 px-3 py-2 border border-border rounded-lg bg-background text-foreground"
                             >
-                              {ACTION_TYPES.map(type => (
+                              {ACTION_TYPES.map((type) => (
                                 <option key={type} value={type}>
                                   {getActionTypeLabel(type)}
                                 </option>
@@ -420,7 +413,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                           </div>
 
                           {/* Action-specific parameters */}
-                          {action.type === 'apply_penalty' && (
+                          {action.type === "apply_penalty" && (
                             <div>
                               <label className="block text-sm font-medium text-foreground mb-2">
                                 Процент штрафа
@@ -428,26 +421,33 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                               <input
                                 type="number"
                                 value={action.parameters?.penaltyPercent || 10}
-                                onChange={(e) => handleUpdateAction(index, {
-                                  parameters: { ...action.parameters, penaltyPercent: parseFloat(e.target.value) || 0 }
-                                })}
+                                onChange={(e) =>
+                                  handleUpdateAction(index, {
+                                    parameters: {
+                                      ...action.parameters,
+                                      penaltyPercent: parseFloat(e.target.value) || 0,
+                                    },
+                                  })
+                                }
                                 className="w-32 px-3 py-2 border border-border rounded-lg bg-background text-foreground"
                                 min="0"
                                 max="100"
                               />
                             </div>
                           )}
-                          {action.type === 'send_notification' && (
+                          {action.type === "send_notification" && (
                             <div>
                               <label className="block text-sm font-medium text-foreground mb-2">
                                 Текст уведомления
                               </label>
                               <input
                                 type="text"
-                                value={action.parameters?.message || ''}
-                                onChange={(e) => handleUpdateAction(index, {
-                                  parameters: { ...action.parameters, message: e.target.value }
-                                })}
+                                value={action.parameters?.message || ""}
+                                onChange={(e) =>
+                                  handleUpdateAction(index, {
+                                    parameters: { ...action.parameters, message: e.target.value },
+                                  })
+                                }
                                 placeholder="Сообщение для студента"
                                 className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
                               />
@@ -463,10 +463,8 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {/* Step 4: Scope */}
               {step === 4 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-4">
-                    Область применения
-                  </h3>
-                  
+                  <h3 className="text-lg font-semibold text-foreground mb-4">Область применения</h3>
+
                   <div className="space-y-4">
                     <label className="flex items-center gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
                       <input
@@ -477,7 +475,9 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                       />
                       <div>
                         <div className="font-medium text-foreground">Все курсы и задания</div>
-                        <div className="text-sm text-muted-foreground">Правило будет применяться везде</div>
+                        <div className="text-sm text-muted-foreground">
+                          Правило будет применяться везде
+                        </div>
                       </div>
                     </label>
 
@@ -485,12 +485,16 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                       <input
                         type="radio"
                         checked={!scope.applyToAll}
-                        onChange={() => setScope({ applyToAll: false, courseIds: [], assignmentIds: [] })}
+                        onChange={() =>
+                          setScope({ applyToAll: false, courseIds: [], assignmentIds: [] })
+                        }
                         className="w-4 h-4 text-primary"
                       />
                       <div>
                         <div className="font-medium text-foreground">Выборочно</div>
-                        <div className="text-sm text-muted-foreground">Выберите конкретные курсы или задания</div>
+                        <div className="text-sm text-muted-foreground">
+                          Выберите конкретные курсы или задания
+                        </div>
                       </div>
                     </label>
 
@@ -513,7 +517,9 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                     <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                       <div>
                         <div className="font-medium text-foreground">Включить правило сразу</div>
-                        <div className="text-sm text-muted-foreground">Правило начнет работать после сохранения</div>
+                        <div className="text-sm text-muted-foreground">
+                          Правило начнет работать после сохранения
+                        </div>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -540,7 +546,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 <ChevronLeft className="w-4 h-4" />
                 Назад
               </button>
-              
+
               <div className="flex gap-2">
                 {step < 4 ? (
                   <button
@@ -555,7 +561,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                     onClick={handleSave}
                     className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
                   >
-                    {isEditing ? 'Сохранить изменения' : 'Создать правило'}
+                    {isEditing ? "Сохранить изменения" : "Создать правило"}
                   </button>
                 )}
               </div>
@@ -568,7 +574,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               <h3 className="font-semibold text-foreground mb-1">Предпросмотр правила</h3>
               <p className="text-sm text-muted-foreground">Читаемое описание</p>
             </div>
-            
+
             <div className="flex-1 p-6 overflow-y-auto">
               <div className="bg-card border border-border rounded-lg p-4 mb-4">
                 <div className="text-sm text-foreground font-mono leading-relaxed">
@@ -587,9 +593,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
 
               {testResults && (
                 <div className="mt-4 bg-card border border-border rounded-lg p-4">
-                  <div className="font-medium text-foreground mb-2">
-                    Результаты теста
-                  </div>
+                  <div className="font-medium text-foreground mb-2">Результаты теста</div>
                   <div className="text-sm text-muted-foreground mb-3">
                     Найдено совпадений: <strong>{testResults.matches}</strong>
                   </div>
@@ -598,7 +602,10 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                       <div className="text-xs text-muted-foreground mb-2">Примеры:</div>
                       <ul className="space-y-1">
                         {testResults.samples.map((sample, i) => (
-                          <li key={i} className="text-xs text-foreground bg-muted/50 px-2 py-1 rounded">
+                          <li
+                            key={i}
+                            className="text-xs text-foreground bg-muted/50 px-2 py-1 rounded"
+                          >
                             {sample}
                           </li>
                         ))}

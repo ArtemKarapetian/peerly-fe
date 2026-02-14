@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Search, Plus, Filter, Copy, Save, Link2, Eye, Edit } from 'lucide-react';
-import { RubricEditor } from './components/RubricEditor';
-import { RubricPreview } from './components/RubricPreview';
-import { AssignmentPickerModal } from './components/AssignmentPickerModal';
+import { useState, useEffect } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Search, Plus, Filter, Copy, Eye, Edit } from "lucide-react";
+import { RubricEditor } from "./components/RubricEditor";
+import { RubricPreview } from "./components/RubricPreview";
+import { AssignmentPickerModal } from "./components/AssignmentPickerModal";
 
 /**
  * TeacherRubricsPage - Библиотека рубрик
- * 
+ *
  * Двухколоночный layout:
  * - Слева: список рубрик с поиском и фильтрами
  * - Справа: редактор/просмотр рубрики
@@ -30,7 +30,7 @@ export interface RubricData {
   id: string;
   name: string;
   description: string;
-  taskType: 'text' | 'code' | 'project';
+  taskType: "text" | "code" | "project";
   criteria: RubricCriterionData[];
   tags: string[];
   createdAt: Date;
@@ -38,10 +38,10 @@ export interface RubricData {
   teacherId: string;
 }
 
-type ViewMode = 'edit' | 'preview';
+type ViewMode = "edit" | "preview";
 
 // Local storage key
-const RUBRICS_STORAGE_KEY = 'peerly_rubrics_library';
+const RUBRICS_STORAGE_KEY = "peerly_rubrics_library";
 
 // Demo rubrics
 const getInitialRubrics = (): RubricData[] => {
@@ -51,32 +51,45 @@ const getInitialRubrics = (): RubricData[] => {
     try {
       const parsed = JSON.parse(stored);
       // Convert date strings back to Date objects
-      return parsed.map((r: any) => ({
-        ...r,
-        createdAt: new Date(r.createdAt),
-        updatedAt: new Date(r.updatedAt),
-      }));
+      return parsed.map(
+        (r: {
+          id: string;
+          name: string;
+          description: string;
+          taskType: string;
+          criteria: RubricCriterionData[];
+          tags: string[];
+          createdAt: string;
+          updatedAt: string;
+        }) => ({
+          ...r,
+          createdAt: new Date(r.createdAt),
+          updatedAt: new Date(r.updatedAt),
+        }),
+      );
     } catch (e) {
-      console.error('Failed to parse stored rubrics', e);
+      console.error("Failed to parse stored rubrics", e);
     }
   }
 
   // Default demo rubrics
   return [
     {
-      id: 'r1',
-      name: 'Оценка веб-проекта',
-      description: 'Критерии оценки финального веб-проекта с фокусом на функциональность, дизайн и качество кода',
-      taskType: 'project' as const,
-      tags: ['веб-разработка', 'frontend', 'fullstack'],
-      teacherId: 'u2',
-      createdAt: new Date('2025-01-10'),
-      updatedAt: new Date('2025-01-15'),
+      id: "r1",
+      name: "Оценка веб-проекта",
+      description:
+        "Критерии оценки финального веб-проекта с фокусом на функциональность, дизайн и качество кода",
+      taskType: "project" as const,
+      tags: ["веб-разработка", "frontend", "fullstack"],
+      teacherId: "u2",
+      createdAt: new Date("2025-01-10"),
+      updatedAt: new Date("2025-01-15"),
       criteria: [
         {
-          id: 'c1',
-          name: 'Функциональность',
-          description: 'Работоспособность всех требуемых функций и корректная обработка пользовательских сценариев',
+          id: "c1",
+          name: "Функциональность",
+          description:
+            "Работоспособность всех требуемых функций и корректная обработка пользовательских сценариев",
           maxScore: 5,
           weight: 30,
           required: true,
@@ -84,25 +97,25 @@ const getInitialRubrics = (): RubricData[] => {
           minCommentLength: 20,
         },
         {
-          id: 'c2',
-          name: 'Дизайн и UX',
-          description: 'Визуальное оформление, адаптивность, удобство использования',
+          id: "c2",
+          name: "Дизайн и UX",
+          description: "Визуальное оформление, адаптивность, удобство использования",
           maxScore: 5,
           weight: 20,
           required: true,
         },
         {
-          id: 'c3',
-          name: 'Качество кода',
-          description: 'Читаемость, структура, соблюдение best practices',
+          id: "c3",
+          name: "Качество кода",
+          description: "Читаемость, структура, соблюдение best practices",
           maxScore: 5,
           weight: 30,
           required: true,
         },
         {
-          id: 'c4',
-          name: 'Документация',
-          description: 'Полнота README, комментариев и инструкций по запуску',
+          id: "c4",
+          name: "Документация",
+          description: "Полнота README, комментариев и инструкций по запуску",
           maxScore: 5,
           weight: 20,
           required: false,
@@ -110,74 +123,74 @@ const getInitialRubrics = (): RubricData[] => {
       ],
     },
     {
-      id: 'r2',
-      name: 'Проверка кода (Code Review)',
-      description: 'Рубрика для оценки качества программного кода',
-      taskType: 'code' as const,
-      tags: ['программирование', 'code-review'],
-      teacherId: 'u2',
-      createdAt: new Date('2025-01-12'),
-      updatedAt: new Date('2025-01-12'),
+      id: "r2",
+      name: "Проверка кода (Code Review)",
+      description: "Рубрика для оценки качества программного кода",
+      taskType: "code" as const,
+      tags: ["программирование", "code-review"],
+      teacherId: "u2",
+      createdAt: new Date("2025-01-12"),
+      updatedAt: new Date("2025-01-12"),
       criteria: [
         {
-          id: 'c1',
-          name: 'Корректность',
-          description: 'Код работает и решает поставленную задачу',
+          id: "c1",
+          name: "Корректность",
+          description: "Код работает и решает поставленную задачу",
           maxScore: 5,
           required: true,
         },
         {
-          id: 'c2',
-          name: 'Читаемость',
-          description: 'Код легко читается и понимается',
+          id: "c2",
+          name: "Читаемость",
+          description: "Код легко читается и понимается",
           maxScore: 5,
           required: true,
         },
         {
-          id: 'c3',
-          name: 'Эффективность',
-          description: 'Оптимальность алгоритма и использования ресурсов',
+          id: "c3",
+          name: "Эффективность",
+          description: "Оптимальность алгоритма и использования ресурсов",
           maxScore: 5,
           required: false,
         },
       ],
     },
     {
-      id: 'r3',
-      name: 'Эссе и письменные работы',
-      description: 'Критерии оценки текстовых работ и аналитических эссе',
-      taskType: 'text' as const,
-      tags: ['письменные работы', 'эссе', 'аналитика'],
-      teacherId: 'u2',
-      createdAt: new Date('2025-01-08'),
-      updatedAt: new Date('2025-01-20'),
+      id: "r3",
+      name: "Эссе и письменные работы",
+      description: "Критерии оценки текстовых работ и аналитических эссе",
+      taskType: "text" as const,
+      tags: ["письменные работы", "эссе", "аналитика"],
+      teacherId: "u2",
+      createdAt: new Date("2025-01-08"),
+      updatedAt: new Date("2025-01-20"),
       criteria: [
         {
-          id: 'c1',
-          name: 'Структура и организация',
-          description: 'Логичность построения текста, наличие введения и заключения',
+          id: "c1",
+          name: "Структура и организация",
+          description: "Логичность построения текста, наличие введения и заключения",
           maxScore: 5,
           required: true,
         },
         {
-          id: 'c2',
-          name: 'Аргументация',
-          description: 'Убедительность доводов и качество примеров',
+          id: "c2",
+          name: "Аргументация",
+          description: "Убедительность доводов и качество примеров",
           maxScore: 5,
           required: true,
           commentRequired: true,
         },
         {
-          id: 'c3',
-          name: 'Язык и стиль',
-          description: 'Грамотность, академический стиль, отсутствие ошибок',
+          id: "c3",
+          name: "Язык и стиль",
+          description: "Грамотность, академический стиль, отсутствие ошибок",
           maxScore: 5,
           required: true,
         },
         {
-          id: 'c4',
-          name: 'Источники',
-          description: 'Использование и оформление источников',
+          id: "c4",
+          name: "Источники",
+          description: "Использование и оформление источников",
           maxScore: 5,
           required: false,
         },
@@ -189,9 +202,9 @@ const getInitialRubrics = (): RubricData[] => {
 export default function TeacherRubricsPage() {
   const [rubrics, setRubrics] = useState<RubricData[]>(getInitialRubrics);
   const [selectedRubricId, setSelectedRubricId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('edit');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [taskTypeFilter, setTaskTypeFilter] = useState<'all' | 'text' | 'code' | 'project'>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>("edit");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [taskTypeFilter, setTaskTypeFilter] = useState<"all" | "text" | "code" | "project">("all");
   const [isAssignmentPickerOpen, setIsAssignmentPickerOpen] = useState(false);
 
   const selectedRubric = rubrics.find((r) => r.id === selectedRubricId) || null;
@@ -208,7 +221,7 @@ export default function TeacherRubricsPage() {
       rubric.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       rubric.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesType = taskTypeFilter === 'all' || rubric.taskType === taskTypeFilter;
+    const matchesType = taskTypeFilter === "all" || rubric.taskType === taskTypeFilter;
 
     return matchesSearch && matchesType;
   });
@@ -217,60 +230,59 @@ export default function TeacherRubricsPage() {
   const handleCreateNew = () => {
     const newRubric: RubricData = {
       id: `r${Date.now()}`,
-      name: 'Новая рубрика',
-      description: 'Описание рубрики',
-      taskType: 'project',
+      name: "Новая рубрика",
+      description: "Описание рубрики",
+      taskType: "project",
       tags: [],
       criteria: [
         {
           id: `c${Date.now()}`,
-          name: 'Критерий 1',
-          description: 'Описание критерия',
+          name: "Критерий 1",
+          description: "Описание критерия",
           maxScore: 5,
           required: true,
         },
       ],
       createdAt: new Date(),
       updatedAt: new Date(),
-      teacherId: 'u2',
+      teacherId: "u2",
     };
     setRubrics([newRubric, ...rubrics]);
     setSelectedRubricId(newRubric.id);
-    setViewMode('edit');
+    setViewMode("edit");
   };
 
   // Duplicate rubric
   const handleDuplicate = (rubric: RubricData) => {
+    const newId = crypto.randomUUID();
     const duplicated: RubricData = {
       ...rubric,
-      id: `r${Date.now()}`,
+      id: `r${newId}`,
       name: `${rubric.name} (копия)`,
       criteria: rubric.criteria.map((c) => ({
         ...c,
-        id: `c${Date.now()}_${c.id}`,
+        id: `c${crypto.randomUUID()}`,
       })),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     setRubrics([duplicated, ...rubrics]);
     setSelectedRubricId(duplicated.id);
-    setViewMode('edit');
+    setViewMode("edit");
   };
 
   // Save rubric changes
   const handleSaveRubric = (updatedRubric: RubricData) => {
     setRubrics(
       rubrics.map((r) =>
-        r.id === updatedRubric.id
-          ? { ...updatedRubric, updatedAt: new Date() }
-          : r
-      )
+        r.id === updatedRubric.id ? { ...updatedRubric, updatedAt: new Date() } : r,
+      ),
     );
   };
 
   // Delete rubric
   const handleDeleteRubric = (rubricId: string) => {
-    if (confirm('Удалить эту рубрику?')) {
+    if (confirm("Удалить эту рубрику?")) {
       setRubrics(rubrics.filter((r) => r.id !== rubricId));
       if (selectedRubricId === rubricId) {
         setSelectedRubricId(null);
@@ -278,20 +290,14 @@ export default function TeacherRubricsPage() {
     }
   };
 
-  // Attach to assignment
-  const handleAttachToAssignment = () => {
-    if (!selectedRubric) return;
-    setIsAssignmentPickerOpen(true);
-  };
-
   const getTaskTypeLabel = (type: string) => {
     switch (type) {
-      case 'text':
-        return 'Текст';
-      case 'code':
-        return 'Код';
-      case 'project':
-        return 'Проект';
+      case "text":
+        return "Текст";
+      case "code":
+        return "Код";
+      case "project":
+        return "Проект";
       default:
         return type;
     }
@@ -299,10 +305,12 @@ export default function TeacherRubricsPage() {
 
   return (
     <AppShell title="Библиотека рубрик">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Библиотека рубрик' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Библиотека рубрик" },
+        ]}
+      />
 
       <div className="mt-6 grid grid-cols-[400px_1fr] gap-6 h-[calc(100vh-180px)]">
         {/* Left Column - Rubric List */}
@@ -338,7 +346,9 @@ export default function TeacherRubricsPage() {
               <Filter className="w-4 h-4 text-[#767692]" />
               <select
                 value={taskTypeFilter}
-                onChange={(e) => setTaskTypeFilter(e.target.value as any)}
+                onChange={(e) =>
+                  setTaskTypeFilter(e.target.value as "all" | "text" | "code" | "project")
+                }
                 className="flex-1 px-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
               >
                 <option value="all">Все типы заданий</option>
@@ -355,9 +365,9 @@ export default function TeacherRubricsPage() {
               <div className="text-center py-12">
                 <Filter className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
                 <p className="text-[15px] text-[#767692]">
-                  {searchQuery || taskTypeFilter !== 'all'
-                    ? 'Рубрики не найдены'
-                    : 'Создайте первую рубрику'}
+                  {searchQuery || taskTypeFilter !== "all"
+                    ? "Рубрики не найдены"
+                    : "Создайте первую рубрику"}
                 </p>
               </div>
             )}
@@ -367,16 +377,12 @@ export default function TeacherRubricsPage() {
                 key={rubric.id}
                 onClick={() => {
                   setSelectedRubricId(rubric.id);
-                  setViewMode('edit');
+                  setViewMode("edit");
                 }}
                 className={`
                   px-5 py-4 cursor-pointer transition-colors
-                  ${index !== filteredRubrics.length - 1 ? 'border-b border-[#e6e8ee]' : ''}
-                  ${
-                    selectedRubricId === rubric.id
-                      ? 'bg-[#eff6ff]'
-                      : 'hover:bg-[#fafbfc]'
-                  }
+                  ${index !== filteredRubrics.length - 1 ? "border-b border-[#e6e8ee]" : ""}
+                  ${selectedRubricId === rubric.id ? "bg-[#eff6ff]" : "hover:bg-[#fafbfc]"}
                 `}
               >
                 <div className="flex items-start justify-between mb-2">
@@ -395,9 +401,7 @@ export default function TeacherRubricsPage() {
                   </button>
                 </div>
 
-                <p className="text-[13px] text-[#767692] mb-3 line-clamp-2">
-                  {rubric.description}
-                </p>
+                <p className="text-[13px] text-[#767692] mb-3 line-clamp-2">{rubric.description}</p>
 
                 <div className="flex items-center gap-2 flex-wrap mb-3">
                   <span className="px-2 py-1 bg-white border border-[#e6e8ee] text-[#21214f] rounded-[6px] text-[12px] font-medium">
@@ -412,17 +416,13 @@ export default function TeacherRubricsPage() {
                     </span>
                   ))}
                   {rubric.tags.length > 2 && (
-                    <span className="text-[11px] text-[#767692]">
-                      +{rubric.tags.length - 2}
-                    </span>
+                    <span className="text-[11px] text-[#767692]">+{rubric.tags.length - 2}</span>
                   )}
                 </div>
 
                 <div className="flex items-center justify-between text-[12px] text-[#767692]">
                   <span>{rubric.criteria.length} критериев</span>
-                  <span>
-                    Обновлено {rubric.updatedAt.toLocaleDateString('ru-RU')}
-                  </span>
+                  <span>Обновлено {rubric.updatedAt.toLocaleDateString("ru-RU")}</span>
                 </div>
               </div>
             ))}
@@ -457,24 +457,24 @@ export default function TeacherRubricsPage() {
               <div className="px-5 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <h2 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-                    {viewMode === 'edit' ? 'Редактирование' : 'Предпросмотр'}
+                    {viewMode === "edit" ? "Редактирование" : "Предпросмотр"}
                   </h2>
                   <div className="flex items-center gap-1 bg-[#f9f9f9] rounded-[8px] p-1">
                     <button
-                      onClick={() => setViewMode('edit')}
+                      onClick={() => setViewMode("edit")}
                       className={`
                         px-3 py-1 rounded-[6px] text-[13px] font-medium transition-colors
-                        ${viewMode === 'edit' ? 'bg-white text-[#21214f] shadow-sm' : 'text-[#767692]'}
+                        ${viewMode === "edit" ? "bg-white text-[#21214f] shadow-sm" : "text-[#767692]"}
                       `}
                     >
                       <Edit className="w-3 h-3 inline-block mr-1" />
                       Редактор
                     </button>
                     <button
-                      onClick={() => setViewMode('preview')}
+                      onClick={() => setViewMode("preview")}
                       className={`
                         px-3 py-1 rounded-[6px] text-[13px] font-medium transition-colors
-                        ${viewMode === 'preview' ? 'bg-white text-[#21214f] shadow-sm' : 'text-[#767692]'}
+                        ${viewMode === "preview" ? "bg-white text-[#21214f] shadow-sm" : "text-[#767692]"}
                       `}
                     >
                       <Eye className="w-3 h-3 inline-block mr-1" />
@@ -495,11 +495,8 @@ export default function TeacherRubricsPage() {
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto p-6">
-                {viewMode === 'edit' ? (
-                  <RubricEditor
-                    rubric={selectedRubric}
-                    onSave={handleSaveRubric}
-                  />
+                {viewMode === "edit" ? (
+                  <RubricEditor rubric={selectedRubric} onSave={handleSaveRubric} />
                 ) : (
                   <RubricPreview rubric={selectedRubric} />
                 )}

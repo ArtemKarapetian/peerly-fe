@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Search, Filter, UserPlus, Upload } from 'lucide-react';
-import { ParticipantImportModal } from './ParticipantImportModal';
+import { useState } from "react";
+import { Search, Filter, Upload } from "lucide-react";
+import { ParticipantImportModal } from "./ParticipantImportModal";
 
 /**
  * TeacherCourseParticipants - Вкладка "Участники"
- * 
+ *
  * - Список участников с поиском и фильтрами
  * - Фильтр по роли (student/teacher assistant)
  * - Фильтр по статусу (active/invited)
@@ -15,8 +15,8 @@ interface Participant {
   id: string;
   name: string;
   email: string;
-  role: 'student' | 'assistant';
-  status: 'active' | 'invited';
+  role: "student" | "assistant";
+  status: "active" | "invited";
   joinedAt: Date;
 }
 
@@ -25,31 +25,67 @@ interface TeacherCourseParticipantsProps {
 }
 
 export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipantsProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'student' | 'assistant'>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'invited'>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState<"all" | "student" | "assistant">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "invited">("all");
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   // Demo participants
   const allParticipants: Participant[] = [
-    { id: 'p1', name: 'Иван Петров', email: 'ivan.petrov@student.ru', role: 'student', status: 'active', joinedAt: new Date('2025-01-15') },
-    { id: 'p2', name: 'Мария Сидорова', email: 'maria.sidorova@student.ru', role: 'student', status: 'active', joinedAt: new Date('2025-01-16') },
-    { id: 'p3', name: 'Алексей Смирнов', email: 'alex.smirnov@student.ru', role: 'student', status: 'active', joinedAt: new Date('2025-01-17') },
-    { id: 'p4', name: 'Екатерина Волкова', email: 'kate.volkova@student.ru', role: 'assistant', status: 'active', joinedAt: new Date('2025-01-10') },
-    { id: 'p5', name: 'Дмитрий Козлов', email: 'dmitry.kozlov@student.ru', role: 'student', status: 'invited', joinedAt: new Date('2025-01-20') },
+    {
+      id: "p1",
+      name: "Иван Петров",
+      email: "ivan.petrov@student.ru",
+      role: "student",
+      status: "active",
+      joinedAt: new Date("2025-01-15"),
+    },
+    {
+      id: "p2",
+      name: "Мария Сидорова",
+      email: "maria.sidorova@student.ru",
+      role: "student",
+      status: "active",
+      joinedAt: new Date("2025-01-16"),
+    },
+    {
+      id: "p3",
+      name: "Алексей Смирнов",
+      email: "alex.smirnov@student.ru",
+      role: "student",
+      status: "active",
+      joinedAt: new Date("2025-01-17"),
+    },
+    {
+      id: "p4",
+      name: "Екатерина Волкова",
+      email: "kate.volkova@student.ru",
+      role: "assistant",
+      status: "active",
+      joinedAt: new Date("2025-01-10"),
+    },
+    {
+      id: "p5",
+      name: "Дмитрий Козлов",
+      email: "dmitry.kozlov@student.ru",
+      role: "student",
+      status: "invited",
+      joinedAt: new Date("2025-01-20"),
+    },
   ];
 
   // Apply filters
-  const filteredParticipants = allParticipants.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         p.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = roleFilter === 'all' || p.role === roleFilter;
-    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+  const filteredParticipants = allParticipants.filter((p) => {
+    const matchesSearch =
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = roleFilter === "all" || p.role === roleFilter;
+    const matchesStatus = statusFilter === "all" || p.status === statusFilter;
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const getRoleBadge = (role: 'student' | 'assistant') => {
-    if (role === 'student') {
+  const getRoleBadge = (role: "student" | "assistant") => {
+    if (role === "student") {
       return (
         <span className="px-2 py-1 bg-[#dbeafe] text-[#2563eb] rounded-[6px] text-[12px] font-medium">
           Студент
@@ -63,8 +99,8 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     );
   };
 
-  const getStatusBadge = (status: 'active' | 'invited') => {
-    if (status === 'active') {
+  const getStatusBadge = (status: "active" | "invited") => {
+    if (status === "active") {
       return (
         <span className="px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
           Активен
@@ -97,7 +133,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {/* Role Filter */}
         <select
           value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value as any)}
+          onChange={(e) => setRoleFilter(e.target.value as "all" | "student" | "assistant")}
           className="px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
         >
           <option value="all">Все роли</option>
@@ -108,7 +144,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {/* Status Filter */}
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as any)}
+          onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "invited")}
           className="px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
         >
           <option value="all">Все статусы</option>
@@ -129,21 +165,17 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
       {/* Participants List */}
       <div className="space-y-0">
         {filteredParticipants.map((participant, index) => (
-          <div 
+          <div
             key={participant.id}
             className={`p-4 hover:bg-white hover:shadow-sm hover:rounded-[12px] transition-all ${
-              index !== filteredParticipants.length - 1 ? 'border-b border-[#e6e8ee]' : ''
+              index !== filteredParticipants.length - 1 ? "border-b border-[#e6e8ee]" : ""
             }`}
           >
             <div className="flex items-center justify-between">
               {/* Left: Name + Email */}
               <div className="flex-1 min-w-0 mr-4">
-                <p className="text-[15px] font-medium text-[#21214f] mb-0.5">
-                  {participant.name}
-                </p>
-                <p className="text-[14px] text-[#767692]">
-                  {participant.email}
-                </p>
+                <p className="text-[15px] font-medium text-[#21214f] mb-0.5">{participant.name}</p>
+                <p className="text-[14px] text-[#767692]">{participant.email}</p>
               </div>
 
               {/* Right: Role, Status, Date */}
@@ -151,7 +183,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
                 {getRoleBadge(participant.role)}
                 {getStatusBadge(participant.status)}
                 <p className="text-[14px] text-[#767692] w-24 text-right">
-                  {participant.joinedAt.toLocaleDateString('ru-RU')}
+                  {participant.joinedAt.toLocaleDateString("ru-RU")}
                 </p>
               </div>
             </div>
@@ -161,26 +193,33 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {filteredParticipants.length === 0 && (
           <div className="p-12 text-center">
             <Filter className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692]">
-              Участники н�� найдены
-            </p>
+            <p className="text-[15px] text-[#767692]">Участники н�� найдены</p>
           </div>
         )}
       </div>
 
       {/* Stats */}
       <div className="mt-4 flex items-center gap-6 text-[14px] text-[#767692]">
-        <span>Всего: <strong className="text-[#21214f]">{allParticipants.length}</strong></span>
-        <span>Активных: <strong className="text-[#21214f]">{allParticipants.filter(p => p.status === 'active').length}</strong></span>
-        <span>Приглашённых: <strong className="text-[#21214f]">{allParticipants.filter(p => p.status === 'invited').length}</strong></span>
+        <span>
+          Всего: <strong className="text-[#21214f]">{allParticipants.length}</strong>
+        </span>
+        <span>
+          Активных:{" "}
+          <strong className="text-[#21214f]">
+            {allParticipants.filter((p) => p.status === "active").length}
+          </strong>
+        </span>
+        <span>
+          Приглашённых:{" "}
+          <strong className="text-[#21214f]">
+            {allParticipants.filter((p) => p.status === "invited").length}
+          </strong>
+        </span>
       </div>
 
       {/* Import Modal */}
       {isImportModalOpen && (
-        <ParticipantImportModal
-          courseId={courseId}
-          onClose={() => setIsImportModalOpen(false)}
-        />
+        <ParticipantImportModal courseId={courseId} onClose={() => setIsImportModalOpen(false)} />
       )}
     </div>
   );

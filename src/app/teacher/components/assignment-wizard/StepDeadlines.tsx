@@ -1,9 +1,9 @@
-import { Calendar, Clock, AlertTriangle } from 'lucide-react';
-import type { AssignmentFormData } from '../../TeacherCreateAssignmentPage';
+import { Calendar, Clock, AlertTriangle } from "lucide-react";
+import type { AssignmentFormData } from "../../TeacherCreateAssignmentPage";
 
 /**
  * StepDeadlines - Шаг 2: Дедлайны
- * 
+ *
  * - Дедлайн сдачи работы
  * - Дедлайн рецензирования
  * - Политика опозданий (мягкая/жесткая)
@@ -17,18 +17,18 @@ interface StepDeadlinesProps {
 
 export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   const formatDateForInput = (date: Date | null) => {
-    if (!date) return '';
+    if (!date) return "";
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   const handleDateChange = (
-    field: 'submissionDeadline' | 'reviewDeadline' | 'reassignmentDeadline',
-    value: string
+    field: "submissionDeadline" | "reviewDeadline" | "reassignmentDeadline",
+    value: string,
   ) => {
     onUpdate({
       [field]: value ? new Date(value) : null,
@@ -49,9 +49,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Дедлайны
-        </h2>
+        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Дедлайны</h2>
         <p className="text-[15px] text-[#767692]">
           Настройте временные рамки для сдачи работ и рецензирования
         </p>
@@ -67,7 +65,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
           <input
             type="datetime-local"
             value={formatDateForInput(data.submissionDeadline)}
-            onChange={(e) => handleDateChange('submissionDeadline', e.target.value)}
+            onChange={(e) => handleDateChange("submissionDeadline", e.target.value)}
             className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
           />
         </div>
@@ -86,14 +84,12 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
           <input
             type="datetime-local"
             value={formatDateForInput(data.reviewDeadline)}
-            onChange={(e) => handleDateChange('reviewDeadline', e.target.value)}
+            onChange={(e) => handleDateChange("reviewDeadline", e.target.value)}
             min={formatDateForInput(data.submissionDeadline)}
             className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
           />
         </div>
-        <p className="text-[13px] text-[#767692] mt-1">
-          Последний момент для завершения рецензий
-        </p>
+        <p className="text-[13px] text-[#767692] mt-1">Последний момент для завершения рецензий</p>
       </div>
 
       {/* Time Difference Display */}
@@ -103,16 +99,15 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             flex items-start gap-3 p-4 rounded-[12px] border
             ${
               timeDiff.total < 2 * 24 * 60 * 60 * 1000
-                ? 'bg-[#fff8e1] border-[#ffe082]'
-                : 'bg-[#e8f5e9] border-[#c8e6c9]'
+                ? "bg-[#fff8e1] border-[#ffe082]"
+                : "bg-[#e8f5e9] border-[#c8e6c9]"
             }
           `}
         >
           <Clock className="w-5 h-5 text-[#21214f] mt-0.5" />
           <div>
             <p className="text-[14px] font-medium text-[#21214f] mb-1">
-              Времени на рецензирование:{' '}
-              {timeDiff.days > 0 && `${timeDiff.days} дн. `}
+              Времени на рецензирование: {timeDiff.days > 0 && `${timeDiff.days} дн. `}
               {timeDiff.hours} ч.
             </p>
             {timeDiff.total < 2 * 24 * 60 * 60 * 1000 && (
@@ -132,19 +127,17 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         <div className="grid grid-cols-1 desktop:grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={() => onUpdate({ latePolicy: 'soft' })}
+            onClick={() => onUpdate({ latePolicy: "soft" })}
             className={`
               p-4 border-2 rounded-[12px] text-left transition-all
               ${
-                data.latePolicy === 'soft'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.latePolicy === "soft"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
-            <div className="text-[15px] font-medium text-[#21214f] mb-1">
-              Мягкая (Soft)
-            </div>
+            <div className="text-[15px] font-medium text-[#21214f] mb-1">Мягкая (Soft)</div>
             <div className="text-[13px] text-[#767692]">
               Работы принимаются с штрафом за каждый день опоздания
             </div>
@@ -152,28 +145,24 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
 
           <button
             type="button"
-            onClick={() => onUpdate({ latePolicy: 'hard' })}
+            onClick={() => onUpdate({ latePolicy: "hard" })}
             className={`
               p-4 border-2 rounded-[12px] text-left transition-all
               ${
-                data.latePolicy === 'hard'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.latePolicy === "hard"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
-            <div className="text-[15px] font-medium text-[#21214f] mb-1">
-              Жесткая (Hard)
-            </div>
-            <div className="text-[13px] text-[#767692]">
-              Работы после дедлайна не принимаются
-            </div>
+            <div className="text-[15px] font-medium text-[#21214f] mb-1">Жесткая (Hard)</div>
+            <div className="text-[13px] text-[#767692]">Работы после дедлайна не принимаются</div>
           </button>
         </div>
       </div>
 
       {/* Late Penalty (if soft policy) */}
-      {data.latePolicy === 'soft' && (
+      {data.latePolicy === "soft" && (
         <div>
           <label className="block text-[14px] font-medium text-[#21214f] mb-2">
             Штраф за опоздание (% в день)
@@ -185,9 +174,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
               max="50"
               step="5"
               value={data.latePenalty}
-              onChange={(e) =>
-                onUpdate({ latePenalty: parseInt(e.target.value) })
-              }
+              onChange={(e) => onUpdate({ latePenalty: parseInt(e.target.value) })}
               className="flex-1"
             />
             <span className="text-[18px] font-medium text-[#21214f] w-16 text-right">
@@ -195,17 +182,15 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             </span>
           </div>
           <p className="text-[13px] text-[#767692] mt-2">
-            Пример: при штрафе {data.latePenalty}% работа, сданная на 2 дня позже,
-            получит максимум {100 - data.latePenalty * 2}% от оценки
+            Пример: при штрафе {data.latePenalty}% работа, сданная на 2 дня позже, получит максимум{" "}
+            {100 - data.latePenalty * 2}% от оценки
           </p>
         </div>
       )}
 
       {/* Timezone */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
-          Часовой пояс
-        </label>
+        <label className="block text-[14px] font-medium text-[#21214f] mb-2">Часовой пояс</label>
         <select
           value={data.timezone}
           onChange={(e) => onUpdate({ timezone: e.target.value })}
@@ -228,8 +213,8 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         <div className="text-[13px] text-[#21214f]">
           <p className="font-medium mb-1">Обратите внимание</p>
           <p className="text-[#767692]">
-            После публикации задания дедлайны можно будет изменить, но это может
-            повлиять на уже начатые работы студентов.
+            После публикации задания дедлайны можно будет изменить, но это может повлиять на уже
+            начатые работы студентов.
           </p>
         </div>
       </div>

@@ -1,9 +1,17 @@
-import { Download, FileText, ChevronRight, RefreshCw, CheckCircle, XCircle, AlertCircle, Clock } from 'lucide-react';
-import type { ValidationCheck } from '@/app/components/submit';
+import {
+  Download,
+  FileText,
+  ChevronRight,
+  RefreshCw,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+} from "lucide-react";
+import type { ValidationCheck } from "@/app/components/submit";
 
 /**
  * VersionCard - Карточка версии работы в истории
- * 
+ *
  * Displays:
  * - Version number + timestamp
  * - Status (draft/submitted/accepted)
@@ -13,7 +21,7 @@ import type { ValidationCheck } from '@/app/components/submit';
  * - Actions: Download, View Reports, Make Current (if draft), New Version
  */
 
-export type VersionStatus = 'draft' | 'submitted' | 'accepted' | 'rejected';
+export type VersionStatus = "draft" | "submitted" | "accepted" | "rejected";
 
 export interface Version {
   id: string;
@@ -55,29 +63,29 @@ export function VersionCard({
 }: VersionCardProps) {
   const getStatusInfo = () => {
     switch (version.status) {
-      case 'draft':
+      case "draft":
         return {
-          label: 'Черновик',
-          color: 'bg-[#e4e4e4]',
-          textColor: 'text-[#4b4963]',
+          label: "Черновик",
+          color: "bg-[#e4e4e4]",
+          textColor: "text-[#4b4963]",
         };
-      case 'submitted':
+      case "submitted":
         return {
-          label: 'Отправлено',
-          color: 'bg-[#b7bdff]',
-          textColor: 'text-[#21214f]',
+          label: "Отправлено",
+          color: "bg-[#b7bdff]",
+          textColor: "text-[#21214f]",
         };
-      case 'accepted':
+      case "accepted":
         return {
-          label: 'Принято',
-          color: 'bg-[#9cf38d]',
-          textColor: 'text-[#21214f]',
+          label: "Принято",
+          color: "bg-[#9cf38d]",
+          textColor: "text-[#21214f]",
         };
-      case 'rejected':
+      case "rejected":
         return {
-          label: 'Отклонено',
-          color: 'bg-[#ffb8b8]',
-          textColor: 'text-[#21214f]',
+          label: "Отклонено",
+          color: "bg-[#ffb8b8]",
+          textColor: "text-[#21214f]",
         };
     }
   };
@@ -97,9 +105,9 @@ export function VersionCard({
       return null;
     }
 
-    const passed = version.validationChecks.filter((c) => c.status === 'passed').length;
-    const failed = version.validationChecks.filter((c) => c.status === 'failed').length;
-    const warnings = version.validationChecks.filter((c) => c.status === 'warning').length;
+    const passed = version.validationChecks.filter((c) => c.status === "passed").length;
+    const failed = version.validationChecks.filter((c) => c.status === "failed").length;
+    const warnings = version.validationChecks.filter((c) => c.status === "warning").length;
 
     return { passed, failed, warnings, total: version.validationChecks.length };
   };
@@ -110,8 +118,8 @@ export function VersionCard({
     <div
       className={`bg-white border-2 rounded-[16px] p-4 desktop:p-6 transition-all ${
         comparisonMode && version.selected
-          ? 'border-[#5b8def] bg-[#f0f5ff]'
-          : 'border-[#e6e8ee] hover:border-[#d2def8]'
+          ? "border-[#5b8def] bg-[#f0f5ff]"
+          : "border-[#e6e8ee] hover:border-[#d2def8]"
       }`}
     >
       {/* Header: Version + Status + Select (if comparison) */}
@@ -132,14 +140,14 @@ export function VersionCard({
           <div className={`${statusInfo.color} ${statusInfo.textColor} px-3 py-1.5 rounded-[8px]`}>
             <span className="text-[14px] font-medium">{statusInfo.label}</span>
           </div>
-          
+
           {comparisonMode && (
             <button
               onClick={onToggleSelect}
               className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
                 version.selected
-                  ? 'bg-[#5b8def] border-[#5b8def]'
-                  : 'bg-white border-[#d2def8] hover:border-[#a0b8f1]'
+                  ? "bg-[#5b8def] border-[#5b8def]"
+                  : "bg-white border-[#d2def8] hover:border-[#a0b8f1]"
               }`}
             >
               {version.selected && <CheckCircle className="w-4 h-4 text-white" />}
@@ -197,7 +205,7 @@ export function VersionCard({
               </div>
             )}
             <span className="text-[13px] text-[#767692]">
-              ({checksSummary.total} {checksSummary.total === 1 ? 'проверка' : 'проверок'})
+              ({checksSummary.total} {checksSummary.total === 1 ? "проверка" : "проверок"})
             </span>
           </div>
         </div>
@@ -221,7 +229,7 @@ export function VersionCard({
           <span>Открыть отчёты</span>
         </button>
 
-        {version.status === 'draft' && onMakeCurrent && (
+        {version.status === "draft" && onMakeCurrent && (
           <button
             onClick={onMakeCurrent}
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border-2 border-[#d2def8] hover:border-[#a0b8f1] hover:bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"

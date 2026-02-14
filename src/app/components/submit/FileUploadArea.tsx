@@ -1,9 +1,9 @@
-import { useState, useRef, DragEvent, ChangeEvent } from 'react';
-import { Upload, X, AlertCircle } from 'lucide-react';
+import { useState, useRef, DragEvent, ChangeEvent } from "react";
+import { Upload, AlertCircle } from "lucide-react";
 
 /**
  * FileUploadArea - Drag & drop + file picker для загрузки файлов
- * 
+ *
  * Features:
  * - Drag & drop support
  * - Click to browse
@@ -36,7 +36,7 @@ export function FileUploadArea({
   onUploadError,
   isUploading = false,
   uploadProgress = 0,
-  error = '',
+  error = "",
   disabled = false,
 }: FileUploadAreaProps) {
   const [isDragging, setIsDragging] = useState(false);
@@ -49,7 +49,7 @@ export function FileUploadArea({
     const hasValidExtension = acceptedFormats.some((ext) => fileName.endsWith(ext.toLowerCase()));
 
     if (!hasValidExtension) {
-      return `Недопустимый формат файла. Разрешены: ${acceptedFormats.join(', ')}`;
+      return `Недопустимый формат файла. Разрешены: ${acceptedFormats.join(", ")}`;
     }
 
     // Check file size
@@ -71,7 +71,7 @@ export function FileUploadArea({
     }
 
     // Clear previous errors
-    onUploadError?.('');
+    onUploadError?.("");
 
     // Start upload simulation
     onUploadStart?.();
@@ -148,19 +148,20 @@ export function FileUploadArea({
         onClick={handleClick}
         className={`
           relative border-2 border-dashed rounded-[16px] p-8 text-center transition-all cursor-pointer
-          ${isDragging 
-            ? 'border-[#5b8def] bg-[#f0f5ff]' 
-            : error 
-              ? 'border-[#ffb8b8] bg-[#fff5f5]'
-              : 'border-[#d2def8] bg-white hover:border-[#a0b8f1] hover:bg-[#f9f9f9]'
+          ${
+            isDragging
+              ? "border-[#5b8def] bg-[#f0f5ff]"
+              : error
+                ? "border-[#ffb8b8] bg-[#fff5f5]"
+                : "border-[#d2def8] bg-white hover:border-[#a0b8f1] hover:bg-[#f9f9f9]"
           }
-          ${(disabled || isUploading) ? 'opacity-50 cursor-not-allowed' : ''}
+          ${disabled || isUploading ? "opacity-50 cursor-not-allowed" : ""}
         `}
       >
         <input
           ref={fileInputRef}
           type="file"
-          accept={acceptedFormats.join(',')}
+          accept={acceptedFormats.join(",")}
           onChange={handleFileInputChange}
           className="hidden"
           disabled={disabled || isUploading}
@@ -172,9 +173,7 @@ export function FileUploadArea({
             <div className="w-12 h-12 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center animate-pulse">
               <Upload className="w-6 h-6 text-[#5b8def]" />
             </div>
-            <p className="text-[15px] text-[#21214f] font-medium">
-              Загрузка... {uploadProgress}%
-            </p>
+            <p className="text-[15px] text-[#21214f] font-medium">Загрузка... {uploadProgress}%</p>
             <div className="max-w-[300px] mx-auto bg-[#e6e8ee] rounded-full h-2 overflow-hidden">
               <div
                 className="bg-[#5b8def] h-full transition-all duration-300"
@@ -185,7 +184,9 @@ export function FileUploadArea({
         ) : (
           // Default state
           <div className="space-y-3">
-            <div className={`w-12 h-12 ${error ? 'bg-[#ffb8b8]' : 'bg-[#d2e1f8]'} rounded-full mx-auto flex items-center justify-center`}>
+            <div
+              className={`w-12 h-12 ${error ? "bg-[#ffb8b8]" : "bg-[#d2e1f8]"} rounded-full mx-auto flex items-center justify-center`}
+            >
               {error ? (
                 <AlertCircle className="w-6 h-6 text-[#d4183d]" />
               ) : (
@@ -194,11 +195,10 @@ export function FileUploadArea({
             </div>
             <div>
               <p className="text-[15px] text-[#21214f] font-medium mb-1">
-                {isDragging ? 'Отпустите файл' : 'Перетащите файл сюда'}
+                {isDragging ? "Отпустите файл" : "Перетащите файл сюда"}
               </p>
               <p className="text-[13px] text-[#767692]">
-                или{' '}
-                <span className="text-[#5b8def] font-medium">выберите файл</span>
+                или <span className="text-[#5b8def] font-medium">выберите файл</span>
               </p>
             </div>
           </div>
@@ -210,7 +210,7 @@ export function FileUploadArea({
         <div className="shrink-0">ℹ️</div>
         <div>
           <p>
-            <strong>Форматы:</strong> {acceptedFormats.join(', ')}
+            <strong>Форматы:</strong> {acceptedFormats.join(", ")}
           </p>
           <p>
             <strong>Макс. размер:</strong> {maxSizeMB} МБ

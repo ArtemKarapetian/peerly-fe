@@ -1,16 +1,23 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
-  AlertCircle, FileText, Upload, CheckCircle, ArrowRight, 
-  Clock, Users, Target, MessageSquare
-} from 'lucide-react';
-import { useAuth } from '@/app/contexts/AuthContext';
-import { createAppeal, AppealReason, getReasonLabel } from '@/app/utils/appeals';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import {
+  AlertCircle,
+  FileText,
+  Upload,
+  CheckCircle,
+  ArrowRight,
+  Clock,
+  Users,
+  Target,
+  MessageSquare,
+} from "lucide-react";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { createAppeal, AppealReason } from "@/app/utils/appeals";
 
 /**
  * CreateAppealPage - Student Appeal (Regrade/Review Request)
- * 
+ *
  * Allows students to request a regrade or appeal a review decision
  */
 
@@ -21,36 +28,36 @@ interface CreateAppealPageProps {
 
 export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageProps = {}) {
   const { user } = useAuth();
-  
-  const [reason, setReason] = useState<AppealReason>('unfair_score');
-  const [message, setMessage] = useState('');
-  const [attachmentName, setAttachmentName] = useState('');
+
+  const [reason, setReason] = useState<AppealReason>("unfair_score");
+  const [message, setMessage] = useState("");
+  const [attachmentName, setAttachmentName] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Mock data - in real app, fetch from submission
-  const courseName = 'Веб-программирование'; // Mock
-  const taskName = 'Задание 1: Введение в peer review'; // Mock
+  const courseName = "Веб-программирование"; // Mock
+  const taskName = "Задание 1: Введение в peer review"; // Mock
   const currentScore = 78;
   const maxScore = 100;
   const reviewCount = 3;
-  const deadline = '25 января 2026, 23:59';
+  const deadline = "25 января 2026, 23:59";
 
   const reasonOptions: { value: AppealReason; label: string }[] = [
-    { value: 'unfair_score', label: 'Несправедливая оценка' },
-    { value: 'wrong_interpretation', label: 'Неправильная интерпретация' },
-    { value: 'technical_issue', label: 'Техническая проблема' },
-    { value: 'other', label: 'Другое' }
+    { value: "unfair_score", label: "Несправедливая оценка" },
+    { value: "wrong_interpretation", label: "Неправильная интерпретация" },
+    { value: "technical_issue", label: "Техническая проблема" },
+    { value: "other", label: "Другое" },
   ];
 
   const validateForm = (): boolean => {
     const newErrors: string[] = [];
 
     if (!message.trim()) {
-      newErrors.push('Сообщение обязательно для заполнения');
+      newErrors.push("Сообщение обязательно для заполнения");
     } else if (message.trim().length < 20) {
-      newErrors.push('Сообщение должно содержать минимум 20 символов');
+      newErrors.push("Сообщение должно содержать минимум 20 символов");
     }
 
     setErrors(newErrors);
@@ -63,21 +70,21 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
     setIsSubmitting(true);
 
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Create appeal
-    const appeal = createAppeal({
-      studentId: user?.id || 'student-1',
-      courseId: courseId || 'course-1',
+    createAppeal({
+      studentId: user?.id || "student-1",
+      courseId: courseId || "course-1",
       courseName,
-      taskId: taskId || 'task-1',
+      taskId: taskId || "task-1",
       taskName,
       reason,
       message: message.trim(),
       attachmentName: attachmentName || undefined,
       currentScore,
       maxScore,
-      reviewCount
+      reviewCount,
     });
 
     setIsSubmitting(false);
@@ -98,22 +105,21 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
             <div className="w-20 h-20 bg-accent rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-accent-foreground" />
             </div>
-            <h1 className="text-[28px] font-medium text-foreground mb-3">
-              Апелляция отправлена
-            </h1>
+            <h1 className="text-[28px] font-medium text-foreground mb-3">Апелляция отправлена</h1>
             <p className="text-[16px] text-muted-foreground mb-8">
-              Ваш запрос на пересмотр оценки отправлен преподавателю. Вы получите уведомление, когда будет получен ответ.
+              Ваш запрос на пересмотр оценки отправлен преподавателю. Вы получите уведомление, когда
+              будет получен ответ.
             </p>
             <div className="flex gap-3 justify-center">
               <button
-                onClick={() => window.location.hash = '/appeals'}
+                onClick={() => (window.location.hash = "/appeals")}
                 className="px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium inline-flex items-center gap-2"
               >
                 Мои апелляции
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
-                onClick={() => window.location.hash = `/courses/${courseId}`}
+                onClick={() => (window.location.hash = `/courses/${courseId}`)}
                 className="px-6 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted/50 transition-colors text-[15px] font-medium"
               >
                 Вернуться к курсу
@@ -127,13 +133,13 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
 
   return (
     <AppShell title="Запрос на пересмотр">
-      <Breadcrumbs 
+      <Breadcrumbs
         items={[
-          { label: 'Курсы', href: '/courses' },
+          { label: "Курсы", href: "/courses" },
           { label: courseName, href: `/courses/${courseId}` },
           { label: taskName, href: `/courses/${courseId}/tasks/${taskId}` },
-          { label: 'Апелляция' }
-        ]} 
+          { label: "Апелляция" },
+        ]}
       />
 
       <div className="mt-6 max-w-[800px]">
@@ -151,9 +157,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
 
         {/* Context Summary */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-          <h2 className="text-[18px] font-medium text-foreground mb-4">
-            Информация о задании
-          </h2>
+          <h2 className="text-[18px] font-medium text-foreground mb-4">Информация о задании</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-3 p-4 bg-muted rounded-[12px]">
               <Target className="w-5 h-5 text-muted-foreground" />
@@ -187,9 +191,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="text-[14px] font-medium text-destructive mb-2">
-                  Ошибки заполнения:
-                </p>
+                <p className="text-[14px] font-medium text-destructive mb-2">Ошибки заполнения:</p>
                 <ul className="list-disc list-inside space-y-1">
                   {errors.map((error, idx) => (
                     <li key={idx} className="text-[13px] text-destructive">
@@ -204,9 +206,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
 
         {/* Appeal Form */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-          <h2 className="text-[18px] font-medium text-foreground mb-6">
-            Форма апелляции
-          </h2>
+          <h2 className="text-[18px] font-medium text-foreground mb-6">Форма апелляции</h2>
 
           {/* Reason Category */}
           <div className="mb-6">
@@ -218,7 +218,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
               onChange={(e) => setReason(e.target.value as AppealReason)}
               className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground bg-card focus:border-accent focus:outline-none transition-colors"
             >
-              {reasonOptions.map(opt => (
+              {reasonOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
@@ -245,12 +245,8 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
               />
             </div>
             <div className="mt-2 flex items-center justify-between">
-              <p className="text-[13px] text-muted-foreground">
-                Минимум 20 символов
-              </p>
-              <p className="text-[13px] text-muted-foreground">
-                {message.length} / 1000
-              </p>
+              <p className="text-[13px] text-muted-foreground">Минимум 20 символов</p>
+              <p className="text-[13px] text-muted-foreground">{message.length} / 1000</p>
             </div>
           </div>
 
@@ -263,11 +259,9 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
               {attachmentName ? (
                 <div className="flex items-center justify-center gap-3">
                   <FileText className="w-5 h-5 text-accent-foreground" />
-                  <span className="text-[14px] text-foreground font-medium">
-                    {attachmentName}
-                  </span>
+                  <span className="text-[14px] text-foreground font-medium">{attachmentName}</span>
                   <button
-                    onClick={() => setAttachmentName('')}
+                    onClick={() => setAttachmentName("")}
                     className="text-[13px] text-destructive hover:underline"
                   >
                     Удалить
@@ -285,9 +279,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
                   >
                     Выбрать файл
                   </button>
-                  <p className="text-[12px] text-muted-foreground mt-2">
-                    PDF, DOC, DOCX до 10 МБ
-                  </p>
+                  <p className="text-[12px] text-muted-foreground mt-2">PDF, DOC, DOCX до 10 МБ</p>
                 </div>
               )}
             </div>
@@ -301,10 +293,10 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
             disabled={isSubmitting}
             className="px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Отправка...' : 'Отправить апелляцию'}
+            {isSubmitting ? "Отправка..." : "Отправить апелляцию"}
           </button>
           <button
-            onClick={() => window.location.hash = `/courses/${courseId}/tasks/${taskId}`}
+            onClick={() => (window.location.hash = `/courses/${courseId}/tasks/${taskId}`)}
             disabled={isSubmitting}
             className="px-6 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted/50 transition-colors text-[15px] font-medium disabled:opacity-50"
           >
@@ -317,12 +309,10 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-accent-foreground flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-[14px] text-foreground font-medium mb-1">
-                Важная информация
-              </p>
+              <p className="text-[14px] text-foreground font-medium mb-1">Важная информация</p>
               <p className="text-[13px] text-muted-foreground">
-                Преподаватель рассмотрит вашу апелляцию в течение 5 рабочих дней. 
-                Вы получите уведомление, когда будет принято решение.
+                Преподаватель рассмотрит вашу апелляцию в течение 5 рабочих дней. Вы получите
+                уведомление, когда будет принято решение.
               </p>
             </div>
           </div>

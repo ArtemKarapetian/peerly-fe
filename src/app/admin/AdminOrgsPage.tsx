@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Database, Users, TrendingUp, ExternalLink } from 'lucide-react';
-import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagination';
+import { AppShell } from "@/app/components/AppShell";
+import { Database, Users, TrendingUp, ExternalLink } from "lucide-react";
+import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
 
 /**
  * AdminOrgsPage - Управление организациями
@@ -10,21 +9,63 @@ import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagi
 interface Organization {
   id: string;
   name: string;
-  plan: 'Free' | 'Pro' | 'Enterprise';
+  plan: "Free" | "Pro" | "Enterprise";
   usersCount: number;
   coursesCount: number;
-  status: 'active' | 'suspended';
+  status: "active" | "suspended";
 }
 
 const mockOrgs: Organization[] = [
-  { id: '1', name: 'Университет ИТМО', plan: 'Enterprise', usersCount: 2450, coursesCount: 89, status: 'active' },
-  { id: '2', name: 'ВШЭ', plan: 'Enterprise', usersCount: 3200, coursesCount: 124, status: 'active' },
-  { id: '3', name: 'МГУ', plan: 'Enterprise', usersCount: 4100, coursesCount: 156, status: 'active' },
-  { id: '4', name: 'СПбГУ', plan: 'Pro', usersCount: 1800, coursesCount: 67, status: 'active' },
-  { id: '5', name: 'МФТИ', plan: 'Enterprise', usersCount: 2200, coursesCount: 92, status: 'active' },
-  { id: '6', name: 'Яндекс Практикум', plan: 'Pro', usersCount: 890, coursesCount: 34, status: 'active' },
-  { id: '7', name: 'Нетология', plan: 'Pro', usersCount: 1200, coursesCount: 45, status: 'active' },
-  { id: '8', name: 'GeekBrains', plan: 'Free', usersCount: 340, coursesCount: 12, status: 'active' },
+  {
+    id: "1",
+    name: "Университет ИТМО",
+    plan: "Enterprise",
+    usersCount: 2450,
+    coursesCount: 89,
+    status: "active",
+  },
+  {
+    id: "2",
+    name: "ВШЭ",
+    plan: "Enterprise",
+    usersCount: 3200,
+    coursesCount: 124,
+    status: "active",
+  },
+  {
+    id: "3",
+    name: "МГУ",
+    plan: "Enterprise",
+    usersCount: 4100,
+    coursesCount: 156,
+    status: "active",
+  },
+  { id: "4", name: "СПбГУ", plan: "Pro", usersCount: 1800, coursesCount: 67, status: "active" },
+  {
+    id: "5",
+    name: "МФТИ",
+    plan: "Enterprise",
+    usersCount: 2200,
+    coursesCount: 92,
+    status: "active",
+  },
+  {
+    id: "6",
+    name: "Яндекс Практикум",
+    plan: "Pro",
+    usersCount: 890,
+    coursesCount: 34,
+    status: "active",
+  },
+  { id: "7", name: "Нетология", plan: "Pro", usersCount: 1200, coursesCount: 45, status: "active" },
+  {
+    id: "8",
+    name: "GeekBrains",
+    plan: "Free",
+    usersCount: 340,
+    coursesCount: 12,
+    status: "active",
+  },
 ];
 
 export default function AdminOrgsPage() {
@@ -32,10 +73,14 @@ export default function AdminOrgsPage() {
 
   const getPlanColor = (plan: string) => {
     switch (plan) {
-      case 'Enterprise': return 'bg-[#e8f5e9] text-[#388e3c]';
-      case 'Pro': return 'bg-[#e3f2fd] text-[#1976d2]';
-      case 'Free': return 'bg-[#f5f5f5] text-[--text-secondary]';
-      default: return 'bg-gray-100 text-gray-600';
+      case "Enterprise":
+        return "bg-[#e8f5e9] text-[#388e3c]";
+      case "Pro":
+        return "bg-[#e3f2fd] text-[#1976d2]";
+      case "Free":
+        return "bg-[#f5f5f5] text-[--text-secondary]";
+      default:
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -45,9 +90,7 @@ export default function AdminOrgsPage() {
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
           Организации
         </h1>
-        <p className="text-[--text-secondary]">
-          Управление организациями в системе
-        </p>
+        <p className="text-[--text-secondary]">Управление организациями в системе</p>
       </div>
 
       {/* Stats */}
@@ -119,19 +162,19 @@ export default function AdminOrgsPage() {
             </thead>
             <tbody>
               {currentItems.map((org, index) => (
-                <tr 
+                <tr
                   key={org.id}
                   className={`border-b border-[--surface-border] last:border-0 hover:bg-[--surface-hover] transition-colors ${
-                    index % 2 === 0 ? '' : 'bg-[--surface-hover]/50'
+                    index % 2 === 0 ? "" : "bg-[--surface-hover]/50"
                   }`}
                 >
                   <td className="px-6 py-4">
-                    <p className="text-sm font-medium text-[--text-primary]">
-                      {org.name}
-                    </p>
+                    <p className="text-sm font-medium text-[--text-primary]">{org.name}</p>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${getPlanColor(org.plan)}`}>
+                    <span
+                      className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${getPlanColor(org.plan)}`}
+                    >
                       {org.plan}
                     </span>
                   </td>

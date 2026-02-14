@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Plus, GripVertical, Trash2, Save, AlertCircle } from 'lucide-react';
-import type { RubricData, RubricCriterionData } from '../TeacherRubricsPage';
+import { useState, useEffect } from "react";
+import { Plus, GripVertical, Trash2, Save, AlertCircle } from "lucide-react";
+import type { RubricData, RubricCriterionData } from "../TeacherRubricsPage";
 
 /**
  * RubricEditor - Редактор рубрики
- * 
+ *
  * Features:
  * - Edit name, description, task type
  * - Add/remove/reorder criteria
@@ -21,13 +21,19 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   const [editedRubric, setEditedRubric] = useState<RubricData>(rubric);
   const [isDirty, setIsDirty] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [tagsInput, setTagsInput] = useState('');
+  const [tagsInput, setTagsInput] = useState("");
 
-  // Update when rubric prop changes
+  // Update when rubric prop changes - this pattern is intentional for form reset
+
   useEffect(() => {
-    setEditedRubric(rubric);
-    setIsDirty(false);
-  }, [rubric.id]);
+    // When rubric prop changes, reset editedRubric state.
+    // Use functional updater to avoid reading stale state and schedule asynchronously to avoid cascading renders.
+    const t = setTimeout(() => {
+      setEditedRubric(rubric);
+      setIsDirty(false);
+    }, 0);
+    return () => clearTimeout(t);
+  }, [rubric]);
 
   const handleSave = () => {
     onSave(editedRubric);
@@ -48,8 +54,8 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   const addCriterion = () => {
     const newCriterion: RubricCriterionData = {
       id: `c${Date.now()}`,
-      name: 'Новый критерий',
-      description: '',
+      name: "Новый критерий",
+      description: "",
       maxScore: 5,
       required: true,
     };
@@ -58,10 +64,10 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
   const removeCriterion = (index: number) => {
     if (editedRubric.criteria.length === 1) {
-      alert('Нельзя удалить последний критерий');
+      alert("Нельзя удалить последний критерий");
       return;
     }
-    if (confirm('Удалить этот критерий?')) {
+    if (confirm("Удалить этот критерий?")) {
       const newCriteria = editedRubric.criteria.filter((_, i) => i !== index);
       updateRubric({ criteria: newCriteria });
     }
@@ -94,7 +100,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
     const tag = tagsInput.trim();
     if (tag && !editedRubric.tags.includes(tag)) {
       updateRubric({ tags: [...editedRubric.tags, tag] });
-      setTagsInput('');
+      setTagsInput("");
     }
   };
 
@@ -146,9 +152,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
           {/* Description */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-              Описание
-            </label>
+            <label className="block text-[13px] font-medium text-[#21214f] mb-2">Описание</label>
             <textarea
               value={editedRubric.description}
               onChange={(e) => updateRubric({ description: e.target.value })}
@@ -165,7 +169,9 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
             </label>
             <select
               value={editedRubric.taskType}
-              onChange={(e) => updateRubric({ taskType: e.target.value as any })}
+              onChange={(e) =>
+                updateRubric({ taskType: e.target.value as "text" | "code" | "project" })
+              }
               className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
             >
               <option value="text">Текст</option>
@@ -176,9 +182,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
           {/* Tags */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-              Теги
-            </label>
+            <label className="block text-[13px] font-medium text-[#21214f] mb-2">Теги</label>
             <div className="flex gap-2 mb-2 flex-wrap">
               {editedRubric.tags.map((tag) => (
                 <span
@@ -186,10 +190,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                   className="inline-flex items-center gap-1 px-3 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[8px] text-[13px]"
                 >
                   {tag}
-                  <button
-                    onClick={() => removeTag(tag)}
-                    className="hover:text-[#d4183d]"
-                  >
+                  <button onClick={() => removeTag(tag)} className="hover:text-[#d4183d]">
                     ×
                   </button>
                 </span>
@@ -201,7 +202,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
                     addTag();
                   }
@@ -245,7 +246,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
               onDragEnd={handleDragEnd}
               className={`
                 bg-white border-2 rounded-[16px] p-4 transition-all
-                ${draggedIndex === index ? 'opacity-50' : 'opacity-100'}
+                ${draggedIndex === index ? "opacity-50" : "opacity-100"}
                 border-[#e6e8ee] hover:border-[#a0b8f1]
               `}
             >
@@ -281,9 +282,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                   <div className="grid grid-cols-2 gap-3">
                     {/* Max Score */}
                     <div>
-                      <label className="block text-[12px] text-[#767692] mb-1">
-                        Макс. баллов
-                      </label>
+                      <label className="block text-[12px] text-[#767692] mb-1">Макс. баллов</label>
                       <input
                         type="number"
                         min="1"
@@ -298,14 +297,12 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
                     {/* Weight */}
                     <div>
-                      <label className="block text-[12px] text-[#767692] mb-1">
-                        Вес (%)
-                      </label>
+                      <label className="block text-[12px] text-[#767692] mb-1">Вес (%)</label>
                       <input
                         type="number"
                         min="0"
                         max="100"
-                        value={criterion.weight || ''}
+                        value={criterion.weight || ""}
                         onChange={(e) =>
                           updateCriterion(index, {
                             weight: e.target.value ? parseInt(e.target.value) : undefined,
@@ -347,10 +344,12 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         <input
                           type="number"
                           min="0"
-                          value={criterion.minCommentLength || ''}
+                          value={criterion.minCommentLength || ""}
                           onChange={(e) =>
                             updateCriterion(index, {
-                              minCommentLength: e.target.value ? parseInt(e.target.value) : undefined,
+                              minCommentLength: e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined,
                             })
                           }
                           className="w-16 px-2 py-1 border-2 border-[#e6e8ee] rounded-[6px] text-[13px] focus:outline-none focus:border-[#5b8def]"

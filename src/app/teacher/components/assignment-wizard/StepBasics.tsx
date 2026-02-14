@@ -1,10 +1,10 @@
-import { Upload, X, FileText } from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
-import type { AssignmentFormData } from '../../TeacherCreateAssignmentPage';
+import { Upload, X, FileText } from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
+import type { AssignmentFormData } from "../../TeacherCreateAssignmentPage";
 
 /**
  * StepBasics - Шаг 1: Основная информация
- * 
+ *
  * - Выбор курса
  * - Название задания
  * - Описание
@@ -54,9 +54,7 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
           Основная информация
         </h2>
-        <p className="text-[15px] text-[#767692]">
-          Укажите базовые параметры задания
-        </p>
+        <p className="text-[15px] text-[#767692]">Укажите базовые параметры задания</p>
       </div>
 
       {/* Course Selection */}
@@ -104,9 +102,7 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
           placeholder="Опишите задание, требования, критерии..."
           className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors resize-none"
         />
-        <p className="text-[13px] text-[#767692] mt-1">
-          {data.description.length} символов
-        </p>
+        <p className="text-[13px] text-[#767692] mt-1">{data.description.length} символов</p>
       </div>
 
       {/* Task Type */}
@@ -116,27 +112,27 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         </label>
         <div className="grid grid-cols-2 desktop:grid-cols-4 gap-3">
           {[
-            { value: 'text', label: 'Текст', desc: 'Эссе, отчеты' },
-            { value: 'code', label: 'Код', desc: 'Программы' },
-            { value: 'project', label: 'Проект', desc: 'Комплексные работы' },
-            { value: 'files', label: 'Файлы', desc: 'Документы, медиа' },
+            { value: "text", label: "Текст", desc: "Эссе, отчеты" },
+            { value: "code", label: "Код", desc: "Программы" },
+            { value: "project", label: "Проект", desc: "Комплексные работы" },
+            { value: "files", label: "Файлы", desc: "Документы, медиа" },
           ].map((type) => (
             <button
               key={type.value}
               type="button"
-              onClick={() => onUpdate({ taskType: type.value as any })}
+              onClick={() =>
+                onUpdate({ taskType: type.value as "text" | "code" | "project" | "files" })
+              }
               className={`
                 p-4 border-2 rounded-[12px] text-left transition-all
                 ${
                   data.taskType === type.value
-                    ? 'border-[#5b8def] bg-[#e9f5ff]'
-                    : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                    ? "border-[#5b8def] bg-[#e9f5ff]"
+                    : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
                 }
               `}
             >
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                {type.label}
-              </div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">{type.label}</div>
               <div className="text-[12px] text-[#767692]">{type.desc}</div>
             </button>
           ))}
@@ -156,12 +152,7 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         <label className="inline-flex items-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors cursor-pointer">
           <Upload className="w-4 h-4" />
           <span className="text-[14px] font-medium">Загрузить файлы</span>
-          <input
-            type="file"
-            multiple
-            onChange={handleFileUpload}
-            className="hidden"
-          />
+          <input type="file" multiple onChange={handleFileUpload} className="hidden" />
         </label>
 
         {/* Attachments List */}
@@ -176,9 +167,7 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
                   <FileText className="w-4 h-4 text-[#767692]" />
                   <div>
                     <p className="text-[14px] text-[#21214f]">{file.name}</p>
-                    <p className="text-[12px] text-[#767692]">
-                      {formatFileSize(file.size)}
-                    </p>
+                    <p className="text-[12px] text-[#767692]">{formatFileSize(file.size)}</p>
                   </div>
                 </div>
                 <button
@@ -196,8 +185,8 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
       {/* Help Text */}
       <div className="bg-[#e9f5ff] border border-[#a0b8f1] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Совет:</strong> Чем подробнее описание и четче требования, тем
-          качественнее будут рецензии студентов.
+          <strong>Совет:</strong> Чем подробнее описание и четче требования, тем качественнее будут
+          рецензии студентов.
         </p>
       </div>
     </div>

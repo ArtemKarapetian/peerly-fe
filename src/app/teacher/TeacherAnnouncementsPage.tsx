@@ -1,16 +1,23 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
 import {
-  Megaphone, Plus, Edit, Trash2, Send, X, Calendar,
-  CheckCircle, BookOpen
-} from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+  Megaphone,
+  Plus,
+  Edit,
+  Trash2,
+  Send,
+  X,
+  Calendar,
+  CheckCircle,
+  BookOpen,
+} from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 
 /**
  * TeacherAnnouncementsPage - Шаблоны уведомлений/анонсов
- * 
+ *
  * Функции:
  * - Создание шаблонов объявлений
  * - Публикация объявления в курсе (demo)
@@ -29,107 +36,135 @@ interface Announcement {
   isPinned: boolean;
 }
 
+interface StoredAnnouncement {
+  id: string;
+  title: string;
+  content: string;
+  courseId: string;
+  courseName: string;
+  createdAt: string;
+  publishedAt?: string;
+  isPublished: boolean;
+  isPinned: boolean;
+}
+
+// Load announcements from localStorage or use defaults
+const loadAnnouncements = (
+  courses: ReturnType<typeof demoDataStore.getCourses>,
+): Announcement[] => {
+  const stored = localStorage.getItem("teacher_announcements");
+  if (stored) {
+    const parsed: StoredAnnouncement[] = JSON.parse(stored);
+    return parsed.map((a) => ({
+      ...a,
+      createdAt: new Date(a.createdAt),
+      publishedAt: a.publishedAt ? new Date(a.publishedAt) : undefined,
+    }));
+  }
+
+  // Default announcements with fixed dates
+  const now = Date.now();
+  return [
+    {
+      id: "ann-1",
+      title: "Приветствие в начале курса",
+      content:
+        "Добро пожаловать в курс! В этом семестре мы изучим основы веб-разработки. Пожалуйста, ознакомьтесь с программой курса и графиком сдачи заданий.",
+      courseId: courses[0]?.id || "",
+      courseName: courses[0]?.title || "",
+      createdAt: new Date(now - 14 * 24 * 60 * 60 * 1000),
+      publishedAt: new Date(now - 14 * 24 * 60 * 60 * 1000),
+      isPublished: true,
+      isPinned: true,
+    },
+    {
+      id: "ann-2",
+      title: "Дедлайн первого задания",
+      content:
+        "Напоминаю, что дедлайн первого задания — 15 марта в 23:59. Убедитесь, что загрузили все необходимые файлы.",
+      courseId: courses[0]?.id || "",
+      courseName: courses[0]?.title || "",
+      createdAt: new Date(now - 7 * 24 * 60 * 60 * 1000),
+      publishedAt: new Date(now - 7 * 24 * 60 * 60 * 1000),
+      isPublished: true,
+      isPinned: false,
+    },
+  ];
+};
+
 export default function TeacherAnnouncementsPage() {
   const courses = demoDataStore.getCourses();
 
-  // Load announcements from localStorage or use defaults
-  const loadAnnouncements = (): Announcement[] => {
-    const stored = localStorage.getItem('teacher_announcements');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return parsed.map((a: any) => ({
-        ...a,
-        createdAt: new Date(a.createdAt),
-        publishedAt: a.publishedAt ? new Date(a.publishedAt) : undefined
-      }));
-    }
-    
-    // Default announcements
-    return [
-      {
-        id: 'ann-1',
-        title: 'Приветствие в начале курса',
-        content: 'Добро пожаловать в курс! В этом семестре мы изучим основы веб-разработки. Пожалуйста, ознакомьтесь с программой курса и графиком сдачи заданий.',
-        courseId: courses[0]?.id || '',
-        courseName: courses[0]?.title || '',
-        createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-        publishedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-        isPublished: true,
-        isPinned: true
-      },
-      {
-        id: 'ann-2',
-        title: 'Дедлайн первого задания',
-        content: 'Напоминаю, что дедлайн первого задания — 15 марта в 23:59. Убедитесь, что загрузили все необходимые файлы.',
-        courseId: courses[0]?.id || '',
-        courseName: courses[0]?.title || '',
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        isPublished: true,
-        isPinned: false
-      }
-    ];
-  };
-
-  const [announcements, setAnnouncements] = useState<Announcement[]>(loadAnnouncements());
+  const [announcements, setAnnouncements] = useState<Announcement[]>(() =>
+    loadAnnouncements(courses),
+  );
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
+
   // Form state
-  const [formTitle, setFormTitle] = useState('');
-  const [formContent, setFormContent] = useState('');
-  const [formCourseId, setFormCourseId] = useState(courses[0]?.id || '');
+  const [formTitle, setFormTitle] = useState("");
+  const [formContent, setFormContent] = useState("");
+  const [formCourseId, setFormCourseId] = useState(courses[0]?.id || "");
   const [formPinned, setFormPinned] = useState(false);
 
   // Save to localStorage whenever announcements change
   const saveAnnouncements = (newAnnouncements: Announcement[]) => {
     setAnnouncements(newAnnouncements);
-    localStorage.setItem('teacher_announcements', JSON.stringify(newAnnouncements));
+    localStorage.setItem("teacher_announcements", JSON.stringify(newAnnouncements));
   };
 
   const handleCreate = () => {
     if (!formTitle.trim() || !formContent.trim()) {
-      alert('Заполните название и содержание');
+      alert("Заполните название и содержание");
       return;
     }
 
-    const course = courses.find(c => c.id === formCourseId);
+    const course = courses.find((c) => c.id === formCourseId);
     const newAnnouncement: Announcement = {
-      id: `ann-${Date.now()}`,
+      id: `ann-${crypto.randomUUID()}`,
       title: formTitle,
       content: formContent,
       courseId: formCourseId,
-      courseName: course?.title || '',
+      courseName: course?.title || "",
       createdAt: new Date(),
       isPublished: false,
-      isPinned: formPinned
+      isPinned: formPinned,
     };
 
     saveAnnouncements([newAnnouncement, ...announcements]);
-    
+
     // Reset form
-    setFormTitle('');
-    setFormContent('');
+    setFormTitle("");
+    setFormContent("");
     setFormPinned(false);
     setIsCreating(false);
   };
 
   const handleUpdate = () => {
     if (!editingId || !formTitle.trim() || !formContent.trim()) {
-      alert('Заполните название и содержание');
+      alert("Заполните название и содержание");
       return;
     }
 
-    const course = courses.find(c => c.id === formCourseId);
-    saveAnnouncements(announcements.map(a => 
-      a.id === editingId 
-        ? { ...a, title: formTitle, content: formContent, courseId: formCourseId, courseName: course?.title || '', isPinned: formPinned }
-        : a
-    ));
+    const course = courses.find((c) => c.id === formCourseId);
+    saveAnnouncements(
+      announcements.map((a) =>
+        a.id === editingId
+          ? {
+              ...a,
+              title: formTitle,
+              content: formContent,
+              courseId: formCourseId,
+              courseName: course?.title || "",
+              isPinned: formPinned,
+            }
+          : a,
+      ),
+    );
 
     // Reset form
-    setFormTitle('');
-    setFormContent('');
+    setFormTitle("");
+    setFormContent("");
     setFormPinned(false);
     setEditingId(null);
   };
@@ -144,51 +179,53 @@ export default function TeacherAnnouncementsPage() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Удалить это объявление?')) {
-      saveAnnouncements(announcements.filter(a => a.id !== id));
+    if (confirm("Удалить это объявление?")) {
+      saveAnnouncements(announcements.filter((a) => a.id !== id));
     }
   };
 
   const handlePublish = (id: string) => {
-    saveAnnouncements(announcements.map(a => 
-      a.id === id 
-        ? { ...a, isPublished: true, publishedAt: new Date() }
-        : a
-    ));
+    saveAnnouncements(
+      announcements.map((a) =>
+        a.id === id ? { ...a, isPublished: true, publishedAt: new Date() } : a,
+      ),
+    );
     alert('Объявление опубликовано! Студенты курса увидят его на вкладке "��нонсы".');
   };
 
   const handleUnpublish = (id: string) => {
-    saveAnnouncements(announcements.map(a => 
-      a.id === id 
-        ? { ...a, isPublished: false, publishedAt: undefined }
-        : a
-    ));
+    saveAnnouncements(
+      announcements.map((a) =>
+        a.id === id ? { ...a, isPublished: false, publishedAt: undefined } : a,
+      ),
+    );
   };
 
   const handleTogglePin = (id: string) => {
-    saveAnnouncements(announcements.map(a => 
-      a.id === id ? { ...a, isPinned: !a.isPinned } : a
-    ));
+    saveAnnouncements(
+      announcements.map((a) => (a.id === id ? { ...a, isPinned: !a.isPinned } : a)),
+    );
   };
 
   const handleCancel = () => {
-    setFormTitle('');
-    setFormContent('');
+    setFormTitle("");
+    setFormContent("");
     setFormPinned(false);
     setIsCreating(false);
     setEditingId(null);
   };
 
-  const publishedCount = announcements.filter(a => a.isPublished).length;
-  const draftCount = announcements.filter(a => !a.isPublished).length;
+  const publishedCount = announcements.filter((a) => a.isPublished).length;
+  const draftCount = announcements.filter((a) => !a.isPublished).length;
 
   return (
     <AppShell title="Объявления">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Объявления' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Объявления" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -217,7 +254,9 @@ export default function TeacherAnnouncementsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Опубликовано</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                Опубликовано
+              </span>
             </div>
             <p className="text-[28px] font-medium text-[#4caf50]">{publishedCount}</p>
           </div>
@@ -235,7 +274,7 @@ export default function TeacherAnnouncementsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[18px] font-medium text-[#21214f]">
-                {editingId ? 'Редактировать объявление' : 'Новое объявление'}
+                {editingId ? "Редактировать объявление" : "Новое объявление"}
               </h2>
               <button
                 onClick={handleCancel}
@@ -270,7 +309,7 @@ export default function TeacherAnnouncementsPage() {
                   onChange={(e) => setFormCourseId(e.target.value)}
                   className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
                 >
-                  {courses.map(course => (
+                  {courses.map((course) => (
                     <option key={course.id} value={course.id}>
                       {course.title} ({course.code})
                     </option>
@@ -314,7 +353,7 @@ export default function TeacherAnnouncementsPage() {
                 >
                   <CheckCircle className="w-5 h-5" />
                   <span className="text-[15px] font-medium">
-                    {editingId ? 'Сохранить изменения' : 'Создать черновик'}
+                    {editingId ? "Сохранить изменения" : "Создать черновик"}
                   </span>
                 </button>
                 <button
@@ -366,12 +405,12 @@ export default function TeacherAnnouncementsPage() {
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        Создано: {announcement.createdAt.toLocaleDateString('ru-RU')}
+                        Создано: {announcement.createdAt.toLocaleDateString("ru-RU")}
                       </span>
                       {announcement.publishedAt && (
                         <span className="flex items-center gap-1">
                           <Send className="w-3 h-3" />
-                          Опубликовано: {announcement.publishedAt.toLocaleDateString('ru-RU')}
+                          Опубликовано: {announcement.publishedAt.toLocaleDateString("ru-RU")}
                         </span>
                       )}
                     </div>
@@ -403,7 +442,7 @@ export default function TeacherAnnouncementsPage() {
                     onClick={() => handleTogglePin(announcement.id)}
                     className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
                   >
-                    {announcement.isPinned ? 'Открепить' : 'Закрепить'}
+                    {announcement.isPinned ? "Открепить" : "Закрепить"}
                   </button>
                   <button
                     onClick={() => handleEdit(announcement)}
@@ -425,9 +464,7 @@ export default function TeacherAnnouncementsPage() {
           ) : (
             <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
               <Megaphone className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-                Нет объявлений
-              </h3>
+              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Нет объявлений</h3>
               <p className="text-[14px] text-[#767692] mb-4">
                 Создайте первое объявление для студентов
               </p>

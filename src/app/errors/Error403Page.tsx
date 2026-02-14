@@ -1,4 +1,4 @@
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from "lucide-react";
 
 export default function Error403Page() {
   return (
@@ -14,26 +14,25 @@ export default function Error403Page() {
         {/* Error code */}
         <div className="space-y-2">
           <h1 className="text-6xl font-semibold text-foreground/40">403</h1>
-          <h2 className="text-2xl font-semibold text-foreground">
-            Доступ запрещён
-          </h2>
+          <h2 className="text-2xl font-semibold text-foreground">Доступ запрещён</h2>
         </div>
 
         {/* Explanation */}
         <p className="text-muted-foreground">
-          У вас недостаточно прав для доступа к этому ресурсу. Если вы считаете, что это ошибка, обратитесь к администратору.
+          У вас недостаточно прав для доступа к этому ресурсу. Если вы считаете, что это ошибка,
+          обратитесь к администратору.
         </p>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
           <button
-            onClick={() => window.location.hash = '/dashboard'}
+            onClick={() => (window.location.hash = "/dashboard")}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             В личный кабинет
           </button>
           <button
-            onClick={() => window.location.hash = '/courses'}
+            onClick={() => (window.location.hash = "/courses")}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
             К курсам

@@ -1,8 +1,8 @@
-import { Download, ExternalLink, FileText, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Download, ExternalLink, FileText, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 
 /**
  * WorkPreviewCard - Превью проверяемой работы
- * 
+ *
  * Displays:
  * - File list with download buttons
  * - "Открыть в новом окне" link
@@ -19,7 +19,7 @@ export interface WorkFile {
 export interface ValidationCheck {
   id: string;
   name: string;
-  status: 'passed' | 'warning' | 'failed';
+  status: "passed" | "warning" | "failed";
   message?: string;
 }
 
@@ -46,9 +46,9 @@ export function WorkPreviewCard({
   const getChecksSummary = () => {
     if (validationChecks.length === 0) return null;
 
-    const passed = validationChecks.filter((c) => c.status === 'passed').length;
-    const failed = validationChecks.filter((c) => c.status === 'failed').length;
-    const warnings = validationChecks.filter((c) => c.status === 'warning').length;
+    const passed = validationChecks.filter((c) => c.status === "passed").length;
+    const failed = validationChecks.filter((c) => c.status === "failed").length;
+    const warnings = validationChecks.filter((c) => c.status === "warning").length;
 
     return { passed, failed, warnings, total: validationChecks.length };
   };
@@ -75,9 +75,7 @@ export function WorkPreviewCard({
 
       {/* Files */}
       <div className="mb-4">
-        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
-          Файлы ({files.length})
-        </h4>
+        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">Файлы ({files.length})</h4>
         <div className="space-y-2">
           {files.map((file) => (
             <div
@@ -104,9 +102,7 @@ export function WorkPreviewCard({
       {/* Validation Checks */}
       {checksSummary && (
         <div>
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
-            Проверки
-          </h4>
+          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">Проверки</h4>
           <div className="bg-[#f9f9f9] rounded-[12px] p-3">
             <div className="flex items-center gap-4 flex-wrap">
               {checksSummary.passed > 0 && (
@@ -138,24 +134,19 @@ export function WorkPreviewCard({
             {/* Detailed checks */}
             <div className="mt-3 space-y-2">
               {validationChecks.map((check) => (
-                <div
-                  key={check.id}
-                  className="flex items-start gap-2 text-[13px]"
-                >
-                  {check.status === 'passed' && (
+                <div key={check.id} className="flex items-start gap-2 text-[13px]">
+                  {check.status === "passed" && (
                     <CheckCircle className="w-4 h-4 text-[#4caf50] shrink-0 mt-0.5" />
                   )}
-                  {check.status === 'warning' && (
+                  {check.status === "warning" && (
                     <AlertCircle className="w-4 h-4 text-[#ff9800] shrink-0 mt-0.5" />
                   )}
-                  {check.status === 'failed' && (
+                  {check.status === "failed" && (
                     <XCircle className="w-4 h-4 text-[#d4183d] shrink-0 mt-0.5" />
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-[#21214f] font-medium">{check.name}</p>
-                    {check.message && (
-                      <p className="text-[#767692] mt-0.5">{check.message}</p>
-                    )}
+                    {check.message && <p className="text-[#767692] mt-0.5">{check.message}</p>}
                   </div>
                 </div>
               ))}

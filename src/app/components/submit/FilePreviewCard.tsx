@@ -1,8 +1,8 @@
-import { FileText, Download, Trash2, RefreshCw } from 'lucide-react';
+import { FileText, Download, Trash2, RefreshCw } from "lucide-react";
 
 /**
  * FilePreviewCard - Превью загруженного файла с действиями
- * 
+ *
  * Features:
  * - File info (name, size, upload time)
  * - Actions: Replace, Download, Delete
@@ -40,36 +40,36 @@ export function FilePreviewCard({
 
   // Get file icon based on extension
   const getFileIcon = () => {
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    
+    const ext = file.name.split(".").pop()?.toLowerCase();
+
     // Different colors for different file types
     const colors: Record<string, string> = {
-      pdf: 'bg-[#ffb8b8]',
-      zip: 'bg-[#ffd4a3]',
-      doc: 'bg-[#b7bdff]',
-      docx: 'bg-[#b7bdff]',
-      jpg: 'bg-[#b0e9fb]',
-      jpeg: 'bg-[#b0e9fb]',
-      png: 'bg-[#b0e9fb]',
-      default: 'bg-[#d2e1f8]',
+      pdf: "bg-[#ffb8b8]",
+      zip: "bg-[#ffd4a3]",
+      doc: "bg-[#b7bdff]",
+      docx: "bg-[#b7bdff]",
+      jpg: "bg-[#b0e9fb]",
+      jpeg: "bg-[#b0e9fb]",
+      png: "bg-[#b0e9fb]",
+      default: "bg-[#d2e1f8]",
     };
 
-    return colors[ext || 'default'] || colors.default;
+    return colors[ext || "default"] || colors.default;
   };
 
   return (
     <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
       <div className="flex items-start gap-4">
         {/* File icon */}
-        <div className={`w-12 h-12 ${getFileIcon()} rounded-[8px] flex items-center justify-center shrink-0`}>
+        <div
+          className={`w-12 h-12 ${getFileIcon()} rounded-[8px] flex items-center justify-center shrink-0`}
+        >
           <FileText className="w-6 h-6 text-[#21214f]" />
         </div>
 
         {/* File info */}
         <div className="flex-1 min-w-0">
-          <div className="text-[15px] font-medium text-[#21214f] mb-1 truncate">
-            {file.name}
-          </div>
+          <div className="text-[15px] font-medium text-[#21214f] mb-1 truncate">{file.name}</div>
           <div className="flex items-center gap-2 text-[13px] text-[#767692]">
             <span>{formatFileSize(file.size)}</span>
             <span>•</span>

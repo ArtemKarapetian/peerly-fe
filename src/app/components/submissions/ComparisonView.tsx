@@ -1,9 +1,9 @@
-import { X, FileText, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import type { Version } from './VersionCard';
+import { X, FileText, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import type { Version } from "./VersionCard";
 
 /**
  * ComparisonView - Side-by-side metadata comparison of two versions
- * 
+ *
  * Displays:
  * - Two versions side by side
  * - Metadata comparison (status, timestamp, files, note, checks)
@@ -23,16 +23,16 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
     return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
   };
 
-  const getStatusLabel = (status: Version['status']) => {
+  const getStatusLabel = (status: Version["status"]) => {
     switch (status) {
-      case 'draft':
-        return 'Черновик';
-      case 'submitted':
-        return 'Отправлено';
-      case 'accepted':
-        return 'Принято';
-      case 'rejected':
-        return 'Отклонено';
+      case "draft":
+        return "Черновик";
+      case "submitted":
+        return "Отправлено";
+      case "accepted":
+        return "Принято";
+      case "rejected":
+        return "Отклонено";
     }
   };
 
@@ -41,9 +41,9 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
       return { passed: 0, failed: 0, warnings: 0, total: 0 };
     }
 
-    const passed = version.validationChecks.filter((c) => c.status === 'passed').length;
-    const failed = version.validationChecks.filter((c) => c.status === 'failed').length;
-    const warnings = version.validationChecks.filter((c) => c.status === 'warning').length;
+    const passed = version.validationChecks.filter((c) => c.status === "passed").length;
+    const failed = version.validationChecks.filter((c) => c.status === "failed").length;
+    const warnings = version.validationChecks.filter((c) => c.status === "warning").length;
 
     return { passed, failed, warnings, total: version.validationChecks.length };
   };
@@ -162,7 +162,7 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             <div className="text-[13px] text-[#767692] mb-1">Статус</div>
             <div
               className={`text-[15px] font-medium ${
-                version1.status !== version2.status ? 'text-[#5b8def]' : 'text-[#21214f]'
+                version1.status !== version2.status ? "text-[#5b8def]" : "text-[#21214f]"
               }`}
             >
               {getStatusLabel(version2.status)}
@@ -186,8 +186,8 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
                     key={file.id}
                     className={`flex items-center gap-2 text-[13px] rounded-[8px] px-3 py-2 ${
                       isDifferent
-                        ? 'bg-[#f0f5ff] text-[#21214f] border border-[#d2e1f8]'
-                        : 'bg-[#f9f9f9] text-[#4b4963]'
+                        ? "bg-[#f0f5ff] text-[#21214f] border border-[#d2e1f8]"
+                        : "bg-[#f9f9f9] text-[#4b4963]"
                     }`}
                   >
                     <FileText className="w-4 h-4 text-[#767692] shrink-0" />
@@ -204,15 +204,13 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
           <div className="mb-4">
             <div className="text-[13px] text-[#767692] mb-1">
               Комментарий
-              {version1.note !== version2.note && (
-                <span className="ml-1 text-[#5b8def]">✓</span>
-              )}
+              {version1.note !== version2.note && <span className="ml-1 text-[#5b8def]">✓</span>}
             </div>
             <div
               className={`text-[14px] rounded-[8px] p-3 min-h-[60px] ${
                 version1.note !== version2.note
-                  ? 'bg-[#f0f5ff] text-[#21214f] border border-[#d2e1f8]'
-                  : 'bg-[#f9f9f9] text-[#21214f]'
+                  ? "bg-[#f0f5ff] text-[#21214f] border border-[#d2e1f8]"
+                  : "bg-[#f9f9f9] text-[#21214f]"
               }`}
             >
               {version2.note || <span className="text-[#767692] italic">Нет комментария</span>}
@@ -234,8 +232,8 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
                 checks1.passed !== checks2.passed ||
                 checks1.failed !== checks2.failed ||
                 checks1.warnings !== checks2.warnings
-                  ? 'bg-[#f0f5ff] border border-[#d2e1f8]'
-                  : 'bg-[#f9f9f9]'
+                  ? "bg-[#f0f5ff] border border-[#d2e1f8]"
+                  : "bg-[#f9f9f9]"
               }`}
             >
               {checks2.total === 0 ? (

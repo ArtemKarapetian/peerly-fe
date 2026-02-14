@@ -1,35 +1,35 @@
-import { useState } from 'react';
-import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/button.tsx';
-import { Input } from '@/app/components/ui/input.tsx';
-import { 
-  CheckCircle2, 
-  AlertTriangle, 
-  AlertCircle, 
-  ChevronDown, 
+import { useState } from "react";
+import { PublicLayout } from "@/app/components/PublicLayout";
+import { Button } from "@/app/components/ui/button.tsx";
+import { Input } from "@/app/components/ui/input.tsx";
+import {
+  CheckCircle2,
+  AlertTriangle,
+  AlertCircle,
+  ChevronDown,
   ChevronUp,
   Bell,
-  Activity
-} from 'lucide-react';
-import { toast } from 'sonner';
+  Activity,
+} from "lucide-react";
+import { toast } from "sonner";
 
 /**
  * StatusPage - System Status & Incidents
- * 
+ *
  * Features:
  * - System status indicator (demo toggle)
  * - Incidents list with expand/collapse
  * - Subscribe to updates (demo)
  */
 
-type SystemStatus = 'operational' | 'degraded' | 'outage';
-type IncidentStatus = 'investigating' | 'monitoring' | 'resolved';
+type SystemStatus = "operational" | "degraded" | "outage";
+type IncidentStatus = "investigating" | "monitoring" | "resolved";
 
 interface Incident {
   id: string;
   title: string;
   status: IncidentStatus;
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
   startTime: string;
   endTime?: string;
   summary: string;
@@ -43,121 +43,126 @@ interface Incident {
 // Mock incidents data
 const MOCK_INCIDENTS: Incident[] = [
   {
-    id: 'inc-001',
-    title: 'Все системы работают нормально',
-    status: 'resolved',
-    severity: 'low',
-    startTime: '2026-01-25T09:00:00Z',
-    endTime: '2026-01-25T09:00:00Z',
-    summary: 'Системы Peerly работают в штатном режиме.',
+    id: "inc-001",
+    title: "Все системы работают нормально",
+    status: "resolved",
+    severity: "low",
+    startTime: "2026-01-25T09:00:00Z",
+    endTime: "2026-01-25T09:00:00Z",
+    summary: "Системы Peerly работают в штатном режиме.",
     updates: [
       {
-        time: '2026-01-25T09:00:00Z',
-        status: 'resolved',
-        message: 'Все сервисы работают стабильно. Никаких проблем не обнаружено.'
-      }
-    ]
+        time: "2026-01-25T09:00:00Z",
+        status: "resolved",
+        message: "Все сервисы работают стабильно. Никаких проблем не обнаружено.",
+      },
+    ],
   },
   {
-    id: 'inc-002',
-    title: 'Временное замедление загрузки файлов',
-    status: 'resolved',
-    severity: 'medium',
-    startTime: '2026-01-24T14:30:00Z',
-    endTime: '2026-01-24T16:45:00Z',
-    summary: 'Пользователи испытывали задержки при загрузке больших файлов submissions.',
+    id: "inc-002",
+    title: "Временное замедление загрузки файлов",
+    status: "resolved",
+    severity: "medium",
+    startTime: "2026-01-24T14:30:00Z",
+    endTime: "2026-01-24T16:45:00Z",
+    summary: "Пользователи испытывали задержки при загрузке больших файлов submissions.",
     updates: [
       {
-        time: '2026-01-24T16:45:00Z',
-        status: 'resolved',
-        message: 'Проблема решена. Мы увеличили пропускную способность серверов хранения файлов. Все загрузки работают нормально.'
+        time: "2026-01-24T16:45:00Z",
+        status: "resolved",
+        message:
+          "Проблема решена. Мы увеличили пропускную способность серверов хранения файлов. Все загрузки работают нормально.",
       },
       {
-        time: '2026-01-24T15:20:00Z',
-        status: 'monitoring',
-        message: 'Мы применили временное исправление и наблюдаем за системой. Скорость загрузки улучшилась.'
+        time: "2026-01-24T15:20:00Z",
+        status: "monitoring",
+        message:
+          "Мы применили временное исправление и наблюдаем за системой. Скорость загрузки улучшилась.",
       },
       {
-        time: '2026-01-24T14:30:00Z',
-        status: 'investigating',
-        message: 'Мы получили сообщения о медленной загрузке файлов и начали расследование.'
-      }
-    ]
+        time: "2026-01-24T14:30:00Z",
+        status: "investigating",
+        message: "Мы получили сообщения о медленной загрузке файлов и начали расследование.",
+      },
+    ],
   },
   {
-    id: 'inc-003',
-    title: 'Проблемы с аутентификацией',
-    status: 'resolved',
-    severity: 'high',
-    startTime: '2026-01-23T08:15:00Z',
-    endTime: '2026-01-23T09:30:00Z',
-    summary: 'Некоторые пользователи не могли войти в систему из-за проблем с сервером аутентификации.',
+    id: "inc-003",
+    title: "Проблемы с аутентификацией",
+    status: "resolved",
+    severity: "high",
+    startTime: "2026-01-23T08:15:00Z",
+    endTime: "2026-01-23T09:30:00Z",
+    summary:
+      "Некоторые пользователи не могли войти в систему из-за проблем с сервером аутентификации.",
     updates: [
       {
-        time: '2026-01-23T09:30:00Z',
-        status: 'resolved',
-        message: 'Сервис аутентификации полностью восстановлен. Все пользователи могут войти в систему.'
+        time: "2026-01-23T09:30:00Z",
+        status: "resolved",
+        message:
+          "Сервис аутентификации полностью восстановлен. Все пользователи могут войти в систему.",
       },
       {
-        time: '2026-01-23T08:45:00Z',
-        status: 'monitoring',
-        message: 'Мы перезапустили сервис аутентификации. Большинство пользователей могут войти, продолжаем мониторинг.'
+        time: "2026-01-23T08:45:00Z",
+        status: "monitoring",
+        message:
+          "Мы перезапустили сервис аутентификации. Большинство пользователей могут войти, продолжаем мониторинг.",
       },
       {
-        time: '2026-01-23T08:15:00Z',
-        status: 'investigating',
-        message: 'Мы расследуем проблемы с входом в систему, о которых сообщили пользователи.'
-      }
-    ]
+        time: "2026-01-23T08:15:00Z",
+        status: "investigating",
+        message: "Мы расследуем проблемы с входом в систему, о которых сообщили пользователи.",
+      },
+    ],
   },
   {
-    id: 'inc-004',
-    title: 'Плановое техническое обслуживание',
-    status: 'resolved',
-    severity: 'low',
-    startTime: '2026-01-20T02:00:00Z',
-    endTime: '2026-01-20T04:00:00Z',
-    summary: 'Запланированное обновление базы данных с кратковременным отключением сервиса.',
+    id: "inc-004",
+    title: "Плановое техническое обслуживание",
+    status: "resolved",
+    severity: "low",
+    startTime: "2026-01-20T02:00:00Z",
+    endTime: "2026-01-20T04:00:00Z",
+    summary: "Запланированное обновление базы данных с кратковременным отключением сервиса.",
     updates: [
       {
-        time: '2026-01-20T04:00:00Z',
-        status: 'resolved',
-        message: 'Техническое обслуживание завершено успешно. Все системы работают нормально.'
+        time: "2026-01-20T04:00:00Z",
+        status: "resolved",
+        message: "Техническое обслуживание завершено успешно. Все системы работают нормально.",
       },
       {
-        time: '2026-01-20T02:00:00Z',
-        status: 'monitoring',
-        message: 'Начато плановое техническое обслуживание. Сервис будет недоступен до 04:00 UTC.'
-      }
-    ]
+        time: "2026-01-20T02:00:00Z",
+        status: "monitoring",
+        message: "Начато плановое техническое обслуживание. Сервис будет недоступен до 04:00 UTC.",
+      },
+    ],
   },
   {
-    id: 'inc-005',
-    title: 'Ошибки при экспорте оценок',
-    status: 'resolved',
-    severity: 'medium',
-    startTime: '2026-01-18T11:20:00Z',
-    endTime: '2026-01-18T13:10:00Z',
-    summary: 'Преподаватели получали ошибки при попытке экспорта gradebook в CSV формат.',
+    id: "inc-005",
+    title: "Ошибки при экспорте оценок",
+    status: "resolved",
+    severity: "medium",
+    startTime: "2026-01-18T11:20:00Z",
+    endTime: "2026-01-18T13:10:00Z",
+    summary: "Преподаватели получали ошибки при попытке экспорта gradebook в CSV формат.",
     updates: [
       {
-        time: '2026-01-18T13:10:00Z',
-        status: 'resolved',
-        message: 'Исправлена ошибка в модуле экспорта. Функция экспорта оценок работает корректно.'
+        time: "2026-01-18T13:10:00Z",
+        status: "resolved",
+        message: "Исправлена ошибка в модуле экспорта. Функция экспорта оценок работает корректно.",
       },
       {
-        time: '2026-01-18T11:20:00Z',
-        status: 'investigating',
-        message: 'Мы получили сообщения об ошибках экспорта и начали расследование.'
-      }
-    ]
-  }
+        time: "2026-01-18T11:20:00Z",
+        status: "investigating",
+        message: "Мы получили сообщения об ошибках экспорта и начали расследование.",
+      },
+    ],
+  },
 ];
 
 export default function StatusPage() {
-  const [systemStatus, setSystemStatus] = useState<SystemStatus>('operational');
+  const [systemStatus, setSystemStatus] = useState<SystemStatus>("operational");
   const [expandedIncidents, setExpandedIncidents] = useState<Set<string>>(new Set());
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
 
   // Toggle incident expansion
@@ -173,7 +178,7 @@ export default function StatusPage() {
 
   // Cycle through status states (for demo)
   const cycleStatus = () => {
-    const statuses: SystemStatus[] = ['operational', 'degraded', 'outage'];
+    const statuses: SystemStatus[] = ["operational", "degraded", "outage"];
     const currentIndex = statuses.indexOf(systemStatus);
     const nextIndex = (currentIndex + 1) % statuses.length;
     setSystemStatus(statuses[nextIndex]);
@@ -182,32 +187,32 @@ export default function StatusPage() {
   // Get status config
   const getStatusConfig = (status: SystemStatus) => {
     switch (status) {
-      case 'operational':
+      case "operational":
         return {
-          label: 'Все системы работают',
+          label: "Все системы работают",
           icon: CheckCircle2,
-          color: 'text-green-600',
-          bg: 'bg-green-50',
-          border: 'border-green-200',
-          dotColor: 'bg-green-500'
+          color: "text-green-600",
+          bg: "bg-green-50",
+          border: "border-green-200",
+          dotColor: "bg-green-500",
         };
-      case 'degraded':
+      case "degraded":
         return {
-          label: 'Частичный сбой',
+          label: "Частичный сбой",
           icon: AlertTriangle,
-          color: 'text-yellow-600',
-          bg: 'bg-yellow-50',
-          border: 'border-yellow-200',
-          dotColor: 'bg-yellow-500'
+          color: "text-yellow-600",
+          bg: "bg-yellow-50",
+          border: "border-yellow-200",
+          dotColor: "bg-yellow-500",
         };
-      case 'outage':
+      case "outage":
         return {
-          label: 'Проблемы с сервисом',
+          label: "Проблемы с сервисом",
           icon: AlertCircle,
-          color: 'text-red-600',
-          bg: 'bg-red-50',
-          border: 'border-red-200',
-          dotColor: 'bg-red-500'
+          color: "text-red-600",
+          bg: "bg-red-50",
+          border: "border-red-200",
+          dotColor: "bg-red-500",
         };
     }
   };
@@ -215,26 +220,26 @@ export default function StatusPage() {
   // Get incident status config
   const getIncidentStatusConfig = (status: IncidentStatus) => {
     switch (status) {
-      case 'investigating':
+      case "investigating":
         return {
-          label: 'Расследуется',
-          color: 'text-red-700',
-          bg: 'bg-red-100',
-          border: 'border-red-300'
+          label: "Расследуется",
+          color: "text-red-700",
+          bg: "bg-red-100",
+          border: "border-red-300",
         };
-      case 'monitoring':
+      case "monitoring":
         return {
-          label: 'Мониторинг',
-          color: 'text-yellow-700',
-          bg: 'bg-yellow-100',
-          border: 'border-yellow-300'
+          label: "Мониторинг",
+          color: "text-yellow-700",
+          bg: "bg-yellow-100",
+          border: "border-yellow-300",
         };
-      case 'resolved':
+      case "resolved":
         return {
-          label: 'Решено',
-          color: 'text-green-700',
-          bg: 'bg-green-100',
-          border: 'border-green-300'
+          label: "Решено",
+          color: "text-green-700",
+          bg: "bg-green-100",
+          border: "border-green-300",
         };
     }
   };
@@ -242,11 +247,11 @@ export default function StatusPage() {
   // Format time
   const formatTime = (isoString: string) => {
     const date = new Date(isoString);
-    return date.toLocaleString('ru-RU', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleString("ru-RU", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -258,16 +263,16 @@ export default function StatusPage() {
   // Handle subscribe
   const handleSubscribe = () => {
     setEmailTouched(true);
-    
+
     if (!isEmailValid()) {
       return;
     }
 
     // Demo: just show success toast
-    toast.success('Подписка оформлена', {
-      description: `Уведомления будут отправляться на ${email}`
+    toast.success("Подписка оформлена", {
+      description: `Уведомления будут отправляться на ${email}`,
     });
-    setEmail('');
+    setEmail("");
     setEmailTouched(false);
   };
 
@@ -306,18 +311,18 @@ export default function StatusPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <div className={`size-3 ${statusConfig.dotColor} rounded-full animate-pulse`} />
-                  <h2 className="text-[24px] font-medium text-foreground">
-                    {statusConfig.label}
-                  </h2>
+                  <h2 className="text-[24px] font-medium text-foreground">{statusConfig.label}</h2>
                 </div>
                 <p className="text-[15px] text-muted-foreground">
-                  {systemStatus === 'operational' && 'Все сервисы работают в штатном режиме'}
-                  {systemStatus === 'degraded' && 'Некоторые функции могут работать медленнее обычного'}
-                  {systemStatus === 'outage' && 'Мы работаем над восстановлением сервиса'}
+                  {systemStatus === "operational" && "Все сервисы работают в штатном режиме"}
+                  {systemStatus === "degraded" &&
+                    "Некоторые функции могут работать медленнее обычного"}
+                  {systemStatus === "outage" && "Мы работаем над восстановлением сервиса"}
                 </p>
               </div>
               <div className="text-xs text-muted-foreground">
-                Обновлено: {new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                Обновлено:{" "}
+                {new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
               </div>
             </div>
           </div>
@@ -343,7 +348,7 @@ export default function StatusPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       onBlur={() => setEmailTouched(true)}
                       placeholder="your.email@university.edu"
-                      error={emailTouched && !isEmailValid() && email ? 'Некорректный email' : ''}
+                      error={emailTouched && !isEmailValid() && email ? "Некорректный email" : ""}
                     />
                   </div>
                   <Button
@@ -363,9 +368,7 @@ export default function StatusPage() {
 
           {/* Incidents Section */}
           <div className="mb-8">
-            <h2 className="text-[24px] font-medium text-foreground mb-4">
-              История инцидентов
-            </h2>
+            <h2 className="text-[24px] font-medium text-foreground mb-4">История инцидентов</h2>
             <p className="text-[15px] text-muted-foreground mb-6">
               Последние 5 инцидентов и обновлений
             </p>
@@ -423,9 +426,7 @@ export default function StatusPage() {
                     {/* Incident Details (Expanded) */}
                     {isExpanded && (
                       <div className="border-t-2 border-border px-5 py-4 bg-accent/20">
-                        <p className="text-[15px] text-muted-foreground mb-4">
-                          {incident.summary}
-                        </p>
+                        <p className="text-[15px] text-muted-foreground mb-4">{incident.summary}</p>
 
                         {/* Updates Timeline */}
                         <div className="space-y-4">
@@ -451,9 +452,7 @@ export default function StatusPage() {
                                         {updateStatusConfig.label}
                                       </span>
                                     </div>
-                                    <p className="text-[14px] text-foreground">
-                                      {update.message}
-                                    </p>
+                                    <p className="text-[14px] text-foreground">{update.message}</p>
                                   </div>
                                 </div>
                               );
@@ -471,7 +470,7 @@ export default function StatusPage() {
           {/* Footer Note */}
           <div className="bg-accent/50 border border-border rounded-lg px-4 py-3">
             <p className="text-sm text-muted-foreground">
-              По вопросам о статусе сервиса:{' '}
+              По вопросам о статусе сервиса:{" "}
               <a href="mailto:support@peerly.edu" className="text-primary hover:underline">
                 support@peerly.edu
               </a>

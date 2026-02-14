@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { RubricSection } from '@/app/components/review/RubricSection';
-import type { RubricSectionData } from '@/app/components/review/RubricSection';
-import type { CriterionScore } from '@/app/components/review/RubricCriterion';
-import type { RubricData } from '../TeacherRubricsPage';
+import { useState } from "react";
+import { RubricSection } from "@/app/components/review/RubricSection";
+import type { RubricSectionData } from "@/app/components/review/RubricSection";
+import type { CriterionScore } from "@/app/components/review/RubricCriterion";
+import type { RubricData } from "../TeacherRubricsPage";
 
 /**
  * RubricPreview - Предпросмотр рубрики
- * 
+ *
  * Отображает рубрику в том виде, как она будет выглядеть
  * для студентов в форме рецензирования
  */
@@ -51,16 +51,14 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
   const totalCriteria = rubric.criteria.length;
   const requiredCount = rubric.criteria.filter((c) => c.required).length;
   const completedRequiredCount = scores.filter(
-    (s) => s.score !== null && rubric.criteria.find((c) => c.id === s.criterionId)?.required
+    (s) => s.score !== null && rubric.criteria.find((c) => c.id === s.criterionId)?.required,
   ).length;
 
   return (
     <div className="max-w-[900px] mx-auto">
       {/* Info Banner */}
       <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6">
-        <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
-          Режим предпросмотра
-        </h3>
+        <h3 className="text-[16px] font-medium text-[#21214f] mb-2">Режим предпросмотра</h3>
         <p className="text-[14px] text-[#767692]">
           Так будет выглядеть эта рубрика для студентов при оценивании работ. Вы можете
           взаимодействовать с формой, чтобы проверить, как она работает.
@@ -74,15 +72,13 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
             <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
               {rubric.name}
             </h2>
-            <p className="text-[15px] text-[#767692] leading-[1.5]">
-              {rubric.description}
-            </p>
+            <p className="text-[15px] text-[#767692] leading-[1.5]">{rubric.description}</p>
           </div>
           <div className="ml-4">
             <span className="inline-block px-3 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[13px] font-medium">
-              {rubric.taskType === 'text' && 'Текст'}
-              {rubric.taskType === 'code' && 'Код'}
-              {rubric.taskType === 'project' && 'Проект'}
+              {rubric.taskType === "text" && "Текст"}
+              {rubric.taskType === "code" && "Код"}
+              {rubric.taskType === "project" && "Проект"}
             </span>
           </div>
         </div>
@@ -143,15 +139,13 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
       {/* Weights Info (if any criterion has weight) */}
       {rubric.criteria.some((c) => c.weight) && (
         <div className="mt-6 bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-3">
-            Весовые коэффициенты
-          </h4>
+          <h4 className="text-[14px] font-medium text-[#21214f] mb-3">Весовые коэффициенты</h4>
           <div className="space-y-2">
             {rubric.criteria.map((criterion) => (
               <div key={criterion.id} className="flex items-center justify-between">
                 <span className="text-[13px] text-[#767692]">{criterion.name}</span>
                 <span className="text-[13px] font-medium text-[#21214f]">
-                  {criterion.weight ? `${criterion.weight}%` : 'Не указан'}
+                  {criterion.weight ? `${criterion.weight}%` : "Не указан"}
                 </span>
               </div>
             ))}

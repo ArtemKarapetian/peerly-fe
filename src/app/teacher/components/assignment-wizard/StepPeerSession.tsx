@@ -1,9 +1,9 @@
-import { Users, Shuffle, EyeOff, RefreshCw } from 'lucide-react';
-import type { AssignmentFormData } from '../../TeacherCreateAssignmentPage';
+import { Users, Shuffle, EyeOff, RefreshCw } from "lucide-react";
+import type { AssignmentFormData } from "../../TeacherCreateAssignmentPage";
 
 /**
  * StepPeerSession - Шаг 4: Настройки peer review
- * 
+ *
  * - Количество рецензий на работу (k)
  * - Режим распределения (случайный/по навыкам/вручную)
  * - Анонимность (полная/частичная/без анонимности)
@@ -17,12 +17,12 @@ interface StepPeerSessionProps {
 
 export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
   const formatDateForInput = (date: Date | null) => {
-    if (!date) return '';
+    if (!date) return "";
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
@@ -38,9 +38,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
         <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
           Настройки peer review
         </h2>
-        <p className="text-[15px] text-[#767692]">
-          Настройте параметры взаимного рецензирования
-        </p>
+        <p className="text-[15px] text-[#767692]">Настройте параметры взаимного рецензирования</p>
       </div>
 
       {/* Reviews Per Submission */}
@@ -55,9 +53,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             max="10"
             step="1"
             value={data.reviewsPerSubmission}
-            onChange={(e) =>
-              onUpdate({ reviewsPerSubmission: parseInt(e.target.value) })
-            }
+            onChange={(e) => onUpdate({ reviewsPerSubmission: parseInt(e.target.value) })}
             className="flex-1"
           />
           <div className="flex items-center gap-2">
@@ -66,21 +62,19 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
               min="1"
               max="10"
               value={data.reviewsPerSubmission}
-              onChange={(e) =>
-                onUpdate({ reviewsPerSubmission: parseInt(e.target.value) || 1 })
-              }
+              onChange={(e) => onUpdate({ reviewsPerSubmission: parseInt(e.target.value) || 1 })}
               className="w-16 px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[15px] font-medium text-center focus:outline-none focus:border-[#5b8def]"
             />
             <Users className="w-5 h-5 text-[#767692]" />
           </div>
         </div>
         <p className="text-[13px] text-[#767692] mt-2">
-          Каждая работа получит {data.reviewsPerSubmission}{' '}
+          Каждая работа получит {data.reviewsPerSubmission}{" "}
           {data.reviewsPerSubmission === 1
-            ? 'рецензию'
+            ? "рецензию"
             : data.reviewsPerSubmission < 5
-            ? 'рецензии'
-            : 'рецензий'}
+              ? "рецензии"
+              : "рецензий"}
           . Рекомендуется: 3-5 для баланса качества и нагрузки.
         </p>
       </div>
@@ -93,13 +87,13 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
         <div className="space-y-3">
           <button
             type="button"
-            onClick={() => onUpdate({ distributionMode: 'random' })}
+            onClick={() => onUpdate({ distributionMode: "random" })}
             className={`
               w-full p-4 border-2 rounded-[12px] text-left transition-all flex items-start gap-3
               ${
-                data.distributionMode === 'random'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.distributionMode === "random"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
@@ -109,56 +103,49 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
                 Случайное распределение
               </div>
               <div className="text-[13px] text-[#767692]">
-                Работы распределяются случайным образом между студентами.
-                Быстро и справедливо.
+                Работы распределяются случайным образом между студентами. Быстро и справедливо.
               </div>
             </div>
           </button>
 
           <button
             type="button"
-            onClick={() => onUpdate({ distributionMode: 'skill-based' })}
+            onClick={() => onUpdate({ distributionMode: "skill-based" })}
             className={`
               w-full p-4 border-2 rounded-[12px] text-left transition-all flex items-start gap-3
               ${
-                data.distributionMode === 'skill-based'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.distributionMode === "skill-based"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
             <Users className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                На основе навыков
-              </div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">На основе навыков</div>
               <div className="text-[13px] text-[#767692]">
-                Система подбирает рецензентов со схожим уровнем. Требует
-                предварительных данных.
+                Система подбирает рецензентов со схожим уровнем. Требует предварительных данных.
               </div>
             </div>
           </button>
 
           <button
             type="button"
-            onClick={() => onUpdate({ distributionMode: 'manual' })}
+            onClick={() => onUpdate({ distributionMode: "manual" })}
             className={`
               w-full p-4 border-2 rounded-[12px] text-left transition-all flex items-start gap-3
               ${
-                data.distributionMode === 'manual'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.distributionMode === "manual"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
             <RefreshCw className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                Вручную
-              </div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">Вручную</div>
               <div className="text-[13px] text-[#767692]">
-                Вы сами распределяете работы между студентами. Максимальный
-                контроль.
+                Вы сами распределяете работы между студентами. Максимальный контроль.
               </div>
             </div>
           </button>
@@ -173,37 +160,35 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
         <div className="space-y-3">
           <button
             type="button"
-            onClick={() => onUpdate({ anonymityMode: 'full' })}
+            onClick={() => onUpdate({ anonymityMode: "full" })}
             className={`
               w-full p-4 border-2 rounded-[12px] text-left transition-all flex items-start gap-3
               ${
-                data.anonymityMode === 'full'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.anonymityMode === "full"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
             <EyeOff className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                Полная анонимность
-              </div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">Полная анонимность</div>
               <div className="text-[13px] text-[#767692]">
-                Студенты не видят, кто автор работы и кто рецензент. Рекомендуется
-                для объективности.
+                Студенты не видят, кто автор работы и кто рецензент. Рекомендуется для
+                объективности.
               </div>
             </div>
           </button>
 
           <button
             type="button"
-            onClick={() => onUpdate({ anonymityMode: 'partial' })}
+            onClick={() => onUpdate({ anonymityMode: "partial" })}
             className={`
               w-full p-4 border-2 rounded-[12px] text-left transition-all flex items-start gap-3
               ${
-                data.anonymityMode === 'partial'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.anonymityMode === "partial"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
@@ -213,29 +198,26 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
                 Частичная анонимность
               </div>
               <div className="text-[13px] text-[#767692]">
-                Автор работы скрыт, но рецензент виден. Полезно для обучения
-                рецензированию.
+                Автор работы скрыт, но рецензент виден. Полезно для обучения рецензированию.
               </div>
             </div>
           </button>
 
           <button
             type="button"
-            onClick={() => onUpdate({ anonymityMode: 'none' })}
+            onClick={() => onUpdate({ anonymityMode: "none" })}
             className={`
               w-full p-4 border-2 rounded-[12px] text-left transition-all flex items-start gap-3
               ${
-                data.anonymityMode === 'none'
-                  ? 'border-[#5b8def] bg-[#e9f5ff]'
-                  : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                data.anonymityMode === "none"
+                  ? "border-[#5b8def] bg-[#e9f5ff]"
+                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
               }
             `}
           >
             <Users className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                Без анонимности
-              </div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">Без анонимности</div>
               <div className="text-[13px] text-[#767692]">
                 Все видят друг друга. Подходит для работы в малых группах.
               </div>
@@ -261,8 +243,8 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
         {data.allowReassignment && (
           <div className="ml-7 space-y-3">
             <p className="text-[13px] text-[#767692]">
-              Студенты смогут запросить другую работу для рецензирования, если
-              текущая слишком сложная или есть конфликт интересов.
+              Студенты смогут запросить другую работу для рецензирования, если текущая слишком
+              сложная или есть конфликт интересов.
             </p>
 
             <div>
@@ -287,9 +269,8 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
       {/* Info Box */}
       <div className="bg-[#e9f5ff] border border-[#a0b8f1] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Совет:</strong> Для курсов с большим количеством студентов (30+)
-          рекомендуется случайное распределение с полной анонимностью и k=3-5
-          рецензий.
+          <strong>Совет:</strong> Для курсов с большим количеством студентов (30+) рекомендуется
+          случайное распределение с полной анонимностью и k=3-5 рецензий.
         </p>
       </div>
     </div>

@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import { useRole, getRoleDisplayName } from '@/app/contexts/RoleContext';
-import type { UserRole } from '@/app/contexts/RoleContext';
+import { useState, useRef, useEffect } from "react";
+import { useRole, getRoleDisplayName } from "@/app/contexts/RoleContext";
+import type { UserRole } from "@/app/contexts/RoleContext";
 
 /**
  * RoleSwitcherPopover - Flexible role switcher component
- * 
+ *
  * Collapsed mode:
  * - Click to open/close
  * - Click outside to close
  * - Escape key to close
  * - Stays open while hovering over menu
- * 
+ *
  * Expanded mode:
  * - Show full role list with buttons
  */
@@ -23,7 +23,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
   const { currentRole, setRole } = useRole();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const roles: UserRole[] = ['Student', 'Teacher', 'Admin'];
+  const roles: UserRole[] = ["Student", "Teacher", "Admin"];
 
   // Handle click outside
   useEffect(() => {
@@ -34,28 +34,28 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
     };
 
     if (isOpen && collapsed) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, collapsed]);
 
   // Handle Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
+      if (event.key === "Escape" && isOpen) {
         setIsOpen(false);
       }
     };
 
     if (isOpen && collapsed) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, collapsed]);
 
@@ -86,13 +86,11 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
               onClick={() => handleSelectRole(role)}
               className={`
                 w-full text-left px-3 py-2 rounded-[8px] text-[14px] transition-colors flex items-center justify-between
-                ${role === currentRole ? 'bg-[#e9f5ff] text-[#3d6bc6] font-medium' : 'text-[#21214f] hover:bg-[#f9f9f9]'}
+                ${role === currentRole ? "bg-[#e9f5ff] text-[#3d6bc6] font-medium" : "text-[#21214f] hover:bg-[#f9f9f9]"}
               `}
             >
               <span>{getRoleDisplayName(role)}</span>
-              {role === currentRole && (
-                <div className="w-2 h-2 rounded-full bg-[#3d6bc6]"></div>
-              )}
+              {role === currentRole && <div className="w-2 h-2 rounded-full bg-[#3d6bc6]"></div>}
             </button>
           ))}
         </div>
@@ -111,9 +109,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
           aria-label="Переключить роль"
           aria-expanded={isOpen}
         >
-          <span className="text-white text-[11px] font-bold">
-            {currentRole[0]}
-          </span>
+          <span className="text-white text-[11px] font-bold">{currentRole[0]}</span>
         </button>
       </div>
 
@@ -129,7 +125,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
               onClick={() => handleSelectRole(role)}
               className={`
                 w-full text-left px-3 py-2 text-[14px] transition-colors
-                ${role === currentRole ? 'bg-[#e9f5ff] text-[#3d6bc6] font-medium' : 'text-[#21214f] hover:bg-[#f9f9f9]'}
+                ${role === currentRole ? "bg-[#e9f5ff] text-[#3d6bc6] font-medium" : "text-[#21214f] hover:bg-[#f9f9f9]"}
               `}
             >
               {getRoleDisplayName(role)}

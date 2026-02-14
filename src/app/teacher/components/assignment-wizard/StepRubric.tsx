@@ -1,10 +1,10 @@
-import {useState} from 'react';
-import {ChevronRight, Layers, Plus, Search} from 'lucide-react';
-import type {AssignmentFormData} from '../../TeacherCreateAssignmentPage';
+import { useState } from "react";
+import { ChevronRight, Layers, Plus, Search } from "lucide-react";
+import type { AssignmentFormData } from "../../TeacherCreateAssignmentPage";
 
 /**
  * StepRubric - Шаг 3: Рубрика оценивания
- * 
+ *
  * - Выбор рубрики из библиотеки
  * - Создание новой рубрики
  * - Предпросмотр выбранной рубрики
@@ -24,61 +24,75 @@ interface RubricItem {
   tags: string[];
 }
 
+interface StoredRubric {
+  id: string;
+  name: string;
+  description: string;
+  taskType: string;
+  criteria?: unknown[];
+  tags?: string[];
+}
+
 const getMockRubrics = (): RubricItem[] => {
-  const stored = localStorage.getItem('peerly_rubrics_library');
+  const stored = localStorage.getItem("peerly_rubrics_library");
   if (stored) {
     try {
-      const parsed = JSON.parse(stored);
-      return parsed.map((r: any): RubricItem => ({
-        id: r.id,
-        name: r.name,
-        description: r.description,
-        taskType: r.taskType,
-        criteriaCount: r.criteria?.length || 0,
-        tags: r.tags || [],
-      }));
+      const parsed: StoredRubric[] = JSON.parse(stored);
+      return parsed.map(
+        (r): RubricItem => ({
+          id: r.id,
+          name: r.name,
+          description: r.description,
+          taskType: r.taskType,
+          criteriaCount: r.criteria?.length || 0,
+          tags: r.tags || [],
+        }),
+      );
     } catch (e) {
-      console.error('Failed to parse rubrics', e);
+      console.error("Failed to parse rubrics", e);
     }
   }
 
   return [
     {
-      id: 'r1',
-      name: 'Оценка веб-проекта',
-      description: 'Критерии оценки финального веб-проекта с фокусом на функциональность, дизайн и качество кода',
-      taskType: 'project',
+      id: "r1",
+      name: "Оценка веб-проекта",
+      description:
+        "Критерии оценки финального веб-проекта с фокусом на функциональность, дизайн и качество кода",
+      taskType: "project",
       criteriaCount: 4,
-      tags: ['веб-разработка', 'frontend'],
+      tags: ["веб-разработка", "frontend"],
     },
     {
-      id: 'r2',
-      name: 'Проверка кода (Code Review)',
-      description: 'Рубрика для оценки качества программного кода',
-      taskType: 'code',
+      id: "r2",
+      name: "Проверка кода (Code Review)",
+      description: "Рубрика для оценки качества программного кода",
+      taskType: "code",
       criteriaCount: 3,
-      tags: ['программирование', 'code-review'],
+      tags: ["программирование", "code-review"],
     },
     {
-      id: 'r3',
-      name: 'Эссе и письменные работы',
-      description: 'Критерии оценки текстовых работ и аналитических эссе',
-      taskType: 'text',
+      id: "r3",
+      name: "Эссе и письменные работы",
+      description: "Критерии оценки текстовых работ и аналитических эссе",
+      taskType: "text",
       criteriaCount: 4,
-      tags: ['письменные работы', 'эссе'],
+      tags: ["письменные работы", "эссе"],
     },
   ];
 };
 
 export function StepRubric({ data, onUpdate }: StepRubricProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const rubrics = getMockRubrics();
 
   const filteredRubrics = rubrics.filter((rubric) => {
     // Prefer matching task type
-    return rubric.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        rubric.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        rubric.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    return (
+      rubric.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      rubric.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      rubric.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
   });
 
   // Sort by task type match first
@@ -96,19 +110,19 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
 
   const handleCreateNew = () => {
     // Open rubrics library in new tab/window or navigate
-    window.open('#/teacher/rubrics', '_blank');
+    window.open("#/teacher/rubrics", "_blank");
   };
 
   const getTaskTypeLabel = (type: string) => {
     switch (type) {
-      case 'text':
-        return 'Текст';
-      case 'code':
-        return 'Код';
-      case 'project':
-        return 'Проект';
-      case 'files':
-        return 'Файлы';
+      case "text":
+        return "Текст";
+      case "code":
+        return "Код";
+      case "project":
+        return "Проект";
+      case "files":
+        return "Файлы";
       default:
         return type;
     }
@@ -134,16 +148,10 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <Layers className="w-5 h-5 text-[#4caf50]" />
-                <h3 className="text-[16px] font-medium text-[#21214f]">
-                  Выбранная рубрика
-                </h3>
+                <h3 className="text-[16px] font-medium text-[#21214f]">Выбранная рубрика</h3>
               </div>
-              <p className="text-[15px] text-[#21214f] font-medium mb-1">
-                {selectedRubric.name}
-              </p>
-              <p className="text-[13px] text-[#767692] mb-2">
-                {selectedRubric.description}
-              </p>
+              <p className="text-[15px] text-[#21214f] font-medium mb-1">{selectedRubric.name}</p>
+              <p className="text-[13px] text-[#767692] mb-2">{selectedRubric.description}</p>
               <div className="flex items-center gap-2">
                 <span className="px-2 py-1 bg-white text-[#21214f] rounded-[6px] text-[12px] font-medium">
                   {getTaskTypeLabel(selectedRubric.taskType)}
@@ -188,9 +196,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
             <Plus className="w-5 h-5 text-white" />
           </div>
           <div className="text-left">
-            <p className="text-[15px] font-medium text-[#21214f]">
-              Создать новую рубрику
-            </p>
+            <p className="text-[15px] font-medium text-[#21214f]">Создать новую рубрику</p>
             <p className="text-[13px] text-[#767692]">
               Откроется в новой вкладке, затем вернитесь сюда
             </p>
@@ -232,8 +238,8 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
                     w-full text-left p-4 border-2 rounded-[12px] transition-all
                     ${
                       isSelected
-                        ? 'border-[#5b8def] bg-[#e9f5ff]'
-                        : 'border-[#e6e8ee] hover:border-[#a0b8f1] bg-white'
+                        ? "border-[#5b8def] bg-[#e9f5ff]"
+                        : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
                     }
                   `}
                 >
@@ -278,9 +284,8 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
       {/* Help Text */}
       <div className="bg-[#e9f5ff] border border-[#a0b8f1] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Можно пропустить:</strong> Рубрику можно не выбирать сейчас и
-          добавить позже. Однако наличие рубрики помогает студентам понять критерии
-          оценивания.
+          <strong>Можно пропустить:</strong> Рубрику можно не выбирать сейчас и добавить позже.
+          Однако наличие рубрики помогает студентам понять критерии оценивания.
         </p>
       </div>
     </div>

@@ -1,16 +1,16 @@
-import { ReviewCard } from './ReviewCard';
-import type { ReviewAssignment } from './ReviewCard';
+import { ReviewCard } from "./ReviewCard";
+import type { ReviewAssignment } from "./ReviewCard";
 
 /**
  * ReviewList - Список назначенных рецензий с группировкой
- * 
+ *
  * Features:
  * - Group by course or by deadline
  * - Display count in group headers
  * - Responsive grid layout
  */
 
-export type GroupBy = 'course' | 'deadline';
+export type GroupBy = "course" | "deadline";
 
 interface ReviewListProps {
   reviews: ReviewAssignment[];
@@ -24,7 +24,7 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
   }
 
   // Group reviews
-  const groupedReviews = groupBy === 'course' ? groupByCourse(reviews) : groupByDeadline(reviews);
+  const groupedReviews = groupBy === "course" ? groupByCourse(reviews) : groupByDeadline(reviews);
 
   return (
     <div className="space-y-8">
@@ -37,7 +37,7 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
                 {group.title}
               </h2>
               <span className="text-[14px] text-[#767692]">
-                {group.reviews.length} {group.reviews.length === 1 ? 'рецензия' : 'рецензии'}
+                {group.reviews.length} {group.reviews.length === 1 ? "рецензия" : "рецензии"}
               </span>
             </div>
           </div>
@@ -114,40 +114,44 @@ function groupByDeadline(reviews: ReviewAssignment[]) {
 
   if (groups.overdue.length > 0) {
     result.push({
-      key: 'overdue',
-      title: '⚠️ Просрочено',
+      key: "overdue",
+      title: "⚠️ Просрочено",
       reviews: groups.overdue.sort((a, b) => b.reviewDeadlineTimestamp - a.reviewDeadlineTimestamp),
     });
   }
 
   if (groups.today.length > 0) {
     result.push({
-      key: 'today',
-      title: 'Сегодня',
+      key: "today",
+      title: "Сегодня",
       reviews: groups.today.sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp),
     });
   }
 
   if (groups.tomorrow.length > 0) {
     result.push({
-      key: 'tomorrow',
-      title: 'Завтра',
-      reviews: groups.tomorrow.sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp),
+      key: "tomorrow",
+      title: "Завтра",
+      reviews: groups.tomorrow.sort(
+        (a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp,
+      ),
     });
   }
 
   if (groups.thisWeek.length > 0) {
     result.push({
-      key: 'thisWeek',
-      title: 'На этой неделе',
-      reviews: groups.thisWeek.sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp),
+      key: "thisWeek",
+      title: "На этой неделе",
+      reviews: groups.thisWeek.sort(
+        (a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp,
+      ),
     });
   }
 
   if (groups.later.length > 0) {
     result.push({
-      key: 'later',
-      title: 'Позже',
+      key: "later",
+      title: "Позже",
       reviews: groups.later.sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp),
     });
   }

@@ -1,35 +1,31 @@
-import { useState } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { LayoutDebugger } from '@/app/components/LayoutDebugger';
-import { 
-  FileUploadArea, 
-  FilePreviewCard, 
-  TaskRulesCard, 
-  ValidationChecks 
-} from '@/app/components/submit';
-import type { 
-  UploadedFile, 
-  TaskRules, 
-  ValidationCheck 
-} from '@/app/components/submit';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { LayoutDebugger } from "@/app/components/LayoutDebugger";
+import {
+  FileUploadArea,
+  FilePreviewCard,
+  TaskRulesCard,
+  ValidationChecks,
+} from "@/app/components/submit";
+import type { UploadedFile, TaskRules, ValidationCheck } from "@/app/components/submit";
 
 /**
  * SubmitWorkPage - Экран отправки работы студентом
- * 
+ *
  * Route: /courses/:courseId/tasks/:taskId/submit
- * 
+ *
  * Layout:
  * Desktop (≥1200px): 2 columns (form + status/help rail)
  * Tablet/Mobile: single column with status at top
- * 
+ *
  * Left (form):
  * - Upload area (drag & drop)
  * - Draft/submission preview
  * - Comment to teacher
  * - CTAs: "Сохранить черновик", "Сдать работу"
- * 
+ *
  * Right rail:
  * - Task rules (deadline, resubmissions, late policy)
  * - Validation checks (plagiarism, lint, format, anonymization)
@@ -44,27 +40,27 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
-  const [uploadError, setUploadError] = useState('');
+  const [uploadError, setUploadError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false); // Success state after submission
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>([]);
 
   // Mock data - will be replaced with API
-  const courseName = 'Веб-разработка';
-  const taskTitle = 'Задание 1: Создание лендинга';
+  const courseName = "Веб-разработка";
+  const taskTitle = "Задание 1: Создание лендинга";
 
   const taskRules: TaskRules = {
-    deadline: '31 января, 23:59',
+    deadline: "31 января, 23:59",
     isDeadlinePassed: false,
     allowedResubmissions: 2,
     currentVersion: 0, // 0 = no submission yet
-    latePolicy: 'Штраф 10% за каждый день опоздания (макс. 3 дня)',
+    latePolicy: "Штраф 10% за каждый день опоздания (макс. 3 дня)",
   };
 
   // File formats based on task type
-  const acceptedFormats = ['.zip', '.pdf', '.jpg', '.png'];
+  const acceptedFormats = [".zip", ".pdf", ".jpg", ".png"];
   const maxFileSize = 10; // MB
 
   // Handle file selection
@@ -74,11 +70,11 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
       id: Date.now().toString(),
       name: file.name,
       size: file.size,
-      uploadedAt: new Date().toLocaleString('ru-RU', {
-        hour: '2-digit',
-        minute: '2-digit',
-        day: 'numeric',
-        month: 'long',
+      uploadedAt: new Date().toLocaleString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "numeric",
+        month: "long",
       }),
     };
 
@@ -88,37 +84,35 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
     setTimeout(() => {
       setValidationChecks([
         {
-          id: '1',
-          name: 'Проверка на плагиат',
-          description: 'Сравнение с базой работ',
-          status: 'queued',
+          id: "1",
+          name: "Проверка на плагиат",
+          description: "Сравнение с базой работ",
+          status: "queued",
         },
         {
-          id: '2',
-          name: 'Линтинг кода',
-          description: 'Проверка стиля и качества кода',
-          status: 'not-started',
+          id: "2",
+          name: "Линтинг кода",
+          description: "Проверка стиля и качества кода",
+          status: "not-started",
         },
         {
-          id: '3',
-          name: 'Формат файлов',
-          description: 'Соответствие требованиям задания',
-          status: 'not-started',
+          id: "3",
+          name: "Формат файлов",
+          description: "Соответствие требованиям задания",
+          status: "not-started",
         },
         {
-          id: '4',
-          name: 'Анонимизация',
-          description: 'Проверка на личные данные',
-          status: 'not-started',
+          id: "4",
+          name: "Анонимизация",
+          description: "Проверка на личные данные",
+          status: "not-started",
         },
       ]);
 
       // Simulate checks running
       setTimeout(() => {
         setValidationChecks((prev) =>
-          prev.map((check, i) =>
-            i === 0 ? { ...check, status: 'running' } : check
-          )
+          prev.map((check, i) => (i === 0 ? { ...check, status: "running" } : check)),
         );
       }, 500);
 
@@ -126,11 +120,11 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
         setValidationChecks((prev) =>
           prev.map((check, i) =>
             i === 0
-              ? { ...check, status: 'passed', message: 'Совпадений не обнаружено' }
+              ? { ...check, status: "passed", message: "Совпадений не обнаружено" }
               : i === 1
-              ? { ...check, status: 'running' }
-              : check
-          )
+                ? { ...check, status: "running" }
+                : check,
+          ),
         );
       }, 2000);
 
@@ -138,11 +132,11 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
         setValidationChecks((prev) =>
           prev.map((check, i) =>
             i === 1
-              ? { ...check, status: 'warning', message: '3 предупреждения о стиле кода' }
+              ? { ...check, status: "warning", message: "3 предупреждения о стиле кода" }
               : i === 2
-              ? { ...check, status: 'running' }
-              : check
-          )
+                ? { ...check, status: "running" }
+                : check,
+          ),
         );
       }, 3500);
 
@@ -150,21 +144,19 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
         setValidationChecks((prev) =>
           prev.map((check, i) =>
             i === 2
-              ? { ...check, status: 'passed', message: 'Все файлы в порядке' }
+              ? { ...check, status: "passed", message: "Все файлы в порядке" }
               : i === 3
-              ? { ...check, status: 'running' }
-              : check
-          )
+                ? { ...check, status: "running" }
+                : check,
+          ),
         );
       }, 5000);
 
       setTimeout(() => {
         setValidationChecks((prev) =>
           prev.map((check, i) =>
-            i === 3
-              ? { ...check, status: 'passed', message: 'Личных данных не найдено' }
-              : check
-          )
+            i === 3 ? { ...check, status: "passed", message: "Личных данных не найдено" } : check,
+          ),
         );
       }, 6000);
     }, 100);
@@ -174,22 +166,22 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
   const handleReplace = () => {
     setUploadedFile(null);
     setValidationChecks([]);
-    setUploadError('');
+    setUploadError("");
   };
 
   // Handle file download
   const handleDownload = () => {
-    console.log('Download file:', uploadedFile?.name);
+    console.log("Download file:", uploadedFile?.name);
     // Simulate download
     alert(`Скачивание: ${uploadedFile?.name}`);
   };
 
   // Handle file delete
   const handleDelete = () => {
-    if (confirm('Вы уверены, что хотите удалить этот файл?')) {
+    if (confirm("Вы уверены, что хотите удалить этот файл?")) {
       setUploadedFile(null);
       setValidationChecks([]);
-      setUploadError('');
+      setUploadError("");
     }
   };
 
@@ -199,7 +191,7 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
     // Simulate save
     setTimeout(() => {
       setIsSaving(false);
-      alert('Черновик сохранён');
+      alert("Черновик сохранён");
     }, 1000);
   };
 
@@ -207,9 +199,7 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
   const handleSubmit = () => {
     // Check if deadline passed
     if (taskRules.isDeadlinePassed) {
-      const confirmSubmit = confirm(
-        'Дедлайн истёк. Применяется штраф за просрочку. Продолжить?'
-      );
+      const confirmSubmit = confirm("Дедлайн истёк. Применяется штраф за просрочку. Продолжить?");
       if (!confirmSubmit) return;
     }
 
@@ -227,10 +217,10 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
       <AppShell title="Отправка работы">
         <Breadcrumbs
           items={[
-            { label: 'Курсы', href: ROUTES.courses },
+            { label: "Курсы", href: ROUTES.courses },
             { label: courseName, href: ROUTES.course(courseId) },
             { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-            { label: 'Отправка' }
+            { label: "Отправка" },
           ]}
         />
 
@@ -245,7 +235,8 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
               Работа успешно отправлена!
             </h2>
             <p className="text-[16px] text-[#767692] leading-[1.5] mb-6">
-              Ваша работа принята и будет проверена. Вы можете отслеживать статус на странице задания.
+              Ваша работа принята и будет проверена. Вы можете отслеживать статус на странице
+              задания.
             </p>
             <div className="flex flex-col gap-3">
               <button
@@ -278,10 +269,10 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
       {/* Breadcrumbs */}
       <Breadcrumbs
         items={[
-          { label: 'Курсы', href: ROUTES.courses },
+          { label: "Курсы", href: ROUTES.courses },
           { label: courseName, href: ROUTES.course(courseId) },
           { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-          { label: 'Отправка' }
+          { label: "Отправка" },
         ]}
       />
 
@@ -290,9 +281,7 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
           Отправка работы
         </h1>
-        <p className="text-[16px] text-[#767692] leading-[1.5]">
-          {taskTitle}
-        </p>
+        <p className="text-[16px] text-[#767692] leading-[1.5]">{taskTitle}</p>
       </div>
 
       {/* 2-column layout: Form + Status Rail */}
@@ -325,7 +314,7 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
               <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
                 Загруженные файлы
               </h2>
-              <FilePreviewCard 
+              <FilePreviewCard
                 file={uploadedFile}
                 onReplace={handleReplace}
                 onDownload={handleDownload}
@@ -357,14 +346,18 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
                 disabled={!uploadedFile || isSaving || isSubmitting}
                 className="flex-1 px-6 py-3 bg-white border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] text-[16px] font-medium hover:border-[#d2def8] hover:bg-[#f9f9f9] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isSaving ? 'Сохранение...' : 'Сохранить черновик'}
+                {isSaving ? "Сохранение..." : "Сохранить черновик"}
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={!uploadedFile || isSaving || isSubmitting}
                 className="flex-1 px-6 py-3 bg-[#3d6bc6] text-white rounded-[12px] text-[16px] font-medium hover:bg-[#2d5bb6] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isSubmitting ? 'Отправка...' : taskRules.currentVersion > 0 ? `Сдать работу (v${taskRules.currentVersion + 1})` : 'Сдать работу'}
+                {isSubmitting
+                  ? "Отправка..."
+                  : taskRules.currentVersion > 0
+                    ? `Сдать работу (v${taskRules.currentVersion + 1})`
+                    : "Сдать работу"}
               </button>
             </div>
 

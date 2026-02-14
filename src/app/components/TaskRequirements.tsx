@@ -1,12 +1,12 @@
-import { Check } from 'lucide-react';
+import { Check } from "lucide-react";
 
 export function TaskRequirements() {
   const requirements = [
-    'Работа должна быть выполнена самостоятельно',
-    'Объём работы: не менее 1500 слов',
-    'Обязательно указывайте источники',
-    'Файл должен быть в формате PDF или DOCX',
-    'Соблюдайте требования к оформлению'
+    "Работа должна быть выполнена самостоятельно",
+    "Объём работы: не менее 1500 слов",
+    "Обязательно указывайте источники",
+    "Файл должен быть в формате PDF или DOCX",
+    "Соблюдайте требования к оформлению",
   ];
 
   return (
@@ -14,7 +14,7 @@ export function TaskRequirements() {
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
         Требования
       </h2>
-      
+
       <div className="space-y-3">
         {requirements.map((requirement, index) => (
           <div key={index} className="flex items-start gap-3">

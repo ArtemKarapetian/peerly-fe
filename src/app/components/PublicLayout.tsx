@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { Button } from '@/app/components/ui/button.tsx';
-import { useAuth } from '@/app/contexts/AuthContext';
-import { ProfileDropdown } from './ProfileDropdown';
+import { ReactNode } from "react";
+import { Button } from "@/app/components/ui/button.tsx";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 /**
  * PublicTopBar - Минималистичный topbar для публичных страниц
@@ -35,7 +35,7 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => (window.location.hash = '/login')}
+                onClick={() => (window.location.hash = "/login")}
               >
                 Войти
               </Button>
@@ -57,7 +57,7 @@ interface PublicLayoutProps {
   showTopBar?: boolean;
   showLoginButton?: boolean;
   showFooter?: boolean;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "full";
 }
 
 export function PublicLayout({
@@ -65,14 +65,14 @@ export function PublicLayout({
   showTopBar = true,
   showLoginButton = true,
   showFooter = true,
-  maxWidth = 'full',
+  maxWidth = "full",
 }: PublicLayoutProps) {
   const maxWidthClasses = {
-    sm: 'max-w-[640px]',
-    md: 'max-w-[768px]',
-    lg: 'max-w-[1024px]',
-    xl: 'max-w-[1200px]',
-    full: 'max-w-none',
+    sm: "max-w-[640px]",
+    md: "max-w-[768px]",
+    lg: "max-w-[1024px]",
+    xl: "max-w-[1200px]",
+    full: "max-w-none",
   };
 
   return (
@@ -81,7 +81,9 @@ export function PublicLayout({
       {showTopBar && <PublicTopBar showAuthControls={showLoginButton} />}
 
       {/* Main Content */}
-      <main className={`flex-1 w-full ${maxWidthClasses[maxWidth]} ${maxWidth !== 'full' ? 'mx-auto' : ''}`}>
+      <main
+        className={`flex-1 w-full ${maxWidthClasses[maxWidth]} ${maxWidth !== "full" ? "mx-auto" : ""}`}
+      >
         {children}
       </main>
 
@@ -113,9 +115,7 @@ export function PublicLayout({
               </nav>
 
               {/* Copyright */}
-              <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Peerly
-              </p>
+              <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Peerly</p>
             </div>
           </div>
         </footer>

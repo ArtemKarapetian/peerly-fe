@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { PublicLayout } from '@/app/components/PublicLayout';
-import { useAuth } from '@/app/contexts/AuthContext';
+import { useEffect } from "react";
+import { PublicLayout } from "@/app/components/PublicLayout";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 /**
  * LandingPage - Яркая и красочная главная страница Peerly
@@ -15,7 +15,7 @@ import imgSettings from "@/assets/8a7431ce52feae07a5df11170b187a4a3d8ac9c2.png";
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
-  
+
   // Скролл наверх при загрузке страницы
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,14 +38,14 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <button
-                onClick={() => (window.location.hash = '/dashboard')}
+                onClick={() => (window.location.hash = "/dashboard")}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-white text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 Открыть дашборд
               </button>
             ) : (
               <button
-                onClick={() => (window.location.hash = '/register')}
+                onClick={() => (window.location.hash = "/register")}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-white text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 Начать работу
@@ -75,14 +75,14 @@ export default function LandingPage() {
               <div className="flex flex-col tablet:flex-row items-start tablet:items-center gap-3">
                 {isAuthenticated ? (
                   <button
-                    onClick={() => (window.location.hash = '/dashboard')}
+                    onClick={() => (window.location.hash = "/dashboard")}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2f5aaf] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#3d6bc6]/50 focus:ring-offset-2"
                   >
                     Открыть дашборд
                   </button>
                 ) : (
                   <button
-                    onClick={() => (window.location.hash = '/register')}
+                    onClick={() => (window.location.hash = "/register")}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2f5aaf] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#3d6bc6]/50 focus:ring-offset-2"
                   >
                     Начать работу
@@ -94,11 +94,7 @@ export default function LandingPage() {
             {/* Hero Illustration - Right */}
             <div className="flex justify-center desktop:justify-end">
               <div className="w-full max-w-[400px] desktop:max-w-[450px]">
-                <img
-                  src={imgHero}
-                  alt="Peer-review illustration"
-                  className="w-full h-auto"
-                />
+                <img src={imgHero} alt="Peer-review illustration" className="w-full h-auto" />
               </div>
             </div>
           </div>
@@ -115,9 +111,7 @@ export default function LandingPage() {
             <h3 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-[#21214f] leading-[1.1]">
               Peerly – новый игрок в взаимной проверке заданий
             </h3>
-            <p className="text-base text-[#21214f]/70">
-              Подробнее расскажем о наших преимуществах
-            </p>
+            <p className="text-base text-[#21214f]/70">Подробнее расскажем о наших преимуществах</p>
           </div>
         </div>
       </section>
@@ -140,7 +134,8 @@ export default function LandingPage() {
                   Самостоятельная платформа
                 </h3>
                 <p className="text-base text-[#21214f]/80">
-                  На базе Peerly можно загрузить, запустить, провести, закончить и выгрузить отчет по заданию. Также функционал можно подключить как плагин к разным LMS.
+                  На базе Peerly можно загрузить, запустить, провести, закончить и выгрузить отчет
+                  по заданию. Также функционал можно подключить как плагин к разным LMS.
                 </p>
               </div>
             </div>
@@ -154,7 +149,8 @@ export default function LandingPage() {
                   Снижение нагрузки на преподавателя
                 </h3>
                 <p className="text-base text-[#21214f]/80">
-                  Взаимопроверка студентов развивает практические навыки  учащихся и снижает нагрузку у преподавателя, не нуждающемуся в индивидуальной проверке каждого решения.
+                  Взаимопроверка студентов развивает практические навыки учащихся и снижает нагрузку
+                  у преподавателя, не нуждающемуся в индивидуальной проверке каждого решения.
                 </p>
               </div>
               <div className="flex justify-center">
@@ -182,7 +178,8 @@ export default function LandingPage() {
                   Гибкая настройка заданий
                 </h3>
                 <p className="text-base text-[#21214f]/80">
-                  Переназначение проверяющих, контроль рецензентов, настройка анонимности и другие функции – на пользу учителю и студента.
+                  Переназначение проверяющих, контроль рецензентов, настройка анонимности и другие
+                  функции – на пользу учителю и студента.
                 </p>
               </div>
             </div>
@@ -199,7 +196,8 @@ export default function LandingPage() {
               Деление на роли внутри платформы
             </h2>
             <p className="text-base text-[#21214f]/70 desktop:pt-4">
-              В Peerly пользователи поделены на три основные группы, каждые из которых имеют собственный набор возможных действий.
+              В Peerly пользователи поделены на три основные группы, каждые из которых имеют
+              собственный набор возможных действий.
             </p>
           </div>
 
@@ -208,15 +206,14 @@ export default function LandingPage() {
             {/* Students */}
             <div className="border-l-2 border-[#21214f] pl-6 tablet:pl-8 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">
-                  Студенты
-                </h3>
+                <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">Студенты</h3>
                 <p className="text-base font-medium text-[#21214f]/80">
                   Простота и многозадачность
                 </p>
               </div>
               <p className="text-base text-[#21214f]/70">
-                Дизайн приложения сделан с расчетом на наличие несколько подряд идущих заданий по разным предметам с разным статусом и неодинаковыми формами сдачи.
+                Дизайн приложения сделан с расчетом на наличие несколько подряд идущих заданий по
+                разным предметам с разным статусом и неодинаковыми формами сдачи.
               </p>
             </div>
 
@@ -226,12 +223,11 @@ export default function LandingPage() {
                 <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">
                   Преподаватели
                 </h3>
-                <p className="text-base font-medium text-[#21214f]/80">
-                  Ясность
-                </p>
+                <p className="text-base font-medium text-[#21214f]/80">Ясность</p>
               </div>
               <p className="text-base text-[#21214f]/70">
-                Интерфейс для преподавателя позволяет настраивать, отслеживать и выгружать задания, контролировать действия конкретных студентов.
+                Интерфейс для преподавателя позволяет настраивать, отслеживать и выгружать задания,
+                контролировать действия конкретных студентов.
               </p>
             </div>
 
@@ -241,9 +237,7 @@ export default function LandingPage() {
                 <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">
                   Администратор
                 </h3>
-                <p className="text-base font-medium text-[#21214f]/80">
-                  Прозрачность
-                </p>
+                <p className="text-base font-medium text-[#21214f]/80">Прозрачность</p>
               </div>
               <p className="text-base text-[#21214f]/70">
                 Администратор может следить за здоровьем системы и метриками.
@@ -258,19 +252,20 @@ export default function LandingPage() {
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
           <div className="text-center space-y-8 tablet:space-y-10">
             <h2 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-[#21214f] leading-[1.1] max-w-[900px] mx-auto">
-              Peerly позволит оптимизировать нагрузку на преподавателя и улучшить качество образования.
+              Peerly позволит оптимизировать нагрузку на преподавателя и улучшить качество
+              образования.
             </h2>
             <div className="flex flex-col tablet:flex-row items-center justify-center gap-3">
               {isAuthenticated ? (
                 <button
-                  onClick={() => (window.location.hash = '/dashboard')}
+                  onClick={() => (window.location.hash = "/dashboard")}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#5b8def] hover:bg-[#4a7cd8] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#5b8def]/50 focus:ring-offset-2 text-base h-11"
                 >
                   Открыть дашборд
                 </button>
               ) : (
                 <button
-                  onClick={() => (window.location.hash = '/register')}
+                  onClick={() => (window.location.hash = "/register")}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#5b8def] hover:bg-[#4a7cd8] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#5b8def]/50 focus:ring-offset-2 text-base h-11"
                 >
                   Начать работу
@@ -302,9 +297,7 @@ export default function LandingPage() {
             </nav>
 
             {/* Copyright */}
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Peerly
-            </p>
+            <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Peerly</p>
           </div>
         </div>
       </footer>

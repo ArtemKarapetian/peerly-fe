@@ -9,7 +9,8 @@
  * ]} />
  */
 
-import { ChevronRight } from 'lucide-react';
+import { useCallback } from "react";
+import { ChevronRight } from "lucide-react";
 
 export interface BreadcrumbItem {
   label: string;
@@ -21,22 +22,21 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
+  // Hooks must be called before any early returns
+  const handleClick = useCallback((href: string) => {
+    // Поддержка hash-роутинга
+    window.location.hash = href.startsWith("#") ? href : `#${href}`;
+  }, []);
+
   if (items.length <= 1) {
     return null;
   }
-
-  const handleClick = (href: string) => {
-    // Поддержка hash-роутинга
-    window.location.hash = href.startsWith('#') ? href : `#${href}`;
-  };
 
   return (
     <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm mb-4">
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
-          {index > 0 && (
-            <ChevronRight className="w-4 h-4 text-[--text-tertiary]" />
-          )}
+          {index > 0 && <ChevronRight className="w-4 h-4 text-[--text-tertiary]" />}
           {item.href ? (
             <button
               onClick={() => handleClick(item.href!)}
@@ -45,9 +45,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
               {item.label}
             </button>
           ) : (
-            <span className="text-[--text-primary] font-medium">
-              {item.label}
-            </span>
+            <span className="text-[--text-primary] font-medium">{item.label}</span>
           )}
         </div>
       ))}

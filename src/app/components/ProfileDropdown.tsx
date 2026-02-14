@@ -1,17 +1,17 @@
-import { useState, useRef, useEffect } from 'react';
-import { User, Settings, HelpCircle, Activity, LogOut } from 'lucide-react';
-import { useAuth } from '@/app/contexts/AuthContext';
+import { useState, useRef, useEffect } from "react";
+import { User, Settings, HelpCircle, Activity, LogOut } from "lucide-react";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 /**
  * ProfileDropdown - Dropdown menu для профиля пользователя
- * 
+ *
  * Меню:
  * - Профиль
  * - Настройки
  * - Помощь
  * - Статус сервиса
  * - Выйти
- * 
+ *
  * Режимы:
  * - collapsed: круглая кнопка-аватар с меню
  * - expanded: полная кнопка с текстом и меню
@@ -22,7 +22,10 @@ interface ProfileDropdownProps {
   userName?: string;
 }
 
-export function ProfileDropdown({ collapsed = false, userName = 'Пользователь' }: ProfileDropdownProps) {
+export function ProfileDropdown({
+  collapsed = false,
+  userName = "Пользователь",
+}: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { logout } = useAuth();
@@ -36,61 +39,61 @@ export function ProfileDropdown({ collapsed = false, userName = 'Пользов�
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
   // Handle Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
+      if (event.key === "Escape" && isOpen) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);
 
   const menuItems = [
     {
       icon: User,
-      label: 'Профиль',
+      label: "Профиль",
       onClick: () => {
-        window.location.hash = '/profile';
+        window.location.hash = "/profile";
         setIsOpen(false);
       },
     },
     {
       icon: Settings,
-      label: 'Настройки',
+      label: "Настройки",
       onClick: () => {
-        window.location.hash = '/settings';
+        window.location.hash = "/settings";
         setIsOpen(false);
       },
     },
     {
       icon: HelpCircle,
-      label: 'Помощь',
+      label: "Помощь",
       onClick: () => {
-        window.location.hash = '/help';
+        window.location.hash = "/help";
         setIsOpen(false);
       },
     },
     {
       icon: Activity,
-      label: 'Статус сервиса',
+      label: "Статус сервиса",
       onClick: () => {
-        window.location.hash = '/status';
+        window.location.hash = "/status";
         setIsOpen(false);
       },
     },

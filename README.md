@@ -5,6 +5,7 @@
 ## 📄 Страницы
 
 ### 0. Landing - Главная страница (`#/` или без хеша)
+
 - Hero-секция с заголовком "Peer-review без хаоса" и иллюстрацией
 - Описание сервиса и преимуществ
 - Три основных feature-блока (платформа, снижение нагрузки, гибкость)
@@ -13,18 +14,21 @@
 - **Публичная страница**: без sidebar, только навигация сверху
 
 ### 0.1. Login - Вход в аккаунт (`#/login`)
+
 - Форма входа с полями логин/пароль
 - Кнопка "Вход"
 - Ссылка на регистрацию
 - **Публичная страница**: без sidebar, только навигация сверху
 
 ### 0.2. Register - Регистрация (`#/register`)
+
 - Форма регистрации с полями логин/пароль/повтор пароля
 - Кнопка "Зарегистрироваться"
 - Ссылка на вход
 - **Публичная страница**: без sidebar, только навигация сверху
 
 ### 1. Курсы - Список всех курсов (`#/courses`)
+
 - Заголовок "Курсы"
 - Адаптивная grid-сетка карточек (class: `.courses-grid`):
   - **Desktop (≥1200px)**: 3 колонки, gap 24px, max-width 1200px
@@ -35,12 +39,13 @@
   - Название курса (1-2 строки с обрезкой, semibold, 15px)
   - Преподаватель (вторичный текст, 13px)
   - Меню иконка в кружке (появляется при hover)
-- Мягкий стиль: 
+- Мягкий стиль:
   - Скругления 20px
   - Тонкая рамка 1px #e6e8ee
   - Мягкая тень с hover эффектом
 
 ### 2. Курс - Список заданий (`#/course/:id`)
+
 - Header курса с названием и преподавателем
 - Tabs: "Задания (5)" / "Участники (24)" - классический underline стиль
 - **Вкладка "Задания"**:
@@ -58,6 +63,7 @@
   - Чистые строки с разделителями
 
 ### 3. Задание - Детальная страница (`#/task/:id`)
+
 - Breadcrumbs для навигации: `Курсы → Название курса → Задание 1`
 - Header задания с метаданными
 - Двухколоночный layout (Desktop ≥1200px):
@@ -72,18 +78,18 @@
 
 Проект использует современную адаптивную архитектуру с тремя брейкпоинтами:
 
-| Брейкпоинт | Диапазон | Sidebar | Layout колонок |
-|------------|----------|---------|----------------|
-| **Desktop** | ≥1200px | Expanded 260px | 2 колонки (2fr + 1fr) |
-| **Tablet** | 800-1199px | Collapsed 80px | 1 колонка |
-| **Mobile** | <800px | Drawer | 1 колонка |
+| Брейкпоинт  | Диапазон   | Sidebar        | Layout колонок        |
+| ----------- | ---------- | -------------- | --------------------- |
+| **Desktop** | ≥1200px    | Expanded 260px | 2 колонки (2fr + 1fr) |
+| **Tablet**  | 800-1199px | Collapsed 80px | 1 колонка             |
+| **Mobile**  | <800px     | Drawer         | 1 колонка             |
 
 ## 🚀 Быстрый старт
 
 ### Базовое использование
 
 ```tsx
-import { AppShell } from '@/app/components';
+import { AppShell } from "@/app/components";
 
 export default function Page() {
   return (
@@ -99,12 +105,8 @@ export default function Page() {
 ```tsx
 <AppShell title="Задание">
   <div className="grid grid-cols-1 desktop:grid-cols-[2fr,1fr] gap-6 desktop:gap-8">
-    <div className="w-full min-w-0">
-      {/* Основной контент */}
-    </div>
-    <div className="w-full min-w-0">
-      {/* Боковая панель */}
-    </div>
+    <div className="w-full min-w-0">{/* Основной контент */}</div>
+    <div className="w-full min-w-0">{/* Боковая панель */}</div>
   </div>
 </AppShell>
 ```
@@ -132,6 +134,7 @@ AppShell (flex horizontal)
 ```
 
 **Фиксированные высоты в SideNav**:
+
 - Header: 64px (логотип + toggle)
 - Profile: 72px (профиль внизу)
 - Navigation: flex-1 (заполняет пространство)
@@ -140,11 +143,13 @@ AppShell (flex horizontal)
 ## 🎨 Компоненты
 
 ### Layout компоненты
+
 - **AppShell** - Главный каркас приложения
 - **SideNav** - Навигация с 4 вариантами
 - **TopBar** - Мобильная верхняя панель
 
 ### Task компоненты
+
 - **Breadcrumbs** - Хлебные крошки
 - **TaskHeader** - Заголовок задания
 - **TaskDescription** - Описание
@@ -154,6 +159,7 @@ AppShell (flex horizontal)
 - **StatusCard** - Статус и действия
 
 ### Вспомогательные
+
 - **LayoutDebugger** - Отладчик layout (для разработки)
 
 ## 📦 Установка и запуск
@@ -172,47 +178,52 @@ npm run build
 ## 🎯 Ключевые принципы
 
 ### 1. Desktop ≠ Mobile
+
 - ✅ Фиксированный sidebar всегда виден на Desktop
 - ✅ НЕТ hamburger как основная навигация на Desktop
 - ✅ Двухколоночный layout для оптимального использования пространства
 
 ### 2. Правильные Constraints
+
 ```tsx
 // SideNav
-className="shrink-0 w-[260px]"
+className = "shrink-0 w-[260px]";
 
 // ContentArea
-className="flex-1 min-w-0"
+className = "flex-1 min-w-0";
 
 // Container
-className="max-w-[1280px] mx-auto"
+className = "max-w-[1280px] mx-auto";
 ```
 
 ### 3. Mobile-first подход
+
 ```tsx
 // Базовые стили для mobile
-className="p-4"
+className = "p-4";
 
 // Tablet и выше
-className="p-4 tablet:p-6"
+className = "p-4 tablet:p-6";
 
 // Desktop
-className="p-4 tablet:p-6 desktop:p-8"
+className = "p-4 tablet:p-6 desktop:p-8";
 ```
 
 ## 🧪 Тестирование
 
 ### Включить отладчик
+
 ```tsx
-import { LayoutDebugger } from '@/app/components';
+import { LayoutDebugger } from "@/app/components";
 
 <AppShell>
   {/* контент */}
   <LayoutDebugger />
-</AppShell>
+</AppShell>;
 ```
 
 ### Проверка брейкпоинтов
+
 1. Откройте приложение
 2. Измените размер окна
 3. Проверьте:
@@ -245,24 +256,21 @@ import { LayoutDebugger } from '@/app/components';
 ```
 
 Использование:
+
 ```tsx
-className="text-[14px] tablet:text-[15px] desktop:text-[16px]"
-className="grid-cols-1 desktop:grid-cols-2"
-className="hidden desktop:block"
+className = "text-[14px] tablet:text-[15px] desktop:text-[16px]";
+className = "grid-cols-1 desktop:grid-cols-2";
+className = "hidden desktop:block";
 ```
 
 ## 🎨 Цветовая схема
 
 ```css
 /* Основные цвета */
---primary: #21214f    /* Темно-синий */
---secondary: #4b4963  /* Серый */
---accent-blue: #b7bdff /* Светло-голубой */
---accent-cyan: #b0e9fb /* Голубой */
---success: #9cf38d    /* Зеленый */
---error: #ffb8b8      /* Красный */
---border: #c7c7c7     /* Серая граница */
---background: #f9f9f9 /* Светлый фон */
+--primary: #21214f /* Темно-синий */ --secondary: #4b4963 /* Серый */ --accent-blue: #b7bdff
+  /* Светло-голубой */ --accent-cyan: #b0e9fb /* Голубой */ --success: #9cf38d /* Зеленый */
+  --error: #ffb8b8 /* Красный */ --border: #c7c7c7 /* Серая граница */ --background: #f9f9f9
+  /* Светлый фон */;
 ```
 
 ## ♿ Доступность
@@ -283,6 +291,7 @@ className="hidden desktop:block"
 ## 🐛 Troubleshooting
 
 ### Sidebar не раскрывается
+
 ```tsx
 // Убедитесь что есть shrink-0 и min-w-0
 <SideNav className="shrink-0" />
@@ -290,12 +299,14 @@ className="hidden desktop:block"
 ```
 
 ### Desktop выглядит как Mobile
+
 ```tsx
 // Проверьте брейкпоинты
-className="desktop:grid-cols-2" // не cols-2
+className = "desktop:grid-cols-2"; // не cols-2
 ```
 
 ### Горизонтальный скролл
+
 ```tsx
 // Добавьте min-w-0 к flex/grid элементам
 <div className="w-full min-w-0">
@@ -308,6 +319,7 @@ className="desktop:grid-cols-2" // не cols-2
 ## 🎯 Roadmap
 
 Планируемые улучшения:
+
 - [ ] Dark mode
 - [ ] Дополнительные варианты TopBar
 - [ ] Больше примеров компонентов

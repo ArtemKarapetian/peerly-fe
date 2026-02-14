@@ -1,20 +1,29 @@
-import { Book, User, X, ChevronLeft, ChevronRight, LogOut, LayoutDashboard, FileCheck, MessageSquare, BookOpen, Bell } from 'lucide-react';
-import { useAuth } from '@/app/contexts/AuthContext';
-import { ProfileDropdown } from './ProfileDropdown';
+import {
+  Book,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  LayoutDashboard,
+  FileCheck,
+  MessageSquare,
+  BookOpen,
+  Bell,
+} from "lucide-react";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 /**
  * SideNav - Навигационная панель с вариантами для разных брейкпоинтов
- * 
+ *
  * Варианты:
  * - desktop-expanded: 260px, полный текст
  * - desktop-collapsed: 80px, только иконки
  * - tablet-collapsed: 80px, только иконки
  * - mobile-drawer: 280px overlay drawer
- * 
+ *
  * Навигация:
  * - Дашборд (home)
  * - Курсы (courses list)
- * 
+ *
  * Структура (vertical layout):
  * ┌────────────────┐
  * │ Header (64px)  │ ← Логотип + toggle
@@ -28,7 +37,11 @@ import { ProfileDropdown } from './ProfileDropdown';
  * └────────────────┘
  */
 
-type SideNavVariant = 'desktop-expanded' | 'desktop-collapsed' | 'tablet-collapsed' | 'mobile-drawer';
+type SideNavVariant =
+  | "desktop-expanded"
+  | "desktop-collapsed"
+  | "tablet-collapsed"
+  | "mobile-drawer";
 
 interface SideNavProps {
   variant: SideNavVariant;
@@ -38,10 +51,12 @@ interface SideNavProps {
 }
 
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
-  const { logout } = useAuth();
-  const isCollapsed = variant === 'desktop-collapsed' || variant === 'tablet-collapsed';
-  const isMobileDrawer = variant === 'mobile-drawer';
-  const showToggleButton = variant === 'desktop-expanded' || variant === 'desktop-collapsed' || variant === 'tablet-collapsed';
+  const isCollapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
+  const isMobileDrawer = variant === "mobile-drawer";
+  const showToggleButton =
+    variant === "desktop-expanded" ||
+    variant === "desktop-collapsed" ||
+    variant === "tablet-collapsed";
 
   // Mobile Drawer - overlay
   if (isMobileDrawer) {
@@ -49,9 +64,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       <div
         className={`
           fixed inset-y-0 left-0 z-50 bg-white transform transition-transform duration-300 w-[280px]
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
-        style={{ boxShadow: '2px 0 8px rgba(0,0,0,0.1)' }}
+        style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.1)" }}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
@@ -70,10 +85,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
           {/* Navigation Items */}
           <div className="flex-1 py-4 px-3 space-y-2">
-            <div 
+            <div
               className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
               onClick={() => {
-                window.location.hash = '/dashboard';
+                window.location.hash = "/dashboard";
                 onClose?.();
               }}
             >
@@ -82,10 +97,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
                 Дашборд
               </span>
             </div>
-            <div 
+            <div
               className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
               onClick={() => {
-                window.location.hash = '/courses';
+                window.location.hash = "/courses";
                 onClose?.();
               }}
             >
@@ -94,10 +109,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
                 Курсы
               </span>
             </div>
-            <div 
+            <div
               className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
               onClick={() => {
-                window.location.hash = '/reviews';
+                window.location.hash = "/reviews";
                 onClose?.();
               }}
             >
@@ -106,10 +121,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
                 Рецензии
               </span>
             </div>
-            <div 
+            <div
               className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
               onClick={() => {
-                window.location.hash = '/reviews/received';
+                window.location.hash = "/reviews/received";
                 onClose?.();
               }}
             >
@@ -118,10 +133,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
                 Полученные отзывы
               </span>
             </div>
-            <div 
+            <div
               className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
               onClick={() => {
-                window.location.hash = '/gradebook';
+                window.location.hash = "/gradebook";
                 onClose?.();
               }}
             >
@@ -130,10 +145,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
                 Журнал оценок
               </span>
             </div>
-            <div 
+            <div
               className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
               onClick={() => {
-                window.location.hash = '/inbox';
+                window.location.hash = "/inbox";
                 onClose?.();
               }}
             >
@@ -158,7 +173,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
     <div
       className={`
         bg-white border-r-3 border-[#c7c7c7] h-screen flex flex-col shrink-0 transition-all duration-300
-        ${isCollapsed ? 'w-[80px]' : 'w-[260px]'}
+        ${isCollapsed ? "w-[80px]" : "w-[260px]"}
       `}
     >
       {/* Header - Фиксированная высота 64px */}
@@ -171,8 +186,8 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         {showToggleButton && (
           <button
             onClick={onToggleCollapse}
-            className={`p-1 hover:bg-gray-100 rounded transition-colors ${isCollapsed ? 'mx-auto' : ''}`}
-            aria-label={isCollapsed ? 'Развернуть' : 'Свернуть'}
+            className={`p-1 hover:bg-gray-100 rounded transition-colors ${isCollapsed ? "mx-auto" : ""}`}
+            aria-label={isCollapsed ? "Развернуть" : "Свернуть"}
           >
             {isCollapsed ? (
               <ChevronRight className="size-5 text-[#21214f]" />
@@ -189,9 +204,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           className={`
             bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
             hover:bg-[#c5d5f5] transition-colors py-2
-            ${isCollapsed ? 'justify-center px-2' : 'px-3'}
+            ${isCollapsed ? "justify-center px-2" : "px-3"}
           `}
-          onClick={() => window.location.hash = '/dashboard'}
+          onClick={() => (window.location.hash = "/dashboard")}
         >
           <LayoutDashboard className="size-[19px] text-[#21214f] shrink-0" />
           {!isCollapsed && (
@@ -204,9 +219,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           className={`
             bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
             hover:bg-[#c5d5f5] transition-colors py-2
-            ${isCollapsed ? 'justify-center px-2' : 'px-3'}
+            ${isCollapsed ? "justify-center px-2" : "px-3"}
           `}
-          onClick={() => window.location.hash = '/courses'}
+          onClick={() => (window.location.hash = "/courses")}
         >
           <Book className="size-[19px] text-[#21214f] shrink-0" />
           {!isCollapsed && (
@@ -219,9 +234,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           className={`
             bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
             hover:bg-[#c5d5f5] transition-colors py-2
-            ${isCollapsed ? 'justify-center px-2' : 'px-3'}
+            ${isCollapsed ? "justify-center px-2" : "px-3"}
           `}
-          onClick={() => window.location.hash = '/reviews'}
+          onClick={() => (window.location.hash = "/reviews")}
         >
           <FileCheck className="size-[19px] text-[#21214f] shrink-0" />
           {!isCollapsed && (
@@ -234,9 +249,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           className={`
             bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
             hover:bg-[#c5d5f5] transition-colors py-2
-            ${isCollapsed ? 'justify-center px-2' : 'px-3'}
+            ${isCollapsed ? "justify-center px-2" : "px-3"}
           `}
-          onClick={() => window.location.hash = '/reviews/received'}
+          onClick={() => (window.location.hash = "/reviews/received")}
         >
           <MessageSquare className="size-[19px] text-[#21214f] shrink-0" />
           {!isCollapsed && (
@@ -249,9 +264,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           className={`
             bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
             hover:bg-[#c5d5f5] transition-colors py-2
-            ${isCollapsed ? 'justify-center px-2' : 'px-3'}
+            ${isCollapsed ? "justify-center px-2" : "px-3"}
           `}
-          onClick={() => window.location.hash = '/gradebook'}
+          onClick={() => (window.location.hash = "/gradebook")}
         >
           <BookOpen className="size-[19px] text-[#21214f] shrink-0" />
           {!isCollapsed && (
@@ -264,9 +279,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           className={`
             bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
             hover:bg-[#c5d5f5] transition-colors py-2
-            ${isCollapsed ? 'justify-center px-2' : 'px-3'}
+            ${isCollapsed ? "justify-center px-2" : "px-3"}
           `}
-          onClick={() => window.location.hash = '/inbox'}
+          onClick={() => (window.location.hash = "/inbox")}
         >
           <Bell className="size-[19px] text-[#21214f] shrink-0" />
           {!isCollapsed && (

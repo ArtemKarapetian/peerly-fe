@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
-import { Database, AlertTriangle, Clock, Save, RotateCcw } from 'lucide-react';
+import { useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
+import { Database, AlertTriangle, Clock, Save, RotateCcw } from "lucide-react";
 
 /**
  * AdminRetentionPage - Политики хранения данных
- * 
+ *
  * Функции:
  * - Периоды хранения для submissions, logs, plugin reports
  * - Предупреждения о рискованных настройках
@@ -26,7 +26,7 @@ const DEFAULT_RETENTION: RetentionPolicy = {
   logs: 90,
   pluginReports: 180,
   archivedCourses: 730,
-  userSessions: 30
+  userSessions: 30,
 };
 
 const RISKY_THRESHOLDS = {
@@ -34,20 +34,19 @@ const RISKY_THRESHOLDS = {
   logs: 7,
   pluginReports: 14,
   archivedCourses: 180,
-  userSessions: 7
+  userSessions: 7,
+};
+
+// Initialize from localStorage
+const getInitialPolicy = (): RetentionPolicy => {
+  const stored = localStorage.getItem("admin_retention_policy");
+  return stored ? JSON.parse(stored) : DEFAULT_RETENTION;
 };
 
 export default function AdminRetentionPage() {
-  const [policy, setPolicy] = useState<RetentionPolicy>(DEFAULT_RETENTION);
+  const [policy, setPolicy] = useState<RetentionPolicy>(getInitialPolicy);
   const [hasChanges, setHasChanges] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('admin_retention_policy');
-    if (stored) {
-      setPolicy(JSON.parse(stored));
-    }
-  }, []);
 
   const handleChange = (key: keyof RetentionPolicy, value: string) => {
     const numValue = parseInt(value) || 0;
@@ -56,31 +55,31 @@ export default function AdminRetentionPage() {
   };
 
   const handleSave = () => {
-    localStorage.setItem('admin_retention_policy', JSON.stringify(policy));
-    logAuditEntry('UPDATE_RETENTION_POLICY', 'RetentionPolicy', 'Политики хранения обновлены');
+    localStorage.setItem("admin_retention_policy", JSON.stringify(policy));
+    logAuditEntry("UPDATE_RETENTION_POLICY", "RetentionPolicy", "Политики хранения обновлены");
     setHasChanges(false);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
   const handleReset = () => {
-    if (!confirm('Сбросить все политики к значениям по умолчанию?')) return;
+    if (!confirm("Сбросить все политики к значениям по умолчанию?")) return;
     setPolicy(DEFAULT_RETENTION);
     setHasChanges(true);
   };
 
   const logAuditEntry = (action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem('admin_audit_logs') || '[]');
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
     logs.unshift({
       id: `audit-${Date.now()}`,
-      userId: 'retention-system',
-      adminId: 'u3',
+      userId: "retention-system",
+      adminId: "u3",
       action,
       resource,
       details,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    localStorage.setItem('admin_audit_logs', JSON.stringify(logs));
+    localStorage.setItem("admin_audit_logs", JSON.stringify(logs));
   };
 
   const isRisky = (key: keyof RetentionPolicy, value: number): boolean => {
@@ -89,53 +88,55 @@ export default function AdminRetentionPage() {
 
   const retentionSettings = [
     {
-      key: 'submissions' as keyof RetentionPolicy,
-      label: 'Работы студентов (Submissions)',
-      description: 'Период хранения загруженных работ и файлов',
-      icon: '📄',
-      warningText: 'Слишком короткий срок может помешать апелляциям и аудиту'
+      key: "submissions" as keyof RetentionPolicy,
+      label: "Работы студентов (Submissions)",
+      description: "Период хранения загруженных работ и файлов",
+      icon: "📄",
+      warningText: "Слишком короткий срок может помешать апелляциям и аудиту",
     },
     {
-      key: 'logs' as keyof RetentionPolicy,
-      label: 'Системные логи',
-      description: 'Период хранения журналов действий и событий',
-      icon: '📋',
-      warningText: 'Короткий срок затруднит расследование инцидентов'
+      key: "logs" as keyof RetentionPolicy,
+      label: "Системные логи",
+      description: "Период хранения журналов действий и событий",
+      icon: "📋",
+      warningText: "Короткий срок затруднит расследование инцидентов",
     },
     {
-      key: 'pluginReports' as keyof RetentionPolicy,
-      label: 'Отчёты плагинов',
-      description: 'Результаты проверок плагиатом, линтером и т.д.',
-      icon: '🔌',
-      warningText: 'Может потребоваться для повторного анализа'
+      key: "pluginReports" as keyof RetentionPolicy,
+      label: "Отчёты плагинов",
+      description: "Результаты проверок плагиатом, линтером и т.д.",
+      icon: "🔌",
+      warningText: "Может потребоваться для повторного анализа",
     },
     {
-      key: 'archivedCourses' as keyof RetentionPolicy,
-      label: 'Архивные курсы',
-      description: 'Период хранения архивированных курсов',
-      icon: '📦',
-      warningText: 'Данные курса будут удалены безвозвратно'
+      key: "archivedCourses" as keyof RetentionPolicy,
+      label: "Архивные курсы",
+      description: "Период хранения архивированных курсов",
+      icon: "📦",
+      warningText: "Данные курса будут удалены безвозвратно",
     },
     {
-      key: 'userSessions' as keyof RetentionPolicy,
-      label: 'Пользовательские сессии',
-      description: 'История активных сессий пользователей',
-      icon: '🔐',
-      warningText: 'Короткий срок затруднит отслеживание безопасности'
-    }
+      key: "userSessions" as keyof RetentionPolicy,
+      label: "Пользовательские сессии",
+      description: "История активных сессий пользователей",
+      icon: "🔐",
+      warningText: "Короткий срок затруднит отслеживание безопасности",
+    },
   ];
 
-  const hasAnyRiskySettings = retentionSettings.some(setting => 
-    isRisky(setting.key, policy[setting.key])
+  const hasAnyRiskySettings = retentionSettings.some((setting) =>
+    isRisky(setting.key, policy[setting.key]),
   );
 
   return (
     <AppShell title="Политики хранения">
-      <Breadcrumbs items={[
-        { label: 'Admin', href: ROUTES.adminOverview },
-        { label: 'Политики', href: ROUTES.adminPolicies },
-        { label: 'Хранение данных' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Admin", href: ROUTES.adminOverview },
+          { label: "Политики", href: ROUTES.adminPolicies },
+          { label: "Хранение данных" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -158,8 +159,8 @@ export default function AdminRetentionPage() {
                   ⚠️ Обнаружены рискованные настройки
                 </h4>
                 <p className="text-[13px] text-[#767692]">
-                  Некоторые периоды хранения установлены ниже рекомендуемых значений. 
-                  Это может привести к потере важных данных или затруднить аудит.
+                  Некоторые периоды хранения установлены ниже рекомендуемых значений. Это может
+                  привести к потере важных данных или затруднить аудит.
                 </p>
               </div>
             </div>
@@ -182,7 +183,7 @@ export default function AdminRetentionPage() {
 
         {/* Retention Settings */}
         <div className="space-y-4 mb-6">
-          {retentionSettings.map(setting => {
+          {retentionSettings.map((setting) => {
             const value = policy[setting.key];
             const risky = isRisky(setting.key, value);
 
@@ -190,7 +191,7 @@ export default function AdminRetentionPage() {
               <div
                 key={setting.key}
                 className={`bg-white border-2 rounded-[20px] p-6 transition-colors ${
-                  risky ? 'border-[#d4183d]' : 'border-[#e6e8ee]'
+                  risky ? "border-[#d4183d]" : "border-[#e6e8ee]"
                 }`}
               >
                 <div className="flex items-start gap-4">
@@ -199,12 +200,8 @@ export default function AdminRetentionPage() {
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="text-[18px] font-medium text-[#21214f] mb-1">
-                      {setting.label}
-                    </h3>
-                    <p className="text-[13px] text-[#767692] mb-4">
-                      {setting.description}
-                    </p>
+                    <h3 className="text-[18px] font-medium text-[#21214f] mb-1">{setting.label}</h3>
+                    <p className="text-[13px] text-[#767692] mb-4">{setting.description}</p>
 
                     {/* Input Row */}
                     <div className="flex items-center gap-4 mb-3">
@@ -217,8 +214,8 @@ export default function AdminRetentionPage() {
                           onChange={(e) => handleChange(setting.key, e.target.value)}
                           className={`flex-1 px-4 py-2 border-2 rounded-[8px] text-[14px] focus:outline-none transition-colors ${
                             risky
-                              ? 'border-[#d4183d] focus:border-[#d4183d]'
-                              : 'border-[#e6e8ee] focus:border-[#5b8def]'
+                              ? "border-[#d4183d] focus:border-[#d4183d]"
+                              : "border-[#e6e8ee] focus:border-[#5b8def]"
                           }`}
                         />
                         <span className="text-[14px] text-[#767692] min-w-[60px]">дней</span>
@@ -255,7 +252,8 @@ export default function AdminRetentionPage() {
                       <div className="flex items-start gap-2 p-3 bg-[#fff4e5] rounded-[8px]">
                         <AlertTriangle className="w-4 h-4 text-[#ff9800] flex-shrink-0 mt-0.5" />
                         <p className="text-[12px] text-[#767692]">
-                          Рекомендуемое значение: <strong>{DEFAULT_RETENTION[setting.key]} дней</strong>
+                          Рекомендуемое значение:{" "}
+                          <strong>{DEFAULT_RETENTION[setting.key]} дней</strong>
                         </p>
                       </div>
                     )}
@@ -271,16 +269,14 @@ export default function AdminRetentionPage() {
           <div className="flex gap-3">
             <Database className="w-5 h-5 text-[#5b8def] flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
-                О политиках хранения
-              </h4>
+              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">О политиках хранения</h4>
               <p className="text-[13px] text-[#767692] mb-2">
-                Данные старше указанного срока будут автоматически удалены из системы. 
-                Удаление происходит необратимо и не может быть отменено.
+                Данные старше указанного срока будут автоматически удалены из системы. Удаление
+                происходит необратимо и не может быть отменено.
               </p>
               <p className="text-[13px] text-[#767692]">
-                Установка значения <strong>0</strong> отключает автоматическое удаление 
-                (данные хранятся бессрочно).
+                Установка значения <strong>0</strong> отключает автоматическое удаление (данные
+                хранятся бессрочно).
               </p>
             </div>
           </div>
@@ -293,8 +289,8 @@ export default function AdminRetentionPage() {
             disabled={!hasChanges}
             className={`flex items-center gap-2 px-6 py-3 rounded-[12px] text-[14px] font-medium transition-all ${
               hasChanges
-                ? 'bg-[#5b8def] text-white hover:bg-[#4a7de8]'
-                : 'bg-[#e6e8ee] text-[#767692] cursor-not-allowed'
+                ? "bg-[#5b8def] text-white hover:bg-[#4a7de8]"
+                : "bg-[#e6e8ee] text-[#767692] cursor-not-allowed"
             }`}
           >
             <Save className="w-5 h-5" />

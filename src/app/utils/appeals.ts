@@ -1,11 +1,11 @@
 /**
  * Appeals System - Data Models and Storage
- * 
+ *
  * Manages student appeals (regrade/review requests) with localStorage persistence
  */
 
-export type AppealStatus = 'new' | 'in_review' | 'resolved';
-export type AppealReason = 'unfair_score' | 'wrong_interpretation' | 'technical_issue' | 'other';
+export type AppealStatus = "new" | "in_review" | "resolved";
+export type AppealReason = "unfair_score" | "wrong_interpretation" | "technical_issue" | "other";
 
 export interface Appeal {
   id: string;
@@ -14,22 +14,22 @@ export interface Appeal {
   courseName: string;
   taskId: string;
   taskName: string;
-  
+
   // Appeal details
   reason: AppealReason;
   message: string;
   attachmentName?: string; // Demo only
-  
+
   // Context from submission
   currentScore?: number;
   maxScore?: number;
   reviewCount?: number;
-  
+
   // Status tracking
   status: AppealStatus;
   createdAt: string;
   updatedAt: string;
-  
+
   // Teacher response (for future implementation)
   teacherResponse?: {
     message: string;
@@ -39,7 +39,7 @@ export interface Appeal {
   };
 }
 
-const STORAGE_KEY = 'peerly_appeals';
+const STORAGE_KEY = "peerly_appeals";
 
 /**
  * Get all appeals from storage
@@ -51,7 +51,7 @@ export function getAppeals(): Appeal[] {
       return JSON.parse(stored);
     }
   } catch (e) {
-    console.error('Failed to load appeals:', e);
+    console.error("Failed to load appeals:", e);
   }
   return [];
 }
@@ -60,32 +60,34 @@ export function getAppeals(): Appeal[] {
  * Get appeals for a specific student
  */
 export function getStudentAppeals(studentId: string): Appeal[] {
-  return getAppeals().filter(a => a.studentId === studentId);
+  return getAppeals().filter((a) => a.studentId === studentId);
 }
 
 /**
  * Get appeal by ID
  */
 export function getAppealById(id: string): Appeal | undefined {
-  return getAppeals().find(a => a.id === id);
+  return getAppeals().find((a) => a.id === id);
 }
 
 /**
  * Create a new appeal
  */
-export function createAppeal(appeal: Omit<Appeal, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Appeal {
+export function createAppeal(
+  appeal: Omit<Appeal, "id" | "status" | "createdAt" | "updatedAt">,
+): Appeal {
   const newAppeal: Appeal = {
     ...appeal,
     id: `appeal-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    status: 'new',
+    status: "new",
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
-  
+
   const appeals = getAppeals();
   appeals.push(newAppeal);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appeals));
-  
+
   return newAppeal;
 }
 
@@ -94,7 +96,7 @@ export function createAppeal(appeal: Omit<Appeal, 'id' | 'status' | 'createdAt' 
  */
 export function updateAppealStatus(id: string, status: AppealStatus): void {
   const appeals = getAppeals();
-  const appeal = appeals.find(a => a.id === id);
+  const appeal = appeals.find((a) => a.id === id);
   if (appeal) {
     appeal.status = status;
     appeal.updatedAt = new Date().toISOString();
@@ -105,15 +107,12 @@ export function updateAppealStatus(id: string, status: AppealStatus): void {
 /**
  * Add teacher response to appeal
  */
-export function addTeacherResponse(
-  id: string, 
-  response: Appeal['teacherResponse']
-): void {
+export function addTeacherResponse(id: string, response: Appeal["teacherResponse"]): void {
   const appeals = getAppeals();
-  const appeal = appeals.find(a => a.id === id);
+  const appeal = appeals.find((a) => a.id === id);
   if (appeal) {
     appeal.teacherResponse = response;
-    appeal.status = 'resolved';
+    appeal.status = "resolved";
     appeal.updatedAt = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appeals));
   }
@@ -124,10 +123,10 @@ export function addTeacherResponse(
  */
 export function getReasonLabel(reason: AppealReason): string {
   const labels: Record<AppealReason, string> = {
-    unfair_score: 'Несправедливая оценка',
-    wrong_interpretation: 'Неправильная интерпретация',
-    technical_issue: 'Техническая проблема',
-    other: 'Другое'
+    unfair_score: "Несправедливая оценка",
+    wrong_interpretation: "Неправильная интерпретация",
+    technical_issue: "Техническая проблема",
+    other: "Другое",
   };
   return labels[reason];
 }
@@ -137,9 +136,9 @@ export function getReasonLabel(reason: AppealReason): string {
  */
 export function getStatusLabel(status: AppealStatus): string {
   const labels: Record<AppealStatus, string> = {
-    new: 'Новая',
-    in_review: 'На рассмотрении',
-    resolved: 'Рассмотрена'
+    new: "Новая",
+    in_review: "На рассмотрении",
+    resolved: "Рассмотрена",
   };
   return labels[status];
 }
@@ -149,9 +148,9 @@ export function getStatusLabel(status: AppealStatus): string {
  */
 export function getStatusColor(status: AppealStatus): string {
   const colors: Record<AppealStatus, string> = {
-    new: 'bg-blue-100 text-blue-800 border-blue-200',
-    in_review: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    resolved: 'bg-green-100 text-green-800 border-green-200'
+    new: "bg-blue-100 text-blue-800 border-blue-200",
+    in_review: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    resolved: "bg-green-100 text-green-800 border-green-200",
   };
   return colors[status];
 }

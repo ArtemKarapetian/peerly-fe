@@ -1,16 +1,24 @@
-import {JSX, useState} from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { ROUTES } from '@/app/routes';
+import { JSX, useState } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { ROUTES } from "@/app/routes";
 import {
-  Shield, AlertTriangle, MessageSquare, Trash2, GitBranch, 
-  Eye, EyeOff, X, CheckCircle, Filter, ChevronDown, ChevronUp
-} from 'lucide-react';
-import { demoDataStore } from '@/app/stores/demoDataStore';
+  Shield,
+  AlertTriangle,
+  MessageSquare,
+  Trash2,
+  GitBranch,
+  Eye,
+  EyeOff,
+  CheckCircle,
+  Filter,
+  ChevronUp,
+} from "lucide-react";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 
 /**
  * TeacherModerationPage - Модерация рецензий
- * 
+ *
  * Управление помеченными рецензиями:
  * - Очередь помеченных рецензий с разными типами флагов
  * - Предпросмотр рецензий с оценками и комментариями
@@ -18,7 +26,7 @@ import { demoDataStore } from '@/app/stores/demoDataStore';
  * - Bulk-действия для выбранных рецензий
  */
 
-type FlagType = 'toxicity' | 'too-short' | 'spam' | 'collusion';
+type FlagType = "toxicity" | "too-short" | "spam" | "collusion";
 
 interface FlaggedReview {
   id: string;
@@ -33,7 +41,7 @@ interface FlaggedReview {
   flaggedAt: Date;
   scores: Record<string, number>;
   comment: string;
-  status: 'pending' | 'dismissed' | 'hidden';
+  status: "pending" | "dismissed" | "hidden";
 }
 
 export default function TeacherModerationPage() {
@@ -44,51 +52,51 @@ export default function TeacherModerationPage() {
 
   // Generate demo flagged reviews
   const generateFlaggedReviews = (): FlaggedReview[] => {
-    const flagTypes: FlagType[] = ['toxicity', 'too-short', 'spam', 'collusion'];
+    const flagTypes: FlagType[] = ["toxicity", "too-short", "spam", "collusion"];
     const flagReasons: Record<FlagType, string[]> = {
       toxicity: [
-        'Обнаружены оскорбительные выражения',
-        'Неконструктивная критика с личными нападками',
-        'Использование недопустимой лексики'
+        "Обнаружены оскорбительные выражения",
+        "Неконструктивная критика с личными нападками",
+        "Использование недопустимой лексики",
       ],
-      'too-short': [
-        'Рецензия содержит менее 50 слов',
-        'Недостаточно детальная обратная связь',
-        'Отсутствует аргументация оценок'
+      "too-short": [
+        "Рецензия содержит менее 50 слов",
+        "Недостаточно детальная обратная связь",
+        "Отсутствует аргументация оценок",
       ],
       spam: [
-        'Повторяющийся текст без смысла',
-        'Случайный набор символов',
-        'Копипаста из другой рецензии'
+        "Повторяющийся текст без смысла",
+        "Случайный набор символов",
+        "Копипаста из другой рецензии",
       ],
       collusion: [
-        'Подозрительно высокие оценки без обоснования',
-        'Идентичные формулировки в нескольких рецензиях',
-        'Паттерн взаимного завышения оценок'
-      ]
+        "Подозрительно высокие оценки без обоснования",
+        "Идентичные формулировки в нескольких рецензиях",
+        "Паттерн взаимного завышения оценок",
+      ],
     };
 
     return reviews.slice(0, 8).map((review, idx) => {
-      const submission = submissions.find(s => s.id === review.submissionId);
-      const assignment = assignments.find(a => a.id === submission?.assignmentId);
-      const reviewer = users.find(u => u.id === review.reviewerId);
-      const reviewee = users.find(u => u.id === submission?.studentId);
+      const submission = submissions.find((s) => s.id === review.submissionId);
+      const assignment = assignments.find((a) => a.id === submission?.assignmentId);
+      const reviewer = users.find((u) => u.id === review.reviewerId);
+      const reviewee = users.find((u) => u.id === submission?.studentId);
       const flagType = flagTypes[idx % flagTypes.length];
 
       return {
         id: `flag-${review.id}`,
         reviewId: review.id,
         submissionId: review.submissionId,
-        assignmentTitle: assignment?.title || 'Unknown Assignment',
-        reviewerName: reviewer?.name || 'Unknown Reviewer',
-        revieweeName: reviewee?.name || 'Unknown Student',
+        assignmentTitle: assignment?.title || "Unknown Assignment",
+        reviewerName: reviewer?.name || "Unknown Reviewer",
+        revieweeName: reviewee?.name || "Unknown Student",
         flagType,
         flagReason: flagReasons[flagType][Math.floor(Math.random() * flagReasons[flagType].length)],
-        flaggedBy: 'Автоматическая система',
+        flaggedBy: "Автоматическая система",
         flaggedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
         scores: review.scores,
         comment: review.comment,
-        status: 'pending'
+        status: "pending",
       };
     });
   };
@@ -96,14 +104,14 @@ export default function TeacherModerationPage() {
   const [flaggedReviews, setFlaggedReviews] = useState<FlaggedReview[]>(generateFlaggedReviews());
   const [selectedReviews, setSelectedReviews] = useState<Set<string>>(new Set());
   const [expandedReview, setExpandedReview] = useState<string | null>(null);
-  const [filterType, setFilterType] = useState<FlagType | 'all'>('all');
+  const [filterType, setFilterType] = useState<FlagType | "all">("all");
 
   const getFlagTypeLabel = (type: FlagType): string => {
     const labels: Record<FlagType, string> = {
-      toxicity: 'Токсичность',
-      'too-short': 'Слишком коротко',
-      spam: 'Спам',
-      collusion: 'Подозрение на сговор'
+      toxicity: "Токсичность",
+      "too-short": "Слишком коротко",
+      spam: "Спам",
+      collusion: "Подозрение на сговор",
     };
     return labels[type];
   };
@@ -111,39 +119,42 @@ export default function TeacherModerationPage() {
   const getFlagTypeBadge = (type: FlagType) => {
     const configs: Record<FlagType, { bg: string; text: string; icon: JSX.Element }> = {
       toxicity: {
-        bg: 'bg-[#fff5f5]',
-        text: 'text-[#d4183d]',
-        icon: <AlertTriangle className="w-3 h-3" />
+        bg: "bg-[#fff5f5]",
+        text: "text-[#d4183d]",
+        icon: <AlertTriangle className="w-3 h-3" />,
       },
-      'too-short': {
-        bg: 'bg-[#fff4e5]',
-        text: 'text-[#ff9800]',
-        icon: <MessageSquare className="w-3 h-3" />
+      "too-short": {
+        bg: "bg-[#fff4e5]",
+        text: "text-[#ff9800]",
+        icon: <MessageSquare className="w-3 h-3" />,
       },
       spam: {
-        bg: 'bg-[#f5f5f5]',
-        text: 'text-[#767692]',
-        icon: <Trash2 className="w-3 h-3" />
+        bg: "bg-[#f5f5f5]",
+        text: "text-[#767692]",
+        icon: <Trash2 className="w-3 h-3" />,
       },
       collusion: {
-        bg: 'bg-[#fff9e5]',
-        text: 'text-[#f59e0b]',
-        icon: <GitBranch className="w-3 h-3" />
-      }
+        bg: "bg-[#fff9e5]",
+        text: "text-[#f59e0b]",
+        icon: <GitBranch className="w-3 h-3" />,
+      },
     };
 
     const config = configs[type];
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-1 ${config.bg} ${config.text} rounded-[6px] text-[12px] font-medium`}>
+      <span
+        className={`inline-flex items-center gap-1 px-2 py-1 ${config.bg} ${config.text} rounded-[6px] text-[12px] font-medium`}
+      >
         {config.icon}
         {getFlagTypeLabel(type)}
       </span>
     );
   };
 
-  const filteredReviews = filterType === 'all' 
-    ? flaggedReviews.filter(r => r.status === 'pending')
-    : flaggedReviews.filter(r => r.status === 'pending' && r.flagType === filterType);
+  const filteredReviews =
+    filterType === "all"
+      ? flaggedReviews.filter((r) => r.status === "pending")
+      : flaggedReviews.filter((r) => r.status === "pending" && r.flagType === filterType);
 
   const toggleSelectReview = (id: string) => {
     const newSet = new Set(selectedReviews);
@@ -159,16 +170,16 @@ export default function TeacherModerationPage() {
     if (selectedReviews.size === filteredReviews.length) {
       setSelectedReviews(new Set());
     } else {
-      setSelectedReviews(new Set(filteredReviews.map(r => r.id)));
+      setSelectedReviews(new Set(filteredReviews.map((r) => r.id)));
     }
   };
 
   const handleDismissFlag = (id: string) => {
-    setFlaggedReviews(prev => prev.map(r => 
-      r.id === id ? { ...r, status: 'dismissed' as const } : r
-    ));
+    setFlaggedReviews((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, status: "dismissed" as const } : r)),
+    );
     setExpandedReview(null);
-    alert('Флаг снят');
+    alert("Флаг снят");
   };
 
   const handleRequestRewrite = (id: string) => {
@@ -177,11 +188,11 @@ export default function TeacherModerationPage() {
   };
 
   const handleHideReview = (id: string) => {
-    setFlaggedReviews(prev => prev.map(r => 
-      r.id === id ? { ...r, status: 'hidden' as const } : r
-    ));
+    setFlaggedReviews((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, status: "hidden" as const } : r)),
+    );
     setExpandedReview(null);
-    alert('Рецензия скрыта');
+    alert("Рецензия скрыта");
   };
 
   const handleReassignReview = (id: string) => {
@@ -190,10 +201,10 @@ export default function TeacherModerationPage() {
 
   const handleBulkDismiss = () => {
     if (selectedReviews.size === 0) return;
-    
-    setFlaggedReviews(prev => prev.map(r => 
-      selectedReviews.has(r.id) ? { ...r, status: 'dismissed' as const } : r
-    ));
+
+    setFlaggedReviews((prev) =>
+      prev.map((r) => (selectedReviews.has(r.id) ? { ...r, status: "dismissed" as const } : r)),
+    );
     setSelectedReviews(new Set());
     alert(`Снято флагов: ${selectedReviews.size}`);
   };
@@ -204,10 +215,12 @@ export default function TeacherModerationPage() {
 
   return (
     <AppShell title="Модерация рецензий">
-      <Breadcrumbs items={[
-        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
-        { label: 'Модерация' }
-      ]} />
+      <Breadcrumbs
+        items={[
+          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          { label: "Модерация" },
+        ]}
+      />
 
       <div className="mt-6">
         {/* Header */}
@@ -225,10 +238,15 @@ export default function TeacherModerationPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-[#d4183d]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Токсичность</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                Токсичность
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
-              {flaggedReviews.filter(r => r.flagType === 'toxicity' && r.status === 'pending').length}
+              {
+                flaggedReviews.filter((r) => r.flagType === "toxicity" && r.status === "pending")
+                  .length
+              }
             </p>
           </div>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
@@ -237,7 +255,10 @@ export default function TeacherModerationPage() {
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">Коротко</span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
-              {flaggedReviews.filter(r => r.flagType === 'too-short' && r.status === 'pending').length}
+              {
+                flaggedReviews.filter((r) => r.flagType === "too-short" && r.status === "pending")
+                  .length
+              }
             </p>
           </div>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
@@ -246,7 +267,7 @@ export default function TeacherModerationPage() {
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">Спам</span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
-              {flaggedReviews.filter(r => r.flagType === 'spam' && r.status === 'pending').length}
+              {flaggedReviews.filter((r) => r.flagType === "spam" && r.status === "pending").length}
             </p>
           </div>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
@@ -255,7 +276,10 @@ export default function TeacherModerationPage() {
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">Сговор</span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
-              {flaggedReviews.filter(r => r.flagType === 'collusion' && r.status === 'pending').length}
+              {
+                flaggedReviews.filter((r) => r.flagType === "collusion" && r.status === "pending")
+                  .length
+              }
             </p>
           </div>
         </div>
@@ -268,14 +292,47 @@ export default function TeacherModerationPage() {
               <Filter className="w-4 h-4 text-[#767692]" />
               <select
                 value={filterType}
-                onChange={(e) => setFilterType(e.target.value as FlagType | 'all')}
+                onChange={(e) => setFilterType(e.target.value as FlagType | "all")}
                 className="px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
-                <option value="all">Все типы ({flaggedReviews.filter(r => r.status === 'pending').length})</option>
-                <option value="toxicity">Токсичность ({flaggedReviews.filter(r => r.flagType === 'toxicity' && r.status === 'pending').length})</option>
-                <option value="too-short">Слишком коротко ({flaggedReviews.filter(r => r.flagType === 'too-short' && r.status === 'pending').length})</option>
-                <option value="spam">Спам ({flaggedReviews.filter(r => r.flagType === 'spam' && r.status === 'pending').length})</option>
-                <option value="collusion">Подозрение на сговор ({flaggedReviews.filter(r => r.flagType === 'collusion' && r.status === 'pending').length})</option>
+                <option value="all">
+                  Все типы ({flaggedReviews.filter((r) => r.status === "pending").length})
+                </option>
+                <option value="toxicity">
+                  Токсичность (
+                  {
+                    flaggedReviews.filter(
+                      (r) => r.flagType === "toxicity" && r.status === "pending",
+                    ).length
+                  }
+                  )
+                </option>
+                <option value="too-short">
+                  Слишком коротко (
+                  {
+                    flaggedReviews.filter(
+                      (r) => r.flagType === "too-short" && r.status === "pending",
+                    ).length
+                  }
+                  )
+                </option>
+                <option value="spam">
+                  Спам (
+                  {
+                    flaggedReviews.filter((r) => r.flagType === "spam" && r.status === "pending")
+                      .length
+                  }
+                  )
+                </option>
+                <option value="collusion">
+                  Подозрение на сговор (
+                  {
+                    flaggedReviews.filter(
+                      (r) => r.flagType === "collusion" && r.status === "pending",
+                    ).length
+                  }
+                  )
+                </option>
               </select>
             </div>
 
@@ -306,7 +363,9 @@ export default function TeacherModerationPage() {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={selectedReviews.size === filteredReviews.length && filteredReviews.length > 0}
+                    checked={
+                      selectedReviews.size === filteredReviews.length && filteredReviews.length > 0
+                    }
                     onChange={toggleSelectAll}
                     className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-0"
                   />
@@ -341,15 +400,21 @@ export default function TeacherModerationPage() {
                               <div className="flex items-center gap-2 mb-2">
                                 {getFlagTypeBadge(flaggedReview.flagType)}
                                 <span className="text-[13px] text-[#767692]">
-                                  {flaggedReview.flaggedAt.toLocaleDateString('ru-RU')}
+                                  {flaggedReview.flaggedAt.toLocaleDateString("ru-RU")}
                                 </span>
                               </div>
                               <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
                                 {flaggedReview.assignmentTitle}
                               </h3>
                               <p className="text-[14px] text-[#767692]">
-                                Рецензент: <strong className="text-[#21214f]">{flaggedReview.reviewerName}</strong> → 
-                                Рецензируемый: <strong className="text-[#21214f]">{flaggedReview.revieweeName}</strong>
+                                Рецензент:{" "}
+                                <strong className="text-[#21214f]">
+                                  {flaggedReview.reviewerName}
+                                </strong>{" "}
+                                → Рецензируемый:{" "}
+                                <strong className="text-[#21214f]">
+                                  {flaggedReview.revieweeName}
+                                </strong>
                               </p>
                             </div>
 
@@ -401,9 +466,14 @@ export default function TeacherModerationPage() {
                               </h4>
                               <div className="space-y-2">
                                 {Object.entries(flaggedReview.scores).map(([criterion, score]) => (
-                                  <div key={criterion} className="flex items-center justify-between p-2 bg-[#f9f9f9] rounded-[8px]">
+                                  <div
+                                    key={criterion}
+                                    className="flex items-center justify-between p-2 bg-[#f9f9f9] rounded-[8px]"
+                                  >
                                     <span className="text-[13px] text-[#767692]">{criterion}</span>
-                                    <span className="text-[15px] font-medium text-[#21214f]">{score}/5</span>
+                                    <span className="text-[15px] font-medium text-[#21214f]">
+                                      {score}/5
+                                    </span>
                                   </div>
                                 ))}
                               </div>
@@ -467,10 +537,9 @@ export default function TeacherModerationPage() {
                 Нет помеченных рецензий
               </h3>
               <p className="text-[14px] text-[#767692]">
-                {filterType === 'all' 
-                  ? 'Все рецензии в порядке!' 
-                  : `Нет рецензий с типом "${getFlagTypeLabel(filterType as FlagType)}"`
-                }
+                {filterType === "all"
+                  ? "Все рецензии в порядке!"
+                  : `Нет рецензий с типом "${getFlagTypeLabel(filterType as FlagType)}"`}
               </p>
             </div>
           )}

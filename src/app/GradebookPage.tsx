@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
-import { AppShell } from '@/app/components/AppShell';
-import { BookOpen, Filter, Lock, ChevronDown, TrendingUp } from 'lucide-react';
+import { useState, useMemo, useCallback } from "react";
+import { AppShell } from "@/app/components/AppShell";
+import { BookOpen, Filter, Lock, ChevronDown, TrendingUp } from "lucide-react";
 
 interface GradeEntry {
   id: string;
@@ -8,7 +8,7 @@ interface GradeEntry {
   courseName: string;
   taskId: string;
   taskTitle: string;
-  status: 'PUBLISHED' | 'IN_REVIEW' | 'PENDING' | 'NOT_SUBMITTED';
+  status: "PUBLISHED" | "IN_REVIEW" | "PENDING" | "NOT_SUBMITTED";
   score: number | null;
   maxScore: number;
   isScoreLocked: boolean; // Scores hidden until instructor publishes
@@ -18,127 +18,127 @@ interface GradeEntry {
 // Mock data for student gradebook
 const mockGrades: GradeEntry[] = [
   {
-    id: '1',
-    courseId: '1',
-    courseName: 'Веб-разработка',
-    taskId: '1',
-    taskTitle: 'Задание 1: Landing Page',
-    status: 'PUBLISHED',
+    id: "1",
+    courseId: "1",
+    courseName: "Веб-разработка",
+    taskId: "1",
+    taskTitle: "Задание 1: Landing Page",
+    status: "PUBLISHED",
     score: 85,
     maxScore: 100,
     isScoreLocked: false,
-    updatedAt: '2025-01-20T14:30:00',
+    updatedAt: "2025-01-20T14:30:00",
   },
   {
-    id: '2',
-    courseId: '1',
-    courseName: 'Веб-разработка',
-    taskId: '2',
-    taskTitle: 'Задание 2: React компоненты',
-    status: 'IN_REVIEW',
+    id: "2",
+    courseId: "1",
+    courseName: "Веб-разработка",
+    taskId: "2",
+    taskTitle: "Задание 2: React компоненты",
+    status: "IN_REVIEW",
     score: null,
     maxScore: 100,
     isScoreLocked: true,
-    updatedAt: '2025-01-22T10:15:00',
+    updatedAt: "2025-01-22T10:15:00",
   },
   {
-    id: '3',
-    courseId: '1',
-    courseName: 'Веб-разработка',
-    taskId: '4',
-    taskTitle: 'Задание 4: TypeScript проект',
-    status: 'PUBLISHED',
+    id: "3",
+    courseId: "1",
+    courseName: "Веб-разработка",
+    taskId: "4",
+    taskTitle: "Задание 4: TypeScript проект",
+    status: "PUBLISHED",
     score: 92,
     maxScore: 100,
     isScoreLocked: false,
-    updatedAt: '2025-01-23T16:45:00',
+    updatedAt: "2025-01-23T16:45:00",
   },
   {
-    id: '4',
-    courseId: '2',
-    courseName: 'UI/UX Дизайн',
-    taskId: '3',
-    taskTitle: 'Задание 3: Прототипирование',
-    status: 'PENDING',
+    id: "4",
+    courseId: "2",
+    courseName: "UI/UX Дизайн",
+    taskId: "3",
+    taskTitle: "Задание 3: Прототипирование",
+    status: "PENDING",
     score: null,
     maxScore: 100,
     isScoreLocked: true,
-    updatedAt: '2025-01-18T09:00:00',
+    updatedAt: "2025-01-18T09:00:00",
   },
   {
-    id: '5',
-    courseId: '2',
-    courseName: 'UI/UX Дизайн',
-    taskId: '5',
-    taskTitle: 'Задание 5: Вайрфреймы',
-    status: 'PUBLISHED',
+    id: "5",
+    courseId: "2",
+    courseName: "UI/UX Дизайн",
+    taskId: "5",
+    taskTitle: "Задание 5: Вайрфреймы",
+    status: "PUBLISHED",
     score: 78,
     maxScore: 100,
     isScoreLocked: false,
-    updatedAt: '2025-01-21T11:20:00',
+    updatedAt: "2025-01-21T11:20:00",
   },
   {
-    id: '6',
-    courseId: '1',
-    courseName: 'Веб-разработка',
-    taskId: '6',
-    taskTitle: 'Задание 6: Backend API',
-    status: 'NOT_SUBMITTED',
+    id: "6",
+    courseId: "1",
+    courseName: "Веб-разработка",
+    taskId: "6",
+    taskTitle: "Задание 6: Backend API",
+    status: "NOT_SUBMITTED",
     score: null,
     maxScore: 100,
     isScoreLocked: false,
-    updatedAt: '2025-01-15T08:00:00',
+    updatedAt: "2025-01-15T08:00:00",
   },
   {
-    id: '7',
-    courseId: '3',
-    courseName: 'Алгоритмы и структуры данных',
-    taskId: '7',
-    taskTitle: 'Задание 1: Сортировка',
-    status: 'PUBLISHED',
+    id: "7",
+    courseId: "3",
+    courseName: "Алгоритмы и структуры данных",
+    taskId: "7",
+    taskTitle: "Задание 1: Сортировка",
+    status: "PUBLISHED",
     score: 95,
     maxScore: 100,
     isScoreLocked: false,
-    updatedAt: '2025-01-19T13:00:00',
+    updatedAt: "2025-01-19T13:00:00",
   },
   {
-    id: '8',
-    courseId: '3',
-    courseName: 'Алгоритмы и структуры данных',
-    taskId: '8',
-    taskTitle: 'Задание 2: Графы',
-    status: 'PUBLISHED',
+    id: "8",
+    courseId: "3",
+    courseName: "Алгоритмы и структуры данных",
+    taskId: "8",
+    taskTitle: "Задание 2: Графы",
+    status: "PUBLISHED",
     score: 88,
     maxScore: 100,
     isScoreLocked: false,
-    updatedAt: '2025-01-22T15:30:00',
+    updatedAt: "2025-01-22T15:30:00",
   },
 ];
 
 const statusLabels: Record<string, string> = {
-  PUBLISHED: 'Опубликовано',
-  IN_REVIEW: 'На проверке',
-  PENDING: 'Ожидание',
-  NOT_SUBMITTED: 'Не сдано',
+  PUBLISHED: "Опубликовано",
+  IN_REVIEW: "На проверке",
+  PENDING: "Ожидание",
+  NOT_SUBMITTED: "Не сдано",
 };
 
 const statusColors: Record<string, string> = {
-  PUBLISHED: 'bg-[#e8f5e9] text-[#2e7d32]',
-  IN_REVIEW: 'bg-[#fff3e0] text-[#e65100]',
-  PENDING: 'bg-[#f3f4f6] text-[#6b7280]',
-  NOT_SUBMITTED: 'bg-[#ffebee] text-[#c62828]',
+  PUBLISHED: "bg-[#e8f5e9] text-[#2e7d32]",
+  IN_REVIEW: "bg-[#fff3e0] text-[#e65100]",
+  PENDING: "bg-[#f3f4f6] text-[#6b7280]",
+  NOT_SUBMITTED: "bg-[#ffebee] text-[#c62828]",
 };
 
 export default function GradebookPage() {
-  const [selectedCourse, setSelectedCourse] = useState<string>('all');
-  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedCourse, setSelectedCourse] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [showCourseFilter, setShowCourseFilter] = useState(false);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
 
   // Get unique courses for filter
   const courses = useMemo(() => {
     const uniqueCourses = Array.from(
-      new Set(mockGrades.map((g) => JSON.stringify({ id: g.courseId, name: g.courseName })))
+      new Set(mockGrades.map((g) => JSON.stringify({ id: g.courseId, name: g.courseName }))),
     ).map((str) => JSON.parse(str));
     return uniqueCourses;
   }, []);
@@ -146,19 +146,21 @@ export default function GradebookPage() {
   // Filter grades
   const filteredGrades = useMemo(() => {
     return mockGrades.filter((grade) => {
-      const courseMatch = selectedCourse === 'all' || grade.courseId === selectedCourse;
-      const statusMatch = selectedStatus === 'all' || grade.status === selectedStatus;
+      const courseMatch = selectedCourse === "all" || grade.courseId === selectedCourse;
+      const statusMatch = selectedStatus === "all" || grade.status === selectedStatus;
       return courseMatch && statusMatch;
     });
   }, [selectedCourse, selectedStatus]);
 
   // Calculate overall stats
   const stats = useMemo(() => {
-    const publishedGrades = filteredGrades.filter((g) => g.status === 'PUBLISHED' && g.score !== null);
+    const publishedGrades = filteredGrades.filter(
+      (g) => g.status === "PUBLISHED" && g.score !== null,
+    );
     const totalScore = publishedGrades.reduce((sum, g) => sum + (g.score || 0), 0);
     const totalMax = publishedGrades.reduce((sum, g) => sum + g.maxScore, 0);
     const avgPercentage = totalMax > 0 ? (totalScore / totalMax) * 100 : 0;
-    
+
     return {
       total: filteredGrades.length,
       published: publishedGrades.length,
@@ -166,22 +168,17 @@ export default function GradebookPage() {
     };
   }, [filteredGrades]);
 
-  const handleRowClick = (grade: GradeEntry) => {
+  const handleRowClick = useCallback((grade: GradeEntry) => {
     // Navigate to task details
     window.location.hash = `/task/${grade.taskId}`;
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
-  };
+  }, []);
 
   const getScoreColor = (score: number, max: number) => {
     const percentage = (score / max) * 100;
-    if (percentage >= 90) return 'text-[#2e7d32]';
-    if (percentage >= 75) return 'text-[#558b2f]';
-    if (percentage >= 60) return 'text-[#f57c00]';
-    return 'text-[#c62828]';
+    if (percentage >= 90) return "text-[#2e7d32]";
+    if (percentage >= 75) return "text-[#558b2f]";
+    if (percentage >= 60) return "text-[#f57c00]";
+    return "text-[#c62828]";
   };
 
   return (
@@ -205,7 +202,9 @@ export default function GradebookPage() {
                 <TrendingUp className="w-5 h-5 text-[#3d6bc6]" />
                 <div>
                   <div className="text-[13px] text-[#767692] mb-1">Средний балл</div>
-                  <div className="text-[20px] font-semibold text-[#21214f]">{stats.avgPercentage}%</div>
+                  <div className="text-[20px] font-semibold text-[#21214f]">
+                    {stats.avgPercentage}%
+                  </div>
                 </div>
               </div>
               <div className="w-px h-12 bg-[#e6e8ee]"></div>
@@ -235,8 +234,8 @@ export default function GradebookPage() {
                 className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] hover:border-[#a0b8f1] transition-colors"
               >
                 <span>
-                  {selectedCourse === 'all'
-                    ? 'Все курсы'
+                  {selectedCourse === "all"
+                    ? "Все курсы"
                     : courses.find((c) => c.id === selectedCourse)?.name}
                 </span>
                 <ChevronDown className="w-4 h-4 text-[#767692]" />
@@ -246,11 +245,13 @@ export default function GradebookPage() {
                 <div className="absolute top-full left-0 mt-2 w-[280px] bg-white border-2 border-[#e6e8ee] rounded-[12px] shadow-lg z-10 overflow-hidden">
                   <button
                     onClick={() => {
-                      setSelectedCourse('all');
+                      setSelectedCourse("all");
                       setShowCourseFilter(false);
                     }}
                     className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
-                      selectedCourse === 'all' ? 'bg-[#f0f4ff] text-[#3d6bc6] font-medium' : 'text-[#21214f]'
+                      selectedCourse === "all"
+                        ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
+                        : "text-[#21214f]"
                     }`}
                   >
                     Все курсы
@@ -263,7 +264,9 @@ export default function GradebookPage() {
                         setShowCourseFilter(false);
                       }}
                       className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
-                        selectedCourse === course.id ? 'bg-[#f0f4ff] text-[#3d6bc6] font-medium' : 'text-[#21214f]'
+                        selectedCourse === course.id
+                          ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
+                          : "text-[#21214f]"
                       }`}
                     >
                       {course.name}
@@ -282,7 +285,9 @@ export default function GradebookPage() {
                 }}
                 className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] hover:border-[#a0b8f1] transition-colors"
               >
-                <span>{selectedStatus === 'all' ? 'Все статусы' : statusLabels[selectedStatus]}</span>
+                <span>
+                  {selectedStatus === "all" ? "Все статусы" : statusLabels[selectedStatus]}
+                </span>
                 <ChevronDown className="w-4 h-4 text-[#767692]" />
               </button>
 
@@ -290,11 +295,13 @@ export default function GradebookPage() {
                 <div className="absolute top-full left-0 mt-2 w-[220px] bg-white border-2 border-[#e6e8ee] rounded-[12px] shadow-lg z-10 overflow-hidden">
                   <button
                     onClick={() => {
-                      setSelectedStatus('all');
+                      setSelectedStatus("all");
                       setShowStatusFilter(false);
                     }}
                     className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
-                      selectedStatus === 'all' ? 'bg-[#f0f4ff] text-[#3d6bc6] font-medium' : 'text-[#21214f]'
+                      selectedStatus === "all"
+                        ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
+                        : "text-[#21214f]"
                     }`}
                   >
                     Все статусы
@@ -307,7 +314,9 @@ export default function GradebookPage() {
                         setShowStatusFilter(false);
                       }}
                       className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
-                        selectedStatus === key ? 'bg-[#f0f4ff] text-[#3d6bc6] font-medium' : 'text-[#21214f]'
+                        selectedStatus === key
+                          ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
+                          : "text-[#21214f]"
                       }`}
                     >
                       {label}
@@ -318,11 +327,11 @@ export default function GradebookPage() {
             </div>
 
             {/* Clear Filters */}
-            {(selectedCourse !== 'all' || selectedStatus !== 'all') && (
+            {(selectedCourse !== "all" || selectedStatus !== "all") && (
               <button
                 onClick={() => {
-                  setSelectedCourse('all');
-                  setSelectedStatus('all');
+                  setSelectedCourse("all");
+                  setSelectedStatus("all");
                 }}
                 className="text-[14px] text-[#3d6bc6] hover:underline"
               >
@@ -448,7 +457,9 @@ export default function GradebookPage() {
                           <span className="text-[14px] text-[#767692]">—</span>
                         </>
                       ) : grade.score !== null ? (
-                        <span className={`text-[16px] font-semibold ${getScoreColor(grade.score, grade.maxScore)}`}>
+                        <span
+                          className={`text-[16px] font-semibold ${getScoreColor(grade.score, grade.maxScore)}`}
+                        >
                           {grade.score} / {grade.maxScore}
                         </span>
                       ) : (
@@ -498,8 +509,9 @@ export default function GradebookPage() {
             <div>
               <h4 className="text-[15px] font-medium text-[#21214f] mb-1">О журнале оценок</h4>
               <p className="text-[14px] text-[#767692] leading-[1.6]">
-                Здесь отображаются ваши оценки по всем заданиям. Некоторые оценки могут быть скрыты до тех пор,
-                пока преподаватель не опубликует результаты. Нажмите на строку, чтобы перейти к деталям задания.
+                Здесь отображаются ваши оценки по всем заданиям. Некоторые оценки могут быть скрыты
+                до тех пор, пока преподаватель не опубликует результаты. Нажмите на строку, чтобы
+                перейти к деталям задания.
               </p>
             </div>
           </div>

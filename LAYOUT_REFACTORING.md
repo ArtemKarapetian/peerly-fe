@@ -1,6 +1,7 @@
 # Layout Refactoring Summary
 
 ## Overview
+
 Complete refactoring of Peerly's layout foundations while preserving visual identity (colors, typography, existing design tokens).
 
 ---
@@ -8,6 +9,7 @@ Complete refactoring of Peerly's layout foundations while preserving visual iden
 ## Key Changes
 
 ### 1. **Global Content Container**
+
 - **Unified max-width**: `1200px` across all breakpoints
 - **Centered**: `margin: auto`
 - **Responsive gutters**:
@@ -23,6 +25,7 @@ Complete refactoring of Peerly's layout foundations while preserving visual iden
 ### 2. **Sidebar Improvements**
 
 #### Fixed "Jumping Divider" Issue
+
 - **Problem**: Divider above "Profile" jumped when sidebar expanded/collapsed
 - **Solution**: Stable flex layout with footer section pinned to bottom
   - Header: `shrink-0` with fixed height (64px)
@@ -30,6 +33,7 @@ Complete refactoring of Peerly's layout foundations while preserving visual iden
   - Footer section: `shrink-0` stays at bottom
 
 #### Sidebar Widths
+
 - **Desktop (≥1200px)**: 260px expanded, 80px collapsed (toggleable)
 - **Tablet (800-1199px)**: 80px collapsed (icons only)
 - **Mobile (<800px)**: Drawer overlay (280px, slides over content)
@@ -41,18 +45,21 @@ Complete refactoring of Peerly's layout foundations while preserving visual iden
 ### 3. **CSS Grid Layout with Right Rail**
 
 #### Desktop Layout (≥1200px)
+
 ```css
 grid-template-columns: 1fr minmax(360px, 420px);
 gap: 2rem; /* 32px */
 ```
 
 **Features**:
+
 - Main content: `1fr` (flexible)
 - Right rail: `360-420px` (fixed width)
 - Right rail is **sticky** within viewport (`position: sticky; top: 1.5rem`)
 - Use available width threshold (≥1200px) for right rail activation
 
 #### Mobile/Tablet Layout (<1200px)
+
 ```css
 grid-template-columns: 1fr;
 gap: 1rem; /* 16px */
@@ -79,6 +86,7 @@ All pages now follow consistent pattern:
 3. **Content** (tabs, grid, etc.)
 
 **Examples**:
+
 - TaskPage: `Курсы → Название курса → Задание 1`
 - CoursePage: `Курсы → Название курса`
 - CoursesListPage: No breadcrumbs (root page)
@@ -129,16 +137,20 @@ Updated to show new specifications:
 
 ```css
 /* Mobile */
-@media (max-width: 799px) { }
+@media (max-width: 799px) {
+}
 
 /* Tablet */
-@media (min-width: 800px) and (max-width: 1199px) { }
+@media (min-width: 800px) and (max-width: 1199px) {
+}
 
 /* Desktop */
-@media (min-width: 1200px) { }
+@media (min-width: 1200px) {
+}
 ```
 
 **Tailwind Custom Breakpoints** (defined in theme.css):
+
 - `tablet`: `width >= 800px`
 - `desktop`: `width >= 1200px`
 
@@ -147,17 +159,20 @@ Updated to show new specifications:
 ## Files Modified
 
 ### Core Layout
+
 - `/src/app/components/AppShell.tsx` — Global container, gutters
 - `/src/app/components/SideNav.tsx` — Fixed divider, stable footer
 - `/src/styles/task.css` — Grid layout with right rail
 - `/src/styles/courses.css` — 4-column grid
 
 ### Pages
+
 - `/src/app/TaskPage.tsx` — Breadcrumbs, grid layout
 - `/src/app/CoursePage.tsx` — Breadcrumbs, header structure
 - `/src/app/CoursesListPage.tsx` — Updated grid comments
 
 ### Components
+
 - `/src/app/components/Breadcrumbs.tsx` — No changes (already correct)
 - `/src/app/components/CourseTabs.tsx` — No changes (already underline style)
 - `/src/app/components/LayoutDebugger.tsx` — Updated metrics
@@ -174,7 +189,7 @@ Updated to show new specifications:
 ✅ Gutters are responsive (40px desktop, 24px tablet/mobile)  
 ✅ Courses grid shows 4 columns on desktop  
 ✅ All routes still work (no removals)  
-✅ Colors and typography unchanged  
+✅ Colors and typography unchanged
 
 ---
 

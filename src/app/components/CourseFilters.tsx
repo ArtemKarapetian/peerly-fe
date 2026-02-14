@@ -2,7 +2,7 @@
  * CourseFilters - Фильтры для списка курсов
  */
 
-export type CourseFilterType = 'all' | 'active' | 'completed';
+export type CourseFilterType = "all" | "active" | "completed";
 
 interface CourseFiltersProps {
   activeFilter: CourseFilterType;
@@ -11,9 +11,9 @@ interface CourseFiltersProps {
 
 export function CourseFilters({ activeFilter, onFilterChange }: CourseFiltersProps) {
   const filters: { value: CourseFilterType; label: string }[] = [
-    { value: 'all', label: 'Все курсы' },
-    { value: 'active', label: 'Активные' },
-    { value: 'completed', label: 'Завершенные' },
+    { value: "all", label: "Все курсы" },
+    { value: "active", label: "Активные" },
+    { value: "completed", label: "Завершенные" },
   ];
 
   return (
@@ -27,8 +27,8 @@ export function CourseFilters({ activeFilter, onFilterChange }: CourseFiltersPro
             transition-all duration-200
             ${
               activeFilter === filter.value
-                ? 'bg-[#2563eb] text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]'
-                : 'bg-white text-[#21214f] border border-[#e6e8ee] hover:border-[#2563eb] hover:bg-[#f0f6ff]'
+                ? "bg-[#2563eb] text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]"
+                : "bg-white text-[#21214f] border border-[#e6e8ee] hover:border-[#2563eb] hover:bg-[#f0f6ff]"
             }
           `}
         >

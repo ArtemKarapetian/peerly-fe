@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
 /**
  * TaskSearch - Поле поиска заданий
@@ -10,7 +10,7 @@ interface TaskSearchProps {
   placeholder?: string;
 }
 
-export function TaskSearch({ value, onChange, placeholder = 'Поиск заданий' }: TaskSearchProps) {
+export function TaskSearch({ value, onChange, placeholder = "Поиск заданий" }: TaskSearchProps) {
   return (
     <div className="relative">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
