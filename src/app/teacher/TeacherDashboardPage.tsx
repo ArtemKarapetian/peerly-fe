@@ -91,7 +91,7 @@ export default function TeacherDashboardPage() {
 
   return (
     <AppShell title="Панель преподавателя">
-      <Breadcrumbs items={['Панель преподавателя']} />
+      <Breadcrumbs items={[{ label: 'Панель преподавателя' }]} />
 
       <div className="mt-6">
         {/* Header */}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Gauge, Save, Plus, X, Building, AlertCircle } from 'lucide-react';
 
 /**
@@ -194,7 +195,11 @@ export default function AdminLimitsPage() {
 
   return (
     <AppShell title="Лимиты и квоты">
-      <Breadcrumbs items={['Администратор', 'Политики', 'Лимиты']} />
+      <Breadcrumbs items={[
+        { label: 'Администратор', href: ROUTES.adminOverview },
+        { label: 'Политики', href: ROUTES.adminPolicies },
+        { label: 'Лимиты' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

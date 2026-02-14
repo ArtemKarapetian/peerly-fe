@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
-import { Button } from "./button";
+import { Button } from "@/app/components/ui/Button";
 import { cn } from "./utils";
 
 interface AdvancedPaginationProps {

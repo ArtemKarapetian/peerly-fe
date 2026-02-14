@@ -261,7 +261,7 @@ export default function AdminPluginsPage() {
   const handleConfigure = (plugin: Plugin) => {
     setConfigModal({
       plugin,
-      config: { ...plugin.config } || {}
+      config: { ...plugin.config }
     });
     setConfigErrors({});
   };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { StepBasics } from './components/assignment-wizard/StepBasics';
 import { StepDeadlines } from './components/assignment-wizard/StepDeadlines';
@@ -224,7 +225,11 @@ export default function TeacherCreateAssignmentPage({ courseId }: TeacherCreateA
   return (
     <AppShell title="Создание задания">
       <Breadcrumbs
-        items={['Дашборд препо��авателя', 'Конструктор заданий', 'Новое задание']}
+        items={[
+          { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+          { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
+          { label: 'Новое задание' }
+        ]}
       />
 
       <div className="mt-6 max-w-[1000px] mx-auto">

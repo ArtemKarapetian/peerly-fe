@@ -185,7 +185,7 @@ export default function AdminFlagsPage() {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const { flags: realFlags, updateFlag: updateRealFlag } = useFeatureFlags();
+  const { updateFlag: updateRealFlag } = useFeatureFlags();
 
   // Available tenants
   const availableTenants = [

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   GitBranch, Plus, UserPlus, Lock, Unlock, Bell, 
   X, Clock, AlertCircle, CheckCircle, Eye, EyeOff,
   MoreVertical, ChevronRight
@@ -195,7 +196,10 @@ export default function TeacherDistributionPage() {
 
   return (
     <AppShell title="Распределение рецензий">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Распределение']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Распределение' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

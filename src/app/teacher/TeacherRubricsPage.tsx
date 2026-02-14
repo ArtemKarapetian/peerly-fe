@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Search, Plus, Filter, Copy, Save, Link2, Eye, Edit } from 'lucide-react';
 import { RubricEditor } from './components/RubricEditor';
 import { RubricPreview } from './components/RubricPreview';
@@ -298,7 +299,10 @@ export default function TeacherRubricsPage() {
 
   return (
     <AppShell title="Библиотека рубрик">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Библиотека рубрик']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Библиотека рубрик' }
+      ]} />
 
       <div className="mt-6 grid grid-cols-[400px_1fr] gap-6 h-[calc(100vh-180px)]">
         {/* Left Column - Rubric List */}

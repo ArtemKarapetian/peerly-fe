@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/Button';
+import { Button } from '@/app/components/ui/button';
 import { Input, PasswordInput } from '@/app/components/ui/Input';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { isFlagEnabled } from '@/app/utils/featureFlags';

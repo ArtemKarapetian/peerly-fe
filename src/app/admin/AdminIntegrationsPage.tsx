@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Link2, Lock, AlertCircle, Plus, X, Edit3, Trash2, 
   CheckCircle, XCircle, Send, Clock, ExternalLink, Eye, EyeOff
 } from 'lucide-react';
@@ -149,9 +150,9 @@ export default function AdminIntegrationsPage() {
 
   // Handle toggle status
   const handleToggleStatus = (webhook: Webhook) => {
-    const newStatus = webhook.status === 'active' ? 'inactive' : 'active';
-    const updated = webhooks.map(w => 
-      w.id === webhook.id ? { ...w, status: newStatus } : w
+    const newStatus = webhook.status === 'active' ? 'inactive' as const : 'active' as const;
+    const updated = webhooks.map(w =>
+        w.id === webhook.id ? { ...w, status: newStatus } : w
     );
     saveWebhooks(updated);
     logAuditEntry(
@@ -244,7 +245,10 @@ export default function AdminIntegrationsPage() {
 
   return (
     <AppShell title="Интеграции и Webhooks">
-      <Breadcrumbs items={['Администратор', 'Интеграции']} />
+      <Breadcrumbs items={[
+        { label: 'Администратор', href: ROUTES.adminOverview },
+        { label: 'Интеграции' }
+      ]} />
 
       <div className="mt-6 space-y-8">
         {/* Header */}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Book, Settings, Users, Archive, ExternalLink, Plus, ArchiveRestore } from 'lucide-react';
 import { demoDataStore } from '@/app/stores/demoDataStore';
 import { SimplePagination, usePagination } from '@/app/components/ui/simple-pagination';
@@ -95,7 +96,10 @@ export default function TeacherCoursesPage() {
 
   return (
     <AppShell title="Упрвление курсами">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Курсы']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Курсы' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

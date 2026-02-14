@@ -14,7 +14,8 @@ export interface Task {
 
 interface TaskListProps {
   tasks: Task[];
-  onTaskClick?: (taskId: string) => void;
+  onTaskClick: (taskId: string) => void;
+  courseId: string;
 }
 
 export function TaskList({ tasks, onTaskClick }: TaskListProps) {

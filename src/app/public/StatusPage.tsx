@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PublicLayout } from '@/app/components/PublicLayout';
-import { Button } from '@/app/components/ui/Button';
+import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/Input';
 import { 
   CheckCircle2, 

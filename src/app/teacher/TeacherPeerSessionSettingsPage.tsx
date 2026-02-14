@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import {
   Save,
   EyeOff,
@@ -232,10 +233,10 @@ export default function TeacherPeerSessionSettingsPage({
     <AppShell title="Настройки peer-сессии">
       <Breadcrumbs
         items={[
-          'Дашборд преподавателя',
-          'Конструктор заданий',
-          'Задание',
-          'Настройки peer-сессии',
+          { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+          { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
+          { label: 'Задание', href: ROUTES.teacherDashboard },
+          { label: 'Настройки peer-сессии' }
         ]}
       />
 

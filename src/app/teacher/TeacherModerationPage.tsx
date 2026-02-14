@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Shield, AlertTriangle, MessageSquare, Trash2, GitBranch, 
   Eye, EyeOff, X, CheckCircle, Filter, ChevronDown, ChevronUp
 } from 'lucide-react';
@@ -203,7 +204,10 @@ export default function TeacherModerationPage() {
 
   return (
     <AppShell title="Модерация рецензий">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Модерация']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Модерация' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

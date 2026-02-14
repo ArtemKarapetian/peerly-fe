@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   FileSearch, Search, Filter, Calendar, AlertCircle, 
   Info, AlertTriangle, XCircle, Activity, User, 
   Download, RefreshCw, X
@@ -351,7 +352,11 @@ export default function AdminLogsPage() {
 
   return (
     <AppShell title="Логи и аудит">
-      <Breadcrumbs items={['Администратор', 'Мониторинг', 'Логи']} />
+      <Breadcrumbs items={[
+        { label: 'Администратор', href: ROUTES.adminOverview },
+        { label: 'Мониторинг', href: ROUTES.adminHealth },
+        { label: 'Логи' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}
