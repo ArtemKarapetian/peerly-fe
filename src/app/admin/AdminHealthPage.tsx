@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Activity, CheckCircle, XCircle, AlertCircle, 
   Database, HardDrive, Zap, Server, Clock, 
   TrendingUp, TrendingDown, RefreshCw
@@ -323,7 +324,11 @@ export default function AdminHealthPage() {
 
   return (
     <AppShell title="Здоровье системы">
-      <Breadcrumbs items={['Администратор', 'Мониторинг', 'Здоровье']} />
+      <Breadcrumbs items={[
+        { label: 'Администратор', href: ROUTES.adminOverview },
+        { label: 'Мониторинг', href: ROUTES.adminHealth },
+        { label: 'Здоровье' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

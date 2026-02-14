@@ -9,9 +9,10 @@ import { TaskList, Task } from '@/app/components/TaskList';
 import { ParticipantSearch } from '@/app/components/ParticipantSearch';
 import { ParticipantsList, Participant } from '@/app/components/ParticipantsList';
 import { LayoutDebugger } from '@/app/components/LayoutDebugger';
+import {ROUTES} from "@/app/routes";
 
 interface CoursePageProps {
-  courseId?: string | null;
+  courseId?: string;
 }
 
 // Моковые данные заданий
@@ -93,14 +94,11 @@ export default function CoursePage({ courseId = '1' }: CoursePageProps) {
   return (
     <AppShell title="Название курса">
       {/* Breadcrumbs - стандартизированная навигация */}
-      <Breadcrumbs 
-        items={['Курсы', 'Название курса']} 
-        onItemClick={(index) => {
-          if (index === 0) {
-            // Клик на "Курсы" - вернуться к списку курсов
-            window.location.hash = '/courses';
-          }
-        }}
+      <Breadcrumbs
+          items={[
+            { label: 'Курсы', href: ROUTES.courses },
+            { label: 'Название курса' }
+          ]}
       />
 
       {/* Page Header - H1 после breadcrumbs */}

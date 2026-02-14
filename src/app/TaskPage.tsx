@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { TaskHeader } from '@/app/components/TaskHeader';
 import { TaskDescription } from '@/app/components/TaskDescription';
 import { TaskRequirements } from '@/app/components/TaskRequirements';
@@ -87,16 +88,11 @@ export default function TaskPage({ taskId = '1' }: TaskPageProps) {
     <AppShell title={taskTitle}>
       {/* Breadcrumbs - стандартизированная навигация: Курсы → Название курса → Задание */}
       <Breadcrumbs 
-        items={['Курсы', 'Веб-программирование', taskTitle]} 
-        onItemClick={(index) => {
-          if (index === 0) {
-            // Клик на "Курсы" - вернуться к списку курсов
-            window.location.hash = '/courses';
-          } else if (index === 1) {
-            // Клик на "Веб-программирование" - вернуться к деталям курса
-            window.location.hash = `/course/${courseId}`;
-          }
-        }}
+        items={[
+          { label: 'Курсы', href: ROUTES.courses },
+          { label: 'Веб-программирование', href: ROUTES.course(courseId) },
+          { label: taskTitle }
+        ]}
       />
       
       {/* Extension Banner - Approved/Manual */}

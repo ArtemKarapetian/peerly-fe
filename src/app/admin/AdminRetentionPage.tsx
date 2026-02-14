@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Database, AlertTriangle, Clock, Save, RotateCcw } from 'lucide-react';
 
 /**
@@ -130,7 +131,11 @@ export default function AdminRetentionPage() {
 
   return (
     <AppShell title="Политики хранения">
-      <Breadcrumbs items={['Admin', 'Политики', 'Хранение данных']} />
+      <Breadcrumbs items={[
+        { label: 'Admin', href: ROUTES.adminOverview },
+        { label: 'Политики', href: ROUTES.adminPolicies },
+        { label: 'Хранение данных' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

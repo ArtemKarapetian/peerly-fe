@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Lock, Shield, Key, Smartphone, CheckCircle, AlertCircle, Mail } from 'lucide-react';
 import { getFeatureFlags, setFeatureFlag } from '@/app/utils/featureFlags';
 
@@ -53,7 +54,10 @@ export default function SecurityPage() {
 
   return (
     <AppShell title="Security">
-      <Breadcrumbs items={['Settings', 'Security']} />
+      <Breadcrumbs items={[
+        { label: 'Settings', href: ROUTES.settings },
+        { label: 'Security' }
+      ]} />
 
       <div className="mt-6 max-w-[800px]">
         <div className="flex items-start justify-between mb-6">

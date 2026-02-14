@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Megaphone, Plus, Edit, Trash2, Send, X, Calendar,
   CheckCircle, BookOpen
 } from 'lucide-react';
@@ -184,7 +185,10 @@ export default function TeacherAnnouncementsPage() {
 
   return (
     <AppShell title="Объявления">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Объявления']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Объявления' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

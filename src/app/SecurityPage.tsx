@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Lock, Eye, EyeOff, Shield, Smartphone, Monitor, 
   MapPin, Clock, CheckCircle, AlertTriangle, X, LogOut, Trash2
 } from 'lucide-react';
@@ -137,7 +138,10 @@ export default function SecurityPage() {
 
   return (
     <AppShell title="Безопасность">
-      <Breadcrumbs items={['Безопасность']} />
+      <Breadcrumbs items={[
+        { label: 'Настройки', href: ROUTES.settings },
+        { label: 'Безопасность' }
+      ]} />
 
       <div className="mt-6 max-w-[800px]">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">

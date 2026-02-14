@@ -1,13 +1,15 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-/**
- * AuthContext - Простой контекст авторизации (мок)
- * Управляет состоянием isAuthenticated через localStorage
- */
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  user: User | null;
+  login: (userData?: User) => void;
   logout: () => void;
 }
 
@@ -15,33 +17,39 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    // Проверяем localStorage при инициализации
     return localStorage.getItem('peerly_auth') === 'true';
   });
 
-  // Синхронизируем с localStorage
-  useEffect(() => {
-    if (isAuthenticated) {
-      localStorage.setItem('peerly_auth', 'true');
-    } else {
-      localStorage.removeItem('peerly_auth');
-    }
-  }, [isAuthenticated]);
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('peerly_user');
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  const login = () => {
+  useEffect(() => {
+    localStorage.setItem('peerly_auth', String(isAuthenticated));
+    if (user) {
+      localStorage.setItem('peerly_user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('peerly_user');
+    }
+  }, [isAuthenticated, user]);
+
+  const login = (userData?: User) => {
+    const defaultUser: User = { id: 'student-1', name: 'Студент', email: 'student@example.com' };
+    setUser(userData ?? defaultUser);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    // Редирект на landing после logout
+    setUser(null);
     window.location.hash = '/';
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+        {children}
+      </AuthContext.Provider>
   );
 }
 

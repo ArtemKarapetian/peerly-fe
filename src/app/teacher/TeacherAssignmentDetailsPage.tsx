@@ -1,5 +1,6 @@
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Edit, Trash2, Users, Calendar, BarChart3, Settings, FileText } from 'lucide-react';
 
 /**
@@ -66,9 +67,9 @@ export default function TeacherAssignmentDetailsPage({
     <AppShell title={assignment.title}>
       <Breadcrumbs
         items={[
-          'Дашборд преподавателя',
-          'Конструктор заданий',
-          assignment.title,
+          { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+          { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
+          { label: assignment.title }
         ]}
       />
 

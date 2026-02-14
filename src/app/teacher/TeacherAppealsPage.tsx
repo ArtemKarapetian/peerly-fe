@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   AlertCircle, Filter, X, CheckCircle, XCircle, Edit3,
   MessageSquare, FileText, Calendar, User
 } from 'lucide-react';
@@ -270,7 +271,10 @@ export default function TeacherAppealsPage() {
 
   return (
     <AppShell title="Апелляции">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Апелляции']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Апелляции' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

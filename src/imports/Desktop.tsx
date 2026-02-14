@@ -566,7 +566,7 @@ function Course() {
 
 function Main() {
   return (
-    <main className="content-stretch flex flex-[1_0_0] flex-col items-center min-h-px min-w-px px-0 py-[60px] relative" data-name="Main" tabIndex="-1">
+    <main className="content-stretch flex flex-[1_0_0] flex-col items-center min-h-px min-w-px px-0 py-[60px] relative" data-name="Main" tabIndex={-1}>
       <Course />
     </main>
   );

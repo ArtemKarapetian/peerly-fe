@@ -1,5 +1,6 @@
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 export default function TeacherExtensionsPage() {
@@ -19,7 +20,11 @@ export default function TeacherExtensionsPage() {
   };
 
   return (
-    <AppShell title="Extensions"><Breadcrumbs items={['Преподаватель', 'Продления']} />
+    <AppShell title="Extensions">
+      <Breadcrumbs items={[
+        { label: 'Преподаватель', href: ROUTES.teacherDashboard },
+        { label: 'Продления' }
+      ]} />
       <div className="mt-6">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Запросы на продление срока</h1>
         <p className="text-[16px] text-[#767692] mb-6">Управление запросами студентов на перенос дедлайнов</p>

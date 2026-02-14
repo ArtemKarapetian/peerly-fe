@@ -1,5 +1,6 @@
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { MessageSquare, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
 
 /**
@@ -70,7 +71,10 @@ export default function AppealsPage() {
 
   return (
     <AppShell title="Appeals">
-      <Breadcrumbs items={['Student', 'Appeals']} />
+      <Breadcrumbs items={[
+        { label: 'Студент', href: ROUTES.dashboard },
+        { label: 'Апелляции' }
+      ]} />
 
       <div className="mt-6">
         <div className="flex items-start justify-between mb-6">

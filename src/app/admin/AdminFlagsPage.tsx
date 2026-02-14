@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Flag, Save, Search, Filter, X, ChevronDown, 
   AlertCircle, CheckCircle, Clock
 } from 'lucide-react';
@@ -185,7 +186,7 @@ export default function AdminFlagsPage() {
   const [expandedFlag, setExpandedFlag] = useState<string | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const { flags: realFlags, updateFlag: updateRealFlag } = useFeatureFlags();
+  const { updateFlag: updateRealFlag } = useFeatureFlags();
 
   // Available tenants
   const availableTenants = [
@@ -335,7 +336,11 @@ export default function AdminFlagsPage() {
 
   return (
     <AppShell title="Фиче-флаги">
-      <Breadcrumbs items={['Администратор', 'Настройки', 'Фиче-флаги']} />
+      <Breadcrumbs items={[
+        { label: 'Администратор', href: ROUTES.adminOverview },
+        { label: 'Настройки', href: ROUTES.adminSettings },
+        { label: 'Фиче-флаги' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

@@ -142,6 +142,15 @@ export interface DemoAuditLog {
   metadata?: Record<string, any>;
 }
 
+export interface CreateCourseInput {
+  title: string;
+  code: string;
+  instructorId: string;
+  semester?: string;
+  description?: string;
+  archived?: boolean;
+}
+
 // ========== MOCK DATA ==========
 
 // Organizations
@@ -368,6 +377,24 @@ class DemoDataStore {
         localStorage.setItem('demo_assignments_archived', JSON.stringify(archivedMap));
       }
     }
+  }
+
+// Добавьте метод в класс DemoDataStore перед закрывающей скобкой
+  createCourse(input: CreateCourseInput): DemoCourse {
+    const newCourse: DemoCourse = {
+      id: `c${Date.now()}`,
+      name: input.title,
+      title: input.title,
+      code: input.code,
+      teacherId: input.instructorId,
+      orgId: 'org1',
+      enrollmentCount: 0,
+      status: input.archived ? 'archived' : 'active',
+      archived: input.archived ?? false,
+      createdAt: new Date(),};
+
+    demoCourses.push(newCourse);
+    return newCourse;
   }
 }
 

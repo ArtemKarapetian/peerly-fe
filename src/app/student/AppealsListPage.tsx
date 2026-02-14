@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   AlertCircle, X, Calendar, MessageSquare, CheckCircle, 
   Clock, FileText, User
 } from 'lucide-react';
@@ -83,7 +84,10 @@ export default function AppealsListPage() {
 
   return (
     <AppShell title="Мои апелляции">
-      <Breadcrumbs items={['Апелляции']} />
+      <Breadcrumbs items={[
+        { label: 'Студент', href: ROUTES.dashboard },
+        { label: 'Апелляции' }
+      ]} />
 
       <div className="mt-6 max-w-[1000px]">
         <div className="flex items-center gap-3 mb-2">

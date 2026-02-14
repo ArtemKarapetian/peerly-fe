@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   BarChart3, Download, FileText, TrendingUp, 
   MessageSquare, AlertTriangle, Shield, Code, CheckCircle, Users
 } from 'lucide-react';
@@ -41,7 +42,7 @@ export default function TeacherAnalyticsPage() {
   const assignments = demoDataStore.getAssignments();
   const submissions = demoDataStore.getSubmissions();
   const reviews = demoDataStore.getReviews();
-  const users = demoDataStore.getUsers().filter(u => u.role === 'student');
+  const users = demoDataStore.getUsers().filter(u => u.role === 'Student');
 
   const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || '');
   const [selectedAssignment, setSelectedAssignment] = useState<string>('all');
@@ -213,7 +214,10 @@ export default function TeacherAnalyticsPage() {
 
   return (
     <AppShell title="Отчёты и аналитика">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Аналитика']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Аналитика' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

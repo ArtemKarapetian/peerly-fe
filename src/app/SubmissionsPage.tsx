@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { VersionTimeline, ComparisonView } from '@/app/components/submissions';
 import type { Version } from '@/app/components/submissions';
 import { LayoutDebugger } from '@/app/components/LayoutDebugger';
@@ -211,16 +212,12 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
     return (
       <AppShell title="История версий">
         <Breadcrumbs
-          items={['Курсы', courseName, taskTitle, 'Версии']}
-          onItemClick={(index) => {
-            if (index === 0) {
-              window.location.hash = '/courses';
-            } else if (index === 1) {
-              window.location.hash = `/course/${courseId}`;
-            } else if (index === 2) {
-              window.location.hash = `/task/${taskId}`;
-            }
-          }}
+          items={[
+            { label: 'Курсы', href: ROUTES.courses },
+            { label: courseName, href: ROUTES.course(courseId) },
+            { label: taskTitle, href: ROUTES.task(courseId, taskId) },
+            { label: 'Версии' }
+          ]}
         />
 
         <div className="flex items-center justify-center min-h-[400px]">
@@ -255,16 +252,12 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
   return (
     <AppShell title="История версий">
       <Breadcrumbs
-        items={['Курсы', courseName, taskTitle, 'Версии']}
-        onItemClick={(index) => {
-          if (index === 0) {
-            window.location.hash = '/courses';
-          } else if (index === 1) {
-            window.location.hash = `/course/${courseId}`;
-          } else if (index === 2) {
-            window.location.hash = `/task/${taskId}`;
-          }
-        }}
+        items={[
+          { label: 'Курсы', href: ROUTES.courses },
+          { label: courseName, href: ROUTES.course(courseId) },
+          { label: taskTitle, href: ROUTES.task(courseId, taskId) },
+          { label: 'Версии' }
+        ]}
       />
 
       {/* Page Header */}

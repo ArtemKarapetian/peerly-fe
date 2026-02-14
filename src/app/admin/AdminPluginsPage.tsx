@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Zap, CheckCircle, AlertTriangle, XCircle, Download, 
   Trash2, Settings, FileText, X, RefreshCw, Package
 } from 'lucide-react';
@@ -261,7 +262,7 @@ export default function AdminPluginsPage() {
   const handleConfigure = (plugin: Plugin) => {
     setConfigModal({
       plugin,
-      config: { ...plugin.config } || {}
+      config: { ...plugin.config }
     });
     setConfigErrors({});
   };
@@ -460,7 +461,10 @@ export default function AdminPluginsPage() {
 
   return (
     <AppShell title="Каталог плагинов">
-      <Breadcrumbs items={['Admin', 'Плагины']} />
+      <Breadcrumbs items={[
+        { label: 'Admin', href: ROUTES.adminOverview },
+        { label: 'Плагины' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Clock, Plus, Pencil, Trash2, User, Calendar, MessageSquare, X, Check } from 'lucide-react';
 import {
   Extension,
@@ -106,10 +107,10 @@ export default function TeacherAssignmentExtensionsPage({ assignmentId }: Teache
       <div className="max-w-[1200px]">
         <Breadcrumbs
           items={[
-            'Дашборд преподавателя',
-            'Конструктор заданий',
-            'Задание',
-            'Продления дедлайнов',
+            { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+            { label: 'Конструктор заданий', href: ROUTES.teacherDashboard },
+            { label: 'Задание', href: ROUTES.teacherDashboard },
+            { label: 'Продления дедлайнов' }
           ]}
         />
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { demoDataStore } from '@/app/stores/demoDataStore';
 import { TeacherCourseAssignments } from './components/TeacherCourseAssignments';
 import { TeacherCourseParticipants } from './components/TeacherCourseParticipants';
@@ -49,7 +50,11 @@ export default function TeacherCourseDetailsPage({ courseId = 'c1' }: TeacherCou
 
   return (
     <AppShell title={course.name}>
-      <Breadcrumbs items={['Дашборд преподавателя', 'Курсы', course.name]} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Курсы', href: ROUTES.teacherDashboard },
+        { label: course.name }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

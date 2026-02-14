@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { Monitor, Sun, Moon, Globe, Clock, Info, ExternalLink, Shield } from 'lucide-react';
 
 /**
@@ -32,7 +33,7 @@ export default function SettingsPage() {
 
   return (
     <AppShell title="Настройки">
-      <Breadcrumbs items={['Настройки']} />
+      <Breadcrumbs items={[{ label: 'Настройки' }]} />
 
       <div className="mt-6 max-w-[800px]">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">

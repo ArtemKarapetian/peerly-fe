@@ -48,17 +48,18 @@ interface AuditLogEntry {
 
 export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [setSelectedUser] = useState<any>(null);
 
-  const mockUsers = [
-    { id: '1', name: 'Иван Иванов', email: 'ivan@example.com', role: 'Student', status: 'active' },
-    { id: '2', name: 'Мария Петрова', email: 'maria@example.com', role: 'Teacher', status: 'active' },
-    { id: '3', name: 'Алексей Сидоров', email: 'alex@example.com', role: 'Student', status: 'active' },
-    { id: '4', name: 'Елена Козлова', email: 'elena@example.com', role: 'Admin', status: 'active' },
-    { id: '5', name: 'Дмитрий Николаев', email: 'dmitry@example.com', role: 'Student', status: 'inactive' },
-  ];
+  // Вместо mockUsers используйте реальные данные
+  const users = demoDataStore.getUsers();
 
-  const filteredUsers = mockUsers.filter(user =>
+  const usersWithStatus: UserWithStatus[] = demoDataStore.getUsers().map(user => ({
+    ...user,
+    status: 'active' as const,
+    lastLogin: new Date(),
+  }));
+
+  const filteredUsers = usersWithStatus.filter(user =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );

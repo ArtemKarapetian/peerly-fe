@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { Button } from '@/app/components/ui/Button';
+import { ROUTES } from '@/app/routes';
+import { Button } from '@/app/components/ui/button.tsx';
 import { Save, X } from 'lucide-react';
 import { demoDataStore } from '@/app/stores/demoDataStore';
 
@@ -31,7 +32,11 @@ export default function CreateCoursePage() {
 
   return (
     <AppShell title="Создание курса">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Курсы', 'Создать курс']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Курсы', href: ROUTES.teacherDashboard },
+        { label: 'Создать курс' }
+      ]} />
 
       <div className="max-w-[800px] mx-auto mt-4">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">

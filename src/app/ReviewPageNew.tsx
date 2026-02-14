@@ -445,12 +445,12 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
     <AppShell title="Рецензия">
       <div className="flex items-center justify-between gap-4 mb-4">
         <Breadcrumbs
-          items={['Курсы', courseName, taskTitle, 'Рецензия']}
-          onItemClick={(index) => {
-            if (index === 0) window.location.hash = '/courses';
-            else if (index === 1) window.location.hash = `/course/${courseId}`;
-            else if (index === 2) window.location.hash = `/task/${taskId}`;
-          }}
+            items={[
+              { label: 'Курсы', href: '/courses' },
+              { label: courseName, href: `/course/${courseId}` },
+              { label: taskTitle, href: `/task/${taskId}` },
+              { label: 'Рецензия' }
+            ]}
         />
         
         <div className="flex items-center gap-3">

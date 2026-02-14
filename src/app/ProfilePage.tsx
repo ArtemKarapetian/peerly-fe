@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { User, Edit2, LogOut, AlertTriangle, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { useRole } from '@/app/contexts/RoleContext';
@@ -68,7 +69,7 @@ export default function ProfilePage() {
 
   return (
     <AppShell title="Профиль">
-      <Breadcrumbs items={['Профиль']} />
+      <Breadcrumbs items={[{ label: 'Профиль' }]} />
 
       <div className="mt-6 max-w-[800px]">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">

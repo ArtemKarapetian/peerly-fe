@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Activity, Play, Pause, RefreshCw, AlertCircle, 
   CheckCircle, Clock, TrendingUp, Server, Zap
 } from 'lucide-react';
@@ -278,7 +279,11 @@ export default function AdminQueuesPage() {
 
   return (
     <AppShell title="Очереди и воркеры">
-      <Breadcrumbs items={['Admin', 'Мониторинг', 'Очереди']} />
+      <Breadcrumbs items={[
+        { label: 'Admin', href: ROUTES.adminOverview },
+        { label: 'Мониторинг', href: ROUTES.adminHealth },
+        { label: 'Очереди' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

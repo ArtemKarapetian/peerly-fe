@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
+import { ROUTES } from '@/app/routes';
 import { LayoutDebugger } from '@/app/components/LayoutDebugger';
 import { 
   FileUploadArea, 
@@ -225,16 +226,12 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
     return (
       <AppShell title="Отправка работы">
         <Breadcrumbs
-          items={['Курсы', courseName, taskTitle, 'Отправка']}
-          onItemClick={(index) => {
-            if (index === 0) {
-              window.location.hash = '/courses';
-            } else if (index === 1) {
-              window.location.hash = `/course/${courseId}`;
-            } else if (index === 2) {
-              window.location.hash = `/task/${taskId}`;
-            }
-          }}
+          items={[
+            { label: 'Курсы', href: ROUTES.courses },
+            { label: courseName, href: ROUTES.course(courseId) },
+            { label: taskTitle, href: ROUTES.task(courseId, taskId) },
+            { label: 'Отправка' }
+          ]}
         />
 
         <div className="flex items-center justify-center min-h-[400px]">
@@ -280,16 +277,12 @@ export default function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps
     <AppShell title="Отправка работы">
       {/* Breadcrumbs */}
       <Breadcrumbs
-        items={['Курсы', courseName, taskTitle, 'Отправка']}
-        onItemClick={(index) => {
-          if (index === 0) {
-            window.location.hash = '/courses';
-          } else if (index === 1) {
-            window.location.hash = `/course/${courseId}`;
-          } else if (index === 2) {
-            window.location.hash = `/task/${taskId}`;
-          }
-        }}
+        items={[
+          { label: 'Курсы', href: ROUTES.courses },
+          { label: courseName, href: ROUTES.course(courseId) },
+          { label: taskTitle, href: ROUTES.task(courseId, taskId) },
+          { label: 'Отправка' }
+        ]}
       />
 
       {/* Page Header */}

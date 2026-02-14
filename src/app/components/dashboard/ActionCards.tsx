@@ -1,5 +1,4 @@
 import { CheckSquare, MessageSquare, ChevronRight } from 'lucide-react';
-import React = require("react");
 
 /**
  * ActionCards - Карточки действий, требующих внимания

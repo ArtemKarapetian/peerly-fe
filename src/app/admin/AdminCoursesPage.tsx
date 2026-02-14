@@ -92,7 +92,7 @@ export default function AdminCoursesPage() {
                   </td>
                   <td className="px-6 py-4">
                     <p className="text-sm text-[--text-primary]">
-                      {course.instructorId === 'teacher-1' ? 'Иванов И.И.' : 'Преподаватель'}
+                      {course.teacherId === 'teacher-1' ? 'Иванов И.И.' : 'Преподаватель'}
                     </p>
                   </td>
                   <td className="px-6 py-4 text-center">

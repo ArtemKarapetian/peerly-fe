@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   LayoutDashboard, Users, BookOpen, Activity, Zap, 
   CheckCircle, XCircle, AlertTriangle, ArrowRight,
   Database, Settings, FileText, Shield
@@ -150,7 +151,10 @@ export default function AdminOverviewPage() {
 
   return (
     <AppShell title="Админ панель">
-      <Breadcrumbs items={['Администратор', 'Обзор']} />
+      <Breadcrumbs items={[
+        { label: 'Администратор', href: ROUTES.adminOverview },
+        { label: 'Обзор' }
+      ]} />
 
       <div className="mt-6">
         {/* Header with Org Selector */}

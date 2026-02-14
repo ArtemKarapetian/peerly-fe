@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Send, Filter, Search, Download, Clock, AlertTriangle, 
   CheckCircle, FileText, X, ChevronRight, Shield, Code,
   FileCheck, EyeOff, History, StickyNote, Save
@@ -330,7 +331,10 @@ export default function TeacherSubmissionsPage() {
 
   return (
     <AppShell title="Просмотр сабмишенов">
-      <Breadcrumbs items={['Дашборд преподавателя', 'Работы студентов']} />
+      <Breadcrumbs items={[
+        { label: 'Дашборд преподавателя', href: ROUTES.teacherDashboard },
+        { label: 'Работы студентов' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}

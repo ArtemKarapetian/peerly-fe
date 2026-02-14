@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Button } from '@/app/components/ui/Button';
+import { Button } from '@/app/components/ui/button.tsx';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { ProfileDropdown } from './ProfileDropdown';
 

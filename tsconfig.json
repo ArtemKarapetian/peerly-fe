@@ -4,6 +4,21 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "jsx": "react"
-  }
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": ["vite/client"],
+
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

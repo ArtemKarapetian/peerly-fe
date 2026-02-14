@@ -1,6 +1,7 @@
 import { AppShell } from '@/app/components/AppShell';
 import { Breadcrumbs } from '@/app/components/Breadcrumbs';
-import { 
+import { ROUTES } from '@/app/routes';
+import {
   Shield, Lock, Clock, Database, AlertTriangle, 
   FileText, Settings, ArrowRight, CheckCircle
 } from 'lucide-react';
@@ -100,7 +101,10 @@ export default function AdminSettingsPage() {
 
   return (
     <AppShell title="Настройки системы">
-      <Breadcrumbs items={['Admin', 'Настройки системы']} />
+      <Breadcrumbs items={[
+        { label: 'Admin', href: ROUTES.adminOverview },
+        { label: 'Настройки системы' }
+      ]} />
 
       <div className="mt-6">
         {/* Header */}
