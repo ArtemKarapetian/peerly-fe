@@ -15,141 +15,18 @@
  * - Plugins
  * - Feature Flags
  */
-
-// ========== TYPES ==========
-
-export interface DemoUser {
-  id: string;
-  email: string;
-  name: string;
-  role: "Student" | "Teacher" | "Admin";
-  orgId: string;
-  avatar?: string;
-  createdAt: Date;
-}
-
-export interface DemoOrganization {
-  id: string;
-  name: string;
-  slug: string;
-  plan: "free" | "pro" | "enterprise";
-  userCount: number;
-  createdAt: Date;
-}
-
-export interface DemoCourse {
-  id: string;
-  name: string;
-  title: string; // Display title
-  code: string;
-  teacherId: string;
-  orgId: string;
-  enrollmentCount: number;
-  status: "active" | "archived";
-  archived?: boolean; // Legacy field for compatibility
-  assignmentIds?: string[]; // List of assignment IDs
-  createdAt: Date;
-}
-
-export interface DemoAssignment {
-  id: string;
-  courseId: string;
-  title: string;
-  description: string;
-  dueDate: Date;
-  reviewCount: number;
-  status: "draft" | "published" | "closed";
-  rubricId?: string;
-}
-
-export interface DemoRubric {
-  id: string;
-  teacherId: string;
-  name: string;
-  description: string;
-  criteria: DemoRubricCriterion[];
-  isPublic: boolean;
-}
-
-export interface DemoRubricCriterion {
-  id: string;
-  name: string;
-  description: string;
-  maxPoints: number;
-}
-
-export interface DemoSubmission {
-  id: string;
-  assignmentId: string;
-  studentId: string;
-  content: string;
-  files: string[];
-  submittedAt: Date;
-  status: "draft" | "submitted" | "reviewed";
-}
-
-export interface DemoReview {
-  id: string;
-  submissionId: string;
-  reviewerId: string;
-  scores: Record<string, number>;
-  comment: string;
-  submittedAt?: Date;
-  status: "pending" | "draft" | "submitted";
-}
-
-export interface DemoAnnouncement {
-  id: string;
-  courseId: string;
-  teacherId: string;
-  title: string;
-  content: string;
-  publishedAt: Date;
-}
-
-export interface DemoAppeal {
-  id: string;
-  reviewId: string;
-  studentId: string;
-  reason: string;
-  status: "open" | "resolved" | "rejected";
-  createdAt: Date;
-}
-
-export interface DemoPlugin {
-  id: string;
-  name: string;
-  description: string;
-  version: string;
-  enabled: boolean;
-  category: "plagiarism" | "analytics" | "integration" | "other";
-}
-
-export interface DemoFeatureFlag {
-  id: string;
-  name: string;
-  key: string;
-  enabled: boolean;
-  rolloutPercentage: number;
-}
-
-export interface DemoAuditLog {
-  id: string;
-  userId: string;
-  action: string;
-  resource: string;
-  timestamp: Date;
-  metadata?: Record<string, unknown>;
-}
-
-export interface CreateCourseInput {
-  title: string;
-  code: string;
-  instructorId: string;
-  semester?: string;
-  description?: string;
-  archived?: boolean;
-}
+import { DemoUser } from "@/entities/user/model/types.ts";
+import { CreateCourseInput, DemoCourse } from "@/entities/course/model/types.ts";
+import { DemoOrganization } from "@/entities/organization/model/types.ts";
+import { DemoRubric } from "@/entities/rubric/model/types.ts";
+import { DemoSubmission } from "@/entities/submission/model/types.ts";
+import { DemoReview } from "@/entities/review/model/types.ts";
+import { DemoAssignment } from "@/entities/assignment/model/types.ts";
+import { DemoAnnouncement } from "@/entities/announcement/model/types.ts";
+import { DemoAppeal } from "@/entities/appeal/model/types.ts";
+import { DemoPlugin } from "@/entities/plugin/model/types.ts";
+import { DemoFeatureFlag } from "@/entities/feature-flag/model/types.ts";
+import { DemoAuditLog } from "@/entities/audit-log/model/types.ts";
 
 // ========== MOCK DATA ==========
 

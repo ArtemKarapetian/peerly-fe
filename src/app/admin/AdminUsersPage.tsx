@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Users, Search, X, CheckCircle, XCircle } from "lucide-react";
-import { demoDataStore, DemoUser } from "@/app/stores/demoDataStore";
+import { demoDataStore } from "@/app/stores/demoDataStore";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
+import { DemoUser } from "@/entities/user/model/types.ts";
 
 /**
  * AdminUsersPage - Управление пользователями и ролями

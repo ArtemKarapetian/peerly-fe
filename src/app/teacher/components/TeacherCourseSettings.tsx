@@ -1,5 +1,6 @@
 import { Save } from "lucide-react";
-import type { DemoCourse } from "@/app/stores/demoDataStore";
+
+import { DemoCourse } from "@/entities/course/model/types.ts";
 
 interface TeacherCourseSettingsProps {
   course: DemoCourse;
