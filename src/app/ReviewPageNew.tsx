@@ -18,7 +18,7 @@ import {
   loadDraftFromStorage,
   clearDraftFromStorage,
 } from "@/app/utils/reviewDraft";
-import { debounce } from "@/app/utils/debounce";
+import { debounce } from "@/shared/lib/debounce.ts";
 
 interface ReviewPageProps {
   reviewId: string;

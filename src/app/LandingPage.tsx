@@ -8,10 +8,10 @@ import { useAuth } from "@/app/contexts/AuthContext";
  */
 
 // Импорт иллюстраций из Figma
-import imgHero from "@/assets/1316612187f4274840308d8544bb1f10cdcc9818.png";
-import imgPlatform from "@/assets/eb9aaf49f5066472e938555cd5aa00e6418c7a26.png";
-import imgTeacher from "@/assets/7177166acba64f35340faa0b6f56005880826629.png";
-import imgSettings from "@/assets/8a7431ce52feae07a5df11170b187a4a3d8ac9c2.png";
+import imgHero from "@/shared/assets/1316612187f4274840308d8544bb1f10cdcc9818.png";
+import imgPlatform from "@/shared/assets/eb9aaf49f5066472e938555cd5aa00e6418c7a26.png";
+import imgTeacher from "@/shared/assets/7177166acba64f35340faa0b6f56005880826629.png";
+import imgSettings from "@/shared/assets/8a7431ce52feae07a5df11170b187a4a3d8ac9c2.png";
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
