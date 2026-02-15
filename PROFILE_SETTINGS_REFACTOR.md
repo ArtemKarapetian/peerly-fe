@@ -49,7 +49,7 @@
 
 ### 3. **Router Configuration**
 
-#### `RouterExtended.tsx` - Route Updates
+#### `Router.tsx` - Route Updates
 
 - Updated imports to use new ProfilePage and SettingsPage from `/src/app/`
 - Routes configured:

@@ -214,7 +214,7 @@ interface Appeal {
 
 ### **Router Configuration**:
 
-Updated `/src/app/RouterExtended.tsx`:
+Updated `/src/app/Router.tsx`:
 
 - Route pattern: `/courses/:courseId/tasks/:taskId/appeal`
 - Route: `/appeals` → AppealsListPage
