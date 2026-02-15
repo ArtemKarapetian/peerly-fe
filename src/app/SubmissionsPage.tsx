@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { VersionTimeline, ComparisonView } from "@/app/components/submissions";
 import type { Version } from "@/app/components/submissions";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";

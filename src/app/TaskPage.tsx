@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { TaskHeader } from "@/app/components/TaskHeader";
 import { TaskDescription } from "@/app/components/TaskDescription";
 import { TaskRequirements } from "@/app/components/TaskRequirements";
@@ -10,7 +10,7 @@ import { TaskQuestionsComments } from "@/app/components/TaskQuestionsComments";
 import { StatusCard, TaskStatus } from "@/app/components/StatusCard";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";
 import { getExtensionForStudent } from "@/app/utils/extensions";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 import { Clock, AlertCircle } from "lucide-react";
 
 interface TaskPageProps {

@@ -12,7 +12,7 @@ import {
   Target,
   MessageSquare,
 } from "lucide-react";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 import { createAppeal, AppealReason } from "@/app/utils/appeals";
 
 /**

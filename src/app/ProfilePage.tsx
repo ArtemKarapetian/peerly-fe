@@ -2,9 +2,9 @@ import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { User, Edit2, LogOut, AlertTriangle, MessageCircle } from "lucide-react";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { useRole } from "@/app/contexts/RoleContext";
-import { useFeatureFlags } from "@/app/contexts/FeatureFlagsContext";
+import { useAuth } from "@/app/providers/auth.tsx";
+import { useRole } from "@/app/providers/role.tsx";
+import { useFeatureFlags } from "@/app/providers/feature-flags.tsx";
 
 /**
  * ProfilePage - User Profile Information

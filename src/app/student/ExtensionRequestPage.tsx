@@ -3,7 +3,7 @@ import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { Clock, Calendar, MessageSquare, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { ExtensionType, requestExtension } from "@/app/utils/extensions";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 
 /**
  * ExtensionRequestPage - Student page to request deadline extension

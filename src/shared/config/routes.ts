@@ -12,7 +12,7 @@ export const ROUTES = {
   // Студент
   dashboard: "/dashboard",
   courses: "/courses",
-  course: (id: string) => `/courses/${id}`,
+  course: (id: string) => `/course/${id}`,
   task: (courseId: string, taskId: string) => `/courses/${courseId}/tasks/${taskId}`,
   submitWork: (taskId: string) => `/submit/${taskId}`,
   submissions: "/submissions",

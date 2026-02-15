@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 /**
- * RoleContext - Управление ролями пользователя для демо
+ * Role - Управление ролями пользователя для демо
  *
  * Roles:
  * - Student: студент (по умолчанию)
@@ -18,7 +18,7 @@ interface RoleContextType {
   setRole: (role: UserRole) => void;
 }
 
-const RoleContext = createContext<RoleContextType | undefined>(undefined);
+const Role = createContext<RoleContextType | undefined>(undefined);
 
 // Initialize role from localStorage
 const getInitialRole = (): UserRole => {
@@ -47,11 +47,11 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return <RoleContext.Provider value={{ currentRole, setRole }}>{children}</RoleContext.Provider>;
+  return <Role.Provider value={{ currentRole, setRole }}>{children}</Role.Provider>;
 }
 
 export function useRole() {
-  const context = useContext(RoleContext);
+  const context = useContext(Role);
   if (context === undefined) {
     throw new Error("useRole must be used within a RoleProvider");
   }

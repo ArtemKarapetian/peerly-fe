@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { demoDataStore } from "@/app/stores/demoDataStore";
 import { TeacherCourseAssignments } from "./components/TeacherCourseAssignments";
 import { TeacherCourseParticipants } from "./components/TeacherCourseParticipants";

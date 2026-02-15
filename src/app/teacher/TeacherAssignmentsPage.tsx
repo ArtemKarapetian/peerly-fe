@@ -1,6 +1,6 @@
 import { FileText } from "lucide-react";
 import { TeacherPlaceholderPage } from "./TeacherPlaceholderPage";
-import { ROUTES } from "@/app/routes.ts";
+import { ROUTES } from "@/shared/config/routes.ts";
 
 export default function TeacherAssignmentsPage() {
   return (

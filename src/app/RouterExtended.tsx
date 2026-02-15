@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 import { isFlagEnabled } from "@/app/utils/featureFlags";
 
 // Student pages

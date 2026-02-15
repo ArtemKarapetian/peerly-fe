@@ -9,7 +9,7 @@ import { TaskList, Task } from "@/app/components/TaskList";
 import { ParticipantSearch } from "@/app/components/ParticipantSearch";
 import { ParticipantsList, Participant } from "@/app/components/ParticipantsList";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 
 interface CoursePageProps {
   courseId?: string;

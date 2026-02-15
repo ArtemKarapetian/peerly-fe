@@ -2,7 +2,7 @@ import { useState, FormEvent } from "react";
 import { PublicLayout } from "@/app/components/PublicLayout";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 import { isFlagEnabled } from "@/app/utils/featureFlags";
 import { authenticateUser } from "@/app/utils/userStorage";
 import { AlertCircle } from "lucide-react";

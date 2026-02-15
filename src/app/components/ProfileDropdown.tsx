@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { User, Settings, HelpCircle, Activity, LogOut } from "lucide-react";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 
 /**
  * ProfileDropdown - Dropdown menu для профиля пользователя

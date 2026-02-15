@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Flag, Save, Search, X, ChevronDown, AlertCircle, CheckCircle, Clock } from "lucide-react";
-import { useFeatureFlags } from "@/app/contexts/FeatureFlagsContext";
+import { useFeatureFlags } from "@/app/providers/feature-flags.tsx";
 
 /**
  * AdminFlagsPage - Фиче-флаги и настройки платформы

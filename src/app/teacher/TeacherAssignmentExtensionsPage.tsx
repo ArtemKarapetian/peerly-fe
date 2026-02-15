@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Clock, Plus, Pencil, Trash2, User, Calendar, MessageSquare, X, Check } from "lucide-react";
 import {
   Extension,

@@ -3,7 +3,7 @@ import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { Button } from "@/shared/ui/button.tsx";
 import { AlertCircle, Send } from "lucide-react";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 
 /**
  * AppealPage - Страница подачи апелляции на оценку

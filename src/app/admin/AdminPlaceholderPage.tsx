@@ -1,7 +1,7 @@
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs, BreadcrumbItem } from "@/app/components/Breadcrumbs";
 import { LucideIcon } from "lucide-react";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 
 /**
  * AdminPlaceholderPage - Шаблон для страниц администратора

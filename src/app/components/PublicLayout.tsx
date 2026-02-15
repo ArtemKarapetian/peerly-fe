@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Button } from "@/shared/ui/button.tsx";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 import { ProfileDropdown } from "./ProfileDropdown";
 
 /**

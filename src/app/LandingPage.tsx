@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { PublicLayout } from "@/app/components/PublicLayout";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 
 /**
  * LandingPage - Яркая и красочная главная страница Peerly

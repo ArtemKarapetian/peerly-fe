@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Search, Plus, Filter, Copy, Eye, Edit } from "lucide-react";
 import { RubricEditor } from "./components/RubricEditor";
 import { RubricPreview } from "./components/RubricPreview";

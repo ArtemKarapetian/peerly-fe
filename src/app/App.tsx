@@ -1,20 +1,14 @@
 import { Router } from "@/app/RouterExtended";
-import { AuthProvider } from "@/app/contexts/AuthContext";
-import { RoleProvider } from "@/app/contexts/RoleContext";
-import { FeatureFlagsProvider } from "@/app/contexts/FeatureFlagsContext";
+import { AppProviders } from "@/app/providers/index.tsx";
 import { Toaster } from "@/shared/ui/sonner";
 import { DevErrorPanel } from "@/app/components/DevErrorPanel";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <RoleProvider>
-        <FeatureFlagsProvider>
-          <Router />
-          <Toaster />
-          <DevErrorPanel />
-        </FeatureFlagsProvider>
-      </RoleProvider>
-    </AuthProvider>
+    <AppProviders>
+      <Router />
+      <Toaster />
+      <DevErrorPanel />
+    </AppProviders>
   );
 }

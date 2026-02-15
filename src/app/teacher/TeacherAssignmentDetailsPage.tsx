@@ -1,7 +1,7 @@
 import React from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
 
 /**

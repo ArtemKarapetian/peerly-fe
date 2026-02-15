@@ -1,6 +1,6 @@
 import { Settings } from "lucide-react";
 import { AdminPlaceholderPage } from "./AdminPlaceholderPage";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 
 export default function AdminPoliciesPage() {
   return (

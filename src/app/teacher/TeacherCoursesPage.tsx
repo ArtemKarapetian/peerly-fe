@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
 import { demoDataStore } from "@/app/stores/demoDataStore";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";

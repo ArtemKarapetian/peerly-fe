@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { ROUTES } from "@/app/routes";
+import { ROUTES } from "@/shared/config/routes.ts";
 import {
   AlertCircle,
   X,
@@ -12,7 +12,7 @@ import {
   FileText,
   User,
 } from "lucide-react";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { useAuth } from "@/app/providers/auth.tsx";
 import {
   getStudentAppeals,
   Appeal,

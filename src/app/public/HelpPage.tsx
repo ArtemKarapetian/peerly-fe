@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { PublicLayout } from "@/app/components/PublicLayout";
 import { Search, ChevronDown, MessageCircle, Mail } from "lucide-react";
-import { useFeatureFlags } from "@/app/contexts/FeatureFlagsContext";
+import { useFeatureFlags } from "@/app/providers/feature-flags.tsx";
 
 /**
  * HelpPage - FAQ и поддержка пользователей

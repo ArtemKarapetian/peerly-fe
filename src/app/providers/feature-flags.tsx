@@ -23,7 +23,7 @@ const defaultFlags: FeatureFlags = {
   deleteAccount: false,
 };
 
-const FeatureFlagsContext = createContext<FeatureFlagsContextType | undefined>(undefined);
+const FeatureFlags = createContext<FeatureFlagsContextType | undefined>(undefined);
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   const [flags, setFlags] = useState<FeatureFlags>(() => {
@@ -46,15 +46,11 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
     setFlags((prev) => ({ ...prev, [key]: value }));
   };
 
-  return (
-    <FeatureFlagsContext.Provider value={{ flags, updateFlag }}>
-      {children}
-    </FeatureFlagsContext.Provider>
-  );
+  return <FeatureFlags.Provider value={{ flags, updateFlag }}>{children}</FeatureFlags.Provider>;
 }
 
 export function useFeatureFlags() {
-  const context = useContext(FeatureFlagsContext);
+  const context = useContext(FeatureFlags);
   if (context === undefined) {
     throw new Error("useFeatureFlags must be used within a FeatureFlagsProvider");
   }
