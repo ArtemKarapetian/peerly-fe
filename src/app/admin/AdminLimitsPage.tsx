@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Save, Plus, X, Building, AlertCircle } from "lucide-react";
 
@@ -8,7 +8,7 @@ import { Save, Plus, X, Building, AlertCircle } from "lucide-react";
  * AdminLimitsPage - Лимиты и квоты
  *
  * Функции:
- * - Глобальные лимиты: upload size, files per submission, attempts, rate limits
+ * - Глобальные лимиты: upload size, files per work, attempts, rate limits
  * - Per-tenant overrides
  * - Сохранение в localStorage
  */
@@ -167,7 +167,7 @@ export default function AdminLimitsPage() {
     {
       key: "maxFilesPerSubmission",
       label: "Файлов в одной работе",
-      description: "Максимальное количество файлов в submission",
+      description: "Максимальное количество файлов в work",
       unit: "файлов",
       icon: "📎",
     },

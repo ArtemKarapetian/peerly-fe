@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Activity, Play, Pause, RefreshCw, AlertCircle, Server } from "lucide-react";
 
@@ -102,7 +102,7 @@ const DEMO_WORKERS: Worker[] = [
     name: "plagiarism-worker-01",
     queue: "plagiarism-check",
     status: "running",
-    currentJob: "submission-7823",
+    currentJob: "work-7823",
     processedToday: 234,
     retryCount: 3,
     lastActivity: new Date(Date.now() - 30000),
@@ -113,7 +113,7 @@ const DEMO_WORKERS: Worker[] = [
     name: "plagiarism-worker-02",
     queue: "plagiarism-check",
     status: "running",
-    currentJob: "submission-7891",
+    currentJob: "work-7891",
     processedToday: 198,
     retryCount: 1,
     lastActivity: new Date(Date.now() - 15000),

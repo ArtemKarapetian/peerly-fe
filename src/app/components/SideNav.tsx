@@ -9,7 +9,7 @@ import {
   BookOpen,
   Bell,
 } from "lucide-react";
-import { ProfileDropdown } from "./ProfileDropdown";
+import { ProfileDropdown } from "../../widgets/navigation/ProfileDropdown.tsx";
 
 /**
  * SideNav - Навигационная панель с вариантами для разных брейкпоинтов

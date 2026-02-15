@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { TaskHeader } from "@/app/components/TaskHeader";
 import { TaskDescription } from "@/app/components/TaskDescription";

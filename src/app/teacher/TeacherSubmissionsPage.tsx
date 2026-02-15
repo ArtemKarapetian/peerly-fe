@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Send,
@@ -100,7 +100,7 @@ export default function TeacherSubmissionsPage() {
     return params.get("assignmentId") || "";
   };
 
-  // Generate comprehensive submission data
+  // Generate comprehensive work data
   const generateSubmissions = (): Submission[] => {
     return demoSubmissions.map((sub, idx) => {
       const assignment = assignments.find((a) => a.id === sub.assignmentId);
@@ -253,7 +253,7 @@ export default function TeacherSubmissionsPage() {
   const [notesText, setNotesText] = useState(notesInitialValue);
 
   useEffect(() => {
-    // Update notesText when selected submission changes.
+    // Update notesText when selected work changes.
     // Schedule setState asynchronously to avoid cascading renders (ESLint rule).
     if (!selectedSubmission) return;
     const t = setTimeout(() => {

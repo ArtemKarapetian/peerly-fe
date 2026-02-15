@@ -1,7 +1,7 @@
-export { AppShell } from "./AppShell";
+export { AppShell } from "../../widgets/app-shell/AppShell.tsx";
 export { SideNav } from "./SideNav";
-export { TopBar } from "./TopBar";
-export { Breadcrumbs } from "./Breadcrumbs";
+export { TopBar } from "../../widgets/navigation/TopBar.tsx";
+export { Breadcrumbs } from "../../shared/ui/Breadcrumbs.tsx";
 export { TaskHeader } from "./TaskHeader";
 export { TaskDescription } from "./TaskDescription";
 export { TaskRequirements } from "./TaskRequirements";

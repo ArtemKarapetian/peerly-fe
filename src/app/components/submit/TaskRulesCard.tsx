@@ -13,7 +13,7 @@ export interface TaskRules {
   deadline: string; // e.g., "31 января, 23:59"
   isDeadlinePassed: boolean;
   allowedResubmissions: number;
-  currentVersion: number; // 0 = no submission yet
+  currentVersion: number; // 0 = no work yet
   latePolicy?: string;
 }
 

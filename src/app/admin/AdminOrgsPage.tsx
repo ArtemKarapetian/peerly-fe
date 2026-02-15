@@ -1,4 +1,4 @@
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Database, Users, TrendingUp, ExternalLink } from "lucide-react";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { CourseHeader } from "@/app/components/CourseHeader";
 import { CourseTabs } from "@/app/components/CourseTabs";
 import { TaskSearch } from "@/app/components/TaskSearch";

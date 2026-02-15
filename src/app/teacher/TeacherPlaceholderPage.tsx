@@ -1,5 +1,5 @@
-import { AppShell } from "@/app/components/AppShell";
-import { BreadcrumbItem, Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LucideIcon } from "lucide-react";
 import { ROUTES } from "@/shared/config/routes.ts";
 

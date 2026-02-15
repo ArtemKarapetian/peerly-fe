@@ -20,7 +20,7 @@ export interface Appeal {
   message: string;
   attachmentName?: string; // Demo only
 
-  // Context from submission
+  // Context from work
   currentScore?: number;
   maxScore?: number;
   reviewCount?: number;

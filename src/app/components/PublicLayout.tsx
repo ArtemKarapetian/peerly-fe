@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Button } from "@/shared/ui/button.tsx";
 import { useAuth } from "@/app/providers/auth.tsx";
-import { ProfileDropdown } from "./ProfileDropdown";
+import { ProfileDropdown } from "../../widgets/navigation/ProfileDropdown.tsx";
 
 /**
  * PublicTopBar - Минималистичный topbar для публичных страниц

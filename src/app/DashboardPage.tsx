@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";
 import {
   DeadlinesList,

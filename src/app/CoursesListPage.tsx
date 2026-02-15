@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { CourseCard } from "@/app/components/CourseCard";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";

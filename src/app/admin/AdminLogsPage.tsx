@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import {
   FileSearch,
@@ -155,7 +155,7 @@ const DEMO_SYSTEM_LOGS: SystemLog[] = [
     timestamp: new Date(Date.now() - 120000),
     service: "worker",
     level: "info",
-    message: "Plagiarism check completed for submission-7823",
+    message: "Plagiarism check completed for work-7823",
     details: "Similarity: 12%",
   },
   {

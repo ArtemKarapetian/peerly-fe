@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Shield, Database, AlertTriangle, Settings, ArrowRight, CheckCircle } from "lucide-react";
 

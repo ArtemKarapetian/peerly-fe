@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { User, Edit2, LogOut, AlertTriangle, MessageCircle } from "lucide-react";
 import { useAuth } from "@/app/providers/auth.tsx";
 import { useRole } from "@/app/providers/role.tsx";

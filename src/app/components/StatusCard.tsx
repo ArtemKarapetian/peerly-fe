@@ -23,8 +23,8 @@ interface StatusCardProps {
   deadline: string;
   courseId: string;
   taskId: string;
-  hasSubmission?: boolean; // Has any submission (draft or final)
-  isDraft?: boolean; // Current submission is draft
+  hasSubmission?: boolean; // Has any work (draft or final)
+  isDraft?: boolean; // Current work is draft
   allowResubmissions?: boolean; // Allows resubmitting
   onStatusChange?: (status: TaskStatus) => void;
 }
@@ -154,7 +154,7 @@ export function StatusCard({
               <span>Сдать работу</span>
             </button>
 
-            {/* History link - show if has any submission */}
+            {/* History link - show if has any work */}
             {hasSubmission && (
               <button
                 onClick={() => {

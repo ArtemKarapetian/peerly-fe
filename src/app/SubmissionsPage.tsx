@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { VersionTimeline, ComparisonView } from "@/app/components/submissions";
 import type { Version } from "@/app/components/submissions";
@@ -17,7 +17,7 @@ import { LayoutDebugger } from "@/app/components/LayoutDebugger";
  * - Actions: Download, View Reports, Make Current, Create New Version
  * - Comparison mode: select 2 versions to compare side-by-side
  * - Empty state if no submissions
- * - Handle submission limits
+ * - Handle work limits
  */
 
 interface SubmissionsPageProps {

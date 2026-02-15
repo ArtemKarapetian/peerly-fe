@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import {
   AlertCircle,
   FileText,
@@ -36,7 +36,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Mock data - in real app, fetch from submission
+  // Mock data - in real app, fetch from work
   const courseName = "Веб-программирование"; // Mock
   const taskName = "Задание 1: Введение в peer review"; // Mock
   const currentScore = 78;

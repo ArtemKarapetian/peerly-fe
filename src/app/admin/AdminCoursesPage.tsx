@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Book, ExternalLink, Search } from "lucide-react";
 import { demoDataStore } from "@/app/stores/demoDataStore";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";

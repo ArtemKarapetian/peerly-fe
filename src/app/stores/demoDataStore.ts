@@ -18,8 +18,7 @@
 import { DemoUser } from "@/entities/user/model/types.ts";
 import { CreateCourseInput, DemoCourse } from "@/entities/course/model/types.ts";
 import { DemoOrganization } from "@/entities/organization/model/types.ts";
-import { DemoRubric } from "@/entities/rubric/model/types.ts";
-import { DemoSubmission } from "@/entities/submission/model/types.ts";
+import { DemoSubmission } from "@/entities/work/model/types.ts";
 import { DemoReview } from "@/entities/review/model/types.ts";
 import { DemoAssignment } from "@/entities/assignment/model/types.ts";
 import { DemoAnnouncement } from "@/entities/announcement/model/types.ts";
@@ -120,28 +119,6 @@ const demoCourses: DemoCourse[] = [
     enrollmentCount: 52,
     status: "active",
     createdAt: new Date("2023-09-01"),
-  },
-];
-
-// Rubrics
-const demoRubrics: DemoRubric[] = [
-  {
-    id: "r1",
-    teacherId: "u2",
-    name: "Оценка веб-проекта",
-    description: "Критерии оценки финального веб-проекта",
-    isPublic: true,
-    criteria: [
-      {
-        id: "c1",
-        name: "Функциональность",
-        description: "Работоспособность всех требуемых функций",
-        maxPoints: 30,
-      },
-      { id: "c2", name: "Дизайн", description: "Визуальное оформление и UX", maxPoints: 20 },
-      { id: "c3", name: "Код", description: "Качество и читаемость кода", maxPoints: 30 },
-      { id: "c4", name: "Документация", description: "Полнота документации", maxPoints: 20 },
-    ],
   },
 ];
 
@@ -294,10 +271,6 @@ class DemoDataStore {
 
   getCourses(): DemoCourse[] {
     return demoCourses;
-  }
-
-  getRubrics(): DemoRubric[] {
-    return demoRubrics;
   }
 
   getAssignments(): DemoAssignment[] {

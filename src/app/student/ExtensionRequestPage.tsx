@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Clock, Calendar, MessageSquare, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { ExtensionType, requestExtension } from "@/app/utils/extensions";
 import { useAuth } from "@/app/providers/auth.tsx";

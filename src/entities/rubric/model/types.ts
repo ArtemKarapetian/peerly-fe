@@ -1,15 +1,16 @@
-export interface DemoRubricCriterion {
+export interface Criterion {
   id: string;
   name: string;
-  description: string;
-  maxPoints: number;
+  description?: string;
+  maxScore: number;
+  required: boolean;
+  commentRequired?: boolean;
+  minCommentLength?: number;
 }
 
-export interface DemoRubric {
+export interface RubricSectionData {
   id: string;
-  teacherId: string;
   name: string;
-  description: string;
-  criteria: DemoRubricCriterion[];
-  isPublic: boolean;
+  description?: string;
+  criteria: Criterion[];
 }

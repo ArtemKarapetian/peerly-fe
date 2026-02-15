@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AppShell } from "@/app/components/AppShell";
-import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import {
   BarChart3,
@@ -71,7 +71,7 @@ export default function TeacherAnalyticsPage() {
     const assignmentReviews = reviews.filter((r) =>
       assignmentSubmissions.some((s) => s.id === r.submissionId),
     );
-    const expectedReviews = completedSubmissions * 3; // 3 reviews per submission
+    const expectedReviews = completedSubmissions * 3; // 3 reviews per work
     const completedReviews = assignmentReviews.length;
     const reviewCompletionRate =
       expectedReviews > 0 ? (completedReviews / expectedReviews) * 100 : 0;

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { RubricSection } from "@/app/components/review/RubricSection";
-import type { RubricSectionData } from "@/app/components/review/RubricSection";
-import type { CriterionScore } from "@/app/components/review/RubricCriterion";
+import { RubricSection } from "@/features/review/fill-review/ui/RubricSection.tsx";
 import type { RubricData } from "../TeacherRubricsPage";
+import { RubricSectionData } from "@/entities/rubric/model/types.ts";
+import { CriterionScore } from "@/entities/review/model/types.ts";
 
 /**
  * RubricPreview - Предпросмотр рубрики
