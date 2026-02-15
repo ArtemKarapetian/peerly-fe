@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PublicLayout } from "@/app/components/PublicLayout";
-import { Button } from "@/app/components/ui/button.tsx";
-import { Input } from "@/app/components/ui/input.tsx";
+import { Button } from "@/shared/ui/button.tsx";
+import { Input } from "@/shared/ui/input.tsx";
 import {
   CheckCircle2,
   AlertTriangle,

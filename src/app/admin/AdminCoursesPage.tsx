@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Book, ExternalLink, Search } from "lucide-react";
 import { demoDataStore } from "@/app/stores/demoDataStore";
-import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
+import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 /**
  * AdminCoursesPage - Просмотр всех курсов в системе (Admin)

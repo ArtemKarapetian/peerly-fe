@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { Button } from "@/app/components/ui/button.tsx";
+import { Button } from "@/shared/ui/button.tsx";
 import { AlertCircle, Send } from "lucide-react";
 import { ROUTES } from "@/app/routes";
 

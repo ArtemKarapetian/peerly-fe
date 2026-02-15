@@ -4,7 +4,7 @@ import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { ROUTES } from "@/app/routes";
 import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
 import { demoDataStore } from "@/app/stores/demoDataStore";
-import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
+import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 import { CourseSearch } from "@/app/components/CourseSearch";
 
 /**

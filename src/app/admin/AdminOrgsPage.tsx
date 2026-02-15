@@ -1,6 +1,6 @@
 import { AppShell } from "@/app/components/AppShell";
 import { Database, Users, TrendingUp, ExternalLink } from "lucide-react";
-import { SimplePagination, usePagination } from "@/app/components/ui/simple-pagination";
+import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 /**
  * AdminOrgsPage - Управление организациями

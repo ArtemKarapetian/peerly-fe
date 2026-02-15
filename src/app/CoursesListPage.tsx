@@ -2,8 +2,8 @@ import { useState, useCallback } from "react";
 import { AppShell } from "@/app/components/AppShell";
 import { CourseCard } from "@/app/components/CourseCard";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";
-import { AdvancedPagination } from "@/app/components/ui/advanced-pagination";
-import { usePagination } from "@/app/components/ui/simple-pagination";
+import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { usePagination } from "@/shared/ui/simple-pagination";
 import { CourseFilters, CourseFilterType } from "@/app/components/CourseFilters";
 import { CourseSearch } from "@/app/components/CourseSearch";
 

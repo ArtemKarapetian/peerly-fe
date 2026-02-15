@@ -1,7 +1,7 @@
 import { useState, FormEvent } from "react";
 import { PublicLayout } from "@/app/components/PublicLayout";
-import { Button } from "@/app/components/ui/button.tsx";
-import { Input, PasswordInput } from "@/app/components/ui/input.tsx";
+import { Button } from "@/shared/ui/button.tsx";
+import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 import { CheckCircle } from "lucide-react";
 
 /**
