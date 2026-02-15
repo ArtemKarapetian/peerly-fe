@@ -6,23 +6,7 @@
  * - Update review status and data
  * - Persist in memory (would be replaced with API calls)
  */
-
-export interface Review {
-  id: string;
-  taskTitle: string;
-  courseName: string;
-  courseId: string;
-  taskId: string;
-  studentName: string; // e.g., "Student #1" or real name
-  isAnonymous: boolean;
-  reviewDeadline: string;
-  reviewDeadlineTimestamp: number;
-  status: "not_started" | "draft" | "submitted";
-  // Draft data
-  scores?: Record<string, { score: number | null; comment: string }>;
-  overallComment?: string;
-  submittedAt?: string;
-}
+import { Review } from "@/entities/review/model/store.ts";
 
 // Mock initial data
 const INITIAL_REVIEWS: Review[] = [
