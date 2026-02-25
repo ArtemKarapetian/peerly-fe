@@ -3,18 +3,15 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Clock, Plus, Pencil, Trash2, User, Calendar, MessageSquare, X, Check } from "lucide-react";
+import { AddExtensionModal } from "@/app/components/AddExtensionModal";
+import { toast } from "sonner";
 import {
   Extension,
   ExtensionStatus,
-  getExtensionsByAssignment,
-  deleteExtension,
-  approveExtension,
-  denyExtension,
+  extensionRepo,
   getExtensionStatusLabel,
   getExtensionTypeLabel,
-} from "@/app/utils/extensions";
-import { AddExtensionModal } from "@/app/components/AddExtensionModal";
-import { toast } from "sonner";
+} from "@/entities/extension";
 
 interface TeacherAssignmentExtensionsPageProps {
   assignmentId: string;
@@ -27,34 +24,34 @@ export default function TeacherAssignmentExtensionsPage({
   assignmentId,
 }: TeacherAssignmentExtensionsPageProps) {
   const [extensions, setExtensions] = useState<Extension[]>(() =>
-    getExtensionsByAssignment(assignmentId),
+    extensionRepo.getByAssignment(assignmentId),
   );
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingExtension, setEditingExtension] = useState<Extension | null>(null);
   const [filterStatus, setFilterStatus] = useState<ExtensionStatus | "all">("all");
 
   const loadExtensions = useCallback(() => {
-    const data = getExtensionsByAssignment(assignmentId);
+    const data = extensionRepo.getByAssignment(assignmentId);
     setExtensions(data);
   }, [assignmentId]);
 
   const handleDelete = (id: string) => {
     if (confirm("Вы уверены, что хотите удалить это продление?")) {
-      deleteExtension(id);
+      extensionRepo.delete(id);
       loadExtensions();
       toast.success("Продление удалено");
     }
   };
 
   const handleApprove = (id: string) => {
-    approveExtension(id, "teacher1"); // demo teacher id
+    extensionRepo.approve(id, "teacher1");
     loadExtensions();
     toast.success("Продление одобрено");
   };
 
   const handleDeny = (id: string) => {
     if (confirm("Вы уверены, что хотите отклонить запрос на продление?")) {
-      denyExtension(id, "teacher1"); // demo teacher id
+      extensionRepo.deny(id, "teacher1");
       loadExtensions();
       toast.info("Запрос отклонён");
     }

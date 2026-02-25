@@ -14,13 +14,13 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/app/providers/auth.tsx";
 import {
-  getStudentAppeals,
   Appeal,
   AppealStatus,
+  appealRepo,
   getReasonLabel,
-  getStatusLabel,
   getStatusColor,
-} from "@/app/utils/appeals";
+  getStatusLabel,
+} from "@/entities/appeal";
 
 /**
  * AppealsListPage - Student Appeals List
@@ -69,7 +69,7 @@ export default function AppealsListPage() {
   const { user } = useAuth();
   const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null);
 
-  const appeals = getStudentAppeals(user?.id || "student-1");
+  const appeals = appealRepo.getByStudent(user?.id || "student-1");
 
   // Group appeals by status
   const appealsByStatus: Record<AppealStatus, Appeal[]> = {

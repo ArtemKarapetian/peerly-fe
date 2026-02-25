@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Clock, Calendar, MessageSquare, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
-import { ExtensionType, requestExtension } from "@/app/utils/extensions";
+import { ExtensionType, extensionRepo } from "@/entities/extension";
 import { useAuth } from "@/app/providers/auth.tsx";
 
 /**
@@ -29,7 +29,7 @@ export default function ExtensionRequestPage() {
     }
 
     // Create extension request
-    requestExtension(
+    extensionRepo.request(
       taskId,
       user?.id || "1",
       user?.name || "Текущий студент",

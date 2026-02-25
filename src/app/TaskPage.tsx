@@ -9,7 +9,7 @@ import { TaskMaterials } from "@/app/components/TaskMaterials";
 import { TaskQuestionsComments } from "@/app/components/TaskQuestionsComments";
 import { StatusCard, TaskStatus } from "@/app/components/StatusCard";
 import { LayoutDebugger } from "@/app/components/LayoutDebugger";
-import { getExtensionForStudent } from "@/app/utils/extensions";
+import { extensionRepo } from "@/entities/extension";
 import { useAuth } from "@/app/providers/auth.tsx";
 import { Clock, AlertCircle } from "lucide-react";
 
@@ -23,7 +23,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
 
   // Use useMemo instead of useState + useEffect to avoid cascading renders
   const extension = useMemo(
-    () => getExtensionForStudent(taskId || "1", user?.id || "1"),
+    () => extensionRepo.getForStudent(taskId || "1", user?.id || "1"),
     [taskId, user?.id],
   );
 

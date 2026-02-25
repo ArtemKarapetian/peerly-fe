@@ -20,7 +20,7 @@ import GradebookPage from "@/app/GradebookPage.tsx";
 import InboxPage from "@/app/InboxPage.tsx";
 import LandingPage from "@/app/LandingPage.tsx";
 import { LoginPage, RegisterPage } from "@/features/auth";
-import CreateAppealPage from "@/app/student/CreateAppealPage.tsx";
+import CreateAppealPage from "@/pages/appeals/create/ui/Page.tsx";
 import AppealsListPage from "@/app/student/AppealsListPage.tsx";
 import ExtensionRequestPage from "@/app/student/ExtensionRequestPage.tsx";
 

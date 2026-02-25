@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X, Calendar, User, MessageSquare, Bell } from "lucide-react";
-import { Extension, ExtensionType, createExtension, updateExtension } from "@/app/utils/extensions";
+import { Extension, ExtensionType, extensionRepo } from "@/entities/extension";
 import { toast } from "sonner";
 
 interface AddExtensionModalProps {
@@ -72,7 +72,7 @@ export function AddExtensionModal({
     const studentName = MOCK_STUDENTS.find((s) => s.id === selectedStudent)?.name || "";
 
     if (isEditing && existingExtension) {
-      updateExtension(existingExtension.id, {
+      extensionRepo.update(existingExtension.id, {
         type,
         submissionDeadlineOverride: type !== "review" ? submissionDeadline : undefined,
         reviewDeadlineOverride: type !== "submission" ? reviewDeadline : undefined,
@@ -81,7 +81,7 @@ export function AddExtensionModal({
       });
       toast.success("Продление обновлено");
     } else {
-      createExtension({
+      extensionRepo.create({
         assignmentId,
         studentId: selectedStudent,
         studentName,
