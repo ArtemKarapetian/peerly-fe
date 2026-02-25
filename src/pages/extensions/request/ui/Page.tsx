@@ -9,7 +9,7 @@ type Props = {
   taskId?: string;
 };
 
-export default function ExtensionRequestPage({ courseId, taskId }: Props) {
+export function ExtensionRequestPage({ courseId, taskId }: Props) {
   const { user } = useAuth();
   const [submitted, setSubmitted] = useState(false);
 

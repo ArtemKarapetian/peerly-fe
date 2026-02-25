@@ -22,7 +22,7 @@ import LandingPage from "@/app/LandingPage.tsx";
 import { LoginPage, RegisterPage } from "@/features/auth";
 import CreateAppealPage from "@/pages/appeals/create/ui/Page.tsx";
 import AppealsListPage from "@/app/student/AppealsListPage.tsx";
-import ExtensionRequestPage from "@/pages/extensions/request/ui/Page.tsx";
+import { ExtensionRequestPage } from "@/pages/extensions/request";
 
 // Profile/Settings pages
 import ProfilePage from "@/app/ProfilePage.tsx";
@@ -53,7 +53,7 @@ import TeacherAnalyticsPage from "@/app/teacher/TeacherAnalyticsPage.tsx";
 import TeacherAppealsPage from "@/app/teacher/TeacherAppealsPage.tsx";
 import TeacherAnnouncementsPage from "@/app/teacher/TeacherAnnouncementsPage.tsx";
 import TeacherExtensionsPage from "@/app/teacher/TeacherExtensionsPage.tsx";
-import TeacherAssignmentExtensionsPage from "@/pages/teacher/assignment-extensinsions/ui/Page.tsx";
+import { TeacherAssignmentExtensionsPage } from "@/pages/teacher/assignment-extensinsions";
 import TeacherAutomationPage from "@/app/teacher/TeacherAutomationPage.tsx";
 
 // Admin pages
@@ -202,8 +202,8 @@ export function Router() {
   if (routeKey === "taskAppeal" && params.courseId && params.taskId) {
     return <CreateAppealPage courseId={params.courseId} taskId={params.taskId} />;
   }
-  if (routeKey === "extensionRequest") {
-    return <ExtensionRequestPage />;
+  if (routeKey === "extensionRequest" && params.courseId && params.taskId) {
+    return <ExtensionRequestPage courseId={params.courseId} taskId={params.taskId} />;
   }
   if (routeKey === "review" && params.reviewId && pathname !== ROUTES.receivedReviews) {
     return <ReviewPage reviewId={params.reviewId} />;
