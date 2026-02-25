@@ -22,7 +22,7 @@ import LandingPage from "@/app/LandingPage.tsx";
 import { LoginPage, RegisterPage } from "@/features/auth";
 import CreateAppealPage from "@/pages/appeals/create/ui/Page.tsx";
 import AppealsListPage from "@/app/student/AppealsListPage.tsx";
-import ExtensionRequestPage from "@/app/student/ExtensionRequestPage.tsx";
+import ExtensionRequestPage from "@/pages/extensions/request/ui/Page.tsx";
 
 // Profile/Settings pages
 import ProfilePage from "@/app/ProfilePage.tsx";
@@ -53,7 +53,7 @@ import TeacherAnalyticsPage from "@/app/teacher/TeacherAnalyticsPage.tsx";
 import TeacherAppealsPage from "@/app/teacher/TeacherAppealsPage.tsx";
 import TeacherAnnouncementsPage from "@/app/teacher/TeacherAnnouncementsPage.tsx";
 import TeacherExtensionsPage from "@/app/teacher/TeacherExtensionsPage.tsx";
-import TeacherAssignmentExtensionsPage from "@/app/teacher/TeacherAssignmentExtensionsPage.tsx";
+import TeacherAssignmentExtensionsPage from "@/pages/teacher/assignment-extensinsions/ui/Page.tsx";
 import TeacherAutomationPage from "@/app/teacher/TeacherAutomationPage.tsx";
 
 // Admin pages

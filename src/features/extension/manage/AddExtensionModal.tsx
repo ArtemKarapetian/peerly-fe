@@ -1,23 +1,17 @@
 import { useState } from "react";
-import { X, Calendar, User, MessageSquare, Bell } from "lucide-react";
-import { Extension, ExtensionType, extensionRepo } from "@/entities/extension";
+import { Bell, Calendar, MessageSquare, User, X } from "lucide-react";
+import { extensionRepo, type Extension, type ExtensionType } from "@/entities/extension";
 import { toast } from "sonner";
+import { MOCK_STUDENTS } from "@/entities/user/model/student.ts";
+
+type StudentOption = { id: string; name: string };
 
 interface AddExtensionModalProps {
   assignmentId: string;
+  students: StudentOption[];
   existingExtension?: Extension | null;
   onClose: () => void;
 }
-
-// Mock students data
-const MOCK_STUDENTS = [
-  { id: "1", name: "Анна Смирнова" },
-  { id: "2", name: "Иван Петров" },
-  { id: "3", name: "Дмитрий Козлов" },
-  { id: "4", name: "Мария Сидорова" },
-  { id: "5", name: "Ольга Петрова" },
-  { id: "6", name: "Алексей Новikov" },
-];
 
 export function AddExtensionModal({
   assignmentId,

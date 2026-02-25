@@ -3,7 +3,7 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Clock, Plus, Pencil, Trash2, User, Calendar, MessageSquare, X, Check } from "lucide-react";
-import { AddExtensionModal } from "@/app/components/AddExtensionModal";
+import { AddExtensionModal } from "@/features/extension/manage/AddExtensionModal.tsx";
 import { toast } from "sonner";
 import {
   Extension,
@@ -12,6 +12,7 @@ import {
   getExtensionStatusLabel,
   getExtensionTypeLabel,
 } from "@/entities/extension";
+import { MOCK_STUDENTS } from "@/entities/user/model/student.ts";
 
 interface TeacherAssignmentExtensionsPageProps {
   assignmentId: string;
@@ -330,6 +331,7 @@ export default function TeacherAssignmentExtensionsPage({
       {showAddModal && (
         <AddExtensionModal
           assignmentId={assignmentId}
+          students={MOCK_STUDENTS}
           existingExtension={editingExtension}
           onClose={handleModalClose}
         />
