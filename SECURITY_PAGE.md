@@ -123,7 +123,7 @@ All text is in Russian:
 ### **Router Configuration**
 
 - Route: `/security` → SecurityPage
-- Updated in `/src/app/RouterExtended.tsx`
+- Updated in `/src/app/Router.tsx`
 - Protected route (requires authentication)
 
 ---

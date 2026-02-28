@@ -1,5 +1,5 @@
 import svgPaths from "./svg-vp0aa5bptg";
-import imgEllipse1 from "@/assets/96fcb7349c6b7606f049631e7c105b9d12154852.png";
+import imgEllipse1 from "@/shared/assets/96fcb7349c6b7606f049631e7c105b9d12154852.png";
 
 function Logo() {
   return (

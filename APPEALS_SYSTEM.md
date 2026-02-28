@@ -11,7 +11,7 @@
 
 ## 🎯 Features
 
-### 1. **Create Appeal Page** (`/src/app/student/CreateAppealPage.tsx`)
+### 1. **Create Appeal Page** (`/src/app/student/Page.tsx`)
 
 **Location**: Accessible from Task page when status is "GRADED"
 
@@ -214,7 +214,7 @@ interface Appeal {
 
 ### **Router Configuration**:
 
-Updated `/src/app/RouterExtended.tsx`:
+Updated `/src/app/Router.tsx`:
 
 - Route pattern: `/courses/:courseId/tasks/:taskId/appeal`
 - Route: `/appeals` → AppealsListPage
