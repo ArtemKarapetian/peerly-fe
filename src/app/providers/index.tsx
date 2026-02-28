@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
 
-import { AuthProvider } from "@/app/providers/auth";
-import { RoleProvider } from "@/app/providers/role";
-import { FeatureFlagsProvider } from "@/app/providers/feature-flags";
+import { AuthProvider, RoleProvider } from "@/entities/user";
+import { FeatureFlagsProvider } from "@/shared/lib/feature-flags-provider";
 
 interface AppProvidersProps {
   children: ReactNode;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppShell } from "@/widgets/app-shell/AppShell";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs";
-import { useAuth } from "@/app/providers/auth";
+import { useAuth } from "@/entities/user";
 import { ExtensionRequestForm, ExtensionRequestSuccess } from "@/features/extension/request";
 
 type Props = {

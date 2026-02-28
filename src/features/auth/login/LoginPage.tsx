@@ -1,9 +1,9 @@
 import { useState, FormEvent } from "react";
-import { PublicLayout } from "@/app/components/PublicLayout.tsx";
+import { PublicLayout } from "@/widgets/public-layout";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
-import { useAuth } from "@/app/providers/auth.tsx";
-import { isFlagEnabled } from "@/app/utils/featureFlags.ts";
+import { useAuth } from "@/entities/user";
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { authenticateUser } from "@/entities/user/model/userStorage.ts";
 import { AlertCircle } from "lucide-react";
 

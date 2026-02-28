@@ -2,14 +2,14 @@ import { useState } from "react";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
-import { LayoutDebugger } from "@/app/components/LayoutDebugger.tsx";
-import {
-  FileUploadArea,
-  FilePreviewCard,
-  TaskRulesCard,
-  ValidationChecks,
-} from "@/app/components/submit";
-import type { UploadedFile, TaskRules, ValidationCheck } from "@/app/components/submit";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+import { FileUploadArea } from "./ui/FileUploadArea";
+import { FilePreviewCard } from "./ui/FilePreviewCard";
+import { TaskRulesCard } from "./ui/TaskRulesCard";
+import { ValidationChecks } from "./ui/ValidationChecks";
+import type { UploadedFile } from "./ui/FilePreviewCard";
+import type { TaskRules } from "./ui/TaskRulesCard";
+import type { ValidationCheck } from "./ui/ValidationChecks";
 
 /**
  * SubmitWorkPage - Экран отправки работы студентом

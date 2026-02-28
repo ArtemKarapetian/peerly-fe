@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { useRole, getRoleDisplayName } from "@/app/providers/role.tsx";
-import type { UserRole } from "@/app/providers/role.tsx";
+import { useRole, getRoleDisplayName } from "@/entities/user";
+import type { UserRole } from "@/entities/user";
 
 /**
  * RoleSwitcherPopover - Flexible role switcher component

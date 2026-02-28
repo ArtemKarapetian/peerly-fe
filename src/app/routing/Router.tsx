@@ -1,85 +1,85 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@/app/providers/auth.tsx";
-import { isFlagEnabled } from "@/app/utils/featureFlags.ts";
+import { useAuth } from "@/entities/user";
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 
 import { ROUTES } from "@/shared/config/routes.ts";
 import { getAuthRedirect, isAuthPage, isProtectedRoute } from "@/app/routing/guards.ts";
 import { getCurrentHashPath, navigateHash, parseHash } from "@/app/routing/parseHash.ts";
 
 // Student pages
-import DashboardPage from "@/app/DashboardPage.tsx";
-import TaskPage from "@/app/TaskPage.tsx";
-import CoursePage from "@/app/CoursePage.tsx";
-import CoursesListPage from "@/app/CoursesListPage.tsx";
+import DashboardPage from "@/pages/dashboard/ui/Page.tsx";
+import TaskPage from "@/pages/task/detail/ui/Page.tsx";
+import CoursePage from "@/pages/courses/detail/ui/Page.tsx";
+import CoursesListPage from "@/pages/courses/list/ui/Page.tsx";
 import { SubmitWorkPage } from "@/features/submission";
-import SubmissionsPage from "@/app/SubmissionsPage.tsx";
+import SubmissionsPage from "@/pages/submissions/ui/Page.tsx";
 import ReviewsInboxPage from "@/pages/reviews/inbox/ui/Page.tsx";
 import ReviewPage from "@/pages/reviews/review/ui/Page.tsx";
 import ReceivedReviewsPage from "@/pages/reviews/received/ui/Page.tsx";
-import GradebookPage from "@/app/GradebookPage.tsx";
-import InboxPage from "@/app/InboxPage.tsx";
-import LandingPage from "@/app/LandingPage.tsx";
+import GradebookPage from "@/pages/gradebook/ui/Page.tsx";
+import InboxPage from "@/pages/inbox/ui/Page.tsx";
+import LandingPage from "@/pages/landing/ui/Page.tsx";
 import { LoginPage, RegisterPage } from "@/features/auth";
 import CreateAppealPage from "@/pages/appeals/create/ui/Page.tsx";
-import AppealsListPage from "@/app/student/AppealsListPage.tsx";
+import AppealsListPage from "@/pages/appeals/list/ui/Page.tsx";
 import { ExtensionRequestPage } from "@/pages/extensions/request";
 
 // Profile/Settings pages
-import ProfilePage from "@/app/ProfilePage.tsx";
-import SettingsPage from "@/app/SettingsPage.tsx";
-import SecurityPage from "@/app/SecurityPage.tsx";
-import DeleteAccountPage from "@/app/profile/DeleteAccountPage.tsx";
+import ProfilePage from "@/pages/profile/ui/Page.tsx";
+import SettingsPage from "@/pages/settings/ui/Page.tsx";
+import SecurityPage from "@/pages/security/ui/Page.tsx";
+import DeleteAccountPage from "@/pages/profile/delete-account/ui/Page.tsx";
 
 // Public pages
-import HelpPage from "@/app/public/HelpPage.tsx";
-import StatusPage from "@/app/public/StatusPage.tsx";
-import TermsPage from "@/app/public/TermsPage.tsx";
-import ResetPasswordPage from "@/app/public/ResetPasswordPage.tsx";
-import VerifyEmailPage from "@/app/public/VerifyEmailPage.tsx";
+import HelpPage from "@/pages/public/help/ui/Page.tsx";
+import StatusPage from "@/pages/public/status/ui/Page.tsx";
+import TermsPage from "@/pages/public/terms/ui/Page.tsx";
+import ResetPasswordPage from "@/pages/public/reset-password/ui/Page.tsx";
+import VerifyEmailPage from "@/pages/public/verify-email/ui/Page.tsx";
 
 // Teacher pages
-import TeacherDashboardPage from "@/app/teacher/TeacherDashboardPage.tsx";
-import TeacherCoursesPage from "@/app/teacher/TeacherCoursesPage.tsx";
-import TeacherCourseDetailsPage from "@/app/teacher/TeacherCourseDetailsPage.tsx";
-import TeacherRubricsPage from "@/app/teacher/TeacherRubricsPage.tsx";
-import TeacherAssignmentsPage from "@/app/teacher/TeacherAssignmentsPage.tsx";
-import TeacherCreateAssignmentPage from "@/app/teacher/TeacherCreateAssignmentPage.tsx";
-import TeacherAssignmentDetailsPage from "@/app/teacher/TeacherAssignmentDetailsPage.tsx";
-import TeacherPeerSessionSettingsPage from "@/app/teacher/TeacherPeerSessionSettingsPage.tsx";
-import TeacherDistributionPage from "@/app/teacher/TeacherDistributionPage.tsx";
-import TeacherModerationPage from "@/app/teacher/TeacherModerationPage.tsx";
-import TeacherSubmissionsPage from "@/app/teacher/TeacherSubmissionsPage.tsx";
-import TeacherAnalyticsPage from "@/app/teacher/TeacherAnalyticsPage.tsx";
-import TeacherAppealsPage from "@/app/teacher/TeacherAppealsPage.tsx";
-import TeacherAnnouncementsPage from "@/app/teacher/TeacherAnnouncementsPage.tsx";
-import TeacherExtensionsPage from "@/app/teacher/TeacherExtensionsPage.tsx";
+import TeacherDashboardPage from "@/pages/teacher/dashboard/ui/Page.tsx";
+import TeacherCoursesPage from "@/pages/teacher/courses/ui/Page.tsx";
+import TeacherCourseDetailsPage from "@/pages/teacher/course-detail/ui/Page.tsx";
+import TeacherRubricsPage from "@/pages/teacher/rubrics/ui/Page.tsx";
+import TeacherAssignmentsPage from "@/pages/teacher/assignments/ui/Page.tsx";
+import TeacherCreateAssignmentPage from "@/pages/teacher/create-assignment/ui/Page.tsx";
+import TeacherAssignmentDetailsPage from "@/pages/teacher/assignment-detail/ui/Page.tsx";
+import TeacherPeerSessionSettingsPage from "@/pages/teacher/peer-session-settings/ui/Page.tsx";
+import TeacherDistributionPage from "@/pages/teacher/distribution/ui/Page.tsx";
+import TeacherModerationPage from "@/pages/teacher/moderation/ui/Page.tsx";
+import TeacherSubmissionsPage from "@/pages/teacher/submissions/ui/Page.tsx";
+import TeacherAnalyticsPage from "@/pages/teacher/analytics/ui/Page.tsx";
+import TeacherAppealsPage from "@/pages/teacher/appeals/ui/Page.tsx";
+import TeacherAnnouncementsPage from "@/pages/teacher/announcements/ui/Page.tsx";
+import TeacherExtensionsPage from "@/pages/teacher/extensions/ui/Page.tsx";
 import { TeacherAssignmentExtensionsPage } from "@/pages/teacher/assignment-extensinsions";
-import TeacherAutomationPage from "@/app/teacher/TeacherAutomationPage.tsx";
+import TeacherAutomationPage from "@/pages/teacher/automation/ui/Page.tsx";
 
 // Admin pages
-import AdminOverviewPage from "@/app/admin/AdminOverviewPage.tsx";
-import AdminCoursesPage from "@/app/admin/AdminCoursesPage.tsx";
-import AdminUsersPage from "@/app/admin/AdminUsersPage.tsx";
-import AdminOrgsPage from "@/app/admin/AdminOrgsPage.tsx";
-import AdminPluginsPage from "@/app/admin/AdminPluginsPage.tsx";
-import AdminIntegrationsPage from "@/app/admin/AdminIntegrationsPage.tsx";
-import AdminSettingsPage from "@/app/admin/AdminSettingsPage.tsx";
-import AdminPoliciesPage from "@/app/admin/AdminPoliciesPage.tsx";
-import AdminRetentionPage from "@/app/admin/AdminRetentionPage.tsx";
-import AdminLimitsPage from "@/app/admin/AdminLimitsPage.tsx";
-import AdminFlagsPage from "@/app/admin/AdminFlagsPage.tsx";
-import AdminQueuesPage from "@/app/admin/AdminQueuesPage.tsx";
-import AdminLogsPage from "@/app/admin/AdminLogsPage.tsx";
-import AdminHealthPage from "@/app/admin/AdminHealthPage.tsx";
+import AdminOverviewPage from "@/pages/admin/overview/ui/Page.tsx";
+import AdminCoursesPage from "@/pages/admin/courses/ui/Page.tsx";
+import AdminUsersPage from "@/pages/admin/users/ui/Page.tsx";
+import AdminOrgsPage from "@/pages/admin/orgs/ui/Page.tsx";
+import AdminPluginsPage from "@/pages/admin/plugins/ui/Page.tsx";
+import AdminIntegrationsPage from "@/pages/admin/integrations/ui/Page.tsx";
+import AdminSettingsPage from "@/pages/admin/settings/ui/Page.tsx";
+import AdminPoliciesPage from "@/pages/admin/policies/ui/Page.tsx";
+import AdminRetentionPage from "@/pages/admin/retention/ui/Page.tsx";
+import AdminLimitsPage from "@/pages/admin/limits/ui/Page.tsx";
+import AdminFlagsPage from "@/pages/admin/flags/ui/Page.tsx";
+import AdminQueuesPage from "@/pages/admin/queues/ui/Page.tsx";
+import AdminLogsPage from "@/pages/admin/logs/ui/Page.tsx";
+import AdminHealthPage from "@/pages/admin/health/ui/Page.tsx";
 
 // Support
-import SupportChatPage from "@/app/support/SupportChatPage.tsx";
+import SupportChatPage from "@/pages/support/chat/ui/Page.tsx";
 
 // Error pages
-import Error401Page from "@/app/errors/Error401Page.tsx";
-import Error403Page from "@/app/errors/Error403Page.tsx";
-import Error404Page from "@/app/errors/Error404Page.tsx";
-import Error500Page from "@/app/errors/Error500Page.tsx";
+import Error401Page from "@/pages/errors/401/ui/Page.tsx";
+import Error403Page from "@/pages/errors/403/ui/Page.tsx";
+import Error404Page from "@/pages/errors/404/ui/Page.tsx";
+import Error500Page from "@/pages/errors/500/ui/Page.tsx";
 
 export function Router() {
   const { isAuthenticated } = useAuth();

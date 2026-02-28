@@ -19,7 +19,7 @@ import {
   FileSearch,
   Zap,
 } from "lucide-react";
-import { useRole } from "@/app/providers/role.tsx";
+import { useRole } from "@/entities/user";
 import { RoleSwitcherPopover } from "./RoleSwitcherPopover.tsx";
 
 /**

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { useAuth } from "@/app/providers/auth.tsx";
+import { useAuth } from "@/entities/user";
 import {
   CreateAppealContext,
   CreateAppealForm,

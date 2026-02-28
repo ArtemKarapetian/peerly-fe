@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { PublicLayout } from "@/app/components/PublicLayout.tsx";
+import { PublicLayout } from "@/widgets/public-layout";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 import { userExists, registerUser } from "@/entities/user/model/userStorage.ts";

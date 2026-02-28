@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { LayoutDebugger } from "@/app/components/LayoutDebugger.tsx";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 import { Clock, ChevronRight } from "lucide-react";
 import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
 

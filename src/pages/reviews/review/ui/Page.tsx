@@ -9,11 +9,11 @@ import type {
   RubricSectionData,
   CriterionScore,
 } from "@/features/review";
-import { LayoutDebugger } from "@/app/components/LayoutDebugger.tsx";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 import { Send, CheckCircle, RotateCcw, AlertTriangle } from "lucide-react";
 import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
-import { SaveStatusIndicator } from "@/app/components/SaveStatusIndicator.tsx";
-import type { SaveStatus } from "@/app/components/SaveStatusIndicator.tsx";
+import { SaveStatusIndicator } from "@/shared/ui/SaveStatusIndicator";
+import type { SaveStatus } from "@/shared/ui/SaveStatusIndicator";
 import {
   saveDraftToStorage,
   loadDraftFromStorage,
