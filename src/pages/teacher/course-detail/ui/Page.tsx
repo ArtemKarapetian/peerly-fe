@@ -5,7 +5,12 @@ import { ROUTES } from "@/shared/config/routes.ts";
 import { courseRepo } from "@/entities/course";
 import { userRepo } from "@/entities/user";
 import { assignmentRepo } from "@/entities/assignment";
-import { TeacherCourseAssignments, TeacherCourseParticipants, TeacherCourseAnnouncements, TeacherCourseSettings } from "@/widgets/teacher-course-detail";
+import {
+  TeacherCourseAssignments,
+  TeacherCourseParticipants,
+  TeacherCourseAnnouncements,
+  TeacherCourseSettings,
+} from "@/widgets/teacher-course-detail";
 
 /**
  * TeacherCourseDetailsPage - Детальный вид курса для преподавателя
@@ -94,9 +99,8 @@ export default function TeacherCourseDetailsPage({
               <div>
                 <p className="text-[24px] font-medium text-[#21214f]">
                   {
-                    assignmentRepo
-                      .getByCourse(course.id)
-                      .filter((a) => a.status === "published").length
+                    assignmentRepo.getByCourse(course.id).filter((a) => a.status === "published")
+                      .length
                   }
                 </p>
                 <p className="text-[13px] text-[#767692]">Заданий</p>

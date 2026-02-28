@@ -3,7 +3,14 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
-import { StepBasics, StepDeadlines, StepRubric, StepPeerSession, StepPlugins, StepPublish } from "@/features/assignment/create";
+import {
+  StepBasics,
+  StepDeadlines,
+  StepRubric,
+  StepPeerSession,
+  StepPlugins,
+  StepPublish,
+} from "@/features/assignment/create";
 import type { AssignmentFormData } from "@/features/assignment/create/model/types";
 
 /**

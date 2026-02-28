@@ -2,7 +2,13 @@ import { useState, useMemo } from "react";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ROUTES } from "@/shared/config/routes.ts";
-import { TaskHeader, TaskDescription, TaskRequirements, TaskMaterials, TaskQuestionsComments } from "@/widgets/task-detail";
+import {
+  TaskHeader,
+  TaskDescription,
+  TaskRequirements,
+  TaskMaterials,
+  TaskQuestionsComments,
+} from "@/widgets/task-detail";
 import { StatusCard } from "@/entities/assignment";
 import type { TaskStatus } from "@/entities/assignment";
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";

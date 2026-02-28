@@ -49,9 +49,7 @@ interface StoredAnnouncement {
 }
 
 // Load announcements from localStorage or use defaults
-const loadAnnouncements = (
-  courses: ReturnType<typeof courseRepo.getAll>,
-): Announcement[] => {
+const loadAnnouncements = (courses: ReturnType<typeof courseRepo.getAll>): Announcement[] => {
   const stored = localStorage.getItem("teacher_announcements");
   if (stored) {
     const parsed: StoredAnnouncement[] = JSON.parse(stored);
