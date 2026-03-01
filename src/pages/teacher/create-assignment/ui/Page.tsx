@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import {
   StepBasics,
   StepDeadlines,
@@ -12,6 +13,8 @@ import {
   StepPublish,
 } from "@/features/assignment/create";
 import type { AssignmentFormData } from "@/features/assignment/create/model/types";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherCreateAssignmentPage - Мастер создания задания

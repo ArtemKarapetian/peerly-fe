@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle, Download, ExternalLink, FileText, XCircle } from "lucide-react";
+
 import { ValidationCheck, WorkFile } from "@/entities/work/model/types.ts";
 
 interface WorkPreviewCardProps {

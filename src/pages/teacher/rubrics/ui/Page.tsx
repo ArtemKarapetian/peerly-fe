@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Search, Plus, Filter, Copy, Eye, Edit } from "lucide-react";
-import { RubricEditor, RubricPreview } from "@/widgets/rubric-editor";
+import { useState, useEffect } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { AssignmentPickerModal } from "@/features/assignment/pick";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { RubricEditor, RubricPreview } from "@/widgets/rubric-editor";
 import type { RubricData, RubricCriterionData } from "@/widgets/rubric-editor/model/types";
 
 /**

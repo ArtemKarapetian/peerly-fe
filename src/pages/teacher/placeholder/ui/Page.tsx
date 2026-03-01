@@ -1,7 +1,9 @@
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LucideIcon } from "lucide-react";
+
 import { ROUTES } from "@/shared/config/routes.ts";
+import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherPlaceholderPage - Шаблон для страниц преподавателя

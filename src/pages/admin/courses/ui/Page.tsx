@@ -1,8 +1,11 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Book, ExternalLink, Search } from "lucide-react";
-import { courseRepo } from "@/entities/course";
+import { useState } from "react";
+
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
+
+import { courseRepo } from "@/entities/course";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminCoursesPage - Просмотр всех курсов в системе (Admin)

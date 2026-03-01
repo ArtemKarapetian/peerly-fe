@@ -1,6 +1,6 @@
-import { ReviewCard } from "./ReviewCard.tsx";
-
 import { ReviewAssignment } from "@/entities/review/model/types.ts";
+
+import { ReviewCard } from "./ReviewCard.tsx";
 
 /**
  * ReviewList - Список назначенных рецензий с группировкой

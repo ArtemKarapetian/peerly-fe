@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { X, Upload, UserPlus, Key, AlertCircle, CheckCircle } from "lucide-react";
+import { useState } from "react";
 
 /**
  * ParticipantImportModal - Модальное окно импорта участников
@@ -388,7 +388,7 @@ export function ParticipantImportModal({
                           >
                             <span className="text-[#21214f]">{code}</span>
                             <button
-                              onClick={() => navigator.clipboard.writeText(code)}
+                              onClick={() => void navigator.clipboard.writeText(code)}
                               className="text-[13px] text-[#5b8def] hover:underline"
                             >
                               Копировать

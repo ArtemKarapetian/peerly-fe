@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { useAuth } from "@/entities/user";
+
 import {
   CreateAppealContext,
   CreateAppealForm,
   CreateAppealSuccess,
 } from "@/features/appeal/create";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * CreateAppealPage - Student Appeal (Regrade/Review Request)

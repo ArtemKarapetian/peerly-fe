@@ -1,7 +1,16 @@
+import { Clock, AlertCircle } from "lucide-react";
 import { useState, useMemo } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
+import type { TaskStatus } from "@/entities/assignment";
+import { StatusCard } from "@/entities/assignment";
+import { extensionRepo } from "@/entities/extension";
+import { useAuth } from "@/entities/user";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
   TaskHeader,
   TaskDescription,
@@ -9,12 +18,6 @@ import {
   TaskMaterials,
   TaskQuestionsComments,
 } from "@/widgets/task-detail";
-import { StatusCard } from "@/entities/assignment";
-import type { TaskStatus } from "@/entities/assignment";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
-import { extensionRepo } from "@/entities/extension";
-import { useAuth } from "@/entities/user";
-import { Clock, AlertCircle } from "lucide-react";
 
 interface TaskPageProps {
   taskId?: string | null;

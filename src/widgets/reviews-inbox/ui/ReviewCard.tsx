@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
 import { ChevronRight, Clock, EyeOff, FileText } from "lucide-react";
+import { useMemo, useState } from "react";
+
 import { ReviewAssignment } from "@/entities/review/model/types.ts";
 
 interface ReviewCardProps {

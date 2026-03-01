@@ -1,8 +1,11 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { AlertTriangle, Trash2, CheckCircle, ArrowLeft } from "lucide-react";
+import { useState } from "react";
+
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { useAuth } from "@/entities/user";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * DeleteAccountPage - Account deletion flow with multi-step confirmation

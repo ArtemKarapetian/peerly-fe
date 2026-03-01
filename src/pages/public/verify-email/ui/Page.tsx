@@ -1,9 +1,11 @@
+import { CheckCircle, Mail, AlertCircle, X } from "lucide-react";
 import { useState } from "react";
-import { PublicLayout } from "@/widgets/public-layout";
+import { toast } from "sonner";
+
 import { Button } from "@/shared/ui/button.tsx";
 import { Input } from "@/shared/ui/input.tsx";
-import { CheckCircle, Mail, AlertCircle, X } from "lucide-react";
-import { toast } from "sonner";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * VerifyEmailPage - Email verification UI flow
@@ -234,7 +236,7 @@ export default function VerifyEmailPage() {
                 variant="outline"
                 size="lg"
                 fullWidth
-                onClick={handleResendEmail}
+                onClick={() => void handleResendEmail()}
                 isLoading={isLoading}
                 disabled={isLoading}
               >
@@ -330,7 +332,7 @@ export default function VerifyEmailPage() {
                 <Button
                   variant="primary"
                   fullWidth
-                  onClick={handleChangeEmail}
+                  onClick={() => void handleChangeEmail()}
                   isLoading={isLoading}
                   disabled={!newEmail.trim() || !newEmail.includes("@") || isLoading}
                 >

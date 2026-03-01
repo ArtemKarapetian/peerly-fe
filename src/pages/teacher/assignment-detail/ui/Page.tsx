@@ -1,8 +1,10 @@
-import React from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
+import React from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherAssignmentDetailsPage - Детальная страница задания (преподаватель)

@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   FileSearch,
   Search,
@@ -14,6 +10,12 @@ import {
   RefreshCw,
   X,
 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminLogsPage - Логи и аудит

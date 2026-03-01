@@ -1,12 +1,16 @@
 import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { CourseCard } from "@/entities/course";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 import { usePagination } from "@/shared/ui/simple-pagination";
+
+import { CourseCard } from "@/entities/course";
+
 import { CourseFilters } from "@/features/course/filter";
 import type { CourseFilterType } from "@/features/course/filter";
 import { CourseSearch } from "@/features/course/search";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * CoursesListPage - Список всех курсов

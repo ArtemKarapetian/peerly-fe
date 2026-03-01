@@ -1,7 +1,3 @@
-import { JSX, useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Shield,
   AlertTriangle,
@@ -14,10 +10,17 @@ import {
   Filter,
   ChevronUp,
 } from "lucide-react";
-import { userRepo } from "@/entities/user";
+import { JSX, useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { assignmentRepo } from "@/entities/assignment";
 import { reviewRepo } from "@/entities/review";
+import { userRepo } from "@/entities/user";
 import { workRepo } from "@/entities/work";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherModerationPage - Модерация рецензий
@@ -542,7 +545,7 @@ export default function TeacherModerationPage() {
               <p className="text-[14px] text-[#767692]">
                 {filterType === "all"
                   ? "Все рецензии в порядке!"
-                  : `Нет рецензий с типом "${getFlagTypeLabel(filterType as FlagType)}"`}
+                  : `Нет рецензий с типом "${getFlagTypeLabel(filterType)}"`}
               </p>
             </div>
           )}

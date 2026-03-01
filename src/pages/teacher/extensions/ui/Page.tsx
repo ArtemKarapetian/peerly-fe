@@ -1,7 +1,9 @@
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Clock, CheckCircle, XCircle } from "lucide-react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 export default function TeacherExtensionsPage() {
   const extensions = [

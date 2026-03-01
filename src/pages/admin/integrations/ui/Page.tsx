@@ -1,7 +1,3 @@
-import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Link2,
   Lock,
@@ -16,6 +12,12 @@ import {
   ExternalLink,
   Eye,
 } from "lucide-react";
+import { useState, useCallback } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminIntegrationsPage - Ключи интеграций и вебхуки
@@ -773,7 +775,7 @@ export default function AdminIntegrationsPage() {
             <div className="px-6 py-4 border-t-2 border-[#e6e8ee]">
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(showSecretModal);
+                  void navigator.clipboard.writeText(showSecretModal);
                   alert("✓ Secret скопирован в буфер обмена");
                 }}
                 className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"

@@ -1,11 +1,15 @@
-import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
-import { courseRepo } from "@/entities/course";
+import { useState, useCallback } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
+
+import { courseRepo } from "@/entities/course";
+
 import { CourseSearch } from "@/features/course/search";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherCoursesPage - Управление курсами (Teacher)

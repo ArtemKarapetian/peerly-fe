@@ -1,4 +1,5 @@
 import { Menu } from "lucide-react";
+
 import { ProfileDropdown } from "./ProfileDropdown.tsx";
 
 interface TopBarProps {

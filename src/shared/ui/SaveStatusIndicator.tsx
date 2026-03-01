@@ -1,5 +1,6 @@
 import { Check, AlertCircle, Loader2 } from "lucide-react";
-import { formatSaveTime } from "@/features/review/fill-review/model/draftStorage.ts";
+
+import { formatSaveTime } from "@/shared/lib/formatSaveTime.ts";
 
 /**
  * SaveStatusIndicator - Shows save status with timestamp

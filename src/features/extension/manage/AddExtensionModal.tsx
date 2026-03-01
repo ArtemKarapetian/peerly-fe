@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { Bell, Calendar, MessageSquare, User, X } from "lucide-react";
-import { extensionRepo, type Extension, type ExtensionType } from "@/entities/extension";
+import { useState } from "react";
 import { toast } from "sonner";
+
+import { extensionRepo, type Extension, type ExtensionType } from "@/entities/extension";
 import { MOCK_STUDENTS } from "@/entities/user/model/student.ts";
 
 type StudentOption = { id: string; name: string };

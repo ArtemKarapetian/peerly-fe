@@ -1,6 +1,7 @@
 import { AlertCircle } from "lucide-react";
-import { Criterion } from "@/entities/rubric/model/types.ts";
+
 import { CriterionScore } from "@/entities/review/model/types.ts";
+import { Criterion } from "@/entities/rubric/model/types.ts";
 
 interface RubricCriterionProps {
   criterion: Criterion;

@@ -19,7 +19,9 @@ import {
   FileSearch,
   Zap,
 } from "lucide-react";
+
 import { useRole } from "@/entities/user";
+
 import { RoleSwitcherPopover } from "./RoleSwitcherPopover.tsx";
 
 /**

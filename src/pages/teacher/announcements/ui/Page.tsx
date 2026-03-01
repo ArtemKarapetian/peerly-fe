@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Megaphone,
   Plus,
@@ -13,7 +9,14 @@ import {
   CheckCircle,
   BookOpen,
 } from "lucide-react";
+import { useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { courseRepo } from "@/entities/course";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherAnnouncementsPage - Шаблоны уведомлений/анонсов

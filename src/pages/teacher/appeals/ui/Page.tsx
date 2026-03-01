@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   AlertCircle,
   Filter,
@@ -14,10 +10,17 @@ import {
   Calendar,
   User,
 } from "lucide-react";
-import { userRepo } from "@/entities/user";
+import { useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { assignmentRepo } from "@/entities/assignment";
-import { workRepo } from "@/entities/work";
 import { reviewRepo } from "@/entities/review";
+import { userRepo } from "@/entities/user";
+import { workRepo } from "@/entities/work";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherAppealsPage - Апелляции (инбокс)

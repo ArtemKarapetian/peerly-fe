@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   BarChart3,
   Download,
@@ -14,11 +10,7 @@ import {
   CheckCircle,
   Users,
 } from "lucide-react";
-import { courseRepo } from "@/entities/course";
-import { assignmentRepo } from "@/entities/assignment";
-import { workRepo } from "@/entities/work";
-import { reviewRepo } from "@/entities/review";
-import { userRepo } from "@/entities/user";
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -31,6 +23,17 @@ import {
   Pie,
   Cell,
 } from "recharts";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { assignmentRepo } from "@/entities/assignment";
+import { courseRepo } from "@/entities/course";
+import { reviewRepo } from "@/entities/review";
+import { userRepo } from "@/entities/user";
+import { workRepo } from "@/entities/work";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherAnalyticsPage - Отчёты и аналитика

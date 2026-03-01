@@ -7,7 +7,8 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
-import type { ValidationCheck } from "@/features/submission/submit-work/ui/ValidationChecks";
+
+import type { ValidationCheck } from "@/entities/work/model/types.ts";
 
 /**
  * VersionCard - Карточка версии работы в истории

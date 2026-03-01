@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from "react";
 import { User, Settings, HelpCircle, Activity, LogOut } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+
 import { useAuth } from "@/entities/user";
 
 /**

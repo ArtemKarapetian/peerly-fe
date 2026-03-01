@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Lock, Shield, Smartphone, CheckCircle, AlertCircle, Mail } from "lucide-react";
+import { useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
 import { getFeatureFlags, setFeatureFlag } from "@/shared/lib/feature-flags";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * SecurityPage - Security settings

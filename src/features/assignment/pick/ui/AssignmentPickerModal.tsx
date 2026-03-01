@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { X, Search, CheckCircle, FileText } from "lucide-react";
-import { courseRepo } from "@/entities/course";
+import { useState } from "react";
+
 import { assignmentRepo } from "@/entities/assignment";
+import { courseRepo } from "@/entities/course";
 
 /**
  * AssignmentPickerModal - Модальное окно выбора задания для привязки рубрики

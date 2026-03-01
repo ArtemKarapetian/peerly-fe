@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { PublicLayout } from "@/widgets/public-layout";
-import { Button } from "@/shared/ui/button.tsx";
-import { Input } from "@/shared/ui/input.tsx";
 import {
   CheckCircle2,
   AlertTriangle,
@@ -11,7 +7,13 @@ import {
   Bell,
   Activity,
 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
+
+import { Button } from "@/shared/ui/button.tsx";
+import { Input } from "@/shared/ui/input.tsx";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * StatusPage - System Status & Incidents

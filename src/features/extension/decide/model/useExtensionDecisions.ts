@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+
 import { extensionRepo } from "@/entities/extension";
 
 type Args = {

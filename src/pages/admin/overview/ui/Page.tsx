@@ -1,7 +1,3 @@
-import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Users,
   BookOpen,
@@ -14,7 +10,14 @@ import {
   Database,
   FileText,
 } from "lucide-react";
+import { useState, useCallback } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { pluginRepo } from "@/entities/plugin";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminOverviewPage - Главная страница админ панели

@@ -1,6 +1,7 @@
-import { useState, useMemo, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { BookOpen, Filter, Lock, ChevronDown, TrendingUp } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 interface GradeEntry {
   id: string;

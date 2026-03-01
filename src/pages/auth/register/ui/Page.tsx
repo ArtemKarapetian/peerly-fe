@@ -1,9 +1,12 @@
 import { useState, FormEvent } from "react";
-import { PublicLayout } from "@/widgets/public-layout";
+import { toast } from "sonner";
+
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
+
 import { userExists, registerUser } from "@/entities/user/model/userStorage.ts";
-import { toast } from "sonner";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * RegisterPage - Account creation screen
@@ -221,7 +224,7 @@ export function RegisterPage() {
             </div>
 
             {/* Registration form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
               {/* First Name & Last Name (Optional) */}
               <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
                 <Input

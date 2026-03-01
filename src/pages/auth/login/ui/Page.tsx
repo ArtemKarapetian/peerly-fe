@@ -1,11 +1,14 @@
+import { AlertCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
-import { PublicLayout } from "@/widgets/public-layout";
+
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
+
 import { useAuth } from "@/entities/user";
-import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { authenticateUser } from "@/entities/user/model/userStorage.ts";
-import { AlertCircle } from "lucide-react";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * LoginPage - Authentication screen
@@ -105,7 +108,7 @@ export function LoginPage() {
             )}
 
             {/* Login form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
               {/* Identifier (username or email) */}
               <Input
                 label="Email or username"

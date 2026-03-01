@@ -1,8 +1,10 @@
-import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Plus, Pencil, Trash2, Zap, CheckCircle2, XCircle } from "lucide-react";
+import { useState, useCallback } from "react";
+import { toast } from "sonner";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import {
   type AutomationRule,
   getAllRules,
@@ -12,8 +14,10 @@ import {
   getConditionLabel,
   getActionLabel,
 } from "@/entities/automation-rule";
+
 import { CreateRuleModal } from "@/features/automation-rule/create";
-import { toast } from "sonner";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherAutomationPage - Manage automation rules

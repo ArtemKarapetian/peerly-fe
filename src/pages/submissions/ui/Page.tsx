@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
 import { VersionTimeline } from "@/entities/work";
 import type { Version } from "@/entities/work";
+
 import { ComparisonView } from "@/features/submission/compare";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * SubmissionsPage - История версий работы

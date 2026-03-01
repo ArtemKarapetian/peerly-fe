@@ -1,7 +1,9 @@
-import { useState, useMemo } from "react";
-import { PublicLayout } from "@/widgets/public-layout";
 import { Search, ChevronDown, MessageCircle, Mail } from "lucide-react";
+import { useState, useMemo } from "react";
+
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * HelpPage - FAQ и поддержка пользователей

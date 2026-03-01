@@ -9,8 +9,8 @@
  * ]} />
  */
 
-import { useCallback } from "react";
 import { ChevronRight } from "lucide-react";
+import { useCallback } from "react";
 
 export interface BreadcrumbItem {
   label: string;

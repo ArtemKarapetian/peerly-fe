@@ -1,25 +1,29 @@
+import { Send, CheckCircle, RotateCcw, AlertTriangle } from "lucide-react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+
+import { debounce } from "@/shared/lib/debounce.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { RubricSection, ReviewProgress } from "@/features/review";
-import { WorkPreviewCard } from "@/features/submission";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+import { SaveStatusIndicator } from "@/shared/ui/SaveStatusIndicator";
+import type { SaveStatus } from "@/shared/ui/SaveStatusIndicator";
+
+import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
+
 import type {
   WorkFile,
   ValidationCheck,
   RubricSectionData,
   CriterionScore,
 } from "@/features/review";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
-import { Send, CheckCircle, RotateCcw, AlertTriangle } from "lucide-react";
-import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
-import { SaveStatusIndicator } from "@/shared/ui/SaveStatusIndicator";
-import type { SaveStatus } from "@/shared/ui/SaveStatusIndicator";
+import { RubricSection, ReviewProgress } from "@/features/review";
 import {
   saveDraftToStorage,
   loadDraftFromStorage,
   clearDraftFromStorage,
 } from "@/features/review/fill-review/model/draftStorage.ts";
-import { debounce } from "@/shared/lib/debounce.ts";
+import { WorkPreviewCard } from "@/features/submission";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 interface ReviewPageProps {
   reviewId: string;
@@ -302,9 +306,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
       // Arrow keys: Navigate between criteria
       if (e.key === "ArrowUp" || e.key === "ArrowDown") {
         e.preventDefault();
-        const allCriteriaElements = Array.from(
-          document.querySelectorAll("[data-criterion-id]"),
-        ) as HTMLElement[];
+        const allCriteriaElements = Array.from(document.querySelectorAll("[data-criterion-id]"));
 
         if (allCriteriaElements.length === 0) return;
 
@@ -326,7 +328,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
         const nextCriterionId = nextElement.getAttribute("data-criterion-id");
         if (nextCriterionId) {
           setFocusedCriterionId(nextCriterionId);
-          nextElement.focus();
+          (nextElement as HTMLElement).focus();
           nextElement.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       }
@@ -674,7 +676,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
                 Отмена
               </button>
               <button
-                onClick={confirmSubmit}
+                onClick={() => void confirmSubmit()}
                 className="flex-1 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 Отправить

@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Send,
   Filter,
@@ -21,9 +17,16 @@ import {
   StickyNote,
   Save,
 } from "lucide-react";
-import { userRepo } from "@/entities/user";
+import { useState, useEffect } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { assignmentRepo } from "@/entities/assignment";
+import { userRepo } from "@/entities/user";
 import { workRepo } from "@/entities/work";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherSubmissionsPage - Просмотр сабмишенов (работ студентов)

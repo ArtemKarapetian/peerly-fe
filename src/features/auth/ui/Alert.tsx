@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { AlertCircle, CheckCircle, Info, X } from "lucide-react";
+import { ReactNode } from "react";
 
 /**
  * Alert - Компонент для отображения уведомлений и ошибок

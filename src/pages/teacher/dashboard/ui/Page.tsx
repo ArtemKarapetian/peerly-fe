@@ -1,5 +1,3 @@
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import {
   Book,
   FileCheck,
@@ -10,6 +8,10 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
+
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherDashboardPage - Главная панель преподавателя

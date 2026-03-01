@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { X, ChevronRight, ChevronLeft, Play, AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import {
   AutomationRule,
   TriggerType,
@@ -15,7 +17,6 @@ import {
   getRuleHumanReadable,
   testRule,
 } from "@/entities/automation-rule";
-import { toast } from "sonner";
 
 interface CreateRuleModalProps {
   existingRule?: AutomationRule | null;

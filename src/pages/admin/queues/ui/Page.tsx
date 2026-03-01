@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Activity, Play, Pause, RefreshCw, AlertCircle, Server } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminQueuesPage - Мониторинг очередей и воркеров

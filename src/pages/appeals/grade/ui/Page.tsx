@@ -1,9 +1,11 @@
+import { AlertCircle, Send } from "lucide-react";
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Button } from "@/shared/ui/button.tsx";
-import { AlertCircle, Send } from "lucide-react";
-import { ROUTES } from "@/shared/config/routes.ts";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AppealPage - Страница подачи апелляции на оценку
@@ -90,7 +92,7 @@ export default function AppealPage({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
           {/* Reason */}
           <div>
             <label className="block text-sm font-medium text-[--text-primary] mb-2">

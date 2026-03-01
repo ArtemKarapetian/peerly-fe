@@ -1,5 +1,6 @@
-import { PublicLayout } from "@/widgets/public-layout";
 import { FileText, Shield, Mail } from "lucide-react";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * TermsPage - Terms of Service & Privacy Policy

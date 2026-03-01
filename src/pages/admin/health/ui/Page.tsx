@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   Activity,
   CheckCircle,
@@ -16,6 +12,12 @@ import {
   TrendingDown,
   RefreshCw,
 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminHealthPage - Здоровье системы и метрики
@@ -375,7 +377,7 @@ export default function AdminHealthPage() {
               </span>
             </div>
             <button
-              onClick={handleRefresh}
+              onClick={() => void handleRefresh()}
               disabled={isRefreshing}
               className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium disabled:opacity-50"
             >

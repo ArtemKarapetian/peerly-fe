@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Flag, Save, Search, X, ChevronDown, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminFlagsPage - Фиче-флаги и настройки платформы
@@ -231,14 +233,7 @@ export default function AdminFlagsPage() {
         flag.key === "enableEmailConfirmation" ||
         flag.key === "enablePasswordReset"
       ) {
-        updateRealFlag(
-          flag.key as
-            | "supportChat"
-            | "twoFactor"
-            | "enableEmailConfirmation"
-            | "enablePasswordReset",
-          flag.enabled,
-        );
+        updateRealFlag(flag.key, flag.enabled);
       }
     });
 
