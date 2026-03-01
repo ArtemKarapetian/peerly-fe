@@ -24,7 +24,7 @@ import {
   Cell,
 } from "recharts";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -244,12 +244,7 @@ export default function TeacherAnalyticsPage() {
 
   return (
     <AppShell title="Отчёты и аналитика">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Аналитика" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Аналитика" }]} />
 
       <div className="mt-6">
         {/* Header */}

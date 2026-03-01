@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { JSX, useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -221,12 +221,7 @@ export default function TeacherModerationPage() {
 
   return (
     <AppShell title="Модерация рецензий">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Модерация" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Модерация" }]} />
 
       <div className="mt-6">
         {/* Header */}

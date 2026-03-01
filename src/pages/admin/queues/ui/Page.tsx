@@ -1,6 +1,7 @@
 import { Activity, Play, Pause, RefreshCw, AlertCircle, Server } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -293,7 +294,7 @@ export default function AdminQueuesPage() {
     <AppShell title="Очереди и воркеры">
       <Breadcrumbs
         items={[
-          { label: "Admin", href: ROUTES.adminOverview },
+          CRUMBS.adminRoot,
           { label: "Мониторинг", href: ROUTES.adminHealth },
           { label: "Очереди" },
         ]}

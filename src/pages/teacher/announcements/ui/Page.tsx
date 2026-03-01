@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { courseRepo } from "@/entities/course";
@@ -221,12 +221,7 @@ export default function TeacherAnnouncementsPage() {
 
   return (
     <AppShell title="Объявления">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Объявления" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Объявления" }]} />
 
       <div className="mt-6">
         {/* Header */}

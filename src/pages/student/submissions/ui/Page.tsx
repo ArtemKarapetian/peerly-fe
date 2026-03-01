@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
@@ -218,7 +219,7 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
       <AppShell title="История версий">
         <Breadcrumbs
           items={[
-            { label: "Курсы", href: ROUTES.courses },
+            CRUMBS.courses,
             { label: courseName, href: ROUTES.course(courseId) },
             { label: taskTitle, href: ROUTES.task(courseId, taskId) },
             { label: "Версии" },
@@ -258,7 +259,7 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
     <AppShell title="История версий">
       <Breadcrumbs
         items={[
-          { label: "Курсы", href: ROUTES.courses },
+          CRUMBS.courses,
           { label: courseName, href: ROUTES.course(courseId) },
           { label: taskTitle, href: ROUTES.task(courseId, taskId) },
           { label: "Версии" },

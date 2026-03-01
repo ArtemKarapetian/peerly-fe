@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -227,12 +227,7 @@ export default function TeacherDistributionPage() {
 
   return (
     <AppShell title="Распределение рецензий">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Распределение" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Распределение" }]} />
 
       <div className="mt-6">
         {/* Header */}

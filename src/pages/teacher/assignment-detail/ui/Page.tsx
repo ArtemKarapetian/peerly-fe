@@ -1,6 +1,7 @@
 import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
 import React from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -70,7 +71,7 @@ export default function TeacherAssignmentDetailsPage({
     <AppShell title={assignment.title}>
       <Breadcrumbs
         items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          CRUMBS.teacherDashboard,
           { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
           { label: assignment.title },
         ]}

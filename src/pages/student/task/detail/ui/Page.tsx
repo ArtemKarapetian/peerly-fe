@@ -1,6 +1,7 @@
 import { Clock, AlertCircle } from "lucide-react";
 import { useState, useMemo } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
@@ -96,7 +97,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
       {/* Breadcrumbs - стандартизированная навигация: Курсы → Название курса → Задание */}
       <Breadcrumbs
         items={[
-          { label: "Курсы", href: ROUTES.courses },
+          CRUMBS.courses,
           { label: "Веб-программирование", href: ROUTES.course(courseId) },
           { label: taskTitle },
         ]}

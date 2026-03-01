@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -150,9 +150,7 @@ export default function SecurityPage() {
 
   return (
     <AppShell title="Безопасность">
-      <Breadcrumbs
-        items={[{ label: "Настройки", href: ROUTES.settings }, { label: "Безопасность" }]}
-      />
+      <Breadcrumbs items={[CRUMBS.settings, { label: "Безопасность" }]} />
 
       <div className="mt-6 max-w-[800px]">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">

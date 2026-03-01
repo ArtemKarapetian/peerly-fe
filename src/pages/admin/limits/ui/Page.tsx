@@ -1,6 +1,7 @@
 import { Save, Plus, X, Building, AlertCircle } from "lucide-react";
 import { useState } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -200,7 +201,7 @@ export default function AdminLimitsPage() {
     <AppShell title="Лимиты и квоты">
       <Breadcrumbs
         items={[
-          { label: "Администратор", href: ROUTES.adminOverview },
+          CRUMBS.adminRoot,
           { label: "Политики", href: ROUTES.adminPolicies },
           { label: "Лимиты" },
         ]}

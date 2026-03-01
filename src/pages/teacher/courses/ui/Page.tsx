@@ -1,7 +1,7 @@
 import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
@@ -97,12 +97,7 @@ export default function TeacherCoursesPage() {
 
   return (
     <AppShell title="Упрвление курсами">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Курсы" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Курсы" }]} />
 
       <div className="mt-6">
         {/* Header */}

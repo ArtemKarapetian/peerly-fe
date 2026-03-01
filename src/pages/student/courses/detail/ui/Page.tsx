@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 
@@ -268,9 +268,7 @@ export default function CoursePage({ courseId = "1" }: CoursePageProps) {
   return (
     <AppShell title="Название курса">
       {/* Breadcrumbs - стандартизированная навигация */}
-      <Breadcrumbs
-        items={[{ label: "Курсы", href: ROUTES.courses }, { label: "Название курса" }]}
-      />
+      <Breadcrumbs items={[CRUMBS.courses, { label: "Название курса" }]} />
 
       {/* Page Header - H1 после breadcrumbs */}
       <div className="mb-2">

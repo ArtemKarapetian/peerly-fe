@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -195,7 +196,7 @@ export default function TeacherCreateAssignmentPage({
     <AppShell title="Создание задания">
       <Breadcrumbs
         items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          CRUMBS.teacherDashboard,
           { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
           { label: "Новое задание" },
         ]}

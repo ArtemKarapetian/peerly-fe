@@ -1,7 +1,7 @@
 import { Shield, Database, AlertTriangle, Settings, ArrowRight, CheckCircle } from "lucide-react";
 import { useCallback } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -101,9 +101,7 @@ export default function AdminSettingsPage() {
 
   return (
     <AppShell title="Настройки системы">
-      <Breadcrumbs
-        items={[{ label: "Admin", href: ROUTES.adminOverview }, { label: "Настройки системы" }]}
-      />
+      <Breadcrumbs items={[CRUMBS.adminRoot, { label: "Настройки системы" }]} />
 
       <div className="mt-6">
         {/* Header */}

@@ -1,6 +1,7 @@
 import { Save, EyeOff, Users, Shuffle } from "lucide-react";
 import { useState, useEffect } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -157,7 +158,7 @@ export default function TeacherPeerSessionSettingsPage({
     <AppShell title="Настройки peer-сессии">
       <Breadcrumbs
         items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          CRUMBS.teacherDashboard,
           { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
           { label: "Задание", href: ROUTES.teacherDashboard },
           { label: "Настройки peer-сессии" },

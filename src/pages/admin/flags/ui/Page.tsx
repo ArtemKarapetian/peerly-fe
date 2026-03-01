@@ -1,6 +1,7 @@
 import { Flag, Save, Search, X, ChevronDown, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { useState } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -335,7 +336,7 @@ export default function AdminFlagsPage() {
     <AppShell title="Фиче-флаги">
       <Breadcrumbs
         items={[
-          { label: "Администратор", href: ROUTES.adminOverview },
+          CRUMBS.adminRoot,
           { label: "Настройки", href: ROUTES.adminSettings },
           { label: "Фиче-флаги" },
         ]}

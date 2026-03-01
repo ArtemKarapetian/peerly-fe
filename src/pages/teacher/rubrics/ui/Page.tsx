@@ -1,7 +1,7 @@
 import { Search, Plus, Filter, Copy, Eye, Edit } from "lucide-react";
 import { useState, useEffect } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AssignmentPickerModal } from "@/features/assignment/pick";
@@ -285,12 +285,7 @@ export default function TeacherRubricsPage() {
 
   return (
     <AppShell title="Библиотека рубрик">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Библиотека рубрик" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Библиотека рубрик" }]} />
 
       <div className="mt-6 grid grid-cols-[400px_1fr] gap-6 h-[calc(100vh-180px)]">
         {/* Left Column - Rubric List */}

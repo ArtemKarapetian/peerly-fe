@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -24,12 +24,7 @@ export function TeacherPlaceholderPage({
   title,
   description,
   icon: Icon,
-  breadcrumbs = [
-    {
-      label: "Дашборд преподавателя",
-      href: ROUTES.teacherDashboard,
-    },
-  ],
+  breadcrumbs = [CRUMBS.teacherDashboard],
   primaryAction,
 }: TeacherPlaceholderPageProps) {
   return (

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import {
@@ -83,7 +83,7 @@ export default function AppealsListPage() {
 
   return (
     <AppShell title="Мои апелляции">
-      <Breadcrumbs items={[{ label: "Студент", href: ROUTES.dashboard }, { label: "Апелляции" }]} />
+      <Breadcrumbs items={[CRUMBS.studentDashboard, { label: "Апелляции" }]} />
 
       <div className="mt-6 max-w-[1000px]">
         <div className="flex items-center gap-3 mb-2">
