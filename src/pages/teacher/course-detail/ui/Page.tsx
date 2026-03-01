@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
 import { userRepo } from "@/entities/user";
-import { assignmentRepo } from "@/entities/assignment";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
   TeacherCourseAssignments,
   TeacherCourseParticipants,

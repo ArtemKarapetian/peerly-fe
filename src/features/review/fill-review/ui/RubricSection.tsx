@@ -1,6 +1,7 @@
-import { RubricCriterion } from "./RubricCriterion.tsx";
-import { RubricSectionData } from "@/entities/rubric/model/types.ts";
 import { CriterionScore } from "@/entities/review/model/types.ts";
+import { RubricSectionData } from "@/entities/rubric/model/types.ts";
+
+import { RubricCriterion } from "./RubricCriterion.tsx";
 
 /**
  * RubricSection - Секция рубрики с несколькими критериями

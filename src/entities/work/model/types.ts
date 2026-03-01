@@ -18,6 +18,7 @@ export interface WorkFile {
 export interface ValidationCheck {
   id: string;
   name: string;
+  description?: string;
   status: "passed" | "warning" | "failed";
   message?: string;
 }

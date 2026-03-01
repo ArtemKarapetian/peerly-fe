@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { User, Edit2, LogOut, AlertTriangle, MessageCircle } from "lucide-react";
-import { useAuth, useRole } from "@/entities/user";
+import { useState } from "react";
+
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { useAuth, useRole } from "@/entities/user";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * ProfilePage - User Profile Information

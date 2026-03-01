@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
 import { CourseHeader, CourseTabs } from "@/entities/course";
-import { TaskSearch } from "@/features/assignment/search";
+import { ParticipantsList } from "@/entities/user";
+import type { Participant } from "@/entities/user";
+
 import { TaskFilters } from "@/features/assignment/filter";
 import type { TaskFilter } from "@/features/assignment/filter";
 import { TaskList } from "@/features/assignment/list";
 import type { Task } from "@/features/assignment/list";
+import { TaskSearch } from "@/features/assignment/search";
 import { ParticipantSearch } from "@/features/participant/search";
-import { ParticipantsList } from "@/entities/user";
-import type { Participant } from "@/entities/user";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
-import { ROUTES } from "@/shared/config/routes.ts";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 interface CoursePageProps {
   courseId?: string;

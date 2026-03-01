@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell";
+
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs";
+
 import { useAuth } from "@/entities/user";
+
 import { ExtensionRequestForm, ExtensionRequestSuccess } from "@/features/extension/request";
+
+import { AppShell } from "@/widgets/app-shell/AppShell";
 
 type Props = {
   courseId?: string;

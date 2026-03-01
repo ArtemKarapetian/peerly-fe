@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle, Clock, FileText } from "lucide-react";
+import { useState } from "react";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * ReceivedReviewsPage - Страница полученных отзывов студента

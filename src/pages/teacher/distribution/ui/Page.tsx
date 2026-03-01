@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
 import {
   GitBranch,
   UserPlus,
@@ -15,11 +11,18 @@ import {
   EyeOff,
   MoreVertical,
 } from "lucide-react";
+import { useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
+import { reviewRepo } from "@/entities/review";
 import { userRepo } from "@/entities/user";
 import { workRepo } from "@/entities/work";
-import { reviewRepo } from "@/entities/review";
-import { assignmentRepo } from "@/entities/assignment";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * TeacherDistributionPage - Распределение рецензий

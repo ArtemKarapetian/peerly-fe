@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
 import { Plus, GripVertical, Trash2, Save, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+
 import type { RubricData, RubricCriterionData } from "../model/types";
 
 /**

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Bug, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 
 /**
  * Dev-only panel for testing error pages

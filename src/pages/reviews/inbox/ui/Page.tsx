@@ -1,8 +1,11 @@
-import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 import { Clock, ChevronRight } from "lucide-react";
+import { useState, useCallback } from "react";
+
+import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
 import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * ReviewsInboxPage - Reviews Inbox (список всех назначенных рецензий)

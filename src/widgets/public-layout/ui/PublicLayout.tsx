@@ -1,6 +1,9 @@
 import { ReactNode } from "react";
+
 import { Button } from "@/shared/ui/button.tsx";
+
 import { useAuth } from "@/entities/user";
+
 import { ProfileDropdown } from "@/widgets/navigation/ProfileDropdown.tsx";
 
 /**

@@ -1,10 +1,13 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Users, Search, X, CheckCircle, XCircle } from "lucide-react";
-import { userRepo } from "@/entities/user";
-import { organizationRepo } from "@/entities/organization";
+import { useState } from "react";
+
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
+
+import { organizationRepo } from "@/entities/organization";
+import { userRepo } from "@/entities/user";
 import { DemoUser } from "@/entities/user/model/types.ts";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * AdminUsersPage - Управление пользователями и ролями

@@ -1,8 +1,10 @@
+import { CheckCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
-import { PublicLayout } from "@/widgets/public-layout";
+
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
-import { CheckCircle } from "lucide-react";
+
+import { PublicLayout } from "@/widgets/public-layout";
 
 /**
  * ResetPasswordPage - Password reset flow
@@ -185,7 +187,7 @@ export default function ResetPasswordPage() {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleContinue} className="space-y-4">
+              <form onSubmit={(e) => void handleContinue(e)} className="space-y-4">
                 {/* Login Field */}
                 <Input
                   label="Логин"
@@ -245,7 +247,7 @@ export default function ResetPasswordPage() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleResetPassword} className="space-y-4">
+            <form onSubmit={(e) => void handleResetPassword(e)} className="space-y-4">
               {/* New Password Field */}
               <PasswordInput
                 label="Новый пароль"

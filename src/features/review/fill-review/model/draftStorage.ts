@@ -2,8 +2,9 @@
  * Utilities for managing review drafts in localStorage
  */
 
-import type { CriterionScore } from "@/features/review";
 import { ReviewDraft } from "@/entities/review/model/types.ts";
+
+import type { CriterionScore } from "@/features/review";
 
 /**
  * Generate a stable key for localStorage
@@ -68,12 +69,4 @@ export function clearDraftFromStorage(courseId: string, taskId: string, reviewId
   }
 }
 
-/**
- * Format timestamp for display
- */
-export function formatSaveTime(timestamp: number): string {
-  const date = new Date(timestamp);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
-}
+export { formatSaveTime } from "@/shared/lib/formatSaveTime.ts";

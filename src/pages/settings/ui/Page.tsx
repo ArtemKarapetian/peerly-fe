@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Monitor, Sun, Moon, Globe, Clock, Info, ExternalLink } from "lucide-react";
+import { useState } from "react";
+
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * SettingsPage - Application Settings

@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { Send, ArrowLeft, Clock, CheckCheck } from "lucide-react";
+import { useState } from "react";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 interface Message {
   id: string;

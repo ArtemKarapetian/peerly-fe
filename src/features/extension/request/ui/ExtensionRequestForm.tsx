@@ -1,7 +1,9 @@
+import { Clock, Calendar, MessageSquare, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Clock, Calendar, MessageSquare, ArrowLeft } from "lucide-react";
+
 import { ExtensionType, extensionRepo } from "@/entities/extension";
+
 import { validateExtensionRequest } from "../model/validation";
 
 type Props = {

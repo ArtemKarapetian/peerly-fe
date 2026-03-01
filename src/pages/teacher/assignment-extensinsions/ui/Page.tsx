@@ -1,11 +1,15 @@
 import { useState, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { ROUTES } from "@/shared/config/routes.ts";
-import { AddExtensionModal } from "@/features/extension/manage/AddExtensionModal.tsx";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { Extension, ExtensionStatus, extensionRepo } from "@/entities/extension";
 import { MOCK_STUDENTS } from "@/entities/user/model/student.ts";
+
 import { useExtensionDecisions } from "@/features/extension/decide";
+import { AddExtensionModal } from "@/features/extension/manage/AddExtensionModal.tsx";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
   ExtensionsFilters,
   ExtensionsHeader,

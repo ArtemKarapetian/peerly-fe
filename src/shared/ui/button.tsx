@@ -1,6 +1,7 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
-import { Loader2 } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
+
 import { cn } from "./utils.ts";
 
 export const buttonVariants = cva(

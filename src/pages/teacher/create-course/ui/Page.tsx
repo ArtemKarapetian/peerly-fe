@@ -1,10 +1,13 @@
-import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { ROUTES } from "@/shared/config/routes.ts";
-import { Button } from "@/shared/ui/button.tsx";
 import { Save, X } from "lucide-react";
+import { useState } from "react";
+
+import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { Button } from "@/shared/ui/button.tsx";
+
 import { courseRepo } from "@/entities/course";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 export default function CreateCoursePage() {
   const [name, setName] = useState("");

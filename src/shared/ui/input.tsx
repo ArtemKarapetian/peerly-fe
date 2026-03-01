@@ -1,5 +1,5 @@
-import { forwardRef, InputHTMLAttributes, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { forwardRef, InputHTMLAttributes, useState } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;

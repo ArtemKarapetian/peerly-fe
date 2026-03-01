@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function LayoutDebugger() {
   const [windowWidth, setWindowWidth] = useState(

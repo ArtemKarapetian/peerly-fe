@@ -1,85 +1,75 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@/entities/user";
-import { isFlagEnabled } from "@/shared/lib/feature-flags";
 
 import { ROUTES } from "@/shared/config/routes.ts";
-import { getAuthRedirect, isAuthPage, isProtectedRoute } from "@/app/routing/guards.ts";
-import { getCurrentHashPath, navigateHash, parseHash } from "@/app/routing/parseHash.ts";
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 
-// Student pages
-import DashboardPage from "@/pages/dashboard/ui/Page.tsx";
-import TaskPage from "@/pages/task/detail/ui/Page.tsx";
-import CoursePage from "@/pages/courses/detail/ui/Page.tsx";
-import CoursesListPage from "@/pages/courses/list/ui/Page.tsx";
-import { SubmitWorkPage } from "@/features/submission";
-import SubmissionsPage from "@/pages/submissions/ui/Page.tsx";
-import ReviewsInboxPage from "@/pages/reviews/inbox/ui/Page.tsx";
-import ReviewPage from "@/pages/reviews/review/ui/Page.tsx";
-import ReceivedReviewsPage from "@/pages/reviews/received/ui/Page.tsx";
-import GradebookPage from "@/pages/gradebook/ui/Page.tsx";
-import InboxPage from "@/pages/inbox/ui/Page.tsx";
-import LandingPage from "@/pages/landing/ui/Page.tsx";
-import { LoginPage, RegisterPage } from "@/features/auth";
+import { useAuth } from "@/entities/user";
+
+import AdminCoursesPage from "@/pages/admin/courses/ui/Page.tsx";
+import AdminFlagsPage from "@/pages/admin/flags/ui/Page.tsx";
+import AdminHealthPage from "@/pages/admin/health/ui/Page.tsx";
+import AdminIntegrationsPage from "@/pages/admin/integrations/ui/Page.tsx";
+import AdminLimitsPage from "@/pages/admin/limits/ui/Page.tsx";
+import AdminLogsPage from "@/pages/admin/logs/ui/Page.tsx";
+import AdminOrgsPage from "@/pages/admin/orgs/ui/Page.tsx";
+import AdminOverviewPage from "@/pages/admin/overview/ui/Page.tsx";
+import AdminPluginsPage from "@/pages/admin/plugins/ui/Page.tsx";
+import AdminPoliciesPage from "@/pages/admin/policies/ui/Page.tsx";
+import AdminQueuesPage from "@/pages/admin/queues/ui/Page.tsx";
+import AdminRetentionPage from "@/pages/admin/retention/ui/Page.tsx";
+import AdminSettingsPage from "@/pages/admin/settings/ui/Page.tsx";
+import AdminUsersPage from "@/pages/admin/users/ui/Page.tsx";
 import CreateAppealPage from "@/pages/appeals/create/ui/Page.tsx";
 import AppealsListPage from "@/pages/appeals/list/ui/Page.tsx";
-import { ExtensionRequestPage } from "@/pages/extensions/request";
-
-// Profile/Settings pages
-import ProfilePage from "@/pages/profile/ui/Page.tsx";
-import SettingsPage from "@/pages/settings/ui/Page.tsx";
-import SecurityPage from "@/pages/security/ui/Page.tsx";
-import DeleteAccountPage from "@/pages/profile/delete-account/ui/Page.tsx";
-
-// Public pages
-import HelpPage from "@/pages/public/help/ui/Page.tsx";
-import StatusPage from "@/pages/public/status/ui/Page.tsx";
-import TermsPage from "@/pages/public/terms/ui/Page.tsx";
-import ResetPasswordPage from "@/pages/public/reset-password/ui/Page.tsx";
-import VerifyEmailPage from "@/pages/public/verify-email/ui/Page.tsx";
-
-// Teacher pages
-import TeacherDashboardPage from "@/pages/teacher/dashboard/ui/Page.tsx";
-import TeacherCoursesPage from "@/pages/teacher/courses/ui/Page.tsx";
-import TeacherCourseDetailsPage from "@/pages/teacher/course-detail/ui/Page.tsx";
-import TeacherRubricsPage from "@/pages/teacher/rubrics/ui/Page.tsx";
-import TeacherAssignmentsPage from "@/pages/teacher/assignments/ui/Page.tsx";
-import TeacherCreateAssignmentPage from "@/pages/teacher/create-assignment/ui/Page.tsx";
-import TeacherAssignmentDetailsPage from "@/pages/teacher/assignment-detail/ui/Page.tsx";
-import TeacherPeerSessionSettingsPage from "@/pages/teacher/peer-session-settings/ui/Page.tsx";
-import TeacherDistributionPage from "@/pages/teacher/distribution/ui/Page.tsx";
-import TeacherModerationPage from "@/pages/teacher/moderation/ui/Page.tsx";
-import TeacherSubmissionsPage from "@/pages/teacher/submissions/ui/Page.tsx";
-import TeacherAnalyticsPage from "@/pages/teacher/analytics/ui/Page.tsx";
-import TeacherAppealsPage from "@/pages/teacher/appeals/ui/Page.tsx";
-import TeacherAnnouncementsPage from "@/pages/teacher/announcements/ui/Page.tsx";
-import TeacherExtensionsPage from "@/pages/teacher/extensions/ui/Page.tsx";
-import { TeacherAssignmentExtensionsPage } from "@/pages/teacher/assignment-extensinsions";
-import TeacherAutomationPage from "@/pages/teacher/automation/ui/Page.tsx";
-
-// Admin pages
-import AdminOverviewPage from "@/pages/admin/overview/ui/Page.tsx";
-import AdminCoursesPage from "@/pages/admin/courses/ui/Page.tsx";
-import AdminUsersPage from "@/pages/admin/users/ui/Page.tsx";
-import AdminOrgsPage from "@/pages/admin/orgs/ui/Page.tsx";
-import AdminPluginsPage from "@/pages/admin/plugins/ui/Page.tsx";
-import AdminIntegrationsPage from "@/pages/admin/integrations/ui/Page.tsx";
-import AdminSettingsPage from "@/pages/admin/settings/ui/Page.tsx";
-import AdminPoliciesPage from "@/pages/admin/policies/ui/Page.tsx";
-import AdminRetentionPage from "@/pages/admin/retention/ui/Page.tsx";
-import AdminLimitsPage from "@/pages/admin/limits/ui/Page.tsx";
-import AdminFlagsPage from "@/pages/admin/flags/ui/Page.tsx";
-import AdminQueuesPage from "@/pages/admin/queues/ui/Page.tsx";
-import AdminLogsPage from "@/pages/admin/logs/ui/Page.tsx";
-import AdminHealthPage from "@/pages/admin/health/ui/Page.tsx";
-
-// Support
-import SupportChatPage from "@/pages/support/chat/ui/Page.tsx";
-
-// Error pages
+import { LoginPage } from "@/pages/auth/login";
+import { RegisterPage } from "@/pages/auth/register";
+import CoursePage from "@/pages/courses/detail/ui/Page.tsx";
+import CoursesListPage from "@/pages/courses/list/ui/Page.tsx";
+import DashboardPage from "@/pages/dashboard/ui/Page.tsx";
 import Error401Page from "@/pages/errors/401/ui/Page.tsx";
 import Error403Page from "@/pages/errors/403/ui/Page.tsx";
 import Error404Page from "@/pages/errors/404/ui/Page.tsx";
 import Error500Page from "@/pages/errors/500/ui/Page.tsx";
+import { ExtensionRequestPage } from "@/pages/extensions/request";
+import GradebookPage from "@/pages/gradebook/ui/Page.tsx";
+import InboxPage from "@/pages/inbox/ui/Page.tsx";
+import LandingPage from "@/pages/landing/ui/Page.tsx";
+import DeleteAccountPage from "@/pages/profile/delete-account/ui/Page.tsx";
+import ProfilePage from "@/pages/profile/ui/Page.tsx";
+import HelpPage from "@/pages/public/help/ui/Page.tsx";
+import ResetPasswordPage from "@/pages/public/reset-password/ui/Page.tsx";
+import StatusPage from "@/pages/public/status/ui/Page.tsx";
+import TermsPage from "@/pages/public/terms/ui/Page.tsx";
+import VerifyEmailPage from "@/pages/public/verify-email/ui/Page.tsx";
+import ReviewsInboxPage from "@/pages/reviews/inbox/ui/Page.tsx";
+import ReceivedReviewsPage from "@/pages/reviews/received/ui/Page.tsx";
+import ReviewPage from "@/pages/reviews/review/ui/Page.tsx";
+import SecurityPage from "@/pages/security/ui/Page.tsx";
+import SettingsPage from "@/pages/settings/ui/Page.tsx";
+import { SubmitWorkPage } from "@/pages/submissions/submit-work";
+import SubmissionsPage from "@/pages/submissions/ui/Page.tsx";
+import SupportChatPage from "@/pages/support/chat/ui/Page.tsx";
+import TaskPage from "@/pages/task/detail/ui/Page.tsx";
+import TeacherAnalyticsPage from "@/pages/teacher/analytics/ui/Page.tsx";
+import TeacherAnnouncementsPage from "@/pages/teacher/announcements/ui/Page.tsx";
+import TeacherAppealsPage from "@/pages/teacher/appeals/ui/Page.tsx";
+import TeacherAssignmentDetailsPage from "@/pages/teacher/assignment-detail/ui/Page.tsx";
+import { TeacherAssignmentExtensionsPage } from "@/pages/teacher/assignment-extensinsions";
+import TeacherAssignmentsPage from "@/pages/teacher/assignments/ui/Page.tsx";
+import TeacherAutomationPage from "@/pages/teacher/automation/ui/Page.tsx";
+import TeacherCourseDetailsPage from "@/pages/teacher/course-detail/ui/Page.tsx";
+import TeacherCoursesPage from "@/pages/teacher/courses/ui/Page.tsx";
+import TeacherCreateAssignmentPage from "@/pages/teacher/create-assignment/ui/Page.tsx";
+import TeacherDashboardPage from "@/pages/teacher/dashboard/ui/Page.tsx";
+import TeacherDistributionPage from "@/pages/teacher/distribution/ui/Page.tsx";
+import TeacherExtensionsPage from "@/pages/teacher/extensions/ui/Page.tsx";
+import TeacherModerationPage from "@/pages/teacher/moderation/ui/Page.tsx";
+import TeacherPeerSessionSettingsPage from "@/pages/teacher/peer-session-settings/ui/Page.tsx";
+import TeacherRubricsPage from "@/pages/teacher/rubrics/ui/Page.tsx";
+import TeacherSubmissionsPage from "@/pages/teacher/submissions/ui/Page.tsx";
+
+import { getAuthRedirect, isAuthPage, isProtectedRoute } from "@/app/routing/guards.ts";
+import { getCurrentHashPath, navigateHash, parseHash } from "@/app/routing/parseHash.ts";
 
 export function Router() {
   const { isAuthenticated } = useAuth();

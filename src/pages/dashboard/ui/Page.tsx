@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
   DeadlinesList,
   ActionCards,

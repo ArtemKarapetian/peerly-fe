@@ -1,5 +1,5 @@
-import { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Upload, AlertCircle } from "lucide-react";
+import { useState, useRef, DragEvent, ChangeEvent } from "react";
 
 /**
  * FileUploadArea - Drag & drop + file picker для загрузки файлов

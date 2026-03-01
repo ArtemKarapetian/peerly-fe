@@ -1,4 +1,5 @@
 import { Calendar, Check, Clock, MessageSquare, Pencil, Trash2, User, X } from "lucide-react";
+
 import {
   Extension,
   ExtensionStatus,
@@ -66,7 +67,7 @@ export function ExtensionsTable({
           <p className="text-sm text-muted-foreground">
             {filterStatus === "all"
               ? "Добавьте продление для студента или дождитесь запросов"
-              : `Нет продлений со статусом "${getExtensionStatusLabel(filterStatus as ExtensionStatus)}"`}
+              : `Нет продлений со статусом "${getExtensionStatusLabel(filterStatus)}"`}
           </p>
         </div>
       ) : (

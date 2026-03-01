@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { AlertCircle, FileText, Upload, MessageSquare, Clock, Users, Target } from "lucide-react";
+import { useState } from "react";
 
 import { AppealReason, appealRepo } from "@/entities/appeal";
+
 import { validateAppealMessage } from "../model/validation";
 
 export type CreateAppealContext = {
@@ -226,7 +227,7 @@ export function CreateAppealForm({
       {/* Submit Actions */}
       <div className="flex gap-3 mb-8">
         <button
-          onClick={handleSubmit}
+          onClick={() => void handleSubmit()}
           disabled={isSubmitting}
           className="px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >

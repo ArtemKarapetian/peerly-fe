@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
 import { ROUTES } from "@/shared/config/routes.ts";
+import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
-import { FileUploadArea } from "./ui/FileUploadArea";
-import { FilePreviewCard } from "./ui/FilePreviewCard";
-import { TaskRulesCard } from "./ui/TaskRulesCard";
-import { ValidationChecks } from "./ui/ValidationChecks";
-import type { UploadedFile } from "./ui/FilePreviewCard";
-import type { TaskRules } from "./ui/TaskRulesCard";
-import type { ValidationCheck } from "./ui/ValidationChecks";
+
+import { FilePreviewCard } from "@/features/submission/submit-work/ui/FilePreviewCard";
+import type { UploadedFile } from "@/features/submission/submit-work/ui/FilePreviewCard";
+import { FileUploadArea } from "@/features/submission/submit-work/ui/FileUploadArea";
+import { TaskRulesCard } from "@/features/submission/submit-work/ui/TaskRulesCard";
+import type { TaskRules } from "@/features/submission/submit-work/ui/TaskRulesCard";
+import { ValidationChecks } from "@/features/submission/submit-work/ui/ValidationChecks";
+import type { ValidationCheck } from "@/features/submission/submit-work/ui/ValidationChecks";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
  * SubmitWorkPage - Экран отправки работы студентом

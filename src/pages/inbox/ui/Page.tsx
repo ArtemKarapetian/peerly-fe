@@ -1,5 +1,3 @@
-import { useState, useMemo, useCallback } from "react";
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
   Bell,
   Filter,
@@ -11,6 +9,9 @@ import {
   Award,
   ChevronDown,
 } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 type NotificationType =
   | "DEADLINE"
