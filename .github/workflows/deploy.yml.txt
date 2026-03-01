@@ -1,3 +1,5 @@
+# vercel deploys itself, so we don't need to deploy 2x times
+
 name: Deploy
 
 on:
