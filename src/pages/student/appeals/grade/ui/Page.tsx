@@ -1,7 +1,7 @@
 import { AlertCircle, Send } from "lucide-react";
 import { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Button } from "@/shared/ui/button.tsx";
 
@@ -63,9 +63,7 @@ export default function AppealPage({
 
   return (
     <AppShell>
-      <Breadcrumbs
-        items={[{ label: "Журнал оценок", href: ROUTES.gradebook }, { label: "Апелляция" }]}
-      />
+      <Breadcrumbs items={[CRUMBS.gradebook, { label: "Апелляция" }]} />
 
       <div className="max-w-[800px] mx-auto">
         {/* Header */}

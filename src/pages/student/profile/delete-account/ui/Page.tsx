@@ -1,6 +1,7 @@
 import { AlertTriangle, Trash2, CheckCircle, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { useAuth } from "@/entities/user";
@@ -88,9 +89,7 @@ export default function DeleteAccountPage() {
   return (
     <AppShell title="Удаление аккаунта">
       <div className="max-w-[800px]">
-        <Breadcrumbs
-          items={[{ label: "Настройки", href: "#/settings" }, { label: "Удаление аккаунта" }]}
-        />
+        <Breadcrumbs items={[CRUMBS.settings, { label: "Удаление аккаунта" }]} />
 
         <div className="mt-6 space-y-6">
           {/* Back link */}

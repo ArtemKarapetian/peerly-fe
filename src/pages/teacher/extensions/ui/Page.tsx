@@ -1,6 +1,6 @@
 import { Clock, CheckCircle, XCircle } from "lucide-react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -69,9 +69,7 @@ export default function TeacherExtensionsPage() {
 
   return (
     <AppShell title="Extensions">
-      <Breadcrumbs
-        items={[{ label: "Преподаватель", href: ROUTES.teacherDashboard }, { label: "Продления" }]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Продления" }]} />
       <div className="mt-6">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
           Запросы на продление срока

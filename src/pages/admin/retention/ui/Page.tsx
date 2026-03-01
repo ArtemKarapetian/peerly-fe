@@ -1,6 +1,7 @@
 import { Database, AlertTriangle, Clock, Save, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -134,7 +135,7 @@ export default function AdminRetentionPage() {
     <AppShell title="Политики хранения">
       <Breadcrumbs
         items={[
-          { label: "Admin", href: ROUTES.adminOverview },
+          CRUMBS.adminRoot,
           { label: "Политики", href: ROUTES.adminPolicies },
           { label: "Хранение данных" },
         ]}

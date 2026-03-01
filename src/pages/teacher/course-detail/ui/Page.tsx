@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -61,7 +62,7 @@ export default function TeacherCourseDetailsPage({
     <AppShell title={course.name}>
       <Breadcrumbs
         items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
+          CRUMBS.teacherDashboard,
           { label: "Курсы", href: ROUTES.teacherDashboard },
           { label: course.name },
         ]}

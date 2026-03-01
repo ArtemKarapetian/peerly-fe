@@ -1,6 +1,6 @@
 import { Settings } from "lucide-react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 
 import { AdminPlaceholderPage } from "../../placeholder/ui/Page";
 
@@ -10,7 +10,7 @@ export default function AdminPoliciesPage() {
       title="Политики (Retention/Limits)"
       description="Настройка политик хранения данных и ограничений системы."
       icon={Settings}
-      breadcrumbs={[{ label: "Admin", href: ROUTES.adminOverview }, { label: "Политики" }]}
+      breadcrumbs={[CRUMBS.adminRoot, { label: "Политики" }]}
     />
   );
 }

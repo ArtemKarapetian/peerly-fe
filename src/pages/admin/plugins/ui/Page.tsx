@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -545,7 +545,7 @@ export default function AdminPluginsPage() {
 
   return (
     <AppShell title="Каталог плагинов">
-      <Breadcrumbs items={[{ label: "Admin", href: ROUTES.adminOverview }, { label: "Плагины" }]} />
+      <Breadcrumbs items={[CRUMBS.adminRoot, { label: "Плагины" }]} />
 
       <div className="mt-6">
         {/* Header */}

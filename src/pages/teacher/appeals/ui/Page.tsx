@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -311,12 +311,7 @@ export default function TeacherAppealsPage() {
 
   return (
     <AppShell title="Апелляции">
-      <Breadcrumbs
-        items={[
-          { label: "Дашборд преподавателя", href: ROUTES.teacherDashboard },
-          { label: "Апелляции" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Апелляции" }]} />
 
       <div className="mt-6">
         {/* Header */}

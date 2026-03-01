@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -430,7 +431,7 @@ export default function AdminLogsPage() {
     <AppShell title="Логи и аудит">
       <Breadcrumbs
         items={[
-          { label: "Администратор", href: ROUTES.adminOverview },
+          CRUMBS.adminRoot,
           { label: "Мониторинг", href: ROUTES.adminHealth },
           { label: "Логи" },
         ]}

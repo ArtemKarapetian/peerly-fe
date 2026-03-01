@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-import { ROUTES } from "@/shared/config/routes.ts";
+import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs, BreadcrumbItem } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -20,7 +20,7 @@ export function AdminPlaceholderPage({
   title,
   description,
   icon: Icon,
-  breadcrumbs = [{ label: "Admin", href: ROUTES.adminOverview }],
+  breadcrumbs = [CRUMBS.adminRoot],
 }: AdminPlaceholderPageProps) {
   return (
     <AppShell title={title}>
