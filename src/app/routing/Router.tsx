@@ -32,6 +32,8 @@ import StatusPage from "@/pages/public/status/ui/Page.tsx";
 import TermsPage from "@/pages/public/terms/ui/Page.tsx";
 import VerifyEmailPage from "@/pages/public/verify-email/ui/Page.tsx";
 import ProfilePage from "@/pages/shared/profile/ui/Page.tsx";
+import SecurityPage from "@/pages/shared/security/ui/Page.tsx";
+import SettingsPage from "@/pages/shared/settings/ui/Page.tsx";
 import CreateAppealPage from "@/pages/student/appeals/create/ui/Page.tsx";
 import AppealsListPage from "@/pages/student/appeals/list/ui/Page.tsx";
 import CoursePage from "@/pages/student/courses/detail/ui/Page.tsx";
@@ -44,8 +46,6 @@ import DeleteAccountPage from "@/pages/student/profile/delete-account/ui/Page.ts
 import ReviewsInboxPage from "@/pages/student/reviews/inbox/ui/Page.tsx";
 import ReceivedReviewsPage from "@/pages/student/reviews/received/ui/Page.tsx";
 import ReviewPage from "@/pages/student/reviews/review/ui/Page.tsx";
-import SecurityPage from "@/pages/student/security/ui/Page.tsx";
-import SettingsPage from "@/pages/student/settings/ui/Page.tsx";
 import { SubmitWorkPage } from "@/pages/student/submissions/submit-work";
 import SubmissionsPage from "@/pages/student/submissions/ui/Page.tsx";
 import SupportChatPage from "@/pages/student/support/chat/ui/Page.tsx";
