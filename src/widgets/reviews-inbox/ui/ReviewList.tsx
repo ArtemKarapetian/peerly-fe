@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { ReviewAssignment } from "@/entities/review/model/types.ts";
 
 import { ReviewCard } from "./ReviewCard.tsx";
@@ -20,9 +22,13 @@ interface ReviewListProps {
 }
 
 export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps) {
+  const [now] = useState(() => Date.now());
+
   if (reviews.length === 0) {
     return null;
   }
+
+  const twoDays = 2 * 24 * 60 * 60 * 1000;
 
   // Group reviews
   const groupedReviews = groupBy === "course" ? groupByCourse(reviews) : groupByDeadline(reviews);
@@ -48,7 +54,16 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
             {group.reviews.map((review) => (
               <ReviewCard
                 key={review.id}
-                review={review}
+                id={review.id}
+                courseName={review.courseName}
+                taskTitle={review.taskTitle}
+                studentName={review.isAnonymous ? "Анонимный автор" : "Студент"}
+                reviewDeadline={review.reviewDeadline}
+                status={review.status}
+                isDeadlineSoon={
+                  review.reviewDeadlineTimestamp - now < twoDays &&
+                  review.reviewDeadlineTimestamp > now
+                }
                 onClick={() => onReviewClick(review.id)}
               />
             ))}
