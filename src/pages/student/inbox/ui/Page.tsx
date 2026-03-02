@@ -13,133 +13,17 @@ import { useState, useMemo, useCallback } from "react";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-type NotificationType =
-  | "DEADLINE"
-  | "REVIEW_ASSIGNED"
-  | "REVIEW_RECEIVED"
-  | "GRADE_PUBLISHED"
-  | "COMMENT"
-  | "TASK_UPDATED";
-
-interface Notification {
-  id: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  time: string;
-  isRead: boolean;
-  link: string;
-}
-
-// Mock notification data
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "REVIEW_ASSIGNED",
-    title: "Новая рецензия для проверки",
-    message: 'Вам назначена рецензия работы по заданию "React компоненты"',
-    time: "2025-01-24T10:30:00",
-    isRead: false,
-    link: "#/reviews",
-  },
-  {
-    id: "2",
-    type: "DEADLINE",
-    title: "Приближается дедлайн",
-    message: 'До сдачи задания "TypeScript проект" осталось 2 дня',
-    time: "2025-01-24T09:15:00",
-    isRead: false,
-    link: "#/task/4",
-  },
-  {
-    id: "3",
-    type: "GRADE_PUBLISHED",
-    title: "Оценка опубликована",
-    message: 'Преподаватель выставил оценку 92/100 за "TypeScript проект"',
-    time: "2025-01-23T16:45:00",
-    isRead: false,
-    link: "#/task/4",
-  },
-  {
-    id: "4",
-    type: "REVIEW_RECEIVED",
-    title: "Получена рецензия",
-    message: 'Ваша работа "Landing Page" прошла peer review',
-    time: "2025-01-23T14:20:00",
-    isRead: true,
-    link: "#/reviews/received",
-  },
-  {
-    id: "5",
-    type: "COMMENT",
-    title: "Новый комментарий",
-    message: 'Преподаватель оставил комментарий к заданию "Backend API"',
-    time: "2025-01-23T11:30:00",
-    isRead: true,
-    link: "#/task/6",
-  },
-  {
-    id: "6",
-    type: "DEADLINE",
-    title: "Дедлайн истекает сегодня",
-    message: 'Последний день сдачи задания "Прототипирование"',
-    time: "2025-01-23T08:00:00",
-    isRead: false,
-    link: "#/task/3",
-  },
-  {
-    id: "7",
-    type: "REVIEW_ASSIGNED",
-    title: "Новая рецензия для проверки",
-    message: 'Вам назначена рецензия работы по заданию "Вайрфреймы"',
-    time: "2025-01-22T15:45:00",
-    isRead: true,
-    link: "#/reviews",
-  },
-  {
-    id: "8",
-    type: "TASK_UPDATED",
-    title: "Задание обновлено",
-    message: 'Преподаватель обновил требования к заданию "Графы"',
-    time: "2025-01-22T13:10:00",
-    isRead: true,
-    link: "#/task/8",
-  },
-  {
-    id: "9",
-    type: "GRADE_PUBLISHED",
-    title: "Оценка опубликована",
-    message: 'Преподаватель выставил оценку 85/100 за "Landing Page"',
-    time: "2025-01-20T14:30:00",
-    isRead: true,
-    link: "#/task/1",
-  },
-  {
-    id: "10",
-    type: "REVIEW_RECEIVED",
-    title: "Получена рецензия",
-    message: 'Ваша работа "Сортировка" прошла peer review',
-    time: "2025-01-19T17:00:00",
-    isRead: true,
-    link: "#/reviews/received",
-  },
-];
-
-type FilterType = "ALL" | "UNREAD" | "DEADLINES" | "REVIEWS";
-
-const filterLabels: Record<FilterType, string> = {
-  ALL: "Все",
-  UNREAD: "Непрочитанные",
-  DEADLINES: "Дедлайны",
-  REVIEWS: "Рецензии",
-};
+import type { Notification, NotificationType, FilterType } from "../model/mockNotifications";
+import {
+  mockNotifications as initialNotifications,
+  filterLabels,
+} from "../model/mockNotifications";
 
 export default function InboxPage() {
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const [selectedFilter, setSelectedFilter] = useState<FilterType>("ALL");
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
-  // Filter notifications
   const filteredNotifications = useMemo(() => {
     return notifications.filter((notif) => {
       switch (selectedFilter) {
@@ -156,17 +40,14 @@ export default function InboxPage() {
     });
   }, [notifications, selectedFilter]);
 
-  // Count unread
   const unreadCount = useMemo(() => {
     return notifications.filter((n) => !n.isRead).length;
   }, [notifications]);
 
   const handleNotificationClick = useCallback((notification: Notification) => {
-    // Mark as read
     setNotifications((prev) =>
       prev.map((n) => (n.id === notification.id ? { ...n, isRead: true } : n)),
     );
-    // Navigate
     window.location.hash = notification.link.replace("#", "");
   }, []);
 
@@ -244,7 +125,6 @@ export default function InboxPage() {
                 </p>
               </div>
 
-              {/* Mark all as read button - Desktop */}
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
@@ -312,7 +192,6 @@ export default function InboxPage() {
                 )}
               </div>
 
-              {/* Mark all as read - Mobile */}
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
@@ -327,7 +206,6 @@ export default function InboxPage() {
 
         {/* Content */}
         <div className="max-w-[1400px] mx-auto px-4 tablet:px-6 desktop:px-8 py-6 desktop:py-8">
-          {/* Notifications List */}
           {filteredNotifications.length > 0 ? (
             <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden divide-y-2 divide-[#e6e8ee]">
               {filteredNotifications.map((notification) => (
@@ -340,7 +218,6 @@ export default function InboxPage() {
                   )}`}
                 >
                   <div className="flex items-start gap-3 desktop:gap-4">
-                    {/* Icon */}
                     <div
                       className={`w-10 h-10 desktop:w-12 desktop:h-12 rounded-[12px] flex items-center justify-center shrink-0 ${
                         notification.isRead ? "bg-[#f9f9f9]" : "bg-white"
@@ -349,7 +226,6 @@ export default function InboxPage() {
                       {getNotificationIcon(notification.type)}
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-3 mb-1">
                         <h3
@@ -380,7 +256,6 @@ export default function InboxPage() {
               ))}
             </div>
           ) : (
-            // Empty State
             <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] py-16 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-[#f9f9f9] rounded-full mb-4">
                 <Bell className="w-8 h-8 text-[#767692]" />
