@@ -3,132 +3,8 @@ import { useState, useMemo, useCallback } from "react";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-interface GradeEntry {
-  id: string;
-  courseId: string;
-  courseName: string;
-  taskId: string;
-  taskTitle: string;
-  status: "PUBLISHED" | "IN_REVIEW" | "PENDING" | "NOT_SUBMITTED";
-  score: number | null;
-  maxScore: number;
-  isScoreLocked: boolean; // Scores hidden until instructor publishes
-  updatedAt: string;
-}
-
-// Mock data for student gradebook
-const mockGrades: GradeEntry[] = [
-  {
-    id: "1",
-    courseId: "1",
-    courseName: "Веб-разработка",
-    taskId: "1",
-    taskTitle: "Задание 1: Landing Page",
-    status: "PUBLISHED",
-    score: 85,
-    maxScore: 100,
-    isScoreLocked: false,
-    updatedAt: "2025-01-20T14:30:00",
-  },
-  {
-    id: "2",
-    courseId: "1",
-    courseName: "Веб-разработка",
-    taskId: "2",
-    taskTitle: "Задание 2: React компоненты",
-    status: "IN_REVIEW",
-    score: null,
-    maxScore: 100,
-    isScoreLocked: true,
-    updatedAt: "2025-01-22T10:15:00",
-  },
-  {
-    id: "3",
-    courseId: "1",
-    courseName: "Веб-разработка",
-    taskId: "4",
-    taskTitle: "Задание 4: TypeScript проект",
-    status: "PUBLISHED",
-    score: 92,
-    maxScore: 100,
-    isScoreLocked: false,
-    updatedAt: "2025-01-23T16:45:00",
-  },
-  {
-    id: "4",
-    courseId: "2",
-    courseName: "UI/UX Дизайн",
-    taskId: "3",
-    taskTitle: "Задание 3: Прототипирование",
-    status: "PENDING",
-    score: null,
-    maxScore: 100,
-    isScoreLocked: true,
-    updatedAt: "2025-01-18T09:00:00",
-  },
-  {
-    id: "5",
-    courseId: "2",
-    courseName: "UI/UX Дизайн",
-    taskId: "5",
-    taskTitle: "Задание 5: Вайрфреймы",
-    status: "PUBLISHED",
-    score: 78,
-    maxScore: 100,
-    isScoreLocked: false,
-    updatedAt: "2025-01-21T11:20:00",
-  },
-  {
-    id: "6",
-    courseId: "1",
-    courseName: "Веб-разработка",
-    taskId: "6",
-    taskTitle: "Задание 6: Backend API",
-    status: "NOT_SUBMITTED",
-    score: null,
-    maxScore: 100,
-    isScoreLocked: false,
-    updatedAt: "2025-01-15T08:00:00",
-  },
-  {
-    id: "7",
-    courseId: "3",
-    courseName: "Алгоритмы и структуры данных",
-    taskId: "7",
-    taskTitle: "Задание 1: Сортировка",
-    status: "PUBLISHED",
-    score: 95,
-    maxScore: 100,
-    isScoreLocked: false,
-    updatedAt: "2025-01-19T13:00:00",
-  },
-  {
-    id: "8",
-    courseId: "3",
-    courseName: "Алгоритмы и структуры данных",
-    taskId: "8",
-    taskTitle: "Задание 2: Графы",
-    status: "PUBLISHED",
-    score: 88,
-    maxScore: 100,
-    isScoreLocked: false,
-    updatedAt: "2025-01-22T15:30:00",
-  },
-];
-
-const statusLabels: Record<string, string> = {
-  PUBLISHED: "Опубликовано",
-  IN_REVIEW: "На проверке",
-  PENDING: "Ожидание",
-  NOT_SUBMITTED: "Не сдано",
-};
-
-const statusColors: Record<string, string> = {
-  PUBLISHED: "bg-[#e8f5e9] text-[#2e7d32]",
-  IN_REVIEW: "bg-[#fff3e0] text-[#e65100]",
-  PENDING: "bg-[#f3f4f6] text-[#6b7280]",
-  NOT_SUBMITTED: "bg-[#ffebee] text-[#c62828]",
-};
+import type { GradeEntry } from "../model/mockGrades";
+import { mockGrades, statusLabels, statusColors } from "../model/mockGrades";
 
 export default function GradebookPage() {
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
@@ -136,7 +12,6 @@ export default function GradebookPage() {
   const [showCourseFilter, setShowCourseFilter] = useState(false);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
 
-  // Get unique courses for filter
   const courses = useMemo(() => {
     const uniqueCourses = Array.from(
       new Set(mockGrades.map((g) => JSON.stringify({ id: g.courseId, name: g.courseName }))),
@@ -144,7 +19,6 @@ export default function GradebookPage() {
     return uniqueCourses;
   }, []);
 
-  // Filter grades
   const filteredGrades = useMemo(() => {
     return mockGrades.filter((grade) => {
       const courseMatch = selectedCourse === "all" || grade.courseId === selectedCourse;
@@ -153,7 +27,6 @@ export default function GradebookPage() {
     });
   }, [selectedCourse, selectedStatus]);
 
-  // Calculate overall stats
   const stats = useMemo(() => {
     const publishedGrades = filteredGrades.filter(
       (g) => g.status === "PUBLISHED" && g.score !== null,
@@ -170,7 +43,6 @@ export default function GradebookPage() {
   }, [filteredGrades]);
 
   const handleRowClick = useCallback((grade: GradeEntry) => {
-    // Navigate to task details
     window.location.hash = `/task/${grade.taskId}`;
   }, []);
 
@@ -197,7 +69,6 @@ export default function GradebookPage() {
               </p>
             </div>
 
-            {/* Stats Card */}
             <div className="hidden desktop:flex items-center gap-6 bg-[#f9f9f9] rounded-[16px] px-6 py-4">
               <div className="flex items-center gap-3">
                 <TrendingUp className="w-5 h-5 text-[#3d6bc6]" />
@@ -237,7 +108,7 @@ export default function GradebookPage() {
                 <span>
                   {selectedCourse === "all"
                     ? "Все курсы"
-                    : courses.find((c) => c.id === selectedCourse)?.name}
+                    : courses.find((c: { id: string }) => c.id === selectedCourse)?.name}
                 </span>
                 <ChevronDown className="w-4 h-4 text-[#767692]" />
               </button>
@@ -257,7 +128,7 @@ export default function GradebookPage() {
                   >
                     Все курсы
                   </button>
-                  {courses.map((course) => (
+                  {courses.map((course: { id: string; name: string }) => (
                     <button
                       key={course.id}
                       onClick={() => {
@@ -327,7 +198,6 @@ export default function GradebookPage() {
               )}
             </div>
 
-            {/* Clear Filters */}
             {(selectedCourse !== "all" || selectedStatus !== "all") && (
               <button
                 onClick={() => {
@@ -345,7 +215,7 @@ export default function GradebookPage() {
 
       {/* Content */}
       <div className="max-w-[1400px] mx-auto px-4 tablet:px-6 desktop:px-8 py-6 desktop:py-8">
-        {/* Mobile Stats (shown on mobile only) */}
+        {/* Mobile Stats */}
         <div className="desktop:hidden mb-6 grid grid-cols-2 gap-4">
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="text-[13px] text-[#767692] mb-1">Средний балл</div>
@@ -412,7 +282,6 @@ export default function GradebookPage() {
                         <div className="inline-flex items-center gap-2 group/lock relative">
                           <Lock className="w-4 h-4 text-[#767692]" />
                           <span className="text-[14px] text-[#767692]">—</span>
-                          {/* Tooltip */}
                           <div className="absolute right-0 bottom-full mb-2 hidden group-hover/lock:block w-[240px] bg-[#21214f] text-white text-[13px] rounded-[8px] px-3 py-2 shadow-lg z-10">
                             Оценки будут доступны после публикации преподавателем
                             <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#21214f]"></div>
