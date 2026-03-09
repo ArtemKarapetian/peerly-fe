@@ -1,6 +1,9 @@
 import { Book, ExternalLink, Search } from "lucide-react";
 import { useState } from "react";
 
+import { useAsync } from "@/shared/lib/useAsync";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { courseRepo } from "@/entities/course";
@@ -14,10 +17,10 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 export default function AdminCoursesPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const courses = courseRepo.getAll();
+  const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
 
   // Filter courses by search
-  const filteredCourses = courses.filter(
+  const filteredCourses = (courses ?? []).filter(
     (course) =>
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.code.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -27,6 +30,19 @@ export default function AdminCoursesPage() {
     filteredCourses,
     15,
   );
+
+  if (isLoading)
+    return (
+      <AppShell title="Все курсы">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Все курсы">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
 
   return (
     <AppShell title="Все курсы">

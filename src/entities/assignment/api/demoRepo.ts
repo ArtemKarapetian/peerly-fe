@@ -23,10 +23,10 @@ const demoAssignments: DemoAssignment[] = [
 ];
 
 export const assignmentRepo = {
-  getAll: (): DemoAssignment[] => demoAssignments,
-  getByCourse: (courseId: string): DemoAssignment[] =>
-    demoAssignments.filter((a) => a.courseId === courseId),
-  archive: (assignmentId: string, archived: boolean): void => {
+  getAll: (): Promise<DemoAssignment[]> => Promise.resolve(demoAssignments),
+  getByCourse: (courseId: string): Promise<DemoAssignment[]> =>
+    Promise.resolve(demoAssignments.filter((a) => a.courseId === courseId)),
+  archive: (assignmentId: string, archived: boolean): Promise<void> => {
     const assignment = demoAssignments.find((a) => a.id === assignmentId);
     if (assignment) {
       (assignment as DemoAssignment & { archived?: boolean }).archived = archived;
@@ -37,5 +37,6 @@ export const assignmentRepo = {
         localStorage.setItem("demo_assignments_archived", JSON.stringify(archivedMap));
       }
     }
+    return Promise.resolve();
   },
 };

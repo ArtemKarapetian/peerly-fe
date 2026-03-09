@@ -35,7 +35,7 @@ export function ExtensionRequestForm({
     if (newErrors.length) return;
 
     // ВАЖНО: сохраняем твою текущую сигнатуру request(...) как есть
-    extensionRepo.request(
+    void extensionRepo.request(
       assignmentId,
       studentId,
       studentName,

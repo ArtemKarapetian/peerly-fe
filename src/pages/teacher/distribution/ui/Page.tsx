@@ -14,7 +14,10 @@ import {
 import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
@@ -59,20 +62,52 @@ interface DistributionHistory {
 }
 
 export default function TeacherDistributionPage() {
-  const courses = courseRepo.getAll();
-  const users = userRepo.getAll();
-  const submissions = workRepo.getAll();
-  const reviews = reviewRepo.getAll();
+  // Load base data (courses, users, submissions, reviews)
+  const {
+    data: baseData,
+    isLoading: baseLoading,
+    error: baseError,
+    refetch: baseRefetch,
+  } = useAsync(async () => {
+    const [courses, users, submissions, reviews] = await Promise.all([
+      courseRepo.getAll(),
+      userRepo.getAll(),
+      workRepo.getAll(),
+      reviewRepo.getAll(),
+    ]);
+    return { courses, users, submissions, reviews };
+  }, []);
 
-  const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || "");
+  const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedAssignment, setSelectedAssignment] = useState<string>("");
   const [selectedDistribution, setSelectedDistribution] = useState<DistributionRow | null>(null);
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [showAddReviewerModal, setShowAddReviewerModal] = useState(false);
   const [activeRowAction, setActiveRowAction] = useState<string | null>(null);
 
-  // Get assignments for selected course
-  const assignments = selectedCourse ? assignmentRepo.getByCourse(selectedCourse) : [];
+  // Compute effective course (default to first course once data is loaded)
+  const effectiveCourse = selectedCourse || baseData?.courses[0]?.id || "";
+
+  // Load assignments for selected course (separate useAsync with dependency)
+  const { data: assignments } = useAsync(async () => {
+    if (!effectiveCourse) return [];
+    return assignmentRepo.getByCourse(effectiveCourse);
+  }, [effectiveCourse]);
+
+  if (baseLoading)
+    return (
+      <AppShell title="Распределение рецензий">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (baseError)
+    return (
+      <AppShell title="Распределение рецензий">
+        <ErrorBanner message={baseError.message} onRetry={baseRefetch} />
+      </AppShell>
+    );
+
+  const { courses, users, submissions, reviews } = baseData!;
 
   // Generate distribution data
   const generateDistributions = (): DistributionRow[] => {
@@ -249,7 +284,7 @@ export default function TeacherDistributionPage() {
                 Курс
               </label>
               <select
-                value={selectedCourse}
+                value={effectiveCourse}
                 onChange={(e) => {
                   setSelectedCourse(e.target.value);
                   setSelectedAssignment("");
@@ -273,11 +308,11 @@ export default function TeacherDistributionPage() {
               <select
                 value={selectedAssignment}
                 onChange={(e) => setSelectedAssignment(e.target.value)}
-                disabled={!selectedCourse}
+                disabled={!effectiveCourse}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors disabled:bg-[#f5f5f5] disabled:cursor-not-allowed"
               >
                 <option value="">Выберите задание</option>
-                {assignments.map((assignment) => (
+                {(assignments || []).map((assignment) => (
                   <option key={assignment.id} value={assignment.id}>
                     {assignment.title}
                   </option>

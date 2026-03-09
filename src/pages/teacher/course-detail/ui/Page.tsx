@@ -2,7 +2,10 @@ import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
@@ -37,9 +40,30 @@ export default function TeacherCourseDetailsPage({
 }: TeacherCourseDetailsPageProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("assignments");
 
-  // Load course data
-  const course = courseRepo.getById(courseId || "c1");
-  const teacher = course ? userRepo.getById(course.teacherId) : null;
+  // Load course, teacher, and assignments data
+  const { data, isLoading, error, refetch } = useAsync(async () => {
+    const course = await courseRepo.getById(courseId || "c1");
+    const [teacher, courseAssignments] = await Promise.all([
+      course ? userRepo.getById(course.teacherId) : Promise.resolve(null),
+      course ? assignmentRepo.getByCourse(course.id) : Promise.resolve([]),
+    ]);
+    return { course, teacher, courseAssignments };
+  }, [courseId]);
+
+  if (isLoading)
+    return (
+      <AppShell title="Загрузка курса...">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Ошибка">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  const { course, teacher, courseAssignments } = data!;
 
   if (!course) {
     return (
@@ -102,10 +126,7 @@ export default function TeacherCourseDetailsPage({
               <div className="w-px h-12 bg-[#e6e8ee]"></div>
               <div>
                 <p className="text-[24px] font-medium text-[#21214f]">
-                  {
-                    assignmentRepo.getByCourse(course.id).filter((a) => a.status === "published")
-                      .length
-                  }
+                  {courseAssignments.filter((a) => a.status === "published").length}
                 </p>
                 <p className="text-[13px] text-[#767692]">Заданий</p>
               </div>

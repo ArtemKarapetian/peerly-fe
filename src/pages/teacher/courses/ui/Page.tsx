@@ -2,7 +2,10 @@ import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
 import { useState, useCallback } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { courseRepo } from "@/entities/course";
@@ -36,9 +39,9 @@ export default function TeacherCoursesPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Load demo courses
-  const courses = courseRepo.getAll();
+  const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
 
-  const courseRows: CourseRow[] = courses.map((course) => ({
+  const courseRows: CourseRow[] = (courses ?? []).map((course) => ({
     id: course.id,
     name: course.title,
     code: course.code,
@@ -68,16 +71,16 @@ export default function TeacherCoursesPage() {
     window.location.hash = `/teacher/course/${courseId}`;
   }, []);
 
-  const handleArchive = (courseId: string) => {
+  const handleArchive = async (courseId: string) => {
     if (confirm("Архивировать этот курс? Он будет скрыт из основного списка.")) {
-      courseRepo.archive(courseId, true);
+      await courseRepo.archive(courseId, true);
       window.location.reload(); // Reload to show updated state
     }
   };
 
-  const handleUnarchive = (courseId: string) => {
+  const handleUnarchive = async (courseId: string) => {
     if (confirm("Восстановить курс из архива?")) {
-      courseRepo.archive(courseId, false);
+      await courseRepo.archive(courseId, false);
       window.location.reload();
     }
   };
@@ -94,6 +97,19 @@ export default function TeacherCoursesPage() {
   };
 
   const { currentPage, totalPages, handlePageChange } = usePagination(filteredCourses, 10);
+
+  if (isLoading)
+    return (
+      <AppShell title="Управление курсами">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Управление курсами">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
 
   return (
     <AppShell title="Упрвление курсами">
@@ -220,7 +236,7 @@ export default function TeacherCoursesPage() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleArchive(course.id);
+                                void handleArchive(course.id);
                               }}
                               className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
                               title="Архивировать"
@@ -231,7 +247,7 @@ export default function TeacherCoursesPage() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleUnarchive(course.id);
+                                void handleUnarchive(course.id);
                               }}
                               className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
                               title="Восстановить"

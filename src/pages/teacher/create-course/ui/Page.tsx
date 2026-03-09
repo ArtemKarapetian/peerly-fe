@@ -17,21 +17,25 @@ export default function CreateCoursePage() {
   const [description, setDescription] = useState("");
   const [visibility, setVisibility] = useState<"public" | "private">("public");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Create new course
-    const newCourse = courseRepo.create({
-      title: name,
-      code,
-      instructorId: "teacher-1",
-      semester,
-      description,
-      archived: false,
-    });
+    try {
+      // Create new course
+      const newCourse = await courseRepo.create({
+        title: name,
+        code,
+        instructorId: "teacher-1",
+        semester,
+        description,
+        archived: false,
+      });
 
-    // Navigate to the new course
-    window.location.hash = `/teacher/course/${newCourse.id}`;
+      // Navigate to the new course
+      window.location.hash = `/teacher/course/${newCourse.id}`;
+    } catch {
+      alert("Ошибка создания курса");
+    }
   };
 
   return (
@@ -49,7 +53,12 @@ export default function CreateCoursePage() {
           Создать ��овый курс
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
+          className="space-y-6"
+        >
           <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-lg)] p-6 space-y-5">
             {/* Name */}
             <div>

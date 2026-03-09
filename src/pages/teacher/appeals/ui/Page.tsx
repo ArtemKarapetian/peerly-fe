@@ -13,7 +13,10 @@ import {
 import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { reviewRepo } from "@/entities/review";
@@ -53,10 +56,43 @@ interface Appeal {
 }
 
 export default function TeacherAppealsPage() {
-  const users = userRepo.getAll();
-  const assignments = assignmentRepo.getAll();
-  const submissions = workRepo.getAll();
-  const reviews = reviewRepo.getAll();
+  const { data, isLoading, error, refetch } = useAsync(async () => {
+    const [users, assignments, submissions, reviews] = await Promise.all([
+      userRepo.getAll(),
+      assignmentRepo.getAll(),
+      workRepo.getAll(),
+      reviewRepo.getAll(),
+    ]);
+    return { users, assignments, submissions, reviews };
+  }, []);
+
+  if (isLoading)
+    return (
+      <AppShell title="Апелляции">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Апелляции">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  return <AppealsContent data={data!} />;
+}
+
+function AppealsContent({
+  data,
+}: {
+  data: {
+    users: Awaited<ReturnType<typeof userRepo.getAll>>;
+    assignments: Awaited<ReturnType<typeof assignmentRepo.getAll>>;
+    submissions: Awaited<ReturnType<typeof workRepo.getAll>>;
+    reviews: Awaited<ReturnType<typeof reviewRepo.getAll>>;
+  };
+}) {
+  const { users, assignments, submissions, reviews } = data;
 
   // Generate demo appeals
   const generateAppeals = (): Appeal[] => {
@@ -135,7 +171,7 @@ export default function TeacherAppealsPage() {
     });
   };
 
-  const [appeals, setAppeals] = useState<Appeal[]>(generateAppeals());
+  const [appeals, setAppeals] = useState<Appeal[]>(() => generateAppeals());
   const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null);
   const [filterStatus, setFilterStatus] = useState<AppealStatus | "all">("all");
 

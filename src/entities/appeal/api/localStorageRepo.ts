@@ -20,10 +20,10 @@ function write(items: Appeal[]) {
 }
 
 export const appealRepo = {
-  getByStudent(studentId: string): Appeal[] {
-    return read().filter((a) => a.studentId === studentId);
+  getByStudent(studentId: string): Promise<Appeal[]> {
+    return Promise.resolve(read().filter((a) => a.studentId === studentId));
   },
-  create(input: CreateAppealInput): Appeal {
+  create(input: CreateAppealInput): Promise<Appeal> {
     const newAppeal: Appeal = {
       ...input,
       id: `appeal-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
@@ -35,6 +35,6 @@ export const appealRepo = {
     const items = read();
     items.push(newAppeal);
     write(items);
-    return newAppeal;
+    return Promise.resolve(newAppeal);
   },
 };

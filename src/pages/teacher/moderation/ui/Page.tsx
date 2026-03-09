@@ -13,7 +13,10 @@ import {
 import { JSX, useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { reviewRepo } from "@/entities/review";
@@ -51,10 +54,43 @@ interface FlaggedReview {
 }
 
 export default function TeacherModerationPage() {
-  const users = userRepo.getAll();
-  const assignments = assignmentRepo.getAll();
-  const reviews = reviewRepo.getAll();
-  const submissions = workRepo.getAll();
+  const { data, isLoading, error, refetch } = useAsync(async () => {
+    const [users, assignments, reviews, submissions] = await Promise.all([
+      userRepo.getAll(),
+      assignmentRepo.getAll(),
+      reviewRepo.getAll(),
+      workRepo.getAll(),
+    ]);
+    return { users, assignments, reviews, submissions };
+  }, []);
+
+  if (isLoading)
+    return (
+      <AppShell title="Модерация рецензий">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Модерация рецензий">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  return <ModerationContent data={data!} />;
+}
+
+function ModerationContent({
+  data,
+}: {
+  data: {
+    users: Awaited<ReturnType<typeof userRepo.getAll>>;
+    assignments: Awaited<ReturnType<typeof assignmentRepo.getAll>>;
+    reviews: Awaited<ReturnType<typeof reviewRepo.getAll>>;
+    submissions: Awaited<ReturnType<typeof workRepo.getAll>>;
+  };
+}) {
+  const { users, assignments, reviews, submissions } = data;
 
   // Generate demo flagged reviews
   const generateFlaggedReviews = (): FlaggedReview[] => {
@@ -107,7 +143,9 @@ export default function TeacherModerationPage() {
     });
   };
 
-  const [flaggedReviews, setFlaggedReviews] = useState<FlaggedReview[]>(generateFlaggedReviews());
+  const [flaggedReviews, setFlaggedReviews] = useState<FlaggedReview[]>(() =>
+    generateFlaggedReviews(),
+  );
   const [selectedReviews, setSelectedReviews] = useState<Set<string>>(new Set());
   const [expandedReview, setExpandedReview] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<FlagType | "all">("all");

@@ -1,8 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { Extension, ExtensionStatus, extensionRepo } from "@/entities/extension";
 import { MOCK_STUDENTS } from "@/entities/user/model/student.ts";
@@ -28,20 +31,19 @@ interface TeacherAssignmentExtensionsPageProps {
 export function TeacherAssignmentExtensionsPage({
   assignmentId,
 }: TeacherAssignmentExtensionsPageProps) {
-  const [extensions, setExtensions] = useState<Extension[]>(() =>
-    extensionRepo.getByAssignment(assignmentId),
-  );
+  const {
+    data: extensions,
+    isLoading,
+    error,
+    refetch,
+  } = useAsync(() => extensionRepo.getByAssignment(assignmentId), [assignmentId]);
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingExtension, setEditingExtension] = useState<Extension | null>(null);
   const [filterStatus, setFilterStatus] = useState<ExtensionStatus | "all">("all");
 
-  const loadExtensions = useCallback(() => {
-    const data = extensionRepo.getByAssignment(assignmentId);
-    setExtensions(data);
-  }, [assignmentId]);
-
   const { approve, deny, remove } = useExtensionDecisions({
-    onChanged: loadExtensions,
+    onChanged: refetch,
     teacherId: "teacher1",
   });
 
@@ -53,11 +55,27 @@ export function TeacherAssignmentExtensionsPage({
   const handleModalClose = () => {
     setShowAddModal(false);
     setEditingExtension(null);
-    loadExtensions();
+    refetch();
   };
 
+  if (isLoading)
+    return (
+      <AppShell title="Продления дедлайнов">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Продления дедлайнов">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  const resolvedExtensions = extensions!;
   const filteredExtensions =
-    filterStatus === "all" ? extensions : extensions.filter((ext) => ext.status === filterStatus);
+    filterStatus === "all"
+      ? resolvedExtensions
+      : resolvedExtensions.filter((ext) => ext.status === filterStatus);
 
   return (
     <AppShell title="Продления дедлайнов">
@@ -79,13 +97,13 @@ export function TeacherAssignmentExtensionsPage({
           <ExtensionsTable
             extensions={filteredExtensions}
             filterStatus={filterStatus}
-            onApprove={approve}
-            onDeny={deny}
+            onApprove={(id) => void approve(id)}
+            onDeny={(id) => void deny(id)}
             onEdit={handleEdit}
-            onDelete={remove}
+            onDelete={(id) => void remove(id)}
           />
 
-          <ExtensionsSummary extensions={extensions} />
+          <ExtensionsSummary extensions={resolvedExtensions} />
         </div>
       </div>
 

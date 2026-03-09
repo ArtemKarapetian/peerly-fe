@@ -1,8 +1,9 @@
 import { Clock, AlertCircle } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 
@@ -28,8 +29,8 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
   const { user } = useAuth();
   const [taskStatus, setTaskStatus] = useState<TaskStatus>("NOT_STARTED");
 
-  // Use useMemo instead of useState + useEffect to avoid cascading renders
-  const extension = useMemo(
+  // Load extension data asynchronously
+  const { data: extension } = useAsync(
     () => extensionRepo.getForStudent(taskId || "1", user?.id || "1"),
     [taskId, user?.id],
   );

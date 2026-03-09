@@ -1,5 +1,7 @@
 import { Upload, X, FileText } from "lucide-react";
 
+import { useAsync } from "@/shared/lib/useAsync";
+
 import { courseRepo } from "@/entities/course";
 
 import type { AssignmentFormData } from "../model/types";
@@ -20,7 +22,7 @@ interface StepBasicsProps {
 }
 
 export function StepBasics({ data, onUpdate }: StepBasicsProps) {
-  const courses = courseRepo.getAll();
+  const { data: courses } = useAsync(() => courseRepo.getAll(), []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -70,7 +72,7 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
           className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
         >
           <option value="">Выберите курс...</option>
-          {courses.map((course) => (
+          {(courses ?? []).map((course) => (
             <option key={course.id} value={course.id}>
               {course.name} ({course.code})
             </option>

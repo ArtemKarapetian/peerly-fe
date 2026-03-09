@@ -1,6 +1,8 @@
 import { Plus, Calendar, Users, FileText } from "lucide-react";
 import { useCallback } from "react";
 
+import { useAsync } from "@/shared/lib/useAsync";
+
 import { assignmentRepo } from "@/entities/assignment";
 
 interface TeacherCourseAssignmentsProps {
@@ -8,7 +10,10 @@ interface TeacherCourseAssignmentsProps {
 }
 
 export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsProps) {
-  const assignments = assignmentRepo.getByCourse(courseId);
+  const { data: assignments, isLoading } = useAsync(
+    () => assignmentRepo.getByCourse(courseId),
+    [courseId],
+  );
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -50,11 +55,15 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
     }
   };
 
+  if (isLoading) {
+    return <div className="text-center py-12 text-[#767692]">Загрузка...</div>;
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <p className="text-[15px] text-[#767692]">
-          Всего заданий: <strong className="text-[#21214f]">{assignments.length}</strong>
+          Всего заданий: <strong className="text-[#21214f]">{(assignments ?? []).length}</strong>
         </p>
         <button
           onClick={handleCreateAssignment}
@@ -66,11 +75,11 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
       </div>
 
       <div className="space-y-0">
-        {assignments.map((assignment, index) => (
+        {(assignments ?? []).map((assignment, index) => (
           <button
             key={assignment.id}
             className={`w-full text-left p-4 hover:bg-white hover:shadow-sm hover:rounded-[12px] transition-all cursor-pointer group ${
-              index !== assignments.length - 1 ? "border-b border-[#e6e8ee]" : ""
+              index !== (assignments ?? []).length - 1 ? "border-b border-[#e6e8ee]" : ""
             }`}
             onClick={() => handleAssignmentClick(assignment.id)}
             onKeyDown={(e) => handleKeyDown(e, assignment.id)}
@@ -94,7 +103,7 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
           </button>
         ))}
 
-        {assignments.length === 0 && (
+        {(assignments ?? []).length === 0 && (
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
             <p className="text-[15px] text-[#767692] mb-4">Заданий пока нет</p>

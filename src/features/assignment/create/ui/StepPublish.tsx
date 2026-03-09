@@ -1,5 +1,7 @@
 import { Check, Calendar, Users, Layers, Shield, Save, Send } from "lucide-react";
 
+import { useAsync } from "@/shared/lib/useAsync";
+
 import { courseRepo } from "@/entities/course";
 
 import type { AssignmentFormData } from "../model/types";
@@ -17,8 +19,8 @@ interface StepPublishProps {
 }
 
 export function StepPublish({ data, onPublish }: StepPublishProps) {
-  const courses = courseRepo.getAll();
-  const course = courses.find((c) => c.id === data.courseId);
+  const { data: courses } = useAsync(() => courseRepo.getAll(), []);
+  const course = (courses ?? []).find((c) => c.id === data.courseId);
 
   const formatDate = (date: Date | null) => {
     if (!date) return "Не указано";
