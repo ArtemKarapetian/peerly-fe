@@ -67,7 +67,7 @@ export function AddExtensionModal({
     const studentName = MOCK_STUDENTS.find((s) => s.id === selectedStudent)?.name || "";
 
     if (isEditing && existingExtension) {
-      extensionRepo.update(existingExtension.id, {
+      void extensionRepo.update(existingExtension.id, {
         type,
         submissionDeadlineOverride: type !== "review" ? submissionDeadline : undefined,
         reviewDeadlineOverride: type !== "submission" ? reviewDeadline : undefined,
@@ -76,7 +76,7 @@ export function AddExtensionModal({
       });
       toast.success("Продление обновлено");
     } else {
-      extensionRepo.create({
+      void extensionRepo.create({
         assignmentId,
         studentId: selectedStudent,
         studentName,

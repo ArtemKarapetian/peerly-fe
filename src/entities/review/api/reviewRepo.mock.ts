@@ -77,6 +77,7 @@ export const useReviewStore = () => {
     // Update review status
     updateReviewStatus: (id: string, status: "not_started" | "draft" | "submitted") => {
       reviews = reviews.map((r) => (r.id === id ? { ...r, status } : r));
+      return Promise.resolve();
     },
 
     // Save draft
@@ -95,6 +96,7 @@ export const useReviewStore = () => {
             }
           : r,
       );
+      return Promise.resolve();
     },
 
     // Submit review
@@ -114,6 +116,7 @@ export const useReviewStore = () => {
             }
           : r,
       );
+      return Promise.resolve();
     },
 
     // Get reviews by task

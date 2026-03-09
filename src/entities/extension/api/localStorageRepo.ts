@@ -53,7 +53,6 @@ const DEMO_EXTENSIONS: Extension[] = [
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
 
 function makeId(): string {
-  // В современных браузерах это надёжнее, чем Date.now()
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return `ext_${crypto.randomUUID()}`;
   }
@@ -68,7 +67,6 @@ function readExtensions(storage: StorageLike, key: string, demo: Extension[]): E
   try {
     const raw = storage.getItem(key);
 
-    // Первый запуск — засеиваем DEMO
     if (!raw) {
       const seeded = cloneDemo(demo);
       storage.setItem(key, JSON.stringify(seeded));
@@ -78,10 +76,8 @@ function readExtensions(storage: StorageLike, key: string, demo: Extension[]): E
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) throw new Error("Invalid stored value");
 
-    // Отдаём копии объектов, чтобы случайно не мутировать “живую” ссылку
     return (parsed as Extension[]).map((e) => ({ ...e }));
   } catch {
-    // Если localStorage битый/недоступен/JSON кривой — возвращаем DEMO
     const fallback = cloneDemo(demo);
     try {
       storage.setItem(key, JSON.stringify(fallback));
@@ -106,10 +102,6 @@ export const extensionRepo = (() => {
   const getAll = (): Extension[] => readExtensions(storage, key, demo);
   const setAll = (next: Extension[]) => writeExtensions(storage, key, next);
 
-  /**
-   * Создать extension, при этом гарантируем уникальность пары:
-   * (assignmentId + studentId). Старый (если был) удаляем.
-   */
   const upsertForStudentAssignment = (data: Omit<Extension, "id">): Extension => {
     const list = getAll();
 
@@ -132,7 +124,6 @@ export const extensionRepo = (() => {
     const prev = list[idx];
     const next = patch(prev);
 
-    // Запрещаем менять id через updates
     list[idx] = { ...next, id: prev.id };
 
     setAll(list);
@@ -140,34 +131,36 @@ export const extensionRepo = (() => {
   };
 
   return {
-    // базовые
-    getAll,
-
-    getByAssignment(assignmentId: string): Extension[] {
-      return getAll().filter((e) => e.assignmentId === assignmentId);
+    getAll(): Promise<Extension[]> {
+      return Promise.resolve(getAll());
     },
 
-    getForStudent(assignmentId: string, studentId: string): Extension | undefined {
-      return getAll().find((e) => e.assignmentId === assignmentId && e.studentId === studentId);
+    getByAssignment(assignmentId: string): Promise<Extension[]> {
+      return Promise.resolve(getAll().filter((e) => e.assignmentId === assignmentId));
     },
 
-    create(extension: Omit<Extension, "id">): Extension {
-      return upsertForStudentAssignment(extension);
+    getForStudent(assignmentId: string, studentId: string): Promise<Extension | undefined> {
+      return Promise.resolve(
+        getAll().find((e) => e.assignmentId === assignmentId && e.studentId === studentId),
+      );
     },
 
-    update(id: string, updates: Partial<Extension>): Extension | null {
-      return updateById(id, (prev) => ({ ...prev, ...updates }));
+    create(extension: Omit<Extension, "id">): Promise<Extension> {
+      return Promise.resolve(upsertForStudentAssignment(extension));
     },
 
-    delete(id: string): boolean {
+    update(id: string, updates: Partial<Extension>): Promise<Extension | null> {
+      return Promise.resolve(updateById(id, (prev) => ({ ...prev, ...updates })));
+    },
+
+    delete(id: string): Promise<boolean> {
       const list = getAll();
       const next = list.filter((e) => e.id !== id);
-      if (next.length === list.length) return false;
+      if (next.length === list.length) return Promise.resolve(false);
       setAll(next);
-      return true;
+      return Promise.resolve(true);
     },
 
-    // доменные методы
     request(
       assignmentId: string,
       studentId: string,
@@ -176,37 +169,43 @@ export const extensionRepo = (() => {
       submissionDeadlineOverride?: string,
       reviewDeadlineOverride?: string,
       reason?: string,
-    ): Extension {
-      return upsertForStudentAssignment({
-        assignmentId,
-        studentId,
-        studentName,
-        type,
-        submissionDeadlineOverride,
-        reviewDeadlineOverride,
-        reason: reason?.trim() || "Запрос студента",
-        status: "requested",
-        requestedAt: nowIso(),
-        notifyStudent: false,
-      });
+    ): Promise<Extension> {
+      return Promise.resolve(
+        upsertForStudentAssignment({
+          assignmentId,
+          studentId,
+          studentName,
+          type,
+          submissionDeadlineOverride,
+          reviewDeadlineOverride,
+          reason: reason?.trim() || "Запрос студента",
+          status: "requested",
+          requestedAt: nowIso(),
+          notifyStudent: false,
+        }),
+      );
     },
 
-    approve(id: string, teacherId: string): Extension | null {
-      return updateById(id, (prev) => ({
-        ...prev,
-        status: "approved",
-        processedAt: nowIso(),
-        processedBy: teacherId,
-      }));
+    approve(id: string, teacherId: string): Promise<Extension | null> {
+      return Promise.resolve(
+        updateById(id, (prev) => ({
+          ...prev,
+          status: "approved",
+          processedAt: nowIso(),
+          processedBy: teacherId,
+        })),
+      );
     },
 
-    deny(id: string, teacherId: string): Extension | null {
-      return updateById(id, (prev) => ({
-        ...prev,
-        status: "denied",
-        processedAt: nowIso(),
-        processedBy: teacherId,
-      }));
+    deny(id: string, teacherId: string): Promise<Extension | null> {
+      return Promise.resolve(
+        updateById(id, (prev) => ({
+          ...prev,
+          status: "denied",
+          processedAt: nowIso(),
+          processedBy: teacherId,
+        })),
+      );
     },
   };
 })();

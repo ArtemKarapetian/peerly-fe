@@ -2,7 +2,10 @@ import { AlertCircle, CheckCircle, Clock } from "lucide-react";
 import React, { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { Appeal, AppealCard, AppealStatus, appealRepo, getStatusLabel } from "@/entities/appeal";
 import { useAuth } from "@/entities/user";
@@ -50,12 +53,30 @@ export default function AppealsListPage() {
   const { user } = useAuth();
   const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null);
 
-  const appeals = appealRepo.getByStudent(user?.id || "student-1");
+  const {
+    data: appeals,
+    isLoading,
+    error,
+    refetch,
+  } = useAsync(() => appealRepo.getByStudent(user?.id || "student-1"), [user?.id]);
+
+  if (isLoading)
+    return (
+      <AppShell title="Мои апелляции">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Мои апелляции">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
 
   const appealsByStatus: Record<AppealStatus, Appeal[]> = {
-    new: appeals.filter((a) => a.status === "new"),
-    in_review: appeals.filter((a) => a.status === "in_review"),
-    resolved: appeals.filter((a) => a.status === "resolved"),
+    new: (appeals ?? []).filter((a) => a.status === "new"),
+    in_review: (appeals ?? []).filter((a) => a.status === "in_review"),
+    resolved: (appeals ?? []).filter((a) => a.status === "resolved"),
   };
 
   return (
@@ -75,7 +96,7 @@ export default function AppealsListPage() {
           Список всех ваших запросов на пересмотр оценок
         </p>
 
-        {appeals.length === 0 ? (
+        {(appeals ?? []).length === 0 ? (
           <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
             <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-[18px] font-medium text-foreground mb-2">У вас нет апелляций</h3>

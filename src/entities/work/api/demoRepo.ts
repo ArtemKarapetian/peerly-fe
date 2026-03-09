@@ -13,5 +13,5 @@ const demoSubmissions: DemoSubmission[] = [
 ];
 
 export const workRepo = {
-  getAll: (): DemoSubmission[] => demoSubmissions,
+  getAll: (): Promise<DemoSubmission[]> => Promise.resolve(demoSubmissions),
 };

@@ -12,7 +12,10 @@ import {
 import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { courseRepo } from "@/entities/course";
 
@@ -52,7 +55,9 @@ interface StoredAnnouncement {
 }
 
 // Load announcements from localStorage or use defaults
-const loadAnnouncements = (courses: ReturnType<typeof courseRepo.getAll>): Announcement[] => {
+const loadAnnouncements = (
+  courses: Awaited<ReturnType<typeof courseRepo.getAll>>,
+): Announcement[] => {
   const stored = localStorage.getItem("teacher_announcements");
   if (stored) {
     const parsed: StoredAnnouncement[] = JSON.parse(stored);
@@ -94,7 +99,33 @@ const loadAnnouncements = (courses: ReturnType<typeof courseRepo.getAll>): Annou
 };
 
 export default function TeacherAnnouncementsPage() {
-  const courses = courseRepo.getAll();
+  const { data, isLoading, error, refetch } = useAsync(async () => {
+    const courses = await courseRepo.getAll();
+    return { courses };
+  }, []);
+
+  if (isLoading)
+    return (
+      <AppShell title="Объявления">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Объявления">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  return <AnnouncementsContent data={data!} />;
+}
+
+function AnnouncementsContent({
+  data,
+}: {
+  data: { courses: Awaited<ReturnType<typeof courseRepo.getAll>> };
+}) {
+  const { courses } = data;
 
   const [announcements, setAnnouncements] = useState<Announcement[]>(() =>
     loadAnnouncements(courses),

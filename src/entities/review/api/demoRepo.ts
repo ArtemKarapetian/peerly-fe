@@ -13,5 +13,5 @@ const demoReviews: DemoReview[] = [
 ];
 
 export const reviewRepo = {
-  getAll: (): DemoReview[] => demoReviews,
+  getAll: (): Promise<DemoReview[]> => Promise.resolve(demoReviews),
 };

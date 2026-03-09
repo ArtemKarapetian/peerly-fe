@@ -1,6 +1,9 @@
 import { Users, Search, X, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
 
+import { useAsync } from "@/shared/lib/useAsync";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { organizationRepo } from "@/entities/organization";
@@ -40,7 +43,9 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [, setSelectedUser] = useState<UserWithStatus | null>(null);
 
-  const usersWithStatus: UserWithStatus[] = userRepo.getAll().map((user) => ({
+  const { data: users, isLoading, error, refetch } = useAsync(() => userRepo.getAll(), []);
+
+  const usersWithStatus: UserWithStatus[] = (users ?? []).map((user) => ({
     ...user,
     status: "active" as const,
     lastLogin: new Date(),
@@ -56,6 +61,19 @@ export default function AdminUsersPage() {
     filteredUsers,
     10,
   );
+
+  if (isLoading)
+    return (
+      <AppShell title="Пользователи">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Пользователи">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {

@@ -28,6 +28,7 @@ const demoUsers: DemoUser[] = [
 ];
 
 export const userRepo = {
-  getAll: (): DemoUser[] => demoUsers,
-  getById: (id: string): DemoUser | undefined => demoUsers.find((u) => u.id === id),
+  getAll: (): Promise<DemoUser[]> => Promise.resolve(demoUsers),
+  getById: (id: string): Promise<DemoUser | undefined> =>
+    Promise.resolve(demoUsers.find((u) => u.id === id)),
 };

@@ -54,7 +54,7 @@ export function CreateAppealForm({
     setIsSubmitting(true);
     await new Promise((r) => setTimeout(r, 500));
 
-    appealRepo.create({
+    void appealRepo.create({
       studentId,
       courseId,
       courseName: context.courseName,

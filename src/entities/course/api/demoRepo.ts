@@ -37,9 +37,10 @@ const demoCourses: DemoCourse[] = [
 ];
 
 export const courseRepo = {
-  getAll: (): DemoCourse[] => demoCourses,
-  getById: (id: string): DemoCourse | undefined => demoCourses.find((c) => c.id === id),
-  archive: (courseId: string, archived: boolean): void => {
+  getAll: (): Promise<DemoCourse[]> => Promise.resolve(demoCourses),
+  getById: (id: string): Promise<DemoCourse | undefined> =>
+    Promise.resolve(demoCourses.find((c) => c.id === id)),
+  archive: (courseId: string, archived: boolean): Promise<void> => {
     const course = demoCourses.find((c) => c.id === courseId);
     if (course) {
       course.status = archived ? "archived" : "active";
@@ -50,8 +51,9 @@ export const courseRepo = {
         localStorage.setItem("demo_courses_archived", JSON.stringify(archivedMap));
       }
     }
+    return Promise.resolve();
   },
-  create: (input: CreateCourseInput): DemoCourse => {
+  create: (input: CreateCourseInput): Promise<DemoCourse> => {
     const newCourse: DemoCourse = {
       id: `c${Date.now()}`,
       name: input.title,
@@ -65,6 +67,6 @@ export const courseRepo = {
       createdAt: new Date(),
     };
     demoCourses.push(newCourse);
-    return newCourse;
+    return Promise.resolve(newCourse);
   },
 };

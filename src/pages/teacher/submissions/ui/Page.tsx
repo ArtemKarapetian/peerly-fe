@@ -20,7 +20,10 @@ import {
 import { useState, useEffect } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { userRepo } from "@/entities/user";
@@ -90,9 +93,41 @@ interface Submission {
 }
 
 export default function TeacherSubmissionsPage() {
-  const users = userRepo.getAll();
-  const assignments = assignmentRepo.getAll();
-  const demoSubmissions = workRepo.getAll();
+  const { data, isLoading, error, refetch } = useAsync(async () => {
+    const [users, assignments, demoSubmissions] = await Promise.all([
+      userRepo.getAll(),
+      assignmentRepo.getAll(),
+      workRepo.getAll(),
+    ]);
+    return { users, assignments, demoSubmissions };
+  }, []);
+
+  if (isLoading)
+    return (
+      <AppShell title="Просмотр сабмишенов">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Просмотр сабмишенов">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  return <SubmissionsContent data={data!} />;
+}
+
+function SubmissionsContent({
+  data,
+}: {
+  data: {
+    users: Awaited<ReturnType<typeof userRepo.getAll>>;
+    assignments: Awaited<ReturnType<typeof assignmentRepo.getAll>>;
+    demoSubmissions: Awaited<ReturnType<typeof workRepo.getAll>>;
+  };
+}) {
+  const { users, assignments, demoSubmissions } = data;
 
   // Get pre-filter from URL hash params
   const getPreFilterAssignmentId = (): string => {
@@ -241,7 +276,7 @@ export default function TeacherSubmissionsPage() {
     });
   };
 
-  const [submissions, setSubmissions] = useState<Submission[]>(generateSubmissions());
+  const [submissions, setSubmissions] = useState<Submission[]>(() => generateSubmissions());
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
 
   // Filters

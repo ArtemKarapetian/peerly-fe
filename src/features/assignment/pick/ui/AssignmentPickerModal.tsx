@@ -1,6 +1,8 @@
 import { X, Search, CheckCircle, FileText } from "lucide-react";
 import { useState } from "react";
 
+import { useAsync } from "@/shared/lib/useAsync";
+
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
 
@@ -30,8 +32,12 @@ export function AssignmentPickerModal({
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
 
   // Get courses and assignments
-  const courses = courseRepo.getAll();
-  const assignments = assignmentRepo.getAll();
+  const { data: fetchedData } = useAsync(
+    () => Promise.all([courseRepo.getAll(), assignmentRepo.getAll()]),
+    [],
+  );
+  const courses = fetchedData?.[0] ?? [];
+  const assignments = fetchedData?.[1] ?? [];
 
   // Filter assignments
   const filteredAssignments = assignments.filter((assignment) => {

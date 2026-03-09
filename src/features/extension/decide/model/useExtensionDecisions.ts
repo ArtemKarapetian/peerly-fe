@@ -8,22 +8,22 @@ type Args = {
 };
 
 export function useExtensionDecisions({ onChanged, teacherId }: Args) {
-  const approve = (id: string) => {
-    extensionRepo.approve(id, teacherId);
+  const approve = async (id: string) => {
+    await extensionRepo.approve(id, teacherId);
     onChanged();
     toast.success("Продление одобрено");
   };
 
-  const deny = (id: string) => {
+  const deny = async (id: string) => {
     if (!confirm("Вы уверены, что хотите отклонить запрос на продление?")) return;
-    extensionRepo.deny(id, teacherId);
+    await extensionRepo.deny(id, teacherId);
     onChanged();
     toast.info("Запрос отклонён");
   };
 
-  const remove = (id: string) => {
+  const remove = async (id: string) => {
     if (!confirm("Вы уверены, что хотите удалить это продление?")) return;
-    extensionRepo.delete(id);
+    await extensionRepo.delete(id);
     onChanged();
     toast.success("Продление удалено");
   };

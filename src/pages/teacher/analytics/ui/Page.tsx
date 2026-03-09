@@ -25,7 +25,10 @@ import {
 } from "recharts";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
@@ -53,18 +56,42 @@ interface GradebookEntry {
 }
 
 export default function TeacherAnalyticsPage() {
-  const courses = courseRepo.getAll();
-  const assignments = assignmentRepo.getAll();
-  const submissions = workRepo.getAll();
-  const reviews = reviewRepo.getAll();
-  const users = userRepo.getAll().filter((u) => u.role === "Student");
+  const { data, isLoading, error, refetch } = useAsync(async () => {
+    const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
+      courseRepo.getAll(),
+      assignmentRepo.getAll(),
+      workRepo.getAll(),
+      reviewRepo.getAll(),
+      userRepo.getAll(),
+    ]);
+    const users = allUsers.filter((u) => u.role === "Student");
+    return { courses, assignments, submissions, reviews, users };
+  }, []);
 
-  const [selectedCourse, setSelectedCourse] = useState<string>(courses[0]?.id || "");
+  const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedAssignment, setSelectedAssignment] = useState<string>("all");
+
+  if (isLoading)
+    return (
+      <AppShell title="Отчёты и аналитика">
+        <PageSkeleton />
+      </AppShell>
+    );
+  if (error)
+    return (
+      <AppShell title="Отчёты и аналитика">
+        <ErrorBanner message={error.message} onRetry={refetch} />
+      </AppShell>
+    );
+
+  const { courses, assignments, submissions, reviews, users } = data!;
+
+  // Set default selected course if not set yet
+  const effectiveCourse = selectedCourse || courses[0]?.id || "";
 
   // Generate analytics data
   const courseAssignments = assignments.filter((a) =>
-    courses.find((c) => c.id === selectedCourse)?.assignmentIds?.includes(a.id),
+    courses.find((c) => c.id === effectiveCourse)?.assignmentIds?.includes(a.id),
   );
 
   const assignmentAnalytics = courseAssignments.map((assignment) => {
@@ -210,7 +237,7 @@ export default function TeacherAnalyticsPage() {
 
   // Export functions
   const handleExportCSV = () => {
-    const course = courses.find((c) => c.id === selectedCourse);
+    const course = courses.find((c) => c.id === effectiveCourse);
 
     // Build CSV content
     const headers = ["Студент", ...courseAssignments.map((a) => a.title), "Итоговая оценка"];
@@ -265,7 +292,7 @@ export default function TeacherAnalyticsPage() {
                 Курс
               </label>
               <select
-                value={selectedCourse}
+                value={effectiveCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
