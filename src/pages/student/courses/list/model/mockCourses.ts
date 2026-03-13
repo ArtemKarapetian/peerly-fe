@@ -4,6 +4,10 @@ export interface StudentCourse {
   teacher: string;
   coverColor: string;
   status?: "active" | "completed";
+  semester?: string;
+  deadline?: string; // ISO date string for nearest deadline
+  progress?: number; // 0-100
+  newAssignments?: number;
 }
 
 export const mockCourses: StudentCourse[] = [
@@ -13,6 +17,10 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Иванов И.И.",
     coverColor: "#b0e9fb",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-03-18",
+    progress: 60,
+    newAssignments: 2,
   },
   {
     id: "3",
@@ -20,6 +28,10 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Петров П.П.",
     coverColor: "#b7bdff",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-03-25",
+    progress: 35,
+    newAssignments: 1,
   },
   {
     id: "4",
@@ -27,6 +39,8 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Сидорова С.С.",
     coverColor: "#9cf38d",
     status: "completed",
+    semester: "Осень 2024",
+    progress: 100,
   },
   {
     id: "5",
@@ -34,6 +48,9 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Козлов К.К.",
     coverColor: "#ffb8b8",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-03-16",
+    progress: 20,
   },
   {
     id: "6",
@@ -41,6 +58,10 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Алексеев А.А.",
     coverColor: "#ffd4a3",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-04-01",
+    progress: 75,
+    newAssignments: 3,
   },
   {
     id: "7",
@@ -48,6 +69,8 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Михайлов М.М.",
     coverColor: "#d4b8ff",
     status: "completed",
+    semester: "Осень 2024",
+    progress: 100,
   },
   {
     id: "8",
@@ -55,6 +78,10 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Николаева Н.Н.",
     coverColor: "#b8ffd4",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-03-30",
+    progress: 45,
+    newAssignments: 1,
   },
   {
     id: "9",
@@ -62,6 +89,8 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Сергеев С.С.",
     coverColor: "#ffc9e8",
     status: "active",
+    semester: "Весна 2025",
+    progress: 10,
   },
   {
     id: "10",
@@ -69,6 +98,8 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Васильева В.В.",
     coverColor: "#c9e8ff",
     status: "completed",
+    semester: "Осень 2024",
+    progress: 100,
   },
   {
     id: "11",
@@ -76,6 +107,9 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Григорьев Г.Г.",
     coverColor: "#e8c9ff",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-04-10",
+    progress: 55,
   },
   {
     id: "12",
@@ -83,6 +117,10 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Дмитриев Д.Д.",
     coverColor: "#b7bdff",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-03-22",
+    progress: 30,
+    newAssignments: 2,
   },
   {
     id: "13",
@@ -90,6 +128,8 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Федорова Ф.Ф.",
     coverColor: "#9cf38d",
     status: "completed",
+    semester: "Осень 2024",
+    progress: 100,
   },
   {
     id: "14",
@@ -97,6 +137,10 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Егоров Е.Е.",
     coverColor: "#ffb8b8",
     status: "active",
+    semester: "Весна 2025",
+    deadline: "2026-03-19",
+    progress: 50,
+    newAssignments: 1,
   },
   {
     id: "15",
@@ -104,5 +148,7 @@ export const mockCourses: StudentCourse[] = [
     teacher: "Романова Р.Р.",
     coverColor: "#ffd4a3",
     status: "active",
+    semester: "Весна 2025",
+    progress: 15,
   },
 ];

@@ -37,8 +37,11 @@ export function CourseFilterBar<T extends FilterableCourse>({
 
   return (
     <>
-      <div className="mb-6 space-y-4">
-        <CourseSearch value={searchQuery} onChange={setSearchQuery} />
+      {/* Toolbar: search left, segmented filter right — one row on desktop */}
+      <div className="mb-4 flex flex-col gap-2.5 tablet:flex-row tablet:items-center tablet:gap-4">
+        <div className="flex-1">
+          <CourseSearch value={searchQuery} onChange={setSearchQuery} />
+        </div>
         <CourseFilters activeFilter={activeFilter} onFilterChange={setActiveFilter} />
       </div>
       {children(filteredCourses)}
