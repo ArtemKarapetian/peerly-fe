@@ -2,6 +2,7 @@ import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-re
 import React from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -68,7 +69,13 @@ export default function TeacherAssignmentDetailsPage({
 
   return (
     <AppShell title={assignment.title}>
-      <Breadcrumbs items={[CRUMBS.teacherAssignments, { label: assignment.title }]} />
+      <Breadcrumbs
+        items={[
+          CRUMBS.teacherCourses,
+          { label: assignment.courseName, href: ROUTES.teacherCourse(assignment.courseCode) },
+          { label: assignment.title },
+        ]}
+      />
 
       {/* Header */}
       <div className="mt-6 bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">

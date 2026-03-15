@@ -1,4 +1,4 @@
-import { Shield, Database, AlertTriangle, ArrowRight, CheckCircle } from "lucide-react";
+import { Shield, Database, AlertTriangle, ArrowRight } from "lucide-react";
 import { useCallback } from "react";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -24,6 +24,8 @@ export default function AdminSettingsPage() {
       href: "/admin/flags",
       bgColor: "bg-[#e9f5ff]",
       iconColor: "text-[#5b8def]",
+      statusLabel: "Синхронизированы",
+      statusOk: true,
     },
     {
       id: "limits",
@@ -33,6 +35,8 @@ export default function AdminSettingsPage() {
       href: "/admin/limits",
       bgColor: "bg-[#fff4e5]",
       iconColor: "text-[#ff9800]",
+      statusLabel: "Соблюдаются",
+      statusOk: true,
     },
     {
       id: "retention",
@@ -42,6 +46,8 @@ export default function AdminSettingsPage() {
       href: "/admin/retention",
       bgColor: "bg-[#f3e5f5]",
       iconColor: "text-[#8e24aa]",
+      statusLabel: "Выполняется",
+      statusOk: true,
     },
   ];
 
@@ -56,8 +62,7 @@ export default function AdminSettingsPage() {
       <div className="mt-6">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-6">Настройки</h1>
 
-        {/* Settings Sections */}
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
+        <div className="grid md:grid-cols-3 gap-4">
           {settingsSections.map((section) => {
             const Icon = section.icon;
             return (
@@ -66,10 +71,22 @@ export default function AdminSettingsPage() {
                 onClick={() => handleNavigate(section.href)}
                 className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-[#2563eb] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
               >
-                <div
-                  className={`w-12 h-12 ${section.bgColor} rounded-[12px] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                >
-                  <Icon className={`w-6 h-6 ${section.iconColor}`} />
+                <div className="flex items-center justify-between mb-4">
+                  <div
+                    className={`w-12 h-12 ${section.bgColor} rounded-[12px] flex items-center justify-center group-hover:scale-110 transition-transform`}
+                  >
+                    <Icon className={`w-6 h-6 ${section.iconColor}`} />
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className={`w-2 h-2 rounded-full ${section.statusOk ? "bg-[#4caf50]" : "bg-[#ff9800]"}`}
+                    ></div>
+                    <span
+                      className={`text-[11px] font-medium ${section.statusOk ? "text-[#4caf50]" : "text-[#ff9800]"}`}
+                    >
+                      {section.statusLabel}
+                    </span>
+                  </div>
                 </div>
                 <h3 className="text-[16px] font-medium text-[#21214f] mb-1">{section.title}</h3>
                 <p className="text-[13px] text-[#767692] mb-3">{section.description}</p>
@@ -80,37 +97,6 @@ export default function AdminSettingsPage() {
               </button>
             );
           })}
-        </div>
-
-        {/* System Status */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <CheckCircle className="w-5 h-5 text-[#4caf50]" />
-            <h2 className="text-[18px] font-medium text-[#21214f]">Статус системы</h2>
-          </div>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-[#4caf50] rounded-full"></div>
-                <span className="text-[14px] text-[#21214f]">Фиче-флаги синхронизированы</span>
-              </div>
-              <span className="text-[12px] text-[#4caf50] font-medium">OK</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-[#4caf50] rounded-full"></div>
-                <span className="text-[14px] text-[#21214f]">Лимиты соблюдаются</span>
-              </div>
-              <span className="text-[12px] text-[#4caf50] font-medium">OK</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-[#4caf50] rounded-full"></div>
-                <span className="text-[14px] text-[#21214f]">Retention выполняется</span>
-              </div>
-              <span className="text-[12px] text-[#4caf50] font-medium">OK</span>
-            </div>
-          </div>
         </div>
       </div>
     </AppShell>
