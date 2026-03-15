@@ -28,8 +28,8 @@ const DEFAULT_FLAGS: FeatureFlags = {
   enableEmailConfirmation: false,
   enablePasswordReset: false,
 
-  enablePlugins: true,
-  enableIntegrations: true,
+  enablePlugins: false,
+  enableIntegrations: false,
   enableRetention: true,
   enableLimits: true,
   enableAutomation: true,

@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -262,7 +261,7 @@ export default function TeacherDistributionPage() {
 
   return (
     <AppShell title="Распределение рецензий">
-      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Распределение" }]} />
+      <Breadcrumbs items={[{ label: "Распределение" }]} />
 
       <div className="mt-6">
         {/* Header */}

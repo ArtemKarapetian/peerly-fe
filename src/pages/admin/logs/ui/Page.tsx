@@ -13,7 +13,6 @@ import {
 import { useState, useEffect } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -429,13 +428,7 @@ export default function AdminLogsPage() {
 
   return (
     <AppShell title="Логи и аудит">
-      <Breadcrumbs
-        items={[
-          CRUMBS.adminRoot,
-          { label: "Мониторинг", href: ROUTES.adminOverview },
-          { label: "Логи" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.adminOverview, { label: "Логи" }]} />
 
       <div className="mt-6">
         {/* Header */}

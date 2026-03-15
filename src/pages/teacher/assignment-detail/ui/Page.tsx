@@ -71,8 +71,8 @@ export default function TeacherAssignmentDetailsPage({
     <AppShell title={assignment.title}>
       <Breadcrumbs
         items={[
-          CRUMBS.teacherDashboard,
-          { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
+          CRUMBS.teacherCourses,
+          { label: assignment.courseName, href: ROUTES.teacherCourse(assignment.courseCode) },
           { label: assignment.title },
         ]}
       />

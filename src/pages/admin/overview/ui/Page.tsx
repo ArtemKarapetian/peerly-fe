@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { pluginRepo } from "@/entities/plugin";
@@ -157,7 +156,7 @@ export default function AdminOverviewPage() {
 
   return (
     <AppShell title="Админ панель">
-      <Breadcrumbs items={[CRUMBS.adminRoot, { label: "Обзор" }]} />
+      <Breadcrumbs items={[{ label: "Обзор" }]} />
 
       <div className="mt-6">
         {/* Header with Org Selector */}
@@ -165,7 +164,7 @@ export default function AdminOverviewPage() {
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex-1">
               <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-                Административная панель
+                Обзор
               </h1>
               <p className="text-[16px] text-[#767692]">Мониторинг и управление системой Peerly</p>
             </div>

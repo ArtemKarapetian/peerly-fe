@@ -9,7 +9,6 @@ import AdminCoursesPage from "@/pages/admin/courses/ui/Page.tsx";
 import AdminFlagsPage from "@/pages/admin/flags/ui/Page.tsx";
 import AdminIntegrationsPage from "@/pages/admin/integrations/ui/Page.tsx";
 import AdminLimitsPage from "@/pages/admin/limits/ui/Page.tsx";
-import AdminLogsPage from "@/pages/admin/logs/ui/Page.tsx";
 import AdminOrgsPage from "@/pages/admin/orgs/ui/Page.tsx";
 import AdminOverviewPage from "@/pages/admin/overview/ui/Page.tsx";
 import AdminPluginsPage from "@/pages/admin/plugins/ui/Page.tsx";
@@ -157,7 +156,6 @@ export function Router() {
   if (pathname === ROUTES.adminOrgs) return <AdminOrgsPage />;
   if (pathname === ROUTES.adminSettings) return <AdminSettingsPage />;
   if (pathname === ROUTES.adminFlags) return <AdminFlagsPage />;
-  if (pathname === ROUTES.adminLogs) return <AdminLogsPage />;
 
   // Admin (feature-flagged)
   if (pathname === ROUTES.adminPlugins)

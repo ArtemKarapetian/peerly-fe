@@ -24,7 +24,6 @@ import {
   Cell,
 } from "recharts";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -271,7 +270,7 @@ export default function TeacherAnalyticsPage() {
 
   return (
     <AppShell title="Отчёты и аналитика">
-      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Аналитика" }]} />
+      <Breadcrumbs items={[{ label: "Аналитика" }]} />
 
       <div className="mt-6">
         {/* Header */}

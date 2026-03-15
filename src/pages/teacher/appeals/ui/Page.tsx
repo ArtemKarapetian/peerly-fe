@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -347,7 +346,7 @@ function AppealsContent({
 
   return (
     <AppShell title="Апелляции">
-      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Апелляции" }]} />
+      <Breadcrumbs items={[{ label: "Апелляции" }]} />
 
       <div className="mt-6">
         {/* Header */}

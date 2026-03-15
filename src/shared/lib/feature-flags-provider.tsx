@@ -32,8 +32,8 @@ const defaultFlags: FeatureFlags = {
   enablePasswordReset: false,
   deleteAccount: false,
 
-  enablePlugins: true,
-  enableIntegrations: true,
+  enablePlugins: false,
+  enableIntegrations: false,
   enableRetention: true,
   enableLimits: true,
   enableAutomation: true,

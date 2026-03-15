@@ -1,7 +1,6 @@
 import { BookOpen, ChevronRight, GraduationCap, Users } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -73,7 +72,7 @@ export default function AdminCoursesPage() {
 
   return (
     <AppShell title="Все курсы">
-      <Breadcrumbs items={[CRUMBS.adminRoot, { label: "Курсы" }]} />
+      <Breadcrumbs items={[{ label: "Курсы" }]} />
 
       <div className="mt-6">
         {/* Header — без CTA, у администратора нет создания курсов */}

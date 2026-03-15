@@ -33,19 +33,19 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
   }
 
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm mb-4">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-4">
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
-          {index > 0 && <ChevronRight className="w-4 h-4 text-[--text-tertiary]" />}
+          {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-[--text-tertiary] shrink-0" />}
           {item.href ? (
             <button
               onClick={() => handleClick(item.href!)}
-              className="text-[--text-secondary] hover:text-[--brand-primary] transition-colors"
+              className="text-[14px] text-[--text-secondary] hover:text-[--brand-primary] transition-colors"
             >
               {item.label}
             </button>
           ) : (
-            <span className="text-[--text-primary] font-medium">{item.label}</span>
+            <span className="text-[14px] text-[--text-primary]">{item.label}</span>
           )}
         </div>
       ))}
