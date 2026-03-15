@@ -15,6 +15,7 @@ import { JSX, useState } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -260,17 +261,12 @@ function ModerationContent({
     <AppShell title="Модерация рецензий">
       <Breadcrumbs items={[{ label: "Модерация" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Модерация рецензий
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Проверка помеченных рецензий и контроль качества
-          </p>
-        </div>
+      <PageHeader
+        title="Модерация рецензий"
+        subtitle="Проверка помеченных рецензий и контроль качества"
+      />
 
+      <div>
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">

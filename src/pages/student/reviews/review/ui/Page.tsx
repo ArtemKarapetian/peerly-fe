@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 import { debounce } from "@/shared/lib/debounce.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 import { SaveStatusIndicator } from "@/shared/ui/SaveStatusIndicator";
 import type { SaveStatus } from "@/shared/ui/SaveStatusIndicator";
 
@@ -628,8 +627,6 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
           <span className="text-[14px] font-medium">Рецензия отправлена!</span>
         </div>
       )}
-
-      <LayoutDebugger />
     </AppShell>
   );
 }

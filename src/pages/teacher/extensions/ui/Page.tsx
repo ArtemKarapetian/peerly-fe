@@ -1,6 +1,7 @@
 import { Clock, CheckCircle, XCircle } from "lucide-react";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -69,13 +70,13 @@ export default function TeacherExtensionsPage() {
   return (
     <AppShell title="Extensions">
       <Breadcrumbs items={[{ label: "Продления" }]} />
-      <div className="mt-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Запросы на продление срока
-        </h1>
-        <p className="text-[16px] text-[#767692] mb-6">
-          Управление запросами студентов на перенос дедлайнов
-        </p>
+
+      <PageHeader
+        title="Запросы на продление срока"
+        subtitle="Управление запросами студентов на перенос дедлайнов"
+      />
+
+      <div>
         <div className="space-y-4">
           {extensions.map((ext) => (
             <div key={ext.id} className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-4">

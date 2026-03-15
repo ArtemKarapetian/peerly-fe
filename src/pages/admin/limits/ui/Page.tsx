@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -95,7 +96,7 @@ export default function AdminLimitsPage() {
     );
 
     if (!unusedTenant) {
-      alert("Все организации уж�� имеют переопределения");
+      alert("Все организации уже имеют переопределения");
       return;
     }
 
@@ -200,17 +201,12 @@ export default function AdminLimitsPage() {
     <AppShell title="Лимиты и квоты">
       <Breadcrumbs items={[CRUMBS.adminSettings, { label: "Лимиты" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Лимиты и квоты
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Настройка ограничений для пользователей и системных ресурсов
-          </p>
-        </div>
+      <PageHeader
+        title="Лимиты и квоты"
+        subtitle="Настройка ограничений для пользователей и системных ресурсов"
+      />
 
+      <div>
         {/* Success Message */}
         {showSuccess && (
           <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6">

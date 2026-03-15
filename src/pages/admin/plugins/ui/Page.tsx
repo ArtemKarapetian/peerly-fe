@@ -14,6 +14,7 @@ import {
 import { useState, useCallback } from "react";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -546,17 +547,12 @@ export default function AdminPluginsPage() {
     <AppShell title="Каталог плагинов">
       <Breadcrumbs items={[{ label: "Плагины" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Каталог плагинов
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Установка и настройка плагинов для расширения функциональности системы
-          </p>
-        </div>
+      <PageHeader
+        title="Каталог плагинов"
+        subtitle="Установка и настройка плагинов для расширения функциональности системы"
+      />
 
+      <div>
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b-2 border-[#e6e8ee]">
           <button

@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -134,17 +135,12 @@ export default function AdminRetentionPage() {
     <AppShell title="Политики хранения">
       <Breadcrumbs items={[CRUMBS.adminSettings, { label: "Хранение данных" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Политики хранения данных
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Настройка периодов хранения для различных типов данных в системе
-          </p>
-        </div>
+      <PageHeader
+        title="Политики хранения данных"
+        subtitle="Настройка периодов хранения для различных типов данных в системе"
+      />
 
+      <div>
         {/* Global Warning Banner */}
         {hasAnyRiskySettings && (
           <div className="bg-[#fff5f5] border-2 border-[#d4183d] rounded-[16px] p-4 mb-6">

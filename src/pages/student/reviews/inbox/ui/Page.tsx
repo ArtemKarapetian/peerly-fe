@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
 
@@ -47,12 +47,7 @@ export default function ReviewsInboxPage() {
 
   return (
     <AppShell title="Рецензии">
-      <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Рецензии</h1>
-        <p className="text-[16px] text-[#767692] leading-[1.5]">
-          Назначенные вам работы для рецензирования
-        </p>
-      </div>
+      <PageHeader title="Рецензии" subtitle="Назначенные вам работы для рецензирования" />
 
       <ReviewFilters filter={filter} counts={counts} onFilterChange={setFilter} />
 
@@ -97,8 +92,6 @@ export default function ReviewsInboxPage() {
           ))}
         </div>
       )}
-
-      <LayoutDebugger />
     </AppShell>
   );
 }

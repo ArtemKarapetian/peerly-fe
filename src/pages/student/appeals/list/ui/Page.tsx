@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { Appeal, AppealCard, AppealStatus, appealRepo, getStatusLabel } from "@/entities/appeal";
@@ -61,13 +62,13 @@ export default function AppealsListPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Мои апелляции">
+      <AppShell title="Апелляции">
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Мои апелляции">
+      <AppShell title="Апелляции">
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -79,21 +80,11 @@ export default function AppealsListPage() {
   };
 
   return (
-    <AppShell title="Мои апелляции">
+    <AppShell title="Апелляции">
       <Breadcrumbs items={[{ label: "Апелляции" }]} />
 
-      <div className="mt-6 max-w-[1000px]">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 bg-accent rounded-[12px] flex items-center justify-center">
-            <FileText className="w-6 h-6 text-accent-foreground" />
-          </div>
-          <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
-            Мои апелляции
-          </h1>
-        </div>
-        <p className="text-[16px] text-muted-foreground mb-8">
-          Список всех ваших запросов на пересмотр оценок
-        </p>
+      <div className="max-w-[1000px]">
+        <PageHeader title="Апелляции" subtitle="Список всех ваших запросов на пересмотр оценок" />
 
         {(appeals ?? []).length === 0 ? (
           <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">

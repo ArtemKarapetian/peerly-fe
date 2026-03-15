@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 import { StatCard } from "@/shared/ui/StatCard";
@@ -74,13 +75,9 @@ export default function AdminCoursesPage() {
     <AppShell title="Все курсы">
       <Breadcrumbs items={[{ label: "Курсы" }]} />
 
-      <div className="mt-6">
-        {/* Header — без CTA, у администратора нет создания курсов */}
-        <div className="mb-5">
-          <h1 className="page-title mb-1">Все курсы</h1>
-          <p className="text-[14px] text-[--text-secondary]">Все курсы системы, включая архивные</p>
-        </div>
+      <PageHeader title="Все курсы" subtitle="Все курсы системы, включая архивные" />
 
+      <div>
         {/* Stat cards — admin-специфичные метрики */}
         <div className="grid grid-cols-2 gap-2.5 tablet:grid-cols-4 mb-5">
           <StatCard
