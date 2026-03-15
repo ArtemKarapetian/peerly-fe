@@ -2,6 +2,7 @@ import { Shield, Database, AlertTriangle, ArrowRight } from "lucide-react";
 import { useCallback } from "react";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -59,9 +60,9 @@ export default function AdminSettingsPage() {
     <AppShell title="Настройки">
       <Breadcrumbs items={[{ label: "Настройки" }]} />
 
-      <div className="mt-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-6">Настройки</h1>
+      <PageHeader title="Настройки" />
 
+      <div>
         <div className="grid md:grid-cols-3 gap-4">
           {settingsSections.map((section) => {
             const Icon = section.icon;

@@ -15,6 +15,7 @@ import {
 import { useState, useCallback } from "react";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -298,17 +299,12 @@ export default function AdminIntegrationsPage() {
     <AppShell title="Интеграции и Webhooks">
       <Breadcrumbs items={[{ label: "Интеграции" }]} />
 
-      <div className="mt-6 space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Ключи интеграций и вебхуки
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Настройка внешних интеграций и webhook-уведомлений
-          </p>
-        </div>
+      <PageHeader
+        title="Ключи интеграций и вебхуки"
+        subtitle="Настройка внешних интеграций и webhook-уведомлений"
+      />
 
+      <div className="space-y-8">
         {/* External Integrations Section */}
         <div>
           <h2 className="text-[20px] font-medium text-[#21214f] mb-4">Внешние интеграции</h2>
@@ -368,7 +364,7 @@ export default function AdminIntegrationsPage() {
                 disabled
                 className="w-full px-4 py-2 bg-[#e6e8ee] text-[#767692] rounded-[8px] text-[14px] font-medium cursor-not-allowed"
               >
-                Подключить (недосту��но)
+                Подключить (недоступно)
               </button>
             </div>
 

@@ -1,5 +1,6 @@
 import { Database, Users, TrendingUp, ExternalLink } from "lucide-react";
 
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -88,141 +89,138 @@ export default function AdminOrgsPage() {
 
   return (
     <AppShell title="Организации">
-      <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Организации
-        </h1>
-        <p className="text-[--text-secondary]">Управление организациями в системе</p>
-      </div>
+      <PageHeader title="Организации" subtitle="Управление организациями в системе" />
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 tablet:grid-cols-3 gap-4 mb-6">
-        <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#e3f2fd] rounded-[var(--radius-md)] flex items-center justify-center">
-              <Database className="w-5 h-5 text-[#1976d2]" />
+      <div>
+        {/* Stats */}
+        <div className="grid grid-cols-1 tablet:grid-cols-3 gap-4 mb-6">
+          <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#e3f2fd] rounded-[var(--radius-md)] flex items-center justify-center">
+                <Database className="w-5 h-5 text-[#1976d2]" />
+              </div>
+              <div>
+                <p className="text-xs text-[--text-secondary]">Всего организаций</p>
+                <p className="text-xl font-semibold text-[--text-primary]">{mockOrgs.length}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-[--text-secondary]">Всего организаций</p>
-              <p className="text-xl font-semibold text-[--text-primary]">{mockOrgs.length}</p>
+          </div>
+          <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#e8f5e9] rounded-[var(--radius-md)] flex items-center justify-center">
+                <Users className="w-5 h-5 text-[#388e3c]" />
+              </div>
+              <div>
+                <p className="text-xs text-[--text-secondary]">Всего пользователей</p>
+                <p className="text-xl font-semibold text-[--text-primary]">
+                  {mockOrgs.reduce((sum, org) => sum + org.usersCount, 0).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#fff8e1] rounded-[var(--radius-md)] flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-[#f57c00]" />
+              </div>
+              <div>
+                <p className="text-xs text-[--text-secondary]">Всего курсов</p>
+                <p className="text-xl font-semibold text-[--text-primary]">
+                  {mockOrgs.reduce((sum, org) => sum + org.coursesCount, 0)}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#e8f5e9] rounded-[var(--radius-md)] flex items-center justify-center">
-              <Users className="w-5 h-5 text-[#388e3c]" />
-            </div>
-            <div>
-              <p className="text-xs text-[--text-secondary]">Всего пользователей</p>
-              <p className="text-xl font-semibold text-[--text-primary]">
-                {mockOrgs.reduce((sum, org) => sum + org.usersCount, 0).toLocaleString()}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#fff8e1] rounded-[var(--radius-md)] flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-[#f57c00]" />
-            </div>
-            <div>
-              <p className="text-xs text-[--text-secondary]">Всего курсов</p>
-              <p className="text-xl font-semibold text-[--text-primary]">
-                {mockOrgs.reduce((sum, org) => sum + org.coursesCount, 0)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Table */}
-      <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-lg)] overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[--surface-border] bg-[--surface-hover]">
-                <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                  Организация
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                  План
-                </th>
-                <th className="text-center px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                  Пользователей
-                </th>
-                <th className="text-center px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                  Курсов
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                  Статус
-                </th>
-                <th className="text-right px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                  Действия
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((org, index) => (
-                <tr
-                  key={org.id}
-                  className={`border-b border-[--surface-border] last:border-0 hover:bg-[--surface-hover] transition-colors ${
-                    index % 2 === 0 ? "" : "bg-[--surface-hover]/50"
-                  }`}
-                >
-                  <td className="px-6 py-4">
-                    <p className="text-sm font-medium text-[--text-primary]">{org.name}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${getPlanColor(org.plan)}`}
-                    >
-                      {org.plan}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-sm text-[--text-primary] font-medium">
-                      {org.usersCount.toLocaleString()}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-sm text-[--text-primary] font-medium">
-                      {org.coursesCount}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex px-2.5 py-1 bg-[#e8f5e9] text-[#388e3c] rounded-md text-xs font-medium">
-                      Активна
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end">
-                      <button
-                        onClick={() => alert(`Открыть организацию: ${org.name}`)}
-                        className="p-2 hover:bg-[--surface-hover] rounded-[var(--radius-sm)] transition-colors"
-                        title="Подробнее"
-                      >
-                        <ExternalLink className="w-4 h-4 text-[--text-secondary]" />
-                      </button>
-                    </div>
-                  </td>
+        {/* Table */}
+        <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-lg)] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[--surface-border] bg-[--surface-hover]">
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
+                    Организация
+                  </th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
+                    План
+                  </th>
+                  <th className="text-center px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
+                    Пользователей
+                  </th>
+                  <th className="text-center px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
+                    Курсов
+                  </th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
+                    Статус
+                  </th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
+                    Действия
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentItems.map((org, index) => (
+                  <tr
+                    key={org.id}
+                    className={`border-b border-[--surface-border] last:border-0 hover:bg-[--surface-hover] transition-colors ${
+                      index % 2 === 0 ? "" : "bg-[--surface-hover]/50"
+                    }`}
+                  >
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-medium text-[--text-primary]">{org.name}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium ${getPlanColor(org.plan)}`}
+                      >
+                        {org.plan}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="text-sm text-[--text-primary] font-medium">
+                        {org.usersCount.toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="text-sm text-[--text-primary] font-medium">
+                        {org.coursesCount}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex px-2.5 py-1 bg-[#e8f5e9] text-[#388e3c] rounded-md text-xs font-medium">
+                        Активна
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end">
+                        <button
+                          onClick={() => alert(`Открыть организацию: ${org.name}`)}
+                          className="p-2 hover:bg-[--surface-hover] rounded-[var(--radius-sm)] transition-colors"
+                          title="Подробнее"
+                        >
+                          <ExternalLink className="w-4 h-4 text-[--text-secondary]" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-6">
-          <SimplePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      )}
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-6">
+            <SimplePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
+      </div>
     </AppShell>
   );
 }

@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -263,17 +264,12 @@ export default function TeacherDistributionPage() {
     <AppShell title="Распределение рецензий">
       <Breadcrumbs items={[{ label: "Распределение" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Распределение рецензий
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Управление распределением peer-review между студентами
-          </p>
-        </div>
+      <PageHeader
+        title="Распределение рецензий"
+        subtitle="Управление распределением peer-review между студентами"
+      />
 
+      <div>
         {/* Filters */}
         <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

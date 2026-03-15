@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { usePagination } from "@/shared/ui/simple-pagination";
 
 import { CourseCard } from "@/entities/course";
@@ -17,10 +18,7 @@ export default function CoursesListPage() {
 
   return (
     <AppShell title="Курсы">
-      <div className="mb-4">
-        <h1 className="page-title mb-1">Мои курсы</h1>
-        <p className="text-[14px] text-[--text-secondary]">Ваши учебные курсы на текущий семестр</p>
-      </div>
+      <PageHeader title="Курсы" subtitle="Ваши учебные курсы на текущий семестр" />
 
       <CourseFilterBar courses={mockCourses}>
         {(filteredCourses) => (

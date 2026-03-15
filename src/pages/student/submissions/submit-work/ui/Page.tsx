@@ -3,7 +3,6 @@ import { useState } from "react";
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 
 import { FilePreviewCard } from "@/features/submission/submit-work/ui/FilePreviewCard";
 import type { UploadedFile } from "@/features/submission/submit-work/ui/FilePreviewCard";
@@ -262,8 +261,6 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
             </div>
           </div>
         </div>
-
-        <LayoutDebugger />
       </AppShell>
     );
   }
@@ -405,8 +402,6 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
           </div>
         </div>
       </div>
-
-      <LayoutDebugger />
     </AppShell>
   );
 }

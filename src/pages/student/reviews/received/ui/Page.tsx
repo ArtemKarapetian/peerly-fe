@@ -1,5 +1,7 @@
 import { FileText } from "lucide-react";
 
+import { PageHeader } from "@/shared/ui/PageHeader";
+
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { TaskReviewAccordion } from "@/widgets/received-reviews";
 
@@ -9,12 +11,10 @@ export default function ReceivedReviewsPage() {
   return (
     <AppShell title="Полученные отзывы">
       <div className="max-w-[1000px]">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Полученные отзывы
-        </h1>
-        <p className="text-[16px] text-[#767692] mb-6">
-          Просматривайте рецензии на свои работы от других студентов
-        </p>
+        <PageHeader
+          title="Полученные отзывы"
+          subtitle="Просматривайте рецензии на свои работы от других студентов"
+        />
 
         {mockReceivedReviews.length > 0 ? (
           <TaskReviewAccordion tasks={mockReceivedReviews} />

@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 
 import { CourseHeader, CourseTabs } from "@/entities/course";
 
@@ -33,8 +32,6 @@ export default function CoursePage({ courseId = "1" }: CoursePageProps) {
 
       {activeTab === "assignments" && <CourseAssignmentsTab courseId={courseId} />}
       {activeTab === "participants" && <CourseParticipantsTab />}
-
-      <LayoutDebugger />
     </AppShell>
   );
 }

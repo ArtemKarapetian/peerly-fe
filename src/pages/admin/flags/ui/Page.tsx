@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -417,17 +418,12 @@ export default function AdminFlagsPage() {
     <AppShell title="Фиче-флаги">
       <Breadcrumbs items={[CRUMBS.adminSettings, { label: "Фиче-флаги" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Фиче-флаги и настройки платформы
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Управление экспериментальными функциями и возможностями системы
-          </p>
-        </div>
+      <PageHeader
+        title="Фиче-флаги и настройки платформы"
+        subtitle="Управление экспериментальными функциями и возможностями системы"
+      />
 
+      <div>
         {/* Success Message */}
         {showSuccess && (
           <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6">

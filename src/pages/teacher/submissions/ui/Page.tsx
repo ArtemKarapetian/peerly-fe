@@ -22,6 +22,7 @@ import { useState, useEffect } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -431,17 +432,12 @@ function SubmissionsContent({
     <AppShell title="Просмотр сабмишенов">
       <Breadcrumbs items={[{ label: "Работы студентов" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Просмотр сабмишенов
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Управление работами студентов и проверка плагинов
-          </p>
-        </div>
+      <PageHeader
+        title="Просмотр сабмишенов"
+        subtitle="Управление работами студентов и проверка плагинов"
+      />
 
+      <div>
         {/* Filters */}
         <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">

@@ -76,7 +76,7 @@ export default function TeacherAutomationPage() {
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
+              <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
                 Правила автоматизации
               </h1>
               <p className="text-muted-foreground">
@@ -101,7 +101,7 @@ export default function TeacherAutomationPage() {
                   Как работают правила автоматизации
                 </h3>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Правила автоматически в��полняются при наступлении событий (триггеров). Вы можете
+                  Правила автоматически выполняются при наступлении событий (триггеров). Вы можете
                   задать условия для более точного контроля и определить действия, которые будут
                   применены.
                 </p>

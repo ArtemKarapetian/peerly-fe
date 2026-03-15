@@ -5,7 +5,6 @@ import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 
 import type { TaskStatus } from "@/entities/assignment";
 import { StatusCard } from "@/entities/assignment";
@@ -267,9 +266,6 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
           <TaskQuestionsComments />
         </div>
       </div>
-
-      {/* Layout Debugger (remove in production) */}
-      <LayoutDebugger />
     </AppShell>
   );
 }

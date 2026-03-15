@@ -75,6 +75,11 @@ export function AppShell({ children, title }: AppShellProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Update browser tab title
+  useEffect(() => {
+    document.title = title ? `${title} — Peerly` : "Peerly";
+  }, [title]);
+
   // Close mobile menu on Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {

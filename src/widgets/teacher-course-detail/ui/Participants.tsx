@@ -194,7 +194,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {filteredParticipants.length === 0 && (
           <div className="p-12 text-center">
             <Filter className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692]">Участники н�� найдены</p>
+            <p className="text-[15px] text-[#767692]">Участники не найдены</p>
           </div>
         )}
       </div>

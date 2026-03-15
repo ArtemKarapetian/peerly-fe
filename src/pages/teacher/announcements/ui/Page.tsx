@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { courseRepo } from "@/entities/course";
@@ -221,7 +222,7 @@ function AnnouncementsContent({
         a.id === id ? { ...a, isPublished: true, publishedAt: new Date() } : a,
       ),
     );
-    alert('Объявление опубликовано! Студенты курса увидят его на вкладке "��нонсы".');
+    alert('Объявление опубликовано! Студенты курса увидят его на вкладке "анонсы".');
   };
 
   const handleUnpublish = (id: string) => {
@@ -253,28 +254,23 @@ function AnnouncementsContent({
     <AppShell title="Объявления">
       <Breadcrumbs items={[{ label: "Объявления" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6 flex items-start justify-between">
-          <div>
-            <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-              Объявления
-            </h1>
-            <p className="text-[16px] text-[#767692]">
-              Создавайте и публикуйте объявления для студентов курса
-            </p>
-          </div>
-          {!isCreating && !editingId && (
+      <PageHeader
+        title="Объявления"
+        subtitle="Создавайте и публикуйте объявления для студентов курса"
+        action={
+          !isCreating && !editingId ? (
             <button
               onClick={() => setIsCreating(true)}
-              className="flex items-center gap-2 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium"
             >
-              <Plus className="w-5 h-5" />
-              <span className="text-[15px] font-medium">Создать объявление</span>
+              <Plus className="w-4 h-4" />
+              Создать объявление
             </button>
-          )}
-        </div>
+          ) : undefined
+        }
+      />
 
+      <div>
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 
 import { VersionTimeline } from "@/entities/work";
 import type { Version } from "@/entities/work";
@@ -138,8 +137,6 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
             </button>
           </div>
         </div>
-
-        <LayoutDebugger />
       </AppShell>
     );
   }
@@ -216,8 +213,6 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
         onToggleSelect={comparisonMode ? handleToggleSelect : undefined}
         comparisonMode={comparisonMode}
       />
-
-      <LayoutDebugger />
     </AppShell>
   );
 }

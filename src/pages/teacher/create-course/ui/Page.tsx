@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Button } from "@/shared/ui/button.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { courseRepo } from "@/entities/course";
 
@@ -41,10 +42,8 @@ export default function CreateCoursePage() {
     <AppShell title="Создание курса">
       <Breadcrumbs items={[CRUMBS.teacherCourses, { label: "Создать курс" }]} />
 
-      <div className="max-w-[800px] mx-auto mt-4">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Создать ��овый курс
-        </h1>
+      <div className="max-w-[800px] mx-auto">
+        <PageHeader title="Создание курса" />
 
         <form
           onSubmit={(e) => {

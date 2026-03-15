@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -348,17 +349,9 @@ function AppealsContent({
     <AppShell title="Апелляции">
       <Breadcrumbs items={[{ label: "Апелляции" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-            Апелляции
-          </h1>
-          <p className="text-[16px] text-[#767692]">
-            Рассмотрение жалоб студентов на оценки и рецензии
-          </p>
-        </div>
+      <PageHeader title="Апелляции" subtitle="Рассмотрение жалоб студентов на оценки и рецензии" />
 
+      <div>
         {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">

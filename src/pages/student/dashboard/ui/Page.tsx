@@ -1,5 +1,6 @@
 import { BookOpen, Clock, CheckSquare, MessageSquare } from "lucide-react";
 
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { StatCard } from "@/shared/ui/StatCard";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -7,11 +8,12 @@ import { DeadlinesList, ActionCards, NotificationsList } from "@/widgets/student
 
 import { mockDeadlines, mockActionData, mockNotifications } from "../model/mockData";
 
-const todayLabel = new Date().toLocaleDateString("ru-RU", {
+const todayRaw = new Date().toLocaleDateString("ru-RU", {
   weekday: "long",
   day: "numeric",
   month: "long",
 });
+const todayLabel = todayRaw.charAt(0).toUpperCase() + todayRaw.slice(1);
 
 function SectionCard({
   title,
@@ -39,11 +41,7 @@ export default function DashboardPage() {
 
   return (
     <AppShell title="Главная">
-      {/* Header */}
-      <div className="mb-4">
-        <h1 className="page-title mb-1">Главная</h1>
-        <p className="text-[14px] text-[--text-secondary] capitalize">{todayLabel}</p>
-      </div>
+      <PageHeader title="Главная" subtitle={todayLabel} />
 
       {/* Overview strip — 4 cols on tablet+, 2x2 on mobile */}
       <div className="grid grid-cols-2 gap-2 tablet:grid-cols-4 mb-5">

@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -430,32 +431,27 @@ export default function AdminLogsPage() {
     <AppShell title="Логи и аудит">
       <Breadcrumbs items={[CRUMBS.adminOverview, { label: "Логи" }]} />
 
-      <div className="mt-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-              Логи и аудит системы
-            </h1>
-            <p className="text-[16px] text-[#767692]">
-              Системные логи и журнал действий пользователей
-            </p>
+      <PageHeader
+        title="Логи и аудит системы"
+        subtitle="Системные логи и журнал действий пользователей"
+      />
+
+      <div>
+        {/* Header actions */}
+        <div className="flex items-center justify-end gap-2 mb-6">
+          <div className="flex items-center gap-2 px-3 py-2 bg-[#f9f9f9] rounded-[8px] border-2 border-[#e6e8ee]">
+            <RefreshCw className="w-4 h-4 text-[#767692]" />
+            <span className="text-[12px] text-[#767692]">
+              {lastUpdate.toLocaleTimeString("ru-RU")}
+            </span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 px-3 py-2 bg-[#f9f9f9] rounded-[8px] border-2 border-[#e6e8ee]">
-              <RefreshCw className="w-4 h-4 text-[#767692]" />
-              <span className="text-[12px] text-[#767692]">
-                {lastUpdate.toLocaleTimeString("ru-RU")}
-              </span>
-            </div>
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors text-[14px] font-medium"
-            >
-              <Download className="w-4 h-4" />
-              Экспорт CSV
-            </button>
-          </div>
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors text-[14px] font-medium"
+          >
+            <Download className="w-4 h-4" />
+            Экспорт CSV
+          </button>
         </div>
 
         {/* Tabs */}
