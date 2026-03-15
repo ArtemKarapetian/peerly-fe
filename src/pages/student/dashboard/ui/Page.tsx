@@ -1,228 +1,150 @@
-import { useState } from "react";
+import { BookOpen, Clock, CheckSquare, MessageSquare } from "lucide-react";
 
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
+import { StatCard } from "@/shared/ui/StatCard";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import {
-  DeadlinesList,
-  ActionCards,
-  RecentActivity,
-  TodaySummary,
-  NotificationsList,
-} from "@/widgets/student-dashboard";
+import { DeadlinesList, ActionCards, NotificationsList } from "@/widgets/student-dashboard";
 
-import {
-  mockDeadlines,
-  mockActionData,
-  mockRecentItems,
-  mockTodayData,
-  mockNotifications,
-} from "../model/mockData";
+import { mockDeadlines, mockActionData, mockNotifications } from "../model/mockData";
+
+const todayLabel = new Date().toLocaleDateString("ru-RU", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+});
+
+function SectionCard({
+  title,
+  children,
+  noPadding = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  noPadding?: boolean;
+}) {
+  return (
+    <section className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
+      <div className="px-5 py-3.5 border-b border-[--surface-border]">
+        <h2 className="text-[15px] font-semibold text-[--text-primary] tracking-[-0.2px]">
+          {title}
+        </h2>
+      </div>
+      <div className={noPadding ? "" : "px-5 py-4"}>{children}</div>
+    </section>
+  );
+}
 
 export default function DashboardPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-
-  const hasCourses = true;
-
-  if (!isLoading && !hasError && !hasCourses) {
-    return (
-      <AppShell title="Дашборд">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-[#f9f9f9] rounded-[20px] p-8 max-w-[480px] text-center">
-            <div className="mb-4">
-              <div className="w-16 h-16 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center">
-                <span className="text-[32px]">📚</span>
-              </div>
-            </div>
-            <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              Вас ещё не добавили в курс
-            </h2>
-            <p className="text-[16px] text-[#767692] leading-[1.5] mb-4">
-              Попросите преподавателя выдать вам доступ к курсу, и здесь появятся ваши задания и
-              дедлайны.
-            </p>
-            <button
-              onClick={() => (window.location.hash = "/courses")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#d2def8] hover:bg-[#c5d5f5] text-[#21214f] rounded-[8px] transition-colors text-[15px] font-medium"
-            >
-              Перейти к курсам
-            </button>
-          </div>
-        </div>
-      </AppShell>
-    );
-  }
-
-  if (hasError) {
-    return (
-      <AppShell title="Дашборд">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-[#fff5f5] border-2 border-[#ffb8b8] rounded-[20px] p-8 max-w-[480px] text-center">
-            <div className="mb-4">
-              <div className="w-16 h-16 bg-[#ffb8b8] rounded-full mx-auto flex items-center justify-center">
-                <span className="text-[32px]">⚠️</span>
-              </div>
-            </div>
-            <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              Ошибка загрузки
-            </h2>
-            <p className="text-[16px] text-[#767692] leading-[1.5] mb-4">
-              Не удалось загрузить данные дашборда. Попробуйте обновить страницу.
-            </p>
-            <button
-              onClick={() => {
-                setHasError(false);
-                setIsLoading(true);
-                setTimeout(() => setIsLoading(false), 1000);
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#21214f] hover:bg-[#3a3a6f] text-white rounded-[8px] transition-colors text-[15px] font-medium"
-            >
-              Повторить попытку
-            </button>
-          </div>
-        </div>
-      </AppShell>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <AppShell title="Дашборд">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Дашборд</h1>
-
-        <div className="task-layout">
-          <div className="space-y-6">
-            <div className="bg-[#f9f9f9] rounded-[20px] p-6 animate-pulse">
-              <div className="h-6 bg-[#e6e8ee] rounded w-48 mb-4"></div>
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-16 bg-[#e6e8ee] rounded-[12px]"></div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-[#f9f9f9] rounded-[20px] p-6 animate-pulse">
-              <div className="h-6 bg-[#e6e8ee] rounded w-40 mb-4"></div>
-              <div className="h-24 bg-[#e6e8ee] rounded-[12px]"></div>
-            </div>
-          </div>
-
-          <div className="space-y-6 hide-below-desktop">
-            <div className="bg-[#f9f9f9] rounded-[20px] p-6 animate-pulse">
-              <div className="h-6 bg-[#e6e8ee] rounded w-32 mb-4"></div>
-              <div className="space-y-2">
-                <div className="h-12 bg-[#e6e8ee] rounded"></div>
-                <div className="h-12 bg-[#e6e8ee] rounded"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </AppShell>
-    );
-  }
+  const hasActions = mockActionData.reviewsPending > 0 || mockActionData.newFeedback > 0;
 
   return (
-    <AppShell title="Дашборд">
-      <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Дашборд</h1>
+    <AppShell title="Главная">
+      {/* Header */}
+      <div className="mb-4">
+        <h1 className="page-title mb-1">Главная</h1>
+        <p className="text-[14px] text-[--text-secondary] capitalize">{todayLabel}</p>
+      </div>
 
+      {/* Overview strip — 4 cols on tablet+, 2x2 on mobile */}
+      <div className="grid grid-cols-2 gap-2 tablet:grid-cols-4 mb-5">
+        <StatCard
+          label="Активных курсов"
+          value={3}
+          icon={<BookOpen className="w-4 h-4" />}
+          accent="#2563eb"
+          compact
+        />
+        <StatCard
+          label="Дедлайнов сегодня"
+          value={mockDeadlines.filter((d) => d.isUrgent).length}
+          icon={<Clock className="w-4 h-4" />}
+          accent="#d97706"
+          compact
+        />
+        <StatCard
+          label="Нужно проверить"
+          value={mockActionData.reviewsPending}
+          icon={<CheckSquare className="w-4 h-4" />}
+          accent="#7c3aed"
+          compact
+        />
+        <StatCard
+          label="Новых отзывов"
+          value={mockActionData.newFeedback}
+          icon={<MessageSquare className="w-4 h-4" />}
+          accent="#059669"
+          compact
+        />
+      </div>
+
+      {/* Two-column layout */}
       <div className="task-layout">
-        <div className="space-y-6">
-          <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-            <h2 className="text-[20px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-              Ближайшие дедлайны
-            </h2>
+        {/* Left: single main focus block */}
+        <div className="space-y-4">
+          <SectionCard title="К выполнению" noPadding>
+            {/* Action items pinned at top when present */}
+            {hasActions && (
+              <>
+                <ActionCards
+                  data={mockActionData}
+                  onReviewsClick={() => {
+                    window.location.hash = "/reviews";
+                  }}
+                  onFeedbackClick={() => {
+                    window.location.hash = "/reviews/received";
+                  }}
+                />
+                {/* Section break before deadlines */}
+                {mockDeadlines.length > 0 && (
+                  <div className="px-5 py-2 bg-[--surface-hover] border-y border-[--surface-border]">
+                    <span className="text-[10px] font-semibold text-[--text-tertiary] uppercase tracking-[0.5px]">
+                      Предстоящие
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
             <DeadlinesList
               items={mockDeadlines}
               onTaskClick={(taskId) => {
                 window.location.hash = `/task/${taskId}`;
               }}
             />
-          </section>
+          </SectionCard>
 
-          <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-            <h2 className="text-[20px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-              Требуют действия
-            </h2>
-            <ActionCards
-              data={mockActionData}
-              onReviewsClick={() => {
-                console.log("Navigate to reviews");
-              }}
-              onFeedbackClick={() => {
-                console.log("Navigate to feedback");
-              }}
-            />
-          </section>
-
-          <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-            <h2 className="text-[20px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-              Недавнее
-            </h2>
-            <RecentActivity
-              items={mockRecentItems}
-              onItemClick={(id, type) => {
-                if (type === "course") {
-                  window.location.hash = `/course/${id}`;
-                } else {
-                  window.location.hash = `/task/${id}`;
-                }
-              }}
-            />
-          </section>
-
-          <div className="hide-on-desktop space-y-6">
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-                Сегодня
-              </h2>
-              <TodaySummary data={mockTodayData} />
-            </section>
-
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-                Уведомления
-              </h2>
+          {/* Mobile: notifications inline */}
+          <div className="hide-on-desktop">
+            <SectionCard title="Уведомления" noPadding>
               <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
-                  console.log("Notification clicked:", id);
+                  window.location.hash = `/inbox/${id}`;
                 }}
                 onViewAllClick={() => {
-                  console.log("View all notifications");
+                  window.location.hash = "/inbox";
                 }}
               />
-            </section>
+            </SectionCard>
           </div>
         </div>
 
-        <div className="space-y-6 hide-below-desktop">
-          <div className="task-sidebar-sticky space-y-6">
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-                Сегодня
-              </h2>
-              <TodaySummary data={mockTodayData} />
-            </section>
-
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-                Уведомления
-              </h2>
+        {/* Right sidebar — desktop only, secondary info */}
+        <div className="hide-below-desktop">
+          <div className="task-sidebar-sticky">
+            <SectionCard title="Уведомления" noPadding>
               <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
-                  console.log("Notification clicked:", id);
+                  window.location.hash = `/inbox/${id}`;
                 }}
                 onViewAllClick={() => {
-                  console.log("View all notifications");
+                  window.location.hash = "/inbox";
                 }}
               />
-            </section>
+            </SectionCard>
           </div>
         </div>
       </div>
-
-      <LayoutDebugger />
     </AppShell>
   );
 }

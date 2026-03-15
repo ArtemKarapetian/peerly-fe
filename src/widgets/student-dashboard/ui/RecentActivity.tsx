@@ -1,8 +1,4 @@
-import { Clock, BookOpen, FileText } from "lucide-react";
-
-/**
- * RecentActivity - Недавно открытые курсы и задания
- */
+import { Clock, BookOpen, FileText, ChevronRight } from "lucide-react";
 
 export type RecentItemType = "course" | "task";
 
@@ -10,9 +6,9 @@ export interface RecentItem {
   id: string;
   type: RecentItemType;
   title: string;
-  subtitle?: string; // Для task - название курса, для course - преподаватель
-  timestamp: string; // e.g., "2 часа назад"
-  coverColor?: string; // Для курсов
+  subtitle?: string;
+  timestamp: string;
+  coverColor?: string;
 }
 
 interface RecentActivityProps {
@@ -23,61 +19,60 @@ interface RecentActivityProps {
 export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
   if (items.length === 0) {
     return (
-      <div className="text-center py-8">
-        <div className="w-12 h-12 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center mb-3">
-          <Clock className="w-6 h-6 text-[#5b8def]" />
+      <div className="flex flex-col items-center justify-center py-10 text-center px-5">
+        <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
+          <Clock className="w-5 h-5 text-[--text-tertiary]" />
         </div>
-        <p className="text-[15px] text-[#767692]">Нет недавней активности</p>
+        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">Нет активности</p>
+        <p className="text-[13px] text-[--text-secondary]">Недавно открытые курсы и задания</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-0">
-      {items.map((item, index) => {
+    <div className="divide-y divide-[--surface-border]">
+      {items.map((item) => {
         const Icon = item.type === "course" ? BookOpen : FileText;
 
         return (
           <button
             key={item.id}
             onClick={() => onItemClick(item.id, item.type)}
-            className={`w-full text-left p-4 hover:bg-white hover:shadow-sm hover:rounded-[12px] transition-all group ${
-              index !== items.length - 1 ? "border-b border-[#e6e8ee]" : ""
-            }`}
+            className="w-full text-left px-5 py-3.5 hover:bg-[#f7f9ff] transition-colors duration-150 group"
           >
             <div className="flex items-center gap-3">
-              {/* Icon or color indicator */}
+              {/* Icon */}
               {item.type === "course" && item.coverColor ? (
                 <div
-                  className="w-10 h-10 rounded-[8px] flex items-center justify-center shrink-0"
+                  className="w-9 h-9 rounded-[var(--radius-sm)] flex items-center justify-center shrink-0"
                   style={{ backgroundColor: item.coverColor }}
                 >
-                  <BookOpen className="w-5 h-5 text-[#21214f]" />
+                  <BookOpen className="w-4 h-4 text-[--text-primary]" />
                 </div>
               ) : (
-                <div className="w-10 h-10 bg-[#d2def8] rounded-[8px] flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-[#21214f]" />
+                <div className="w-9 h-9 bg-[--surface-hover] rounded-[var(--radius-sm)] flex items-center justify-center shrink-0">
+                  <Icon className="w-4 h-4 text-[--text-secondary]" />
                 </div>
               )}
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                {/* Title */}
-                <div className="text-[15px] font-medium text-[#21214f] mb-0.5 tracking-[-0.3px] truncate">
+                <p className="text-[14px] font-semibold text-[--text-primary] tracking-[-0.2px] truncate leading-snug">
                   {item.title}
-                </div>
-
-                {/* Subtitle + timestamp */}
-                <div className="flex items-center gap-2 text-[13px] text-[#767692]">
+                </p>
+                <div className="flex items-center gap-1.5 text-[12px] text-[--text-tertiary] mt-0.5">
                   {item.subtitle && (
                     <>
                       <span className="truncate">{item.subtitle}</span>
-                      <span>•</span>
+                      <span>·</span>
                     </>
                   )}
                   <span className="shrink-0">{item.timestamp}</span>
                 </div>
               </div>
+
+              {/* Chevron */}
+              <ChevronRight className="w-4 h-4 text-[--text-tertiary] opacity-25 group-hover:opacity-60 transition-opacity duration-150 shrink-0" />
             </div>
           </button>
         );

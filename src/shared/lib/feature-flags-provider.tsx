@@ -7,6 +7,16 @@ interface FeatureFlags {
   enableEmailConfirmation: boolean;
   enablePasswordReset: boolean;
   deleteAccount: boolean;
+
+  // Enterprise / backend-pending
+  enablePlugins: boolean;
+  enableIntegrations: boolean;
+  enableRetention: boolean;
+  enableLimits: boolean;
+  enableAutomation: boolean;
+  enableAnalytics: boolean;
+  enableExtensions: boolean;
+  enableAnnouncements: boolean;
 }
 
 interface FeatureFlagsContextType {
@@ -21,6 +31,15 @@ const defaultFlags: FeatureFlags = {
   enableEmailConfirmation: false,
   enablePasswordReset: false,
   deleteAccount: false,
+
+  enablePlugins: true,
+  enableIntegrations: true,
+  enableRetention: true,
+  enableLimits: true,
+  enableAutomation: true,
+  enableAnalytics: true,
+  enableExtensions: true,
+  enableAnnouncements: true,
 };
 
 const FeatureFlags = createContext<FeatureFlagsContextType | undefined>(undefined);

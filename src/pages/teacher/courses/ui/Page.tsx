@@ -1,4 +1,4 @@
-import { Book, Archive, Plus, ArchiveRestore } from "lucide-react";
+import { BookOpen, ChevronRight, ClipboardList, Plus, Users } from "lucide-react";
 import { useState, useCallback } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
@@ -14,16 +14,6 @@ import { CourseSearch } from "@/features/course/search";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * TeacherCoursesPage - Управление курсами (Teacher)
- *
- * Административный вид списка курсов для преподавателя
- * - Таблица/сетка с информацией о курсах
- * - Действия: Открыть, Настройки, Участники, Архивировать
- * - Переключатель "Показать архивные" курсы
- * - Поиск по названию и коду курса
- */
-
 interface CourseRow {
   id: string;
   name: string;
@@ -35,13 +25,11 @@ interface CourseRow {
 }
 
 export default function TeacherCoursesPage() {
-  const [showArchived, setShowArchived] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Load demo courses
   const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
 
-  const courseRows: CourseRow[] = (courses ?? []).map((course) => ({
+  const allCourseRows: CourseRow[] = (courses ?? []).map((course) => ({
     id: course.id,
     name: course.title,
     code: course.code,
@@ -51,43 +39,22 @@ export default function TeacherCoursesPage() {
     status: course.archived ? "archived" : "active",
   }));
 
-  // Filter courses based on archived status and search
-  const filteredCourses = courseRows.filter((course) => {
-    // Filter by archived status
-    if (!showArchived && course.status === "archived") {
-      return false;
-    }
-
-    // Filter by search query
+  const filteredCourses = allCourseRows.filter((course) => {
+    if (course.status === "archived") return false;
     if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      return course.name.toLowerCase().includes(query) || course.code.toLowerCase().includes(query);
+      const q = searchQuery.toLowerCase();
+      return course.name.toLowerCase().includes(q) || course.code.toLowerCase().includes(q);
     }
-
     return true;
   });
 
+  const activeCourses = allCourseRows.filter((c) => c.status === "active");
+  const totalStudents = activeCourses.reduce((sum, c) => sum + c.participantsCount, 0);
+  const totalAssignments = activeCourses.reduce((sum, c) => sum + c.activeAssignments, 0);
+
   const handleOpenCourse = useCallback((courseId: string) => {
-    window.location.hash = `/teacher/course/${courseId}`;
+    window.location.hash = `/teacher/courses/${courseId}`;
   }, []);
-
-  const handleArchive = async (courseId: string) => {
-    if (confirm("Архивировать этот курс? Он будет скрыт из основного списка.")) {
-      await courseRepo.archive(courseId, true);
-      window.location.reload(); // Reload to show updated state
-    }
-  };
-
-  const handleUnarchive = async (courseId: string) => {
-    if (confirm("Восстановить курс из архива?")) {
-      await courseRepo.archive(courseId, false);
-      window.location.reload();
-    }
-  };
-
-  const handleRowClick = (courseId: string) => {
-    handleOpenCourse(courseId);
-  };
 
   const handleRowKeyDown = (e: React.KeyboardEvent, courseId: string) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -112,182 +79,240 @@ export default function TeacherCoursesPage() {
     );
 
   return (
-    <AppShell title="Упрвление курсами">
+    <AppShell title="Управление курсами">
       <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Курсы" }]} />
 
       <div className="mt-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="page-title mb-2">Управление курсами</h1>
-            <p className="text-base text-[--text-secondary]">Ваши курсы, студенты и задания</p>
+        {/* Hero header card */}
+        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-1">
+                Мои курсы
+              </h1>
+              <p className="text-[15px] text-[#767692]">
+                {activeCourses.length > 0
+                  ? `${activeCourses.length} активных курсов, ${allCourseRows.length - activeCourses.length > 0 ? `${allCourseRows.length - activeCourses.length} в архиве` : "все активны"}`
+                  : "Создайте первый курс, чтобы начать работу"}
+              </p>
+            </div>
+            <div className="flex items-center gap-5 shrink-0">
+              {/* Inline stats — mirroring course detail page counters */}
+              <div className="hidden tablet:flex items-center gap-5">
+                <div className="text-center">
+                  <p className="text-[24px] font-medium text-[#21214f] tabular-nums leading-none mb-1">
+                    {totalStudents}
+                  </p>
+                  <p className="text-[13px] text-[#767692]">Студентов</p>
+                </div>
+                <div className="w-px h-10 bg-[#e6e8ee]"></div>
+                <div className="text-center">
+                  <p className="text-[24px] font-medium text-[#21214f] tabular-nums leading-none mb-1">
+                    {totalAssignments}
+                  </p>
+                  <p className="text-[13px] text-[#767692]">Заданий</p>
+                </div>
+                <div className="w-px h-10 bg-[#e6e8ee]"></div>
+              </div>
+              <button
+                onClick={() => (window.location.hash = "/teacher/course/create")}
+                className="flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] active:bg-[#1e40af] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563eb]"
+              >
+                <Plus className="w-4 h-4" />
+                Создать курс
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showArchived}
-                onChange={(e) => setShowArchived(e.target.checked)}
-                className="w-4 h-4 rounded border-[--surface-border] text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
-              />
-              <Archive className="w-4 h-4 text-[--text-secondary]" />
-              <span className="text-sm text-[--text-primary]">Показать архивные</span>
-            </label>
-            <button
-              onClick={() => (window.location.hash = "/teacher/course/create")}
-              className="flex items-center gap-2 px-4 py-2 bg-[--brand-primary] text-white rounded-[var(--radius-md)] hover:bg-[--brand-primary-hover] transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Создать курс
-            </button>
-          </div>
-        </div>
 
-        {/* Search and Stats */}
-        <div className="mb-6 space-y-4">
-          <CourseSearch
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Поиск по названию или коду курса..."
-          />
-          <div className="text-[14px] text-[#767692]">Найдено курсов: {filteredCourses.length}</div>
-        </div>
-
-        {/* Courses Table */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-[#e6e8ee]">
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Курс
-                  </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Семестр
-                  </th>
-                  <th className="text-center px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Участники
-                  </th>
-                  <th className="text-center px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Задания
-                  </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Статус
-                  </th>
-                  <th className="text-right px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Действия
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCourses
-                  .slice((currentPage - 1) * 10, currentPage * 10)
-                  .map((course, index) => (
-                    <tr
-                      key={course.id}
-                      className={`
-                      border-b border-[#e6e8ee] last:border-0 
-                      hover:bg-[#f0f6ff] transition-all duration-200 cursor-pointer
-                      shadow-[0_1px_3px_rgba(0,0,0,0.02)]
-                      hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                      ${index % 2 === 0 ? "bg-white" : "bg-[#fafbfc]"}
-                    `}
-                      onClick={() => handleRowClick(course.id)}
-                      onKeyDown={(e) => handleRowKeyDown(e, course.id)}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Открыть курс ${course.name}`}
-                    >
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="text-[16px] font-medium text-[#21214f] tracking-[-0.3px]">
-                            {course.name}
-                          </p>
-                          <p className="text-[13px] text-[#767692] mt-1">{course.code}</p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-[15px] text-[#21214f]">{course.term}</p>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 bg-[#e9f5ff] text-[#2563eb] rounded-[8px] text-[14px] font-medium">
-                          {course.participantsCount}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[14px] font-medium">
-                          {course.activeAssignments}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        {course.status === "active" ? (
-                          <span className="inline-flex px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
-                            Активен
-                          </span>
-                        ) : (
-                          <span className="inline-flex px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[13px] font-medium">
-                            Архив
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          {course.status === "active" ? (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                void handleArchive(course.id);
-                              }}
-                              className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
-                              title="Архивировать"
-                            >
-                              <Archive className="w-4 h-4 text-[--text-secondary]" />
-                            </button>
-                          ) : (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                void handleUnarchive(course.id);
-                              }}
-                              className="p-2 hover:bg-white rounded-[var(--radius-sm)] transition-colors"
-                              title="Восстановить"
-                            >
-                              <ArchiveRestore className="w-4 h-4 text-[--text-secondary]" />
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+          {/* Mobile stats strip — visible below tablet */}
+          <div className="flex tablet:hidden gap-3 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#f7f9ff] rounded-[10px]">
+              <div className="w-7 h-7 bg-[#2563eb1a] rounded-[6px] flex items-center justify-center shrink-0">
+                <BookOpen className="w-3.5 h-3.5 text-[#2563eb]" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-[#21214f] leading-none">
+                  {activeCourses.length}
+                </p>
+                <p className="text-[10px] text-[#767692] mt-0.5">Курсов</p>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#f0fdf4] rounded-[10px]">
+              <div className="w-7 h-7 bg-[#0596691a] rounded-[6px] flex items-center justify-center shrink-0">
+                <Users className="w-3.5 h-3.5 text-[#059669]" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-[#21214f] leading-none">
+                  {totalStudents}
+                </p>
+                <p className="text-[10px] text-[#767692] mt-0.5">Студентов</p>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#fffbeb] rounded-[10px]">
+              <div className="w-7 h-7 bg-[#d977061a] rounded-[6px] flex items-center justify-center shrink-0">
+                <ClipboardList className="w-3.5 h-3.5 text-[#d97706]" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-[#21214f] leading-none">
+                  {totalAssignments}
+                </p>
+                <p className="text-[10px] text-[#767692] mt-0.5">Заданий</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-6">
-            <SimplePagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
+        {/* Search + count */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1">
+            <CourseSearch
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Поиск по названию или коду курса..."
             />
           </div>
-        )}
-
-        {/* Empty state if no courses */}
-        {filteredCourses.length === 0 && (
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
-            <div className="w-16 h-16 bg-[#f9f9f9] rounded-[16px] flex items-center justify-center mx-auto mb-4">
-              <Book className="w-8 h-8 text-[#767692]" />
-            </div>
-            <h3 className="text-[20px] font-medium text-[#21214f] mb-2">Нет курсов</h3>
-            <p className="text-[15px] text-[#767692] mb-6">
-              Создайте первый курс, чтобы начать работу
+          {filteredCourses.length > 0 && (
+            <p className="text-[12px] text-[#767692] tabular-nums shrink-0 hidden tablet:block">
+              {filteredCourses.length} курсов
             </p>
-            <button className="px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-all duration-200 shadow-[0_2px_8px_rgba(37,99,235,0.3)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]">
-              Создать курс
-            </button>
+          )}
+        </div>
+
+        {/* Table or empty state */}
+        {filteredCourses.length > 0 ? (
+          <>
+            <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full table-fixed">
+                  <colgroup>
+                    <col /> {/* Курс — остаток */}
+                    <col className="w-[120px] hidden tablet:table-column" /> {/* Семестр */}
+                    <col className="w-[100px] hidden tablet:table-column" /> {/* Студенты */}
+                    <col className="w-[100px] hidden tablet:table-column" /> {/* Задания */}
+                    <col className="w-[105px]" /> {/* Статус */}
+                    <col className="w-[48px]" /> {/* Chevron */}
+                  </colgroup>
+                  <thead>
+                    <tr className="border-b-2 border-[#e6e8ee] bg-[#fafbfc]">
+                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px]">
+                        Курс
+                      </th>
+                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
+                        Семестр
+                      </th>
+                      <th className="text-center px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
+                        Студенты
+                      </th>
+                      <th className="text-center px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
+                        Задания
+                      </th>
+                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px]">
+                        Статус
+                      </th>
+                      <th className="py-3 w-[48px]" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#e6e8ee]">
+                    {filteredCourses
+                      .slice((currentPage - 1) * 10, currentPage * 10)
+                      .map((course) => (
+                        <tr
+                          key={course.id}
+                          className="hover:bg-[#f7f9ff] transition-colors duration-150 cursor-pointer group"
+                          onClick={() => handleOpenCourse(course.id)}
+                          onKeyDown={(e) => handleRowKeyDown(e, course.id)}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Открыть курс ${course.name}`}
+                        >
+                          {/* Course name + code */}
+                          <td className="px-5 py-4">
+                            <p className="text-[14px] font-semibold text-[#21214f] tracking-[-0.2px] leading-snug">
+                              {course.name}
+                            </p>
+                            <p className="text-[12px] text-[#767692] mt-0.5 font-mono">
+                              {course.code}
+                            </p>
+                          </td>
+
+                          {/* Semester */}
+                          <td className="px-5 py-4 hidden tablet:table-cell">
+                            <p className="text-[13px] text-[#767692]">{course.term}</p>
+                          </td>
+
+                          {/* Students */}
+                          <td className="px-5 py-4 text-center hidden tablet:table-cell">
+                            <span className="inline-flex items-center justify-center min-w-[32px] px-2.5 py-1 bg-[#eff6ff] text-[#2563eb] rounded-[8px] text-[13px] font-semibold tabular-nums">
+                              {course.participantsCount}
+                            </span>
+                          </td>
+
+                          {/* Assignments */}
+                          <td className="px-5 py-4 text-center hidden tablet:table-cell">
+                            <span className="inline-flex items-center justify-center min-w-[32px] px-2.5 py-1 bg-[#f0fdf4] text-[#059669] rounded-[8px] text-[13px] font-semibold tabular-nums">
+                              {course.activeAssignments}
+                            </span>
+                          </td>
+
+                          {/* Status */}
+                          <td className="px-5 py-4">
+                            {course.status === "active" ? (
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[12px] font-medium">
+                                Активен
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[12px] font-medium">
+                                Архив
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Row-navigation affordance */}
+                          <td className="pr-4 py-4 w-[48px]">
+                            <ChevronRight
+                              aria-hidden="true"
+                              className="w-4 h-4 text-[#767692] opacity-20 group-hover:opacity-50 transition-opacity duration-150 ml-auto"
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {totalPages > 1 && (
+              <div className="mt-4">
+                <SimplePagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
+            <div className="w-12 h-12 bg-[#f7f9ff] rounded-[12px] flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="w-6 h-6 text-[#767692]" />
+            </div>
+            <h3 className="text-[17px] font-medium text-[#21214f] mb-2">
+              {searchQuery ? "Курсы не найдены" : "Нет курсов"}
+            </h3>
+            <p className="text-[14px] text-[#767692] mb-6">
+              {searchQuery
+                ? "Попробуйте изменить поисковый запрос"
+                : "Создайте первый курс, чтобы начать работу"}
+            </p>
+            {!searchQuery && (
+              <button
+                onClick={() => (window.location.hash = "/teacher/course/create")}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-[14px] font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Создать курс
+              </button>
+            )}
           </div>
         )}
       </div>

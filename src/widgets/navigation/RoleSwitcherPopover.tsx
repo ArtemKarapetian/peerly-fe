@@ -3,19 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { useRole, getRoleDisplayName } from "@/entities/user";
 import type { UserRole } from "@/entities/user";
 
-/**
- * RoleSwitcherPopover - Flexible role switcher component
- *
- * Collapsed mode:
- * - Click to open/close
- * - Click outside to close
- * - Escape key to close
- * - Stays open while hovering over menu
- *
- * Expanded mode:
- * - Show full role list with buttons
- */
-
 interface RoleSwitcherPopoverProps {
   collapsed?: boolean;
 }
@@ -26,7 +13,6 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
   const containerRef = useRef<HTMLDivElement>(null);
   const roles: UserRole[] = ["Student", "Teacher", "Admin"];
 
-  // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -43,7 +29,6 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
     };
   }, [isOpen, collapsed]);
 
-  // Handle Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isOpen) {
@@ -73,25 +58,28 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
     }
   };
 
-  // Expanded mode
+  // Expanded mode — inline list
   if (!collapsed) {
     return (
-      <div className="px-3 pb-2">
-        <p className="text-[11px] text-[#767692] font-medium uppercase tracking-wide px-3 mb-2">
+      <div className="px-2.5 pb-2">
+        <p className="text-[10px] text-[--text-tertiary] font-medium uppercase tracking-wider px-2.5 mb-1.5">
           Демо: Роль
         </p>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {roles.map((role) => (
             <button
               key={role}
               onClick={() => handleSelectRole(role)}
-              className={`
-                w-full text-left px-3 py-2 rounded-[8px] text-[14px] transition-colors flex items-center justify-between
-                ${role === currentRole ? "bg-[#e9f5ff] text-[#3d6bc6] font-medium" : "text-[#21214f] hover:bg-[#f9f9f9]"}
-              `}
+              className={`w-full text-left px-2.5 py-[6px] rounded-[6px] text-[13px] transition-colors flex items-center justify-between ${
+                role === currentRole
+                  ? "bg-[#eef4ff] text-[--brand-primary] font-medium"
+                  : "text-[--text-secondary] hover:bg-[--surface-hover] hover:text-[--text-primary]"
+              }`}
             >
               <span>{getRoleDisplayName(role)}</span>
-              {role === currentRole && <div className="w-2 h-2 rounded-full bg-[#3d6bc6]"></div>}
+              {role === currentRole && (
+                <div className="w-1.5 h-1.5 rounded-full bg-[--brand-primary]" />
+              )}
             </button>
           ))}
         </div>
@@ -99,35 +87,35 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
     );
   }
 
-  // Collapsed mode with click-to-toggle popover
+  // Collapsed mode — circle button + popover
   return (
-    <div ref={containerRef} className="relative px-3 pb-2">
+    <div ref={containerRef} className="relative px-2.5 pb-2">
       <div className="flex justify-center">
         <button
           onClick={handleToggle}
-          className="w-8 h-8 rounded-full bg-gradient-to-br from-[#5b8def] to-[#3d6bc6] flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-2"
+          className="w-7 h-7 rounded-full bg-gradient-to-br from-[#5b8def] to-[#3d6bc6] flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
           title={`Роль: ${getRoleDisplayName(currentRole)}`}
           aria-label="Переключить роль"
           aria-expanded={isOpen}
         >
-          <span className="text-white text-[11px] font-bold">{currentRole[0]}</span>
+          <span className="text-white text-[10px] font-bold">{currentRole[0]}</span>
         </button>
       </div>
 
-      {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute left-full ml-2 top-0 bg-white border-2 border-[#e6e8ee] rounded-[12px] shadow-lg py-2 z-50 w-[180px]">
-          <p className="px-3 py-1 text-[11px] text-[#767692] font-medium uppercase tracking-wide">
+        <div className="absolute left-full ml-2 top-0 bg-white border border-[--surface-border] rounded-[8px] shadow-[var(--shadow-lg)] py-1 z-50 w-[170px]">
+          <p className="px-3 py-1 text-[10px] text-[--text-tertiary] font-medium uppercase tracking-wider">
             Переключить роль
           </p>
           {roles.map((role) => (
             <button
               key={role}
               onClick={() => handleSelectRole(role)}
-              className={`
-                w-full text-left px-3 py-2 text-[14px] transition-colors
-                ${role === currentRole ? "bg-[#e9f5ff] text-[#3d6bc6] font-medium" : "text-[#21214f] hover:bg-[#f9f9f9]"}
-              `}
+              className={`w-full text-left px-3 py-[6px] text-[13px] transition-colors ${
+                role === currentRole
+                  ? "bg-[#eef4ff] text-[--brand-primary] font-medium"
+                  : "text-[--text-primary] hover:bg-[--surface-hover]"
+              }`}
             >
               {getRoleDisplayName(role)}
             </button>

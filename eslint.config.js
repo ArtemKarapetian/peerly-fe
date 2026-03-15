@@ -49,7 +49,7 @@ export default [
   prettier,
 
   {
-    ignores: ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.next/**", "**/coverage/**"],
+    ignores: ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.next/**", "**/coverage/**", "**/src/pages/_archived/**"],
   },
 
   {

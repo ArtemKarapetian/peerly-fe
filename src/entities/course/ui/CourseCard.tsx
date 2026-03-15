@@ -1,6 +1,15 @@
+import { AlertCircle, BookOpen, CheckCircle2, Clock } from "lucide-react";
+
 /**
- * CourseCard - Карточка курса
- * Мягкий стиль без толстых рамок, с hover эффектом
+ * CourseCard — карточка курса (студент).
+ *
+ * Структура body:
+ *   - title (min 2 строки)
+ *   - teacher row
+ *   - progress bar (для активных и завершённых, цвет разный)
+ *   - footer (mt-auto): deadline | "Завершён" | пусто
+ *
+ * flex-col на кнопке + flex-1 на body → footer всегда прижат к низу.
  */
 
 interface CourseCardProps {
@@ -8,66 +17,146 @@ interface CourseCardProps {
   title: string;
   teacher: string;
   coverColor?: string;
+  semester?: string;
+  deadline?: string;
+  progress?: number;
+  newAssignments?: number;
+  status?: "active" | "completed";
   onClick?: () => void;
 }
 
-export function CourseCard({ title, teacher, coverColor = "#f2b2d6", onClick }: CourseCardProps) {
-  // Generate initials from teacher name for avatar
-  const getInitials = (name: string) => {
-    const parts = name.split(" ");
-    if (parts.length >= 2) {
-      return parts[0][0] + parts[1][0];
-    }
-    return name.substring(0, 2).toUpperCase();
+function getInitials(name: string): string {
+  const parts = name.split(" ");
+  if (parts.length >= 2) return parts[0][0] + parts[1][0];
+  return name.substring(0, 2).toUpperCase();
+}
+
+function formatDeadline(isoDate: string): { label: string; urgent: boolean } {
+  const date = new Date(isoDate);
+  const now = new Date();
+  const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return { label: "Дедлайн истёк", urgent: true };
+  if (diffDays === 0) return { label: "Сегодня", urgent: true };
+  if (diffDays === 1) return { label: "Завтра", urgent: true };
+  if (diffDays <= 3) return { label: `Через ${diffDays} дня`, urgent: true };
+  if (diffDays <= 7) return { label: `Через ${diffDays} дней`, urgent: false };
+  return {
+    label: date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
+    urgent: false,
   };
+}
+
+export function CourseCard({
+  title,
+  teacher,
+  coverColor = "#b0e9fb",
+  semester,
+  deadline,
+  progress,
+  newAssignments,
+  status = "active",
+  onClick,
+}: CourseCardProps) {
+  const isCompleted = status === "completed";
+  const deadlineInfo = !isCompleted && deadline ? formatDeadline(deadline) : null;
+  const isUrgent = deadlineInfo?.urgent === true;
 
   return (
     <button
       onClick={onClick}
-      className="
-        bg-white rounded-[20px] overflow-hidden w-full
-        border border-[#e6e8ee]
-        shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-        transition-all duration-200
-        hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:border-[#b7bdff]
-        text-left
+      className={`
+        flex flex-col
+        bg-white rounded-[var(--radius-xl)] overflow-hidden w-full text-left
+        border transition-all duration-200
+        shadow-[var(--shadow-md)]
+        hover:shadow-[0_6px_20px_rgba(0,0,0,0.1)] hover:-translate-y-0.5
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary]/40
         group
-      "
+        ${isUrgent ? "border-[--error]/40" : "border-[--surface-border]"}
+      `}
     >
-      {/* Cover Image */}
-      <div className="w-full h-[120px]" style={{ backgroundColor: coverColor }} />
+      {/* Accent strip */}
+      <div
+        className="relative h-[52px] flex items-end px-3 pb-2 shrink-0"
+        style={{ backgroundColor: coverColor }}
+      >
+        {/* New assignments badge — visible only on active cards */}
+        {!isCompleted && newAssignments && newAssignments > 0 ? (
+          <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[11px] font-semibold text-[--brand-primary] shadow-sm">
+            <BookOpen className="w-3 h-3" />
+            {newAssignments} {newAssignments === 1 ? "новое" : "новых"}
+          </span>
+        ) : null}
 
-      {/* Content */}
-      <div className="flex flex-col gap-2 px-4 py-3">
+        {/* Semester chip — bg-black/12 works on any cover color lightness */}
+        {semester && (
+          <span className="text-[10px] font-medium px-2 py-0.5 bg-black/[0.14] rounded-full text-[--text-primary] leading-none">
+            {semester}
+          </span>
+        )}
+      </div>
+
+      {/* Card body */}
+      <div className="px-4 pt-3 pb-3 flex flex-col flex-1 gap-2">
         {/* Title */}
-        <h3
-          className="
-          text-[15px] leading-[1.3] tracking-[-0.3px] text-[#21214f]
-          font-semibold
-          line-clamp-2
-          min-h-[2.6em]
-        "
-        >
+        <h3 className="text-[14px] leading-[1.35] tracking-[-0.2px] text-[--text-primary] font-semibold line-clamp-2 min-h-[2.7em]">
           {title}
         </h3>
 
-        {/* Teacher with Avatar */}
+        {/* Teacher */}
         <div className="flex items-center gap-2">
-          {/* Teacher Avatar */}
           <div
-            className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-semibold text-white"
+            className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold text-[--text-primary]"
             style={{ backgroundColor: coverColor }}
           >
             {getInitials(teacher)}
           </div>
-          <p
-            className="
-            flex-1 text-[13px] leading-[1.4] text-[#767692]
-            truncate
-          "
-          >
-            {teacher}
-          </p>
+          <p className="text-[12px] text-[--text-secondary] truncate">{teacher}</p>
+        </div>
+
+        {/* Progress bar — shown for both active and completed, color differs */}
+        {typeof progress === "number" && (
+          <div className="space-y-1">
+            <div className="h-1.5 bg-[--surface-border] rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={
+                  isCompleted
+                    ? { width: "100%", backgroundColor: "var(--success)" }
+                    : { width: `${progress}%`, backgroundColor: coverColor }
+                }
+              />
+            </div>
+            <p className="text-[11px] text-[--text-tertiary]">
+              {isCompleted ? "100% выполнено" : `${progress}% выполнено`}
+            </p>
+          </div>
+        )}
+
+        {/* Footer — always at the bottom, aligned across all cards in a row */}
+        <div className="mt-auto">
+          {isCompleted ? (
+            /* Completed: green badge with checkmark */
+            <div className="flex items-center gap-1.5 pt-1 text-[--success]">
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+              <span className="text-[12px] font-medium">Завершён</span>
+            </div>
+          ) : deadlineInfo ? (
+            /* Active with deadline */
+            <div
+              className={`flex items-center gap-1.5 pt-1 ${
+                deadlineInfo.urgent ? "text-[--error]" : "text-[--text-tertiary]"
+              }`}
+            >
+              {deadlineInfo.urgent ? (
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              ) : (
+                <Clock className="w-3.5 h-3.5 shrink-0" />
+              )}
+              <span className="text-[12px] font-medium">{deadlineInfo.label}</span>
+            </div>
+          ) : null}
         </div>
       </div>
     </button>

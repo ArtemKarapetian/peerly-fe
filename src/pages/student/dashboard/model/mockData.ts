@@ -1,7 +1,6 @@
 import type {
   DeadlineItem,
   ActionCardData,
-  RecentItem,
   TodaySummaryData,
   Notification,
 } from "@/widgets/student-dashboard";
@@ -61,7 +60,7 @@ export const mockActionData: ActionCardData = {
   newFeedback: 1,
 };
 
-export const mockRecentItems: RecentItem[] = [
+export const mockRecentItems = [
   {
     id: "1",
     type: "task",

@@ -7,15 +7,12 @@ import { useAuth } from "@/entities/user";
 
 import AdminCoursesPage from "@/pages/admin/courses/ui/Page.tsx";
 import AdminFlagsPage from "@/pages/admin/flags/ui/Page.tsx";
-import AdminHealthPage from "@/pages/admin/health/ui/Page.tsx";
 import AdminIntegrationsPage from "@/pages/admin/integrations/ui/Page.tsx";
 import AdminLimitsPage from "@/pages/admin/limits/ui/Page.tsx";
 import AdminLogsPage from "@/pages/admin/logs/ui/Page.tsx";
 import AdminOrgsPage from "@/pages/admin/orgs/ui/Page.tsx";
 import AdminOverviewPage from "@/pages/admin/overview/ui/Page.tsx";
 import AdminPluginsPage from "@/pages/admin/plugins/ui/Page.tsx";
-import AdminPoliciesPage from "@/pages/admin/policies/ui/Page.tsx";
-import AdminQueuesPage from "@/pages/admin/queues/ui/Page.tsx";
 import AdminRetentionPage from "@/pages/admin/retention/ui/Page.tsx";
 import AdminSettingsPage from "@/pages/admin/settings/ui/Page.tsx";
 import AdminUsersPage from "@/pages/admin/users/ui/Page.tsx";
@@ -40,7 +37,6 @@ import AppealsListPage from "@/pages/student/appeals/list/ui/Page.tsx";
 import CoursePage from "@/pages/student/courses/detail/ui/Page.tsx";
 import CoursesListPage from "@/pages/student/courses/list/ui/Page.tsx";
 import DashboardPage from "@/pages/student/dashboard/ui/Page.tsx";
-import { ExtensionRequestPage } from "@/pages/student/extensions/request";
 import GradebookPage from "@/pages/student/gradebook/ui/Page.tsx";
 import InboxPage from "@/pages/student/inbox/ui/Page.tsx";
 import ReviewsInboxPage from "@/pages/student/reviews/inbox/ui/Page.tsx";
@@ -48,7 +44,6 @@ import ReceivedReviewsPage from "@/pages/student/reviews/received/ui/Page.tsx";
 import ReviewPage from "@/pages/student/reviews/review/ui/Page.tsx";
 import { SubmitWorkPage } from "@/pages/student/submissions/submit-work";
 import SubmissionsPage from "@/pages/student/submissions/ui/Page.tsx";
-import SupportChatPage from "@/pages/student/support/chat/ui/Page.tsx";
 import TaskPage from "@/pages/student/task/detail/ui/Page.tsx";
 import TeacherAnalyticsPage from "@/pages/teacher/analytics/ui/Page.tsx";
 import TeacherAnnouncementsPage from "@/pages/teacher/announcements/ui/Page.tsx";
@@ -60,7 +55,6 @@ import TeacherAutomationPage from "@/pages/teacher/automation/ui/Page.tsx";
 import TeacherCourseDetailsPage from "@/pages/teacher/course-detail/ui/Page.tsx";
 import TeacherCoursesPage from "@/pages/teacher/courses/ui/Page.tsx";
 import TeacherCreateAssignmentPage from "@/pages/teacher/create-assignment/ui/Page.tsx";
-import TeacherDashboardPage from "@/pages/teacher/dashboard/ui/Page.tsx";
 import TeacherDistributionPage from "@/pages/teacher/distribution/ui/Page.tsx";
 import TeacherExtensionsPage from "@/pages/teacher/extensions/ui/Page.tsx";
 import TeacherModerationPage from "@/pages/teacher/moderation/ui/Page.tsx";
@@ -92,8 +86,10 @@ export function Router() {
     if (routeKey === "legacyCourse" && params.courseId) return ROUTES.course(params.courseId);
     if (routeKey === "legacyTeacherCourse" && params.courseId)
       return ROUTES.teacherCourse(params.courseId);
+    // Teacher dashboard removed — redirect to courses
+    if (pathname === ROUTES.teacherDashboard) return ROUTES.teacherCourses;
     return null;
-  }, [routeKey, params.courseId]);
+  }, [routeKey, params.courseId, pathname]);
 
   const authRedirect = useMemo(
     () => getAuthRedirect(pathname, isAuthenticated),
@@ -121,7 +117,6 @@ export function Router() {
   if (isAuthenticated && isAuthPage(pathname)) return <DashboardPage />;
 
   // Teacher (static)
-  if (pathname === ROUTES.teacherDashboard) return <TeacherDashboardPage />;
   if (pathname === ROUTES.teacherCourses) return <TeacherCoursesPage />;
   if (pathname === ROUTES.teacherRubrics) return <TeacherRubricsPage />;
   if (pathname === ROUTES.teacherAssignments) return <TeacherAssignmentsPage />;
@@ -129,11 +124,17 @@ export function Router() {
   if (pathname === ROUTES.teacherDistribution) return <TeacherDistributionPage />;
   if (pathname === ROUTES.teacherModeration) return <TeacherModerationPage />;
   if (pathname === ROUTES.teacherSubmissions) return <TeacherSubmissionsPage />;
-  if (pathname === ROUTES.teacherAnalytics) return <TeacherAnalyticsPage />;
   if (pathname === ROUTES.teacherAppeals) return <TeacherAppealsPage />;
-  if (pathname === ROUTES.teacherAnnouncements) return <TeacherAnnouncementsPage />;
-  if (pathname === ROUTES.teacherExtensions) return <TeacherExtensionsPage />;
-  if (pathname === ROUTES.teacherAutomation) return <TeacherAutomationPage />;
+
+  // Teacher (feature-flagged)
+  if (pathname === ROUTES.teacherAnalytics)
+    return isFlagEnabled("enableAnalytics") ? <TeacherAnalyticsPage /> : <Error404Page />;
+  if (pathname === ROUTES.teacherAnnouncements)
+    return isFlagEnabled("enableAnnouncements") ? <TeacherAnnouncementsPage /> : <Error404Page />;
+  if (pathname === ROUTES.teacherExtensions)
+    return isFlagEnabled("enableExtensions") ? <TeacherExtensionsPage /> : <Error404Page />;
+  if (pathname === ROUTES.teacherAutomation)
+    return isFlagEnabled("enableAutomation") ? <TeacherAutomationPage /> : <Error404Page />;
 
   // Teacher (dynamic)
   if (routeKey === "teacherCourse" && params.courseId) {
@@ -154,16 +155,19 @@ export function Router() {
   if (pathname === ROUTES.adminCourses) return <AdminCoursesPage />;
   if (pathname === ROUTES.adminUsers) return <AdminUsersPage />;
   if (pathname === ROUTES.adminOrgs) return <AdminOrgsPage />;
-  if (pathname === ROUTES.adminPlugins) return <AdminPluginsPage />;
-  if (pathname === ROUTES.adminIntegrations) return <AdminIntegrationsPage />;
   if (pathname === ROUTES.adminSettings) return <AdminSettingsPage />;
-  if (pathname === ROUTES.adminPolicies) return <AdminPoliciesPage />;
-  if (pathname === ROUTES.adminRetention) return <AdminRetentionPage />;
-  if (pathname === ROUTES.adminLimits) return <AdminLimitsPage />;
   if (pathname === ROUTES.adminFlags) return <AdminFlagsPage />;
-  if (pathname === ROUTES.adminQueues) return <AdminQueuesPage />;
   if (pathname === ROUTES.adminLogs) return <AdminLogsPage />;
-  if (pathname === ROUTES.adminHealth) return <AdminHealthPage />;
+
+  // Admin (feature-flagged)
+  if (pathname === ROUTES.adminPlugins)
+    return isFlagEnabled("enablePlugins") ? <AdminPluginsPage /> : <Error404Page />;
+  if (pathname === ROUTES.adminIntegrations)
+    return isFlagEnabled("enableIntegrations") ? <AdminIntegrationsPage /> : <Error404Page />;
+  if (pathname === ROUTES.adminRetention)
+    return isFlagEnabled("enableRetention") ? <AdminRetentionPage /> : <Error404Page />;
+  if (pathname === ROUTES.adminLimits)
+    return isFlagEnabled("enableLimits") ? <AdminLimitsPage /> : <Error404Page />;
 
   // Student (static)
   if (pathname === ROUTES.dashboard) return <DashboardPage />;
@@ -173,14 +177,12 @@ export function Router() {
   if (pathname === ROUTES.gradebook) return <GradebookPage />;
   if (pathname === ROUTES.inbox) return <InboxPage />;
   if (pathname === ROUTES.appeals) return <AppealsListPage />;
-  if (pathname === ROUTES.extensions) return <ExtensionRequestPage />;
 
   // Student (dynamic)
   if (routeKey === "courseDetails" && params.courseId) {
     return <CoursePage courseId={params.courseId} />;
   }
   if (routeKey === "taskDetails" && params.taskId) {
-    // TaskPage у тебя принимает только taskId — курс не обязателен
     return <TaskPage taskId={params.taskId} />;
   }
   if (routeKey === "submitWork" && params.courseId && params.taskId) {
@@ -191,9 +193,6 @@ export function Router() {
   }
   if (routeKey === "taskAppeal" && params.courseId && params.taskId) {
     return <CreateAppealPage courseId={params.courseId} taskId={params.taskId} />;
-  }
-  if (routeKey === "extensionRequest" && params.courseId && params.taskId) {
-    return <ExtensionRequestPage courseId={params.courseId} taskId={params.taskId} />;
   }
   if (routeKey === "review" && params.reviewId && pathname !== ROUTES.receivedReviews) {
     return <ReviewPage reviewId={params.reviewId} />;
@@ -225,9 +224,6 @@ export function Router() {
 
   // Landing
   if (pathname === ROUTES.landing) return <LandingPage />;
-
-  // Support
-  if (pathname === ROUTES.supportChat) return <SupportChatPage />;
 
   // Errors
   if (pathname === ROUTES.error401) return <Error401Page />;

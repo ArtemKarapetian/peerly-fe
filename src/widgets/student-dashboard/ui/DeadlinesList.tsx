@@ -1,22 +1,11 @@
 import { Clock, ChevronRight } from "lucide-react";
 
-/**
- * DeadlinesList - Список ближайших дедлайнов
- *
- * Каждая строка содержит:
- * - Название курса
- * - Название задания
- * - Дата/время дедлайна
- * - Статус чип
- * - Кнопка быстрого действия (зависит от статуса)
- */
-
 export type DeadlineStatus =
-  | "NOT_STARTED" // Не начато
-  | "DRAFT" // Черновик
-  | "SUBMITTED" // Сдано
-  | "IN_REVIEW" // На проверке
-  | "NEED_YOUR_REVIEW"; // Нужна ваша рецензия
+  | "NOT_STARTED"
+  | "DRAFT"
+  | "SUBMITTED"
+  | "IN_REVIEW"
+  | "NEED_YOUR_REVIEW";
 
 export interface DeadlineItem {
   id: string;
@@ -24,9 +13,9 @@ export interface DeadlineItem {
   courseName: string;
   taskId: string;
   taskTitle: string;
-  dueDate: string; // e.g., "31 января, 23:59"
+  dueDate: string;
   status: DeadlineStatus;
-  isUrgent?: boolean; // < 24 hours
+  isUrgent?: boolean;
 }
 
 interface DeadlinesListProps {
@@ -34,89 +23,88 @@ interface DeadlinesListProps {
   onTaskClick: (taskId: string) => void;
 }
 
+function getStatusBadge(status: DeadlineStatus): string {
+  switch (status) {
+    case "NOT_STARTED":
+      return "badge badge-neutral";
+    case "DRAFT":
+      return "badge badge-warning";
+    case "SUBMITTED":
+      // Already done — calm, no action needed
+      return "badge badge-neutral";
+    case "IN_REVIEW":
+      // Someone else reviews it — calm, no action needed
+      return "badge badge-neutral";
+    case "NEED_YOUR_REVIEW":
+      // Requires student's action — loud
+      return "badge badge-error";
+  }
+}
+
+function getStatusLabel(status: DeadlineStatus): string {
+  switch (status) {
+    case "NOT_STARTED":
+      return "Не начато";
+    case "DRAFT":
+      return "Черновик";
+    case "SUBMITTED":
+      return "Сдано";
+    case "IN_REVIEW":
+      return "На проверке";
+    case "NEED_YOUR_REVIEW":
+      return "Нужна рецензия";
+  }
+}
+
 export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
-  const getStatusLabel = (status: DeadlineStatus): string => {
-    switch (status) {
-      case "NOT_STARTED":
-        return "Не начато";
-      case "DRAFT":
-        return "Черновик";
-      case "SUBMITTED":
-        return "Сдано";
-      case "IN_REVIEW":
-        return "На проверке";
-      case "NEED_YOUR_REVIEW":
-        return "Нужна рецензия";
-    }
-  };
-
-  const getStatusColor = (status: DeadlineStatus): string => {
-    switch (status) {
-      case "NOT_STARTED":
-        return "bg-[#e4e4e4] text-[#767692]";
-      case "DRAFT":
-        return "bg-[#ffd4a3] text-[#21214f]";
-      case "SUBMITTED":
-        return "bg-[#b7bdff] text-[#21214f]";
-      case "IN_REVIEW":
-        return "bg-[#b0e9fb] text-[#21214f]";
-      case "NEED_YOUR_REVIEW":
-        return "bg-[#ffb8b8] text-[#21214f]";
-    }
-  };
-
   if (items.length === 0) {
     return (
-      <div className="text-center py-12 bg-[--surface] rounded-[var(--radius-lg)] border border-[--surface-border]">
-        <div className="w-12 h-12 bg-[--brand-primary-lighter] rounded-full mx-auto flex items-center justify-center mb-3">
-          <Clock className="w-6 h-6 text-[--brand-primary]" />
+      <div className="flex flex-col items-center justify-center py-10 text-center px-5">
+        <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
+          <Clock className="w-5 h-5 text-[--text-tertiary]" />
         </div>
-        <p className="text-sm text-[--text-secondary]">Нет ближайших дедлайнов</p>
+        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">Нет дедлайнов</p>
+        <p className="text-[13px] text-[--text-secondary]">Все задания выполнены</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      {items.map((item) => {
+    <div className="divide-y divide-[--surface-border]">
+      {items.map((item, index) => {
+        // First urgent item gets a left-border "next up" treatment
+        const isPrimary = index === 0 && item.isUrgent;
+
         return (
           <button
             key={item.id}
             onClick={() => onTaskClick(item.taskId)}
-            className="w-full text-left p-4 border-b border-[#e6e8ee] last:border-b-0 hover:bg-white hover:shadow-sm hover:rounded-[12px] transition-all cursor-pointer group"
+            className={`w-full text-left py-3.5 pr-5 hover:bg-[#f7f9ff] transition-colors duration-150 group ${
+              isPrimary ? "pl-[17px] border-l-[3px] border-[--warning]" : "pl-5"
+            }`}
           >
-            <div className="flex items-start gap-3">
-              {/* Left: Course + Task info */}
+            <div className="flex items-center gap-3">
               <div className="flex-1 min-w-0">
-                {/* Course name */}
-                <div className="text-[13px] text-[#767692] mb-1">{item.courseName}</div>
-
-                {/* Task title */}
-                <div className="text-[15px] font-medium text-[#21214f] mb-2 truncate">
+                <p className="text-[11px] text-[--text-tertiary] mb-0.5">{item.courseName}</p>
+                <p
+                  className={`tracking-[-0.2px] truncate leading-snug mb-2 ${isPrimary ? "text-[14px] font-bold text-[--text-primary]" : "text-[14px] font-semibold text-[--text-primary]"}`}
+                >
                   {item.taskTitle}
-                </div>
-
-                {/* Due date + Status */}
+                </p>
                 <div className="flex items-center gap-2 flex-wrap">
                   <div
-                    className={`flex items-center gap-1.5 text-[13px] ${item.isUrgent ? "text-[#d4183d] font-medium" : "text-[#767692]"}`}
+                    className={`flex items-center gap-1 text-[12px] font-medium ${
+                      item.isUrgent ? "text-[--error]" : "text-[--text-tertiary]"
+                    }`}
                   >
-                    <Clock className="w-3.5 h-3.5" />
+                    <Clock className="w-3 h-3 shrink-0" />
                     <span>{item.dueDate}</span>
                   </div>
-
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-[6px] text-[12px] font-medium ${getStatusColor(item.status)}`}
-                  >
-                    {getStatusLabel(item.status)}
-                  </span>
+                  <span className={getStatusBadge(item.status)}>{getStatusLabel(item.status)}</span>
                 </div>
               </div>
 
-              {/* Right: Arrow icon */}
-              <div className="shrink-0 flex items-center">
-                <ChevronRight className="w-5 h-5 text-[#d7d7d7] group-hover:text-[#2563eb] transition-colors" />
-              </div>
+              <ChevronRight className="w-4 h-4 text-[--text-tertiary] opacity-25 group-hover:opacity-60 transition-opacity duration-150 shrink-0" />
             </div>
           </button>
         );

@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
-import { LayoutDebugger } from "@/shared/ui/LayoutDebugger";
 import { usePagination } from "@/shared/ui/simple-pagination";
 
 import { CourseCard } from "@/entities/course";
@@ -18,15 +17,16 @@ export default function CoursesListPage() {
 
   return (
     <AppShell title="Курсы">
-      <h1 className="page-title mb-6">Курсы</h1>
+      <div className="mb-4">
+        <h1 className="page-title mb-1">Мои курсы</h1>
+        <p className="text-[14px] text-[--text-secondary]">Ваши учебные курсы на текущий семестр</p>
+      </div>
 
       <CourseFilterBar courses={mockCourses}>
         {(filteredCourses) => (
           <CourseListContent courses={filteredCourses} onCourseClick={handleCourseClick} />
         )}
       </CourseFilterBar>
-
-      <LayoutDebugger />
     </AppShell>
   );
 }
@@ -42,7 +42,9 @@ function CourseListContent({
 
   return (
     <>
-      <div className="mb-4 text-[14px] text-[#767692]">Найдено курсов: {courses.length}</div>
+      {courses.length > 0 && (
+        <p className="mb-3 text-[12px] text-[--text-tertiary]">Найдено: {courses.length}</p>
+      )}
 
       {currentItems.length > 0 ? (
         <div className="courses-grid">
@@ -53,13 +55,24 @@ function CourseListContent({
               title={course.title}
               teacher={course.teacher}
               coverColor={course.coverColor}
+              semester={course.semester}
+              deadline={course.deadline}
+              progress={course.progress}
+              newAssignments={course.newAssignments}
+              status={course.status}
               onClick={() => onCourseClick(course.id)}
             />
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="text-[14px] text-[#767692]">Курсы не найдены</p>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-12 h-12 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
+            <span className="text-[22px]">📚</span>
+          </div>
+          <p className="text-[14px] font-medium text-[--text-primary] mb-1">Курсы не найдены</p>
+          <p className="text-[13px] text-[--text-secondary]">
+            Попробуйте изменить параметры поиска
+          </p>
         </div>
       )}
 

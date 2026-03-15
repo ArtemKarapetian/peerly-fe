@@ -136,7 +136,7 @@ export default function AdminRetentionPage() {
       <Breadcrumbs
         items={[
           CRUMBS.adminRoot,
-          { label: "Политики", href: ROUTES.adminPolicies },
+          { label: "Политики", href: ROUTES.adminSettings },
           { label: "Хранение данных" },
         ]}
       />

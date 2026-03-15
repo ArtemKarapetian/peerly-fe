@@ -20,7 +20,6 @@ const PROTECTED_EXACT = [
   ROUTES.gradebook,
   ROUTES.inbox,
   ROUTES.appeals,
-  ROUTES.extensions,
   ROUTES.profile,
   ROUTES.settings,
   ROUTES.security,
