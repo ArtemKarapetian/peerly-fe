@@ -19,19 +19,11 @@ import {
   FileSearch,
   Zap,
 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 import { useRole } from "@/entities/user";
 
 import { RoleSwitcherPopover } from "./RoleSwitcherPopover.tsx";
-
-/**
- * SideNav - Role-Aware Navigation
- *
- * Показывает разные элементы меню в зависимости от роли:
- * - Student: Dashboard, Courses, Reviews, etc.
- * - Teacher: Teaching Dashboard, Course Management, Rubrics, etc.
- * - Admin: System Overview, Users, Integrations, etc.
- */
 
 type SideNavVariant =
   | "desktop-expanded"
@@ -53,18 +45,32 @@ interface NavItem {
   hash: string;
 }
 
+/* Shared focus ring for all interactive sidebar elements */
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary]/25";
+
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
   const { currentRole } = useRole();
   const isCollapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
   const isMobileDrawer = variant === "mobile-drawer";
-  // Show toggle button on desktop AND tablet
   const showToggleButton =
     variant === "desktop-expanded" ||
     variant === "desktop-collapsed" ||
     variant === "tablet-collapsed" ||
     variant === "tablet-expanded";
 
-  // Navigation items by role
+  const [currentPath, setCurrentPath] = useState(
+    () => window.location.hash.slice(1) || "/dashboard",
+  );
+
+  useEffect(() => {
+    const onHashChange = () => setCurrentPath(window.location.hash.slice(1));
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const isActive = (hash: string) => currentPath === hash || currentPath.startsWith(hash + "/");
+
   const getNavItems = (): NavItem[] => {
     switch (currentRole) {
       case "Student":
@@ -101,105 +107,101 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
   const navItems = getNavItems();
 
-  // Mobile Drawer
+  const navItemClass = (active: boolean) =>
+    active
+      ? "bg-[#eef4ff] text-[--brand-primary] font-medium hover:bg-[#dce6fd]"
+      : "text-[--text-secondary] hover:bg-[#f3f4f6] hover:text-[--text-primary]";
+
+  const footerItemClass = "text-[--text-secondary] hover:bg-[#f3f4f6] hover:text-[--text-primary]";
+
+  // ── Mobile Drawer ──────────────────────────────────────────────────────
   if (isMobileDrawer) {
     return (
       <div
-        className={`
-          fixed inset-y-0 left-0 z-50 bg-white transform transition-transform duration-300 w-[280px]
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        `}
-        style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.1)" }}
+        className={`fixed inset-y-0 left-0 z-50 bg-white transform transition-transform duration-300 w-[272px] ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.08)" }}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between h-[64px] px-4 border-b-2 border-[#c7c7c7] shrink-0">
+          <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
             <a
               href="#/dashboard"
-              className="text-[20px] font-medium text-[#21214f] tracking-[-0.9px] hover:opacity-70 transition-opacity cursor-pointer"
+              className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
             >
               Peerly
             </a>
             <button
               onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-[#f3f4f6] hover:text-[--text-primary] transition-colors duration-150 ${focusRing}`}
               aria-label="Закрыть меню"
             >
-              <X className="size-5 text-[#21214f]" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Navigation Items */}
-          <div className="flex-1 py-4 px-3 space-y-2 overflow-y-auto">
+          {/* Navigation */}
+          <nav className="flex-1 py-2 px-2.5 space-y-0.5 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const active = isActive(item.hash);
               return (
-                <div
+                <a
                   key={item.hash}
-                  className="bg-[#d2def8] rounded-[8px] px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-[#c5d5f5] transition-colors"
-                  onClick={() => {
-                    window.location.hash = item.hash;
-                    onClose?.();
-                  }}
+                  href={`#${item.hash}`}
+                  onClick={() => onClose?.()}
+                  className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${navItemClass(active)}`}
                 >
-                  <Icon className="size-[19px] text-[#21214f]" />
-                  <span className="text-[18px] text-[#21214f] tracking-[-0.54px]">
-                    {item.label}
-                  </span>
-                </div>
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="text-[14px]">{item.label}</span>
+                </a>
               );
             })}
-          </div>
+          </nav>
 
           {/* Role Switcher */}
-          <div className="border-t-2 border-[#c7c7c7] pt-3 shrink-0">
+          <div className="border-t border-[--surface-border] pt-2 shrink-0">
             <RoleSwitcherPopover collapsed={false} />
           </div>
 
           {/* Profile & Settings */}
-          <div className="border-t-2 border-[#c7c7c7] shrink-0 pb-4">
-            <div className="px-3 py-3 space-y-2">
-              <div
-                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer transition-colors"
-                onClick={() => {
-                  window.location.hash = "/profile";
-                  onClose?.();
-                }}
-              >
-                <User className="size-[19px] text-[#d7d7d7]" />
-                <span className="text-[18px] text-foreground tracking-[-0.54px]">Профиль</span>
-              </div>
-              <div
-                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer transition-colors"
-                onClick={() => {
-                  window.location.hash = "/settings";
-                  onClose?.();
-                }}
-              >
-                <Settings className="size-[19px] text-[#d7d7d7]" />
-                <span className="text-[18px] text-foreground tracking-[-0.54px]">Настройки</span>
-              </div>
-            </div>
+          <div className="border-t border-[--surface-border] shrink-0 px-2.5 py-2 space-y-0.5 pb-3">
+            <a
+              href="#/profile"
+              onClick={() => onClose?.()}
+              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
+            >
+              <User className="w-4 h-4 shrink-0" />
+              <span className="text-[14px]">Профиль</span>
+            </a>
+            <a
+              href="#/settings"
+              onClick={() => onClose?.()}
+              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
+            >
+              <Settings className="w-4 h-4 shrink-0" />
+              <span className="text-[14px]">Настройки</span>
+            </a>
           </div>
         </div>
       </div>
     );
   }
 
-  // Desktop/Tablet Sidebar
+  // ── Desktop / Tablet Sidebar ───────────────────────────────────────────
   return (
     <div
-      className={`
-        bg-white border-r-3 border-[#c7c7c7] h-screen flex flex-col shrink-0 transition-all duration-300
-        ${isCollapsed ? "w-[80px]" : "w-[260px]"}
-      `}
+      className={`bg-white border-r border-[--surface-border] h-screen flex flex-col shrink-0 transition-all duration-300 ${
+        isCollapsed ? "w-[72px]" : "w-[240px]"
+      }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between h-[64px] px-4 border-b-2 border-[#c7c7c7] shrink-0">
+      <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
         {!isCollapsed && (
           <a
             href="#/dashboard"
-            className="text-[20px] font-medium text-[#21214f] tracking-[-0.9px] hover:opacity-70 transition-opacity cursor-pointer"
+            className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
           >
             Peerly
           </a>
@@ -207,38 +209,35 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         {showToggleButton && (
           <button
             onClick={onToggleCollapse}
-            className={`p-1 hover:bg-gray-100 rounded transition-colors ${isCollapsed ? "mx-auto" : ""}`}
+            className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-[#f3f4f6] hover:text-[--text-primary] transition-colors duration-150 ${focusRing} ${isCollapsed ? "mx-auto" : ""}`}
             aria-label={isCollapsed ? "Развернуть" : "Свернуть"}
           >
             {isCollapsed ? (
-              <ChevronRight className="size-5 text-[#21214f]" />
+              <ChevronRight className="w-3.5 h-3.5" />
             ) : (
-              <ChevronLeft className="size-5 text-[#21214f]" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             )}
           </button>
         )}
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 py-4 px-3 overflow-y-auto space-y-2">
+      {/* Navigation */}
+      <nav className="flex-1 py-2 px-2.5 overflow-y-auto space-y-0.5">
         {navItems.map((item) => {
           const Icon = item.icon;
+          const active = isActive(item.hash);
           return (
-            <div
+            <a
               key={item.hash}
-              className={`
-                bg-[#d2def8] rounded-[8px] flex items-center gap-2 cursor-pointer 
-                hover:bg-[#c5d5f5] transition-colors py-2
-                ${isCollapsed ? "justify-center px-2" : "px-3"}
-              `}
-              onClick={() => (window.location.hash = item.hash)}
+              href={`#${item.hash}`}
+              className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${
+                isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
+              } ${navItemClass(active)}`}
               title={isCollapsed ? item.label : undefined}
             >
-              <Icon className="size-[19px] text-[#21214f] shrink-0" />
-              {!isCollapsed && (
-                <span className="text-[18px] text-[#21214f] tracking-[-0.54px]">{item.label}</span>
-              )}
-            </div>
+              <Icon className="w-4 h-4 shrink-0" />
+              {!isCollapsed && <span className="text-[14px]">{item.label}</span>}
+            </a>
           );
         })}
       </nav>
@@ -246,40 +245,32 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       {/* Footer */}
       <div className="shrink-0">
         {/* Role Switcher */}
-        <div className="border-t-2 border-[#c7c7c7] pt-3">
+        <div className="border-t border-[--surface-border] pt-2">
           <RoleSwitcherPopover collapsed={isCollapsed} />
         </div>
 
         {/* Profile & Settings */}
-        <div className="border-t-2 border-[#c7c7c7] pb-4">
-          <div className="px-3 py-3 space-y-2">
-            <div
-              className={`
-                flex items-center gap-2 hover:bg-gray-50 rounded cursor-pointer transition-colors py-2
-                ${isCollapsed ? "justify-center px-2" : "px-3"}
-              `}
-              onClick={() => (window.location.hash = "/profile")}
-              title={isCollapsed ? "Профиль" : undefined}
-            >
-              <User className="size-[19px] text-[#d7d7d7] shrink-0" />
-              {!isCollapsed && (
-                <span className="text-[18px] text-foreground tracking-[-0.54px]">Профиль</span>
-              )}
-            </div>
-            <div
-              className={`
-                flex items-center gap-2 hover:bg-gray-50 rounded cursor-pointer transition-colors py-2
-                ${isCollapsed ? "justify-center px-2" : "px-3"}
-              `}
-              onClick={() => (window.location.hash = "/settings")}
-              title={isCollapsed ? "Настройки" : undefined}
-            >
-              <Settings className="size-[19px] text-[#d7d7d7] shrink-0" />
-              {!isCollapsed && (
-                <span className="text-[18px] text-foreground tracking-[-0.54px]">Настройки</span>
-              )}
-            </div>
-          </div>
+        <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
+          <a
+            href="#/profile"
+            className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
+              isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
+            }`}
+            title={isCollapsed ? "Профиль" : undefined}
+          >
+            <User className="w-4 h-4 shrink-0" />
+            {!isCollapsed && <span className="text-[14px]">Профиль</span>}
+          </a>
+          <a
+            href="#/settings"
+            className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
+              isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
+            }`}
+            title={isCollapsed ? "Настройки" : undefined}
+          >
+            <Settings className="w-4 h-4 shrink-0" />
+            {!isCollapsed && <span className="text-[14px]">Настройки</span>}
+          </a>
         </div>
       </div>
     </div>
