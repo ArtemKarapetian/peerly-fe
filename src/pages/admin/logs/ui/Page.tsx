@@ -432,7 +432,7 @@ export default function AdminLogsPage() {
       <Breadcrumbs
         items={[
           CRUMBS.adminRoot,
-          { label: "Мониторинг", href: ROUTES.adminHealth },
+          { label: "Мониторинг", href: ROUTES.adminOverview },
           { label: "Логи" },
         ]}
       />

@@ -5,10 +5,21 @@
  */
 
 export interface FeatureFlags {
+  // Auth / existing
   supportChat: boolean;
   twoFactor: boolean;
   enableEmailConfirmation: boolean;
   enablePasswordReset: boolean;
+
+  // Enterprise / backend-pending
+  enablePlugins: boolean;
+  enableIntegrations: boolean;
+  enableRetention: boolean;
+  enableLimits: boolean;
+  enableAutomation: boolean;
+  enableAnalytics: boolean;
+  enableExtensions: boolean;
+  enableAnnouncements: boolean;
 }
 
 const DEFAULT_FLAGS: FeatureFlags = {
@@ -16,6 +27,15 @@ const DEFAULT_FLAGS: FeatureFlags = {
   twoFactor: false,
   enableEmailConfirmation: false,
   enablePasswordReset: false,
+
+  enablePlugins: true,
+  enableIntegrations: true,
+  enableRetention: true,
+  enableLimits: true,
+  enableAutomation: true,
+  enableAnalytics: true,
+  enableExtensions: true,
+  enableAnnouncements: true,
 };
 
 const STORAGE_KEY = "peerly_feature_flags";
@@ -46,4 +66,9 @@ export function isFlagEnabled(key: keyof FeatureFlags): boolean {
 
 export function resetFeatureFlags(): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_FLAGS));
+}
+
+export function setAllFlags(overrides: Partial<FeatureFlags>): void {
+  const flags = getFeatureFlags();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...flags, ...overrides }));
 }

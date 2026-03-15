@@ -20,5 +20,5 @@
     "allowImportingTsExtensions": true
   },
   "include": ["src", "vite.config.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/pages/_archived"]
 }

@@ -18,8 +18,17 @@ import {
   Flag,
   FileSearch,
   Zap,
+  Shield,
+  Megaphone,
+  Clock,
+  Shuffle,
+  Scale,
+  Archive,
+  AlertTriangle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+
+import { isFlagEnabled, type FeatureFlags } from "@/shared/lib/feature-flags";
 
 import { useRole } from "@/entities/user";
 
@@ -43,6 +52,7 @@ interface NavItem {
   icon: React.ElementType;
   label: string;
   hash: string;
+  flag?: keyof FeatureFlags;
 }
 
 /* Shared focus ring for all interactive sidebar elements */
@@ -81,14 +91,41 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: MessageSquare, label: "Полученные отзывы", hash: "/reviews/received" },
           { icon: BookOpen, label: "Журнал оценок", hash: "/gradebook" },
           { icon: Bell, label: "Уведомления", hash: "/inbox" },
+          { icon: AlertTriangle, label: "Апелляции", hash: "/appeals" },
         ];
       case "Teacher":
         return [
-          { icon: LayoutDashboard, label: "Дашборд", hash: "/teacher/dashboard" },
           { icon: Book, label: "Курсы", hash: "/teacher/courses" },
-          { icon: Layers, label: "Библиотека рубрик", hash: "/teacher/rubrics" },
-          { icon: FileCheck, label: "Работы студентов", hash: "/teacher/submissions" },
-          { icon: BarChart3, label: "Аналитика", hash: "/teacher/analytics" },
+          { icon: FileCheck, label: "Задания", hash: "/teacher/assignments" },
+          { icon: Layers, label: "Рубрики", hash: "/teacher/rubrics" },
+          { icon: Shuffle, label: "Распределение", hash: "/teacher/distribution" },
+          { icon: Archive, label: "Работы студентов", hash: "/teacher/submissions" },
+          { icon: Shield, label: "Модерация", hash: "/teacher/moderation" },
+          { icon: Scale, label: "Апелляции", hash: "/teacher/appeals" },
+          {
+            icon: Megaphone,
+            label: "Анонсы",
+            hash: "/teacher/announcements",
+            flag: "enableAnnouncements",
+          },
+          {
+            icon: Clock,
+            label: "Продления",
+            hash: "/teacher/extensions",
+            flag: "enableExtensions",
+          },
+          {
+            icon: BarChart3,
+            label: "Аналитика",
+            hash: "/teacher/analytics",
+            flag: "enableAnalytics",
+          },
+          {
+            icon: Zap,
+            label: "Автоматизация",
+            hash: "/teacher/automation",
+            flag: "enableAutomation",
+          },
         ];
       case "Admin":
         return [
@@ -96,16 +133,23 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: Book, label: "Все курсы", hash: "/admin/courses" },
           { icon: Users, label: "Пользователи", hash: "/admin/users" },
           { icon: Database, label: "Организации", hash: "/admin/orgs" },
-          { icon: Plug, label: "Каталог плагинов", hash: "/admin/plugins" },
-          { icon: Zap, label: "Интеграции", hash: "/admin/integrations" },
+          { icon: Plug, label: "Каталог плагинов", hash: "/admin/plugins", flag: "enablePlugins" },
+          {
+            icon: Zap,
+            label: "Интеграции",
+            hash: "/admin/integrations",
+            flag: "enableIntegrations",
+          },
           { icon: Settings, label: "Настройки системы", hash: "/admin/settings" },
           { icon: Flag, label: "Фиче-флаги", hash: "/admin/flags" },
           { icon: FileSearch, label: "Логи и аудит", hash: "/admin/logs" },
+          { icon: AlertTriangle, label: "Лимиты", hash: "/admin/limits", flag: "enableLimits" },
+          { icon: Archive, label: "Retention", hash: "/admin/retention", flag: "enableRetention" },
         ];
     }
   };
 
-  const navItems = getNavItems();
+  const navItems = getNavItems().filter((item) => !item.flag || isFlagEnabled(item.flag));
 
   const navItemClass = (active: boolean) =>
     active

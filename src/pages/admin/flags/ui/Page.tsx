@@ -67,6 +67,79 @@ const FEATURE_FLAGS: FeatureFlag[] = [
     status: "stable",
     enabled: false,
   },
+  // Enterprise / backend-pending feature flags
+  {
+    id: "ff-plugins",
+    key: "enablePlugins",
+    name: "Каталог плагинов",
+    description: "Управление плагинами и расширениями платформы (Admin)",
+    category: "integration",
+    status: "beta",
+    enabled: true,
+  },
+  {
+    id: "ff-integrations",
+    key: "enableIntegrations",
+    name: "Интеграции",
+    description: "Внешние интеграции и подключения (Admin)",
+    category: "integration",
+    status: "beta",
+    enabled: true,
+  },
+  {
+    id: "ff-retention",
+    key: "enableRetention",
+    name: "Retention policies",
+    description: "Политики хранения данных и автоочистки (Admin)",
+    category: "integration",
+    status: "alpha",
+    enabled: true,
+  },
+  {
+    id: "ff-limits",
+    key: "enableLimits",
+    name: "Rate limiting",
+    description: "Ограничения и лимиты использования API (Admin)",
+    category: "integration",
+    status: "alpha",
+    enabled: true,
+  },
+  {
+    id: "ff-automation",
+    key: "enableAutomation",
+    name: "Автоматизация",
+    description: "Правила автоматизации рабочих процессов (Teacher)",
+    category: "experimental",
+    status: "beta",
+    enabled: true,
+  },
+  {
+    id: "ff-analytics",
+    key: "enableAnalytics",
+    name: "Аналитика преподавателя",
+    description: "Детальная аналитика и статистика по курсам (Teacher)",
+    category: "ui",
+    status: "beta",
+    enabled: true,
+  },
+  {
+    id: "ff-extensions",
+    key: "enableExtensions",
+    name: "Управление продлениями",
+    description: "Управление запросами на продление дедлайнов (Teacher)",
+    category: "ui",
+    status: "beta",
+    enabled: true,
+  },
+  {
+    id: "ff-announcements",
+    key: "enableAnnouncements",
+    name: "Анонсы",
+    description: "Система анонсов и уведомлений для студентов (Teacher)",
+    category: "ui",
+    status: "beta",
+    enabled: true,
+  },
   // Demo feature flags
   {
     id: "ff1",
@@ -227,14 +300,23 @@ export default function AdminFlagsPage() {
     localStorage.setItem("admin_feature_flags", JSON.stringify(flags));
 
     // Sync real feature flags with FeatureFlagsContext
+    const realFlagKeys: string[] = [
+      "supportChat",
+      "twoFactor",
+      "enableEmailConfirmation",
+      "enablePasswordReset",
+      "enablePlugins",
+      "enableIntegrations",
+      "enableRetention",
+      "enableLimits",
+      "enableAutomation",
+      "enableAnalytics",
+      "enableExtensions",
+      "enableAnnouncements",
+    ];
     flags.forEach((flag) => {
-      if (
-        flag.key === "supportChat" ||
-        flag.key === "twoFactor" ||
-        flag.key === "enableEmailConfirmation" ||
-        flag.key === "enablePasswordReset"
-      ) {
-        updateRealFlag(flag.key, flag.enabled);
+      if (realFlagKeys.includes(flag.key)) {
+        updateRealFlag(flag.key as Parameters<typeof updateRealFlag>[0], flag.enabled);
       }
     });
 

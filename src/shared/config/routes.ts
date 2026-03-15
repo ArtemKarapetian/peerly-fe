@@ -16,7 +16,7 @@ export const ROUTES = {
   help: "/help",
   status: "/status",
   terms: "/terms",
-  supportChat: "/support/chat",
+  // supportChat — archived
 
   // Errors
   error401: "/401",
@@ -32,8 +32,7 @@ export const ROUTES = {
   submitWork: (courseId: string, taskId: string) => `/courses/${courseId}/tasks/${taskId}/submit`,
   submissions: (courseId: string, taskId: string) =>
     `/courses/${courseId}/tasks/${taskId}/submissions`,
-  extensionRequest: (courseId: string, taskId: string) =>
-    `/courses/${courseId}/tasks/${taskId}/extension-request`,
+  // extensionRequest — archived
   taskAppeal: (courseId: string, taskId: string) => `/courses/${courseId}/tasks/${taskId}/appeal`,
 
   reviews: "/reviews",
@@ -43,7 +42,7 @@ export const ROUTES = {
   gradebook: "/gradebook",
   inbox: "/inbox",
   appeals: "/appeals",
-  extensions: "/extensions",
+  // extensions (student) — archived
 
   profile: "/profile",
   settings: "/settings",
@@ -51,7 +50,7 @@ export const ROUTES = {
   deleteAccount: "/offboarding/delete-account",
 
   // Teacher
-  teacherDashboard: "/teacher/dashboard",
+  teacherDashboard: "/teacher/dashboard", // archived — redirects to teacherCourses
   teacherCourses: "/teacher/courses",
   teacherCourse: (courseId: string) => `/teacher/courses/${courseId}`,
   teacherRubrics: "/teacher/rubrics",
@@ -79,11 +78,11 @@ export const ROUTES = {
   adminFlags: "/admin/flags",
   adminLogs: "/admin/logs",
   adminSettings: "/admin/settings",
-  adminHealth: "/admin/health",
-  adminQueues: "/admin/queues",
+  // adminHealth — archived
+  // adminQueues — archived
   adminIntegrations: "/admin/integrations",
   adminPlugins: "/admin/plugins",
-  adminPolicies: "/admin/policies",
+  // adminPolicies — archived
   adminRetention: "/admin/retention",
   adminLimits: "/admin/limits",
 
@@ -119,11 +118,7 @@ export const ROUTE_PATTERN_LIST = [
     regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)\/submissions$/,
     params: ["courseId", "taskId"] as const,
   },
-  {
-    key: "extensionRequest",
-    regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)\/extension-request$/,
-    params: ["courseId", "taskId"] as const,
-  },
+  // extensionRequest pattern — archived
   {
     key: "taskAppeal",
     regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)\/appeal$/,
