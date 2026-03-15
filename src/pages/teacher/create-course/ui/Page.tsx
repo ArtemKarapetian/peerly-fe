@@ -2,7 +2,6 @@ import { Save, X } from "lucide-react";
 import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Button } from "@/shared/ui/button.tsx";
 
@@ -40,13 +39,7 @@ export default function CreateCoursePage() {
 
   return (
     <AppShell title="Создание курса">
-      <Breadcrumbs
-        items={[
-          CRUMBS.teacherDashboard,
-          { label: "Курсы", href: ROUTES.teacherDashboard },
-          { label: "Создать курс" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.teacherCourses, { label: "Создать курс" }]} />
 
       <div className="max-w-[800px] mx-auto mt-4">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">

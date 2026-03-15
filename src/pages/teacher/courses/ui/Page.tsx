@@ -1,7 +1,6 @@
 import { BookOpen, ChevronRight, ClipboardList, Plus, Users } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -80,7 +79,7 @@ export default function TeacherCoursesPage() {
 
   return (
     <AppShell title="Управление курсами">
-      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Курсы" }]} />
+      <Breadcrumbs items={[{ label: "Курсы" }]} />
 
       <div className="mt-6">
         {/* Hero header card */}

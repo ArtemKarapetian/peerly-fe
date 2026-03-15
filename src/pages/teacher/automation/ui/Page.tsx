@@ -2,8 +2,6 @@ import { Plus, Pencil, Trash2, Zap, CheckCircle2, XCircle } from "lucide-react";
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import {
@@ -72,14 +70,7 @@ export default function TeacherAutomationPage() {
   return (
     <AppShell title="Автоматизация">
       <div className="max-w-[1400px]">
-        <Breadcrumbs
-          items={[
-            CRUMBS.teacherDashboard,
-            { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
-            { label: "Задание", href: ROUTES.teacherDashboard },
-            { label: "Автоматизация" },
-          ]}
-        />
+        <Breadcrumbs items={[{ label: "Автоматизация" }]} />
 
         <div className="mt-6">
           {/* Header */}

@@ -45,7 +45,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
               {item.label}
             </button>
           ) : (
-            <span className="text-[--text-primary] font-medium">{item.label}</span>
+            <span className="text-[--text-primary]">{item.label}</span>
           )}
         </div>
       ))}

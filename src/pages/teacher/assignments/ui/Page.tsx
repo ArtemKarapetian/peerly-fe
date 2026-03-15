@@ -1,7 +1,6 @@
 import { FileText } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -25,7 +24,7 @@ function TeacherPlaceholderPage({
   title,
   description,
   icon: Icon,
-  breadcrumbs = [CRUMBS.teacherDashboard],
+  breadcrumbs = [],
   primaryAction,
 }: TeacherPlaceholderPageProps) {
   return (
@@ -69,7 +68,7 @@ export default function TeacherAssignmentsPage() {
       title="Конструктор заданий"
       description="Создавайте задания с настройкой параметров рецензирования."
       icon={FileText}
-      breadcrumbs={[CRUMBS.teacherDashboard, { label: "Задания" }]}
+      breadcrumbs={[{ label: "Задания" }]}
       primaryAction={{
         label: "Создать задание",
         href: "#/teacher/assignments/new",

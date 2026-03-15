@@ -2,7 +2,6 @@ import { Flag, Save, Search, X, ChevronDown, AlertCircle, CheckCircle, Clock } f
 import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -416,13 +415,7 @@ export default function AdminFlagsPage() {
 
   return (
     <AppShell title="Фиче-флаги">
-      <Breadcrumbs
-        items={[
-          CRUMBS.adminRoot,
-          { label: "Настройки", href: ROUTES.adminSettings },
-          { label: "Фиче-флаги" },
-        ]}
-      />
+      <Breadcrumbs items={[CRUMBS.adminSettings, { label: "Фиче-флаги" }]} />
 
       <div className="mt-6">
         {/* Header */}

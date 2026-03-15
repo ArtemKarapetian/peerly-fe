@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { JSX, useState } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -259,7 +258,7 @@ function ModerationContent({
 
   return (
     <AppShell title="Модерация рецензий">
-      <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Модерация" }]} />
+      <Breadcrumbs items={[{ label: "Модерация" }]} />
 
       <div className="mt-6">
         {/* Header */}

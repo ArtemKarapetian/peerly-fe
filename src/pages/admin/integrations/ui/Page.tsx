@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -297,7 +296,7 @@ export default function AdminIntegrationsPage() {
 
   return (
     <AppShell title="Интеграции и Webhooks">
-      <Breadcrumbs items={[CRUMBS.adminRoot, { label: "Интеграции" }]} />
+      <Breadcrumbs items={[{ label: "Интеграции" }]} />
 
       <div className="mt-6 space-y-8">
         {/* Header */}

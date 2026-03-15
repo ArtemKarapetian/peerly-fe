@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useState, useCallback } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { pluginRepo } from "@/entities/plugin";
@@ -157,7 +156,7 @@ export default function AdminOverviewPage() {
 
   return (
     <AppShell title="Админ панель">
-      <Breadcrumbs items={[CRUMBS.adminRoot, { label: "Обзор" }]} />
+      <Breadcrumbs items={[{ label: "Обзор" }]} />
 
       <div className="mt-6">
         {/* Header with Org Selector */}

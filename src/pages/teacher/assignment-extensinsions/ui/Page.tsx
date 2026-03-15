@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
-import { ROUTES } from "@/shared/config/routes.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -80,14 +79,7 @@ export function TeacherAssignmentExtensionsPage({
   return (
     <AppShell title="Продления дедлайнов">
       <div className="max-w-[1200px]">
-        <Breadcrumbs
-          items={[
-            CRUMBS.teacherDashboard,
-            { label: "Конструктор заданий", href: ROUTES.teacherDashboard },
-            { label: "Задание", href: ROUTES.teacherDashboard },
-            { label: "Продления дедлайнов" },
-          ]}
-        />
+        <Breadcrumbs items={[CRUMBS.teacherAssignments, { label: "Продления дедлайнов" }]} />
 
         <div className="mt-6">
           <ExtensionsHeader onAdd={() => setShowAddModal(true)} />
