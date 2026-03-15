@@ -1,4 +1,4 @@
-import { Archive, BookOpen, ChevronRight, Plus, Users } from "lucide-react";
+import { BookOpen, ChevronRight, ClipboardList, Plus, Users } from "lucide-react";
 import { useState, useCallback } from "react";
 
 import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
@@ -7,7 +7,6 @@ import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
-import { StatCard } from "@/shared/ui/StatCard";
 
 import { courseRepo } from "@/entities/course";
 
@@ -54,7 +53,7 @@ export default function TeacherCoursesPage() {
   const totalAssignments = activeCourses.reduce((sum, c) => sum + c.activeAssignments, 0);
 
   const handleOpenCourse = useCallback((courseId: string) => {
-    window.location.hash = `/teacher/course/${courseId}`;
+    window.location.hash = `/teacher/courses/${courseId}`;
   }, []);
 
   const handleRowKeyDown = (e: React.KeyboardEvent, courseId: string) => {
@@ -84,98 +83,136 @@ export default function TeacherCoursesPage() {
       <Breadcrumbs items={[CRUMBS.teacherDashboard, { label: "Курсы" }]} />
 
       <div className="mt-6">
-        {/* Header: title + primary CTA */}
-        <div className="flex items-center justify-between gap-4 mb-5">
-          <div>
-            <h1 className="page-title mb-1">Управление курсами</h1>
-            <p className="text-[14px] text-[--text-secondary]">Ваши курсы, студенты и задания</p>
+        {/* Hero header card */}
+        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-1">
+                Мои курсы
+              </h1>
+              <p className="text-[15px] text-[#767692]">
+                {activeCourses.length > 0
+                  ? `${activeCourses.length} активных курсов, ${allCourseRows.length - activeCourses.length > 0 ? `${allCourseRows.length - activeCourses.length} в архиве` : "все активны"}`
+                  : "Создайте первый курс, чтобы начать работу"}
+              </p>
+            </div>
+            <div className="flex items-center gap-5 shrink-0">
+              {/* Inline stats — mirroring course detail page counters */}
+              <div className="hidden tablet:flex items-center gap-5">
+                <div className="text-center">
+                  <p className="text-[24px] font-medium text-[#21214f] tabular-nums leading-none mb-1">
+                    {totalStudents}
+                  </p>
+                  <p className="text-[13px] text-[#767692]">Студентов</p>
+                </div>
+                <div className="w-px h-10 bg-[#e6e8ee]"></div>
+                <div className="text-center">
+                  <p className="text-[24px] font-medium text-[#21214f] tabular-nums leading-none mb-1">
+                    {totalAssignments}
+                  </p>
+                  <p className="text-[13px] text-[#767692]">Заданий</p>
+                </div>
+                <div className="w-px h-10 bg-[#e6e8ee]"></div>
+              </div>
+              <button
+                onClick={() => (window.location.hash = "/teacher/course/create")}
+                className="flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] active:bg-[#1e40af] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563eb]"
+              >
+                <Plus className="w-4 h-4" />
+                Создать курс
+              </button>
+            </div>
           </div>
-          <button
-            onClick={() => (window.location.hash = "/teacher/course/create")}
-            style={{ backgroundColor: "#2563eb" }}
-            className="flex items-center gap-2 px-4 py-2.5 text-white rounded-[var(--radius-md)] hover:opacity-90 active:opacity-80 transition-opacity shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563eb] shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            Создать курс
-          </button>
+
+          {/* Mobile stats strip — visible below tablet */}
+          <div className="flex tablet:hidden gap-3 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#f7f9ff] rounded-[10px]">
+              <div className="w-7 h-7 bg-[#2563eb1a] rounded-[6px] flex items-center justify-center shrink-0">
+                <BookOpen className="w-3.5 h-3.5 text-[#2563eb]" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-[#21214f] leading-none">
+                  {activeCourses.length}
+                </p>
+                <p className="text-[10px] text-[#767692] mt-0.5">Курсов</p>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#f0fdf4] rounded-[10px]">
+              <div className="w-7 h-7 bg-[#0596691a] rounded-[6px] flex items-center justify-center shrink-0">
+                <Users className="w-3.5 h-3.5 text-[#059669]" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-[#21214f] leading-none">
+                  {totalStudents}
+                </p>
+                <p className="text-[10px] text-[#767692] mt-0.5">Студентов</p>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#fffbeb] rounded-[10px]">
+              <div className="w-7 h-7 bg-[#d977061a] rounded-[6px] flex items-center justify-center shrink-0">
+                <ClipboardList className="w-3.5 h-3.5 text-[#d97706]" />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-[#21214f] leading-none">
+                  {totalAssignments}
+                </p>
+                <p className="text-[10px] text-[#767692] mt-0.5">Заданий</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-2 gap-2.5 tablet:grid-cols-4 mb-5">
-          <StatCard
-            label="Активных курсов"
-            value={activeCourses.length}
-            icon={<BookOpen className="w-4 h-4" />}
-            accent="#2563eb"
-          />
-          <StatCard
-            label="Всего студентов"
-            value={totalStudents}
-            icon={<Users className="w-4 h-4" />}
-            accent="#059669"
-          />
-          <StatCard
-            label="Активных заданий"
-            value={totalAssignments}
-            icon={<BookOpen className="w-4 h-4" />}
-            accent="#d97706"
-          />
-          <StatCard
-            label="Всего курсов"
-            value={allCourseRows.length}
-            icon={<Archive className="w-4 h-4" />}
-            accent="#7c3aed"
-          />
-        </div>
-
-        {/* Search toolbar */}
-        <div className="mb-4">
-          <CourseSearch
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Поиск по названию или коду курса..."
-          />
+        {/* Search + count */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1">
+            <CourseSearch
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Поиск по названию или коду курса..."
+            />
+          </div>
+          {filteredCourses.length > 0 && (
+            <p className="text-[12px] text-[#767692] tabular-nums shrink-0 hidden tablet:block">
+              {filteredCourses.length} курсов
+            </p>
+          )}
         </div>
 
         {/* Table or empty state */}
         {filteredCourses.length > 0 ? (
           <>
-            <p className="text-[12px] text-[--text-tertiary] mb-2">
-              Курсов: {filteredCourses.length}
-            </p>
-
-            <div className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
+            <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
-                    <col /> {/* Курс — занимает остаток */}
-                    <col className="w-[130px] hidden tablet:table-column" /> {/* Семестр */}
+                    <col /> {/* Курс — остаток */}
+                    <col className="w-[120px] hidden tablet:table-column" /> {/* Семестр */}
                     <col className="w-[100px] hidden tablet:table-column" /> {/* Студенты */}
                     <col className="w-[100px] hidden tablet:table-column" /> {/* Задания */}
-                    <col className="w-[110px]" /> {/* Статус */}
-                    <col className="w-[56px]" /> {/* Chevron */}
+                    <col className="w-[105px]" /> {/* Статус */}
+                    <col className="w-[48px]" /> {/* Chevron */}
                   </colgroup>
                   <thead>
-                    <tr className="border-b border-[--surface-border] bg-[--surface-hover]">
-                      <th className="text-left px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide">
+                    <tr className="border-b-2 border-[#e6e8ee] bg-[#fafbfc]">
+                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px]">
                         Курс
                       </th>
-                      <th className="text-left px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide hidden tablet:table-cell">
+                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
                         Семестр
                       </th>
-                      <th className="text-center px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide hidden tablet:table-cell">
+                      <th className="text-center px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
                         Студенты
                       </th>
-                      <th className="text-center px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide hidden tablet:table-cell">
+                      <th className="text-center px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
                         Задания
                       </th>
-                      <th className="text-left px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide">
+                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px]">
                         Статус
                       </th>
-                      <th className="pl-3 pr-4 py-3" />
+                      <th className="py-3 w-[48px]" />
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[--surface-border]">
+                  <tbody className="divide-y divide-[#e6e8ee]">
                     {filteredCourses
                       .slice((currentPage - 1) * 10, currentPage * 10)
                       .map((course) => (
@@ -189,48 +226,52 @@ export default function TeacherCoursesPage() {
                           aria-label={`Открыть курс ${course.name}`}
                         >
                           {/* Course name + code */}
-                          <td className="px-5 py-3.5">
-                            <p className="text-[14px] font-semibold text-[--text-primary] tracking-[-0.2px] leading-snug">
+                          <td className="px-5 py-4">
+                            <p className="text-[14px] font-semibold text-[#21214f] tracking-[-0.2px] leading-snug">
                               {course.name}
                             </p>
-                            <p className="text-[11px] text-[--text-tertiary] mt-0.5 font-mono">
+                            <p className="text-[12px] text-[#767692] mt-0.5 font-mono">
                               {course.code}
                             </p>
                           </td>
 
                           {/* Semester */}
-                          <td className="px-5 py-3.5 hidden tablet:table-cell">
-                            <p className="text-[13px] text-[--text-secondary]">{course.term}</p>
+                          <td className="px-5 py-4 hidden tablet:table-cell">
+                            <p className="text-[13px] text-[#767692]">{course.term}</p>
                           </td>
 
                           {/* Students */}
-                          <td className="px-5 py-3.5 text-center hidden tablet:table-cell">
-                            <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 bg-[#eff6ff] text-[--brand-primary] rounded-[var(--radius-sm)] text-[13px] font-semibold tabular-nums">
+                          <td className="px-5 py-4 text-center hidden tablet:table-cell">
+                            <span className="inline-flex items-center justify-center min-w-[32px] px-2.5 py-1 bg-[#eff6ff] text-[#2563eb] rounded-[8px] text-[13px] font-semibold tabular-nums">
                               {course.participantsCount}
                             </span>
                           </td>
 
                           {/* Assignments */}
-                          <td className="px-5 py-3.5 text-center hidden tablet:table-cell">
-                            <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 bg-[--success-light] text-[--success] rounded-[var(--radius-sm)] text-[13px] font-semibold tabular-nums">
+                          <td className="px-5 py-4 text-center hidden tablet:table-cell">
+                            <span className="inline-flex items-center justify-center min-w-[32px] px-2.5 py-1 bg-[#f0fdf4] text-[#059669] rounded-[8px] text-[13px] font-semibold tabular-nums">
                               {course.activeAssignments}
                             </span>
                           </td>
 
                           {/* Status */}
-                          <td className="px-5 py-3.5">
+                          <td className="px-5 py-4">
                             {course.status === "active" ? (
-                              <span className="badge badge-success">Активен</span>
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[12px] font-medium">
+                                Активен
+                              </span>
                             ) : (
-                              <span className="badge badge-neutral">Архив</span>
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[12px] font-medium">
+                                Архив
+                              </span>
                             )}
                           </td>
 
                           {/* Row-navigation affordance */}
-                          <td className="pl-3 pr-4 py-3.5 w-10">
+                          <td className="pr-4 py-4 w-[48px]">
                             <ChevronRight
                               aria-hidden="true"
-                              className="w-4 h-4 text-[--text-tertiary] opacity-25 group-hover:opacity-60 transition-opacity duration-150 ml-auto"
+                              className="w-4 h-4 text-[#767692] opacity-20 group-hover:opacity-50 transition-opacity duration-150 ml-auto"
                             />
                           </td>
                         </tr>
@@ -251,21 +292,27 @@ export default function TeacherCoursesPage() {
             )}
           </>
         ) : (
-          <div className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] p-12 text-center shadow-[var(--shadow-sm)]">
-            <div className="w-12 h-12 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-6 h-6 text-[--text-tertiary]" />
+          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
+            <div className="w-12 h-12 bg-[#f7f9ff] rounded-[12px] flex items-center justify-center mx-auto mb-4">
+              <BookOpen className="w-6 h-6 text-[#767692]" />
             </div>
-            <h3 className="text-[17px] font-semibold text-[--text-primary] mb-2">Нет курсов</h3>
-            <p className="text-[14px] text-[--text-secondary] mb-6">
-              Создайте первый курс, чтобы начать работу
+            <h3 className="text-[17px] font-medium text-[#21214f] mb-2">
+              {searchQuery ? "Курсы не найдены" : "Нет курсов"}
+            </h3>
+            <p className="text-[14px] text-[#767692] mb-6">
+              {searchQuery
+                ? "Попробуйте изменить поисковый запрос"
+                : "Создайте первый курс, чтобы начать работу"}
             </p>
-            <button
-              onClick={() => (window.location.hash = "/teacher/course/create")}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[--brand-primary] text-white rounded-[var(--radius-md)] hover:bg-[--brand-primary-hover] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-[14px] font-medium"
-            >
-              <Plus className="w-4 h-4" />
-              Создать курс
-            </button>
+            {!searchQuery && (
+              <button
+                onClick={() => (window.location.hash = "/teacher/course/create")}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-[14px] font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Создать курс
+              </button>
+            )}
           </div>
         )}
       </div>

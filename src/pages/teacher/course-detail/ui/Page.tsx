@@ -87,7 +87,7 @@ export default function TeacherCourseDetailsPage({
       <Breadcrumbs
         items={[
           CRUMBS.teacherDashboard,
-          { label: "Курсы", href: ROUTES.teacherDashboard },
+          { label: "Курсы", href: ROUTES.teacherCourses },
           { label: course.name },
         ]}
       />
