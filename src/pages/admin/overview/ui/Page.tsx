@@ -164,7 +164,7 @@ export default function AdminOverviewPage() {
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex-1">
               <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-                Административная панель
+                Обзор
               </h1>
               <p className="text-[16px] text-[#767692]">Мониторинг и управление системой Peerly</p>
             </div>

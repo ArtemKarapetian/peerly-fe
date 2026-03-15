@@ -87,7 +87,7 @@ export default function TeacherCoursesPage() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-1">
-                Мои курсы
+                Курсы
               </h1>
               <p className="text-[15px] text-[#767692]">
                 {activeCourses.length > 0

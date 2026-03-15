@@ -15,8 +15,6 @@ import {
   Settings,
   Database,
   Plug,
-  Flag,
-  FileSearch,
   Zap,
   Shield,
   Megaphone,
@@ -85,7 +83,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
     switch (currentRole) {
       case "Student":
         return [
-          { icon: LayoutDashboard, label: "Дашборд", hash: "/dashboard" },
+          { icon: LayoutDashboard, label: "Главная", hash: "/dashboard" },
           { icon: Book, label: "Курсы", hash: "/courses" },
           { icon: FileCheck, label: "Рецензии", hash: "/reviews" },
           { icon: MessageSquare, label: "Полученные отзывы", hash: "/reviews/received" },
@@ -129,7 +127,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         ];
       case "Admin":
         return [
-          { icon: LayoutDashboard, label: "Обзор системы", hash: "/admin/overview" },
+          { icon: LayoutDashboard, label: "Обзор", hash: "/admin/overview" },
           { icon: Book, label: "Все курсы", hash: "/admin/courses" },
           { icon: Users, label: "Пользователи", hash: "/admin/users" },
           { icon: Database, label: "Организации", hash: "/admin/orgs" },
@@ -140,11 +138,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             hash: "/admin/integrations",
             flag: "enableIntegrations",
           },
-          { icon: Settings, label: "Настройки системы", hash: "/admin/settings" },
-          { icon: Flag, label: "Фиче-флаги", hash: "/admin/flags" },
-          { icon: FileSearch, label: "Логи и аудит", hash: "/admin/logs" },
-          { icon: AlertTriangle, label: "Лимиты", hash: "/admin/limits", flag: "enableLimits" },
-          { icon: Archive, label: "Retention", hash: "/admin/retention", flag: "enableRetention" },
+          { icon: Settings, label: "Настройки", hash: "/admin/settings" },
         ];
     }
   };

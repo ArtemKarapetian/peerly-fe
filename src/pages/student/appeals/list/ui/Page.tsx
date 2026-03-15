@@ -1,7 +1,6 @@
-import { AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { FileText, CheckCircle, Clock } from "lucide-react";
 import React, { useState } from "react";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -14,7 +13,7 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { AppealDetailDrawer } from "@/widgets/appeal-detail-drawer";
 
 const statusIcons: Record<AppealStatus, React.ElementType> = {
-  new: AlertCircle,
+  new: FileText,
   in_review: Clock,
   resolved: CheckCircle,
 };
@@ -81,12 +80,12 @@ export default function AppealsListPage() {
 
   return (
     <AppShell title="Мои апелляции">
-      <Breadcrumbs items={[CRUMBS.studentDashboard, { label: "Апелляции" }]} />
+      <Breadcrumbs items={[{ label: "Апелляции" }]} />
 
       <div className="mt-6 max-w-[1000px]">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-12 h-12 bg-accent rounded-[12px] flex items-center justify-center">
-            <AlertCircle className="w-6 h-6 text-accent-foreground" />
+            <FileText className="w-6 h-6 text-accent-foreground" />
           </div>
           <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
             Мои апелляции
@@ -98,7 +97,7 @@ export default function AppealsListPage() {
 
         {(appeals ?? []).length === 0 ? (
           <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-[18px] font-medium text-foreground mb-2">У вас нет апелляций</h3>
             <p className="text-[14px] text-muted-foreground mb-6">
               Если вы не согласны с оценкой, вы можете подать апелляцию из страницы задания

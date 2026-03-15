@@ -193,7 +193,7 @@ export default function TeacherCreateAssignmentPage({
 
   return (
     <AppShell title="Создание задания">
-      <Breadcrumbs items={[CRUMBS.teacherAssignments, { label: "Новое задание" }]} />
+      <Breadcrumbs items={[CRUMBS.teacherCourses, { label: "Новое задание" }]} />
 
       <div className="mt-6 max-w-[1000px] mx-auto">
         {/* Step Indicator */}
