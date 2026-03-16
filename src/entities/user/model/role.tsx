@@ -59,16 +59,19 @@ export function useRole() {
 }
 
 /**
- * Helper: Get role display name in Russian
+ * Helper: Get role display name (i18n)
  */
 export function getRoleDisplayName(role: UserRole): string {
+  // Dynamic import to avoid circular deps in context provider
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const i18n = require("@/shared/lib/i18n/config").default;
   switch (role) {
     case "Student":
-      return "Студент";
+      return i18n.t("roles.student");
     case "Teacher":
-      return "Преподаватель";
+      return i18n.t("roles.teacher");
     case "Admin":
-      return "Администратор";
+      return i18n.t("roles.admin");
   }
 }
 

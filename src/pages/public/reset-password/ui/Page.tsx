@@ -1,5 +1,6 @@
 import { CheckCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
@@ -23,6 +24,7 @@ interface FormErrors {
 type Step = "login" | "password" | "success";
 
 export default function ResetPasswordPage() {
+  const { t } = useTranslation();
   const [step, setStep] = useState<Step>("login");
   const [login, setLogin] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -41,7 +43,7 @@ export default function ResetPasswordPage() {
 
     if (field === "login") {
       if (!value.trim()) {
-        newErrors.login = "Введите логин";
+        newErrors.login = t("page.resetPassword.enterLogin");
       } else {
         delete newErrors.login;
       }
@@ -49,16 +51,16 @@ export default function ResetPasswordPage() {
 
     if (field === "newPassword") {
       if (!value) {
-        newErrors.newPassword = "Введите новый пароль";
+        newErrors.newPassword = t("page.resetPassword.enterNewPassword");
       } else if (value.length < 8) {
-        newErrors.newPassword = "Пароль должен содержать минимум 8 символов";
+        newErrors.newPassword = t("page.resetPassword.minChars");
       } else {
         delete newErrors.newPassword;
       }
 
       // Проверяем совпадение, если уже введён confirmPassword
       if (confirmPassword && value !== confirmPassword) {
-        newErrors.confirmPassword = "Пароли не совпадают";
+        newErrors.confirmPassword = t("page.resetPassword.passwordsMismatch");
       } else if (confirmPassword && value === confirmPassword) {
         delete newErrors.confirmPassword;
       }
@@ -66,9 +68,9 @@ export default function ResetPasswordPage() {
 
     if (field === "confirmPassword") {
       if (!value) {
-        newErrors.confirmPassword = "Подтвердите пароль";
+        newErrors.confirmPassword = t("page.resetPassword.confirmPasswordError");
       } else if (value !== newPassword) {
-        newErrors.confirmPassword = "Пароли не совпадают";
+        newErrors.confirmPassword = t("page.resetPassword.passwordsMismatch");
       } else {
         delete newErrors.confirmPassword;
       }
@@ -150,9 +152,11 @@ export default function ResetPasswordPage() {
 
               {/* Success Message */}
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold text-foreground">Пароль обновлён</h1>
+                <h1 className="text-2xl font-semibold text-foreground">
+                  {t("page.resetPassword.passwordUpdated")}
+                </h1>
                 <p className="text-sm text-muted-foreground">
-                  Ваш пароль успешно изменён. Теперь вы можете войти с новым паролем.
+                  {t("page.resetPassword.passwordUpdatedDesc")}
                 </p>
               </div>
 
@@ -162,7 +166,7 @@ export default function ResetPasswordPage() {
                 className="w-full"
                 onClick={() => (window.location.hash = "/login")}
               >
-                Вернуться ко входу
+                {t("page.resetPassword.backToLogin")}
               </Button>
             </div>
           </div>
@@ -180,17 +184,17 @@ export default function ResetPasswordPage() {
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6">
               {/* Header */}
               <div className="space-y-1">
-                <h1 className="text-2xl font-semibold text-foreground">Сброс пароля</h1>
-                <p className="text-sm text-muted-foreground">
-                  Введите ваш логин для восстановления доступа
-                </p>
+                <h1 className="text-2xl font-semibold text-foreground">
+                  {t("page.resetPassword.title")}
+                </h1>
+                <p className="text-sm text-muted-foreground">{t("page.resetPassword.subtitle")}</p>
               </div>
 
               {/* Form */}
               <form onSubmit={(e) => void handleContinue(e)} className="space-y-4">
                 {/* Login Field */}
                 <Input
-                  label="Логин"
+                  label={t("page.resetPassword.loginLabel")}
                   value={login}
                   onChange={(e) => {
                     setLogin(e.target.value);
@@ -199,7 +203,7 @@ export default function ResetPasswordPage() {
                     }
                   }}
                   onBlur={() => handleBlur("login")}
-                  placeholder="Введите логин"
+                  placeholder={t("page.resetPassword.enterLogin")}
                   error={touched.login ? errors.login : undefined}
                   disabled={isLoading}
                   autoComplete="username"
@@ -215,14 +219,14 @@ export default function ResetPasswordPage() {
                   disabled={!login.trim() || !!errors.login}
                   isLoading={isLoading}
                 >
-                  {isLoading ? "Проверка..." : "Продолжить"}
+                  {isLoading ? t("page.resetPassword.checking") : t("page.resetPassword.continue")}
                 </Button>
               </form>
 
               {/* Back to Login Link */}
               <div className="text-center">
                 <a href="#/login" className="text-sm text-primary hover:underline">
-                  Вернуться к входу
+                  {t("page.resetPassword.backToLogin")}
                 </a>
               </div>
             </div>
@@ -240,9 +244,11 @@ export default function ResetPasswordPage() {
           <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6">
             {/* Header */}
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold text-foreground">Новый пароль</h1>
+              <h1 className="text-2xl font-semibold text-foreground">
+                {t("page.resetPassword.newPasswordTitle")}
+              </h1>
               <p className="text-sm text-muted-foreground">
-                Пользователь: <strong>{login}</strong>
+                {t("page.resetPassword.user")}: <strong>{login}</strong>
               </p>
             </div>
 
@@ -250,7 +256,7 @@ export default function ResetPasswordPage() {
             <form onSubmit={(e) => void handleResetPassword(e)} className="space-y-4">
               {/* New Password Field */}
               <PasswordInput
-                label="Новый пароль"
+                label={t("page.resetPassword.newPasswordLabel")}
                 value={newPassword}
                 onChange={(e) => {
                   setNewPassword(e.target.value);
@@ -259,7 +265,7 @@ export default function ResetPasswordPage() {
                   }
                 }}
                 onBlur={() => handleBlur("newPassword")}
-                placeholder="Минимум 8 символов"
+                placeholder={t("page.resetPassword.minCharsPlaceholder")}
                 error={touched.newPassword ? errors.newPassword : undefined}
                 disabled={isLoading}
                 autoComplete="new-password"
@@ -268,7 +274,7 @@ export default function ResetPasswordPage() {
 
               {/* Confirm Password Field */}
               <PasswordInput
-                label="Подтвердите пароль"
+                label={t("page.resetPassword.confirmPasswordLabel")}
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
@@ -277,7 +283,7 @@ export default function ResetPasswordPage() {
                   }
                 }}
                 onBlur={() => handleBlur("confirmPassword")}
-                placeholder="Повторите новый пароль"
+                placeholder={t("page.resetPassword.repeatNewPassword")}
                 error={touched.confirmPassword ? errors.confirmPassword : undefined}
                 disabled={isLoading}
                 autoComplete="new-password"
@@ -286,7 +292,7 @@ export default function ResetPasswordPage() {
               {/* Password Requirements */}
               <div className="bg-muted/50 border border-border rounded-lg p-3">
                 <p className="text-xs text-muted-foreground mb-2 font-medium">
-                  Требования к паролю:
+                  {t("page.resetPassword.passwordRequirements")}
                 </p>
                 <ul className="space-y-1">
                   <li
@@ -295,7 +301,7 @@ export default function ResetPasswordPage() {
                     }`}
                   >
                     <span className="text-lg leading-none">•</span>
-                    Минимум 8 символов
+                    {t("page.resetPassword.minChars")}
                   </li>
                   <li
                     className={`text-xs flex items-center gap-2 ${
@@ -305,7 +311,7 @@ export default function ResetPasswordPage() {
                     }`}
                   >
                     <span className="text-lg leading-none">•</span>
-                    Пароли совпадают
+                    {t("page.resetPassword.passwordsMatch")}
                   </li>
                 </ul>
               </div>
@@ -324,7 +330,9 @@ export default function ResetPasswordPage() {
                 }
                 isLoading={isLoading}
               >
-                {isLoading ? "Сохранение..." : "Сохранить новый пароль"}
+                {isLoading
+                  ? t("page.resetPassword.saving")
+                  : t("page.resetPassword.saveNewPassword")}
               </Button>
             </form>
 
@@ -336,7 +344,7 @@ export default function ResetPasswordPage() {
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 disabled={isLoading}
               >
-                ← Назад
+                {t("common.back")}
               </button>
             </div>
           </div>

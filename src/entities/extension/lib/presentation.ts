@@ -1,22 +1,24 @@
 // Helper to format extension status
+import i18n from "@/shared/lib/i18n/config";
+
 import { ExtensionStatus, ExtensionType } from "@/entities/extension";
 
 export function getExtensionStatusLabel(status: ExtensionStatus): string {
-  const labels: Record<ExtensionStatus, string> = {
-    manual: "Вручную",
-    requested: "Запрошено",
-    approved: "Одобрено",
-    denied: "Отклонено",
+  const keys: Record<ExtensionStatus, string> = {
+    manual: "entity.extension.statusManual",
+    requested: "entity.extension.statusRequested",
+    approved: "entity.extension.statusApproved",
+    denied: "entity.extension.statusDenied",
   };
-  return labels[status];
+  return i18n.t(keys[status]);
 }
 
 // Helper to get extension type label
 export function getExtensionTypeLabel(type: ExtensionType): string {
-  const labels: Record<ExtensionType, string> = {
-    submission: "Сдача работы",
-    review: "Проверка работ",
-    both: "Сдача и проверка",
+  const keys: Record<ExtensionType, string> = {
+    submission: "entity.extension.typeSubmission",
+    review: "entity.extension.typeReview",
+    both: "entity.extension.typeBoth",
   };
-  return labels[type];
+  return i18n.t(keys[type]);
 }

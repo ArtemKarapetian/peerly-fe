@@ -25,6 +25,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { isFlagEnabled, type FeatureFlags } from "@/shared/lib/feature-flags";
 
@@ -58,6 +59,7 @@ const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary]/25";
 
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
+  const { t } = useTranslation();
   const { currentRole } = useRole();
   const isCollapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
   const isMobileDrawer = variant === "mobile-drawer";
@@ -83,62 +85,67 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
     switch (currentRole) {
       case "Student":
         return [
-          { icon: LayoutDashboard, label: "Главная", hash: "/dashboard" },
-          { icon: Book, label: "Курсы", hash: "/courses" },
-          { icon: FileCheck, label: "Рецензии", hash: "/reviews" },
-          { icon: MessageSquare, label: "Полученные отзывы", hash: "/reviews/received" },
-          { icon: BookOpen, label: "Журнал оценок", hash: "/gradebook" },
-          { icon: Bell, label: "Уведомления", hash: "/inbox" },
-          { icon: AlertTriangle, label: "Апелляции", hash: "/appeals" },
+          { icon: LayoutDashboard, label: t("nav.home"), hash: "/dashboard" },
+          { icon: Book, label: t("nav.courses"), hash: "/courses" },
+          { icon: FileCheck, label: t("nav.reviews"), hash: "/reviews" },
+          { icon: MessageSquare, label: t("nav.receivedReviews"), hash: "/reviews/received" },
+          { icon: BookOpen, label: t("nav.gradebook"), hash: "/gradebook" },
+          { icon: Bell, label: t("nav.notifications"), hash: "/inbox" },
+          { icon: AlertTriangle, label: t("nav.appeals"), hash: "/appeals" },
         ];
       case "Teacher":
         return [
-          { icon: Book, label: "Курсы", hash: "/teacher/courses" },
-          { icon: FileCheck, label: "Задания", hash: "/teacher/assignments" },
-          { icon: Layers, label: "Рубрики", hash: "/teacher/rubrics" },
-          { icon: Shuffle, label: "Распределение", hash: "/teacher/distribution" },
-          { icon: Archive, label: "Работы студентов", hash: "/teacher/submissions" },
-          { icon: Shield, label: "Модерация", hash: "/teacher/moderation" },
-          { icon: Scale, label: "Апелляции", hash: "/teacher/appeals" },
+          { icon: Book, label: t("nav.courses"), hash: "/teacher/courses" },
+          { icon: FileCheck, label: t("nav.assignments"), hash: "/teacher/assignments" },
+          { icon: Layers, label: t("nav.rubrics"), hash: "/teacher/rubrics" },
+          { icon: Shuffle, label: t("nav.distribution"), hash: "/teacher/distribution" },
+          { icon: Archive, label: t("nav.studentSubmissions"), hash: "/teacher/submissions" },
+          { icon: Shield, label: t("nav.moderation"), hash: "/teacher/moderation" },
+          { icon: Scale, label: t("nav.appeals"), hash: "/teacher/appeals" },
           {
             icon: Megaphone,
-            label: "Анонсы",
+            label: t("nav.announcements"),
             hash: "/teacher/announcements",
             flag: "enableAnnouncements",
           },
           {
             icon: Clock,
-            label: "Продления",
+            label: t("nav.extensions"),
             hash: "/teacher/extensions",
             flag: "enableExtensions",
           },
           {
             icon: BarChart3,
-            label: "Аналитика",
+            label: t("nav.analytics"),
             hash: "/teacher/analytics",
             flag: "enableAnalytics",
           },
           {
             icon: Zap,
-            label: "Автоматизация",
+            label: t("nav.automation"),
             hash: "/teacher/automation",
             flag: "enableAutomation",
           },
         ];
       case "Admin":
         return [
-          { icon: LayoutDashboard, label: "Обзор", hash: "/admin/overview" },
-          { icon: Book, label: "Все курсы", hash: "/admin/courses" },
-          { icon: Users, label: "Пользователи", hash: "/admin/users" },
-          { icon: Database, label: "Организации", hash: "/admin/orgs" },
-          { icon: Plug, label: "Каталог плагинов", hash: "/admin/plugins", flag: "enablePlugins" },
+          { icon: LayoutDashboard, label: t("nav.overview"), hash: "/admin/overview" },
+          { icon: Book, label: t("nav.allCourses"), hash: "/admin/courses" },
+          { icon: Users, label: t("nav.users"), hash: "/admin/users" },
+          { icon: Database, label: t("nav.organizations"), hash: "/admin/orgs" },
+          {
+            icon: Plug,
+            label: t("nav.pluginCatalog"),
+            hash: "/admin/plugins",
+            flag: "enablePlugins",
+          },
           {
             icon: Zap,
-            label: "Интеграции",
+            label: t("nav.integrations"),
             hash: "/admin/integrations",
             flag: "enableIntegrations",
           },
-          { icon: Settings, label: "Настройки", hash: "/admin/settings" },
+          { icon: Settings, label: t("nav.settings"), hash: "/admin/settings" },
         ];
     }
   };
@@ -173,7 +180,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             <button
               onClick={onClose}
               className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-[#f3f4f6] hover:text-[--text-primary] transition-colors duration-150 ${focusRing}`}
-              aria-label="Закрыть меню"
+              aria-label={t("nav.closeMenu")}
             >
               <X className="w-4 h-4" />
             </button>
@@ -211,7 +218,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
               className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
             >
               <User className="w-4 h-4 shrink-0" />
-              <span className="text-[14px]">Профиль</span>
+              <span className="text-[14px]">{t("nav.profile")}</span>
             </a>
             <a
               href="#/settings"
@@ -219,7 +226,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
               className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
             >
               <Settings className="w-4 h-4 shrink-0" />
-              <span className="text-[14px]">Настройки</span>
+              <span className="text-[14px]">{t("nav.settings")}</span>
             </a>
           </div>
         </div>
@@ -248,7 +255,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           <button
             onClick={onToggleCollapse}
             className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-[#f3f4f6] hover:text-[--text-primary] transition-colors duration-150 ${focusRing} ${isCollapsed ? "mx-auto" : ""}`}
-            aria-label={isCollapsed ? "Развернуть" : "Свернуть"}
+            aria-label={isCollapsed ? t("nav.expand") : t("nav.collapse")}
           >
             {isCollapsed ? (
               <ChevronRight className="w-3.5 h-3.5" />
@@ -294,20 +301,20 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
               isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
             }`}
-            title={isCollapsed ? "Профиль" : undefined}
+            title={isCollapsed ? t("nav.profile") : undefined}
           >
             <User className="w-4 h-4 shrink-0" />
-            {!isCollapsed && <span className="text-[14px]">Профиль</span>}
+            {!isCollapsed && <span className="text-[14px]">{t("nav.profile")}</span>}
           </a>
           <a
             href="#/settings"
             className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
               isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
             }`}
-            title={isCollapsed ? "Настройки" : undefined}
+            title={isCollapsed ? t("nav.settings") : undefined}
           >
             <Settings className="w-4 h-4 shrink-0" />
-            {!isCollapsed && <span className="text-[14px]">Настройки</span>}
+            {!isCollapsed && <span className="text-[14px]">{t("nav.settings")}</span>}
           </a>
         </div>
       </div>

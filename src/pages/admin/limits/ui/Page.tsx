@@ -1,19 +1,15 @@
 import { Save, Plus, X, Building, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
- * AdminLimitsPage - Лимиты и квоты
- *
- * Функции:
- * - Глобальные лимиты: upload size, files per work, attempts, rate limits
- * - Per-tenant overrides
- * - Сохранение в localStorage
+ * AdminLimitsPage - Limits & quotas
  */
 
 interface GlobalLimits {
@@ -46,7 +42,6 @@ const DEFAULT_LIMITS: GlobalLimits = {
   maxCoursesPerTeacher: 20,
 };
 
-// Initialize from localStorage
 const getInitialLimits = (): GlobalLimits => {
   const stored = localStorage.getItem("admin_global_limits");
   return stored ? JSON.parse(stored) : DEFAULT_LIMITS;
@@ -58,13 +53,14 @@ const getInitialOverrides = (): TenantOverride[] => {
 };
 
 export default function AdminLimitsPage() {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [globalLimits, setGlobalLimits] = useState<GlobalLimits>(getInitialLimits);
   const [tenantOverrides, setTenantOverrides] = useState<TenantOverride[]>(getInitialOverrides);
   const [showAddOverride, setShowAddOverride] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Available tenants
   const availableTenants = [
     { id: "org1", name: "HSE" },
     { id: "org2", name: "MGUSiT" },
@@ -73,7 +69,6 @@ export default function AdminLimitsPage() {
 
   const handleGlobalChange = (path: string, value: string) => {
     const numValue = parseInt(value) || 0;
-
     if (path.includes(".")) {
       const [parent, child] = path.split(".");
       setGlobalLimits({
@@ -86,7 +81,6 @@ export default function AdminLimitsPage() {
     } else {
       setGlobalLimits({ ...globalLimits, [path]: numValue });
     }
-
     setHasChanges(true);
   };
 
@@ -94,52 +88,41 @@ export default function AdminLimitsPage() {
     const unusedTenant = availableTenants.find(
       (t) => !tenantOverrides.some((o) => o.tenantId === t.id),
     );
-
     if (!unusedTenant) {
-      alert("Все организации уже имеют переопределения");
+      alert(t("admin.limitsPage.allOrgsHaveOverrides"));
       return;
     }
-
     const newOverride: TenantOverride = {
       tenantId: unusedTenant.id,
       tenantName: unusedTenant.name,
       limits: {},
     };
-
     setTenantOverrides([...tenantOverrides, newOverride]);
     setHasChanges(true);
     setShowAddOverride(false);
   };
 
   const handleRemoveOverride = (tenantId: string) => {
-    if (!confirm("Удалить переопределение для этой организации?")) return;
+    if (!confirm(t("admin.limitsPage.confirmRemoveOverride"))) return;
     setTenantOverrides(tenantOverrides.filter((o) => o.tenantId !== tenantId));
     setHasChanges(true);
   };
 
   const handleOverrideChange = (tenantId: string, key: string, value: string) => {
     const numValue = parseInt(value) || 0;
-
     setTenantOverrides(
       tenantOverrides.map((override) => {
         if (override.tenantId !== tenantId) return override;
-
-        return {
-          ...override,
-          limits: { ...override.limits, [key]: numValue },
-        };
+        return { ...override, limits: { ...override.limits, [key]: numValue } };
       }),
     );
-
     setHasChanges(true);
   };
 
   const handleSave = () => {
     localStorage.setItem("admin_global_limits", JSON.stringify(globalLimits));
     localStorage.setItem("admin_tenant_overrides", JSON.stringify(tenantOverrides));
-
-    logAuditEntry("UPDATE_LIMITS", "SystemLimits", "Лимиты и квоты обновлены");
-
+    logAuditEntry("UPDATE_LIMITS", "SystemLimits", t("admin.limitsPage.auditUpdated"));
     setHasChanges(false);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
@@ -162,52 +145,47 @@ export default function AdminLimitsPage() {
   const limitSettings = [
     {
       key: "maxUploadSizeMB",
-      label: "Максимальный размер файла",
-      description: "Лимит размера одного загружаемого файла",
+      labelKey: "admin.limitsPage.maxUploadSize",
+      descriptionKey: "admin.limitsPage.maxUploadSizeDesc",
       unit: "MB",
       icon: "📁",
     },
     {
       key: "maxFilesPerSubmission",
-      label: "Файлов в одной работе",
-      description: "Максимальное количество файлов в work",
-      unit: "файлов",
+      labelKey: "admin.limitsPage.filesPerSubmission",
+      descriptionKey: "admin.limitsPage.filesPerSubmissionDesc",
+      unitKey: "admin.limitsPage.unitFiles",
       icon: "📎",
     },
     {
       key: "maxSubmissionAttempts",
-      label: "Попыток отправки",
-      description: "Сколько раз студент может переотправить работу",
-      unit: "попыток",
+      labelKey: "admin.limitsPage.submissionAttempts",
+      descriptionKey: "admin.limitsPage.submissionAttemptsDesc",
+      unitKey: "admin.limitsPage.unitAttempts",
       icon: "🔄",
     },
     {
       key: "maxReviewsPerDay",
-      label: "Рецензий в день",
-      description: "Максимум рецензий, которые может написать студент за день",
-      unit: "рецензий",
+      labelKey: "admin.limitsPage.reviewsPerDay",
+      descriptionKey: "admin.limitsPage.reviewsPerDayDesc",
+      unitKey: "admin.limitsPage.unitReviews",
       icon: "✍️",
     },
     {
       key: "maxCoursesPerTeacher",
-      label: "Курсов на преподавателя",
-      description: "Максимальное количество курсов у одного преподавателя",
-      unit: "курсов",
+      labelKey: "admin.limitsPage.coursesPerTeacher",
+      descriptionKey: "admin.limitsPage.coursesPerTeacherDesc",
+      unitKey: "admin.limitsPage.unitCourses",
       icon: "📚",
     },
   ];
 
   return (
-    <AppShell title="Лимиты и квоты">
-      <Breadcrumbs items={[CRUMBS.adminSettings, { label: "Лимиты" }]} />
-
-      <PageHeader
-        title="Лимиты и квоты"
-        subtitle="Настройка ограничений для пользователей и системных ресурсов"
-      />
+    <AppShell title={t("admin.limits.title")}>
+      <Breadcrumbs items={[CRUMBS.adminSettings, { label: t("admin.limits.title") }]} />
+      <PageHeader title={t("admin.limits.title")} subtitle={t("admin.limits.subtitle")} />
 
       <div>
-        {/* Success Message */}
         {showSuccess && (
           <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6">
             <div className="flex items-center gap-3">
@@ -215,18 +193,17 @@ export default function AdminLimitsPage() {
                 <Save className="w-4 h-4 text-white" />
               </div>
               <p className="text-[14px] font-medium text-[#4caf50]">
-                ✓ Лимиты и квоты успешно сохранены
+                {t("admin.limitsPage.savedSuccess")}
               </p>
             </div>
           </div>
         )}
 
-        {/* Global Limits */}
         <div className="mb-8">
-          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">Глобальные лимиты</h2>
-
+          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">
+            {t("admin.limitsPage.globalLimits")}
+          </h2>
           <div className="space-y-4">
-            {/* Standard Limits */}
             {limitSettings.map((setting) => (
               <div
                 key={setting.key}
@@ -235,8 +212,10 @@ export default function AdminLimitsPage() {
                 <div className="flex items-start gap-4">
                   <div className="text-[32px] flex-shrink-0">{setting.icon}</div>
                   <div className="flex-1">
-                    <h3 className="text-[16px] font-medium text-[#21214f] mb-1">{setting.label}</h3>
-                    <p className="text-[13px] text-[#767692] mb-3">{setting.description}</p>
+                    <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                      {t(setting.labelKey)}
+                    </h3>
+                    <p className="text-[13px] text-[#767692] mb-3">{t(setting.descriptionKey)}</p>
                     <div className="flex items-center gap-2 max-w-[250px]">
                       <input
                         type="number"
@@ -246,7 +225,7 @@ export default function AdminLimitsPage() {
                         className="flex-1 px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:border-[#5b8def] focus:outline-none transition-colors"
                       />
                       <span className="text-[14px] text-[#767692] min-w-[80px]">
-                        {setting.unit}
+                        {setting.unit || t(setting.unitKey!)}
                       </span>
                     </div>
                   </div>
@@ -259,15 +238,16 @@ export default function AdminLimitsPage() {
               <div className="flex items-start gap-4">
                 <div className="text-[32px] flex-shrink-0">⚡</div>
                 <div className="flex-1">
-                  <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Rate Limiting</h3>
+                  <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                    {t("admin.limitsPage.rateLimiting")}
+                  </h3>
                   <p className="text-[13px] text-[#767692] mb-4">
-                    Ограничение частоты запросов к API
+                    {t("admin.limitsPage.rateLimitingDesc")}
                   </p>
-
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[12px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                        Запросов в минуту
+                        {t("admin.limitsPage.requestsPerMinute")}
                       </label>
                       <div className="flex items-center gap-2">
                         <input
@@ -282,10 +262,9 @@ export default function AdminLimitsPage() {
                         <span className="text-[14px] text-[#767692] min-w-[60px]">req/min</span>
                       </div>
                     </div>
-
                     <div>
                       <label className="block text-[12px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                        Запросов в час
+                        {t("admin.limitsPage.requestsPerHour")}
                       </label>
                       <div className="flex items-center gap-2">
                         <input
@@ -312,10 +291,10 @@ export default function AdminLimitsPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-[20px] font-medium text-[#21214f]">
-                Переопределения по организациям
+                {t("admin.limitsPage.tenantOverrides")}
               </h2>
               <p className="text-[13px] text-[#767692] mt-1">
-                Установите особые лимиты для конкретных организаций
+                {t("admin.limitsPage.tenantOverridesDesc")}
               </p>
             </div>
             {tenantOverrides.length < availableTenants.length && (
@@ -324,7 +303,7 @@ export default function AdminLimitsPage() {
                 className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
               >
                 <Plus className="w-4 h-4" />
-                Добавить
+                {t("admin.limitsPage.addBtn")}
               </button>
             )}
           </div>
@@ -338,7 +317,6 @@ export default function AdminLimitsPage() {
                     key={override.tenantId}
                     className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6"
                   >
-                    {/* Tenant Header */}
                     <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-[#e6e8ee]">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
@@ -356,13 +334,11 @@ export default function AdminLimitsPage() {
                         <X className="w-5 h-5" />
                       </button>
                     </div>
-
-                    {/* Override Settings */}
                     <div className="grid md:grid-cols-2 gap-4">
                       {limitSettings.map((setting) => (
                         <div key={setting.key}>
                           <label className="block text-[12px] font-medium text-[#767692] mb-2">
-                            {setting.label}
+                            {t(setting.labelKey)}
                           </label>
                           <div className="flex items-center gap-2">
                             <input
@@ -374,22 +350,21 @@ export default function AdminLimitsPage() {
                               onChange={(e) =>
                                 handleOverrideChange(override.tenantId, setting.key, e.target.value)
                               }
-                              placeholder={`По умолч.: ${globalLimits[setting.key as keyof GlobalLimits]}`}
+                              placeholder={t("admin.limitsPage.defaultPlaceholder", {
+                                value: globalLimits[setting.key as keyof GlobalLimits],
+                              })}
                               className="flex-1 px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[13px] focus:border-[#5b8def] focus:outline-none transition-colors"
                             />
                             <span className="text-[12px] text-[#767692] min-w-[60px]">
-                              {setting.unit}
+                              {setting.unit || t(setting.unitKey!)}
                             </span>
                           </div>
                         </div>
                       ))}
                     </div>
-
-                    {/* Info */}
                     <div className="mt-4 p-3 bg-[#f9f9f9] rounded-[8px]">
                       <p className="text-[12px] text-[#767692]">
-                        💡 Пустые поля используют глобальное значение. Заполненные поля
-                        переопределяют глобальные лимиты для этой организации.
+                        {t("admin.limitsPage.overrideHint")}
                       </p>
                     </div>
                   </div>
@@ -399,30 +374,28 @@ export default function AdminLimitsPage() {
           ) : (
             <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-12 text-center">
               <Building className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-2">Нет переопределений</h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+                {t("admin.limitsPage.noOverrides")}
+              </h3>
               <p className="text-[13px] text-[#767692] mb-4">
-                Все организации используют глобальные лимиты
+                {t("admin.limitsPage.noOverridesDesc")}
               </p>
             </div>
           )}
         </div>
 
-        {/* Info Box */}
         <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6">
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-[#5b8def] flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">О лимитах и квотах</h4>
-              <p className="text-[13px] text-[#767692]">
-                Лимиты применяются в реальном времени и помогают предотвратить злоупотребления
-                системой. Переопределения по организациям имеют приоритет над глобальными
-                настройками.
-              </p>
+              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
+                {t("admin.limitsPage.aboutLimitsTitle")}
+              </h4>
+              <p className="text-[13px] text-[#767692]">{t("admin.limitsPage.aboutLimitsText")}</p>
             </div>
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3">
           <button
             onClick={handleSave}
@@ -434,12 +407,11 @@ export default function AdminLimitsPage() {
             }`}
           >
             <Save className="w-5 h-5" />
-            Сохранить изменения
+            {t("admin.limitsPage.saveChanges")}
           </button>
         </div>
       </div>
 
-      {/* Add Override Modal */}
       {showAddOverride && (
         <div
           className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4"
@@ -450,16 +422,17 @@ export default function AdminLimitsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-6 py-4 border-b-2 border-[#e6e8ee]">
-              <h2 className="text-[18px] font-medium text-[#21214f]">Добавить переопределение</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("admin.limitsPage.addOverrideTitle")}
+              </h2>
             </div>
             <div className="p-6">
               <p className="text-[14px] text-[#767692] mb-4">
-                Будет добавлено переопределение для следующей доступной организации. После
-                добавления вы сможете настроить индивидуальные лимиты.
+                {t("admin.limitsPage.addOverrideText")}
               </p>
               <div className="p-4 bg-[#f9f9f9] rounded-[12px] border-2 border-[#e6e8ee]">
                 <p className="text-[13px] text-[#21214f]">
-                  Доступные организации:{" "}
+                  {t("admin.limitsPage.availableOrgs")}{" "}
                   <strong>
                     {availableTenants
                       .filter((t) => !tenantOverrides.some((o) => o.tenantId === t.id))
@@ -474,13 +447,13 @@ export default function AdminLimitsPage() {
                 onClick={() => setShowAddOverride(false)}
                 className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px] font-medium"
               >
-                Отмена
+                {t("admin.limitsPage.cancel")}
               </button>
               <button
                 onClick={handleAddOverride}
                 className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
               >
-                Добавить
+                {t("admin.limitsPage.add")}
               </button>
             </div>
           </div>

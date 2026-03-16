@@ -1,4 +1,5 @@
 import { User, Edit2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { useRole } from "@/entities/user";
 
@@ -17,20 +18,21 @@ const getRoleBadgeColor = (role: string) => {
   }
 };
 
-const getRoleLabel = (role: string) => {
+const getRoleLabelKey = (role: string) => {
   switch (role) {
     case "Student":
-      return "Студент";
+      return "roles.student";
     case "Teacher":
-      return "Преподаватель";
+      return "roles.teacher";
     case "Admin":
-      return "Администратор";
+      return "roles.admin";
     default:
-      return role;
+      return "";
   }
 };
 
 export function UserInfoCard() {
+  const { t } = useTranslation();
   const { currentRole } = useRole();
   const { isEditing, formData, setFormData, showSuccess, handleSave, handleCancel, startEditing } =
     useProfileForm();
@@ -40,20 +42,24 @@ export function UserInfoCard() {
       {showSuccess && (
         <div className="mb-6 p-4 bg-accent rounded-[12px] flex items-center gap-3">
           <Edit2 className="w-5 h-5 text-accent-foreground" />
-          <p className="text-[14px] text-accent-foreground font-medium">Изменения сохранены!</p>
+          <p className="text-[14px] text-accent-foreground font-medium">
+            {t("feature.profile.changesSaved")}
+          </p>
         </div>
       )}
 
       <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
         <div className="flex items-start justify-between mb-6">
-          <h2 className="text-[20px] font-medium text-foreground">Информация о пользователе</h2>
+          <h2 className="text-[20px] font-medium text-foreground">
+            {t("feature.profile.userInfo")}
+          </h2>
           {!isEditing && (
             <button
               onClick={startEditing}
               className="flex items-center gap-2 px-4 py-2 border-2 border-border rounded-[12px] hover:bg-muted/50 transition-colors"
             >
               <Edit2 className="w-4 h-4 text-muted-foreground" />
-              <span className="text-[14px] text-foreground">Редактировать</span>
+              <span className="text-[14px] text-foreground">{t("common.edit")}</span>
             </button>
           )}
         </div>
@@ -71,7 +77,7 @@ export function UserInfoCard() {
               <span
                 className={`inline-flex px-3 py-1 rounded-[8px] text-[13px] font-medium ${getRoleBadgeColor(currentRole)}`}
               >
-                {getRoleLabel(currentRole)}
+                {getRoleLabelKey(currentRole) ? t(getRoleLabelKey(currentRole)) : currentRole}
               </span>
             </div>
             <p className="text-[15px] text-muted-foreground">@{formData.username}</p>
@@ -83,7 +89,7 @@ export function UserInfoCard() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                Имя
+                {t("feature.profile.firstName")}
               </label>
               <input
                 type="text"
@@ -99,7 +105,7 @@ export function UserInfoCard() {
             </div>
             <div>
               <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                Фамилия
+                {t("feature.profile.lastName")}
               </label>
               <input
                 type="text"
@@ -117,7 +123,7 @@ export function UserInfoCard() {
 
           <div>
             <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              Имя пользователя
+              {t("feature.profile.username")}
             </label>
             <input
               type="text"
@@ -139,13 +145,13 @@ export function UserInfoCard() {
               onClick={handleSave}
               className="px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium"
             >
-              Сохранить изменения
+              {t("feature.profile.saveChanges")}
             </button>
             <button
               onClick={handleCancel}
               className="px-6 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted/50 transition-colors text-[15px] font-medium"
             >
-              Отмена
+              {t("common.cancel")}
             </button>
           </div>
         )}

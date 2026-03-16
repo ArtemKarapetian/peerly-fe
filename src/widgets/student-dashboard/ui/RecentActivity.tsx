@@ -1,4 +1,5 @@
 import { Clock, BookOpen, FileText, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type RecentItemType = "course" | "task";
 
@@ -17,14 +18,19 @@ interface RecentActivityProps {
 }
 
 export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
+  const { t } = useTranslation();
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-10 text-center px-5">
         <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
           <Clock className="w-5 h-5 text-[--text-tertiary]" />
         </div>
-        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">Нет активности</p>
-        <p className="text-[13px] text-[--text-secondary]">Недавно открытые курсы и задания</p>
+        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">
+          {t("widget.recentActivity.noActivity")}
+        </p>
+        <p className="text-[13px] text-[--text-secondary]">
+          {t("widget.recentActivity.recentItems")}
+        </p>
       </div>
     );
   }

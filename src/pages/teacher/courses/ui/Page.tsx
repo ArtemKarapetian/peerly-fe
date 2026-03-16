@@ -1,5 +1,6 @@
 import { BookOpen, ChevronRight, ClipboardList, Plus, Users } from "lucide-react";
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -24,6 +25,7 @@ interface CourseRow {
 }
 
 export default function TeacherCoursesPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
@@ -32,7 +34,7 @@ export default function TeacherCoursesPage() {
     id: course.id,
     name: course.title,
     code: course.code,
-    term: "Весна 2025",
+    term: t("teacher.courses.springTerm"),
     participantsCount: course.enrollmentCount,
     activeAssignments: course.assignmentIds?.length || 0,
     status: course.archived ? "archived" : "active",
@@ -66,20 +68,20 @@ export default function TeacherCoursesPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Управление курсами">
+      <AppShell title={t("teacher.courses.management")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Управление курсами">
+      <AppShell title={t("teacher.courses.management")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
 
   return (
-    <AppShell title="Управление курсами">
-      <Breadcrumbs items={[{ label: "Курсы" }]} />
+    <AppShell title={t("teacher.courses.management")}>
+      <Breadcrumbs items={[{ label: t("teacher.courses.title") }]} />
 
       <div className="mt-6">
         {/* Hero header card */}
@@ -87,12 +89,12 @@ export default function TeacherCoursesPage() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-1">
-                Курсы
+                {t("teacher.courses.title")}
               </h1>
               <p className="text-[15px] text-[#767692]">
                 {activeCourses.length > 0
-                  ? `${activeCourses.length} активных курсов, ${allCourseRows.length - activeCourses.length > 0 ? `${allCourseRows.length - activeCourses.length} в архиве` : "все активны"}`
-                  : "Создайте первый курс, чтобы начать работу"}
+                  ? `${activeCourses.length} ${t("teacher.courses.activeCourses")}, ${allCourseRows.length - activeCourses.length > 0 ? `${allCourseRows.length - activeCourses.length} ${t("teacher.courses.inArchive")}` : t("teacher.courses.allActive")}`
+                  : t("teacher.courses.createFirst")}
               </p>
             </div>
             <div className="flex items-center gap-5 shrink-0">
@@ -102,14 +104,16 @@ export default function TeacherCoursesPage() {
                   <p className="text-[24px] font-medium text-[#21214f] tabular-nums leading-none mb-1">
                     {totalStudents}
                   </p>
-                  <p className="text-[13px] text-[#767692]">Студентов</p>
+                  <p className="text-[13px] text-[#767692]">{t("teacher.courses.studentsLabel")}</p>
                 </div>
                 <div className="w-px h-10 bg-[#e6e8ee]"></div>
                 <div className="text-center">
                   <p className="text-[24px] font-medium text-[#21214f] tabular-nums leading-none mb-1">
                     {totalAssignments}
                   </p>
-                  <p className="text-[13px] text-[#767692]">Заданий</p>
+                  <p className="text-[13px] text-[#767692]">
+                    {t("teacher.courses.assignmentsLabel")}
+                  </p>
                 </div>
                 <div className="w-px h-10 bg-[#e6e8ee]"></div>
               </div>
@@ -118,7 +122,7 @@ export default function TeacherCoursesPage() {
                 className="flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] active:bg-[#1e40af] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2563eb]"
               >
                 <Plus className="w-4 h-4" />
-                Создать курс
+                {t("teacher.courses.createCourse")}
               </button>
             </div>
           </div>
@@ -133,7 +137,9 @@ export default function TeacherCoursesPage() {
                 <p className="text-[15px] font-semibold text-[#21214f] leading-none">
                   {activeCourses.length}
                 </p>
-                <p className="text-[10px] text-[#767692] mt-0.5">Курсов</p>
+                <p className="text-[10px] text-[#767692] mt-0.5">
+                  {t("teacher.courses.coursesCount")}
+                </p>
               </div>
             </div>
             <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#f0fdf4] rounded-[10px]">
@@ -144,7 +150,9 @@ export default function TeacherCoursesPage() {
                 <p className="text-[15px] font-semibold text-[#21214f] leading-none">
                   {totalStudents}
                 </p>
-                <p className="text-[10px] text-[#767692] mt-0.5">Студентов</p>
+                <p className="text-[10px] text-[#767692] mt-0.5">
+                  {t("teacher.courses.studentsLabel")}
+                </p>
               </div>
             </div>
             <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#fffbeb] rounded-[10px]">
@@ -155,7 +163,9 @@ export default function TeacherCoursesPage() {
                 <p className="text-[15px] font-semibold text-[#21214f] leading-none">
                   {totalAssignments}
                 </p>
-                <p className="text-[10px] text-[#767692] mt-0.5">Заданий</p>
+                <p className="text-[10px] text-[#767692] mt-0.5">
+                  {t("teacher.courses.assignmentsLabel")}
+                </p>
               </div>
             </div>
           </div>
@@ -167,12 +177,12 @@ export default function TeacherCoursesPage() {
             <CourseSearch
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Поиск по названию или коду курса..."
+              placeholder={t("teacher.courses.searchPlaceholder")}
             />
           </div>
           {filteredCourses.length > 0 && (
             <p className="text-[12px] text-[#767692] tabular-nums shrink-0 hidden tablet:block">
-              {filteredCourses.length} курсов
+              {filteredCourses.length} {t("teacher.courses.coursesCount")}
             </p>
           )}
         </div>
@@ -194,19 +204,19 @@ export default function TeacherCoursesPage() {
                   <thead>
                     <tr className="border-b-2 border-[#e6e8ee] bg-[#fafbfc]">
                       <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px]">
-                        Курс
+                        {t("common.course")}
                       </th>
                       <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
-                        Семестр
+                        {t("common.semester")}
                       </th>
                       <th className="text-center px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
-                        Студенты
+                        {t("common.students")}
                       </th>
                       <th className="text-center px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px] hidden tablet:table-cell">
-                        Задания
+                        {t("common.assignments")}
                       </th>
                       <th className="text-left px-5 py-3 text-[11px] font-semibold text-[#767692] uppercase tracking-[0.5px]">
-                        Статус
+                        {t("common.status")}
                       </th>
                       <th className="py-3 w-[48px]" />
                     </tr>
@@ -222,7 +232,7 @@ export default function TeacherCoursesPage() {
                           onKeyDown={(e) => handleRowKeyDown(e, course.id)}
                           role="button"
                           tabIndex={0}
-                          aria-label={`Открыть курс ${course.name}`}
+                          aria-label={t("teacher.courses.openCourse", { name: course.name })}
                         >
                           {/* Course name + code */}
                           <td className="px-5 py-4">
@@ -257,11 +267,11 @@ export default function TeacherCoursesPage() {
                           <td className="px-5 py-4">
                             {course.status === "active" ? (
                               <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[12px] font-medium">
-                                Активен
+                                {t("common.active")}
                               </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[12px] font-medium">
-                                Архив
+                                {t("common.archive")}
                               </span>
                             )}
                           </td>
@@ -296,12 +306,12 @@ export default function TeacherCoursesPage() {
               <BookOpen className="w-6 h-6 text-[#767692]" />
             </div>
             <h3 className="text-[17px] font-medium text-[#21214f] mb-2">
-              {searchQuery ? "Курсы не найдены" : "Нет курсов"}
+              {searchQuery ? t("teacher.courses.noCoursesSearch") : t("teacher.courses.noCourses")}
             </h3>
             <p className="text-[14px] text-[#767692] mb-6">
               {searchQuery
-                ? "Попробуйте изменить поисковый запрос"
-                : "Создайте первый курс, чтобы начать работу"}
+                ? t("teacher.courses.tryChangingSearch")
+                : t("teacher.courses.createFirst")}
             </p>
             {!searchQuery && (
               <button
@@ -309,7 +319,7 @@ export default function TeacherCoursesPage() {
                 className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-[14px] font-medium"
               >
                 <Plus className="w-4 h-4" />
-                Создать курс
+                {t("teacher.courses.createCourse")}
               </button>
             )}
           </div>

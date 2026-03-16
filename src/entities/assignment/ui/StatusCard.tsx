@@ -8,6 +8,7 @@ import {
   User,
   History,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type TaskStatus =
   | "NOT_STARTED"
@@ -39,47 +40,49 @@ export function StatusCard({
   allowResubmissions,
   onStatusChange,
 }: StatusCardProps) {
+  const { t } = useTranslation();
+
   const getStatusInfo = () => {
     switch (status) {
       case "NOT_STARTED":
         return {
-          label: "Не начато",
+          label: t("entity.assignment.statusNotStarted"),
           color: "bg-[#e4e4e4]",
           textColor: "text-[#4b4963]",
         };
       case "SUBMITTED":
         return {
-          label: "Сдано",
+          label: t("entity.assignment.statusSubmitted"),
           color: "bg-[#b7bdff]",
           textColor: "text-[#21214f]",
         };
       case "PEER_REVIEW":
         return {
-          label: "На проверке",
+          label: t("entity.assignment.statusPeerReview"),
           color: "bg-[#b0e9fb]",
           textColor: "text-[#21214f]",
         };
       case "TEACHER_REVIEW":
         return {
-          label: "Нужно проверить",
+          label: t("entity.assignment.statusTeacherReview"),
           color: "bg-[#ffd4a3]",
           textColor: "text-[#21214f]",
         };
       case "GRADING":
         return {
-          label: "Черновик",
+          label: t("entity.assignment.statusGrading"),
           color: "bg-[#e6e8ee]",
           textColor: "text-[#4b4963]",
         };
       case "GRADED":
         return {
-          label: "Оценено",
+          label: t("entity.assignment.statusGraded"),
           color: "bg-[#9cf38d]",
           textColor: "text-[#21214f]",
         };
       case "OVERDUE":
         return {
-          label: "Просрочено",
+          label: t("entity.assignment.statusOverdue"),
           color: "bg-[#ffb8b8]",
           textColor: "text-[#21214f]",
         };
@@ -92,13 +95,13 @@ export function StatusCard({
   const peerReviewAssignments = [
     {
       id: 1,
-      studentName: "Иванов Иван",
+      studentName: "Ivan Ivanov",
       submitted: true,
       reviewed: false,
     },
     {
       id: 2,
-      studentName: "Петрова Мария",
+      studentName: "Maria Petrova",
       submitted: true,
       reviewed: false,
     },
@@ -110,7 +113,7 @@ export function StatusCard({
     <div>
       <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
         <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
-          Статус и действия
+          {t("entity.assignment.statusAndActions")}
         </h2>
 
         <div
@@ -128,7 +131,7 @@ export function StatusCard({
           <Clock className="size-5 text-[#4b4963]" />
           <div>
             <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
-              Дедлайн
+              {t("entity.assignment.deadline")}
             </p>
             <p className="text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
               {deadline}
@@ -140,7 +143,7 @@ export function StatusCard({
         {status === "NOT_STARTED" && (
           <div>
             <h3 className="text-[16px] desktop:text-[18px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.54px] text-[#21214f] mb-3">
-              Сдать работу
+              {t("entity.assignment.submitWork")}
             </h3>
 
             <button
@@ -151,7 +154,7 @@ export function StatusCard({
               }}
             >
               <Upload className="size-4" />
-              <span>Сдать работу</span>
+              <span>{t("entity.assignment.submitWork")}</span>
             </button>
 
             {/* History link - show if has any work */}
@@ -163,7 +166,7 @@ export function StatusCard({
                 className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
               >
                 <History className="size-4" />
-                <span>История версий</span>
+                <span>{t("entity.assignment.versionHistory")}</span>
               </button>
             )}
           </div>
@@ -176,10 +179,10 @@ export function StatusCard({
                 <CheckCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
                 <div>
                   <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
-                    Работа сдана
+                    {t("entity.assignment.workSubmitted")}
                   </p>
                   <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
-                    Ожидайте назначения рецензентов
+                    {t("entity.assignment.awaitingReviewers")}
                   </p>
                 </div>
               </div>
@@ -199,7 +202,7 @@ export function StatusCard({
                 }}
                 className="w-full bg-white border-2 border-[#d2def8] hover:border-[#a0b8f1] hover:bg-[#f9f9f9] transition-colors py-2 desktop:py-3 rounded-[12px] text-[13px] desktop:text-[14px] font-medium text-[#21214f] mb-3"
               >
-                Загрузить новую версию
+                {t("entity.assignment.uploadNewVersion")}
               </button>
             )}
 
@@ -210,7 +213,7 @@ export function StatusCard({
               className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
               <History className="size-4" />
-              <span>История версий</span>
+              <span>{t("entity.assignment.versionHistory")}</span>
             </button>
           </div>
         )}
@@ -220,13 +223,13 @@ export function StatusCard({
             {/* Your work being reviewed */}
             <div className="mb-6">
               <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-3">
-                Вашу работу проверяют
+                {t("entity.assignment.yourWorkBeingReviewed")}
               </h3>
 
               <div className="bg-white rounded-[12px] p-4 mb-2">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
-                    Прогресс проверки
+                    {t("entity.assignment.reviewProgress")}
                   </span>
                   <span className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f]">
                     {myWorkReviewProgress.completed}/{myWorkReviewProgress.total}
@@ -245,17 +248,14 @@ export function StatusCard({
 
               <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
                 {myWorkReviewProgress.total - myWorkReviewProgress.completed}{" "}
-                {myWorkReviewProgress.total - myWorkReviewProgress.completed === 1
-                  ? "рецензент"
-                  : "рецензента"}{" "}
-                ещё не завершили проверку
+                {t("entity.assignment.reviewerNotFinished_other")}
               </p>
             </div>
 
             {/* Reviews you need to do */}
             <div>
               <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-3">
-                Вам нужно проверить
+                {t("entity.assignment.youNeedToReview")}
               </h3>
 
               <div className="space-y-2 mb-4">
@@ -274,7 +274,9 @@ export function StatusCard({
                             {assignment.studentName}
                           </p>
                           <p className="text-[11px] desktop:text-[12px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
-                            {assignment.reviewed ? "Проверено" : "Ожидает проверки"}
+                            {assignment.reviewed
+                              ? t("entity.assignment.reviewed")
+                              : t("entity.assignment.awaitingReview")}
                           </p>
                         </div>
                       </div>
@@ -296,7 +298,7 @@ export function StatusCard({
                 }}
                 className="w-full bg-[#d2def8] hover:bg-[#b7bdff] transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-[#21214f] flex items-center justify-center gap-2"
               >
-                Начать проверку
+                {t("entity.assignment.startReview")}
                 <ArrowRight className="size-4" />
               </button>
             </div>
@@ -309,10 +311,10 @@ export function StatusCard({
               <CheckCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
               <div>
                 <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
-                  Взаимная проверка завершена
+                  {t("entity.assignment.peerReviewCompleted")}
                 </p>
                 <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
-                  Преподаватель проверяет вашу работу и рецензии
+                  {t("entity.assignment.teacherReviewingWork")}
                 </p>
               </div>
             </div>
@@ -326,10 +328,10 @@ export function StatusCard({
                 <AlertCircle className="size-5 text-[#f57c00] shrink-0 mt-0.5" />
                 <div>
                   <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
-                    Черновик сохранён
+                    {t("entity.assignment.draftSaved")}
                   </p>
                   <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
-                    Не забудьте сдать финальную версию до дедлайна
+                    {t("entity.assignment.dontForgetSubmit")}
                   </p>
                 </div>
               </div>
@@ -342,7 +344,7 @@ export function StatusCard({
               }}
             >
               <Upload className="size-4" />
-              <span>Продолжить работу</span>
+              <span>{t("entity.assignment.continueWork")}</span>
             </button>
 
             <button
@@ -352,7 +354,7 @@ export function StatusCard({
               className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
               <History className="size-4" />
-              <span>История версий</span>
+              <span>{t("entity.assignment.versionHistory")}</span>
             </button>
           </div>
         )}
@@ -364,10 +366,10 @@ export function StatusCard({
                 <CheckCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
                 <div>
                   <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
-                    Оценка выставлена
+                    {t("entity.assignment.gradeAssigned")}
                   </p>
                   <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
-                    Вы получили 85 баллов из 100
+                    {t("entity.assignment.scoreReceived")}
                   </p>
                 </div>
               </div>
@@ -379,7 +381,7 @@ export function StatusCard({
               }}
               className="w-full bg-[#d2def8] hover:bg-[#b7bdff] transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-[#21214f] mb-3"
             >
-              Посмотреть отзыв
+              {t("entity.assignment.viewFeedback")}
             </button>
 
             <button
@@ -389,7 +391,7 @@ export function StatusCard({
               className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
               <AlertCircle className="size-4" />
-              <span>Запросить пересмотр оценки</span>
+              <span>{t("entity.assignment.requestGradeReview")}</span>
             </button>
           </div>
         )}
@@ -400,10 +402,10 @@ export function StatusCard({
               <AlertCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
               <div>
                 <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
-                  Срок сдачи истёк
+                  {t("entity.assignment.deadlineExpired")}
                 </p>
                 <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
-                  Обратитесь к преподавателю для получения индивидуального дедлайна
+                  {t("entity.assignment.contactTeacher")}
                 </p>
               </div>
             </div>
@@ -415,20 +417,20 @@ export function StatusCard({
       {onStatusChange && (
         <div className="bg-white border border-[#c7c7c7] rounded-[12px] p-4">
           <p className="text-[12px] font-['Work_Sans:Medium',sans-serif] text-[#767692] mb-2">
-            ДЕМО: Выберите статус
+            {t("entity.assignment.demoSelectStatus")}
           </p>
           <select
             value={status}
             onChange={(e) => onStatusChange(e.target.value as TaskStatus)}
             className="w-full px-3 py-2 bg-white border border-[#c7c7c7] rounded-[8px] text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#21214f]"
           >
-            <option value="NOT_STARTED">Не начато</option>
-            <option value="SUBMITTED">Сдана работа</option>
-            <option value="PEER_REVIEW">Взаимная проверка</option>
-            <option value="TEACHER_REVIEW">Проверка преподавателем</option>
-            <option value="GRADING">Выставление оценок</option>
-            <option value="GRADED">Оценки выставлены</option>
-            <option value="OVERDUE">Просрочено</option>
+            <option value="NOT_STARTED">{t("entity.assignment.optionNotStarted")}</option>
+            <option value="SUBMITTED">{t("entity.assignment.optionSubmitted")}</option>
+            <option value="PEER_REVIEW">{t("entity.assignment.optionPeerReview")}</option>
+            <option value="TEACHER_REVIEW">{t("entity.assignment.optionTeacherReview")}</option>
+            <option value="GRADING">{t("entity.assignment.optionGrading")}</option>
+            <option value="GRADED">{t("entity.assignment.optionGraded")}</option>
+            <option value="OVERDUE">{t("entity.assignment.optionOverdue")}</option>
           </select>
         </div>
       )}

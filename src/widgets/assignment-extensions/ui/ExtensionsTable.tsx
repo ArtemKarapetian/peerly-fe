@@ -1,4 +1,5 @@
 import { Calendar, Check, Clock, MessageSquare, Pencil, Trash2, User, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import {
   Extension,
@@ -25,6 +26,7 @@ export function ExtensionsTable({
   onEdit,
   onDelete,
 }: Props) {
+  const { t } = useTranslation();
   const getStatusBadge = (status: ExtensionStatus) => {
     const styles: Record<ExtensionStatus, string> = {
       manual:
@@ -49,7 +51,7 @@ export function ExtensionsTable({
   const formatDateTime = (dateStr?: string) => {
     if (!dateStr) return "—";
     const date = new Date(dateStr);
-    return date.toLocaleString("ru-RU", {
+    return date.toLocaleString(undefined, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -63,11 +65,11 @@ export function ExtensionsTable({
       {extensions.length === 0 ? (
         <div className="p-12 text-center">
           <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-          <p className="text-muted-foreground mb-2">Нет продлений</p>
+          <p className="text-muted-foreground mb-2">{t("widget.extensions.noExtensions")}</p>
           <p className="text-sm text-muted-foreground">
             {filterStatus === "all"
-              ? "Добавьте продление для студента или дождитесь запросов"
-              : `Нет продлений со статусом "${getExtensionStatusLabel(filterStatus)}"`}
+              ? t("widget.extensions.addOrWait")
+              : `${t("widget.extensions.noExtensionsWithStatus")} "${getExtensionStatusLabel(filterStatus)}"`}
           </p>
         </div>
       ) : (
@@ -76,25 +78,25 @@ export function ExtensionsTable({
             <thead>
               <tr className="border-b border-border bg-muted/50">
                 <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Студент
+                  {t("widget.extensions.student")}
                 </th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Тип
+                  {t("widget.extensions.type")}
                 </th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Дедлайн сдачи
+                  {t("widget.extensions.submissionDeadline")}
                 </th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Дедлайн проверки
+                  {t("widget.extensions.reviewDeadline")}
                 </th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Причина
+                  {t("widget.extensions.reason")}
                 </th>
                 <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Статус
+                  {t("common.status")}
                 </th>
                 <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">
-                  Действия
+                  {t("common.actions")}
                 </th>
               </tr>
             </thead>
@@ -168,14 +170,14 @@ export function ExtensionsTable({
                           <button
                             onClick={() => onApprove(ext.id)}
                             className="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 rounded transition-colors"
-                            title="Одобрить"
+                            title={t("widget.extensions.approveTitle")}
                           >
                             <Check className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => onDeny(ext.id)}
                             className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors"
-                            title="Отклонить"
+                            title={t("widget.extensions.denyTitle")}
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -185,7 +187,7 @@ export function ExtensionsTable({
                       <button
                         onClick={() => onEdit(ext)}
                         className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
-                        title="Редактировать"
+                        title={t("widget.extensions.editTitle")}
                       >
                         <Pencil className="w-4 h-4" />
                       </button>
@@ -193,7 +195,7 @@ export function ExtensionsTable({
                       <button
                         onClick={() => onDelete(ext.id)}
                         className="p-1.5 text-destructive hover:bg-destructive/10 rounded transition-colors"
-                        title="Удалить"
+                        title={t("widget.extensions.deleteTitle")}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

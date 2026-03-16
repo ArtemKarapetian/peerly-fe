@@ -1,4 +1,5 @@
 import { BookOpen, Lock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface GradeEntry {
   id: string;
@@ -29,6 +30,8 @@ function getScoreColor(score: number, max: number) {
 }
 
 export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: GradeTableProps) {
+  const { t } = useTranslation();
+
   if (grades.length === 0) {
     return (
       <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
@@ -36,10 +39,10 @@ export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: G
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[#f9f9f9] rounded-full mb-4">
             <BookOpen className="w-8 h-8 text-[#767692]" />
           </div>
-          <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Оценок не найдено</h3>
-          <p className="text-[14px] text-[#767692]">
-            Попробуйте изменить фильтры или выберите другой курс
-          </p>
+          <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+            {t("widget.gradeTable.noGrades")}
+          </h3>
+          <p className="text-[14px] text-[#767692]">{t("widget.gradeTable.noGradesHint")}</p>
         </div>
       </div>
     );
@@ -53,19 +56,19 @@ export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: G
           <thead>
             <tr className="bg-[#f9f9f9] border-b-2 border-[#e6e8ee]">
               <th className="text-left px-4 desktop:px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                Курс
+                {t("widget.gradeTable.course")}
               </th>
               <th className="text-left px-4 desktop:px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                Задание
+                {t("widget.gradeTable.assignment")}
               </th>
               <th className="text-left px-4 desktop:px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                Статус
+                {t("widget.gradeTable.status")}
               </th>
               <th className="text-right px-4 desktop:px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                Оценка
+                {t("widget.gradeTable.grade")}
               </th>
               <th className="text-right px-4 desktop:px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                Макс
+                {t("widget.gradeTable.max")}
               </th>
             </tr>
           </thead>
@@ -99,7 +102,7 @@ export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: G
                       <Lock className="w-4 h-4 text-[#767692]" />
                       <span className="text-[14px] text-[#767692]">—</span>
                       <div className="absolute right-0 bottom-full mb-2 hidden group-hover/lock:block w-[240px] bg-[#21214f] text-white text-[13px] rounded-[8px] px-3 py-2 shadow-lg z-10">
-                        Оценки будут доступны после публикации преподавателем
+                        {t("widget.gradeTable.lockedTooltip")}
                         <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#21214f]"></div>
                       </div>
                     </div>
@@ -165,7 +168,7 @@ export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: G
             {grade.isScoreLocked && (
               <div className="mt-2 flex items-start gap-2 text-[12px] text-[#767692] bg-[#f9f9f9] rounded-[8px] p-2.5">
                 <Lock className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                <span>Оценки будут доступны после публикации преподавателем</span>
+                <span>{t("widget.gradeTable.lockedTooltip")}</span>
               </div>
             )}
           </div>

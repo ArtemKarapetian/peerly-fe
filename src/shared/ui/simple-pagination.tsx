@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "./button.tsx";
 import { cn } from "./utils.ts";
@@ -17,6 +18,7 @@ export function SimplePagination({
   onPageChange,
   className,
 }: SimplePaginationProps) {
+  const { t } = useTranslation();
   const canGoPrevious = currentPage > 1;
   const canGoNext = currentPage < totalPages;
 
@@ -34,12 +36,14 @@ export function SimplePagination({
         className="gap-1"
       >
         <ChevronLeft className="size-4" />
-        Предыдущая
+        {t("shared.pagination.previous")}
       </Button>
 
       <div className="flex items-center gap-2 px-3">
         <span className="text-sm text-[var(--text-secondary)]">
-          Страница <span className="font-medium text-[var(--text-primary)]">{currentPage}</span> из{" "}
+          {t("shared.pagination.pageLabel")}{" "}
+          <span className="font-medium text-[var(--text-primary)]">{currentPage}</span>{" "}
+          {t("shared.pagination.of")}{" "}
           <span className="font-medium text-[var(--text-primary)]">{totalPages}</span>
         </span>
       </div>
@@ -51,7 +55,7 @@ export function SimplePagination({
         disabled={!canGoNext}
         className="gap-1"
       >
-        Следующая
+        {t("shared.pagination.next")}
         <ChevronRight className="size-4" />
       </Button>
     </div>

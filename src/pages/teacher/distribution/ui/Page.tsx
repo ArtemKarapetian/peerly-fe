@@ -12,6 +12,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -62,6 +63,7 @@ interface DistributionHistory {
 }
 
 export default function TeacherDistributionPage() {
+  const { t } = useTranslation();
   // Load base data (courses, users, submissions, reviews)
   const {
     data: baseData,
@@ -96,13 +98,13 @@ export default function TeacherDistributionPage() {
 
   if (baseLoading)
     return (
-      <AppShell title="Распределение рецензий">
+      <AppShell title={t("teacher.distribution.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (baseError)
     return (
-      <AppShell title="Распределение рецензий">
+      <AppShell title={t("teacher.distribution.title")}>
         <ErrorBanner message={baseError.message} onRetry={baseRefetch} />
       </AppShell>
     );
@@ -158,20 +160,21 @@ export default function TeacherDistributionPage() {
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
             <CheckCircle className="w-3 h-3" />
-            Завершено
+            {t("teacher.distribution.completed")}
           </span>
         );
       case "in-progress":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
-            <Clock className="w-3 h-3" />В процессе
+            <Clock className="w-3 h-3" />
+            {t("teacher.distribution.inProgress")}
           </span>
         );
       case "not-started":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
             <AlertCircle className="w-3 h-3" />
-            Не начато
+            {t("teacher.distribution.notStarted")}
           </span>
         );
     }
@@ -220,7 +223,7 @@ export default function TeacherDistributionPage() {
   };
 
   const handleNudgeReviewer = (distributionId: string) => {
-    alert(`Напоминание отправлено рецензентам для ${distributionId}`);
+    alert(t("teacher.distribution.reminderSentFor", { id: distributionId }));
     setActiveRowAction(null);
   };
 
@@ -232,41 +235,41 @@ export default function TeacherDistributionPage() {
   const mockHistory: DistributionHistory[] = [
     {
       id: "h1",
-      action: "Распределение создано",
-      performedBy: "Система (автоматически)",
+      action: t("teacher.distribution.histDistCreated"),
+      performedBy: t("teacher.distribution.histSystemAuto"),
       timestamp: new Date("2024-02-10"),
-      details: "Автоматическое распределение на основе алгоритма round-robin",
+      details: t("teacher.distribution.histAutoRoundRobin"),
     },
     {
       id: "h2",
-      action: "Рецензент назначен",
-      performedBy: "Иванов П.С.",
+      action: t("teacher.distribution.histReviewerAssigned"),
+      performedBy: t("teacher.distribution.histTeacherName"),
       timestamp: new Date("2024-02-11"),
-      details: "Добавлен дополнительный рецензент вручную",
+      details: t("teacher.distribution.histAddedManually"),
     },
     {
       id: "h3",
-      action: "Напоминание отправлено",
-      performedBy: "Иванов П.С.",
+      action: t("teacher.distribution.histReminderSent"),
+      performedBy: t("teacher.distribution.histTeacherName"),
       timestamp: new Date("2024-02-13"),
-      details: "Уведомление отправлено рецензентам",
+      details: t("teacher.distribution.histNotificationSent"),
     },
     {
       id: "h4",
-      action: "Рецензия отправлена",
-      performedBy: "Студент #1",
+      action: t("teacher.distribution.histReviewSubmitted"),
+      performedBy: t("teacher.distribution.histStudentNum"),
       timestamp: new Date("2024-02-14"),
-      details: "Рецензия успешно отправлена",
+      details: t("teacher.distribution.histReviewSuccess"),
     },
   ];
 
   return (
-    <AppShell title="Распределение рецензий">
-      <Breadcrumbs items={[{ label: "Распределение" }]} />
+    <AppShell title={t("teacher.distribution.title")}>
+      <Breadcrumbs items={[{ label: t("teacher.distribution.breadcrumb") }]} />
 
       <PageHeader
-        title="Распределение рецензий"
-        subtitle="Управление распределением peer-review между студентами"
+        title={t("teacher.distribution.title")}
+        subtitle={t("teacher.distribution.subtitle")}
       />
 
       <div>
@@ -276,7 +279,7 @@ export default function TeacherDistributionPage() {
             {/* Course Filter */}
             <div>
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Курс
+                {t("teacher.distribution.courseLabel")}
               </label>
               <select
                 value={effectiveCourse}
@@ -286,7 +289,7 @@ export default function TeacherDistributionPage() {
                 }}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
-                <option value="">Выберите курс</option>
+                <option value="">{t("teacher.distribution.selectCourse")}</option>
                 {courses.map((course) => (
                   <option key={course.id} value={course.id}>
                     {course.name} ({course.code})
@@ -298,7 +301,7 @@ export default function TeacherDistributionPage() {
             {/* Assignment Filter */}
             <div>
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Задание
+                {t("teacher.distribution.assignmentLabel")}
               </label>
               <select
                 value={selectedAssignment}
@@ -306,7 +309,7 @@ export default function TeacherDistributionPage() {
                 disabled={!effectiveCourse}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors disabled:bg-[#f5f5f5] disabled:cursor-not-allowed"
               >
-                <option value="">Выберите задание</option>
+                <option value="">{t("teacher.distribution.selectAssignment")}</option>
                 {(assignments || []).map((assignment) => (
                   <option key={assignment.id} value={assignment.id}>
                     {assignment.title}
@@ -327,22 +330,22 @@ export default function TeacherDistributionPage() {
                   <thead>
                     <tr className="border-b-2 border-[#e6e8ee]">
                       <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                        Работа
+                        {t("teacher.distribution.work")}
                       </th>
                       <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                        Автор
+                        {t("teacher.distribution.author")}
                       </th>
                       <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                        Назначенные рецензенты
+                        {t("teacher.distribution.assignedReviewers")}
                       </th>
                       <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                        Статус
+                        {t("common.status")}
                       </th>
                       <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                        Активность
+                        {t("common.actions")}
                       </th>
                       <th className="text-right px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                        Действия
+                        {t("common.actions")}
                       </th>
                     </tr>
                   </thead>
@@ -369,7 +372,9 @@ export default function TeacherDistributionPage() {
                             {dist.isAnonymous ? (
                               <>
                                 <EyeOff className="w-4 h-4 text-[#767692]" />
-                                <span className="text-[14px] text-[#767692] italic">Скрыто</span>
+                                <span className="text-[14px] text-[#767692] italic">
+                                  {t("teacher.distribution.hidden")}
+                                </span>
                               </>
                             ) : (
                               <span className="text-[14px] text-[#21214f]">{dist.authorName}</span>
@@ -386,7 +391,7 @@ export default function TeacherDistributionPage() {
                             ))}
                             {dist.assignedReviewers.length === 0 && (
                               <span className="text-[13px] text-[#767692] italic">
-                                Нет рецензентов
+                                {t("teacher.distribution.noReviewers")}
                               </span>
                             )}
                           </div>
@@ -394,7 +399,7 @@ export default function TeacherDistributionPage() {
                         <td className="px-6 py-4">{getStatusBadge(dist.overallStatus)}</td>
                         <td className="px-6 py-4">
                           <span className="text-[13px] text-[#767692]">
-                            {dist.lastActivity.toLocaleDateString("ru-RU")}
+                            {dist.lastActivity.toLocaleDateString()}
                           </span>
                         </td>
                         <td className="px-6 py-4">
@@ -405,7 +410,7 @@ export default function TeacherDistributionPage() {
                                 setActiveRowAction(activeRowAction === dist.id ? null : dist.id);
                               }}
                               className="p-2 hover:bg-[#e9f5ff] rounded-[8px] transition-colors"
-                              title="Действия"
+                              title={t("teacher.distribution.actionsLabel")}
                             >
                               <MoreVertical className="w-4 h-4 text-[#767692]" />
                             </button>
@@ -421,7 +426,9 @@ export default function TeacherDistributionPage() {
                                   className="w-full flex items-center gap-2 px-4 py-3 hover:bg-[#f9f9f9] text-left transition-colors first:rounded-t-[10px]"
                                 >
                                   <GitBranch className="w-4 h-4 text-[#5b8def]" />
-                                  <span className="text-[14px] text-[#21214f]">Переназначить</span>
+                                  <span className="text-[14px] text-[#21214f]">
+                                    {t("teacher.distribution.reassign")}
+                                  </span>
                                 </button>
                                 <button
                                   onClick={() => handleAddReviewer(dist.id)}
@@ -429,7 +436,7 @@ export default function TeacherDistributionPage() {
                                 >
                                   <UserPlus className="w-4 h-4 text-[#4caf50]" />
                                   <span className="text-[14px] text-[#21214f]">
-                                    Добавить рецензента
+                                    {t("teacher.distribution.addReviewerLabel")}
                                   </span>
                                 </button>
                                 <button
@@ -440,14 +447,14 @@ export default function TeacherDistributionPage() {
                                     <>
                                       <Unlock className="w-4 h-4 text-[#ff9800]" />
                                       <span className="text-[14px] text-[#21214f]">
-                                        Разблокировать
+                                        {t("teacher.distribution.unlock")}
                                       </span>
                                     </>
                                   ) : (
                                     <>
                                       <Lock className="w-4 h-4 text-[#d4183d]" />
                                       <span className="text-[14px] text-[#21214f]">
-                                        Заблокировать
+                                        {t("teacher.distribution.lock")}
                                       </span>
                                     </>
                                   )}
@@ -457,7 +464,9 @@ export default function TeacherDistributionPage() {
                                   className="w-full flex items-center gap-2 px-4 py-3 hover:bg-[#f9f9f9] text-left transition-colors border-t border-[#e6e8ee] last:rounded-b-[10px]"
                                 >
                                   <Bell className="w-4 h-4 text-[#5b8def]" />
-                                  <span className="text-[14px] text-[#21214f]">Напомнить</span>
+                                  <span className="text-[14px] text-[#21214f]">
+                                    {t("teacher.distribution.remind")}
+                                  </span>
                                 </button>
                               </div>
                             )}
@@ -472,7 +481,9 @@ export default function TeacherDistributionPage() {
               {distributions.length === 0 && (
                 <div className="text-center py-12">
                   <GitBranch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-                  <p className="text-[15px] text-[#767692]">Нет данных о распределении</p>
+                  <p className="text-[15px] text-[#767692]">
+                    {t("teacher.distribution.noDistributionData")}
+                  </p>
                 </div>
               )}
             </div>
@@ -497,11 +508,13 @@ export default function TeacherDistributionPage() {
 
                   <div className="space-y-2 mb-3">
                     <div className="flex items-center gap-2 text-[13px]">
-                      <span className="text-[#767692]">Автор:</span>
+                      <span className="text-[#767692]">
+                        {t("teacher.distribution.authorLabel")}
+                      </span>
                       {dist.isAnonymous ? (
                         <span className="text-[#767692] italic flex items-center gap-1">
                           <EyeOff className="w-3 h-3" />
-                          Скрыто
+                          {t("teacher.distribution.hiddenShort")}
                         </span>
                       ) : (
                         <span className="text-[#21214f]">{dist.authorName}</span>
@@ -509,7 +522,9 @@ export default function TeacherDistributionPage() {
                     </div>
 
                     <div>
-                      <span className="text-[13px] text-[#767692] block mb-1">Рецензенты:</span>
+                      <span className="text-[13px] text-[#767692] block mb-1">
+                        {t("teacher.distribution.reviewersLabel")}
+                      </span>
                       <div className="flex flex-wrap gap-2">
                         {dist.assignedReviewers.map((reviewer) => (
                           <div key={reviewer.id} className="flex items-center gap-1 text-[12px]">
@@ -518,7 +533,9 @@ export default function TeacherDistributionPage() {
                           </div>
                         ))}
                         {dist.assignedReviewers.length === 0 && (
-                          <span className="text-[12px] text-[#767692] italic">Нет рецензентов</span>
+                          <span className="text-[12px] text-[#767692] italic">
+                            {t("teacher.distribution.noReviewers")}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -526,7 +543,7 @@ export default function TeacherDistributionPage() {
                     <div className="flex items-center gap-2 text-[13px]">
                       <Clock className="w-3 h-3 text-[#767692]" />
                       <span className="text-[#767692]">
-                        {dist.lastActivity.toLocaleDateString("ru-RU")}
+                        {dist.lastActivity.toLocaleDateString()}
                       </span>
                     </div>
                   </div>
@@ -540,7 +557,7 @@ export default function TeacherDistributionPage() {
                       className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#f9f9f9] hover:bg-[#e9f5ff] rounded-[8px] transition-colors text-[13px] text-[#21214f]"
                     >
                       <GitBranch className="w-4 h-4" />
-                      Переназначить
+                      {t("teacher.distribution.reassignBtn")}
                     </button>
                     <button
                       onClick={(e) => {
@@ -550,7 +567,7 @@ export default function TeacherDistributionPage() {
                       className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#f9f9f9] hover:bg-[#e9f5ff] rounded-[8px] transition-colors text-[13px] text-[#21214f]"
                     >
                       <UserPlus className="w-4 h-4" />
-                      Добавить
+                      {t("teacher.distribution.addBtn")}
                     </button>
                     <button
                       onClick={(e) => {
@@ -576,12 +593,12 @@ export default function TeacherDistributionPage() {
                         {dist.isLocked ? (
                           <>
                             <Unlock className="w-4 h-4 text-[#ff9800]" />
-                            Разблокировать
+                            {t("teacher.distribution.unlockBtn")}
                           </>
                         ) : (
                           <>
                             <Lock className="w-4 h-4 text-[#d4183d]" />
-                            Заблокировать
+                            {t("teacher.distribution.lockBtn")}
                           </>
                         )}
                       </button>
@@ -593,7 +610,7 @@ export default function TeacherDistributionPage() {
                         className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors text-[13px] text-[#21214f]"
                       >
                         <Bell className="w-4 h-4 text-[#5b8def]" />
-                        Напомнить рецензентам
+                        {t("teacher.distribution.remindReviewers")}
                       </button>
                     </div>
                   )}
@@ -603,7 +620,9 @@ export default function TeacherDistributionPage() {
               {distributions.length === 0 && (
                 <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
                   <GitBranch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-                  <p className="text-[15px] text-[#767692]">Нет данных о распределении</p>
+                  <p className="text-[15px] text-[#767692]">
+                    {t("teacher.distribution.noDistributionData")}
+                  </p>
                 </div>
               )}
             </div>
@@ -611,9 +630,7 @@ export default function TeacherDistributionPage() {
         ) : (
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
             <GitBranch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692]">
-              Выберите курс и задание для просмотра распределения
-            </p>
+            <p className="text-[15px] text-[#767692]">{t("teacher.distribution.selectToView")}</p>
           </div>
         )}
       </div>
@@ -634,7 +651,9 @@ export default function TeacherDistributionPage() {
                 <h2 className="text-[20px] font-medium text-[#21214f]">
                   {selectedDistribution.anonymousId}
                 </h2>
-                <p className="text-[13px] text-[#767692] mt-1">Детали распределения</p>
+                <p className="text-[13px] text-[#767692] mt-1">
+                  {t("teacher.distribution.distributionDetails")}
+                </p>
               </div>
               <button
                 onClick={() => setSelectedDistribution(null)}
@@ -651,7 +670,7 @@ export default function TeacherDistributionPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                      Работа
+                      {t("teacher.distribution.workLabel")}
                     </p>
                     <p className="text-[15px] font-medium text-[#21214f]">
                       {selectedDistribution.anonymousId}
@@ -659,16 +678,18 @@ export default function TeacherDistributionPage() {
                   </div>
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                      Статус
+                      {t("teacher.distribution.statusLabel")}
                     </p>
                     {getStatusBadge(selectedDistribution.overallStatus)}
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Автор</p>
+                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      {t("teacher.distribution.authorDrawerLabel")}
+                    </p>
                     {selectedDistribution.isAnonymous ? (
                       <p className="text-[14px] text-[#767692] italic flex items-center gap-1">
                         <EyeOff className="w-3 h-3" />
-                        Скрыто
+                        {t("teacher.distribution.hiddenShort")}
                       </p>
                     ) : (
                       <p className="text-[14px] text-[#21214f]">
@@ -678,10 +699,10 @@ export default function TeacherDistributionPage() {
                   </div>
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                      Активность
+                      {t("teacher.distribution.activityLabel")}
                     </p>
                     <p className="text-[14px] text-[#21214f]">
-                      {selectedDistribution.lastActivity.toLocaleDateString("ru-RU")}
+                      {selectedDistribution.lastActivity.toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -690,7 +711,8 @@ export default function TeacherDistributionPage() {
               {/* Assigned Reviewers */}
               <div>
                 <h3 className="text-[16px] font-medium text-[#21214f] mb-3">
-                  Назначенные рецензенты ({selectedDistribution.assignedReviewers.length})
+                  {t("teacher.distribution.assignedReviewersTitle")} (
+                  {selectedDistribution.assignedReviewers.length})
                 </h3>
                 <div className="space-y-2">
                   {selectedDistribution.assignedReviewers.map((reviewer) => (
@@ -704,7 +726,7 @@ export default function TeacherDistributionPage() {
                   ))}
                   {selectedDistribution.assignedReviewers.length === 0 && (
                     <p className="text-[14px] text-[#767692] italic py-2">
-                      Рецензенты не назначены
+                      {t("teacher.distribution.noReviewersAssigned")}
                     </p>
                   )}
                 </div>
@@ -712,21 +734,23 @@ export default function TeacherDistributionPage() {
 
               {/* Actions */}
               <div>
-                <h3 className="text-[16px] font-medium text-[#21214f] mb-3">Действия</h3>
+                <h3 className="text-[16px] font-medium text-[#21214f] mb-3">
+                  {t("teacher.distribution.actionsTitle")}
+                </h3>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => handleReassignReviewer(selectedDistribution.id)}
                     className="flex items-center justify-center gap-2 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors"
                   >
                     <GitBranch className="w-4 h-4" />
-                    Переназначить
+                    {t("teacher.distribution.reassignBtn")}
                   </button>
                   <button
                     onClick={() => handleAddReviewer(selectedDistribution.id)}
                     className="flex items-center justify-center gap-2 px-4 py-3 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors"
                   >
                     <UserPlus className="w-4 h-4" />
-                    Добавить
+                    {t("teacher.distribution.addBtn")}
                   </button>
                   <button
                     onClick={() => handleToggleLock(selectedDistribution.id)}
@@ -735,12 +759,16 @@ export default function TeacherDistributionPage() {
                     {selectedDistribution.isLocked ? (
                       <>
                         <Unlock className="w-4 h-4 text-[#ff9800]" />
-                        <span className="text-[14px] text-[#21214f]">Разблокировать</span>
+                        <span className="text-[14px] text-[#21214f]">
+                          {t("teacher.distribution.unlockBtn")}
+                        </span>
                       </>
                     ) : (
                       <>
                         <Lock className="w-4 h-4 text-[#d4183d]" />
-                        <span className="text-[14px] text-[#21214f]">Заблокировать</span>
+                        <span className="text-[14px] text-[#21214f]">
+                          {t("teacher.distribution.lockBtn")}
+                        </span>
                       </>
                     )}
                   </button>
@@ -749,14 +777,18 @@ export default function TeacherDistributionPage() {
                     className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] hover:bg-[#f9f9f9] transition-colors"
                   >
                     <Bell className="w-4 h-4 text-[#5b8def]" />
-                    <span className="text-[14px] text-[#21214f]">Напомнить</span>
+                    <span className="text-[14px] text-[#21214f]">
+                      {t("teacher.distribution.remind")}
+                    </span>
                   </button>
                 </div>
               </div>
 
               {/* History */}
               <div>
-                <h3 className="text-[16px] font-medium text-[#21214f] mb-3">История изменений</h3>
+                <h3 className="text-[16px] font-medium text-[#21214f] mb-3">
+                  {t("teacher.distribution.changeHistory")}
+                </h3>
                 <div className="space-y-3">
                   {mockHistory.map((item, _index) => (
                     <div
@@ -773,7 +805,7 @@ export default function TeacherDistributionPage() {
                       <div className="flex items-center gap-2 text-[12px] text-[#767692]">
                         <span>{item.performedBy}</span>
                         <span>•</span>
-                        <span>{item.timestamp.toLocaleString("ru-RU")}</span>
+                        <span>{item.timestamp.toLocaleString()}</span>
                       </div>
                     </div>
                   ))}
@@ -795,7 +827,9 @@ export default function TeacherDistributionPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[20px] font-medium text-[#21214f]">Переназначить рецензента</h2>
+              <h2 className="text-[20px] font-medium text-[#21214f]">
+                {t("teacher.distribution.reassignReviewer")}
+              </h2>
               <button
                 onClick={() => setShowReassignModal(false)}
                 className="p-1 hover:bg-[#f9f9f9] rounded transition-colors"
@@ -806,14 +840,14 @@ export default function TeacherDistributionPage() {
 
             <div className="mb-6">
               <p className="text-[14px] text-[#767692] mb-4">
-                Работа:{" "}
+                {t("teacher.distribution.workModalLabel")}{" "}
                 <strong className="text-[#21214f]">{selectedDistribution.anonymousId}</strong>
               </p>
 
               {/* Current Reviewers */}
               <div className="mb-4">
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                  Текущие рецензенты
+                  {t("teacher.distribution.currentReviewers")}
                 </label>
                 <div className="space-y-2">
                   {selectedDistribution.assignedReviewers.map((reviewer) => (
@@ -837,10 +871,10 @@ export default function TeacherDistributionPage() {
               {/* New Reviewer */}
               <div>
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                  Новый рецензент
+                  {t("teacher.distribution.newReviewer")}
                 </label>
                 <select className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors">
-                  <option value="">Выберите студента</option>
+                  <option value="">{t("teacher.distribution.selectStudent")}</option>
                   {users
                     .filter((u) => u.role === "Student")
                     .map((user) => (
@@ -857,16 +891,16 @@ export default function TeacherDistributionPage() {
                 onClick={() => setShowReassignModal(false)}
                 className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[15px] text-[#21214f]"
               >
-                Отмена
+                {t("teacher.distribution.cancelBtn")}
               </button>
               <button
                 onClick={() => {
-                  alert("Рецензент переназначен");
+                  alert(t("teacher.distribution.reviewerReassignedAlert"));
                   setShowReassignModal(false);
                 }}
                 className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[15px]"
               >
-                Переназначить
+                {t("teacher.distribution.reassignBtn")}
               </button>
             </div>
           </div>
@@ -884,7 +918,9 @@ export default function TeacherDistributionPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[20px] font-medium text-[#21214f]">Добавить рецензента</h2>
+              <h2 className="text-[20px] font-medium text-[#21214f]">
+                {t("teacher.distribution.addReviewer")}
+              </h2>
               <button
                 onClick={() => setShowAddReviewerModal(false)}
                 className="p-1 hover:bg-[#f9f9f9] rounded transition-colors"
@@ -895,16 +931,16 @@ export default function TeacherDistributionPage() {
 
             <div className="mb-6">
               <p className="text-[14px] text-[#767692] mb-4">
-                Работа:{" "}
+                {t("teacher.distribution.workModalLabel")}{" "}
                 <strong className="text-[#21214f]">{selectedDistribution.anonymousId}</strong>
               </p>
 
               <div>
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                  Выберите студента
+                  {t("teacher.distribution.selectStudent")}
                 </label>
                 <select className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors">
-                  <option value="">Выберите студента</option>
+                  <option value="">{t("teacher.distribution.selectStudent")}</option>
                   {users
                     .filter((u) => u.role === "Student")
                     .map((user) => (
@@ -917,7 +953,7 @@ export default function TeacherDistributionPage() {
 
               <div className="mt-4 p-3 bg-[#e9f5ff] border border-[#5b8def] rounded-[8px]">
                 <p className="text-[13px] text-[#21214f]">
-                  ℹ️ Новый рецензент получит уведомление о назначении
+                  {t("teacher.distribution.newReviewerNotified")}
                 </p>
               </div>
             </div>
@@ -927,16 +963,16 @@ export default function TeacherDistributionPage() {
                 onClick={() => setShowAddReviewerModal(false)}
                 className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[15px] text-[#21214f]"
               >
-                Отмена
+                {t("teacher.distribution.cancelBtn")}
               </button>
               <button
                 onClick={() => {
-                  alert("Рецензент добавлен");
+                  alert(t("teacher.distribution.reviewerAddedAlert"));
                   setShowAddReviewerModal(false);
                 }}
                 className="flex-1 px-4 py-3 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors text-[15px]"
               >
-                Добавить
+                {t("teacher.distribution.addBtn")}
               </button>
             </div>
           </div>

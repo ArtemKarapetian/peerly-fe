@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -37,6 +38,8 @@ interface TeacherCourseDetailsPageProps {
 export default function TeacherCourseDetailsPage({
   courseId = "c1",
 }: TeacherCourseDetailsPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<TabKey>("assignments");
 
   // Load course, teacher, and assignments data
@@ -51,13 +54,13 @@ export default function TeacherCourseDetailsPage({
 
   if (isLoading)
     return (
-      <AppShell title="Загрузка курса...">
+      <AppShell title={t("teacher.courseDetail.loadingCourse")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Ошибка">
+      <AppShell title={t("teacher.courseDetail.error")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -66,19 +69,19 @@ export default function TeacherCourseDetailsPage({
 
   if (!course) {
     return (
-      <AppShell title="Курс н найден">
+      <AppShell title={t("teacher.courseDetail.courseNotFound")}>
         <div className="text-center py-12">
-          <p className="text-[16px] text-[#767692]">Курс не найден</p>
+          <p className="text-[16px] text-[#767692]">{t("teacher.courseDetail.courseNotFound")}</p>
         </div>
       </AppShell>
     );
   }
 
   const tabs = [
-    { key: "assignments" as TabKey, label: "Задания" },
-    { key: "participants" as TabKey, label: "Участники" },
-    { key: "announcements" as TabKey, label: "Анонсы" },
-    { key: "settings" as TabKey, label: "Настройки" },
+    { key: "assignments" as TabKey, label: t("teacher.courseDetail.tabs.assignments") },
+    { key: "participants" as TabKey, label: t("teacher.courseDetail.tabs.participants") },
+    { key: "announcements" as TabKey, label: t("teacher.courseDetail.tabs.announcements") },
+    { key: "settings" as TabKey, label: t("teacher.courseDetail.tabs.settings") },
   ];
 
   return (
@@ -96,32 +99,39 @@ export default function TeacherCourseDetailsPage({
                 </h1>
                 {course.status === "active" ? (
                   <span className="px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
-                    Активен
+                    {t("teacher.courseDetail.status.active")}
                   </span>
                 ) : (
                   <span className="px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[13px] font-medium">
-                    Архив
+                    {t("teacher.courseDetail.status.archived")}
                   </span>
                 )}
               </div>
-              <p className="text-[15px] text-[#767692] mb-3">{course.code} • Весна 2025</p>
+              <p className="text-[15px] text-[#767692] mb-3">
+                {course.code} • {t("teacher.courseDetail.springTerm")}
+              </p>
               {teacher && (
                 <p className="text-[14px] text-[#767692]">
-                  Преподаватель: <span className="text-[#21214f] font-medium">{teacher.name}</span>
+                  {t("teacher.courseDetail.meta.teacherLabel")}{" "}
+                  <span className="text-[#21214f] font-medium">{teacher.name}</span>
                 </p>
               )}
             </div>
             <div className="flex items-center gap-4 text-center">
               <div>
                 <p className="text-[24px] font-medium text-[#21214f]">{course.enrollmentCount}</p>
-                <p className="text-[13px] text-[#767692]">Участников</p>
+                <p className="text-[13px] text-[#767692]">
+                  {t("teacher.courseDetail.meta.participants")}
+                </p>
               </div>
               <div className="w-px h-12 bg-[#e6e8ee]"></div>
               <div>
                 <p className="text-[24px] font-medium text-[#21214f]">
                   {courseAssignments.filter((a) => a.status === "published").length}
                 </p>
-                <p className="text-[13px] text-[#767692]">Заданий</p>
+                <p className="text-[13px] text-[#767692]">
+                  {t("teacher.courseDetail.meta.assignments")}
+                </p>
               </div>
             </div>
           </div>

@@ -11,8 +11,9 @@ import {
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
 
@@ -319,6 +320,8 @@ const getInitialAuditLogs = (): AuditLog[] => {
 // ========== MAIN COMPONENT ==========
 
 export default function AdminLogsPage() {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [systemLogs, setSystemLogs] = useState<SystemLog[]>(DEMO_SYSTEM_LOGS);
   const [auditLogs] = useState<AuditLog[]>(getInitialAuditLogs);
   const [activeTab, setActiveTab] = useState<"system" | "audit">("system");
@@ -428,12 +431,12 @@ export default function AdminLogsPage() {
   const hasActiveFilters = searchQuery || filterService !== "all" || filterLevel !== "all";
 
   return (
-    <AppShell title="Логи и аудит">
-      <Breadcrumbs items={[CRUMBS.adminOverview, { label: "Логи" }]} />
+    <AppShell title={t("admin.logsPage.title")}>
+      <Breadcrumbs items={[CRUMBS.adminOverview, { label: t("admin.logsPage.breadcrumbLogs") }]} />
 
       <PageHeader
-        title="Логи и аудит системы"
-        subtitle="Системные логи и журнал действий пользователей"
+        title={t("admin.logsPage.pageTitle")}
+        subtitle={t("admin.logsPage.pageSubtitle")}
       />
 
       <div>
@@ -450,7 +453,7 @@ export default function AdminLogsPage() {
             className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors text-[14px] font-medium"
           >
             <Download className="w-4 h-4" />
-            Экспорт CSV
+            {t("admin.logsPage.exportCsv")}
           </button>
         </div>
 
@@ -464,7 +467,7 @@ export default function AdminLogsPage() {
                 : "bg-white border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]"
             }`}
           >
-            Системные логи ({stats.system.total})
+            {t("admin.logsPage.tabSystemLogs")} ({stats.system.total})
           </button>
           <button
             onClick={() => setActiveTab("audit")}
@@ -474,14 +477,14 @@ export default function AdminLogsPage() {
                 : "bg-white border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]"
             }`}
           >
-            Аудит ({stats.audit.total})
+            {t("admin.logsPage.tabAudit")} ({stats.audit.total})
           </button>
         </div>
 
         {/* Stats */}
         {activeTab === "system" && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <StatCard label="Всего" value={stats.system.total} />
+            <StatCard label={t("admin.logsPage.statsTotal")} value={stats.system.total} />
             <StatCard label="Info" value={stats.system.info} valueColor="text-[#2563eb]" />
             <StatCard label="Warnings" value={stats.system.warn} valueColor="text-[#ff9800]" />
             <StatCard label="Errors" value={stats.system.error} valueColor="text-[#d4183d]" />
@@ -490,8 +493,12 @@ export default function AdminLogsPage() {
 
         {activeTab === "audit" && (
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <StatCard label="Всего записей" value={stats.audit.total} />
-            <StatCard label="Сегодня" value={stats.audit.today} valueColor="text-[#2563eb]" />
+            <StatCard label={t("admin.logsPage.statsTotalRecords")} value={stats.audit.total} />
+            <StatCard
+              label={t("admin.logsPage.statsToday")}
+              value={stats.audit.today}
+              valueColor="text-[#2563eb]"
+            />
           </div>
         )}
 
@@ -500,7 +507,7 @@ export default function AdminLogsPage() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Поиск
+                {t("admin.logsPage.searchLabel")}
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
@@ -508,7 +515,7 @@ export default function AdminLogsPage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Поиск по сообщению, сервису, деталям..."
+                  placeholder={t("admin.logsPage.searchPlaceholder")}
                   className={`${CLASSES.input} pl-11`}
                 />
               </div>
@@ -518,14 +525,14 @@ export default function AdminLogsPage() {
               <>
                 <div className="w-full md:w-[200px]">
                   <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                    Сервис
+                    {t("admin.logsPage.serviceLabel")}
                   </label>
                   <select
                     value={filterService}
                     onChange={(e) => setFilterService(e.target.value)}
                     className={CLASSES.input}
                   >
-                    <option value="all">Все сервисы</option>
+                    <option value="all">{t("admin.logsPage.allServices")}</option>
                     {SERVICES.map((service) => (
                       <option key={service} value={service}>
                         {service}
@@ -536,14 +543,14 @@ export default function AdminLogsPage() {
 
                 <div className="w-full md:w-[200px]">
                   <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                    Уровень
+                    {t("admin.logsPage.levelLabel")}
                   </label>
                   <select
                     value={filterLevel}
                     onChange={(e) => setFilterLevel(e.target.value)}
                     className={CLASSES.input}
                   >
-                    <option value="all">Все уровни</option>
+                    <option value="all">{t("admin.logsPage.allLevels")}</option>
                     <option value="info">Info</option>
                     <option value="warn">Warning</option>
                     <option value="error">Error</option>
@@ -556,7 +563,7 @@ export default function AdminLogsPage() {
 
           {hasActiveFilters && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
-              <span className="text-[13px] text-[#767692]">Фильтры:</span>
+              <span className="text-[13px] text-[#767692]">{t("admin.logsPage.filtersLabel")}</span>
               {searchQuery && (
                 <FilterTag label={`"${searchQuery}"`} onRemove={() => setSearchQuery("")} />
               )}
@@ -579,19 +586,19 @@ export default function AdminLogsPage() {
                   <thead className="bg-[#f9f9f9] border-b-2 border-[#e6e8ee]">
                     <tr>
                       <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
-                        Время
+                        {t("admin.logsPage.headerTime")}
                       </th>
                       <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
-                        Сервис
+                        {t("admin.logsPage.headerService")}
                       </th>
                       <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
-                        Уровень
+                        {t("admin.logsPage.headerLevel")}
                       </th>
                       <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
-                        Сообщение
+                        {t("admin.logsPage.headerMessage")}
                       </th>
                       <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
-                        Детали
+                        {t("admin.logsPage.headerDetails")}
                       </th>
                     </tr>
                   </thead>
@@ -622,10 +629,10 @@ export default function AdminLogsPage() {
             ) : (
               <div className="p-12 text-center">
                 <FileSearch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-                <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Логи не найдены</h3>
-                <p className="text-[14px] text-[#767692]">
-                  Попробуйте изменить параметры поиска или фильтры
-                </p>
+                <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+                  {t("admin.logsPage.noLogs")}
+                </h3>
+                <p className="text-[14px] text-[#767692]">{t("admin.logsPage.noLogsHint")}</p>
               </div>
             )}
           </div>
@@ -663,11 +670,11 @@ export default function AdminLogsPage() {
             ) : (
               <EmptyState
                 icon={Activity}
-                title="Нет записей аудита"
+                title={t("admin.logsPage.noAuditRecords")}
                 description={
                   searchQuery
-                    ? "Попробуйте изменить параметры поиска"
-                    : "Записи аудита появятся после действий администраторов"
+                    ? t("admin.logsPage.noAuditWithSearch")
+                    : t("admin.logsPage.noAuditEmpty")
                 }
               />
             )}

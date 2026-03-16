@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface ConversationListProps {
   lastMessageText: string;
   lastMessageTime: string;
@@ -11,6 +13,7 @@ export function ConversationList({
   onSelect,
   isSelected,
 }: ConversationListProps) {
+  const { t } = useTranslation();
   const Wrapper = onSelect ? "button" : "div";
   const interactiveProps = onSelect
     ? {
@@ -29,7 +32,7 @@ export function ConversationList({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="font-medium text-foreground">Служба поддержки</h3>
+            <h3 className="font-medium text-foreground">{t("widget.chatThread.supportService")}</h3>
             <span className="text-xs text-muted-foreground">{lastMessageTime}</span>
           </div>
           <p className="text-sm text-muted-foreground truncate">{lastMessageText}</p>

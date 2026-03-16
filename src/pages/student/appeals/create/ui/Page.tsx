@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -24,17 +25,18 @@ interface CreateAppealPageProps {
 }
 
 export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageProps = {}) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [showSuccess, setShowSuccess] = useState(false);
 
   // пока мок — это нормально. позже будет из entities/course/task
   const context: CreateAppealContext = {
-    courseName: "Веб-программирование",
-    taskName: "Задание 1: Введение в peer review",
+    courseName: t("student.task.mockCourseName"),
+    taskName: t("student.appeals.mockTaskName"),
     currentScore: 78,
     maxScore: 100,
     reviewCount: 3,
-    deadline: "25 января 2026, 23:59",
+    deadline: t("student.appeals.mockDeadline"),
   };
 
   const resolvedCourseId = courseId || "course-1";
@@ -43,7 +45,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
 
   if (showSuccess) {
     return (
-      <AppShell title="Апелляция отправлена">
+      <AppShell title={t("feature.appeal.success.title")}>
         <CreateAppealSuccess
           onGoToAppeals={() => (window.location.hash = "/appeals")}
           onGoToCourse={() => (window.location.hash = `/courses/${resolvedCourseId}`)}
@@ -53,13 +55,13 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
   }
 
   return (
-    <AppShell title="Запрос на пересмотр">
+    <AppShell title={t("feature.appeal.create.title")}>
       <Breadcrumbs
         items={[
-          { label: "Курсы", href: "/courses" },
+          { label: t("nav.courses"), href: "/courses" },
           { label: context.courseName, href: `/courses/${resolvedCourseId}` },
           { label: context.taskName, href: `/courses/${resolvedCourseId}/tasks/${resolvedTaskId}` },
-          { label: "Апелляция" },
+          { label: t("nav.appeals") },
         ]}
       />
 

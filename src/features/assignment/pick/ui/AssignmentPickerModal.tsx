@@ -1,5 +1,6 @@
 import { X, Search, CheckCircle, FileText } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 
@@ -27,6 +28,7 @@ export function AssignmentPickerModal({
   rubricName,
   onClose,
 }: AssignmentPickerModalProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState<string>("all");
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
@@ -48,13 +50,18 @@ export function AssignmentPickerModal({
 
   const handleAttach = () => {
     if (!selectedAssignmentId) {
-      alert("Выберите задание");
+      alert(t("feature.assignmentPicker.selectAssignment"));
       return;
     }
 
     const assignment = assignments.find((a) => a.id === selectedAssignmentId);
     if (assignment) {
-      alert(`Рубрика "${rubricName}" успешно привязана к заданию "${assignment.title}"`);
+      alert(
+        t("feature.assignmentPicker.rubricAttached", {
+          rubricName,
+          assignmentTitle: assignment.title,
+        }),
+      );
       onClose();
     }
   };
@@ -68,19 +75,19 @@ export function AssignmentPickerModal({
       case "published":
         return (
           <span className="px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
-            Опубликовано
+            {t("feature.assignmentPicker.published")}
           </span>
         );
       case "draft":
         return (
           <span className="px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
-            Черновик
+            {t("feature.assignmentPicker.draft")}
           </span>
         );
       case "closed":
         return (
           <span className="px-2 py-1 bg-[#ffe9e9] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
-            Закрыто
+            {t("feature.assignmentPicker.closed")}
           </span>
         );
       default:
@@ -95,10 +102,11 @@ export function AssignmentPickerModal({
         <div className="flex items-center justify-between p-6 border-b-2 border-[#e6e8ee]">
           <div>
             <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px]">
-              Привязать рубрику к заданию
+              {t("feature.assignmentPicker.title")}
             </h2>
             <p className="text-[14px] text-[#767692] mt-1">
-              Рубрика: <span className="font-medium text-[#21214f]">{rubricName}</span>
+              {t("feature.assignmentPicker.rubricLabel")}:{" "}
+              <span className="font-medium text-[#21214f]">{rubricName}</span>
             </p>
           </div>
           <button
@@ -116,7 +124,7 @@ export function AssignmentPickerModal({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
             <input
               type="text"
-              placeholder="Поиск по названию задания..."
+              placeholder={t("feature.assignmentPicker.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
@@ -129,7 +137,7 @@ export function AssignmentPickerModal({
             onChange={(e) => setSelectedCourseId(e.target.value)}
             className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
           >
-            <option value="all">Все курсы</option>
+            <option value="all">{t("feature.assignmentPicker.allCourses")}</option>
             {courses.map((course) => (
               <option key={course.id} value={course.id}>
                 {course.name} ({course.code})
@@ -143,7 +151,7 @@ export function AssignmentPickerModal({
           {filteredAssignments.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <p className="text-[15px] text-[#767692]">Задания не найдены</p>
+              <p className="text-[15px] text-[#767692]">{t("feature.assignmentPicker.notFound")}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -181,11 +189,12 @@ export function AssignmentPickerModal({
                         <div className="flex items-center gap-2 flex-wrap">
                           {getStatusBadge(assignment.status)}
                           <span className="text-[12px] text-[#767692]">
-                            Дедлайн: {assignment.dueDate.toLocaleDateString("ru-RU")}
+                            {t("feature.assignmentPicker.deadline")}:{" "}
+                            {assignment.dueDate.toLocaleDateString("ru-RU")}
                           </span>
                           {hasRubric && (
                             <span className="px-2 py-1 bg-[#fff8e1] text-[#f57c00] rounded-[6px] text-[11px] font-medium">
-                              Уже есть рубрика
+                              {t("feature.assignmentPicker.hasRubric")}
                             </span>
                           )}
                         </div>
@@ -202,22 +211,22 @@ export function AssignmentPickerModal({
         <div className="flex items-center justify-between gap-3 p-6 border-t-2 border-[#e6e8ee]">
           <p className="text-[13px] text-[#767692]">
             {selectedAssignmentId
-              ? 'Нажмите "Привязать" для подтверждения'
-              : "Выберите задание из списка выше"}
+              ? t("feature.assignmentPicker.clickAttach")
+              : t("feature.assignmentPicker.selectFromList")}
           </p>
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
               className="px-4 py-2 text-[#767692] hover:bg-[#f9f9f9] rounded-[12px] transition-colors"
             >
-              Отмена
+              {t("common.cancel")}
             </button>
             <button
               onClick={handleAttach}
               disabled={!selectedAssignmentId}
               className="px-6 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
             >
-              Привязать
+              {t("feature.assignmentPicker.attach")}
             </button>
           </div>
         </div>

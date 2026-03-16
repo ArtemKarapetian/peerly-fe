@@ -1,4 +1,5 @@
 import { FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 
@@ -8,12 +9,14 @@ import { TaskReviewAccordion } from "@/widgets/received-reviews";
 import { mockReceivedReviews } from "../model/mockReceivedReviews";
 
 export default function ReceivedReviewsPage() {
+  const { t } = useTranslation();
+
   return (
-    <AppShell title="Полученные отзывы">
+    <AppShell title={t("student.receivedReviews.title")}>
       <div className="max-w-[1000px]">
         <PageHeader
-          title="Полученные отзывы"
-          subtitle="Просматривайте рецензии на свои работы от других студентов"
+          title={t("student.receivedReviews.title")}
+          subtitle={t("student.receivedReviews.subtitle")}
         />
 
         {mockReceivedReviews.length > 0 ? (
@@ -24,16 +27,16 @@ export default function ReceivedReviewsPage() {
               <FileText className="w-8 h-8 text-[#3d6bc6]" />
             </div>
             <h3 className="text-[20px] font-medium text-[#21214f] mb-2 tracking-[-0.5px]">
-              Вы ещё не получали отзывы
+              {t("student.receivedReviews.noReviews")}
             </h3>
             <p className="text-[15px] text-[#767692] leading-[1.5] mb-6">
-              Отзывы появятся здесь после того, как другие студенты проверят ваши работы.
+              {t("student.receivedReviews.willAppear")}
             </p>
             <button
               onClick={() => (window.location.hash = "/courses")}
               className="inline-flex items-center justify-center px-5 py-3 bg-[#3d6bc6] hover:bg-[#2f5aa8] text-white rounded-[12px] text-[15px] font-medium transition-colors"
             >
-              Перейти к курсам
+              {t("student.receivedReviews.goToCourses")}
             </button>
           </div>
         )}

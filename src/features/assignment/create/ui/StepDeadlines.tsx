@@ -1,4 +1,5 @@
 import { Calendar, Clock, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import type { AssignmentFormData } from "../model/types";
 
@@ -17,6 +18,8 @@ interface StepDeadlinesProps {
 }
 
 export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
+  const { t } = useTranslation();
+
   const formatDateForInput = (date: Date | null) => {
     if (!date) return "";
     const year = date.getFullYear();
@@ -50,16 +53,19 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">Дедлайны</h2>
+        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+          {t("feature.assignmentCreate.deadlines.title")}
+        </h2>
         <p className="text-[15px] text-[#767692]">
-          Настройте временные рамки для сдачи работ и рецензирования
+          {t("feature.assignmentCreate.deadlines.subtitle")}
         </p>
       </div>
 
       {/* Submission Deadline */}
       <div>
         <label className="block text-[14px] font-medium text-[#21214f] mb-2">
-          Дедлайн сдачи работы <span className="text-[#d4183d]">*</span>
+          {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}{" "}
+          <span className="text-[#d4183d]">*</span>
         </label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692] pointer-events-none" />
@@ -71,14 +77,15 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
           />
         </div>
         <p className="text-[13px] text-[#767692] mt-1">
-          Последний момент, когда студенты могут отправить работу
+          {t("feature.assignmentCreate.deadlines.submissionDeadlineHint")}
         </p>
       </div>
 
       {/* Review Deadline */}
       <div>
         <label className="block text-[14px] font-medium text-[#21214f] mb-2">
-          Дедлайн рецензирования <span className="text-[#d4183d]">*</span>
+          {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}{" "}
+          <span className="text-[#d4183d]">*</span>
         </label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692] pointer-events-none" />
@@ -90,7 +97,9 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
           />
         </div>
-        <p className="text-[13px] text-[#767692] mt-1">Последний момент для завершения рецензий</p>
+        <p className="text-[13px] text-[#767692] mt-1">
+          {t("feature.assignmentCreate.deadlines.reviewDeadlineHint")}
+        </p>
       </div>
 
       {/* Time Difference Display */}
@@ -108,12 +117,14 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
           <Clock className="w-5 h-5 text-[#21214f] mt-0.5" />
           <div>
             <p className="text-[14px] font-medium text-[#21214f] mb-1">
-              Времени на рецензирование: {timeDiff.days > 0 && `${timeDiff.days} дн. `}
-              {timeDiff.hours} ч.
+              {t("feature.assignmentCreate.deadlines.timeForReview")}{" "}
+              {timeDiff.days > 0 &&
+                `${timeDiff.days} ${t("feature.assignmentCreate.deadlines.days")} `}
+              {timeDiff.hours} {t("feature.assignmentCreate.deadlines.hours")}
             </p>
             {timeDiff.total < 2 * 24 * 60 * 60 * 1000 && (
               <p className="text-[13px] text-[#f57c00]">
-                ⚠️ Рекомендуется оставить минимум 2-3 дня для качественного рецензирования
+                {t("feature.assignmentCreate.deadlines.reviewTimeWarning")}
               </p>
             )}
           </div>
@@ -123,7 +134,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
       {/* Late Policy */}
       <div>
         <label className="block text-[14px] font-medium text-[#21214f] mb-3">
-          Политика опозданий
+          {t("feature.assignmentCreate.deadlines.latePolicyLabel")}
         </label>
         <div className="grid grid-cols-1 desktop:grid-cols-2 gap-3">
           <button
@@ -138,9 +149,11 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
               }
             `}
           >
-            <div className="text-[15px] font-medium text-[#21214f] mb-1">Мягкая (Soft)</div>
+            <div className="text-[15px] font-medium text-[#21214f] mb-1">
+              {t("feature.assignmentCreate.deadlines.latePolicySoft")}
+            </div>
             <div className="text-[13px] text-[#767692]">
-              Работы принимаются с штрафом за каждый день опоздания
+              {t("feature.assignmentCreate.deadlines.latePolicySoftDesc")}
             </div>
           </button>
 
@@ -156,8 +169,12 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
               }
             `}
           >
-            <div className="text-[15px] font-medium text-[#21214f] mb-1">Жесткая (Hard)</div>
-            <div className="text-[13px] text-[#767692]">Работы после дедлайна не принимаются</div>
+            <div className="text-[15px] font-medium text-[#21214f] mb-1">
+              {t("feature.assignmentCreate.deadlines.latePolicyHard")}
+            </div>
+            <div className="text-[13px] text-[#767692]">
+              {t("feature.assignmentCreate.deadlines.latePolicyHardDesc")}
+            </div>
           </button>
         </div>
       </div>
@@ -166,7 +183,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
       {data.latePolicy === "soft" && (
         <div>
           <label className="block text-[14px] font-medium text-[#21214f] mb-2">
-            Штраф за опоздание (% в день)
+            {t("feature.assignmentCreate.deadlines.latePenaltyLabel")}
           </label>
           <div className="flex items-center gap-4">
             <input
@@ -183,28 +200,42 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             </span>
           </div>
           <p className="text-[13px] text-[#767692] mt-2">
-            Пример: при штрафе {data.latePenalty}% работа, сданная на 2 дня позже, получит максимум{" "}
-            {100 - data.latePenalty * 2}% от оценки
+            {t("feature.assignmentCreate.deadlines.latePenaltyExample", {
+              penalty: data.latePenalty,
+              max: 100 - data.latePenalty * 2,
+            })}
           </p>
         </div>
       )}
 
       {/* Timezone */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">Часовой пояс</label>
+        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+          {t("feature.assignmentCreate.deadlines.timezoneLabel")}
+        </label>
         <select
           value={data.timezone}
           onChange={(e) => onUpdate({ timezone: e.target.value })}
           className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
         >
-          <option value="Europe/Moscow">Москва (UTC+3)</option>
-          <option value="Europe/London">Лондон (UTC+0)</option>
-          <option value="America/New_York">Нью-Йорк (UTC-5)</option>
-          <option value="Asia/Tokyo">Токио (UTC+9)</option>
-          <option value="Australia/Sydney">Сидней (UTC+11)</option>
+          <option value="Europe/Moscow">
+            {t("feature.assignmentCreate.deadlines.timezoneMoscow")}
+          </option>
+          <option value="Europe/London">
+            {t("feature.assignmentCreate.deadlines.timezoneLondon")}
+          </option>
+          <option value="America/New_York">
+            {t("feature.assignmentCreate.deadlines.timezoneNewYork")}
+          </option>
+          <option value="Asia/Tokyo">
+            {t("feature.assignmentCreate.deadlines.timezoneTokyo")}
+          </option>
+          <option value="Australia/Sydney">
+            {t("feature.assignmentCreate.deadlines.timezoneSydney")}
+          </option>
         </select>
         <p className="text-[13px] text-[#767692] mt-1">
-          Все дедлайны будут отображаться в указанном часовом поясе
+          {t("feature.assignmentCreate.deadlines.timezoneHint")}
         </p>
       </div>
 
@@ -212,11 +243,8 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
       <div className="flex items-start gap-3 bg-[#fff8e1] border border-[#ffe082] rounded-[12px] p-4">
         <AlertTriangle className="w-5 h-5 text-[#f57c00] shrink-0 mt-0.5" />
         <div className="text-[13px] text-[#21214f]">
-          <p className="font-medium mb-1">Обратите внимание</p>
-          <p className="text-[#767692]">
-            После публикации задания дедлайны можно будет изменить, но это может повлиять на уже
-            начатые работы студентов.
-          </p>
+          <p className="font-medium mb-1">{t("feature.assignmentCreate.deadlines.warningTitle")}</p>
+          <p className="text-[#767692]">{t("feature.assignmentCreate.deadlines.warningText")}</p>
         </div>
       </div>
     </div>

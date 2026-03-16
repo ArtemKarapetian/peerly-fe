@@ -1,5 +1,6 @@
 import { Shield, Database, AlertTriangle, ArrowRight } from "lucide-react";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -16,38 +17,39 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  */
 
 export default function AdminSettingsPage() {
+  const { t } = useTranslation();
   const settingsSections = [
     {
       id: "flags",
-      title: "Фиче-флаги",
-      description: "Управление экспериментальными функциями платформы",
+      title: t("admin.settingsCard.featureFlags"),
+      description: t("admin.settingsCard.featureFlagsDesc"),
       icon: Shield,
       href: "/admin/flags",
       bgColor: "bg-[#e9f5ff]",
       iconColor: "text-[#5b8def]",
-      statusLabel: "Синхронизированы",
+      statusLabel: t("admin.settingsCard.synchronized"),
       statusOk: true,
     },
     {
       id: "limits",
-      title: "Лимиты и квоты",
-      description: "Ограничения на курсы, файлы и пользователей",
+      title: t("admin.settingsCard.limitsAndQuotas"),
+      description: t("admin.settingsCard.limitsDesc"),
       icon: AlertTriangle,
       href: "/admin/limits",
       bgColor: "bg-[#fff4e5]",
       iconColor: "text-[#ff9800]",
-      statusLabel: "Соблюдаются",
+      statusLabel: t("admin.settingsCard.compliant"),
       statusOk: true,
     },
     {
       id: "retention",
-      title: "Хранение данных",
-      description: "Политики retention и удаления данных",
+      title: t("admin.settingsCard.dataRetention"),
+      description: t("admin.settingsCard.retentionDesc"),
       icon: Database,
       href: "/admin/retention",
       bgColor: "bg-[#f3e5f5]",
       iconColor: "text-[#8e24aa]",
-      statusLabel: "Выполняется",
+      statusLabel: t("admin.settingsCard.running"),
       statusOk: true,
     },
   ];
@@ -57,10 +59,10 @@ export default function AdminSettingsPage() {
   }, []);
 
   return (
-    <AppShell title="Настройки">
-      <Breadcrumbs items={[{ label: "Настройки" }]} />
+    <AppShell title={t("admin.settings.title")}>
+      <Breadcrumbs items={[{ label: t("admin.settings.title") }]} />
 
-      <PageHeader title="Настройки" />
+      <PageHeader title={t("admin.settings.title")} />
 
       <div>
         <div className="grid md:grid-cols-3 gap-4">
@@ -92,7 +94,7 @@ export default function AdminSettingsPage() {
                 <h3 className="text-[16px] font-medium text-[#21214f] mb-1">{section.title}</h3>
                 <p className="text-[13px] text-[#767692] mb-3">{section.description}</p>
                 <div className="flex items-center gap-1 text-[13px] text-[#5b8def] font-medium">
-                  Настроить
+                  {t("common.configure")}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </button>

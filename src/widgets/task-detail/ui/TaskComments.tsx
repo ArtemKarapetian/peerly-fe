@@ -1,5 +1,6 @@
 import { Send } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Comment {
   author: string;
@@ -8,23 +9,23 @@ interface Comment {
   isTeacher: boolean;
 }
 
-const initialComments: Comment[] = [
-  {
-    author: "Преподаватель",
-    text: "Обратите внимание на требование по адаптивности - это важный критерий оценки.",
-    date: "15 января, 14:30",
-    isTeacher: true,
-  },
-  {
-    author: "Вы",
-    text: "Можно ли использовать готовые UI-киты или нужно создавать компоненты с нуля?",
-    date: "16 января, 10:15",
-    isTeacher: false,
-  },
-];
-
 export function TaskComments() {
-  const [comments, setComments] = useState(initialComments);
+  const { t } = useTranslation();
+
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      author: t("widget.taskComments.teacher"),
+      text: t("widget.taskComments.mockComment1"),
+      date: t("widget.taskComments.mockDate1"),
+      isTeacher: true,
+    },
+    {
+      author: t("widget.taskComments.you"),
+      text: t("widget.taskComments.mockComment2"),
+      date: t("widget.taskComments.mockDate2"),
+      isTeacher: false,
+    },
+  ]);
   const [newComment, setNewComment] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -33,9 +34,9 @@ export function TaskComments() {
       setComments([
         ...comments,
         {
-          author: "Вы",
+          author: t("widget.taskComments.you"),
           text: newComment,
-          date: new Date().toLocaleString("ru-RU", {
+          date: new Date().toLocaleString(undefined, {
             day: "numeric",
             month: "long",
             hour: "2-digit",
@@ -51,7 +52,7 @@ export function TaskComments() {
   return (
     <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
-        Комментарии и вопросы
+        {t("widget.taskComments.title")}
       </h2>
 
       <div className="space-y-3 desktop:space-y-4 mb-4 desktop:mb-6">
@@ -80,7 +81,7 @@ export function TaskComments() {
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Задайте вопрос преподавателю..."
+          placeholder={t("widget.taskComments.placeholder")}
           className="flex-1 px-3 desktop:px-4 py-2 desktop:py-3 rounded-[12px] bg-white border border-[#c7c7c7] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f] placeholder:text-[#767692] focus:outline-none focus:border-[#b7bdff]"
         />
         <button

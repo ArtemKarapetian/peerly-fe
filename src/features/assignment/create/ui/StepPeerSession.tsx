@@ -1,4 +1,5 @@
 import { Users, Shuffle, EyeOff, RefreshCw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import type { AssignmentFormData } from "../model/types";
 
@@ -17,6 +18,8 @@ interface StepPeerSessionProps {
 }
 
 export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
+  const { t } = useTranslation();
+
   const formatDateForInput = (date: Date | null) => {
     if (!date) return "";
     const year = date.getFullYear();
@@ -33,19 +36,28 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
     });
   };
 
+  const getReviewForm = (count: number) => {
+    if (count === 1) return t("feature.assignmentCreate.peerSession.reviewOne");
+    if (count < 5) return t("feature.assignmentCreate.peerSession.reviewFew");
+    return t("feature.assignmentCreate.peerSession.reviewMany");
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Настройки peer review
+          {t("feature.assignmentCreate.peerSession.title")}
         </h2>
-        <p className="text-[15px] text-[#767692]">Настройте параметры взаимного рецензирования</p>
+        <p className="text-[15px] text-[#767692]">
+          {t("feature.assignmentCreate.peerSession.subtitle")}
+        </p>
       </div>
 
       {/* Reviews Per Submission */}
       <div>
         <label className="block text-[14px] font-medium text-[#21214f] mb-3">
-          Количество рецензий на одну работу (k) <span className="text-[#d4183d]">*</span>
+          {t("feature.assignmentCreate.peerSession.reviewsPerSubmissionLabel")}{" "}
+          <span className="text-[#d4183d]">*</span>
         </label>
         <div className="flex items-center gap-4">
           <input
@@ -70,20 +82,17 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
           </div>
         </div>
         <p className="text-[13px] text-[#767692] mt-2">
-          Каждая работа получит {data.reviewsPerSubmission}{" "}
-          {data.reviewsPerSubmission === 1
-            ? "рецензию"
-            : data.reviewsPerSubmission < 5
-              ? "рецензии"
-              : "рецензий"}
-          . Рекомендуется: 3-5 для баланса качества и нагрузки.
+          {t("feature.assignmentCreate.peerSession.reviewsHint", {
+            count: data.reviewsPerSubmission,
+            form: getReviewForm(data.reviewsPerSubmission),
+          })}
         </p>
       </div>
 
       {/* Distribution Mode */}
       <div>
         <label className="block text-[14px] font-medium text-[#21214f] mb-3">
-          Режим распределения рецензий
+          {t("feature.assignmentCreate.peerSession.distributionLabel")}
         </label>
         <div className="space-y-3">
           <button
@@ -101,10 +110,10 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             <Shuffle className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
               <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                Случайное распределение
+                {t("feature.assignmentCreate.peerSession.distributionRandom")}
               </div>
               <div className="text-[13px] text-[#767692]">
-                Работы распределяются случайным образом между студентами. Быстро и справедливо.
+                {t("feature.assignmentCreate.peerSession.distributionRandomDesc")}
               </div>
             </div>
           </button>
@@ -123,9 +132,11 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
           >
             <Users className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">На основе навыков</div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.peerSession.distributionSkillBased")}
+              </div>
               <div className="text-[13px] text-[#767692]">
-                Система подбирает рецензентов со схожим уровнем. Требует предварительных данных.
+                {t("feature.assignmentCreate.peerSession.distributionSkillBasedDesc")}
               </div>
             </div>
           </button>
@@ -144,9 +155,11 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
           >
             <RefreshCw className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">Вручную</div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.peerSession.distributionManual")}
+              </div>
               <div className="text-[13px] text-[#767692]">
-                Вы сами распределяете работы между студентами. Максимальный контроль.
+                {t("feature.assignmentCreate.peerSession.distributionManualDesc")}
               </div>
             </div>
           </button>
@@ -156,7 +169,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
       {/* Anonymity Mode */}
       <div>
         <label className="block text-[14px] font-medium text-[#21214f] mb-3">
-          Уровень анонимности
+          {t("feature.assignmentCreate.peerSession.anonymityLabel")}
         </label>
         <div className="space-y-3">
           <button
@@ -173,10 +186,11 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
           >
             <EyeOff className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">Полная анонимность</div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.peerSession.anonymityFull")}
+              </div>
               <div className="text-[13px] text-[#767692]">
-                Студенты не видят, кто автор работы и кто рецензент. Рекомендуется для
-                объективности.
+                {t("feature.assignmentCreate.peerSession.anonymityFullDesc")}
               </div>
             </div>
           </button>
@@ -196,10 +210,10 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             <Users className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
               <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                Частичная анонимность
+                {t("feature.assignmentCreate.peerSession.anonymityPartial")}
               </div>
               <div className="text-[13px] text-[#767692]">
-                Автор работы скрыт, но рецензент виден. Полезно для обучения рецензированию.
+                {t("feature.assignmentCreate.peerSession.anonymityPartialDesc")}
               </div>
             </div>
           </button>
@@ -218,9 +232,11 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
           >
             <Users className="w-5 h-5 text-[#767692] mt-0.5" />
             <div className="flex-1">
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">Без анонимности</div>
+              <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.peerSession.anonymityNone")}
+              </div>
               <div className="text-[13px] text-[#767692]">
-                Все видят друг друга. Подходит для работы в малых группах.
+                {t("feature.assignmentCreate.peerSession.anonymityNoneDesc")}
               </div>
             </div>
           </button>
@@ -237,20 +253,19 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             className="w-5 h-5 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-[#5b8def]"
           />
           <span className="text-[14px] font-medium text-[#21214f]">
-            Разрешить переназначение рецензий
+            {t("feature.assignmentCreate.peerSession.allowReassignment")}
           </span>
         </label>
 
         {data.allowReassignment && (
           <div className="ml-7 space-y-3">
             <p className="text-[13px] text-[#767692]">
-              Студенты смогут запросить другую работу для рецензирования, если текущая слишком
-              сложная или есть конфликт интересов.
+              {t("feature.assignmentCreate.peerSession.reassignmentHint")}
             </p>
 
             <div>
               <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                Дедлайн для запроса переназначения
+                {t("feature.assignmentCreate.peerSession.reassignmentDeadlineLabel")}
               </label>
               <input
                 type="datetime-local"
@@ -260,7 +275,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
                 className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
               />
               <p className="text-[12px] text-[#767692] mt-1">
-                После этого времени переназначение будет недоступно
+                {t("feature.assignmentCreate.peerSession.reassignmentDeadlineHint")}
               </p>
             </div>
           </div>
@@ -270,8 +285,8 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
       {/* Info Box */}
       <div className="bg-[#e9f5ff] border border-[#a0b8f1] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Совет:</strong> Для курсов с большим количеством студентов (30+) рекомендуется
-          случайное распределение с полной анонимностью и k=3-5 рецензий.
+          <strong>{t("feature.assignmentCreate.peerSession.tip")}</strong>{" "}
+          {t("feature.assignmentCreate.peerSession.tipText")}
         </p>
       </div>
     </div>

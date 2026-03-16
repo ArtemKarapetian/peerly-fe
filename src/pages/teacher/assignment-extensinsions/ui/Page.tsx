@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -30,6 +31,8 @@ interface TeacherAssignmentExtensionsPageProps {
 export function TeacherAssignmentExtensionsPage({
   assignmentId,
 }: TeacherAssignmentExtensionsPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const {
     data: extensions,
     isLoading,
@@ -59,13 +62,13 @@ export function TeacherAssignmentExtensionsPage({
 
   if (isLoading)
     return (
-      <AppShell title="Продления дедлайнов">
+      <AppShell title={t("widget.extensions.deadlineExtensions")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Продления дедлайнов">
+      <AppShell title={t("widget.extensions.deadlineExtensions")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -77,9 +80,11 @@ export function TeacherAssignmentExtensionsPage({
       : resolvedExtensions.filter((ext) => ext.status === filterStatus);
 
   return (
-    <AppShell title="Продления дедлайнов">
+    <AppShell title={t("widget.extensions.deadlineExtensions")}>
       <div className="max-w-[1200px]">
-        <Breadcrumbs items={[CRUMBS.teacherAssignments, { label: "Продления дедлайнов" }]} />
+        <Breadcrumbs
+          items={[CRUMBS.teacherAssignments, { label: t("widget.extensions.deadlineExtensions") }]}
+        />
 
         <div className="mt-6">
           <ExtensionsHeader onAdd={() => setShowAddModal(true)} />

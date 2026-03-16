@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/ui/button.tsx";
@@ -29,6 +30,7 @@ interface FormErrors {
 }
 
 export function RegisterPage() {
+  const { t } = useTranslation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,13 +58,13 @@ export function RegisterPage() {
     switch (field) {
       case "email":
         if (!value.trim()) {
-          newErrors.email = "Введите email";
+          newErrors.email = t("auth.enterEmail");
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          newErrors.email = "Некорректный формат email";
+          newErrors.email = t("auth.invalidEmail");
         } else {
           const check = userExists("", value);
           if (check.exists && check.field === "email") {
-            newErrors.email = "Email уже зарегистрирован";
+            newErrors.email = t("auth.emailTaken");
           } else {
             delete newErrors.email;
           }
@@ -71,15 +73,15 @@ export function RegisterPage() {
 
       case "username":
         if (!value.trim()) {
-          newErrors.username = "Введите логин";
+          newErrors.username = t("auth.enterUsername");
         } else if (value.length < 3) {
-          newErrors.username = "Минимум 3 символа";
+          newErrors.username = t("auth.minChars", { count: 3 });
         } else if (!/^[a-zA-Z0-9._-]+$/.test(value)) {
-          newErrors.username = "Только буквы, цифры, ., _, -";
+          newErrors.username = t("auth.usernameChars");
         } else {
           const check = userExists(value, "");
           if (check.exists && check.field === "username") {
-            newErrors.username = "Логин занят";
+            newErrors.username = t("auth.usernameTaken");
           } else {
             delete newErrors.username;
           }
@@ -88,16 +90,16 @@ export function RegisterPage() {
 
       case "password":
         if (!value) {
-          newErrors.password = "Введите пароль";
+          newErrors.password = t("auth.enterPassword");
         } else if (value.length < 8) {
-          newErrors.password = "Минимум 8 символов";
+          newErrors.password = t("auth.minChars", { count: 8 });
         } else {
           delete newErrors.password;
         }
 
         // Also validate confirm password if it's filled
         if (confirmPassword && value !== confirmPassword) {
-          newErrors.confirmPassword = "Пароли не совпадают";
+          newErrors.confirmPassword = t("auth.passwordsDontMatch");
         } else if (confirmPassword && value === confirmPassword) {
           delete newErrors.confirmPassword;
         }
@@ -105,9 +107,9 @@ export function RegisterPage() {
 
       case "confirmPassword":
         if (!value) {
-          newErrors.confirmPassword = "Повторите пароль";
+          newErrors.confirmPassword = t("auth.repeatPassword");
         } else if (value !== password) {
-          newErrors.confirmPassword = "Пароли не совпадают";
+          newErrors.confirmPassword = t("auth.passwordsDontMatch");
         } else {
           delete newErrors.confirmPassword;
         }
@@ -190,8 +192,8 @@ export function RegisterPage() {
       });
 
       // Show success toast
-      toast.success("Аккаунт создан", {
-        description: "Теперь вы можете войти с вашими учетными данными",
+      toast.success(t("auth.accountCreated"), {
+        description: t("auth.canLoginNow"),
       });
 
       // Navigate to login
@@ -200,8 +202,8 @@ export function RegisterPage() {
       }, 1000);
     } catch (error) {
       console.error("Registration error:", error);
-      toast.error("Ошибка регистрации", {
-        description: "Попробуйте еще раз",
+      toast.error(t("auth.registrationError"), {
+        description: t("auth.tryAgain"),
       });
       setIsLoading(false);
     }
@@ -216,11 +218,9 @@ export function RegisterPage() {
             {/* Header */}
             <div className="space-y-2">
               <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
-                Регистрация
+                {t("auth.register")}
               </h1>
-              <p className="text-[15px] text-muted-foreground">
-                Создайте аккаунт для доступа к платформе peer review
-              </p>
+              <p className="text-[15px] text-muted-foreground">{t("auth.registerSubtitle")}</p>
             </div>
 
             {/* Registration form */}
@@ -228,21 +228,21 @@ export function RegisterPage() {
               {/* First Name & Last Name (Optional) */}
               <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
                 <Input
-                  label="Имя (необязательно)"
+                  label={t("auth.firstName")}
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Иван"
+                  placeholder={t("auth.firstNamePlaceholder")}
                   autoComplete="given-name"
                   disabled={isLoading}
                 />
 
                 <Input
-                  label="Фамилия (необязательно)"
+                  label={t("auth.lastName")}
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Петров"
+                  placeholder={t("auth.lastNamePlaceholder")}
                   autoComplete="family-name"
                   disabled={isLoading}
                 />
@@ -266,7 +266,7 @@ export function RegisterPage() {
 
               {/* Username (Required) */}
               <Input
-                label="Логин"
+                label={t("auth.username")}
                 type="text"
                 value={username}
                 onChange={(e) => {
@@ -278,12 +278,14 @@ export function RegisterPage() {
                 autoComplete="username"
                 disabled={isLoading}
                 error={touched.username ? errors.username : ""}
-                helperText={!touched.username && !errors.username ? "Минимум 3 символа" : ""}
+                helperText={
+                  !touched.username && !errors.username ? t("auth.minChars", { count: 3 }) : ""
+                }
               />
 
               {/* Password (Required) */}
               <PasswordInput
-                label="Пароль"
+                label={t("auth.password")}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -294,12 +296,14 @@ export function RegisterPage() {
                 autoComplete="new-password"
                 disabled={isLoading}
                 error={touched.password ? errors.password : ""}
-                helperText={!touched.password && !errors.password ? "Минимум 8 символов" : ""}
+                helperText={
+                  !touched.password && !errors.password ? t("auth.minChars", { count: 8 }) : ""
+                }
               />
 
               {/* Confirm Password (Required) */}
               <PasswordInput
-                label="Подтвердите пароль"
+                label={t("auth.confirmPassword")}
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
@@ -322,24 +326,24 @@ export function RegisterPage() {
                   isLoading={isLoading}
                   disabled={!isFormValid()}
                 >
-                  {isLoading ? "Создание..." : "Создать аккаунт"}
+                  {isLoading ? t("auth.creating") : t("auth.createAccount")}
                 </Button>
               </div>
             </form>
 
             {/* Footer link */}
             <div className="text-center border-t border-border pt-4">
-              <p className="text-sm text-muted-foreground mb-2">Уже есть аккаунт?</p>
+              <p className="text-sm text-muted-foreground mb-2">{t("auth.alreadyHaveAccount")}</p>
               <a href="#/login" className="text-sm font-medium text-primary hover:underline">
-                Войти
+                {t("auth.signIn")}
               </a>
 
               {/* Terms link */}
               <div className="mt-4 pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground">
-                  Регистрируясь, вы соглашаетесь с{" "}
+                  {t("auth.agreeWith")}{" "}
                   <a href="#/terms" className="text-primary hover:underline">
-                    Условиями использования
+                    {t("auth.termsOfUse")}
                   </a>
                 </p>
               </div>

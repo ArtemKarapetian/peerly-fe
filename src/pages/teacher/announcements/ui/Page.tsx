@@ -10,7 +10,9 @@ import {
   BookOpen,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import i18n from "@/shared/lib/i18n/config";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -73,9 +75,8 @@ const loadAnnouncements = (
   return [
     {
       id: "ann-1",
-      title: "Приветствие в начале курса",
-      content:
-        "Добро пожаловать в курс! В этом семестре мы изучим основы веб-разработки. Пожалуйста, ознакомьтесь с программой курса и графиком сдачи заданий.",
+      title: i18n.t("teacher.announcements.mockTitle1"),
+      content: i18n.t("teacher.announcements.mockContent1"),
       courseId: courses[0]?.id || "",
       courseName: courses[0]?.title || "",
       createdAt: new Date(now - 14 * 24 * 60 * 60 * 1000),
@@ -85,9 +86,8 @@ const loadAnnouncements = (
     },
     {
       id: "ann-2",
-      title: "Дедлайн первого задания",
-      content:
-        "Напоминаю, что дедлайн первого задания — 15 марта в 23:59. Убедитесь, что загрузили все необходимые файлы.",
+      title: i18n.t("teacher.announcements.mockTitle2"),
+      content: i18n.t("teacher.announcements.mockContent2"),
       courseId: courses[0]?.id || "",
       courseName: courses[0]?.title || "",
       createdAt: new Date(now - 7 * 24 * 60 * 60 * 1000),
@@ -99,6 +99,7 @@ const loadAnnouncements = (
 };
 
 export default function TeacherAnnouncementsPage() {
+  const { t } = useTranslation();
   const { data, isLoading, error, refetch } = useAsync(async () => {
     const courses = await courseRepo.getAll();
     return { courses };
@@ -106,13 +107,13 @@ export default function TeacherAnnouncementsPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Объявления">
+      <AppShell title={t("teacher.announcements.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Объявления">
+      <AppShell title={t("teacher.announcements.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -125,6 +126,7 @@ function AnnouncementsContent({
 }: {
   data: { courses: Awaited<ReturnType<typeof courseRepo.getAll>> };
 }) {
+  const { t } = useTranslation();
   const { courses } = data;
 
   const [announcements, setAnnouncements] = useState<Announcement[]>(() =>
@@ -147,7 +149,7 @@ function AnnouncementsContent({
 
   const handleCreate = () => {
     if (!formTitle.trim() || !formContent.trim()) {
-      alert("Заполните название и содержание");
+      alert(t("teacher.announcements.fillRequired"));
       return;
     }
 
@@ -174,7 +176,7 @@ function AnnouncementsContent({
 
   const handleUpdate = () => {
     if (!editingId || !formTitle.trim() || !formContent.trim()) {
-      alert("Заполните название и содержание");
+      alert(t("teacher.announcements.fillRequired"));
       return;
     }
 
@@ -211,7 +213,7 @@ function AnnouncementsContent({
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Удалить это объявление?")) {
+    if (confirm(t("teacher.announcements.deleteConfirm"))) {
       saveAnnouncements(announcements.filter((a) => a.id !== id));
     }
   };
@@ -222,7 +224,7 @@ function AnnouncementsContent({
         a.id === id ? { ...a, isPublished: true, publishedAt: new Date() } : a,
       ),
     );
-    alert('Объявление опубликовано! Студенты курса увидят его на вкладке "анонсы".');
+    alert(t("teacher.announcements.publishedAlert"));
   };
 
   const handleUnpublish = (id: string) => {
@@ -251,12 +253,12 @@ function AnnouncementsContent({
   const draftCount = announcements.filter((a) => !a.isPublished).length;
 
   return (
-    <AppShell title="Объявления">
-      <Breadcrumbs items={[{ label: "Объявления" }]} />
+    <AppShell title={t("teacher.announcements.title")}>
+      <Breadcrumbs items={[{ label: t("teacher.announcements.breadcrumb") }]} />
 
       <PageHeader
-        title="Объявления"
-        subtitle="Создавайте и публикуйте объявления для студентов курса"
+        title={t("teacher.announcements.title")}
+        subtitle={t("teacher.announcements.subtitle")}
         action={
           !isCreating && !editingId ? (
             <button
@@ -264,7 +266,7 @@ function AnnouncementsContent({
               className="flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium"
             >
               <Plus className="w-4 h-4" />
-              Создать объявление
+              {t("teacher.announcements.create")}
             </button>
           ) : undefined
         }
@@ -277,7 +279,7 @@ function AnnouncementsContent({
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-[#4caf50]" />
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">
-                Опубликовано
+                {t("teacher.announcements.published")}
               </span>
             </div>
             <p className="text-[28px] font-medium text-[#4caf50]">{publishedCount}</p>
@@ -285,7 +287,9 @@ function AnnouncementsContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <Edit className="w-4 h-4 text-[#767692]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Черновики</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.announcements.drafts")}
+              </span>
             </div>
             <p className="text-[28px] font-medium text-[#767692]">{draftCount}</p>
           </div>
@@ -296,7 +300,9 @@ function AnnouncementsContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[18px] font-medium text-[#21214f]">
-                {editingId ? "Редактировать объявление" : "Новое объявление"}
+                {editingId
+                  ? t("teacher.announcements.editTitle")
+                  : t("teacher.announcements.newTitle")}
               </h2>
               <button
                 onClick={handleCancel}
@@ -310,13 +316,13 @@ function AnnouncementsContent({
               {/* Title */}
               <div>
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                  Название объявления
+                  {t("teacher.announcements.titleLabel")}
                 </label>
                 <input
                   type="text"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  placeholder="Например: Напоминание о дедлайне"
+                  placeholder={t("teacher.announcements.titlePlaceholder")}
                   className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
                 />
               </div>
@@ -324,7 +330,7 @@ function AnnouncementsContent({
               {/* Course */}
               <div>
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                  Курс
+                  {t("teacher.announcements.courseLabel")}
                 </label>
                 <select
                   value={formCourseId}
@@ -342,12 +348,12 @@ function AnnouncementsContent({
               {/* Content */}
               <div>
                 <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                  Содержание
+                  {t("teacher.announcements.contentLabel")}
                 </label>
                 <textarea
                   value={formContent}
                   onChange={(e) => setFormContent(e.target.value)}
-                  placeholder="Введите текст объявления..."
+                  placeholder={t("teacher.announcements.contentPlaceholder")}
                   className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors min-h-[150px] resize-y"
                 />
               </div>
@@ -362,7 +368,7 @@ function AnnouncementsContent({
                     className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-0"
                   />
                   <span className="text-[14px] text-[#21214f]">
-                    Закрепить объявление (будет показано вверху списка)
+                    {t("teacher.announcements.pinAnnouncement")}
                   </span>
                 </label>
               </div>
@@ -375,14 +381,16 @@ function AnnouncementsContent({
                 >
                   <CheckCircle className="w-5 h-5" />
                   <span className="text-[15px] font-medium">
-                    {editingId ? "Сохранить изменения" : "Создать черновик"}
+                    {editingId
+                      ? t("teacher.announcements.saveChanges")
+                      : t("teacher.announcements.createDraft")}
                   </span>
                 </button>
                 <button
                   onClick={handleCancel}
                   className="px-6 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[15px] font-medium"
                 >
-                  Отмена
+                  {t("teacher.announcements.cancelBtn")}
                 </button>
               </div>
             </div>
@@ -406,17 +414,17 @@ function AnnouncementsContent({
                       {announcement.isPublished ? (
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
                           <CheckCircle className="w-3 h-3" />
-                          Опубликовано
+                          {t("teacher.announcements.publishedBadge")}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
                           <Edit className="w-3 h-3" />
-                          Черновик
+                          {t("teacher.announcements.draftBadge")}
                         </span>
                       )}
                       {announcement.isPinned && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
-                          📌 Закреплено
+                          {t("teacher.announcements.pinnedBadge")}
                         </span>
                       )}
                     </div>
@@ -427,12 +435,14 @@ function AnnouncementsContent({
                       </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        Создано: {announcement.createdAt.toLocaleDateString("ru-RU")}
+                        {t("teacher.announcements.createdAt")}{" "}
+                        {announcement.createdAt.toLocaleDateString()}
                       </span>
                       {announcement.publishedAt && (
                         <span className="flex items-center gap-1">
                           <Send className="w-3 h-3" />
-                          Опубликовано: {announcement.publishedAt.toLocaleDateString("ru-RU")}
+                          {t("teacher.announcements.publishedAt")}{" "}
+                          {announcement.publishedAt.toLocaleDateString()}
                         </span>
                       )}
                     </div>
@@ -450,35 +460,37 @@ function AnnouncementsContent({
                       className="flex items-center gap-2 px-4 py-2 bg-[#4caf50] text-white rounded-[8px] hover:bg-[#45a049] transition-colors text-[14px]"
                     >
                       <Send className="w-4 h-4" />
-                      Опубликовать
+                      {t("teacher.announcements.publishBtn")}
                     </button>
                   ) : (
                     <button
                       onClick={() => handleUnpublish(announcement.id)}
                       className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#767692] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
                     >
-                      Снять с публикации
+                      {t("teacher.announcements.unpublishBtn")}
                     </button>
                   )}
                   <button
                     onClick={() => handleTogglePin(announcement.id)}
                     className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
                   >
-                    {announcement.isPinned ? "Открепить" : "Закрепить"}
+                    {announcement.isPinned
+                      ? t("teacher.announcements.unpinBtn")
+                      : t("teacher.announcements.pinBtn")}
                   </button>
                   <button
                     onClick={() => handleEdit(announcement)}
                     className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
                   >
                     <Edit className="w-4 h-4" />
-                    Редактировать
+                    {t("teacher.announcements.editBtn")}
                   </button>
                   <button
                     onClick={() => handleDelete(announcement.id)}
                     className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#d4183d] rounded-[8px] hover:border-[#d4183d] hover:bg-[#fff5f5] transition-colors text-[14px] ml-auto"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Удалить
+                    {t("teacher.announcements.deleteBtn")}
                   </button>
                 </div>
               </div>
@@ -486,16 +498,20 @@ function AnnouncementsContent({
           ) : (
             <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
               <Megaphone className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Нет объявлений</h3>
+              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+                {t("teacher.announcements.noAnnouncements")}
+              </h3>
               <p className="text-[14px] text-[#767692] mb-4">
-                Создайте первое объявление для студентов
+                {t("teacher.announcements.createFirstDesc")}
               </p>
               <button
                 onClick={() => setIsCreating(true)}
                 className="inline-flex items-center gap-2 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors"
               >
                 <Plus className="w-5 h-5" />
-                <span className="text-[15px] font-medium">Создать объявление</span>
+                <span className="text-[15px] font-medium">
+                  {t("teacher.announcements.createAnnouncement")}
+                </span>
               </button>
             </div>
           )}

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 
@@ -9,6 +10,7 @@ import { ReviewCard, ReviewFilters } from "@/widgets/reviews-inbox";
 import type { ReviewFilter } from "@/widgets/reviews-inbox";
 
 export default function ReviewsInboxPage() {
+  const { t } = useTranslation();
   const { reviews } = useReviewStore();
   const [filter, setFilter] = useState<ReviewFilter>("all");
 
@@ -46,8 +48,8 @@ export default function ReviewsInboxPage() {
   const isEmpty = filteredReviews.length === 0;
 
   return (
-    <AppShell title="Рецензии">
-      <PageHeader title="Рецензии" subtitle="Назначенные вам работы для рецензирования" />
+    <AppShell title={t("student.reviews.title")}>
+      <PageHeader title={t("student.reviews.title")} subtitle={t("student.reviews.subtitle")} />
 
       <ReviewFilters filter={filter} counts={counts} onFilterChange={setFilter} />
 
@@ -60,16 +62,16 @@ export default function ReviewsInboxPage() {
               </div>
             </div>
             <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              {filter === "all" && "Нет назначенных рецензий"}
-              {filter === "not_started" && "Нет рецензий для начала"}
-              {filter === "drafts" && "Нет черновиков"}
-              {filter === "submitted" && "Нет отправленных рецензий"}
+              {filter === "all" && t("student.reviews.noAssigned")}
+              {filter === "not_started" && t("student.reviews.noToStart")}
+              {filter === "drafts" && t("student.reviews.noDrafts")}
+              {filter === "submitted" && t("student.reviews.noSubmitted")}
             </h2>
             <p className="text-[16px] text-[#767692] leading-[1.5]">
-              {filter === "all" && "Когда вам назначат рецензии, они появятся здесь."}
-              {filter === "not_started" && "Все ваши рецензии уже начаты или завершены."}
-              {filter === "drafts" && "У вас нет черновиков рецензий."}
-              {filter === "submitted" && "Вы еще не отправили ни одной рецензии."}
+              {filter === "all" && t("student.reviews.willAppear")}
+              {filter === "not_started" && t("student.reviews.allStarted")}
+              {filter === "drafts" && t("student.reviews.noDraftReviews")}
+              {filter === "submitted" && t("student.reviews.notSubmittedYet")}
             </p>
           </div>
         </div>
@@ -83,7 +85,11 @@ export default function ReviewsInboxPage() {
               id={review.id}
               courseName={review.courseName}
               taskTitle={review.taskTitle}
-              studentName={review.isAnonymous ? "Анонимный автор" : "Студент"}
+              studentName={
+                review.isAnonymous
+                  ? t("student.reviews.anonymousAuthor")
+                  : t("widget.reviewList.studentLabel")
+              }
               reviewDeadline={review.reviewDeadline}
               status={review.status}
               isDeadlineSoon={isDeadlineSoon(review.reviewDeadlineTimestamp)}

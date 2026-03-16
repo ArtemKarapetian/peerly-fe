@@ -1,5 +1,6 @@
 import { ChevronRight, Layers, Plus, Search } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { AssignmentFormData } from "../model/types";
 
@@ -84,6 +85,7 @@ const getMockRubrics = (): RubricItem[] => {
 };
 
 export function StepRubric({ data, onUpdate }: StepRubricProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const rubrics = getMockRubrics();
 
@@ -117,13 +119,13 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
   const getTaskTypeLabel = (type: string) => {
     switch (type) {
       case "text":
-        return "Текст";
+        return t("feature.assignmentCreate.rubric.typeText");
       case "code":
-        return "Код";
+        return t("feature.assignmentCreate.rubric.typeCode");
       case "project":
-        return "Проект";
+        return t("feature.assignmentCreate.rubric.typeProject");
       case "files":
-        return "Файлы";
+        return t("feature.assignmentCreate.rubric.typeFiles");
       default:
         return type;
     }
@@ -135,10 +137,10 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
     <div className="space-y-6">
       <div>
         <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Рубрика оценивания
+          {t("feature.assignmentCreate.rubric.title")}
         </h2>
         <p className="text-[15px] text-[#767692]">
-          Выберите рубрику для оценивания работ или создайте новую
+          {t("feature.assignmentCreate.rubric.subtitle")}
         </p>
       </div>
 
@@ -149,7 +151,9 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <Layers className="w-5 h-5 text-[#4caf50]" />
-                <h3 className="text-[16px] font-medium text-[#21214f]">Выбранная рубрика</h3>
+                <h3 className="text-[16px] font-medium text-[#21214f]">
+                  {t("feature.assignmentCreate.rubric.selectedRubric")}
+                </h3>
               </div>
               <p className="text-[15px] text-[#21214f] font-medium mb-1">{selectedRubric.name}</p>
               <p className="text-[13px] text-[#767692] mb-2">{selectedRubric.description}</p>
@@ -158,7 +162,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
                   {getTaskTypeLabel(selectedRubric.taskType)}
                 </span>
                 <span className="text-[13px] text-[#767692]">
-                  {selectedRubric.criteriaCount} критериев
+                  {selectedRubric.criteriaCount} {t("feature.assignmentCreate.rubric.criteria")}
                 </span>
               </div>
             </div>
@@ -166,7 +170,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
               onClick={() => onUpdate({ rubricId: null, rubricName: undefined })}
               className="px-3 py-2 text-[13px] text-[#767692] hover:text-[#d4183d] transition-colors"
             >
-              Отменить
+              {t("feature.assignmentCreate.rubric.deselect")}
             </button>
           </div>
         </div>
@@ -178,7 +182,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
           <input
             type="text"
-            placeholder="Поиск рубрики по названию, тегам..."
+            placeholder={t("feature.assignmentCreate.rubric.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
@@ -197,9 +201,11 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
             <Plus className="w-5 h-5 text-white" />
           </div>
           <div className="text-left">
-            <p className="text-[15px] font-medium text-[#21214f]">Создать новую рубрику</p>
+            <p className="text-[15px] font-medium text-[#21214f]">
+              {t("feature.assignmentCreate.rubric.createNew")}
+            </p>
             <p className="text-[13px] text-[#767692]">
-              Откроется в новой вкладке, затем вернитесь сюда
+              {t("feature.assignmentCreate.rubric.createNewHint")}
             </p>
           </div>
         </div>
@@ -209,10 +215,12 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
       {/* Rubrics List */}
       <div>
         <h3 className="text-[14px] font-medium text-[#21214f] mb-3">
-          Библиотека рубрик
+          {t("feature.assignmentCreate.rubric.library")}
           {data.taskType && (
             <span className="ml-2 text-[13px] font-normal text-[#767692]">
-              (рекомендованные для типа "{getTaskTypeLabel(data.taskType)}" в начале списка)
+              {t("feature.assignmentCreate.rubric.recommendedForType", {
+                type: getTaskTypeLabel(data.taskType),
+              })}
             </span>
           )}
         </h3>
@@ -221,7 +229,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
           <div className="text-center py-12 bg-[#f9f9f9] border border-[#e6e8ee] rounded-[12px]">
             <Layers className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
             <p className="text-[15px] text-[#767692]">
-              Рубрики не найдены. Создайте новую рубрику.
+              {t("feature.assignmentCreate.rubric.noRubrics")}
             </p>
           </div>
         ) : (
@@ -249,7 +257,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
                       {rubric.name}
                       {matchesTaskType && (
                         <span className="ml-2 px-2 py-0.5 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
-                          Рекомендовано
+                          {t("feature.assignmentCreate.rubric.recommended")}
                         </span>
                       )}
                     </h4>
@@ -264,7 +272,7 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
                       {getTaskTypeLabel(rubric.taskType)}
                     </span>
                     <span className="text-[12px] text-[#767692]">
-                      {rubric.criteriaCount} критериев
+                      {rubric.criteriaCount} {t("feature.assignmentCreate.rubric.criteria")}
                     </span>
                     {rubric.tags.slice(0, 2).map((tag) => (
                       <span
@@ -285,8 +293,8 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
       {/* Help Text */}
       <div className="bg-[#e9f5ff] border border-[#a0b8f1] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Можно пропустить:</strong> Рубрику можно не выбирать сейчас и добавить позже.
-          Однако наличие рубрики помогает студентам понять критерии оценивания.
+          <strong>{t("feature.assignmentCreate.rubric.skipTip")}</strong>{" "}
+          {t("feature.assignmentCreate.rubric.skipTipText")}
         </p>
       </div>
     </div>

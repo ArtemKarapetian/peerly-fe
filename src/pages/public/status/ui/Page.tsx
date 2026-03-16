@@ -7,7 +7,8 @@ import {
   Bell,
   Activity,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/ui/button.tsx";
@@ -29,16 +30,16 @@ type IncidentStatus = "investigating" | "monitoring" | "resolved";
 
 interface Incident {
   id: string;
-  title: string;
+  titleKey: string;
   status: IncidentStatus;
   severity: "low" | "medium" | "high";
   startTime: string;
   endTime?: string;
-  summary: string;
+  summaryKey: string;
   updates: {
     time: string;
     status: IncidentStatus;
-    message: string;
+    messageKey: string;
   }[];
 }
 
@@ -46,122 +47,118 @@ interface Incident {
 const MOCK_INCIDENTS: Incident[] = [
   {
     id: "inc-001",
-    title: "Все системы работают нормально",
+    titleKey: "page.status.incident1Title",
     status: "resolved",
     severity: "low",
     startTime: "2026-01-25T09:00:00Z",
     endTime: "2026-01-25T09:00:00Z",
-    summary: "Системы Peerly работают в штатном режиме.",
+    summaryKey: "page.status.incident1Summary",
     updates: [
       {
         time: "2026-01-25T09:00:00Z",
         status: "resolved",
-        message: "Все сервисы работают стабильно. Никаких проблем не обнаружено.",
+        messageKey: "page.status.incident1Update1",
       },
     ],
   },
   {
     id: "inc-002",
-    title: "Временное замедление загрузки файлов",
+    titleKey: "page.status.incident2Title",
     status: "resolved",
     severity: "medium",
     startTime: "2026-01-24T14:30:00Z",
     endTime: "2026-01-24T16:45:00Z",
-    summary: "Пользователи испытывали задержки при загрузке больших файлов submissions.",
+    summaryKey: "page.status.incident2Summary",
     updates: [
       {
         time: "2026-01-24T16:45:00Z",
         status: "resolved",
-        message:
-          "Проблема решена. Мы увеличили пропускную способность серверов хранения файлов. Все загрузки работают нормально.",
+        messageKey: "page.status.incident2Update1",
       },
       {
         time: "2026-01-24T15:20:00Z",
         status: "monitoring",
-        message:
-          "Мы применили временное исправление и наблюдаем за системой. Скорость загрузки улучшилась.",
+        messageKey: "page.status.incident2Update2",
       },
       {
         time: "2026-01-24T14:30:00Z",
         status: "investigating",
-        message: "Мы получили сообщения о медленной загрузке файлов и начали расследование.",
+        messageKey: "page.status.incident2Update3",
       },
     ],
   },
   {
     id: "inc-003",
-    title: "Проблемы с аутентификацией",
+    titleKey: "page.status.incident3Title",
     status: "resolved",
     severity: "high",
     startTime: "2026-01-23T08:15:00Z",
     endTime: "2026-01-23T09:30:00Z",
-    summary:
-      "Некоторые пользователи не могли войти в систему из-за проблем с сервером аутентификации.",
+    summaryKey: "page.status.incident3Summary",
     updates: [
       {
         time: "2026-01-23T09:30:00Z",
         status: "resolved",
-        message:
-          "Сервис аутентификации полностью восстановлен. Все пользователи могут войти в систему.",
+        messageKey: "page.status.incident3Update1",
       },
       {
         time: "2026-01-23T08:45:00Z",
         status: "monitoring",
-        message:
-          "Мы перезапустили сервис аутентификации. Большинство пользователей могут войти, продолжаем мониторинг.",
+        messageKey: "page.status.incident3Update2",
       },
       {
         time: "2026-01-23T08:15:00Z",
         status: "investigating",
-        message: "Мы расследуем проблемы с входом в систему, о которых сообщили пользователи.",
+        messageKey: "page.status.incident3Update3",
       },
     ],
   },
   {
     id: "inc-004",
-    title: "Плановое техническое обслуживание",
+    titleKey: "page.status.incident4Title",
     status: "resolved",
     severity: "low",
     startTime: "2026-01-20T02:00:00Z",
     endTime: "2026-01-20T04:00:00Z",
-    summary: "Запланированное обновление базы данных с кратковременным отключением сервиса.",
+    summaryKey: "page.status.incident4Summary",
     updates: [
       {
         time: "2026-01-20T04:00:00Z",
         status: "resolved",
-        message: "Техническое обслуживание завершено успешно. Все системы работают нормально.",
+        messageKey: "page.status.incident4Update1",
       },
       {
         time: "2026-01-20T02:00:00Z",
         status: "monitoring",
-        message: "Начато плановое техническое обслуживание. Сервис будет недоступен до 04:00 UTC.",
+        messageKey: "page.status.incident4Update2",
       },
     ],
   },
   {
     id: "inc-005",
-    title: "Ошибки при экспорте оценок",
+    titleKey: "page.status.incident5Title",
     status: "resolved",
     severity: "medium",
     startTime: "2026-01-18T11:20:00Z",
     endTime: "2026-01-18T13:10:00Z",
-    summary: "Преподаватели получали ошибки при попытке экспорта gradebook в CSV формат.",
+    summaryKey: "page.status.incident5Summary",
     updates: [
       {
         time: "2026-01-18T13:10:00Z",
         status: "resolved",
-        message: "Исправлена ошибка в модуле экспорта. Функция экспорта оценок работает корректно.",
+        messageKey: "page.status.incident5Update1",
       },
       {
         time: "2026-01-18T11:20:00Z",
         status: "investigating",
-        message: "Мы получили сообщения об ошибках экспорта и начали расследование.",
+        messageKey: "page.status.incident5Update2",
       },
     ],
   },
 ];
 
 export default function StatusPage() {
+  const { t } = useTranslation();
   const [systemStatus, setSystemStatus] = useState<SystemStatus>("operational");
   const [expandedIncidents, setExpandedIncidents] = useState<Set<string>>(new Set());
   const [email, setEmail] = useState("");
@@ -187,69 +184,78 @@ export default function StatusPage() {
   };
 
   // Get status config
-  const getStatusConfig = (status: SystemStatus) => {
-    switch (status) {
-      case "operational":
-        return {
-          label: "Все системы работают",
-          icon: CheckCircle2,
-          color: "text-green-600",
-          bg: "bg-green-50",
-          border: "border-green-200",
-          dotColor: "bg-green-500",
-        };
-      case "degraded":
-        return {
-          label: "Частичный сбой",
-          icon: AlertTriangle,
-          color: "text-yellow-600",
-          bg: "bg-yellow-50",
-          border: "border-yellow-200",
-          dotColor: "bg-yellow-500",
-        };
-      case "outage":
-        return {
-          label: "Проблемы с сервисом",
-          icon: AlertCircle,
-          color: "text-red-600",
-          bg: "bg-red-50",
-          border: "border-red-200",
-          dotColor: "bg-red-500",
-        };
-    }
-  };
+  const getStatusConfig = useMemo(
+    () => (status: SystemStatus) => {
+      switch (status) {
+        case "operational":
+          return {
+            label: t("page.status.operational"),
+            desc: t("page.status.operationalDesc"),
+            icon: CheckCircle2,
+            color: "text-green-600",
+            bg: "bg-green-50",
+            border: "border-green-200",
+            dotColor: "bg-green-500",
+          };
+        case "degraded":
+          return {
+            label: t("page.status.degraded"),
+            desc: t("page.status.degradedDesc"),
+            icon: AlertTriangle,
+            color: "text-yellow-600",
+            bg: "bg-yellow-50",
+            border: "border-yellow-200",
+            dotColor: "bg-yellow-500",
+          };
+        case "outage":
+          return {
+            label: t("page.status.outage"),
+            desc: t("page.status.outageDesc"),
+            icon: AlertCircle,
+            color: "text-red-600",
+            bg: "bg-red-50",
+            border: "border-red-200",
+            dotColor: "bg-red-500",
+          };
+      }
+    },
+    [t],
+  );
 
   // Get incident status config
-  const getIncidentStatusConfig = (status: IncidentStatus) => {
-    switch (status) {
-      case "investigating":
-        return {
-          label: "Расследуется",
-          color: "text-red-700",
-          bg: "bg-red-100",
-          border: "border-red-300",
-        };
-      case "monitoring":
-        return {
-          label: "Мониторинг",
-          color: "text-yellow-700",
-          bg: "bg-yellow-100",
-          border: "border-yellow-300",
-        };
-      case "resolved":
-        return {
-          label: "Решено",
-          color: "text-green-700",
-          bg: "bg-green-100",
-          border: "border-green-300",
-        };
-    }
-  };
+  const getIncidentStatusConfig = useMemo(
+    () => (status: IncidentStatus) => {
+      switch (status) {
+        case "investigating":
+          return {
+            label: t("page.status.investigating"),
+            color: "text-red-700",
+            bg: "bg-red-100",
+            border: "border-red-300",
+          };
+        case "monitoring":
+          return {
+            label: t("page.status.monitoring"),
+            color: "text-yellow-700",
+            bg: "bg-yellow-100",
+            border: "border-yellow-300",
+          };
+        case "resolved":
+          return {
+            label: t("page.status.resolved"),
+            color: "text-green-700",
+            bg: "bg-green-100",
+            border: "border-green-300",
+          };
+      }
+    },
+    [t],
+  );
 
   // Format time
   const formatTime = (isoString: string) => {
     const date = new Date(isoString);
-    return date.toLocaleString("ru-RU", {
+    return date.toLocaleString(undefined, {
       month: "short",
       day: "numeric",
       hour: "2-digit",
@@ -271,8 +277,8 @@ export default function StatusPage() {
     }
 
     // Demo: just show success toast
-    toast.success("Подписка оформлена", {
-      description: `Уведомления будут отправляться на ${email}`,
+    toast.success(t("page.status.subscribeSuccess"), {
+      description: t("page.status.subscribeSuccessDesc", { email }),
     });
     setEmail("");
     setEmailTouched(false);
@@ -292,19 +298,17 @@ export default function StatusPage() {
                 <Activity className="size-6 text-primary" />
               </div>
               <h1 className="text-[32px] tablet:text-[40px] font-medium text-foreground tracking-[-0.5px]">
-                Статус сервиса
+                {t("page.status.title")}
               </h1>
             </div>
-            <p className="text-[15px] text-muted-foreground">
-              Текущее состояние систем Peerly и история инцидентов
-            </p>
+            <p className="text-[15px] text-muted-foreground">{t("page.status.subtitle")}</p>
           </div>
 
           {/* System Status Card */}
           <div
             className={`${statusConfig.bg} ${statusConfig.border} border-2 rounded-xl p-6 mb-8 cursor-pointer transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)]`}
             onClick={cycleStatus}
-            title="Нажмите для переключения статуса (демо)"
+            title={t("page.status.clickToToggle")}
           >
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0">
@@ -315,16 +319,11 @@ export default function StatusPage() {
                   <div className={`size-3 ${statusConfig.dotColor} rounded-full animate-pulse`} />
                   <h2 className="text-[24px] font-medium text-foreground">{statusConfig.label}</h2>
                 </div>
-                <p className="text-[15px] text-muted-foreground">
-                  {systemStatus === "operational" && "Все сервисы работают в штатном режиме"}
-                  {systemStatus === "degraded" &&
-                    "Некоторые функции могут работать медленнее обычного"}
-                  {systemStatus === "outage" && "Мы работаем над восстановлением сервиса"}
-                </p>
+                <p className="text-[15px] text-muted-foreground">{statusConfig.desc}</p>
               </div>
               <div className="text-xs text-muted-foreground">
-                Обновлено:{" "}
-                {new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
+                {t("page.status.updatedAt")}{" "}
+                {new Date().toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
               </div>
             </div>
           </div>
@@ -337,10 +336,10 @@ export default function StatusPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-[20px] font-medium text-foreground mb-2">
-                  Подписаться на обновления
+                  {t("page.status.subscribeTitle")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground mb-4">
-                  Получайте уведомления о статусе сервиса и плановых работах
+                  {t("page.status.subscribeDesc")}
                 </p>
                 <div className="flex gap-3 max-w-[500px]">
                   <div className="flex-1">
@@ -350,7 +349,11 @@ export default function StatusPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       onBlur={() => setEmailTouched(true)}
                       placeholder="your.email@university.edu"
-                      error={emailTouched && !isEmailValid() && email ? "Некорректный email" : ""}
+                      error={
+                        emailTouched && !isEmailValid() && email
+                          ? t("page.status.invalidEmail")
+                          : ""
+                      }
                     />
                   </div>
                   <Button
@@ -358,27 +361,27 @@ export default function StatusPage() {
                     onClick={handleSubscribe}
                     disabled={!email || (emailTouched && !isEmailValid())}
                   >
-                    Подписаться
+                    {t("page.status.subscribe")}
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Demo: уведомления не отправляются
-                </p>
+                <p className="text-xs text-muted-foreground mt-2">{t("page.status.demoNote")}</p>
               </div>
             </div>
           </div>
 
           {/* Incidents Section */}
           <div className="mb-8">
-            <h2 className="text-[24px] font-medium text-foreground mb-4">История инцидентов</h2>
+            <h2 className="text-[24px] font-medium text-foreground mb-4">
+              {t("page.status.incidentsTitle")}
+            </h2>
             <p className="text-[15px] text-muted-foreground mb-6">
-              Последние 5 инцидентов и обновлений
+              {t("page.status.incidentsSubtitle")}
             </p>
 
             <div className="space-y-4">
               {MOCK_INCIDENTS.map((incident) => {
                 const isExpanded = expandedIncidents.has(incident.id);
-                const statusConfig = getIncidentStatusConfig(incident.status);
+                const incidentStatusConfig = getIncidentStatusConfig(incident.status);
 
                 return (
                   <div
@@ -393,12 +396,12 @@ export default function StatusPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <span
-                            className={`px-2.5 py-1 rounded-md text-xs font-medium ${statusConfig.bg} ${statusConfig.color} ${statusConfig.border} border`}
+                            className={`px-2.5 py-1 rounded-md text-xs font-medium ${incidentStatusConfig.bg} ${incidentStatusConfig.color} ${incidentStatusConfig.border} border`}
                           >
-                            {statusConfig.label}
+                            {incidentStatusConfig.label}
                           </span>
                           <h3 className="text-[17px] font-medium text-foreground">
-                            {incident.title}
+                            {t(incident.titleKey)}
                           </h3>
                         </div>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -412,7 +415,7 @@ export default function StatusPage() {
                         </div>
                         {!isExpanded && (
                           <p className="text-[14px] text-muted-foreground mt-2 line-clamp-1">
-                            {incident.summary}
+                            {t(incident.summaryKey)}
                           </p>
                         )}
                       </div>
@@ -428,12 +431,14 @@ export default function StatusPage() {
                     {/* Incident Details (Expanded) */}
                     {isExpanded && (
                       <div className="border-t-2 border-border px-5 py-4 bg-accent/20">
-                        <p className="text-[15px] text-muted-foreground mb-4">{incident.summary}</p>
+                        <p className="text-[15px] text-muted-foreground mb-4">
+                          {t(incident.summaryKey)}
+                        </p>
 
                         {/* Updates Timeline */}
                         <div className="space-y-4">
                           <h4 className="text-sm font-medium text-foreground uppercase tracking-wide">
-                            Обновления
+                            {t("page.status.updates")}
                           </h4>
                           <div className="space-y-3">
                             {incident.updates.map((update, index) => {
@@ -454,7 +459,9 @@ export default function StatusPage() {
                                         {updateStatusConfig.label}
                                       </span>
                                     </div>
-                                    <p className="text-[14px] text-foreground">{update.message}</p>
+                                    <p className="text-[14px] text-foreground">
+                                      {t(update.messageKey)}
+                                    </p>
                                   </div>
                                 </div>
                               );
@@ -472,7 +479,7 @@ export default function StatusPage() {
           {/* Footer Note */}
           <div className="bg-accent/50 border border-border rounded-lg px-4 py-3">
             <p className="text-sm text-muted-foreground">
-              По вопросам о статусе сервиса:{" "}
+              {t("page.status.footerNote")}{" "}
               <a href="mailto:support@peerly.edu" className="text-primary hover:underline">
                 support@peerly.edu
               </a>

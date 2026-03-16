@@ -11,6 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BarChart,
   Bar,
@@ -56,6 +57,7 @@ interface GradebookEntry {
 }
 
 export default function TeacherAnalyticsPage() {
+  const { t } = useTranslation();
   const { data, isLoading, error, refetch } = useAsync(async () => {
     const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
       courseRepo.getAll(),
@@ -73,13 +75,13 @@ export default function TeacherAnalyticsPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Отчёты и аналитика">
+      <AppShell title={t("teacher.analytics.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Отчёты и аналитика">
+      <AppShell title={t("teacher.analytics.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -224,8 +226,8 @@ export default function TeacherAnalyticsPage() {
   // Chart data
   const completionChartData = assignmentAnalytics.map((a) => ({
     name: a.title.length > 20 ? a.title.substring(0, 20) + "..." : a.title,
-    "Сдано работ": Math.round(a.completionRate),
-    "Завершено рецензий": Math.round(a.reviewCompletionRate),
+    [t("teacher.analytics.submissionsSubmitted")]: Math.round(a.completionRate),
+    [t("teacher.analytics.reviewsCompleted")]: Math.round(a.reviewCompletionRate),
   }));
 
   const scoreDistributionData = [
@@ -240,7 +242,11 @@ export default function TeacherAnalyticsPage() {
     const course = courses.find((c) => c.id === effectiveCourse);
 
     // Build CSV content
-    const headers = ["Студент", ...courseAssignments.map((a) => a.title), "Итоговая оценка"];
+    const headers = [
+      t("teacher.analytics.csvStudentHeader"),
+      ...courseAssignments.map((a) => a.title),
+      t("teacher.analytics.csvFinalGrade"),
+    ];
     const rows = gradebook.map((entry) => [
       entry.studentName,
       ...courseAssignments.map((a) => entry.scores[a.id]?.toString() || "-"),
@@ -261,7 +267,7 @@ export default function TeacherAnalyticsPage() {
   };
 
   const handleExportPDF = () => {
-    alert("PDF экспорт: Файл будет подготовлен и отправлен на вашу почту");
+    alert(t("teacher.analytics.pdfExportMsg"));
   };
 
   const selectedAnalytics =
@@ -270,13 +276,10 @@ export default function TeacherAnalyticsPage() {
       : assignmentAnalytics.find((a) => a.id === selectedAssignment);
 
   return (
-    <AppShell title="Отчёты и аналитика">
-      <Breadcrumbs items={[{ label: "Аналитика" }]} />
+    <AppShell title={t("teacher.analytics.title")}>
+      <Breadcrumbs items={[{ label: t("teacher.analytics.breadcrumb") }]} />
 
-      <PageHeader
-        title="Отчёты и аналитика"
-        subtitle="Анализ успеваемости и качества рецензирования"
-      />
+      <PageHeader title={t("teacher.analytics.title")} subtitle={t("teacher.analytics.subtitle")} />
 
       <div>
         {/* Course Selector */}
@@ -284,7 +287,7 @@ export default function TeacherAnalyticsPage() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Курс
+                {t("teacher.analytics.courseLabel")}
               </label>
               <select
                 value={effectiveCourse}
@@ -300,14 +303,14 @@ export default function TeacherAnalyticsPage() {
             </div>
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Задание
+                {t("teacher.analytics.assignmentLabel")}
               </label>
               <select
                 value={selectedAssignment}
                 onChange={(e) => setSelectedAssignment(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
-                <option value="all">Все задания (общая аналитика)</option>
+                <option value="all">{t("teacher.analytics.allAssignments")}</option>
                 {courseAssignments.map((assignment) => (
                   <option key={assignment.id} value={assignment.id}>
                     {assignment.title}
@@ -323,7 +326,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <FileText className="w-4 h-4 text-[#5b8def]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Заданий</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.analytics.assignmentsCount")}
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {overallAnalytics.totalAssignments}
@@ -333,7 +338,7 @@ export default function TeacherAnalyticsPage() {
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-[#4caf50]" />
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">
-                Сдача работ
+                {t("teacher.analytics.submissionRate")}
               </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
@@ -343,7 +348,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-[#5b8def]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Ср. оценка</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.analytics.avgScore")}
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {overallAnalytics.avgScore.toFixed(1)}/5
@@ -352,7 +359,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-[#5b8def]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Студентов</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.analytics.studentsCount")}
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">{users.length}</p>
           </div>
@@ -364,7 +373,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Завершённость по заданиям</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("teacher.analytics.completionByAssignment")}
+              </h2>
             </div>
             {completionChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -385,13 +396,21 @@ export default function TeacherAnalyticsPage() {
                       borderRadius: "8px",
                     }}
                   />
-                  <Bar dataKey="Сдано работ" fill="#5b8def" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="Завершено рецензий" fill="#4caf50" radius={[8, 8, 0, 0]} />
+                  <Bar
+                    dataKey={t("teacher.analytics.submissionsSubmitted")}
+                    fill="#5b8def"
+                    radius={[8, 8, 0, 0]}
+                  />
+                  <Bar
+                    dataKey={t("teacher.analytics.reviewsCompleted")}
+                    fill="#4caf50"
+                    radius={[8, 8, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
               <div className="h-[300px] flex items-center justify-center text-[#767692]">
-                Нет данных для отображения
+                {t("teacher.analytics.noDataToDisplay")}
               </div>
             )}
           </div>
@@ -400,7 +419,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Распределение оценок</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("teacher.analytics.scoreDistribution")}
+              </h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -427,36 +448,46 @@ export default function TeacherAnalyticsPage() {
         <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-[#5b8def]" />
-            <h2 className="text-[18px] font-medium text-[#21214f]">Индикаторы качества рецензий</h2>
+            <h2 className="text-[18px] font-medium text-[#21214f]">
+              {t("teacher.analytics.reviewQualityIndicators")}
+            </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
-              <p className="text-[13px] text-[#767692] mb-2">Средняя длина комментария</p>
+              <p className="text-[13px] text-[#767692] mb-2">
+                {t("teacher.analytics.avgCommentLength")}
+              </p>
               <p className="text-[28px] font-medium text-[#21214f]">
                 {Math.round(overallAnalytics.avgCommentLength)}
               </p>
-              <p className="text-[12px] text-[#767692]">символов</p>
+              <p className="text-[12px] text-[#767692]">{t("teacher.analytics.characters")}</p>
             </div>
             <div>
-              <p className="text-[13px] text-[#767692] mb-2">Процент помеченных рецензий</p>
+              <p className="text-[13px] text-[#767692] mb-2">
+                {t("teacher.analytics.flaggedReviewPercent")}
+              </p>
               <p className="text-[28px] font-medium text-[#ff9800]">
                 {overallAnalytics.avgFlaggedRate.toFixed(1)}%
               </p>
-              <p className="text-[12px] text-[#767692]">требуют внимания</p>
+              <p className="text-[12px] text-[#767692]">{t("teacher.analytics.needAttention")}</p>
             </div>
             <div>
-              <p className="text-[13px] text-[#767692] mb-2">Завершённость рецензий</p>
+              <p className="text-[13px] text-[#767692] mb-2">
+                {t("teacher.analytics.reviewCompletion")}
+              </p>
               <p className="text-[28px] font-medium text-[#4caf50]">
                 {Math.round(overallAnalytics.avgReviewCompletionRate)}%
               </p>
-              <p className="text-[12px] text-[#767692]">от ожидаемых</p>
+              <p className="text-[12px] text-[#767692]">{t("teacher.analytics.ofExpected")}</p>
             </div>
             <div>
-              <p className="text-[13px] text-[#767692] mb-2">Средний балл</p>
+              <p className="text-[13px] text-[#767692] mb-2">
+                {t("teacher.analytics.averageScoreLabel")}
+              </p>
               <p className="text-[28px] font-medium text-[#5b8def]">
                 {overallAnalytics.avgScore.toFixed(2)}
               </p>
-              <p className="text-[12px] text-[#767692]">из 5.00</p>
+              <p className="text-[12px] text-[#767692]">{t("teacher.analytics.outOf")}</p>
             </div>
           </div>
         </div>
@@ -467,7 +498,7 @@ export default function TeacherAnalyticsPage() {
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-[#5b8def]" />
               <h2 className="text-[18px] font-medium text-[#21214f]">
-                Сводка по плагинам: {selectedAnalytics.title}
+                {t("teacher.analytics.pluginSummaryFor", { name: selectedAnalytics.title })}
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
@@ -475,13 +506,17 @@ export default function TeacherAnalyticsPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Shield className="w-4 h-4 text-[#767692]" />
-                  <h3 className="text-[15px] font-medium text-[#21214f]">Проверка плагиата</h3>
+                  <h3 className="text-[15px] font-medium text-[#21214f]">
+                    {t("teacher.analytics.plagiarismCheck")}
+                  </h3>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between p-3 bg-[#fff5f5] border border-[#d4183d] rounded-[8px]">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-[#d4183d]" />
-                      <span className="text-[14px] text-[#21214f]">Высокий риск</span>
+                      <span className="text-[14px] text-[#21214f]">
+                        {t("teacher.analytics.highRisk")}
+                      </span>
                     </div>
                     <span className="text-[16px] font-medium text-[#d4183d]">
                       {selectedAnalytics.plagiarism.high}
@@ -490,7 +525,9 @@ export default function TeacherAnalyticsPage() {
                   <div className="flex items-center justify-between p-3 bg-[#fff4e5] border border-[#ff9800] rounded-[8px]">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-[#ff9800]" />
-                      <span className="text-[14px] text-[#21214f]">Средний риск</span>
+                      <span className="text-[14px] text-[#21214f]">
+                        {t("teacher.analytics.mediumRisk")}
+                      </span>
                     </div>
                     <span className="text-[16px] font-medium text-[#ff9800]">
                       {selectedAnalytics.plagiarism.medium}
@@ -499,7 +536,9 @@ export default function TeacherAnalyticsPage() {
                   <div className="flex items-center justify-between p-3 bg-[#e8f5e9] border border-[#4caf50] rounded-[8px]">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-                      <span className="text-[14px] text-[#21214f]">Низкий риск</span>
+                      <span className="text-[14px] text-[#21214f]">
+                        {t("teacher.analytics.lowRisk")}
+                      </span>
                     </div>
                     <span className="text-[16px] font-medium text-[#4caf50]">
                       {selectedAnalytics.plagiarism.low}
@@ -512,13 +551,17 @@ export default function TeacherAnalyticsPage() {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Code className="w-4 h-4 text-[#767692]" />
-                  <h3 className="text-[15px] font-medium text-[#21214f]">Проверка кода (линтер)</h3>
+                  <h3 className="text-[15px] font-medium text-[#21214f]">
+                    {t("teacher.analytics.codeCheck")}
+                  </h3>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between p-3 bg-[#fff5f5] border border-[#d4183d] rounded-[8px]">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-[#d4183d]" />
-                      <span className="text-[14px] text-[#21214f]">Ошибки</span>
+                      <span className="text-[14px] text-[#21214f]">
+                        {t("teacher.analytics.errors")}
+                      </span>
                     </div>
                     <span className="text-[16px] font-medium text-[#d4183d]">
                       {selectedAnalytics.linter.failed}
@@ -527,7 +570,9 @@ export default function TeacherAnalyticsPage() {
                   <div className="flex items-center justify-between p-3 bg-[#fff4e5] border border-[#ff9800] rounded-[8px]">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-[#ff9800]" />
-                      <span className="text-[14px] text-[#21214f]">Предупреждения</span>
+                      <span className="text-[14px] text-[#21214f]">
+                        {t("teacher.analytics.warnings")}
+                      </span>
                     </div>
                     <span className="text-[16px] font-medium text-[#ff9800]">
                       {selectedAnalytics.linter.warning}
@@ -536,7 +581,9 @@ export default function TeacherAnalyticsPage() {
                   <div className="flex items-center justify-between p-3 bg-[#e8f5e9] border border-[#4caf50] rounded-[8px]">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-                      <span className="text-[14px] text-[#21214f]">Без ошибок</span>
+                      <span className="text-[14px] text-[#21214f]">
+                        {t("teacher.analytics.noErrors")}
+                      </span>
                     </div>
                     <span className="text-[16px] font-medium text-[#4caf50]">
                       {selectedAnalytics.linter.passed}
@@ -550,7 +597,9 @@ export default function TeacherAnalyticsPage() {
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Сводка по плагинам</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("teacher.analytics.pluginSummary")}
+              </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {assignmentAnalytics.slice(0, 4).map((analytics) => (
@@ -558,13 +607,13 @@ export default function TeacherAnalyticsPage() {
                   <h3 className="text-[14px] font-medium text-[#21214f] mb-3">{analytics.title}</h3>
                   <div className="grid grid-cols-2 gap-3 text-[12px]">
                     <div>
-                      <p className="text-[#767692] mb-1">Плагиат (высокий)</p>
+                      <p className="text-[#767692] mb-1">{t("teacher.analytics.plagiarismHigh")}</p>
                       <p className="text-[16px] font-medium text-[#d4183d]">
                         {analytics.plagiarism.high}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[#767692] mb-1">Линтер (ошибки)</p>
+                      <p className="text-[#767692] mb-1">{t("teacher.analytics.linterErrors")}</p>
                       <p className="text-[16px] font-medium text-[#d4183d]">
                         {analytics.linter.failed}
                       </p>
@@ -581,7 +630,9 @@ export default function TeacherAnalyticsPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Журнал оценок</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("teacher.analytics.gradebook")}
+              </h2>
             </div>
             <div className="flex gap-2">
               <button
@@ -589,14 +640,14 @@ export default function TeacherAnalyticsPage() {
                 className="flex items-center gap-2 px-4 py-2 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors text-[14px]"
               >
                 <Download className="w-4 h-4" />
-                Экспорт CSV
+                {t("teacher.analytics.exportCSV")}
               </button>
               <button
                 onClick={handleExportPDF}
                 className="flex items-center gap-2 px-4 py-2 border-2 border-[#5b8def] text-[#5b8def] rounded-[12px] hover:bg-[#e9f5ff] transition-colors text-[14px]"
               >
                 <Download className="w-4 h-4" />
-                Экспорт PDF
+                {t("teacher.analytics.exportPDF")}
               </button>
             </div>
           </div>
@@ -607,7 +658,7 @@ export default function TeacherAnalyticsPage() {
               <thead>
                 <tr className="border-b-2 border-[#e6e8ee]">
                   <th className="text-left p-3 text-[13px] font-medium text-[#767692] uppercase tracking-wide sticky left-0 bg-white">
-                    Студент
+                    {t("teacher.analytics.studentHeader")}
                   </th>
                   {courseAssignments.map((assignment) => (
                     <th
@@ -621,7 +672,7 @@ export default function TeacherAnalyticsPage() {
                     </th>
                   ))}
                   <th className="text-center p-3 text-[13px] font-medium text-[#767692] uppercase tracking-wide bg-[#f9f9f9] min-w-[100px]">
-                    Итоговая
+                    {t("teacher.analytics.finalGrade")}
                   </th>
                 </tr>
               </thead>
@@ -683,10 +734,10 @@ export default function TeacherAnalyticsPage() {
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
               <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-                Нет данных для журнала
+                {t("teacher.analytics.noGradebookData")}
               </h3>
               <p className="text-[14px] text-[#767692]">
-                Выберите курс с заданиями и работами студентов
+                {t("teacher.analytics.selectCourseWithData")}
               </p>
             </div>
           )}

@@ -1,5 +1,6 @@
 import { Send, CheckCircle, RotateCcw, AlertTriangle } from "lucide-react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { debounce } from "@/shared/lib/debounce.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -33,6 +34,7 @@ interface ReviewPageProps {
 }
 
 export default function ReviewPage({ reviewId }: ReviewPageProps) {
+  const { t } = useTranslation();
   const { getReview } = useReviewStore();
   const review = getReview(reviewId);
 
@@ -250,20 +252,20 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
   // If review not found, show error
   if (!review) {
     return (
-      <AppShell title="Рецензия не найдена">
+      <AppShell title={t("page.reviewFill.notFoundTitle")}>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="bg-[#f9f9f9] rounded-[20px] p-8 max-w-[480px] text-center">
             <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              Рецензия не найдена
+              {t("page.reviewFill.notFoundTitle")}
             </h2>
             <p className="text-[16px] text-[#767692] leading-[1.5] mb-6">
-              Рецензия, которую вы ищете, не существует или была удалена.
+              {t("page.reviewFill.notFoundDesc")}
             </p>
             <button
               onClick={() => (window.location.hash = "/reviews")}
               className="px-6 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] text-[15px] font-medium transition-colors"
             >
-              Вернуться к рецензиям
+              {t("page.reviewFill.backToReviews")}
             </button>
           </div>
         </div>
@@ -278,11 +280,11 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
     requiredCriteria.forEach((criterion) => {
       const score = scores.find((s) => s.criterionId === criterion.id);
       if (!score || score.score === null) {
-        newErrors[criterion.id] = "Обязательное поле";
+        newErrors[criterion.id] = t("page.reviewFill.requiredField");
       }
 
       if (criterion.commentRequired && (!score?.comment || score.comment.trim() === "")) {
-        newErrors[criterion.id] = "Комментарий обязателен";
+        newErrors[criterion.id] = t("page.reviewFill.commentRequired");
       }
 
       if (
@@ -290,12 +292,14 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
         score?.comment &&
         score.comment.length < criterion.minCommentLength
       ) {
-        newErrors[criterion.id] = `Минимум ${criterion.minCommentLength} символов`;
+        newErrors[criterion.id] = t("page.reviewFill.minChars", {
+          count: criterion.minCommentLength,
+        });
       }
     });
 
     if (overallComment.length < minOverallCommentLength) {
-      newErrors["overall"] = `Минимум ${minOverallCommentLength} символов`;
+      newErrors["overall"] = t("page.reviewFill.minChars", { count: minOverallCommentLength });
     }
 
     setErrors(newErrors);
@@ -361,7 +365,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
 
   // Handlers
   const handleDownloadFile = (fileId: string) => {
-    alert(`Скачивание файла ${fileId}`);
+    alert(t("page.reviewFill.downloadFile", { fileId }));
   };
 
   const handleOpenInNewWindow = () => {
@@ -369,14 +373,14 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
   };
 
   return (
-    <AppShell title="Рецензия">
+    <AppShell title={t("page.reviewFill.title")}>
       <div className="flex items-center justify-between gap-4 mb-4">
         <Breadcrumbs
           items={[
-            { label: "Курсы", href: "/courses" },
+            { label: t("page.reviewFill.breadcrumbCourses"), href: "/courses" },
             { label: courseName, href: `/course/${courseId}` },
             { label: taskTitle, href: `/task/${taskId}` },
-            { label: "Рецензия" },
+            { label: t("page.reviewFill.breadcrumbReview") },
           ]}
         />
 
@@ -387,10 +391,10 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
             <button
               onClick={handleResetDraft}
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] text-[12px] font-medium text-[#767692] hover:text-[#21214f] hover:bg-[#f9f9f9] transition-colors"
-              title="Сбросить черновик"
+              title={t("page.reviewFill.resetDraft")}
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span className="hidden tablet:inline">Сбросить</span>
+              <span className="hidden tablet:inline">{t("page.reviewFill.resetLabel")}</span>
             </button>
           )}
         </div>
@@ -402,11 +406,9 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
           <AlertTriangle className="w-5 h-5 text-[#d4183d] shrink-0 mt-0.5" />
           <div>
             <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
-              Не удалось сохранить локально
+              {t("page.reviewFill.saveErrorTitle")}
             </h3>
-            <p className="text-[14px] text-[#4b4963]">
-              Проверьте настройки браузера. Ваши изменения могут быть не сохранены.
-            </p>
+            <p className="text-[14px] text-[#4b4963]">{t("page.reviewFill.saveErrorDesc")}</p>
           </div>
         </div>
       )}
@@ -416,10 +418,10 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
         <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6 flex items-start gap-3">
           <CheckCircle className="w-5 h-5 text-[#5b8def] shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Черновик восстановлен</h3>
-            <p className="text-[14px] text-[#4b4963]">
-              Продолжайте работу с того места, где остановились.
-            </p>
+            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              {t("page.reviewFill.draftRestoredTitle")}
+            </h3>
+            <p className="text-[14px] text-[#4b4963]">{t("page.reviewFill.draftRestoredDesc")}</p>
           </div>
         </div>
       )}
@@ -429,10 +431,10 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
         <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6 flex items-start gap-3">
           <CheckCircle className="w-5 h-5 text-[#4caf50] shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Рецензия отправлена</h3>
-            <p className="text-[14px] text-[#4b4963]">
-              Ваша рецензия успешно отправлена. Автор работы получит уведомление.
-            </p>
+            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              {t("page.reviewFill.submittedTitle")}
+            </h3>
+            <p className="text-[14px] text-[#4b4963]">{t("page.reviewFill.submittedDesc")}</p>
           </div>
         </div>
       )}
@@ -461,7 +463,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
 
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-4 desktop:p-6">
             <h3 className="text-[18px] desktop:text-[20px] font-medium text-[#21214f] tracking-[-0.5px] mb-4">
-              Общий комментарий
+              {t("page.reviewFill.overallComment")}
               <span className="text-[#d4183d] ml-1">*</span>
             </h3>
             <textarea
@@ -478,7 +480,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
               }}
               disabled={isSubmitted}
               rows={6}
-              placeholder="Напишите общий комментарий о работе. Укажите сильные стороны и области для улучшения."
+              placeholder={t("page.reviewFill.overallCommentPlaceholder")}
               className={`
                 w-full px-4 py-3 border-2 rounded-[12px] text-[14px] text-[#21214f] 
                 placeholder:text-[#b4b4b4] transition-colors resize-none
@@ -496,7 +498,8 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
                       : "text-[#767692]"
                 }`}
               >
-                {overallComment.length} / {minOverallCommentLength} символов
+                {overallComment.length} / {minOverallCommentLength}{" "}
+                {t("page.reviewFill.characters")}
               </p>
               {errors["overall"] && (
                 <p className="text-[13px] text-[#d4183d]">{errors["overall"]}</p>
@@ -513,7 +516,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
                 className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 <Send className="w-4 h-4" />
-                <span>Отправить рецензию</span>
+                <span>{t("page.reviewFill.submitReview")}</span>
               </button>
             </div>
           )}
@@ -526,11 +529,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
             totalCriteria={requiredCriteria.length}
             overallCommentLength={overallComment.length}
             minOverallCommentLength={minOverallCommentLength}
-            tips={[
-              "Будьте конструктивны в критике",
-              "Укажите конкретные примеры",
-              "Предложите способы улучшения",
-            ]}
+            tips={[t("page.reviewFill.tip1"), t("page.reviewFill.tip2"), t("page.reviewFill.tip3")]}
           />
 
           {!isSubmitted && (
@@ -541,7 +540,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
                 className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 <Send className="w-4 h-4" />
-                <span>Отправить рецензию</span>
+                <span>{t("page.reviewFill.submitReview")}</span>
               </button>
             </div>
           )}
@@ -555,11 +554,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
           totalCriteria={requiredCriteria.length}
           overallCommentLength={overallComment.length}
           minOverallCommentLength={minOverallCommentLength}
-          tips={[
-            "Будьте конструктивны в критике",
-            "Укажите конкретные примеры",
-            "Предложите способы улучшения",
-          ]}
+          tips={[t("page.reviewFill.tip1"), t("page.reviewFill.tip2"), t("page.reviewFill.tip3")]}
         />
       </div>
 
@@ -568,24 +563,23 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-[20px] p-6 max-w-md w-full">
             <h3 className="text-[20px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              Отправить рецензию?
+              {t("page.reviewFill.confirmTitle")}
             </h3>
             <p className="text-[15px] text-[#767692] leading-[1.5] mb-6">
-              После отправки рецензию нельзя будет изменить. Убедитесь, что вы проверили все
-              критерии и оставили полезные комментарии.
+              {t("page.reviewFill.confirmDesc")}
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowConfirmModal(false)}
                 className="flex-1 px-4 py-3 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[12px] text-[15px] font-medium transition-colors"
               >
-                Отмена
+                {t("page.reviewFill.confirmCancel")}
               </button>
               <button
                 onClick={() => void confirmSubmit()}
                 className="flex-1 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] text-[15px] font-medium transition-colors"
               >
-                Отправить
+                {t("page.reviewFill.confirmSubmit")}
               </button>
             </div>
           </div>
@@ -597,23 +591,23 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-[20px] p-6 max-w-md w-full">
             <h3 className="text-[20px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              Сбросить черновик?
+              {t("page.reviewFill.resetTitle")}
             </h3>
             <p className="text-[15px] text-[#767692] leading-[1.5] mb-6">
-              Все несохранённые изменения будут удалены. Это действие нельзя отменить.
+              {t("page.reviewFill.resetDesc")}
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowResetModal(false)}
                 className="flex-1 px-4 py-3 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[12px] text-[15px] font-medium transition-colors"
               >
-                Отмена
+                {t("page.reviewFill.resetCancel")}
               </button>
               <button
                 onClick={confirmResetDraft}
                 className="flex-1 px-4 py-3 bg-[#d4183d] hover:bg-[#c01030] text-white rounded-[12px] text-[15px] font-medium transition-colors"
               >
-                Сбросить
+                {t("page.reviewFill.resetConfirm")}
               </button>
             </div>
           </div>
@@ -624,7 +618,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
       {showSuccessToast && (
         <div className="fixed top-20 right-4 bg-[#4caf50] text-white rounded-[12px] px-4 py-3 shadow-lg z-50 flex items-center gap-2 animate-slide-in">
           <CheckCircle className="w-5 h-5" />
-          <span className="text-[14px] font-medium">Рецензия отправлена!</span>
+          <span className="text-[14px] font-medium">{t("page.reviewFill.successToast")}</span>
         </div>
       )}
     </AppShell>

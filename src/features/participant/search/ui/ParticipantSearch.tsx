@@ -1,7 +1,8 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
- * ParticipantSearch - Поиск участников
+ * ParticipantSearch - Participant search field
  */
 
 interface ParticipantSearchProps {
@@ -10,11 +11,9 @@ interface ParticipantSearchProps {
   placeholder?: string;
 }
 
-export function ParticipantSearch({
-  value,
-  onChange,
-  placeholder = "Поиск участников...",
-}: ParticipantSearchProps) {
+export function ParticipantSearch({ value, onChange, placeholder }: ParticipantSearchProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="relative">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
@@ -22,7 +21,7 @@ export function ParticipantSearch({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t("feature.participantSearch.placeholder")}
         className="
           w-full pl-9 pr-4 py-2.5
           text-[14px] leading-[1.4] text-[#21214f]

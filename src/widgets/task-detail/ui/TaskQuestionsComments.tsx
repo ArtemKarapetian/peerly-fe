@@ -1,19 +1,21 @@
 import { MessageCircle, Send } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function TaskQuestionsComments() {
+  const { t } = useTranslation();
   const [comment, setComment] = useState("");
 
   const comments = [
     {
-      author: "Преподаватель",
-      text: "Обратите внимание на критерии оценивания",
-      date: "18 января, 15:30",
+      author: t("widget.taskQuestionsComments.teacher"),
+      text: t("widget.taskQuestionsComments.mockComment1"),
+      date: t("widget.taskQuestionsComments.mockDate1"),
     },
     {
-      author: "Студент",
-      text: "Можно ли использовать дополнительные источники?",
-      date: "17 января, 10:20",
+      author: t("widget.taskQuestionsComments.student"),
+      text: t("widget.taskQuestionsComments.mockComment2"),
+      date: t("widget.taskQuestionsComments.mockDate2"),
     },
   ];
 
@@ -22,7 +24,7 @@ export function TaskQuestionsComments() {
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="size-5 text-[#21214f]" />
         <h2 className="text-[18px] desktop:text-[20px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.72px] text-[#21214f]">
-          Комментарии и вопросы
+          {t("widget.taskQuestionsComments.title")}
         </h2>
       </div>
 
@@ -50,13 +52,13 @@ export function TaskQuestionsComments() {
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="Задайте вопрос преподавателю..."
+          placeholder={t("widget.taskQuestionsComments.placeholder")}
           rows={3}
           className="w-full px-3 py-2 bg-white border border-[#c7c7c7] rounded-[8px] text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#21214f] placeholder:text-[#767692] focus:outline-none focus:border-[#b7bdff] resize-none"
         />
         <button className="flex items-center justify-center gap-2 bg-[#d2def8] hover:bg-[#b7bdff] transition-colors px-4 py-2 rounded-[8px] text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#21214f]">
           <Send className="size-4" />
-          Отправить
+          {t("widget.taskQuestionsComments.send")}
         </button>
       </div>
     </div>

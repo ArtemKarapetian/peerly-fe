@@ -11,6 +11,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { JSX, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -54,6 +55,7 @@ interface FlaggedReview {
 }
 
 export default function TeacherModerationPage() {
+  const { t } = useTranslation();
   const { data, isLoading, error, refetch } = useAsync(async () => {
     const [users, assignments, reviews, submissions] = await Promise.all([
       userRepo.getAll(),
@@ -66,13 +68,13 @@ export default function TeacherModerationPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Модерация рецензий">
+      <AppShell title={t("teacher.moderation.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Модерация рецензий">
+      <AppShell title={t("teacher.moderation.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -90,6 +92,7 @@ function ModerationContent({
     submissions: Awaited<ReturnType<typeof workRepo.getAll>>;
   };
 }) {
+  const { t } = useTranslation();
   const { users, assignments, reviews, submissions } = data;
 
   // Generate demo flagged reviews
@@ -97,24 +100,24 @@ function ModerationContent({
     const flagTypes: FlagType[] = ["toxicity", "too-short", "spam", "collusion"];
     const flagReasons: Record<FlagType, string[]> = {
       toxicity: [
-        "Обнаружены оскорбительные выражения",
-        "Неконструктивная критика с личными нападками",
-        "Использование недопустимой лексики",
+        t("teacher.moderation.flagReasonToxicity1"),
+        t("teacher.moderation.flagReasonToxicity2"),
+        t("teacher.moderation.flagReasonToxicity3"),
       ],
       "too-short": [
-        "Рецензия содержит менее 50 слов",
-        "Недостаточно детальная обратная связь",
-        "Отсутствует аргументация оценок",
+        t("teacher.moderation.flagReasonShort1"),
+        t("teacher.moderation.flagReasonShort2"),
+        t("teacher.moderation.flagReasonShort3"),
       ],
       spam: [
-        "Повторяющийся текст без смысла",
-        "Случайный набор символов",
-        "Копипаста из другой рецензии",
+        t("teacher.moderation.flagReasonSpam1"),
+        t("teacher.moderation.flagReasonSpam2"),
+        t("teacher.moderation.flagReasonSpam3"),
       ],
       collusion: [
-        "Подозрительно высокие оценки без обоснования",
-        "Идентичные формулировки в нескольких рецензиях",
-        "Паттерн взаимного завышения оценок",
+        t("teacher.moderation.flagReasonCollusion1"),
+        t("teacher.moderation.flagReasonCollusion2"),
+        t("teacher.moderation.flagReasonCollusion3"),
       ],
     };
 
@@ -134,7 +137,7 @@ function ModerationContent({
         revieweeName: reviewee?.name || "Unknown Student",
         flagType,
         flagReason: flagReasons[flagType][Math.floor(Math.random() * flagReasons[flagType].length)],
-        flaggedBy: "Автоматическая система",
+        flaggedBy: t("teacher.moderation.flaggedBySystem"),
         flaggedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
         scores: review.scores,
         comment: review.comment,
@@ -152,10 +155,10 @@ function ModerationContent({
 
   const getFlagTypeLabel = (type: FlagType): string => {
     const labels: Record<FlagType, string> = {
-      toxicity: "Токсичность",
-      "too-short": "Слишком коротко",
-      spam: "Спам",
-      collusion: "Подозрение на сговор",
+      toxicity: t("teacher.moderation.toxicity"),
+      "too-short": t("teacher.moderation.tooShort"),
+      spam: t("teacher.moderation.spam"),
+      collusion: t("teacher.moderation.collusion"),
     };
     return labels[type];
   };
@@ -223,11 +226,11 @@ function ModerationContent({
       prev.map((r) => (r.id === id ? { ...r, status: "dismissed" as const } : r)),
     );
     setExpandedReview(null);
-    alert("Флаг снят");
+    alert(t("teacher.moderation.flagDismissed"));
   };
 
   const handleRequestRewrite = (id: string) => {
-    alert(`Запрос на переписывание отправлен для рецензии ${id}`);
+    alert(t("teacher.moderation.rewriteRequested", { id }));
     setExpandedReview(null);
   };
 
@@ -236,11 +239,11 @@ function ModerationContent({
       prev.map((r) => (r.id === id ? { ...r, status: "hidden" as const } : r)),
     );
     setExpandedReview(null);
-    alert("Рецензия скрыта");
+    alert(t("teacher.moderation.reviewHidden"));
   };
 
   const handleReassignReview = (id: string) => {
-    alert(`Открыть модальное окно переназначения для ${id}`);
+    alert(t("teacher.moderation.reassignModal", { id }));
   };
 
   const handleBulkDismiss = () => {
@@ -250,7 +253,7 @@ function ModerationContent({
       prev.map((r) => (selectedReviews.has(r.id) ? { ...r, status: "dismissed" as const } : r)),
     );
     setSelectedReviews(new Set());
-    alert(`Снято флагов: ${selectedReviews.size}`);
+    alert(t("teacher.moderation.flagsDismissedCount", { count: selectedReviews.size }));
   };
 
   const toggleExpandReview = (id: string) => {
@@ -258,12 +261,12 @@ function ModerationContent({
   };
 
   return (
-    <AppShell title="Модерация рецензий">
-      <Breadcrumbs items={[{ label: "Модерация" }]} />
+    <AppShell title={t("teacher.moderation.title")}>
+      <Breadcrumbs items={[{ label: t("teacher.moderation.breadcrumb") }]} />
 
       <PageHeader
-        title="Модерация рецензий"
-        subtitle="Проверка помеченных рецензий и контроль качества"
+        title={t("teacher.moderation.title")}
+        subtitle={t("teacher.moderation.subtitle")}
       />
 
       <div>
@@ -273,7 +276,7 @@ function ModerationContent({
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-4 h-4 text-[#d4183d]" />
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">
-                Токсичность
+                {t("teacher.moderation.toxicityLabel")}
               </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
@@ -286,7 +289,9 @@ function ModerationContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <MessageSquare className="w-4 h-4 text-[#ff9800]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Коротко</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.moderation.tooShortLabel")}
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {
@@ -298,7 +303,9 @@ function ModerationContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <Trash2 className="w-4 h-4 text-[#767692]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Спам</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.moderation.spamLabel")}
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {flaggedReviews.filter((r) => r.flagType === "spam" && r.status === "pending").length}
@@ -307,7 +314,9 @@ function ModerationContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <GitBranch className="w-4 h-4 text-[#f59e0b]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Сговор</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.moderation.collusionLabel")}
+              </span>
             </div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {
@@ -330,10 +339,11 @@ function ModerationContent({
                 className="px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
                 <option value="all">
-                  Все типы ({flaggedReviews.filter((r) => r.status === "pending").length})
+                  {t("teacher.moderation.allTypesFilter")} (
+                  {flaggedReviews.filter((r) => r.status === "pending").length})
                 </option>
                 <option value="toxicity">
-                  Токсичность (
+                  {t("teacher.moderation.toxicityFilter")} (
                   {
                     flaggedReviews.filter(
                       (r) => r.flagType === "toxicity" && r.status === "pending",
@@ -342,7 +352,7 @@ function ModerationContent({
                   )
                 </option>
                 <option value="too-short">
-                  Слишком коротко (
+                  {t("teacher.moderation.tooShortFilter")} (
                   {
                     flaggedReviews.filter(
                       (r) => r.flagType === "too-short" && r.status === "pending",
@@ -351,7 +361,7 @@ function ModerationContent({
                   )
                 </option>
                 <option value="spam">
-                  Спам (
+                  {t("teacher.moderation.spamFilter")} (
                   {
                     flaggedReviews.filter((r) => r.flagType === "spam" && r.status === "pending")
                       .length
@@ -359,7 +369,7 @@ function ModerationContent({
                   )
                 </option>
                 <option value="collusion">
-                  Подозрение на сговор (
+                  {t("teacher.moderation.collusionFilter")} (
                   {
                     flaggedReviews.filter(
                       (r) => r.flagType === "collusion" && r.status === "pending",
@@ -374,14 +384,15 @@ function ModerationContent({
             {selectedReviews.size > 0 && (
               <div className="flex items-center gap-3">
                 <span className="text-[14px] text-[#767692]">
-                  Выбрано: <strong className="text-[#21214f]">{selectedReviews.size}</strong>
+                  {t("teacher.moderation.selected")}{" "}
+                  <strong className="text-[#21214f]">{selectedReviews.size}</strong>
                 </span>
                 <button
                   onClick={handleBulkDismiss}
                   className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px]"
                 >
                   <CheckCircle className="w-4 h-4" />
-                  Снять все флаги
+                  {t("teacher.moderation.removeAllFlags")}
                 </button>
               </div>
             )}
@@ -404,7 +415,7 @@ function ModerationContent({
                     className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-0"
                   />
                   <span className="text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Выбрать все ({filteredReviews.length})
+                    {t("teacher.moderation.selectAllLabel")} ({filteredReviews.length})
                   </span>
                 </label>
               </div>
@@ -434,18 +445,18 @@ function ModerationContent({
                               <div className="flex items-center gap-2 mb-2">
                                 {getFlagTypeBadge(flaggedReview.flagType)}
                                 <span className="text-[13px] text-[#767692]">
-                                  {flaggedReview.flaggedAt.toLocaleDateString("ru-RU")}
+                                  {flaggedReview.flaggedAt.toLocaleDateString()}
                                 </span>
                               </div>
                               <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
                                 {flaggedReview.assignmentTitle}
                               </h3>
                               <p className="text-[14px] text-[#767692]">
-                                Рецензент:{" "}
+                                {t("teacher.moderation.reviewer")}{" "}
                                 <strong className="text-[#21214f]">
                                   {flaggedReview.reviewerName}
                                 </strong>{" "}
-                                → Рецензируемый:{" "}
+                                → {t("teacher.moderation.reviewee")}{" "}
                                 <strong className="text-[#21214f]">
                                   {flaggedReview.revieweeName}
                                 </strong>
@@ -460,12 +471,12 @@ function ModerationContent({
                               {expandedReview === flaggedReview.id ? (
                                 <>
                                   <ChevronUp className="w-4 h-4" />
-                                  Свернуть
+                                  {t("teacher.moderation.collapse")}
                                 </>
                               ) : (
                                 <>
                                   <Eye className="w-4 h-4" />
-                                  Просмотр
+                                  {t("teacher.moderation.view")}
                                 </>
                               )}
                             </button>
@@ -476,13 +487,13 @@ function ModerationContent({
                             <AlertTriangle className="w-4 h-4 text-[#f59e0b] shrink-0 mt-0.5" />
                             <div className="flex-1">
                               <p className="text-[13px] font-medium text-[#21214f] mb-1">
-                                Причина флага:
+                                {t("teacher.moderation.flagReason")}
                               </p>
                               <p className="text-[13px] text-[#767692]">
                                 {flaggedReview.flagReason}
                               </p>
                               <p className="text-[12px] text-[#767692] mt-1">
-                                Отмечено: {flaggedReview.flaggedBy}
+                                {t("teacher.moderation.flaggedBy")} {flaggedReview.flaggedBy}
                               </p>
                             </div>
                           </div>
@@ -496,7 +507,7 @@ function ModerationContent({
                             {/* Scores */}
                             <div>
                               <h4 className="text-[14px] font-medium text-[#21214f] mb-3 uppercase tracking-wide">
-                                Оценки по критериям
+                                {t("teacher.moderation.scoresByCriteria")}
                               </h4>
                               <div className="space-y-2">
                                 {Object.entries(flaggedReview.scores).map(([criterion, score]) => (
@@ -516,7 +527,7 @@ function ModerationContent({
                             {/* Comment */}
                             <div>
                               <h4 className="text-[14px] font-medium text-[#21214f] mb-3 uppercase tracking-wide">
-                                Комментарий
+                                {t("common.comment")}
                               </h4>
                               <div className="p-4 bg-[#f9f9f9] rounded-[12px] border-2 border-[#e6e8ee]">
                                 <p className="text-[14px] text-[#21214f] leading-relaxed">
@@ -533,28 +544,28 @@ function ModerationContent({
                               className="flex items-center gap-2 px-4 py-2 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors text-[14px]"
                             >
                               <CheckCircle className="w-4 h-4" />
-                              Снять флаг
+                              {t("teacher.moderation.removeFlag")}
                             </button>
                             <button
                               onClick={() => handleRequestRewrite(flaggedReview.id)}
                               className="flex items-center gap-2 px-4 py-2 border-2 border-[#5b8def] text-[#5b8def] rounded-[12px] hover:bg-[#e9f5ff] transition-colors text-[14px]"
                             >
                               <MessageSquare className="w-4 h-4" />
-                              Запросить переписывание
+                              {t("teacher.moderation.requestRewrite")}
                             </button>
                             <button
                               onClick={() => handleHideReview(flaggedReview.id)}
                               className="flex items-center gap-2 px-4 py-2 border-2 border-[#ff9800] text-[#ff9800] rounded-[12px] hover:bg-[#fff4e5] transition-colors text-[14px]"
                             >
                               <EyeOff className="w-4 h-4" />
-                              Скрыть рецензию
+                              {t("teacher.moderation.hideReview")}
                             </button>
                             <button
                               onClick={() => handleReassignReview(flaggedReview.id)}
                               className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
                             >
                               <GitBranch className="w-4 h-4" />
-                              Переназначить рецензию
+                              {t("teacher.moderation.reassignReview")}
                             </button>
                           </div>
                         </div>
@@ -568,12 +579,12 @@ function ModerationContent({
             <div className="text-center py-12">
               <Shield className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
               <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-                Нет помеченных рецензий
+                {t("teacher.moderation.noFlaggedReviews")}
               </h3>
               <p className="text-[14px] text-[#767692]">
                 {filterType === "all"
-                  ? "Все рецензии в порядке!"
-                  : `Нет рецензий с типом "${getFlagTypeLabel(filterType)}"`}
+                  ? t("teacher.moderation.allReviewsFine")
+                  : `${t("teacher.moderation.noReviewsOfType")} "${getFlagTypeLabel(filterType)}"`}
               </p>
             </div>
           )}

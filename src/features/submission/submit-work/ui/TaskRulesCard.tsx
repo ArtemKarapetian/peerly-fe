@@ -1,4 +1,5 @@
 import { Clock, RefreshCw, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * TaskRulesCard - Карточка с правилами задания
@@ -22,6 +23,7 @@ interface TaskRulesCardProps {
 }
 
 export function TaskRulesCard({ rules }: TaskRulesCardProps) {
+  const { t } = useTranslation();
   const remainingResubmissions = Math.max(0, rules.allowedResubmissions - rules.currentVersion);
 
   return (
@@ -34,12 +36,16 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
           <Clock className="w-5 h-5 text-[#21214f]" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-[#767692] mb-0.5">Дедлайн</div>
+          <div className="text-[13px] text-[#767692] mb-0.5">
+            {t("feature.submission.rules.deadline")}
+          </div>
           <div
             className={`text-[15px] font-medium ${rules.isDeadlinePassed ? "text-[#d4183d]" : "text-[#21214f]"}`}
           >
             {rules.deadline}
-            {rules.isDeadlinePassed && <span className="ml-2 text-[13px]">(просрочен)</span>}
+            {rules.isDeadlinePassed && (
+              <span className="ml-2 text-[13px]">{t("feature.submission.rules.overdue")}</span>
+            )}
           </div>
         </div>
       </div>
@@ -50,19 +56,22 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
           <RefreshCw className="w-5 h-5 text-[#21214f]" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-[#767692] mb-0.5">Пересдачи</div>
+          <div className="text-[13px] text-[#767692] mb-0.5">
+            {t("feature.submission.rules.resubmissions")}
+          </div>
           <div className="text-[15px] font-medium text-[#21214f]">
             {remainingResubmissions > 0 ? (
               <>
-                Осталось: <span className="text-[#5b8def]">{remainingResubmissions}</span>
+                {t("feature.submission.rules.remaining")}{" "}
+                <span className="text-[#5b8def]">{remainingResubmissions}</span>
               </>
             ) : (
-              <span className="text-[#767692]">Не осталось</span>
+              <span className="text-[#767692]">{t("feature.submission.rules.noneRemaining")}</span>
             )}
           </div>
           {rules.currentVersion > 0 && (
             <div className="text-[13px] text-[#767692] mt-1">
-              Текущая версия: v{rules.currentVersion}
+              {t("feature.submission.rules.currentVersion")} v{rules.currentVersion}
             </div>
           )}
         </div>
@@ -75,7 +84,9 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
             <AlertTriangle className="w-5 h-5 text-[#21214f]" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] text-[#767692] mb-0.5">Политика опозданий</div>
+            <div className="text-[13px] text-[#767692] mb-0.5">
+              {t("feature.submission.rules.latePolicy")}
+            </div>
             <div className="text-[13px] text-[#21214f] leading-[1.5]">{rules.latePolicy}</div>
           </div>
         </div>

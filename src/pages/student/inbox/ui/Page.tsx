@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { InboxHeader, NotificationList } from "@/widgets/inbox";
@@ -10,6 +11,7 @@ import {
 } from "../model/mockNotifications";
 
 export default function InboxPage() {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const [selectedFilter, setSelectedFilter] = useState<FilterType>("ALL");
 
@@ -70,11 +72,11 @@ export default function InboxPage() {
                 <span className="text-white text-[14px] font-semibold">i</span>
               </div>
               <div>
-                <h4 className="text-[15px] font-medium text-[#21214f] mb-1">Об уведомлениях</h4>
+                <h4 className="text-[15px] font-medium text-[#21214f] mb-1">
+                  {t("student.inbox.about")}
+                </h4>
                 <p className="text-[14px] text-[#767692] leading-[1.6]">
-                  Здесь отображаются все важные события: дедлайны заданий, новые рецензии,
-                  комментарии преподавателей и опубликованные оценки. Нажмите на уведомление, чтобы
-                  перейти к связанной странице.
+                  {t("student.inbox.aboutDesc")}
                 </p>
               </div>
             </div>

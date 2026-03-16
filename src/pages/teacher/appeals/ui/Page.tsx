@@ -11,6 +11,7 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -56,6 +57,7 @@ interface Appeal {
 }
 
 export default function TeacherAppealsPage() {
+  const { t } = useTranslation();
   const { data, isLoading, error, refetch } = useAsync(async () => {
     const [users, assignments, submissions, reviews] = await Promise.all([
       userRepo.getAll(),
@@ -68,13 +70,13 @@ export default function TeacherAppealsPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Апелляции">
+      <AppShell title={t("teacher.appeals.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Апелляции">
+      <AppShell title={t("teacher.appeals.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -92,17 +94,18 @@ function AppealsContent({
     reviews: Awaited<ReturnType<typeof reviewRepo.getAll>>;
   };
 }) {
+  const { t } = useTranslation();
   const { users, assignments, submissions, reviews } = data;
 
   // Generate demo appeals
   const generateAppeals = (): Appeal[] => {
     const appeals: Appeal[] = [];
     const appealMessages = [
-      "Я считаю, что оценка занижена. Работа полностью соответствует всем критериям рубрики, но рецензент поставил низкие баллы без должного обоснования.",
-      "Рецензент указал на ошибки, которых нет в моей работе. Прошу пересмотреть оценку.",
-      "Комментарии рецензента не соответствуют содержанию моей работы. Возможно, он перепутал с другой работой.",
-      "Оценка кажется несправедливой. Я выполнил все требования задания, но получил низкий балл.",
-      "Рецензент не оценил важные части моей работы. Прошу обратить внимание на раздел с дополнительными функциями.",
+      t("teacher.appeals.msg1"),
+      t("teacher.appeals.msg2"),
+      t("teacher.appeals.msg3"),
+      t("teacher.appeals.msg4"),
+      t("teacher.appeals.msg5"),
     ];
 
     reviews.slice(0, 8).forEach((review, idx) => {
@@ -147,14 +150,12 @@ function AppealsContent({
 
         if (appeal.resolution === "approved") {
           appeal.newScore = appeal.requestedScore || appeal.originalScore + 0.5;
-          appeal.teacherResponse =
-            "Апелляция одобрена. Оценка пересмотрена в соответствии с критериями.";
+          appeal.teacherResponse = t("teacher.appeals.resolvedApproved");
         } else if (appeal.resolution === "adjusted") {
           appeal.newScore = appeal.originalScore + 0.3;
-          appeal.teacherResponse = "Оценка скорректирована с учетом дополнительных критериев.";
+          appeal.teacherResponse = t("teacher.appeals.resolvedAdjusted");
         } else {
-          appeal.teacherResponse =
-            "После рассмотрения апелляции решено сохранить исходную оценку. Рецензент корректно применил критерии рубрики.";
+          appeal.teacherResponse = t("teacher.appeals.resolvedDenied");
         }
       }
 
@@ -190,21 +191,21 @@ function AppealsContent({
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] text-[12px] font-medium">
             <AlertCircle className="w-3 h-3" />
-            Новая
+            {t("teacher.appeals.newStatus")}
           </span>
         );
       case "in_review":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
             <Edit3 className="w-3 h-3" />
-            На рассмотрении
+            {t("teacher.appeals.inReviewStatus")}
           </span>
         );
       case "resolved":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
             <CheckCircle className="w-3 h-3" />
-            Решена
+            {t("teacher.appeals.resolvedStatus")}
           </span>
         );
     }
@@ -218,21 +219,21 @@ function AppealsContent({
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
-            Одобрено
+            {t("teacher.appeals.approved")}
           </span>
         );
       case "denied":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
             <XCircle className="w-3 h-3" />
-            Отклонено
+            {t("teacher.appeals.denied")}
           </span>
         );
       case "adjusted":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
             <Edit3 className="w-3 h-3" />
-            Скорректировано
+            {t("teacher.appeals.adjusted")}
           </span>
         );
     }
@@ -251,7 +252,7 @@ function AppealsContent({
               status: "resolved",
               resolution: "approved",
               newScore,
-              teacherResponse: responseText || "Апелляция одобрена. Оценка пересмотрена.",
+              teacherResponse: responseText || t("teacher.appeals.defaultApproveResponse"),
               resolvedAt: new Date(),
             }
           : a,
@@ -263,12 +264,12 @@ function AppealsContent({
       status: "resolved",
       resolution: "approved",
       newScore,
-      teacherResponse: responseText || "Апелляция одобрена. Оценка пересмотрена.",
+      teacherResponse: responseText || t("teacher.appeals.defaultApproveResponse"),
       resolvedAt: new Date(),
     });
 
     setResponseText("");
-    alert("Апелляция одобрена. Оценка обновлена.");
+    alert(t("teacher.appeals.appealApprovedAlert"));
   };
 
   const handleDeny = () => {
@@ -281,7 +282,7 @@ function AppealsContent({
               ...a,
               status: "resolved",
               resolution: "denied",
-              teacherResponse: responseText || "Исходная оценка сохранена. Рецензия корректна.",
+              teacherResponse: responseText || t("teacher.appeals.defaultDenyResponse"),
               resolvedAt: new Date(),
             }
           : a,
@@ -292,17 +293,17 @@ function AppealsContent({
       ...selectedAppeal,
       status: "resolved",
       resolution: "denied",
-      teacherResponse: responseText || "Исходная оценка сохранена. Рецензия корректна.",
+      teacherResponse: responseText || t("teacher.appeals.defaultDenyResponse"),
       resolvedAt: new Date(),
     });
 
     setResponseText("");
-    alert("Апелляция отклонена.");
+    alert(t("teacher.appeals.appealDeniedAlert"));
   };
 
   const handleAdjust = () => {
     if (!selectedAppeal || adjustedScore === null) {
-      alert("Укажите скорректированную оценку");
+      alert(t("teacher.appeals.specifyAdjustedScore"));
       return;
     }
 
@@ -314,7 +315,7 @@ function AppealsContent({
               status: "resolved",
               resolution: "adjusted",
               newScore: adjustedScore,
-              teacherResponse: responseText || "Оценка скорректирована.",
+              teacherResponse: responseText || t("teacher.appeals.defaultAdjustResponse"),
               resolvedAt: new Date(),
             }
           : a,
@@ -326,13 +327,13 @@ function AppealsContent({
       status: "resolved",
       resolution: "adjusted",
       newScore: adjustedScore,
-      teacherResponse: responseText || "Оценка скорректирована.",
+      teacherResponse: responseText || t("teacher.appeals.defaultAdjustResponse"),
       resolvedAt: new Date(),
     });
 
     setResponseText("");
     setAdjustedScore(null);
-    alert("Оценка скорректирована.");
+    alert(t("teacher.appeals.gradeAdjustedAlert"));
   };
 
   const handleMarkInReview = (appeal: Appeal) => {
@@ -346,10 +347,10 @@ function AppealsContent({
   const resolvedCount = appeals.filter((a) => a.status === "resolved").length;
 
   return (
-    <AppShell title="Апелляции">
-      <Breadcrumbs items={[{ label: "Апелляции" }]} />
+    <AppShell title={t("teacher.appeals.title")}>
+      <Breadcrumbs items={[{ label: t("teacher.appeals.breadcrumb") }]} />
 
-      <PageHeader title="Апелляции" subtitle="Рассмотрение жалоб студентов на оценки и рецензии" />
+      <PageHeader title={t("teacher.appeals.title")} subtitle={t("teacher.appeals.subtitle")} />
 
       <div>
         {/* Stats Cards */}
@@ -357,7 +358,9 @@ function AppealsContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-4 h-4 text-[#5b8def]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Новые</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.appeals.new")}
+              </span>
             </div>
             <p className="text-[28px] font-medium text-[#5b8def]">{newCount}</p>
           </div>
@@ -365,7 +368,7 @@ function AppealsContent({
             <div className="flex items-center gap-2 mb-2">
               <Edit3 className="w-4 h-4 text-[#ff9800]" />
               <span className="text-[12px] text-[#767692] uppercase tracking-wide">
-                На рассмотрении
+                {t("teacher.appeals.underReview")}
               </span>
             </div>
             <p className="text-[28px] font-medium text-[#ff9800]">{inReviewCount}</p>
@@ -373,7 +376,9 @@ function AppealsContent({
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">Решено</span>
+              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+                {t("teacher.appeals.resolved")}
+              </span>
             </div>
             <p className="text-[28px] font-medium text-[#4caf50]">{resolvedCount}</p>
           </div>
@@ -383,7 +388,9 @@ function AppealsContent({
         <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="w-5 h-5 text-[#767692]" />
-            <h2 className="text-[16px] font-medium text-[#21214f]">Фильтры</h2>
+            <h2 className="text-[16px] font-medium text-[#21214f]">
+              {t("teacher.appeals.filtersLabel")}
+            </h2>
           </div>
 
           <div className="flex gap-2">
@@ -395,7 +402,7 @@ function AppealsContent({
                   : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
               }`}
             >
-              Все ({appeals.length})
+              {t("common.all")} ({appeals.length})
             </button>
             <button
               onClick={() => setFilterStatus("new")}
@@ -405,7 +412,7 @@ function AppealsContent({
                   : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
               }`}
             >
-              Новые ({newCount})
+              {t("teacher.appeals.new")} ({newCount})
             </button>
             <button
               onClick={() => setFilterStatus("in_review")}
@@ -415,7 +422,7 @@ function AppealsContent({
                   : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
               }`}
             >
-              На рассмотрении ({inReviewCount})
+              {t("teacher.appeals.underReview")} ({inReviewCount})
             </button>
             <button
               onClick={() => setFilterStatus("resolved")}
@@ -425,7 +432,7 @@ function AppealsContent({
                   : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
               }`}
             >
-              Решённые ({resolvedCount})
+              {t("teacher.appeals.resolvedPlural")} ({resolvedCount})
             </button>
           </div>
         </div>
@@ -463,17 +470,17 @@ function AppealsContent({
                       <div className="flex items-center gap-4 text-[13px] text-[#767692]">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {appeal.createdAt.toLocaleDateString("ru-RU")}
+                          {appeal.createdAt.toLocaleDateString()}
                         </span>
                         <span>
-                          Оценка:{" "}
+                          {t("teacher.appeals.scoreLabel")}{" "}
                           <strong className="text-[#21214f]">
                             {appeal.originalScore.toFixed(1)}
                           </strong>
                         </span>
                         {appeal.requestedScore && (
                           <span>
-                            Запрошено:{" "}
+                            {t("teacher.appeals.requestedLabel")}{" "}
                             <strong className="text-[#5b8def]">
                               {appeal.requestedScore.toFixed(1)}
                             </strong>
@@ -481,7 +488,7 @@ function AppealsContent({
                         )}
                         {appeal.newScore && (
                           <span>
-                            Новая оценка:{" "}
+                            {t("teacher.appeals.newScoreCardLabel")}{" "}
                             <strong className="text-[#4caf50]">{appeal.newScore.toFixed(1)}</strong>
                           </span>
                         )}
@@ -494,10 +501,10 @@ function AppealsContent({
           ) : (
             <div className="text-center py-12">
               <AlertCircle className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Нет апелляций</h3>
-              <p className="text-[14px] text-[#767692]">
-                Апелляции появятся здесь, когда студенты их подадут
-              </p>
+              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+                {t("teacher.appeals.noAppeals")}
+              </h3>
+              <p className="text-[14px] text-[#767692]">{t("teacher.appeals.appealsWillAppear")}</p>
             </div>
           )}
         </div>
@@ -517,10 +524,10 @@ function AppealsContent({
             <div className="sticky top-0 bg-white border-b-2 border-[#e6e8ee] px-6 py-4 flex items-center justify-between z-10">
               <div>
                 <h2 className="text-[20px] font-medium text-[#21214f]">
-                  Апелляция #{selectedAppeal.id}
+                  {t("teacher.appeals.appealTitle", { id: selectedAppeal.id })}
                 </h2>
                 <p className="text-[13px] text-[#767692] mt-1">
-                  {selectedAppeal.studentName} • {selectedAppeal.createdAt.toLocaleString("ru-RU")}
+                  {selectedAppeal.studentName} • {selectedAppeal.createdAt.toLocaleString()}
                 </p>
               </div>
               <button
@@ -543,12 +550,14 @@ function AppealsContent({
               <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <FileText className="w-4 h-4 text-[#767692]" />
-                  <h3 className="text-[15px] font-medium text-[#21214f]">Информация о задании</h3>
+                  <h3 className="text-[15px] font-medium text-[#21214f]">
+                    {t("teacher.appeals.assignmentInfo")}
+                  </h3>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                      Задание
+                      {t("teacher.appeals.assignment")}
                     </p>
                     <p className="text-[14px] text-[#21214f] font-medium">
                       {selectedAppeal.assignmentTitle}
@@ -556,7 +565,7 @@ function AppealsContent({
                   </div>
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                      Студент
+                      {t("teacher.appeals.studentLabel")}
                     </p>
                     <p className="text-[14px] text-[#21214f] font-medium">
                       {selectedAppeal.studentName}
@@ -564,7 +573,7 @@ function AppealsContent({
                   </div>
                   <div>
                     <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                      Исходная оценка
+                      {t("teacher.appeals.originalScore")}
                     </p>
                     <p className="text-[20px] text-[#d4183d] font-medium">
                       {selectedAppeal.originalScore.toFixed(1)}/5
@@ -573,7 +582,7 @@ function AppealsContent({
                   {selectedAppeal.requestedScore && (
                     <div>
                       <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                        Запрашиваемая оценка
+                        {t("teacher.appeals.requestedScore")}
                       </p>
                       <p className="text-[20px] text-[#5b8def] font-medium">
                         {selectedAppeal.requestedScore.toFixed(1)}/5
@@ -583,7 +592,7 @@ function AppealsContent({
                   {selectedAppeal.newScore && (
                     <div>
                       <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
-                        Новая оценка
+                        {t("teacher.appeals.newScore")}
                       </p>
                       <p className="text-[20px] text-[#4caf50] font-medium">
                         {selectedAppeal.newScore.toFixed(1)}/5
@@ -597,7 +606,9 @@ function AppealsContent({
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <MessageSquare className="w-4 h-4 text-[#767692]" />
-                  <h3 className="text-[15px] font-medium text-[#21214f]">Сообщение студента</h3>
+                  <h3 className="text-[15px] font-medium text-[#21214f]">
+                    {t("teacher.appeals.studentMessage")}
+                  </h3>
                 </div>
                 <div className="p-4 bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[12px]">
                   <p className="text-[14px] text-[#21214f] leading-relaxed">
@@ -611,7 +622,9 @@ function AppealsContent({
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <User className="w-4 h-4 text-[#767692]" />
-                    <h3 className="text-[15px] font-medium text-[#21214f]">Ответ преподавателя</h3>
+                    <h3 className="text-[15px] font-medium text-[#21214f]">
+                      {t("teacher.appeals.teacherResponse")}
+                    </h3>
                   </div>
                   <div className="p-4 bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[12px]">
                     <p className="text-[14px] text-[#21214f] leading-relaxed">
@@ -619,7 +632,8 @@ function AppealsContent({
                     </p>
                     {selectedAppeal.resolvedAt && (
                       <p className="text-[12px] text-[#767692] mt-2">
-                        Решено: {selectedAppeal.resolvedAt.toLocaleString("ru-RU")}
+                        {t("teacher.appeals.resolvedAt")}{" "}
+                        {selectedAppeal.resolvedAt.toLocaleString()}
                       </p>
                     )}
                   </div>
@@ -629,17 +643,19 @@ function AppealsContent({
               {/* Actions (if not resolved) */}
               {selectedAppeal.status !== "resolved" && (
                 <div>
-                  <h3 className="text-[15px] font-medium text-[#21214f] mb-3">Действия</h3>
+                  <h3 className="text-[15px] font-medium text-[#21214f] mb-3">
+                    {t("teacher.appeals.actionsTitle")}
+                  </h3>
 
                   {/* Response textarea */}
                   <div className="mb-4">
                     <label className="block text-[13px] font-medium text-[#767692] mb-2">
-                      Комментарий (необязательно)
+                      {t("teacher.appeals.commentOptional")}
                     </label>
                     <textarea
                       value={responseText}
                       onChange={(e) => setResponseText(e.target.value)}
-                      placeholder="Добавьте комментарий к решению..."
+                      placeholder={t("teacher.appeals.addResolutionComment")}
                       className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors min-h-[100px] resize-y"
                     />
                   </div>
@@ -653,9 +669,9 @@ function AppealsContent({
                     >
                       <CheckCircle className="w-5 h-5" />
                       <span className="text-[15px] font-medium">
-                        Одобрить апелляцию
+                        {t("teacher.appeals.approveAppeal")}
                         {selectedAppeal.requestedScore &&
-                          ` (новая оценка: ${selectedAppeal.requestedScore.toFixed(1)})`}
+                          ` (${t("teacher.appeals.newScoreApprove", { score: selectedAppeal.requestedScore.toFixed(1) })})`}
                       </span>
                     </button>
 
@@ -668,7 +684,7 @@ function AppealsContent({
                         step="0.1"
                         value={adjustedScore || ""}
                         onChange={(e) => setAdjustedScore(parseFloat(e.target.value))}
-                        placeholder="Новая оценка (0-5)"
+                        placeholder={t("teacher.appeals.newScoreRange")}
                         className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
                       />
                       <button
@@ -676,7 +692,9 @@ function AppealsContent({
                         className="flex items-center gap-2 px-6 py-3 bg-[#ff9800] text-white rounded-[12px] hover:bg-[#f57c00] transition-colors"
                       >
                         <Edit3 className="w-5 h-5" />
-                        <span className="text-[15px] font-medium">Скорректировать</span>
+                        <span className="text-[15px] font-medium">
+                          {t("teacher.appeals.adjust")}
+                        </span>
                       </button>
                     </div>
 
@@ -686,7 +704,9 @@ function AppealsContent({
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-[#d4183d] text-[#d4183d] rounded-[12px] hover:bg-[#fff5f5] transition-colors"
                     >
                       <XCircle className="w-5 h-5" />
-                      <span className="text-[15px] font-medium">Отклонить апелляцию</span>
+                      <span className="text-[15px] font-medium">
+                        {t("teacher.appeals.denyAppeal")}
+                      </span>
                     </button>
                   </div>
                 </div>

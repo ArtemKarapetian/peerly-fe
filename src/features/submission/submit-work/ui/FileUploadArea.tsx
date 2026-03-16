@@ -1,5 +1,6 @@
 import { Upload, AlertCircle } from "lucide-react";
 import { useState, useRef, DragEvent, ChangeEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * FileUploadArea - Drag & drop + file picker для загрузки файлов
@@ -39,6 +40,7 @@ export function FileUploadArea({
   error = "",
   disabled = false,
 }: FileUploadAreaProps) {
+  const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,13 +51,13 @@ export function FileUploadArea({
     const hasValidExtension = acceptedFormats.some((ext) => fileName.endsWith(ext.toLowerCase()));
 
     if (!hasValidExtension) {
-      return `Недопустимый формат файла. Разрешены: ${acceptedFormats.join(", ")}`;
+      return t("feature.submission.upload.invalidFormat", { formats: acceptedFormats.join(", ") });
     }
 
     // Check file size
     const fileSizeMB = file.size / (1024 * 1024);
     if (fileSizeMB > maxSizeMB) {
-      return `Файл слишком большой. Максимум ${maxSizeMB} МБ.`;
+      return t("feature.submission.upload.fileTooLarge", { max: maxSizeMB });
     }
 
     return null;
@@ -173,7 +175,9 @@ export function FileUploadArea({
             <div className="w-12 h-12 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center animate-pulse">
               <Upload className="w-6 h-6 text-[#5b8def]" />
             </div>
-            <p className="text-[15px] text-[#21214f] font-medium">Загрузка... {uploadProgress}%</p>
+            <p className="text-[15px] text-[#21214f] font-medium">
+              {t("feature.submission.upload.uploading")} {uploadProgress}%
+            </p>
             <div className="max-w-[300px] mx-auto bg-[#e6e8ee] rounded-full h-2 overflow-hidden">
               <div
                 className="bg-[#5b8def] h-full transition-all duration-300"
@@ -195,10 +199,15 @@ export function FileUploadArea({
             </div>
             <div>
               <p className="text-[15px] text-[#21214f] font-medium mb-1">
-                {isDragging ? "Отпустите файл" : "Перетащите файл сюда"}
+                {isDragging
+                  ? t("feature.submission.upload.dropFile")
+                  : t("feature.submission.upload.dragFileHere")}
               </p>
               <p className="text-[13px] text-[#767692]">
-                или <span className="text-[#5b8def] font-medium">выберите файл</span>
+                {t("feature.submission.upload.or")}{" "}
+                <span className="text-[#5b8def] font-medium">
+                  {t("feature.submission.upload.browseFile")}
+                </span>
               </p>
             </div>
           </div>
@@ -210,10 +219,11 @@ export function FileUploadArea({
         <div className="shrink-0">ℹ️</div>
         <div>
           <p>
-            <strong>Форматы:</strong> {acceptedFormats.join(", ")}
+            <strong>{t("feature.submission.upload.formats")}</strong> {acceptedFormats.join(", ")}
           </p>
           <p>
-            <strong>Макс. размер:</strong> {maxSizeMB} МБ
+            <strong>{t("feature.submission.upload.maxSize")}</strong> {maxSizeMB}{" "}
+            {t("feature.submission.upload.mb")}
           </p>
         </div>
       </div>

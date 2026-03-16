@@ -1,13 +1,21 @@
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import { useRole, getRoleDisplayName } from "@/entities/user";
+import { useRole } from "@/entities/user";
 import type { UserRole } from "@/entities/user";
 
 interface RoleSwitcherPopoverProps {
   collapsed?: boolean;
 }
 
+const ROLE_KEYS: Record<string, string> = {
+  Student: "roles.student",
+  Teacher: "roles.teacher",
+  Admin: "roles.admin",
+};
+
 export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverProps) {
+  const { t } = useTranslation();
   const { currentRole, setRole } = useRole();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +71,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
     return (
       <div className="px-2.5 pb-2">
         <p className="text-[10px] text-[--text-tertiary] font-medium uppercase tracking-wider px-2.5 mb-1.5">
-          Демо: Роль
+          {t("roles.demoRole")}
         </p>
         <div className="space-y-0.5">
           {roles.map((role) => (
@@ -76,7 +84,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
                   : "text-[--text-secondary] hover:bg-[--surface-hover] hover:text-[--text-primary]"
               }`}
             >
-              <span>{getRoleDisplayName(role)}</span>
+              <span>{t(ROLE_KEYS[role])}</span>
               {role === currentRole && (
                 <div className="w-1.5 h-1.5 rounded-full bg-[--brand-primary]" />
               )}
@@ -94,8 +102,8 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
         <button
           onClick={handleToggle}
           className="w-7 h-7 rounded-full bg-gradient-to-br from-[#5b8def] to-[#3d6bc6] flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
-          title={`Роль: ${getRoleDisplayName(currentRole)}`}
-          aria-label="Переключить роль"
+          title={`${t("roles.switchRole")}: ${t(ROLE_KEYS[currentRole])}`}
+          aria-label={t("roles.switchRole")}
           aria-expanded={isOpen}
         >
           <span className="text-white text-[10px] font-bold">{currentRole[0]}</span>
@@ -105,7 +113,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
       {isOpen && (
         <div className="absolute left-full ml-2 top-0 bg-white border border-[--surface-border] rounded-[8px] shadow-[var(--shadow-lg)] py-1 z-50 w-[170px]">
           <p className="px-3 py-1 text-[10px] text-[--text-tertiary] font-medium uppercase tracking-wider">
-            Переключить роль
+            {t("roles.switchRole")}
           </p>
           {roles.map((role) => (
             <button
@@ -117,7 +125,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
                   : "text-[--text-primary] hover:bg-[--surface-hover]"
               }`}
             >
-              {getRoleDisplayName(role)}
+              {t(ROLE_KEYS[role])}
             </button>
           ))}
         </div>

@@ -1,5 +1,6 @@
 import { X, ChevronRight, ChevronLeft, Play, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import {
@@ -54,6 +55,7 @@ const ACTION_TYPES: ActionType[] = [
 const OPERATORS: ConditionOperator[] = [">", "<", ">=", "<=", "==", "!="];
 
 export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps) {
+  const { t } = useTranslation();
   const isEditing = !!existingRule;
   const [step, setStep] = useState(1);
 
@@ -101,17 +103,17 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
   const handleTestRule = () => {
     const results = testRule();
     setTestResults(results);
-    toast.info(`Найдено совпадений: ${results.matches}`);
+    toast.info(t("feature.createRule.matchesFound", { count: results.matches }));
   };
 
   const handleSave = () => {
     if (!name.trim()) {
-      toast.error("Введите название правила");
+      toast.error(t("feature.createRule.enterRuleName"));
       return;
     }
 
     if (actions.length === 0) {
-      toast.error("Добавьте хотя бы одно действие");
+      toast.error(t("feature.createRule.addAtLeastOneAction"));
       return;
     }
 
@@ -128,43 +130,43 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
 
     if (isEditing && existingRule) {
       updateRule(existingRule.id, ruleData);
-      toast.success("Правило обновлено");
+      toast.success(t("feature.createRule.ruleUpdated"));
     } else {
       createRule(ruleData);
-      toast.success("Правило создано");
+      toast.success(t("feature.createRule.ruleCreated"));
     }
 
     onClose();
   };
 
   const getConditionTypeLabel = (type: ConditionType): string => {
-    const labels: Record<ConditionType, string> = {
-      plagiarism_score: "Балл плагиата",
-      missing_reviews: "Пропущенных рецензий",
-      submission_delay_days: "Дней опоздания",
-      review_comment_length: "Длина комментария",
-      grade_deviation: "Отклонение оценки",
-      peer_scores_variance: "Разброс оценок",
+    const keys: Record<ConditionType, string> = {
+      plagiarism_score: "feature.createRule.condPlagiarismScore",
+      missing_reviews: "feature.createRule.condMissingReviews",
+      submission_delay_days: "feature.createRule.condSubmissionDelay",
+      review_comment_length: "feature.createRule.condCommentLength",
+      grade_deviation: "feature.createRule.condGradeDeviation",
+      peer_scores_variance: "feature.createRule.condScoresVariance",
     };
-    return labels[type];
+    return t(keys[type]);
   };
 
   const getActionTypeLabel = (type: ActionType): string => {
-    const labels: Record<ActionType, string> = {
-      flag_submission: "Отметить работу",
-      flag_review: "Отметить рецензию",
-      require_moderation: "Требовать модерацию",
-      reassign_reviewer: "Переназначить рецензента",
-      apply_penalty: "Применить штраф",
-      send_notification: "Отправить уведомление",
+    const keys: Record<ActionType, string> = {
+      flag_submission: "feature.createRule.actFlagSubmission",
+      flag_review: "feature.createRule.actFlagReview",
+      require_moderation: "feature.createRule.actRequireModeration",
+      reassign_reviewer: "feature.createRule.actReassignReviewer",
+      apply_penalty: "feature.createRule.actApplyPenalty",
+      send_notification: "feature.createRule.actSendNotification",
     };
-    return labels[type];
+    return t(keys[type]);
   };
 
   // Build human-readable summary
   const buildSummary = () => {
     if (!trigger || actions.length === 0) {
-      return "Настройте триггер и действия для просмотра правила";
+      return t("feature.createRule.configureTriggerAndActions");
     }
 
     const rule: AutomationRule = {
@@ -193,7 +195,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
             {/* Header */}
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">
-                {isEditing ? "Редактировать правило" : "Создать правило"}
+                {isEditing ? t("feature.createRule.editRule") : t("feature.createRule.createRule")}
               </h2>
               <button
                 onClick={onClose}
@@ -225,10 +227,10 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 ))}
               </div>
               <div className="mt-2 text-sm text-muted-foreground">
-                {step === 1 && "Шаг 1: Триггер"}
-                {step === 2 && "Шаг 2: Условия"}
-                {step === 3 && "Шаг 3: Действия"}
-                {step === 4 && "Шаг 4: Область применения"}
+                {step === 1 && t("feature.createRule.step1")}
+                {step === 2 && t("feature.createRule.step2")}
+                {step === 3 && t("feature.createRule.step3")}
+                {step === 4 && t("feature.createRule.step4")}
               </div>
             </div>
 
@@ -238,25 +240,25 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               <div className="mb-6 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Название правила *
+                    {t("feature.createRule.ruleNameLabel")} *
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Например: Флаг коротких рецензий"
+                    placeholder={t("feature.createRule.ruleNamePlaceholder")}
                     className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Описание (опционально)
+                    {t("feature.createRule.descriptionLabel")}
                   </label>
                   <input
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Краткое описание правила"
+                    placeholder={t("feature.createRule.descriptionPlaceholder")}
                     className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
                   />
                 </div>
@@ -265,7 +267,9 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {/* Step 1: Trigger */}
               {step === 1 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Выберите триггер</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-4">
+                    {t("feature.createRule.selectTrigger")}
+                  </h3>
                   <div className="space-y-2">
                     {TRIGGERS.map((t) => (
                       <label
@@ -292,19 +296,21 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {step === 2 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-foreground">Условия (опционально)</h3>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {t("feature.createRule.conditionsOptional")}
+                    </h3>
                     <button
                       onClick={handleAddCondition}
                       className="text-sm text-primary hover:underline"
                     >
-                      + Добавить условие
+                      + {t("feature.createRule.addCondition")}
                     </button>
                   </div>
 
                   {conditions.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      <p className="mb-2">Нет условий</p>
-                      <p className="text-sm">Правило будет срабатывать всегда при триггере</p>
+                      <p className="mb-2">{t("feature.createRule.noConditions")}</p>
+                      <p className="text-sm">{t("feature.createRule.ruleWillAlwaysFire")}</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -370,21 +376,25 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {step === 3 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-foreground">Действия *</h3>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {t("feature.createRule.actionsRequired")} *
+                    </h3>
                     <button
                       onClick={handleAddAction}
                       className="text-sm text-primary hover:underline"
                     >
-                      + Добавить действие
+                      + {t("feature.createRule.addAction")}
                     </button>
                   </div>
 
                   {actions.length === 0 ? (
                     <div className="text-center py-8">
                       <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-2 opacity-50" />
-                      <p className="text-muted-foreground mb-2">Нет действий</p>
+                      <p className="text-muted-foreground mb-2">
+                        {t("feature.createRule.noActions")}
+                      </p>
                       <p className="text-sm text-muted-foreground">
-                        Добавьте хотя бы одно действие
+                        {t("feature.createRule.addAtLeastOneAction")}
                       </p>
                     </div>
                   ) : (
@@ -417,7 +427,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                           {action.type === "apply_penalty" && (
                             <div>
                               <label className="block text-sm font-medium text-foreground mb-2">
-                                Процент штрафа
+                                {t("feature.createRule.penaltyPercent")}
                               </label>
                               <input
                                 type="number"
@@ -439,7 +449,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                           {action.type === "send_notification" && (
                             <div>
                               <label className="block text-sm font-medium text-foreground mb-2">
-                                Текст уведомления
+                                {t("feature.createRule.notificationText")}
                               </label>
                               <input
                                 type="text"
@@ -449,7 +459,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                                     parameters: { ...action.parameters, message: e.target.value },
                                   })
                                 }
-                                placeholder="Сообщение для студента"
+                                placeholder={t("feature.createRule.messagePlaceholder")}
                                 className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
                               />
                             </div>
@@ -464,7 +474,9 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               {/* Step 4: Scope */}
               {step === 4 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Область применения</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-4">
+                    {t("feature.createRule.scopeTitle")}
+                  </h3>
 
                   <div className="space-y-4">
                     <label className="flex items-center gap-3 p-4 border border-border rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
@@ -475,9 +487,11 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                         className="w-4 h-4 text-primary"
                       />
                       <div>
-                        <div className="font-medium text-foreground">Все курсы и задания</div>
+                        <div className="font-medium text-foreground">
+                          {t("feature.createRule.allCoursesAndAssignments")}
+                        </div>
                         <div className="text-sm text-muted-foreground">
-                          Правило будет применяться везде
+                          {t("feature.createRule.ruleAppliesEverywhere")}
                         </div>
                       </div>
                     </label>
@@ -492,16 +506,18 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                         className="w-4 h-4 text-primary"
                       />
                       <div>
-                        <div className="font-medium text-foreground">Выборочно</div>
+                        <div className="font-medium text-foreground">
+                          {t("feature.createRule.selective")}
+                        </div>
                         <div className="text-sm text-muted-foreground">
-                          Выберите конкретные курсы или задания
+                          {t("feature.createRule.selectSpecific")}
                         </div>
                       </div>
                     </label>
 
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
-                        Приоритет
+                        {t("feature.createRule.priority")}
                       </label>
                       <input
                         type="number"
@@ -511,15 +527,17 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                         className="w-32 px-4 py-2.5 border border-border rounded-lg bg-background text-foreground"
                       />
                       <p className="text-xs text-muted-foreground mt-1">
-                        Правила с меньшим номером выполняются первыми
+                        {t("feature.createRule.priorityHint")}
                       </p>
                     </div>
 
                     <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
                       <div>
-                        <div className="font-medium text-foreground">Включить правило сразу</div>
+                        <div className="font-medium text-foreground">
+                          {t("feature.createRule.enableImmediately")}
+                        </div>
                         <div className="text-sm text-muted-foreground">
-                          Правило начнет работать после сохранения
+                          {t("feature.createRule.ruleStartsAfterSave")}
                         </div>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -545,7 +563,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="w-4 h-4" />
-                Назад
+                {t("common.back")}
               </button>
 
               <div className="flex gap-2">
@@ -554,7 +572,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                     onClick={() => setStep(step + 1)}
                     className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
                   >
-                    Далее
+                    {t("common.next")}
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
@@ -562,7 +580,9 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                     onClick={handleSave}
                     className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
                   >
-                    {isEditing ? "Сохранить изменения" : "Создать правило"}
+                    {isEditing
+                      ? t("feature.createRule.saveChanges")
+                      : t("feature.createRule.createRule")}
                   </button>
                 )}
               </div>
@@ -572,8 +592,12 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
           {/* Right: Summary & Test */}
           <div className="w-[400px] border-l border-border flex flex-col bg-muted/30">
             <div className="p-6 border-b border-border">
-              <h3 className="font-semibold text-foreground mb-1">Предпросмотр правила</h3>
-              <p className="text-sm text-muted-foreground">Читаемое описание</p>
+              <h3 className="font-semibold text-foreground mb-1">
+                {t("feature.createRule.rulePreview")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("feature.createRule.readableDescription")}
+              </p>
             </div>
 
             <div className="flex-1 p-6 overflow-y-auto">
@@ -589,18 +613,23 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Play className="w-4 h-4" />
-                Тестировать правило
+                {t("feature.createRule.testRule")}
               </button>
 
               {testResults && (
                 <div className="mt-4 bg-card border border-border rounded-lg p-4">
-                  <div className="font-medium text-foreground mb-2">Результаты теста</div>
+                  <div className="font-medium text-foreground mb-2">
+                    {t("feature.createRule.testResults")}
+                  </div>
                   <div className="text-sm text-muted-foreground mb-3">
-                    Найдено совпадений: <strong>{testResults.matches}</strong>
+                    {t("feature.createRule.matchesFoundLabel")}:{" "}
+                    <strong>{testResults.matches}</strong>
                   </div>
                   {testResults.samples.length > 0 && (
                     <div>
-                      <div className="text-xs text-muted-foreground mb-2">Примеры:</div>
+                      <div className="text-xs text-muted-foreground mb-2">
+                        {t("feature.createRule.examples")}:
+                      </div>
                       <ul className="space-y-1">
                         {testResults.samples.map((sample, i) => (
                           <li

@@ -1,3 +1,5 @@
+import i18n from "@/shared/lib/i18n/config";
+
 import { AppealReason, AppealStatus } from "@/entities/appeal/model/types.ts";
 
 /**
@@ -5,10 +7,10 @@ import { AppealReason, AppealStatus } from "@/entities/appeal/model/types.ts";
  */
 export function getReasonLabel(reason: AppealReason): string {
   const labels: Record<AppealReason, string> = {
-    unfair_score: "Несправедливая оценка",
-    wrong_interpretation: "Неправильная интерпретация",
-    technical_issue: "Техническая проблема",
-    other: "Другое",
+    unfair_score: i18n.t("entity.appeal.reasonUnfair"),
+    wrong_interpretation: i18n.t("entity.appeal.reasonWrongInterpretation"),
+    technical_issue: i18n.t("entity.appeal.reasonTechnical"),
+    other: i18n.t("entity.appeal.reasonOther"),
   };
   return labels[reason];
 }
@@ -18,9 +20,9 @@ export function getReasonLabel(reason: AppealReason): string {
  */
 export function getStatusLabel(status: AppealStatus): string {
   const labels: Record<AppealStatus, string> = {
-    new: "Новая",
-    in_review: "На рассмотрении",
-    resolved: "Рассмотрена",
+    new: i18n.t("entity.appeal.statusNew"),
+    in_review: i18n.t("entity.appeal.statusInReview"),
+    resolved: i18n.t("entity.appeal.statusResolved"),
   };
   return labels[status];
 }

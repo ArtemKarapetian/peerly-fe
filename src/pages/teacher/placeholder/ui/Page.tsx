@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -26,6 +27,7 @@ export function TeacherPlaceholderPage({
   breadcrumbs = [],
   primaryAction,
 }: TeacherPlaceholderPageProps) {
+  const { t } = useTranslation();
   return (
     <AppShell title={title}>
       <Breadcrumbs items={breadcrumbs} />
@@ -51,8 +53,8 @@ export function TeacherPlaceholderPage({
 
           <div className="bg-[#f9f9f9] border border-[#e6e8ee] rounded-[12px] p-4">
             <p className="text-[14px] text-[#767692]">
-              <strong>Демо-режим:</strong> Эта страница будет содержать функционал управления для
-              преподавателей.
+              <strong>{t("teacher.placeholder.demoMode")}</strong>{" "}
+              {t("teacher.placeholder.demoDesc")}
             </p>
           </div>
         </div>

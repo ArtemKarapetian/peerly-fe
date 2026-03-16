@@ -1,5 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Button } from "@/shared/ui/button.tsx";
@@ -21,6 +22,7 @@ import { PublicLayout } from "@/widgets/public-layout";
  */
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const { login: authLogin } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -60,20 +62,20 @@ export function LoginPage() {
     } else {
       // Failed - show error
       setIsLoading(false);
-      setError("Invalid credentials. Please check your username/email and password.");
+      setError(t("auth.invalidCredentials"));
     }
   };
 
   // Show field-level errors only when touched
   const getIdentifierError = () => {
     if (!touched.identifier) return "";
-    if (!identifier.trim()) return "Required field";
+    if (!identifier.trim()) return t("auth.requiredField");
     return "";
   };
 
   const getPasswordError = () => {
     if (!touched.password) return "";
-    if (!password.trim()) return "Required field";
+    if (!password.trim()) return t("auth.requiredField");
     return "";
   };
 
@@ -85,17 +87,16 @@ export function LoginPage() {
           <div className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 space-y-6">
             {/* Header */}
             <div className="space-y-2">
-              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">Вход</h1>
-              <p className="text-[15px] text-muted-foreground">
-                Войдите в свой аккаунт для доступа к курсам
-              </p>
+              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
+                {t("auth.login")}
+              </h1>
+              <p className="text-[15px] text-muted-foreground">{t("auth.loginSubtitle")}</p>
             </div>
 
             {/* Demo credentials hint */}
             <div className="bg-accent/50 border border-border rounded-lg px-3.5 py-2.5">
               <p className="text-[13px] text-muted-foreground">
-                <strong className="font-medium">Demo:</strong> demo / demo или ivan.petrov /
-                password123
+                <strong className="font-medium">Demo:</strong> {t("auth.demoCredentials")}
               </p>
             </div>
 
@@ -111,7 +112,7 @@ export function LoginPage() {
             <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
               {/* Identifier (username or email) */}
               <Input
-                label="Email or username"
+                label={t("auth.emailOrUsername")}
                 type="text"
                 value={identifier}
                 onChange={(e) => {
@@ -127,7 +128,7 @@ export function LoginPage() {
 
               {/* Password */}
               <PasswordInput
-                label="Пароль"
+                label={t("auth.password")}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -150,7 +151,7 @@ export function LoginPage() {
                   isLoading={isLoading}
                   disabled={!identifier.trim() || !password.trim()}
                 >
-                  {isLoading ? "Вход..." : "Войти"}
+                  {isLoading ? t("auth.loggingIn") : t("auth.signIn")}
                 </Button>
               </div>
             </form>
@@ -164,16 +165,16 @@ export function LoginPage() {
                     href="#/reset-password"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Забыли пароль?
+                    {t("auth.forgotPassword")}
                   </a>
                 </div>
               )}
 
               {/* Register link */}
               <div className="text-center border-t border-border pt-4">
-                <p className="text-sm text-muted-foreground mb-2">Нет аккаунта?</p>
+                <p className="text-sm text-muted-foreground mb-2">{t("auth.noAccount")}</p>
                 <a href="#/register" className="text-sm font-medium text-primary hover:underline">
-                  Создать аккаунт
+                  {t("auth.createAccount")}
                 </a>
               </div>
             </div>

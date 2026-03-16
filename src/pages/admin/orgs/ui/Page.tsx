@@ -1,4 +1,5 @@
 import { Database, Users, TrendingUp, ExternalLink } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
@@ -72,6 +73,7 @@ const mockOrgs: Organization[] = [
 ];
 
 export default function AdminOrgsPage() {
+  const { t } = useTranslation();
   const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(mockOrgs, 10);
 
   const getPlanColor = (plan: string) => {
@@ -88,8 +90,8 @@ export default function AdminOrgsPage() {
   };
 
   return (
-    <AppShell title="Организации">
-      <PageHeader title="Организации" subtitle="Управление организациями в системе" />
+    <AppShell title={t("admin.orgs.title")}>
+      <PageHeader title={t("admin.orgs.title")} subtitle={t("admin.orgs.subtitle")} />
 
       <div>
         {/* Stats */}
@@ -100,7 +102,7 @@ export default function AdminOrgsPage() {
                 <Database className="w-5 h-5 text-[#1976d2]" />
               </div>
               <div>
-                <p className="text-xs text-[--text-secondary]">Всего организаций</p>
+                <p className="text-xs text-[--text-secondary]">{t("admin.orgsPage.totalOrgs")}</p>
                 <p className="text-xl font-semibold text-[--text-primary]">{mockOrgs.length}</p>
               </div>
             </div>
@@ -111,7 +113,7 @@ export default function AdminOrgsPage() {
                 <Users className="w-5 h-5 text-[#388e3c]" />
               </div>
               <div>
-                <p className="text-xs text-[--text-secondary]">Всего пользователей</p>
+                <p className="text-xs text-[--text-secondary]">{t("admin.orgsPage.totalUsers")}</p>
                 <p className="text-xl font-semibold text-[--text-primary]">
                   {mockOrgs.reduce((sum, org) => sum + org.usersCount, 0).toLocaleString()}
                 </p>
@@ -124,7 +126,9 @@ export default function AdminOrgsPage() {
                 <TrendingUp className="w-5 h-5 text-[#f57c00]" />
               </div>
               <div>
-                <p className="text-xs text-[--text-secondary]">Всего курсов</p>
+                <p className="text-xs text-[--text-secondary]">
+                  {t("admin.orgsPage.totalCourses")}
+                </p>
                 <p className="text-xl font-semibold text-[--text-primary]">
                   {mockOrgs.reduce((sum, org) => sum + org.coursesCount, 0)}
                 </p>
@@ -140,22 +144,22 @@ export default function AdminOrgsPage() {
               <thead>
                 <tr className="border-b border-[--surface-border] bg-[--surface-hover]">
                   <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                    Организация
+                    {t("admin.orgsPage.headerOrg")}
                   </th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                    План
+                    {t("admin.orgsPage.headerPlan")}
                   </th>
                   <th className="text-center px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                    Пользователей
+                    {t("admin.orgsPage.headerUsers")}
                   </th>
                   <th className="text-center px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                    Курсов
+                    {t("admin.orgsPage.headerCourses")}
                   </th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                    Статус
+                    {t("admin.orgsPage.headerStatus")}
                   </th>
                   <th className="text-right px-6 py-3 text-xs font-medium text-[--text-secondary] uppercase">
-                    Действия
+                    {t("admin.orgsPage.headerActions")}
                   </th>
                 </tr>
               </thead>
@@ -189,15 +193,17 @@ export default function AdminOrgsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="inline-flex px-2.5 py-1 bg-[#e8f5e9] text-[#388e3c] rounded-md text-xs font-medium">
-                        Активна
+                        {t("admin.orgsPage.statusActive")}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end">
                         <button
-                          onClick={() => alert(`Открыть организацию: ${org.name}`)}
+                          onClick={() =>
+                            alert(t("admin.orgsPage.openOrgAlert", { name: org.name }))
+                          }
                           className="p-2 hover:bg-[--surface-hover] rounded-[var(--radius-sm)] transition-colors"
-                          title="Подробнее"
+                          title={t("admin.orgsPage.detailsTooltip")}
                         >
                           <ExternalLink className="w-4 h-4 text-[--text-secondary]" />
                         </button>

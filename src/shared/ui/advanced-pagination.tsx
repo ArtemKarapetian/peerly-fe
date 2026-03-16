@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui/button.tsx";
 
@@ -22,6 +23,7 @@ export function AdvancedPagination({
   showPageNumbers = true,
   maxPageButtons = 7,
 }: AdvancedPaginationProps) {
+  const { t } = useTranslation();
   const canGoPrevious = currentPage > 1;
   const canGoNext = currentPage < totalPages;
 
@@ -96,7 +98,7 @@ export function AdvancedPagination({
         className="gap-1 px-3"
       >
         <ChevronLeft className="size-4" />
-        <span className="hidden sm:inline">Назад</span>
+        <span className="hidden sm:inline">{t("shared.pagination.back")}</span>
       </Button>
 
       {/* Page Numbers */}
@@ -124,7 +126,7 @@ export function AdvancedPagination({
                     ? "bg-[#2563eb] text-white shadow-[0_2px_4px_rgba(37,99,235,0.3)]"
                     : "text-[#21214f] hover:bg-[#f0f6ff] hover:text-[#2563eb]",
                 )}
-                aria-label={`Страница ${page}`}
+                aria-label={t("shared.pagination.page", { page })}
                 aria-current={currentPage === page ? "page" : undefined}
               >
                 {page}
@@ -142,7 +144,7 @@ export function AdvancedPagination({
         disabled={!canGoNext}
         className="gap-1 px-3"
       >
-        <span className="hidden sm:inline">Вперёд</span>
+        <span className="hidden sm:inline">{t("shared.pagination.forward")}</span>
         <ChevronRight className="size-4" />
       </Button>
     </div>

@@ -1,18 +1,21 @@
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function TaskRequirements() {
+  const { t } = useTranslation();
+
   const requirements = [
-    "Работа должна быть выполнена самостоятельно",
-    "Объём работы: не менее 1500 слов",
-    "Обязательно указывайте источники",
-    "Файл должен быть в формате PDF или DOCX",
-    "Соблюдайте требования к оформлению",
+    t("widget.taskRequirements.independent"),
+    t("widget.taskRequirements.minWords"),
+    t("widget.taskRequirements.citeSources"),
+    t("widget.taskRequirements.fileFormat"),
+    t("widget.taskRequirements.formatting"),
   ];
 
   return (
     <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
-        Требования
+        {t("widget.taskRequirements.title")}
       </h2>
 
       <div className="space-y-3">

@@ -7,6 +7,7 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import type { ValidationCheck } from "@/entities/work/model/types.ts";
 
@@ -62,29 +63,31 @@ export function VersionCard({
   onToggleSelect,
   comparisonMode = false,
 }: VersionCardProps) {
+  const { t } = useTranslation();
+
   const getStatusInfo = () => {
     switch (version.status) {
       case "draft":
         return {
-          label: "Черновик",
+          label: t("entity.work.statusDraft"),
           color: "bg-[#e4e4e4]",
           textColor: "text-[#4b4963]",
         };
       case "submitted":
         return {
-          label: "Отправлено",
+          label: t("entity.work.statusSubmitted"),
           color: "bg-[#b7bdff]",
           textColor: "text-[#21214f]",
         };
       case "accepted":
         return {
-          label: "Принято",
+          label: t("entity.work.statusAccepted"),
           color: "bg-[#9cf38d]",
           textColor: "text-[#21214f]",
         };
       case "rejected":
         return {
-          label: "Отклонено",
+          label: t("entity.work.statusRejected"),
           color: "bg-[#ffb8b8]",
           textColor: "text-[#21214f]",
         };
@@ -95,9 +98,9 @@ export function VersionCard({
 
   // Format file size
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+    if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
   };
 
   // Get checks summary
@@ -128,9 +131,11 @@ export function VersionCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <h3 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-              Версия {version.versionNumber}
+              {t("entity.work.version")} {version.versionNumber}
               {isLatest && (
-                <span className="ml-2 text-[13px] font-normal text-[#5b8def]">(текущая)</span>
+                <span className="ml-2 text-[13px] font-normal text-[#5b8def]">
+                  ({t("entity.work.current")})
+                </span>
               )}
             </h3>
           </div>
@@ -159,7 +164,7 @@ export function VersionCard({
 
       {/* Files */}
       <div className="mb-4">
-        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">Файлы</h4>
+        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">{t("entity.work.files")}</h4>
         <div className="space-y-2">
           {version.files.map((file) => (
             <div
@@ -177,7 +182,9 @@ export function VersionCard({
       {/* Note */}
       {version.note && (
         <div className="mb-4 bg-[#f9f9f9] rounded-[12px] p-3">
-          <h4 className="text-[13px] font-medium text-[#767692] mb-1">Комментарий</h4>
+          <h4 className="text-[13px] font-medium text-[#767692] mb-1">
+            {t("entity.work.comment")}
+          </h4>
           <p className="text-[14px] text-[#21214f] leading-[1.5]">{version.note}</p>
         </div>
       )}
@@ -185,7 +192,7 @@ export function VersionCard({
       {/* Validation Checks Summary */}
       {checksSummary && (
         <div className="mb-4">
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">Проверки</h4>
+          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">{t("entity.work.checks")}</h4>
           <div className="flex items-center gap-3">
             {checksSummary.passed > 0 && (
               <div className="flex items-center gap-1.5 text-[13px]">
@@ -206,7 +213,8 @@ export function VersionCard({
               </div>
             )}
             <span className="text-[13px] text-[#767692]">
-              ({checksSummary.total} {checksSummary.total === 1 ? "проверка" : "проверок"})
+              ({checksSummary.total}{" "}
+              {checksSummary.total === 1 ? t("entity.work.checkOne") : t("entity.work.checkMany")})
             </span>
           </div>
         </div>
@@ -219,7 +227,7 @@ export function VersionCard({
           className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#d2def8] hover:bg-[#c5d5f5] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
         >
           <Download className="w-4 h-4" />
-          <span>Скачать</span>
+          <span>{t("common.download")}</span>
         </button>
 
         <button
@@ -227,7 +235,7 @@ export function VersionCard({
           className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border-2 border-[#e6e8ee] hover:border-[#d2def8] hover:bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
         >
           <ChevronRight className="w-4 h-4" />
-          <span>Открыть отчёты</span>
+          <span>{t("entity.work.openReports")}</span>
         </button>
 
         {version.status === "draft" && onMakeCurrent && (
@@ -236,7 +244,7 @@ export function VersionCard({
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border-2 border-[#d2def8] hover:border-[#a0b8f1] hover:bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
-            <span>Сделать текущей</span>
+            <span>{t("entity.work.makeCurrent")}</span>
           </button>
         )}
 
@@ -245,7 +253,7 @@ export function VersionCard({
             onClick={onCreateNewVersion}
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[8px] text-[14px] font-medium transition-colors ml-auto"
           >
-            <span>Создать новую версию</span>
+            <span>{t("entity.work.createNewVersion")}</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         )}

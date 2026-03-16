@@ -1,4 +1,5 @@
 import { Calendar, FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Appeal, getReasonLabel, getStatusColor, getStatusLabel } from "@/entities/appeal";
 
@@ -8,6 +9,7 @@ interface AppealCardProps {
 }
 
 export function AppealCard({ appeal, onClick }: AppealCardProps) {
+  const { t } = useTranslation();
   return (
     <div
       onClick={onClick}
@@ -40,7 +42,7 @@ export function AppealCard({ appeal, onClick }: AppealCardProps) {
 
       {appeal.currentScore !== undefined && (
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
-          <span>Текущая оценка:</span>
+          <span>{t("entity.appeal.currentScore")}</span>
           <span className="font-medium text-foreground">
             {appeal.currentScore} / {appeal.maxScore}
           </span>

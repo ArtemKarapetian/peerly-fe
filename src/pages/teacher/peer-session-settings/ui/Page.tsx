@@ -1,7 +1,8 @@
 import { Save, EyeOff, Users, Shuffle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -45,6 +46,8 @@ interface TeacherPeerSessionSettingsPageProps {
 export default function TeacherPeerSessionSettingsPage({
   assignmentId,
 }: TeacherPeerSessionSettingsPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [settings, setSettings] = useState<PeerSessionSettings>(() => {
     const stored = localStorage.getItem(`peer_session_settings_${assignmentId}`);
     if (stored) {
@@ -120,7 +123,7 @@ export default function TeacherPeerSessionSettingsPage({
       oldValue,
       newValue,
       userId: "u2",
-      userName: "Преподаватель",
+      userName: t("teacher.peerSettings.teacherName"),
     };
 
     setAuditLog((prev) => [entry, ...prev].slice(0, 50)); // Keep last 50 entries
@@ -139,7 +142,7 @@ export default function TeacherPeerSessionSettingsPage({
         const oldValue = String(prev[key as keyof PeerSessionSettings]);
         const newValue = String(updates[key as keyof PeerSessionSettings]);
         if (oldValue !== newValue) {
-          addAuditEntry("Изменение настройки", key, oldValue, newValue);
+          addAuditEntry(t("teacher.peerSettings.settingChange"), key, oldValue, newValue);
         }
       });
 
@@ -148,19 +151,28 @@ export default function TeacherPeerSessionSettingsPage({
   };
 
   const handleSave = () => {
-    addAuditEntry("Сохранение настроек", "all", "", "Настройки сохранены");
+    addAuditEntry(
+      t("teacher.peerSettings.settingsSave"),
+      "all",
+      "",
+      t("teacher.peerSettings.settingsSaved"),
+    );
     setShowSaveSuccess(true);
     setTimeout(() => setShowSaveSuccess(false), 3000);
   };
 
   return (
-    <AppShell title="Настройки peer-сессии">
-      <Breadcrumbs items={[CRUMBS.teacherAssignments, { label: "Настройки peer-сессии" }]} />
+    <AppShell title={t("teacher.peerSettings.title")}>
+      <Breadcrumbs
+        items={[CRUMBS.teacherAssignments, { label: t("teacher.peerSettings.breadcrumb") }]}
+      />
 
       {/* Save Success Banner */}
       {showSaveSuccess && (
         <div className="mt-6 bg-[#e8f5e9] border border-[#4caf50] rounded-[12px] p-4 animate-fade-in">
-          <p className="text-[14px] text-[#21214f] font-medium">✅ Настройки успешно сохранены</p>
+          <p className="text-[14px] text-[#21214f] font-medium">
+            {t("teacher.peerSettings.savedSuccess")}
+          </p>
         </div>
       )}
 
@@ -169,18 +181,16 @@ export default function TeacherPeerSessionSettingsPage({
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-              Настройки peer-сессии
+              {t("teacher.peerSettings.title")}
             </h1>
-            <p className="text-[15px] text-[#767692]">
-              Управление параметрами взаимного рецензирования
-            </p>
+            <p className="text-[15px] text-[#767692]">{t("teacher.peerSettings.subtitle")}</p>
           </div>
           <button
             onClick={handleSave}
             className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
           >
             <Save className="w-4 h-4" />
-            Сохранить изменения
+            {t("teacher.peerSettings.saveChanges")}
           </button>
         </div>
 
@@ -189,7 +199,9 @@ export default function TeacherPeerSessionSettingsPage({
           <div>
             <div className="flex items-center gap-2 mb-3">
               <EyeOff className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Режим анонимности</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("teacher.peerSettings.anonymityMode")}
+              </h2>
             </div>
             <div className="space-y-3">
               <button
@@ -204,9 +216,11 @@ export default function TeacherPeerSessionSettingsPage({
                   }
                 `}
               >
-                <div className="text-[15px] font-medium text-[#21214f] mb-1">Без анонимности</div>
+                <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                  {t("teacher.peerSettings.noAnonymity")}
+                </div>
                 <div className="text-[13px] text-[#767692]">
-                  Все участники видят имена авторов и рецензентов
+                  {t("teacher.peerSettings.noAnonymityDesc")}
                 </div>
               </button>
 
@@ -223,10 +237,10 @@ export default function TeacherPeerSessionSettingsPage({
                 `}
               >
                 <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                  Скрыть автора работы
+                  {t("teacher.peerSettings.hideAuthor")}
                 </div>
                 <div className="text-[13px] text-[#767692]">
-                  Рецензент не знает, чью работу проверяет, но автор видит рецензента
+                  {t("teacher.peerSettings.hideAuthorDesc")}
                 </div>
               </button>
 
@@ -243,10 +257,10 @@ export default function TeacherPeerSessionSettingsPage({
                 `}
               >
                 <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                  Двойная анонимность (рекомендуется)
+                  {t("teacher.peerSettings.doubleAnonymous")}
                 </div>
                 <div className="text-[13px] text-[#767692]">
-                  Ни автор, ни рецензент не знают друг друга. Максимальная объективность.
+                  {t("teacher.peerSettings.doubleAnonymousDesc")}
                 </div>
               </button>
             </div>
@@ -257,7 +271,7 @@ export default function TeacherPeerSessionSettingsPage({
             <div className="flex items-center gap-2 mb-3">
               <Users className="w-5 h-5 text-[#5b8def]" />
               <h2 className="text-[18px] font-medium text-[#21214f]">
-                Количество рецензий на работу
+                {t("teacher.peerSettings.reviewsPerSubmission")}
               </h2>
             </div>
             <div className="flex items-center gap-4">
@@ -287,17 +301,13 @@ export default function TeacherPeerSessionSettingsPage({
                   }
                   className="w-20 px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[15px] font-medium text-center focus:outline-none focus:border-[#5b8def]"
                 />
-                <span className="text-[14px] text-[#767692]">рецензий</span>
+                <span className="text-[14px] text-[#767692]">
+                  {t("teacher.peerSettings.reviewsLabel")}
+                </span>
               </div>
             </div>
             <p className="text-[13px] text-[#767692] mt-2">
-              Каждая работа будет проверена {settings.reviewsPerSubmission} рецензент
-              {settings.reviewsPerSubmission === 1
-                ? "ом"
-                : settings.reviewsPerSubmission < 5
-                  ? "ами"
-                  : "ами"}
-              . Рекомендуется 3-5 для баланса.
+              {t("teacher.peerSettings.recommendedRange")}
             </p>
           </div>
 
@@ -305,7 +315,9 @@ export default function TeacherPeerSessionSettingsPage({
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Shuffle className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Алгоритм распределения</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("teacher.peerSettings.distributionAlgorithm")}
+              </h2>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <button
@@ -321,10 +333,10 @@ export default function TeacherPeerSessionSettingsPage({
                 `}
               >
                 <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                  Случайное распределение
+                  {t("teacher.peerSettings.randomDistribution")}
                 </div>
                 <div className="text-[13px] text-[#767692]">
-                  Быстрое и простое распределение работ
+                  {t("teacher.peerSettings.randomDistributionDesc")}
                 </div>
               </button>
 
@@ -341,16 +353,17 @@ export default function TeacherPeerSessionSettingsPage({
                 `}
               >
                 <div className="text-[15px] font-medium text-[#21214f] mb-1">
-                  С защитой от сговора
+                  {t("teacher.peerSettings.collusionProtection")}
                 </div>
-                <div className="text-[13px] text-[#767692]">Учитывает связи между студентами</div>
+                <div className="text-[13px] text-[#767692]">
+                  {t("teacher.peerSettings.collusionProtectionDesc")}
+                </div>
               </button>
             </div>
             {settings.assignmentAlgorithm === "avoid-collusion" && (
               <div className="mt-3 bg-[#e9f5ff] border border-[#a0b8f1] rounded-[8px] p-3">
                 <p className="text-[13px] text-[#21214f]">
-                  <strong>Demo:</strong> Алгоритм анализирует историю взаимодействий и избегает
-                  назначения работ между студентами, которые часто взаимодействуют.
+                  <strong>Demo:</strong> {t("teacher.peerSettings.collusionDemoNote")}
                 </p>
               </div>
             )}

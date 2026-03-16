@@ -1,5 +1,6 @@
 import { CheckCircle, Mail, AlertCircle, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/ui/button.tsx";
@@ -34,6 +35,7 @@ export default function VerifyEmailPage() {
     return storedEmail || "ivan.petrov@university.edu";
   };
 
+  const { t } = useTranslation();
   const [state, setState] = useState<VerificationState>(getInitialState());
   const [email, setEmail] = useState(getInitialEmail());
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -47,8 +49,8 @@ export default function VerifyEmailPage() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 800));
     setIsLoading(false);
-    toast.success("Письмо отправлено", {
-      description: `Проверьте ${email}`,
+    toast.success(t("page.verifyEmail.emailSent"), {
+      description: t("page.verifyEmail.checkEmail", { email }),
     });
     setLastSentTime(new Date().toLocaleTimeString());
   };
@@ -66,8 +68,8 @@ export default function VerifyEmailPage() {
     setEmail(newEmail);
     setShowEmailModal(false);
     setNewEmail("");
-    toast.success("Email изменён", {
-      description: `Письмо отправлено на ${newEmail}`,
+    toast.success(t("page.verifyEmail.emailChanged"), {
+      description: t("page.verifyEmail.emailSentTo", { email: newEmail }),
     });
     localStorage.setItem("pendingVerificationEmail", newEmail);
   };
@@ -86,10 +88,11 @@ export default function VerifyEmailPage() {
 
               {/* Success Message */}
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold text-foreground">Email подтверждён</h1>
+                <h1 className="text-2xl font-semibold text-foreground">
+                  {t("page.verifyEmail.emailVerified")}
+                </h1>
                 <p className="text-sm text-muted-foreground">
-                  Ваш адрес электронной почты успешно подтверждён. Теперь вы можете пользоваться
-                  всеми функциями платформы.
+                  {t("page.verifyEmail.emailVerifiedDesc")}
                 </p>
               </div>
 
@@ -100,12 +103,14 @@ export default function VerifyEmailPage() {
                 fullWidth
                 onClick={() => (window.location.hash = "/courses")}
               >
-                Перейти в приложение
+                {t("page.verifyEmail.goToApp")}
               </Button>
 
               {/* Demo State Switcher */}
               <div className="pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground mb-2">Demo: Переключить состояние</p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t("page.verifyEmail.demoSwitchState")}
+                </p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setState("pending")}
@@ -142,10 +147,11 @@ export default function VerifyEmailPage() {
 
               {/* Error Message */}
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold text-foreground">Ссылка устарела</h1>
+                <h1 className="text-2xl font-semibold text-foreground">
+                  {t("page.verifyEmail.linkExpired")}
+                </h1>
                 <p className="text-sm text-muted-foreground">
-                  Срок действия ссылки для подтверждения истёк. Пожалуйста, запросите новую ссылку
-                  для подтверждения email.
+                  {t("page.verifyEmail.linkExpiredDesc")}
                 </p>
               </div>
 
@@ -156,10 +162,10 @@ export default function VerifyEmailPage() {
                 fullWidth
                 onClick={() => {
                   setState("pending");
-                  toast.success("Новая ссылка отправлена");
+                  toast.success(t("page.verifyEmail.newLinkSent"));
                 }}
               >
-                Отправить новую ссылку
+                {t("page.verifyEmail.sendNewLink")}
               </Button>
 
               {/* Back to Login */}
@@ -168,13 +174,15 @@ export default function VerifyEmailPage() {
                   href="#/login"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Вернуться к входу
+                  {t("page.resetPassword.backToLogin")}
                 </a>
               </div>
 
               {/* Demo State Switcher */}
               <div className="pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground mb-2">Demo: Переключить состояние</p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t("page.verifyEmail.demoSwitchState")}
+                </p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setState("pending")}
@@ -211,22 +219,24 @@ export default function VerifyEmailPage() {
 
               {/* Message */}
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold text-foreground">Подтверждение email</h1>
+                <h1 className="text-2xl font-semibold text-foreground">
+                  {t("page.verifyEmail.title")}
+                </h1>
                 <p className="text-sm text-muted-foreground">
-                  Мы отправили письмо на <strong className="text-foreground">{email}</strong>
+                  {t("page.verifyEmail.weSentEmail")}{" "}
+                  <strong className="text-foreground">{email}</strong>
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Откройте письмо и перейдите по ссылке для подтверждения.
+                  {t("page.verifyEmail.openEmailAndFollow")}
                 </p>
                 {lastSentTime && (
                   <p className="text-xs text-muted-foreground">
-                    Последняя отправка: {lastSentTime}
+                    {t("page.verifyEmail.lastSent")}: {lastSentTime}
                   </p>
                 )}
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
                   <p className="text-xs text-amber-800">
-                    <strong>Demo only:</strong> Реальные письма не отправляются. Используйте
-                    переключатели состояний ниже.
+                    <strong>Demo only:</strong> {t("page.verifyEmail.demoNote")}
                   </p>
                 </div>
               </div>
@@ -240,7 +250,7 @@ export default function VerifyEmailPage() {
                 isLoading={isLoading}
                 disabled={isLoading}
               >
-                {isLoading ? "Отправка..." : "Отправить письмо ещё раз"}
+                {isLoading ? t("page.verifyEmail.sending") : t("page.verifyEmail.resendEmail")}
               </Button>
 
               {/* Change Email Link */}
@@ -249,20 +259,20 @@ export default function VerifyEmailPage() {
                   onClick={() => setShowEmailModal(true)}
                   className="text-sm text-primary hover:underline"
                 >
-                  Изменить email
+                  {t("page.verifyEmail.changeEmail")}
                 </button>
               </div>
 
               {/* Help Text */}
               <div className="pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground">
-                  Не получили письмо? Проверьте папку «Спам» или «Промоакции»
-                </p>
+                <p className="text-xs text-muted-foreground">{t("page.verifyEmail.checkSpam")}</p>
               </div>
 
               {/* Demo State Switcher */}
               <div className="pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground mb-2">Demo: Переключить состояние</p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t("page.verifyEmail.demoSwitchState")}
+                </p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setState("verified")}
@@ -289,7 +299,9 @@ export default function VerifyEmailPage() {
           <div className="bg-card border border-border rounded-xl p-6 w-full max-w-[400px] shadow-lg">
             {/* Modal Header */}
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Изменить email</h2>
+              <h2 className="text-lg font-semibold text-foreground">
+                {t("page.verifyEmail.changeEmail")}
+              </h2>
               <button
                 onClick={() => {
                   setShowEmailModal(false);
@@ -303,12 +315,10 @@ export default function VerifyEmailPage() {
 
             {/* Modal Content */}
             <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Введите новый адрес электронной почты. Мы отправим письмо для подтверждения.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("page.verifyEmail.enterNewEmail")}</p>
 
               <Input
-                label="Новый email"
+                label={t("page.verifyEmail.newEmail")}
                 type="email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
@@ -327,7 +337,7 @@ export default function VerifyEmailPage() {
                   }}
                   disabled={isLoading}
                 >
-                  Отмена
+                  {t("common.cancel")}
                 </Button>
                 <Button
                   variant="primary"
@@ -336,7 +346,7 @@ export default function VerifyEmailPage() {
                   isLoading={isLoading}
                   disabled={!newEmail.trim() || !newEmail.includes("@") || isLoading}
                 >
-                  {isLoading ? "Сохранение..." : "Сохранить"}
+                  {isLoading ? t("page.resetPassword.saving") : t("common.save")}
                 </Button>
               </div>
             </div>

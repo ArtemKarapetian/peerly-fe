@@ -1,4 +1,5 @@
 import { Calendar, CheckSquare, MessageSquare } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface TodaySummaryData {
   tasksToday: number;
@@ -10,16 +11,17 @@ interface TodaySummaryProps {
 }
 
 export function TodaySummary({ data }: TodaySummaryProps) {
+  const { t } = useTranslation();
   const items = [
     {
       icon: CheckSquare,
-      label: "Задания сегодня",
+      label: t("widget.todaySummary.tasksToday"),
       count: data.tasksToday,
       accent: "#2563eb",
     },
     {
       icon: MessageSquare,
-      label: "Рецензии на проверке",
+      label: t("widget.todaySummary.reviewsPending"),
       count: data.reviewsPending,
       accent: "#059669",
     },
@@ -51,7 +53,7 @@ export function TodaySummary({ data }: TodaySummaryProps) {
       <div className="pt-3 border-t border-[--surface-border] flex items-center gap-2 text-[12px] text-[--text-tertiary]">
         <Calendar className="w-3.5 h-3.5 shrink-0" />
         <span className="capitalize">
-          {new Date().toLocaleDateString("ru-RU", {
+          {new Date().toLocaleDateString(undefined, {
             weekday: "long",
             day: "numeric",
             month: "long",

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { CourseHeader, CourseTabs } from "@/entities/course";
@@ -14,13 +15,18 @@ interface CoursePageProps {
 }
 
 export default function CoursePage({ courseId = "1" }: CoursePageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<"assignments" | "participants">("assignments");
 
   return (
-    <AppShell title="Название курса">
-      <Breadcrumbs items={[CRUMBS.courses, { label: "Название курса" }]} />
+    <AppShell title={t("page.courseDetail.title")}>
+      <Breadcrumbs items={[CRUMBS.courses, { label: t("page.courseDetail.title") }]} />
       <div className="mb-2">
-        <CourseHeader title="Название курса" teacher="Преподаватель" />
+        <CourseHeader
+          title={t("page.courseDetail.title")}
+          teacher={t("page.courseDetail.teacher")}
+        />
       </div>
 
       <CourseTabs

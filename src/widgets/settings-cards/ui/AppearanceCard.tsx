@@ -1,9 +1,11 @@
 import { Monitor, Sun, Moon } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type ThemeMode = "light" | "dark" | "system";
 
 export function AppearanceCard() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState<ThemeMode>("light");
 
   return (
@@ -12,10 +14,10 @@ export function AppearanceCard() {
         <div className="w-10 h-10 bg-accent rounded-[8px] flex items-center justify-center">
           <Monitor className="w-5 h-5 text-accent-foreground" />
         </div>
-        <h2 className="text-[20px] font-medium text-foreground">Внешний вид</h2>
+        <h2 className="text-[20px] font-medium text-foreground">{t("widget.appearance.title")}</h2>
       </div>
 
-      <p className="text-[14px] text-muted-foreground mb-4">Выберите тему оформления интерфейса</p>
+      <p className="text-[14px] text-muted-foreground mb-4">{t("widget.appearance.subtitle")}</p>
 
       <div className="inline-flex bg-muted rounded-[12px] p-1">
         <button
@@ -27,7 +29,7 @@ export function AppearanceCard() {
           }`}
         >
           <Sun className="w-4 h-4" />
-          Светлая
+          {t("widget.appearance.light")}
         </button>
         <button
           onClick={() => setTheme("dark")}
@@ -35,10 +37,10 @@ export function AppearanceCard() {
           className={`flex items-center gap-2 px-4 py-2 rounded-[8px] text-[14px] font-medium transition-all opacity-40 cursor-not-allowed ${
             theme === "dark" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
           }`}
-          title="Темная тема скоро будет доступна"
+          title={t("widget.appearance.darkTooltip")}
         >
           <Moon className="w-4 h-4" />
-          Тёмная
+          {t("widget.appearance.dark")}
         </button>
         <button
           onClick={() => setTheme("system")}
@@ -46,16 +48,14 @@ export function AppearanceCard() {
           className={`flex items-center gap-2 px-4 py-2 rounded-[8px] text-[14px] font-medium transition-all opacity-40 cursor-not-allowed ${
             theme === "system" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
           }`}
-          title="Автоматическая тема скоро будет доступна"
+          title={t("widget.appearance.systemTooltip")}
         >
           <Monitor className="w-4 h-4" />
-          Системная
+          {t("widget.appearance.system")}
         </button>
       </div>
 
-      <p className="text-[13px] text-muted-foreground mt-3 italic">
-        * Темная и системная темы будут доступны в следующих версиях
-      </p>
+      <p className="text-[13px] text-muted-foreground mt-3 italic">{t("widget.appearance.note")}</p>
     </div>
   );
 }
