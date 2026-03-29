@@ -1,5 +1,6 @@
 import { Plus, Calendar, Users, FileText } from "lucide-react";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 
@@ -10,6 +11,7 @@ interface TeacherCourseAssignmentsProps {
 }
 
 export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsProps) {
+  const { t } = useTranslation();
   const { data: assignments, isLoading } = useAsync(
     () => assignmentRepo.getByCourse(courseId),
     [courseId],
@@ -20,19 +22,19 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
       case "published":
         return (
           <span className="px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
-            Опубликовано
+            {t("widget.assignments.published")}
           </span>
         );
       case "draft":
         return (
           <span className="px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
-            Черновик
+            {t("widget.assignments.draft")}
           </span>
         );
       case "closed":
         return (
           <span className="px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[12px] font-medium">
-            Закрыто
+            {t("widget.assignments.closed")}
           </span>
         );
       default:
@@ -56,21 +58,24 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
   };
 
   if (isLoading) {
-    return <div className="text-center py-12 text-[#767692]">Загрузка...</div>;
+    return (
+      <div className="text-center py-12 text-[#767692]">{t("widget.assignments.loading")}</div>
+    );
   }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <p className="text-[15px] text-[#767692]">
-          Всего заданий: <strong className="text-[#21214f]">{(assignments ?? []).length}</strong>
+          {t("widget.assignments.totalAssignments")}{" "}
+          <strong className="text-[#21214f]">{(assignments ?? []).length}</strong>
         </p>
         <button
           onClick={handleCreateAssignment}
           className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors"
         >
           <Plus className="w-4 h-4" />
-          Создать задание
+          {t("widget.assignments.createAssignment")}
         </button>
       </div>
 
@@ -97,7 +102,7 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
               </span>
               <span className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                {assignment.reviewCount} рецензий
+                {assignment.reviewCount} {t("widget.assignments.reviews")}
               </span>
             </div>
           </button>
@@ -106,12 +111,14 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
         {(assignments ?? []).length === 0 && (
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692] mb-4">Заданий пока нет</p>
+            <p className="text-[15px] text-[#767692] mb-4">
+              {t("widget.assignments.noAssignments")}
+            </p>
             <button
               onClick={handleCreateAssignment}
               className="px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors"
             >
-              Создать первое задание
+              {t("widget.assignments.createFirst")}
             </button>
           </div>
         )}

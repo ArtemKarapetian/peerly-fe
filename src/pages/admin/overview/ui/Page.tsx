@@ -11,6 +11,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -19,12 +20,7 @@ import { pluginRepo } from "@/entities/plugin";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
- * AdminOverviewPage - Главная страница админ панели
- *
- * Функции:
- * - Переключатель организации/тенанта
- * - Карточки статистики: пользователи, курсы, очереди, плагины
- * - Быстрые ссылки на разделы: Users, Plugins, Logs, Health
+ * AdminOverviewPage - Admin panel dashboard
  */
 
 interface Organization {
@@ -52,7 +48,8 @@ interface QueueStats {
 }
 
 export default function AdminOverviewPage() {
-  // Demo organizations
+  const { t } = useTranslation();
+
   const demoOrgs: Organization[] = [
     {
       id: "org1",
@@ -84,17 +81,12 @@ export default function AdminOverviewPage() {
   ];
 
   const [selectedOrg, setSelectedOrg] = useState<string>(demoOrgs[0].id);
-
   const currentOrg = demoOrgs.find((o) => o.id === selectedOrg) || demoOrgs[0];
 
-  // Get data from store
   const allPlugins = pluginRepo.getAll();
-
-  // Filter by selected org (in real app)
   const orgUsers = currentOrg.userCount;
   const activeCourses = currentOrg.courseCount;
 
-  // Demo queue stats
   const queueStats: QueueStats = {
     total: 247,
     running: 12,
@@ -102,7 +94,6 @@ export default function AdminOverviewPage() {
     failed: 0,
   };
 
-  // Demo plugin health - use deterministic values with fixed dates
   const pluginHealth: PluginHealth[] = allPlugins.map((plugin, index) => ({
     id: plugin.id,
     name: plugin.name,
@@ -114,35 +105,34 @@ export default function AdminOverviewPage() {
   const warningPlugins = pluginHealth.filter((p) => p.status === "warning").length;
   const errorPlugins = pluginHealth.filter((p) => p.status === "error").length;
 
-  // Quick links
   const quickLinks = [
     {
-      title: "Пользователи",
-      description: "Управление пользователями и ролями",
+      titleKey: "admin.overviewPage.qlUsers",
+      descriptionKey: "admin.overviewPage.qlUsersDesc",
       icon: Users,
       href: "/admin/users",
       color: "bg-[#e9f5ff]",
       iconColor: "text-[#5b8def]",
     },
     {
-      title: "Плагины",
-      description: "Настройка и мониторинг плагинов",
+      titleKey: "admin.overviewPage.qlPlugins",
+      descriptionKey: "admin.overviewPage.qlPluginsDesc",
       icon: Zap,
       href: "/admin/plugins",
       color: "bg-[#fff4e5]",
       iconColor: "text-[#ff9800]",
     },
     {
-      title: "Логи",
-      description: "Журнал действий и аудит",
+      titleKey: "admin.overviewPage.qlLogs",
+      descriptionKey: "admin.overviewPage.qlLogsDesc",
       icon: FileText,
       href: "/admin/logs",
       color: "bg-[#f3e5f5]",
       iconColor: "text-[#8e24aa]",
     },
     {
-      title: "Здоровье системы",
-      description: "Мониторинг и диагностика",
+      titleKey: "admin.overviewPage.qlHealth",
+      descriptionKey: "admin.overviewPage.qlHealthDesc",
       icon: Activity,
       href: "/admin/health",
       color: "bg-[#e8f5e9]",
@@ -155,24 +145,21 @@ export default function AdminOverviewPage() {
   }, []);
 
   return (
-    <AppShell title="Админ панель">
-      <Breadcrumbs items={[{ label: "Обзор" }]} />
+    <AppShell title={t("admin.overview.title")}>
+      <Breadcrumbs items={[{ label: t("admin.overview.title") }]} />
 
       <div className="mt-6">
-        {/* Header with Org Selector */}
         <div className="mb-6">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex-1">
               <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-                Обзор
+                {t("admin.overview.title")}
               </h1>
-              <p className="text-[16px] text-[#767692]">Мониторинг и управление системой Peerly</p>
+              <p className="text-[16px] text-[#767692]">{t("admin.overview.subtitle")}</p>
             </div>
-
-            {/* Organization Selector */}
             <div className="min-w-[280px]">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Организация
+                {t("admin.overviewPage.orgLabel")}
               </label>
               <select
                 value={selectedOrg}
@@ -188,7 +175,6 @@ export default function AdminOverviewPage() {
             </div>
           </div>
 
-          {/* Selected Org Info */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
@@ -208,66 +194,67 @@ export default function AdminOverviewPage() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[13px] text-[#4caf50] font-medium">Активна</span>
+              <span className="text-[13px] text-[#4caf50] font-medium">
+                {t("admin.overviewPage.orgActive")}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          {/* Total Users */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
             <div className="w-12 h-12 bg-[#e9f5ff] rounded-[12px] flex items-center justify-center mb-4">
               <Users className="w-6 h-6 text-[#5b8def]" />
             </div>
             <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
-              Всего пользователей
+              {t("admin.overviewPage.totalUsers")}
             </p>
             <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
               {orgUsers.toLocaleString()}
             </p>
             <p className="text-[12px] text-[#4caf50] mt-2 flex items-center gap-1">
-              <span>↗</span> +12% за месяц
+              <span>↗</span> {t("admin.overviewPage.monthGrowth")}
             </p>
           </div>
 
-          {/* Active Courses */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
             <div className="w-12 h-12 bg-[#e8f5e9] rounded-[12px] flex items-center justify-center mb-4">
               <BookOpen className="w-6 h-6 text-[#4caf50]" />
             </div>
             <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
-              Активных курсов
+              {t("admin.overviewPage.activeCourses")}
             </p>
             <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
               {activeCourses}
             </p>
             <p className="text-[12px] text-[#767692] mt-2">
-              {Math.floor(activeCourses * 0.15)} архивных
+              {t("admin.overviewPage.archivedCount", {
+                count: Math.floor(activeCourses * 0.15),
+              })}
             </p>
           </div>
 
-          {/* Running Queues/Jobs */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
             <div className="w-12 h-12 bg-[#fff4e5] rounded-[12px] flex items-center justify-center mb-4">
               <Activity className="w-6 h-6 text-[#ff9800]" />
             </div>
             <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
-              Задач в очереди
+              {t("admin.overviewPage.queueJobs")}
             </p>
             <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
               {queueStats.running}
             </p>
-            <p className="text-[12px] text-[#767692] mt-2">{queueStats.pending} в ожидании</p>
+            <p className="text-[12px] text-[#767692] mt-2">
+              {t("admin.overviewPage.pendingCount", { count: queueStats.pending })}
+            </p>
           </div>
 
-          {/* Plugin Health */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
             <div className="w-12 h-12 bg-[#e8f5e9] rounded-[12px] flex items-center justify-center mb-4">
               <Zap className="w-6 h-6 text-[#4caf50]" />
             </div>
             <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
-              Статус плагинов
+              {t("admin.overviewPage.pluginStatus")}
             </p>
             <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
               {healthyPlugins}/{pluginHealth.length}
@@ -276,50 +263,57 @@ export default function AdminOverviewPage() {
               {warningPlugins > 0 && <span className="text-[#ff9800]">{warningPlugins} ⚠️</span>}
               {errorPlugins > 0 && <span className="text-[#d4183d]">{errorPlugins} ❌</span>}
               {warningPlugins === 0 && errorPlugins === 0 && (
-                <span className="text-[#4caf50]">Все работают</span>
+                <span className="text-[#4caf50]">{t("admin.overviewPage.allRunning")}</span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Detailed Stats Row */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Queue Details */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <Activity className="w-5 h-5 text-[#ff9800]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Очереди задач</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("admin.overviewPage.queueDetails")}
+              </h2>
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-[#ff9800] rounded-full"></div>
-                  <span className="text-[14px] text-[#21214f]">Выполняется</span>
+                  <span className="text-[14px] text-[#21214f]">
+                    {t("admin.overviewPage.running")}
+                  </span>
                 </div>
                 <span className="text-[16px] font-medium text-[#ff9800]">{queueStats.running}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-[#5b8def] rounded-full"></div>
-                  <span className="text-[14px] text-[#21214f]">В ожидании</span>
+                  <span className="text-[14px] text-[#21214f]">
+                    {t("admin.overviewPage.pending")}
+                  </span>
                 </div>
                 <span className="text-[16px] font-medium text-[#5b8def]">{queueStats.pending}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-[#d4183d] rounded-full"></div>
-                  <span className="text-[14px] text-[#21214f]">Ошибки</span>
+                  <span className="text-[14px] text-[#21214f]">
+                    {t("admin.overviewPage.errors")}
+                  </span>
                 </div>
                 <span className="text-[16px] font-medium text-[#d4183d]">{queueStats.failed}</span>
               </div>
             </div>
           </div>
 
-          {/* Plugin Health Details */}
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">Здоровье плагинов</h2>
+              <h2 className="text-[18px] font-medium text-[#21214f]">
+                {t("admin.overviewPage.pluginHealth")}
+              </h2>
             </div>
             <div className="space-y-3">
               {pluginHealth.slice(0, 3).map((plugin) => (
@@ -330,26 +324,27 @@ export default function AdminOverviewPage() {
                   <div className="flex-1">
                     <p className="text-[14px] font-medium text-[#21214f]">{plugin.name}</p>
                     <p className="text-[12px] text-[#767692]">
-                      Проверено: {plugin.lastCheck.toLocaleTimeString("ru-RU")}
+                      {t("admin.overviewPage.checked")}{" "}
+                      {plugin.lastCheck.toLocaleTimeString("ru-RU")}
                     </p>
                   </div>
                   <div>
                     {plugin.status === "healthy" && (
                       <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
                         <CheckCircle className="w-3 h-3" />
-                        OK
+                        {t("admin.overviewPage.statusOk")}
                       </span>
                     )}
                     {plugin.status === "warning" && (
                       <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
                         <AlertTriangle className="w-3 h-3" />
-                        Внимание
+                        {t("admin.overviewPage.statusWarning")}
                       </span>
                     )}
                     {plugin.status === "error" && (
                       <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
                         <XCircle className="w-3 h-3" />
-                        Ошибка
+                        {t("admin.overviewPage.statusError")}
                       </span>
                     )}
                   </div>
@@ -359,9 +354,10 @@ export default function AdminOverviewPage() {
           </div>
         </div>
 
-        {/* Quick Links */}
         <div>
-          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">Быстрые переходы</h2>
+          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">
+            {t("admin.overviewPage.quickLinks")}
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {quickLinks.map((link) => {
               const Icon = link.icon;
@@ -376,10 +372,12 @@ export default function AdminOverviewPage() {
                   >
                     <Icon className={`w-6 h-6 ${link.iconColor}`} />
                   </div>
-                  <h3 className="text-[16px] font-medium text-[#21214f] mb-2">{link.title}</h3>
-                  <p className="text-[13px] text-[#767692] mb-3">{link.description}</p>
+                  <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+                    {t(link.titleKey)}
+                  </h3>
+                  <p className="text-[13px] text-[#767692] mb-3">{t(link.descriptionKey)}</p>
                   <div className="flex items-center gap-1 text-[13px] text-[#5b8def] font-medium">
-                    Перейти
+                    {t("admin.overviewPage.goTo")}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </button>
@@ -388,11 +386,12 @@ export default function AdminOverviewPage() {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <div className="mt-6 bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
           <div className="flex items-center gap-2 mb-4">
             <FileText className="w-5 h-5 text-[#767692]" />
-            <h2 className="text-[18px] font-medium text-[#21214f]">Последние события</h2>
+            <h2 className="text-[18px] font-medium text-[#21214f]">
+              {t("admin.overviewPage.recentEvents")}
+            </h2>
           </div>
           <div className="space-y-3">
             <div className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
@@ -401,9 +400,11 @@ export default function AdminOverviewPage() {
               </div>
               <div className="flex-1">
                 <p className="text-[14px] text-[#21214f]">
-                  Новая организация создана: "{currentOrg.name}"
+                  {t("admin.overviewPage.eventOrgCreated", { name: currentOrg.name })}
                 </p>
-                <p className="text-[12px] text-[#767692] mt-1">2 часа назад</p>
+                <p className="text-[12px] text-[#767692] mt-1">
+                  {t("admin.overviewPage.timeAgo2h")}
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
@@ -412,9 +413,11 @@ export default function AdminOverviewPage() {
               </div>
               <div className="flex-1">
                 <p className="text-[14px] text-[#21214f]">
-                  Плагин обновлён: "Plagiarism Checker v2.1"
+                  {t("admin.overviewPage.eventPluginUpdated")}
                 </p>
-                <p className="text-[12px] text-[#767692] mt-1">5 часов назад</p>
+                <p className="text-[12px] text-[#767692] mt-1">
+                  {t("admin.overviewPage.timeAgo5h")}
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
@@ -423,9 +426,11 @@ export default function AdminOverviewPage() {
               </div>
               <div className="flex-1">
                 <p className="text-[14px] text-[#21214f]">
-                  Резервное копирование завершено успешно
+                  {t("admin.overviewPage.eventBackupComplete")}
                 </p>
-                <p className="text-[12px] text-[#767692] mt-1">1 день назад</p>
+                <p className="text-[12px] text-[#767692] mt-1">
+                  {t("admin.overviewPage.timeAgo1d")}
+                </p>
               </div>
             </div>
           </div>

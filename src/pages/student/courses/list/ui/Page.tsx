@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -12,13 +13,14 @@ import { CourseFilterBar } from "@/widgets/course-filter-bar";
 import { mockCourses } from "../model/mockCourses";
 
 export default function CoursesListPage() {
+  const { t } = useTranslation();
   const handleCourseClick = useCallback((courseId: string) => {
     window.location.hash = `/course/${courseId}`;
   }, []);
 
   return (
-    <AppShell title="Курсы">
-      <PageHeader title="Курсы" subtitle="Ваши учебные курсы на текущий семестр" />
+    <AppShell title={t("student.courses.title")}>
+      <PageHeader title={t("student.courses.title")} subtitle={t("student.courses.subtitle")} />
 
       <CourseFilterBar courses={mockCourses}>
         {(filteredCourses) => (
@@ -36,12 +38,15 @@ function CourseListContent({
   courses: typeof mockCourses;
   onCourseClick: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(courses, 9);
 
   return (
     <>
       {courses.length > 0 && (
-        <p className="mb-3 text-[12px] text-[--text-tertiary]">Найдено: {courses.length}</p>
+        <p className="mb-3 text-[12px] text-[--text-tertiary]">
+          {t("common.found")}: {courses.length}
+        </p>
       )}
 
       {currentItems.length > 0 ? (
@@ -67,9 +72,11 @@ function CourseListContent({
           <div className="w-12 h-12 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
             <span className="text-[22px]">📚</span>
           </div>
-          <p className="text-[14px] font-medium text-[--text-primary] mb-1">Курсы не найдены</p>
+          <p className="text-[14px] font-medium text-[--text-primary] mb-1">
+            {t("student.courses.notFound")}
+          </p>
           <p className="text-[13px] text-[--text-secondary]">
-            Попробуйте изменить параметры поиска
+            {t("student.courses.tryChangingSearch")}
           </p>
         </div>
       )}

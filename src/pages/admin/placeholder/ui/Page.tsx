@@ -1,11 +1,12 @@
 import { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs, BreadcrumbItem } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
- * AdminPlaceholderPage - Шаблон для страниц администратора
+ * AdminPlaceholderPage - Template for admin pages
  */
 
 interface AdminPlaceholderPageProps {
@@ -21,6 +22,8 @@ export function AdminPlaceholderPage({
   icon: Icon,
   breadcrumbs = [],
 }: AdminPlaceholderPageProps) {
+  const { t } = useTranslation();
+
   return (
     <AppShell title={title}>
       <Breadcrumbs items={breadcrumbs} />
@@ -34,8 +37,8 @@ export function AdminPlaceholderPage({
           <p className="text-[16px] text-[#767692] leading-[1.6] mb-6">{description}</p>
           <div className="bg-[#f9f9f9] border border-[#e6e8ee] rounded-[12px] p-4">
             <p className="text-[14px] text-[#767692]">
-              <strong>Демо-режим:</strong> Эта страница будет содержать административные функции
-              системы.
+              <strong>{t("admin.placeholderPage.demoMode")}</strong>{" "}
+              {t("admin.placeholderPage.demoText")}
             </p>
           </div>
         </div>

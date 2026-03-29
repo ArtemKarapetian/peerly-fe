@@ -1,5 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import { InputHTMLAttributes, forwardRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * PasswordField - Поле пароля с возможностью показать/скрыть
@@ -13,6 +14,7 @@ interface PasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
 
 export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
   ({ label, error, helperText, className = "", ...props }, ref) => {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -46,7 +48,9 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-[#767692] hover:text-[#21214f] transition-colors focus:outline-none"
-            aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+            aria-label={
+              showPassword ? t("feature.auth.hidePassword") : t("feature.auth.showPassword")
+            }
           >
             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>

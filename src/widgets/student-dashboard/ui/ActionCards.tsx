@@ -1,4 +1,5 @@
 import { CheckSquare, MessageSquare, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface ActionCardData {
   reviewsPending: number;
@@ -12,11 +13,13 @@ interface ActionCardsProps {
 }
 
 export function ActionCards({ data, onReviewsClick, onFeedbackClick }: ActionCardsProps) {
+  const { t } = useTranslation();
+
   const items = [
     {
       id: "reviews",
       icon: CheckSquare,
-      label: "Нужно проверить",
+      label: t("widget.actionCards.needToReview"),
       count: data.reviewsPending,
       accent: "#7c3aed",
       onClick: onReviewsClick,
@@ -24,7 +27,7 @@ export function ActionCards({ data, onReviewsClick, onFeedbackClick }: ActionCar
     {
       id: "feedback",
       icon: MessageSquare,
-      label: "Новые отзывы",
+      label: t("widget.actionCards.newFeedback"),
       count: data.newFeedback,
       accent: "#059669",
       onClick: onFeedbackClick,

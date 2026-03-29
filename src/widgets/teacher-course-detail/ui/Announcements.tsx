@@ -1,4 +1,5 @@
 import { Plus, Megaphone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { announcementRepo } from "@/entities/announcement";
 
@@ -7,15 +8,16 @@ interface TeacherCourseAnnouncementsProps {
 }
 
 export function TeacherCourseAnnouncements({ courseId }: TeacherCourseAnnouncementsProps) {
+  const { t } = useTranslation();
   const announcements = announcementRepo.getAll().filter((a) => a.courseId === courseId);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <p className="text-[15px] text-[#767692]">Объявления для студентов курса</p>
+        <p className="text-[15px] text-[#767692]">{t("widget.announcements.subtitle")}</p>
         <button className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors">
           <Plus className="w-4 h-4" />
-          Создать объявление
+          {t("widget.announcements.create")}
         </button>
       </div>
 
@@ -39,9 +41,11 @@ export function TeacherCourseAnnouncements({ courseId }: TeacherCourseAnnounceme
         {announcements.length === 0 && (
           <div className="text-center py-12">
             <Megaphone className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692] mb-4">Объявлений пока нет</p>
+            <p className="text-[15px] text-[#767692] mb-4">
+              {t("widget.announcements.noAnnouncements")}
+            </p>
             <button className="px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors">
-              Создать объявление
+              {t("widget.announcements.create")}
             </button>
           </div>
         )}

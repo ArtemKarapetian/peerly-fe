@@ -1,8 +1,10 @@
 import { Lock, Eye, EyeOff, AlertTriangle, CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { useChangePassword } from "@/features/security/change-password";
 
 export function ChangePasswordCard() {
+  const { t } = useTranslation();
   const {
     passwordData,
     setPasswordData,
@@ -20,7 +22,9 @@ export function ChangePasswordCard() {
       {showSuccess && (
         <div className="mb-6 p-4 bg-accent rounded-[12px] flex items-center gap-3">
           <CheckCircle className="w-5 h-5 text-accent-foreground" />
-          <p className="text-[14px] text-accent-foreground font-medium">Пароль успешно изменён!</p>
+          <p className="text-[14px] text-accent-foreground font-medium">
+            {t("widget.changePassword.successMessage")}
+          </p>
         </div>
       )}
 
@@ -29,11 +33,13 @@ export function ChangePasswordCard() {
           <div className="w-10 h-10 bg-accent rounded-[8px] flex items-center justify-center">
             <Lock className="w-5 h-5 text-accent-foreground" />
           </div>
-          <h2 className="text-[20px] font-medium text-foreground">Изменить пароль</h2>
+          <h2 className="text-[20px] font-medium text-foreground">
+            {t("widget.changePassword.title")}
+          </h2>
         </div>
 
         <p className="text-[14px] text-muted-foreground mb-6">
-          Используйте надёжный пароль для защиты вашей учётной записи
+          {t("widget.changePassword.subtitle")}
         </p>
 
         {/* Password Errors */}
@@ -42,7 +48,9 @@ export function ChangePasswordCard() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="text-[14px] font-medium text-destructive mb-2">Ошибки валидации:</p>
+                <p className="text-[14px] font-medium text-destructive mb-2">
+                  {t("widget.changePassword.validationErrors")}
+                </p>
                 <ul className="list-disc list-inside space-y-1">
                   {passwordErrors.map((error, idx) => (
                     <li key={idx} className="text-[13px] text-destructive">
@@ -59,7 +67,7 @@ export function ChangePasswordCard() {
           {/* Current Password */}
           <div>
             <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              Текущий пароль
+              {t("widget.changePassword.currentPassword")}
             </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -68,7 +76,7 @@ export function ChangePasswordCard() {
                 value={passwordData.current}
                 onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
                 className="w-full pl-12 pr-12 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground bg-card focus:border-accent focus:outline-none transition-colors"
-                placeholder="Введите текущий пароль"
+                placeholder={t("widget.changePassword.currentPasswordPlaceholder")}
               />
               <button
                 type="button"
@@ -87,7 +95,7 @@ export function ChangePasswordCard() {
           {/* New Password */}
           <div>
             <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              Новый пароль
+              {t("widget.changePassword.newPassword")}
             </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -96,7 +104,7 @@ export function ChangePasswordCard() {
                 value={passwordData.new}
                 onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
                 className="w-full pl-12 pr-12 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground bg-card focus:border-accent focus:outline-none transition-colors"
-                placeholder="Введите новый пароль"
+                placeholder={t("widget.changePassword.newPasswordPlaceholder")}
               />
               <button
                 type="button"
@@ -107,14 +115,14 @@ export function ChangePasswordCard() {
               </button>
             </div>
             <p className="mt-2 text-[12px] text-muted-foreground">
-              Минимум 8 символов, включая заглавную букву и цифру
+              {t("widget.changePassword.passwordHint")}
             </p>
           </div>
 
           {/* Confirm Password */}
           <div>
             <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              Подтвердите пароль
+              {t("widget.changePassword.confirmPassword")}
             </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -123,7 +131,7 @@ export function ChangePasswordCard() {
                 value={passwordData.confirm}
                 onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })}
                 className="w-full pl-12 pr-12 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground bg-card focus:border-accent focus:outline-none transition-colors"
-                placeholder="Повторите новый пароль"
+                placeholder={t("widget.changePassword.confirmPasswordPlaceholder")}
               />
               <button
                 type="button"
@@ -145,13 +153,13 @@ export function ChangePasswordCard() {
             onClick={handleChangePassword}
             className="px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium"
           >
-            Изменить пароль
+            {t("widget.changePassword.changePasswordButton")}
           </button>
           <button
             onClick={handleCancel}
             className="px-6 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted/50 transition-colors text-[15px] font-medium"
           >
-            Отмена
+            {t("widget.changePassword.cancel")}
           </button>
         </div>
       </div>

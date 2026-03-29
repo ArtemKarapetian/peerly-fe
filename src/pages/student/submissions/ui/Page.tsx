@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -33,12 +34,14 @@ interface SubmissionsPageProps {
 }
 
 export default function SubmissionsPage({ courseId, taskId }: SubmissionsPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [comparisonMode, setComparisonMode] = useState(false);
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
   // Mock data - will be replaced with API
-  const courseName = "Веб-разработка";
-  const taskTitle = "Задание 1: Создание лендинга";
+  const courseName = t("student.submissions.mockCourseName");
+  const taskTitle = t("student.submissions.mockTaskTitle");
   const allowResubmissions = true; // If false, hide "Create new version"
   const maxSubmissions = 3; // 0 = unlimited
 
@@ -71,25 +74,25 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
   // Actions
   const handleDownload = (versionId: string) => {
     console.log("Download version:", versionId);
-    alert(`Скачивание версии ${versionId}`);
+    alert(`${t("student.submissions.downloadingVersion")} ${versionId}`);
   };
 
   const handleViewReports = (versionId: string) => {
     console.log("View reports for version:", versionId);
-    alert(`Просмотр отчётов для версии ${versionId}`);
+    alert(`${t("student.submissions.viewingReports")} ${versionId}`);
   };
 
   const handleMakeCurrent = (versionId: string) => {
     console.log("Make version current:", versionId);
-    if (confirm("Сделать эту версию текущей?")) {
-      alert(`Версия ${versionId} теперь текущая`);
+    if (confirm(t("student.submissions.makeCurrentVersion"))) {
+      alert(`${t("student.submissions.versionNowCurrent", { id: versionId })}`);
     }
   };
 
   const handleCreateNewVersion = () => {
     // Check if max submissions reached
     if (maxSubmissions > 0 && versions.length >= maxSubmissions) {
-      alert(`Достигнуто максимальное количество версий (${maxSubmissions})`);
+      alert(t("student.submissions.maxVersionsReached", { max: maxSubmissions }));
       return;
     }
     window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
@@ -104,13 +107,13 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
   // Empty state
   if (versions.length === 0) {
     return (
-      <AppShell title="История версий">
+      <AppShell title={t("student.submissions.title")}>
         <Breadcrumbs
           items={[
             CRUMBS.courses,
             { label: courseName, href: ROUTES.course(courseId) },
             { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-            { label: "Версии" },
+            { label: t("student.submissions.breadcrumbVersions") },
           ]}
         />
 
@@ -122,10 +125,10 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
               </div>
             </div>
             <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
-              Вы ещё не загружали работу
+              {t("student.submissions.noSubmissions")}
             </h2>
             <p className="text-[16px] text-[#767692] leading-[1.5] mb-6">
-              Начните работу над заданием, загрузив свои файлы.
+              {t("student.submissions.noSubmissionsDesc")}
             </p>
             <button
               onClick={() => {
@@ -133,7 +136,7 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
               }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] transition-colors text-[15px] font-medium"
             >
-              Сдать работу
+              {t("student.submissions.submitWork")}
             </button>
           </div>
         </div>
@@ -142,20 +145,20 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
   }
 
   return (
-    <AppShell title="История версий">
+    <AppShell title={t("student.submissions.title")}>
       <Breadcrumbs
         items={[
           CRUMBS.courses,
           { label: courseName, href: ROUTES.course(courseId) },
           { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-          { label: "Версии" },
+          { label: t("student.submissions.breadcrumbVersions") },
         ]}
       />
 
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          История версий
+          {t("student.submissions.title")}
         </h1>
         <p className="text-[16px] text-[#767692] leading-[1.5]">{taskTitle}</p>
       </div>
@@ -173,19 +176,21 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
               : "bg-[#d2def8] text-[#21214f] hover:bg-[#c5d5f5]"
           }`}
         >
-          {comparisonMode ? "Отменить сравнение" : "Сравнить версии"}
+          {comparisonMode
+            ? t("student.submissions.cancelCompare")
+            : t("student.submissions.compareVersions")}
         </button>
 
         {comparisonMode && (
           <p className="text-[13px] text-[#767692]">
-            Выберите 2 версии для сравнения ({selectedVersions.length}/2)
+            {t("student.submissions.selectTwoVersions")} ({selectedVersions.length}/2)
           </p>
         )}
 
         {!allowResubmissions && (
           <div className="bg-[#fff8f0] border border-[#ffe8cc] rounded-[12px] px-4 py-2 flex-1 max-w-md">
             <p className="text-[13px] text-[#4b4963]">
-              ℹ️ Для этого задания разрешена только одна отправка
+              {t("student.submissions.singleSubmission")}
             </p>
           </div>
         )}

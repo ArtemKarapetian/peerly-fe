@@ -1,7 +1,8 @@
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import {
@@ -28,14 +29,14 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * 6. Публикация
  */
 
-const STEPS = [
-  { id: 1, name: "Основное", shortName: "Основное" },
-  { id: 2, name: "Дедлайны", shortName: "Дедлайны" },
-  { id: 3, name: "Рубрика", shortName: "Рубрика" },
-  { id: 4, name: "Peer Review", shortName: "Peer Review" },
-  { id: 5, name: "Плагины", shortName: "Плагины" },
-  { id: 6, name: "Публикация", shortName: "Публикация" },
-];
+const STEP_KEYS = [
+  { id: 1, key: "stepBasics" },
+  { id: 2, key: "stepDeadlines" },
+  { id: 3, key: "stepRubric" },
+  { id: 4, key: "stepPeerReview" },
+  { id: 5, key: "stepPlugins" },
+  { id: 6, key: "stepPublish" },
+] as const;
 
 const STORAGE_KEY = "peerly_assignment_draft";
 
@@ -99,6 +100,13 @@ interface TeacherCreateAssignmentPageProps {
 export default function TeacherCreateAssignmentPage({
   courseId,
 }: TeacherCreateAssignmentPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
+  const STEPS = STEP_KEYS.map((s) => ({
+    id: s.id,
+    name: t(`teacher.createAssignment.${s.key}`),
+    shortName: t(`teacher.createAssignment.${s.key}`),
+  }));
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<AssignmentFormData>(() => {
     const initial = getInitialFormData();
@@ -192,8 +200,10 @@ export default function TeacherCreateAssignmentPage({
   };
 
   return (
-    <AppShell title="Создание задания">
-      <Breadcrumbs items={[CRUMBS.teacherCourses, { label: "Новое задание" }]} />
+    <AppShell title={t("teacher.createAssignment.title")}>
+      <Breadcrumbs
+        items={[CRUMBS.teacherCourses, { label: t("teacher.createAssignment.title") }]}
+      />
 
       <div className="mt-6 max-w-[1000px] mx-auto">
         {/* Step Indicator */}
@@ -256,11 +266,11 @@ export default function TeacherCreateAssignmentPage({
               className="flex items-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
-              Назад
+              {t("teacher.createAssignment.backBtn")}
             </button>
 
             <div className="text-[14px] text-[#767692]">
-              Шаг {currentStep} из {STEPS.length}
+              {t("teacher.createAssignment.stepOf", { current: currentStep, total: STEPS.length })}
             </div>
 
             <button
@@ -268,7 +278,7 @@ export default function TeacherCreateAssignmentPage({
               disabled={!canProceed()}
               className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed font-medium"
             >
-              Далее
+              {t("teacher.createAssignment.nextBtn")}
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

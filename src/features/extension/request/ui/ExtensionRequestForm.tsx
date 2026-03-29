@@ -1,17 +1,18 @@
 import { Clock, Calendar, MessageSquare, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 import { ExtensionType, extensionRepo } from "@/entities/extension";
 
 import { validateExtensionRequest } from "../model/validation";
 
 type Props = {
-  assignmentId: string; // у тебя сейчас это taskId, но по смыслу это assignmentId
+  assignmentId: string;
   studentId: string;
   studentName: string;
 
-  backHref: string; // куда вернуться по "назад/отмена"
+  backHref: string;
   onSuccess: () => void;
 };
 
@@ -22,6 +23,7 @@ export function ExtensionRequestForm({
   backHref,
   onSuccess,
 }: Props) {
+  const { t } = useTranslation();
   const [type, setType] = useState<ExtensionType>("submission");
   const [desiredDate, setDesiredDate] = useState("");
   const [reason, setReason] = useState("");
@@ -34,7 +36,6 @@ export function ExtensionRequestForm({
     setErrors(newErrors);
     if (newErrors.length) return;
 
-    // ВАЖНО: сохраняем твою текущую сигнатуру request(...) как есть
     void extensionRepo.request(
       assignmentId,
       studentId,
@@ -55,16 +56,14 @@ export function ExtensionRequestForm({
         className="inline-flex items-center gap-2 text-sm text-accent-blue hover:underline"
       >
         <ArrowLeft className="w-4 h-4" />
-        Вернуться к заданию
+        {t("feature.extension.request.backToTask")}
       </a>
 
       <div>
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
-          Запрос на продление дедлайна
+          {t("feature.extension.request.title")}
         </h1>
-        <p className="text-muted-foreground">
-          Опишите причину, по которой вам требуется дополнительное время для выполнения задания
-        </p>
+        <p className="text-muted-foreground">{t("feature.extension.request.subtitle")}</p>
       </div>
 
       <div className="bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-[20px] p-6">
@@ -73,11 +72,11 @@ export function ExtensionRequestForm({
             <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h2 className="font-semibold text-foreground mb-2">О запросе продления</h2>
+            <h2 className="font-semibold text-foreground mb-2">
+              {t("feature.extension.request.aboutTitle")}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Запрос будет рассмотрен преподавателем. Обоснованные причины (болезнь, личные
-              обстоятельства, технические проблемы) имеют больше шансов на одобрение. Вы получите
-              уведомление о решении.
+              {t("feature.extension.request.aboutDesc")}
             </p>
           </div>
         </div>
@@ -85,7 +84,9 @@ export function ExtensionRequestForm({
 
       {errors.length > 0 && (
         <div className="bg-destructive/10 border border-destructive/30 rounded-[12px] p-4">
-          <div className="text-sm font-medium text-destructive mb-2">Проверьте форму:</div>
+          <div className="text-sm font-medium text-destructive mb-2">
+            {t("feature.extension.request.checkForm")}
+          </div>
           <ul className="list-disc list-inside text-sm text-destructive space-y-1">
             {errors.map((e, i) => (
               <li key={i}>{e}</li>
@@ -100,7 +101,7 @@ export function ExtensionRequestForm({
       >
         <div>
           <label className="block text-sm font-medium text-foreground mb-3">
-            Что вы хотите продлить?
+            {t("feature.extension.request.whatToExtend")}
           </label>
           <div className="space-y-2">
             {(["submission", "review", "both"] as ExtensionType[]).map((v) => (
@@ -118,14 +119,14 @@ export function ExtensionRequestForm({
                 />
                 <div className="flex-1">
                   <div className="font-medium text-foreground">
-                    {v === "submission" && "Дедлайн сдачи работы"}
-                    {v === "review" && "Дедлайн проверки работ"}
-                    {v === "both" && "Оба дедлайна"}
+                    {v === "submission" && t("feature.extension.request.submissionDeadline")}
+                    {v === "review" && t("feature.extension.request.reviewDeadline")}
+                    {v === "both" && t("feature.extension.request.bothDeadlines")}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
-                    {v === "submission" && "Продлить срок для отправки вашей работы"}
-                    {v === "review" && "Продлить срок для peer review других работ"}
-                    {v === "both" && "Продлить и сдачу работы, и проверку"}
+                    {v === "submission" && t("feature.extension.request.submissionDeadlineDesc")}
+                    {v === "review" && t("feature.extension.request.reviewDeadlineDesc")}
+                    {v === "both" && t("feature.extension.request.bothDeadlinesDesc")}
                   </div>
                 </div>
               </label>
@@ -137,7 +138,7 @@ export function ExtensionRequestForm({
           <label className="block text-sm font-medium text-foreground mb-2">
             <div className="flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4" />
-              Желаемый новый дедлайн
+              {t("feature.extension.request.desiredDeadline")}
             </div>
           </label>
           <input
@@ -148,7 +149,7 @@ export function ExtensionRequestForm({
             className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            Укажите реалистичный срок, достаточный для выполнения задания
+            {t("feature.extension.request.desiredDeadlineHint")}
           </p>
         </div>
 
@@ -156,7 +157,7 @@ export function ExtensionRequestForm({
           <label className="block text-sm font-medium text-foreground mb-2">
             <div className="flex items-center gap-2 mb-2">
               <MessageSquare className="w-4 h-4" />
-              Причина запроса
+              {t("feature.extension.request.reasonLabel")}
             </div>
           </label>
           <textarea
@@ -164,11 +165,11 @@ export function ExtensionRequestForm({
             onChange={(e) => setReason(e.target.value)}
             required
             rows={5}
-            placeholder="Опишите причину..."
+            placeholder={t("feature.extension.request.reasonPlaceholder")}
             className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors resize-none"
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            Подробное объяснение поможет преподавателю принять решение
+            {t("feature.extension.request.reasonHint")}
           </p>
         </div>
 
@@ -178,13 +179,13 @@ export function ExtensionRequestForm({
             disabled={!desiredDate || !reason.trim()}
             className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Отправить запрос
+            {t("feature.extension.request.submitRequest")}
           </button>
           <a
             href={backHref}
             className="px-6 py-3 border border-border rounded-lg hover:bg-accent transition-colors font-medium text-center"
           >
-            Отмена
+            {t("feature.extension.request.cancel")}
           </a>
         </div>
       </form>

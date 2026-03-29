@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui/button.tsx";
 
@@ -17,6 +18,7 @@ interface PublicTopBarProps {
 
 export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <header className="w-full border-b border-border bg-background">
@@ -33,14 +35,14 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
         {showAuthControls && (
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
-              <ProfileDropdown userName="Пользователь" />
+              <ProfileDropdown />
             ) : (
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={() => (window.location.hash = "/login")}
               >
-                Войти
+                {t("widget.publicLayout.signIn")}
               </Button>
             )}
           </div>
@@ -70,6 +72,7 @@ export function PublicLayout({
   showFooter = true,
   maxWidth = "full",
 }: PublicLayoutProps) {
+  const { t } = useTranslation();
   const maxWidthClasses = {
     sm: "max-w-[640px]",
     md: "max-w-[768px]",
@@ -101,19 +104,19 @@ export function PublicLayout({
                   href="#/help"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Помощь
+                  {t("widget.publicLayout.help")}
                 </a>
                 <a
                   href="#/status"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Статус
+                  {t("widget.publicLayout.status")}
                 </a>
                 <a
                   href="#/terms"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Условия
+                  {t("widget.publicLayout.terms")}
                 </a>
               </nav>
 

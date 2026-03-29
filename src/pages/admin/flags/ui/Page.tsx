@@ -1,7 +1,8 @@
 import { Flag, Save, Search, X, ChevronDown, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -9,20 +10,14 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
- * AdminFlagsPage - Фиче-флаги и настройки платформы
- *
- * Функции:
- * - Переключение экспериментальных функций
- * - Поиск и фильтрация флагов
- * - Tenant scoping (per-organization overrides)
- * - Сохранение в localStorage
+ * AdminFlagsPage - Feature flags & platform settings
  */
 
 interface FeatureFlag {
   id: string;
   key: string;
-  name: string;
-  description: string;
+  nameKey: string;
+  descriptionKey: string;
   category: "ui" | "performance" | "experimental" | "integration";
   status: "stable" | "beta" | "alpha";
   enabled: boolean;
@@ -30,12 +25,11 @@ interface FeatureFlag {
 }
 
 const FEATURE_FLAGS: FeatureFlag[] = [
-  // Real platform feature flags
   {
     id: "ff-support-chat",
     key: "supportChat",
-    name: "Чат поддержки",
-    description: "Включить виджет чата для связи с поддержкой",
+    nameKey: "admin.flagsPage.flagNames.supportChat",
+    descriptionKey: "admin.flagsPage.flagDescriptions.supportChat",
     category: "integration",
     status: "stable",
     enabled: false,
@@ -43,8 +37,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-two-factor",
     key: "twoFactor",
-    name: "Двухфакторная аутентификация",
-    description: "Включить 2FA для дополнительной безопасности учетных записей",
+    nameKey: "admin.flagsPage.flagNames.twoFactor",
+    descriptionKey: "admin.flagsPage.flagDescriptions.twoFactor",
     category: "integration",
     status: "beta",
     enabled: false,
@@ -52,8 +46,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-email-confirm",
     key: "enableEmailConfirmation",
-    name: "Подтверждение email",
-    description: "Требовать подтверждение email при регистрации",
+    nameKey: "admin.flagsPage.flagNames.emailConfirm",
+    descriptionKey: "admin.flagsPage.flagDescriptions.emailConfirm",
     category: "integration",
     status: "stable",
     enabled: false,
@@ -61,18 +55,17 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-password-reset",
     key: "enablePasswordReset",
-    name: "Восстановление пароля",
-    description: "Включить функцию восстановления пароля через email",
+    nameKey: "admin.flagsPage.flagNames.passwordReset",
+    descriptionKey: "admin.flagsPage.flagDescriptions.passwordReset",
     category: "integration",
     status: "stable",
     enabled: false,
   },
-  // Enterprise / backend-pending feature flags
   {
     id: "ff-plugins",
     key: "enablePlugins",
-    name: "Каталог плагинов",
-    description: "Управление плагинами и расширениями платформы (Admin)",
+    nameKey: "admin.flagsPage.flagNames.pluginsCatalog",
+    descriptionKey: "admin.flagsPage.flagDescriptions.pluginsCatalog",
     category: "integration",
     status: "beta",
     enabled: true,
@@ -80,8 +73,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-integrations",
     key: "enableIntegrations",
-    name: "Интеграции",
-    description: "Внешние интеграции и подключения (Admin)",
+    nameKey: "admin.flagsPage.flagNames.integrations",
+    descriptionKey: "admin.flagsPage.flagDescriptions.integrations",
     category: "integration",
     status: "beta",
     enabled: true,
@@ -89,8 +82,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-retention",
     key: "enableRetention",
-    name: "Retention policies",
-    description: "Политики хранения данных и автоочистки (Admin)",
+    nameKey: "admin.flagsPage.flagNames.retentionPolicies",
+    descriptionKey: "admin.flagsPage.flagDescriptions.retentionPolicies",
     category: "integration",
     status: "alpha",
     enabled: true,
@@ -98,8 +91,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-limits",
     key: "enableLimits",
-    name: "Rate limiting",
-    description: "Ограничения и лимиты использования API (Admin)",
+    nameKey: "admin.flagsPage.flagNames.rateLimiting",
+    descriptionKey: "admin.flagsPage.flagDescriptions.rateLimiting",
     category: "integration",
     status: "alpha",
     enabled: true,
@@ -107,8 +100,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-automation",
     key: "enableAutomation",
-    name: "Автоматизация",
-    description: "Правила автоматизации рабочих процессов (Teacher)",
+    nameKey: "admin.flagsPage.flagNames.automation",
+    descriptionKey: "admin.flagsPage.flagDescriptions.automation",
     category: "experimental",
     status: "beta",
     enabled: true,
@@ -116,8 +109,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-analytics",
     key: "enableAnalytics",
-    name: "Аналитика преподавателя",
-    description: "Детальная аналитика и статистика по курсам (Teacher)",
+    nameKey: "admin.flagsPage.flagNames.teacherAnalytics",
+    descriptionKey: "admin.flagsPage.flagDescriptions.teacherAnalytics",
     category: "ui",
     status: "beta",
     enabled: true,
@@ -125,8 +118,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-extensions",
     key: "enableExtensions",
-    name: "Управление продлениями",
-    description: "Управление запросами на продление дедлайнов (Teacher)",
+    nameKey: "admin.flagsPage.flagNames.extensionsMgmt",
+    descriptionKey: "admin.flagsPage.flagDescriptions.extensionsMgmt",
     category: "ui",
     status: "beta",
     enabled: true,
@@ -134,18 +127,17 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff-announcements",
     key: "enableAnnouncements",
-    name: "Анонсы",
-    description: "Система анонсов и уведомлений для студентов (Teacher)",
+    nameKey: "admin.flagsPage.flagNames.announcements",
+    descriptionKey: "admin.flagsPage.flagDescriptions.announcements",
     category: "ui",
     status: "beta",
     enabled: true,
   },
-  // Demo feature flags
   {
     id: "ff1",
     key: "review_hotkeys",
-    name: "Горячие клавиши для рецензирования",
-    description: "Быстрые клавиши для навигации и действий в интерфейсе рецензирования",
+    nameKey: "admin.flagsPage.flagNames.reviewHotkeys",
+    descriptionKey: "admin.flagsPage.flagDescriptions.reviewHotkeys",
     category: "ui",
     status: "stable",
     enabled: true,
@@ -153,8 +145,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff2",
     key: "autosave",
-    name: "Автосохранение",
-    description: "Автоматическое сохранение черновиков рецензий каждые 30 секунд",
+    nameKey: "admin.flagsPage.flagNames.autosave",
+    descriptionKey: "admin.flagsPage.flagDescriptions.autosave",
     category: "ui",
     status: "stable",
     enabled: true,
@@ -162,8 +154,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff3",
     key: "dark_mode",
-    name: "Тёмная тема",
-    description: "Тёмная цветовая схема для всего интерфейса",
+    nameKey: "admin.flagsPage.flagNames.darkTheme",
+    descriptionKey: "admin.flagsPage.flagDescriptions.darkTheme",
     category: "ui",
     status: "beta",
     enabled: false,
@@ -171,8 +163,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff4",
     key: "inline_comments",
-    name: "Комментарии в коде",
-    description: "Возможность оставлять комментарии прямо в коде работы",
+    nameKey: "admin.flagsPage.flagNames.inlineComments",
+    descriptionKey: "admin.flagsPage.flagDescriptions.inlineComments",
     category: "ui",
     status: "alpha",
     enabled: false,
@@ -180,8 +172,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff5",
     key: "ai_suggestions",
-    name: "AI-подсказки",
-    description: "Автоматические рекомендации по улучшению рецензий с помощью ИИ",
+    nameKey: "admin.flagsPage.flagNames.aiSuggestions",
+    descriptionKey: "admin.flagsPage.flagDescriptions.aiSuggestions",
     category: "experimental",
     status: "alpha",
     enabled: false,
@@ -189,8 +181,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff6",
     key: "lazy_loading",
-    name: "Ленивая загрузка",
-    description: "Отложенная загрузка больших списков для ускорения интерфейса",
+    nameKey: "admin.flagsPage.flagNames.lazyLoading",
+    descriptionKey: "admin.flagsPage.flagDescriptions.lazyLoading",
     category: "performance",
     status: "beta",
     enabled: true,
@@ -198,8 +190,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff7",
     key: "virtual_scrolling",
-    name: "Виртуальный скроллинг",
-    description: "Оптимизация рендеринга для длинных списков работ и рецензий",
+    nameKey: "admin.flagsPage.flagNames.virtualScrolling",
+    descriptionKey: "admin.flagsPage.flagDescriptions.virtualScrolling",
     category: "performance",
     status: "stable",
     enabled: true,
@@ -207,8 +199,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff8",
     key: "video_reviews",
-    name: "Видео-рецензии",
-    description: "Возможность записывать видео-объяснения к рецензиям",
+    nameKey: "admin.flagsPage.flagNames.videoReviews",
+    descriptionKey: "admin.flagsPage.flagDescriptions.videoReviews",
     category: "experimental",
     status: "alpha",
     enabled: false,
@@ -216,8 +208,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff9",
     key: "github_sync",
-    name: "Синхронизация с GitHub",
-    description: "Автоматическая синхронизация работ из GitHub репозиториев",
+    nameKey: "admin.flagsPage.flagNames.githubSync",
+    descriptionKey: "admin.flagsPage.flagDescriptions.githubSync",
     category: "integration",
     status: "beta",
     enabled: false,
@@ -225,8 +217,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff10",
     key: "real_time_collab",
-    name: "Совместное редактирование",
-    description: "Рецензирование нескольких человек одновременно в реальном времени",
+    nameKey: "admin.flagsPage.flagNames.realTimeCollab",
+    descriptionKey: "admin.flagsPage.flagDescriptions.realTimeCollab",
     category: "experimental",
     status: "alpha",
     enabled: false,
@@ -234,8 +226,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff11",
     key: "advanced_analytics",
-    name: "Расширенная аналитика",
-    description: "Детальная статистика и визуализация данных о рецензировании",
+    nameKey: "admin.flagsPage.flagNames.advancedAnalytics",
+    descriptionKey: "admin.flagsPage.flagDescriptions.advancedAnalytics",
     category: "ui",
     status: "beta",
     enabled: true,
@@ -243,8 +235,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
   {
     id: "ff12",
     key: "batch_operations",
-    name: "Пакетные операции",
-    description: "Массовые действия над несколькими работами или рецензиями",
+    nameKey: "admin.flagsPage.flagNames.batchOperations",
+    descriptionKey: "admin.flagsPage.flagDescriptions.batchOperations",
     category: "ui",
     status: "stable",
     enabled: true,
@@ -252,6 +244,8 @@ const FEATURE_FLAGS: FeatureFlag[] = [
 ];
 
 export default function AdminFlagsPage() {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [flags, setFlags] = useState<FeatureFlag[]>(FEATURE_FLAGS);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
@@ -320,7 +314,7 @@ export default function AdminFlagsPage() {
       }
     });
 
-    logAuditEntry("UPDATE_FEATURE_FLAGS", "FeatureFlags", "Фиче-флаги обновлены");
+    logAuditEntry("UPDATE_FEATURE_FLAGS", "FeatureFlags", t("admin.flagsPage.flagsUpdatedAudit"));
     setHasChanges(false);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
@@ -342,11 +336,13 @@ export default function AdminFlagsPage() {
 
   // Filter flags
   const filteredFlags = flags.filter((flag) => {
+    const translatedName = t(flag.nameKey).toLowerCase();
+    const translatedDesc = t(flag.descriptionKey).toLowerCase();
     const matchesSearch =
       searchQuery === "" ||
-      flag.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      translatedName.includes(searchQuery.toLowerCase()) ||
       flag.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      flag.description.toLowerCase().includes(searchQuery.toLowerCase());
+      translatedDesc.includes(searchQuery.toLowerCase());
 
     const matchesCategory = filterCategory === "all" || flag.category === filterCategory;
     const matchesStatus = filterStatus === "all" || flag.status === filterStatus;
@@ -360,7 +356,7 @@ export default function AdminFlagsPage() {
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
-            Стабильно
+            {t("admin.flagsPage.statusLabels.stable")}
           </span>
         );
       case "beta":
@@ -390,18 +386,18 @@ export default function AdminFlagsPage() {
       integration: "bg-[#fff4e5] text-[#ff9800]",
     };
 
-    const labels = {
+    const labels: Record<string, string> = {
       ui: "UI",
-      performance: "Производительность",
-      experimental: "Экспериментальное",
-      integration: "Интеграция",
+      performance: t("admin.flagsPage.categoryLabels.performance"),
+      experimental: t("admin.flagsPage.categoryLabels.experimental"),
+      integration: t("admin.flagsPage.categoryLabels.integration"),
     };
 
     return (
       <span
         className={`inline-flex px-2 py-1 rounded-[6px] text-[11px] font-medium ${styles[category as keyof typeof styles]}`}
       >
-        {labels[category as keyof typeof labels]}
+        {labels[category]}
       </span>
     );
   };
@@ -415,13 +411,12 @@ export default function AdminFlagsPage() {
   };
 
   return (
-    <AppShell title="Фиче-флаги">
-      <Breadcrumbs items={[CRUMBS.adminSettings, { label: "Фиче-флаги" }]} />
-
-      <PageHeader
-        title="Фиче-флаги и настройки платформы"
-        subtitle="Управление экспериментальными функциями и возможностями системы"
+    <AppShell title={t("admin.flags.title")}>
+      <Breadcrumbs
+        items={[CRUMBS.adminSettings, { label: t("admin.settingsCard.featureFlags") }]}
       />
+
+      <PageHeader title={t("admin.flags.title")} subtitle={t("admin.flags.subtitle")} />
 
       <div>
         {/* Success Message */}
@@ -432,7 +427,7 @@ export default function AdminFlagsPage() {
                 <Save className="w-4 h-4 text-white" />
               </div>
               <p className="text-[14px] font-medium text-[#4caf50]">
-                ✓ Фиче-флаги успешно сохранены
+                {t("admin.flagsPage.savedSuccess")}
               </p>
             </div>
           </div>
@@ -441,11 +436,15 @@ export default function AdminFlagsPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Всего</p>
+            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+              {t("admin.flagsPage.statsTotal")}
+            </p>
             <p className="text-[24px] font-medium text-[#21214f]">{stats.total}</p>
           </div>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Включено</p>
+            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+              {t("admin.flagsPage.statsEnabled")}
+            </p>
             <p className="text-[24px] font-medium text-[#4caf50]">{stats.enabled}</p>
           </div>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
@@ -468,7 +467,7 @@ export default function AdminFlagsPage() {
             {/* Search */}
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Поиск
+                {t("admin.flagsPage.searchLabel")}
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
@@ -476,7 +475,7 @@ export default function AdminFlagsPage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Название или ключ..."
+                  placeholder={t("admin.flagsPage.searchPlaceholder")}
                   className="w-full pl-11 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
                 />
               </div>
@@ -485,32 +484,38 @@ export default function AdminFlagsPage() {
             {/* Category Filter */}
             <div className="w-full md:w-[200px]">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Категория
+                {t("admin.flagsPage.categoryLabel")}
               </label>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
-                <option value="all">Все</option>
+                <option value="all">{t("admin.flagsPage.allOption")}</option>
                 <option value="ui">UI</option>
-                <option value="performance">Производительность</option>
-                <option value="experimental">Экспериментальное</option>
-                <option value="integration">Интеграция</option>
+                <option value="performance">
+                  {t("admin.flagsPage.categoryLabels.performance")}
+                </option>
+                <option value="experimental">
+                  {t("admin.flagsPage.categoryLabels.experimental")}
+                </option>
+                <option value="integration">
+                  {t("admin.flagsPage.categoryLabels.integration")}
+                </option>
               </select>
             </div>
 
             {/* Status Filter */}
             <div className="w-full md:w-[200px]">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Статус
+                {t("admin.flagsPage.statusLabel")}
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
               >
-                <option value="all">Все</option>
+                <option value="all">{t("admin.flagsPage.allOption")}</option>
                 <option value="stable">Stable</option>
                 <option value="beta">Beta</option>
                 <option value="alpha">Alpha</option>
@@ -521,7 +526,9 @@ export default function AdminFlagsPage() {
           {/* Active filters */}
           {(searchQuery || filterCategory !== "all" || filterStatus !== "all") && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
-              <span className="text-[13px] text-[#767692]">Фильтры:</span>
+              <span className="text-[13px] text-[#767692]">
+                {t("admin.flagsPage.filtersLabel")}
+              </span>
               {searchQuery && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
                   "{searchQuery}"
@@ -567,16 +574,20 @@ export default function AdminFlagsPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-[16px] font-medium text-[#21214f]">{flag.name}</h3>
+                        <h3 className="text-[16px] font-medium text-[#21214f]">
+                          {t(flag.nameKey)}
+                        </h3>
                         {getCategoryBadge(flag.category)}
                         {getStatusBadge(flag.status)}
                         {hasOverrides && (
                           <span className="inline-flex px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] text-[11px] font-medium">
-                            {Object.keys(flag.tenantOverrides!).length} переопр.
+                            {t("admin.flagsPage.overridesCount_other", {
+                              count: Object.keys(flag.tenantOverrides!).length,
+                            })}
                           </span>
                         )}
                       </div>
-                      <p className="text-[13px] text-[#767692] mb-2">{flag.description}</p>
+                      <p className="text-[13px] text-[#767692] mb-2">{t(flag.descriptionKey)}</p>
                       <p className="text-[12px] text-[#767692] font-mono">Key: {flag.key}</p>
                     </div>
 
@@ -610,7 +621,7 @@ export default function AdminFlagsPage() {
                   <div className="px-6 pb-6 pt-0 border-t-2 border-[#e6e8ee]">
                     <div className="pt-4">
                       <h4 className="text-[14px] font-medium text-[#21214f] mb-3">
-                        Переопределения по организациям
+                        {t("admin.flagsPage.tenantOverridesTitle")}
                       </h4>
                       <div className="space-y-2">
                         {availableTenants.map((tenant) => {
@@ -631,11 +642,15 @@ export default function AdminFlagsPage() {
                                 </span>
                                 {hasOverride ? (
                                   <span className="text-[11px] px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] font-medium">
-                                    Переопределено
+                                    {t("admin.flagsPage.overridden")}
                                   </span>
                                 ) : (
                                   <span className="text-[11px] text-[#767692]">
-                                    (глобальное: {flag.enabled ? "вкл" : "выкл"})
+                                    (
+                                    {flag.enabled
+                                      ? t("admin.flagsPage.globalEnabled")
+                                      : t("admin.flagsPage.globalDisabled")}
+                                    )
                                   </span>
                                 )}
                               </div>
@@ -653,8 +668,7 @@ export default function AdminFlagsPage() {
                         })}
                       </div>
                       <p className="text-[12px] text-[#767692] mt-3">
-                        💡 Переопределения позволяют включить/выключить функцию для конкретной
-                        организации, независимо от глобальной настройки.
+                        {t("admin.flagsPage.overridesHint")}
                       </p>
                     </div>
                   </div>
@@ -668,10 +682,10 @@ export default function AdminFlagsPage() {
         {filteredFlags.length === 0 && (
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
             <Flag className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">Флаги не найдены</h3>
-            <p className="text-[14px] text-[#767692]">
-              Попробуйте изменить параметры поиска или фильтры
-            </p>
+            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+              {t("admin.flagsPage.noFlagsFound")}
+            </h3>
+            <p className="text-[14px] text-[#767692]">{t("admin.flagsPage.noFlagsFoundHint")}</p>
           </div>
         )}
 
@@ -681,11 +695,10 @@ export default function AdminFlagsPage() {
             <AlertCircle className="w-5 h-5 text-[#ff9800] flex-shrink-0 mt-0.5" />
             <div>
               <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
-                Экспериментальные функции
+                {t("admin.flagsPage.experimentalWarningTitle")}
               </h4>
               <p className="text-[13px] text-[#767692]">
-                Функции со статусом Alpha и Beta находятся в разработке и могут работать
-                нестабильно. Используйте их с осторожностью в production-среде.
+                {t("admin.flagsPage.experimentalWarningText")}
               </p>
             </div>
           </div>
@@ -703,7 +716,7 @@ export default function AdminFlagsPage() {
             }`}
           >
             <Save className="w-5 h-5" />
-            Сохранить изменения
+            {t("admin.flagsPage.saveChanges")}
           </button>
         </div>
       </div>

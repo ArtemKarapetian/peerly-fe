@@ -1,7 +1,8 @@
 import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -20,15 +21,17 @@ interface TeacherAssignmentDetailsPageProps {
 export default function TeacherAssignmentDetailsPage({
   assignmentId,
 }: TeacherAssignmentDetailsPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   // In a real app, we'd load assignment data from storage/API
   // For now, using mock data with fixed dates
 
   const assignment = {
     id: assignmentId,
-    title: "Новое задание",
-    description: "Описание задания будет здесь",
+    title: t("teacher.assignmentDetail.mockTitle") || "New Assignment",
+    description: t("teacher.assignmentDetail.mockDesc") || "Assignment description",
     status: "published" as "draft" | "published",
-    courseName: "Веб-разработка",
+    courseName: t("teacher.assignmentDetail.mockCourseName") || "Web Development",
     courseCode: "CS301",
     taskType: "project",
     submissionDeadline: new Date("2024-02-21"),
@@ -36,7 +39,7 @@ export default function TeacherAssignmentDetailsPage({
     studentsCount: 45,
     submissionsCount: 0,
     reviewsCount: 0,
-    rubricName: "Оценка веб-проекта",
+    rubricName: t("teacher.assignmentDetail.mockRubricName") || "Web Project Assessment",
     reviewsPerSubmission: 3,
   };
 
@@ -45,14 +48,14 @@ export default function TeacherAssignmentDetailsPage({
       return (
         <span className="inline-flex items-center gap-2 px-3 py-2 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[14px] font-medium">
           <div className="w-2 h-2 bg-[#4caf50] rounded-full"></div>
-          Опубликовано
+          {t("teacher.assignmentDetail.published")}
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-2 px-3 py-2 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[14px] font-medium">
         <div className="w-2 h-2 bg-[#767692] rounded-full"></div>
-        Черновик
+        {t("teacher.assignmentDetail.draft")}
       </span>
     );
   };
@@ -104,18 +107,22 @@ export default function TeacherAssignmentDetailsPage({
               className="flex items-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors"
             >
               <Edit className="w-4 h-4" />
-              <span className="text-[14px] font-medium">Редактировать</span>
+              <span className="text-[14px] font-medium">
+                {t("teacher.assignmentDetail.editBtn")}
+              </span>
             </button>
             <button
               onClick={() => {
-                if (confirm("Удалить это задание?")) {
+                if (confirm(t("teacher.assignmentDetail.deleteConfirm"))) {
                   window.location.hash = "/teacher/assignments";
                 }
               }}
               className="flex items-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] text-[#d4183d] rounded-[12px] hover:border-[#d4183d] hover:bg-[#fff5f5] transition-colors"
             >
               <Trash2 className="w-4 h-4" />
-              <span className="text-[14px] font-medium">Удалить</span>
+              <span className="text-[14px] font-medium">
+                {t("teacher.assignmentDetail.deleteBtn")}
+              </span>
             </button>
           </div>
         </div>
@@ -123,19 +130,27 @@ export default function TeacherAssignmentDetailsPage({
         {/* Quick Stats */}
         <div className="grid grid-cols-4 gap-4 pt-4 border-t-2 border-[#e6e8ee]">
           <div>
-            <p className="text-[13px] text-[#767692] mb-1">Студентов в курсе</p>
+            <p className="text-[13px] text-[#767692] mb-1">
+              {t("teacher.assignmentDetail.studentsInCourse")}
+            </p>
             <p className="text-[24px] font-medium text-[#21214f]">{assignment.studentsCount}</p>
           </div>
           <div>
-            <p className="text-[13px] text-[#767692] mb-1">Сдано работ</p>
+            <p className="text-[13px] text-[#767692] mb-1">
+              {t("teacher.assignmentDetail.submissionsCount")}
+            </p>
             <p className="text-[24px] font-medium text-[#5b8def]">{assignment.submissionsCount}</p>
           </div>
           <div>
-            <p className="text-[13px] text-[#767692] mb-1">Рецензий готово</p>
+            <p className="text-[13px] text-[#767692] mb-1">
+              {t("teacher.assignmentDetail.reviewsReady")}
+            </p>
             <p className="text-[24px] font-medium text-[#4caf50]">{assignment.reviewsCount}</p>
           </div>
           <div>
-            <p className="text-[13px] text-[#767692] mb-1">Всего рецензий</p>
+            <p className="text-[13px] text-[#767692] mb-1">
+              {t("teacher.assignmentDetail.totalReviews")}
+            </p>
             <p className="text-[24px] font-medium text-[#21214f]">
               {assignment.submissionsCount * assignment.reviewsPerSubmission}
             </p>
@@ -147,18 +162,24 @@ export default function TeacherAssignmentDetailsPage({
       <div className="mt-6 bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-[#5b8def]" />
-          <h2 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">Дедлайны</h2>
+          <h2 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
+            {t("teacher.assignmentDetail.deadlines")}
+          </h2>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <p className="text-[13px] text-[#767692] mb-2">Дедлайн сдачи работы</p>
+            <p className="text-[13px] text-[#767692] mb-2">
+              {t("teacher.assignmentDetail.submissionDeadline")}
+            </p>
             <p className="text-[16px] text-[#21214f] font-medium">
               {formatDate(assignment.submissionDeadline)}
             </p>
           </div>
           <div>
-            <p className="text-[13px] text-[#767692] mb-2">Дедлайн рецензирования</p>
+            <p className="text-[13px] text-[#767692] mb-2">
+              {t("teacher.assignmentDetail.reviewDeadline")}
+            </p>
             <p className="text-[16px] text-[#21214f] font-medium">
               {formatDate(assignment.reviewDeadline)}
             </p>
@@ -171,26 +192,34 @@ export default function TeacherAssignmentDetailsPage({
         <div className="flex items-center gap-2 mb-4">
           <Settings className="w-5 h-5 text-[#5b8def]" />
           <h2 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-            Настройки peer review
+            {t("teacher.assignmentDetail.peerReviewSettings")}
           </h2>
         </div>
 
         <div className="grid grid-cols-3 gap-6">
           <div>
-            <p className="text-[13px] text-[#767692] mb-2">Рецензий на одну работу</p>
+            <p className="text-[13px] text-[#767692] mb-2">
+              {t("teacher.assignmentDetail.reviewsPerSubmission")}
+            </p>
             <p className="text-[16px] text-[#21214f] font-medium">
               {assignment.reviewsPerSubmission}
             </p>
           </div>
           <div>
-            <p className="text-[13px] text-[#767692] mb-2">Рубрика оценивания</p>
+            <p className="text-[13px] text-[#767692] mb-2">
+              {t("teacher.assignmentDetail.gradingRubric")}
+            </p>
             <p className="text-[16px] text-[#21214f] font-medium">
-              {assignment.rubricName || "Не указана"}
+              {assignment.rubricName || t("teacher.assignmentDetail.notSpecified")}
             </p>
           </div>
           <div>
-            <p className="text-[13px] text-[#767692] mb-2">Режим распределения</p>
-            <p className="text-[16px] text-[#21214f] font-medium">Случайное</p>
+            <p className="text-[13px] text-[#767692] mb-2">
+              {t("teacher.assignmentDetail.distributionMode")}
+            </p>
+            <p className="text-[16px] text-[#21214f] font-medium">
+              {t("teacher.assignmentDetail.random")}
+            </p>
           </div>
         </div>
       </div>
@@ -204,8 +233,12 @@ export default function TeacherAssignmentDetailsPage({
           className="p-6 bg-white border-2 border-[#e6e8ee] rounded-[16px] hover:border-[#5b8def] hover:bg-[#e9f5ff] transition-all text-left group"
         >
           <Settings className="w-6 h-6 text-[#5b8def] mb-3" />
-          <h3 className="text-[16px] font-medium text-[#21214f] mb-2">Настройки peer-сессии</h3>
-          <p className="text-[13px] text-[#767692]">Анонимность, распределение, штрафы</p>
+          <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+            {t("teacher.assignmentDetail.peerSessionSettings")}
+          </h3>
+          <p className="text-[13px] text-[#767692]">
+            {t("teacher.assignmentDetail.peerSessionSettingsDesc")}
+          </p>
         </button>
 
         <button
@@ -215,8 +248,12 @@ export default function TeacherAssignmentDetailsPage({
           className="p-6 bg-white border-2 border-[#e6e8ee] rounded-[16px] hover:border-[#5b8def] hover:bg-[#e9f5ff] transition-all text-left group"
         >
           <FileText className="w-6 h-6 text-[#5b8def] mb-3" />
-          <h3 className="text-[16px] font-medium text-[#21214f] mb-2">Сабмишены</h3>
-          <p className="text-[13px] text-[#767692]">Просмотр работ студентов с проверками</p>
+          <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+            {t("teacher.assignmentDetail.submissions")}
+          </h3>
+          <p className="text-[13px] text-[#767692]">
+            {t("teacher.assignmentDetail.submissionsDesc")}
+          </p>
         </button>
 
         <button
@@ -226,8 +263,12 @@ export default function TeacherAssignmentDetailsPage({
           className="p-6 bg-white border-2 border-[#e6e8ee] rounded-[16px] hover:border-[#5b8def] hover:bg-[#e9f5ff] transition-all text-left group"
         >
           <BarChart3 className="w-6 h-6 text-[#5b8def] mb-3" />
-          <h3 className="text-[16px] font-medium text-[#21214f] mb-2">Аналитика</h3>
-          <p className="text-[13px] text-[#767692]">Статистика сдачи и оценок</p>
+          <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+            {t("teacher.assignmentDetail.analyticsTitle")}
+          </h3>
+          <p className="text-[13px] text-[#767692]">
+            {t("teacher.assignmentDetail.analyticsDesc")}
+          </p>
         </button>
       </div>
 
@@ -235,8 +276,10 @@ export default function TeacherAssignmentDetailsPage({
       {assignment.status === "published" && assignment.submissionsCount === 0 && (
         <div className="mt-6 bg-[#e8f5e9] border border-[#4caf50] rounded-[16px] p-4">
           <p className="text-[14px] text-[#21214f]">
-            ✅ <strong>Задание успешно опубликовано!</strong> Студенты курса {assignment.courseName}{" "}
-            уже могут видеть это задание и начать работу.
+            {t("teacher.assignmentDetail.publishedSuccess")}{" "}
+            {t("teacher.assignmentDetail.publishedSuccessDesc", {
+              courseName: assignment.courseName,
+            })}
           </p>
         </div>
       )}

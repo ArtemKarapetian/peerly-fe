@@ -1,4 +1,5 @@
 import { CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * ValidationChecks - Список проверок работы
@@ -27,6 +28,8 @@ interface ValidationChecksProps {
 }
 
 export function ValidationChecks({ checks }: ValidationChecksProps) {
+  const { t } = useTranslation();
+
   const getStatusIcon = (status: CheckStatus) => {
     switch (status) {
       case "queued":
@@ -66,25 +69,27 @@ export function ValidationChecks({ checks }: ValidationChecksProps) {
   const getStatusLabel = (status: CheckStatus) => {
     switch (status) {
       case "queued":
-        return "В очереди";
+        return t("feature.validationChecks.queued");
       case "running":
-        return "Проверяется...";
+        return t("feature.validationChecks.running");
       case "passed":
-        return "Пройдено";
+        return t("feature.validationChecks.passed");
       case "failed":
-        return "Не пройдено";
+        return t("feature.validationChecks.failed");
       case "warning":
-        return "Предупреждение";
+        return t("feature.validationChecks.warning");
       case "not-started":
       default:
-        return "Не начато";
+        return t("feature.validationChecks.notStarted");
     }
   };
 
   if (checks.length === 0) {
     return (
       <div className="text-center py-6">
-        <p className="text-[13px] text-[#767692]">Проверки будут запущены после загрузки файла</p>
+        <p className="text-[13px] text-[#767692]">
+          {t("feature.validationChecks.willRunAfterUpload")}
+        </p>
       </div>
     );
   }

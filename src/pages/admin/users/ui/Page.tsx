@@ -1,5 +1,6 @@
 import { Users, Search, X, CheckCircle, XCircle } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
@@ -41,6 +42,7 @@ interface UserSession {
 }
 
 export default function AdminUsersPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [, setSelectedUser] = useState<UserWithStatus | null>(null);
 
@@ -65,13 +67,13 @@ export default function AdminUsersPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Пользователи">
+      <AppShell title={t("admin.users.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Пользователи">
+      <AppShell title={t("admin.users.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -94,22 +96,22 @@ export default function AdminUsersPage() {
       return (
         <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
           <CheckCircle className="w-3 h-3" />
-          Активен
+          {t("admin.usersPage.statusActive")}
         </span>
       );
     } else {
       return (
         <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
           <XCircle className="w-3 h-3" />
-          Неактивен
+          {t("admin.usersPage.statusInactive")}
         </span>
       );
     }
   };
 
   return (
-    <AppShell title="Пользователи">
-      <PageHeader title="Пользователи" subtitle="Управление пользователями системы" />
+    <AppShell title={t("admin.users.title")}>
+      <PageHeader title={t("admin.users.title")} subtitle={t("admin.users.subtitle")} />
 
       <div>
         {/* Search and Filters */}
@@ -118,7 +120,7 @@ export default function AdminUsersPage() {
             {/* Search */}
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
-                Поиск
+                {t("admin.usersPage.searchLabel")}
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
@@ -126,7 +128,7 @@ export default function AdminUsersPage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Имя или email..."
+                  placeholder={t("admin.usersPage.searchPlaceholder")}
                   className="w-full pl-11 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
                 />
               </div>
@@ -136,10 +138,12 @@ export default function AdminUsersPage() {
           {/* Active filters */}
           {searchQuery && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
-              <span className="text-[13px] text-[#767692]">Фильтры:</span>
+              <span className="text-[13px] text-[#767692]">
+                {t("admin.usersPage.filtersLabel")}
+              </span>
               {searchQuery && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
-                  Поиск: "{searchQuery}"
+                  {t("admin.usersPage.searchFilter", { query: searchQuery })}
                   <button onClick={() => setSearchQuery("")} className="hover:text-[#d4183d]">
                     <X className="w-3 h-3" />
                   </button>
@@ -156,22 +160,22 @@ export default function AdminUsersPage() {
               <thead>
                 <tr className="border-b-2 border-[#e6e8ee] bg-[#fafbfc]">
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Пользователь
+                    {t("admin.usersPage.headerUser")}
                   </th>
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Роль
+                    {t("admin.usersPage.headerRole")}
                   </th>
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Организация
+                    {t("admin.usersPage.headerOrg")}
                   </th>
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Последний вход
+                    {t("admin.usersPage.headerLastLogin")}
                   </th>
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Статус
+                    {t("admin.usersPage.headerStatus")}
                   </th>
                   <th className="text-right px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
-                    Действия
+                    {t("admin.usersPage.headerActions")}
                   </th>
                 </tr>
               </thead>
@@ -212,7 +216,7 @@ export default function AdminUsersPage() {
                           onClick={() => setSelectedUser(user)}
                           className="inline-flex items-center gap-1 px-3 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[13px]"
                         >
-                          Управление
+                          {t("admin.usersPage.manage")}
                         </button>
                       </td>
                     </tr>
@@ -226,11 +230,9 @@ export default function AdminUsersPage() {
             <div className="text-center py-12">
               <Users className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
               <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
-                Пользователи не найдены
+                {t("admin.usersPage.notFound")}
               </h3>
-              <p className="text-[14px] text-[#767692]">
-                Попробуйте изменить параметры поиска или фильтры
-              </p>
+              <p className="text-[14px] text-[#767692]">{t("admin.usersPage.notFoundHint")}</p>
             </div>
           )}
         </div>

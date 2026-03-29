@@ -1,7 +1,8 @@
 import { Save, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Button } from "@/shared/ui/button.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -11,6 +12,8 @@ import { courseRepo } from "@/entities/course";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 export default function CreateCoursePage() {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [semester, setSemester] = useState("");
@@ -34,16 +37,18 @@ export default function CreateCoursePage() {
       // Navigate to the new course
       window.location.hash = `/teacher/course/${newCourse.id}`;
     } catch {
-      alert("Ошибка создания курса");
+      alert(t("teacher.createCourse.errorCreating"));
     }
   };
 
   return (
-    <AppShell title="Создание курса">
-      <Breadcrumbs items={[CRUMBS.teacherCourses, { label: "Создать курс" }]} />
+    <AppShell title={t("teacher.createCourse.title")}>
+      <Breadcrumbs
+        items={[CRUMBS.teacherCourses, { label: t("teacher.createCourse.breadcrumb") }]}
+      />
 
       <div className="max-w-[800px] mx-auto">
-        <PageHeader title="Создание курса" />
+        <PageHeader title={t("teacher.createCourse.title")} />
 
         <form
           onSubmit={(e) => {
@@ -55,14 +60,14 @@ export default function CreateCoursePage() {
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-[--text-primary] mb-2">
-                Название курса *
+                {t("teacher.createCourse.courseNameLabel")}
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                placeholder="Например: Веб-разработка"
+                placeholder={t("teacher.createCourse.courseNamePlaceholder")}
                 className="w-full px-4 py-2.5 border border-[--surface-border] rounded-[var(--radius-md)] text-[--text-primary] focus:outline-none focus:ring-2 focus:ring-[--brand-primary]/30 focus:border-[--brand-primary]"
               />
             </div>
@@ -70,14 +75,14 @@ export default function CreateCoursePage() {
             {/* Code */}
             <div>
               <label className="block text-sm font-medium text-[--text-primary] mb-2">
-                Код курса *
+                {t("teacher.createCourse.courseCodeLabel")}
               </label>
               <input
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 required
-                placeholder="Например: CS101"
+                placeholder={t("teacher.createCourse.courseCodePlaceholder")}
                 className="w-full px-4 py-2.5 border border-[--surface-border] rounded-[var(--radius-md)] text-[--text-primary] focus:outline-none focus:ring-2 focus:ring-[--brand-primary]/30 focus:border-[--brand-primary]"
               />
             </div>
@@ -85,7 +90,7 @@ export default function CreateCoursePage() {
             {/* Semester */}
             <div>
               <label className="block text-sm font-medium text-[--text-primary] mb-2">
-                Семестр *
+                {t("teacher.createCourse.semesterLabel")}
               </label>
               <select
                 value={semester}
@@ -93,23 +98,23 @@ export default function CreateCoursePage() {
                 required
                 className="w-full px-4 py-2.5 border border-[--surface-border] rounded-[var(--radius-md)] text-[--text-primary] focus:outline-none focus:ring-2 focus:ring-[--brand-primary]/30 focus:border-[--brand-primary]"
               >
-                <option value="">Выберите семестр</option>
-                <option value="Весна 2025">Весна 2025</option>
-                <option value="Осень 2024">Осень 2024</option>
-                <option value="Лето 2024">Лето 2024</option>
+                <option value="">{t("teacher.createCourse.selectSemester")}</option>
+                <option value="Весна 2025">{t("teacher.createCourse.spring2025")}</option>
+                <option value="Осень 2024">{t("teacher.createCourse.fall2024")}</option>
+                <option value="Лето 2024">{t("teacher.createCourse.summer2024")}</option>
               </select>
             </div>
 
             {/* Description */}
             <div>
               <label className="block text-sm font-medium text-[--text-primary] mb-2">
-                Описание
+                {t("teacher.createCourse.descriptionLabel")}
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                placeholder="Краткое описание курса..."
+                placeholder={t("teacher.createCourse.descriptionPlaceholder")}
                 className="w-full px-4 py-3 border border-[--surface-border] rounded-[var(--radius-md)] text-[--text-primary] focus:outline-none focus:ring-2 focus:ring-[--brand-primary]/30 focus:border-[--brand-primary] resize-none"
               />
             </div>
@@ -117,7 +122,7 @@ export default function CreateCoursePage() {
             {/* Visibility */}
             <div>
               <label className="block text-sm font-medium text-[--text-primary] mb-3">
-                Видимость
+                {t("teacher.createCourse.visibilityLabel")}
               </label>
               <div className="space-y-2">
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -130,8 +135,12 @@ export default function CreateCoursePage() {
                     className="w-4 h-4 text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
                   />
                   <div>
-                    <div className="text-sm font-medium text-[--text-primary]">Публичный</div>
-                    <div className="text-xs text-[--text-secondary]">Курс виден всем студентам</div>
+                    <div className="text-sm font-medium text-[--text-primary]">
+                      {t("teacher.createCourse.public")}
+                    </div>
+                    <div className="text-xs text-[--text-secondary]">
+                      {t("teacher.createCourse.publicDesc")}
+                    </div>
                   </div>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -144,8 +153,12 @@ export default function CreateCoursePage() {
                     className="w-4 h-4 text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
                   />
                   <div>
-                    <div className="text-sm font-medium text-[--text-primary]">Приватный</div>
-                    <div className="text-xs text-[--text-secondary]">Только по приглашению</div>
+                    <div className="text-sm font-medium text-[--text-primary]">
+                      {t("teacher.createCourse.private")}
+                    </div>
+                    <div className="text-xs text-[--text-secondary]">
+                      {t("teacher.createCourse.privateDesc")}
+                    </div>
                   </div>
                 </label>
               </div>
@@ -160,11 +173,11 @@ export default function CreateCoursePage() {
               onClick={() => (window.location.hash = "/teacher/courses")}
             >
               <X className="w-4 h-4" />
-              Отмена
+              {t("teacher.createCourse.cancelBtn")}
             </Button>
             <Button type="submit" variant="primary">
               <Save className="w-4 h-4" />
-              Создать курс
+              {t("teacher.createCourse.createBtn")}
             </Button>
           </div>
         </form>

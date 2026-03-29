@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle, Download, ExternalLink, FileText, XCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { ValidationCheck, WorkFile } from "@/entities/work/model/types.ts";
 
@@ -24,10 +25,12 @@ export function WorkPreviewCard({
   onDownloadFile,
   onOpenInNewWindow,
 }: WorkPreviewCardProps) {
+  const { t } = useTranslation();
+
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+    if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
   };
 
   // Get checks summary
@@ -48,14 +51,14 @@ export function WorkPreviewCard({
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-[#e6e8ee]">
         <h3 className="text-[18px] desktop:text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-          Работа студента
+          {t("feature.workPreview.title")}
         </h3>
         {onOpenInNewWindow && (
           <button
             onClick={onOpenInNewWindow}
             className="inline-flex items-center gap-1.5 text-[13px] text-[#5b8def] hover:text-[#3d6bc6] transition-colors"
           >
-            <span>Открыть в новом окне</span>
+            <span>{t("feature.workPreview.openInNewWindow")}</span>
             <ExternalLink className="w-4 h-4" />
           </button>
         )}
@@ -63,7 +66,9 @@ export function WorkPreviewCard({
 
       {/* Files */}
       <div className="mb-4">
-        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">Файлы ({files.length})</h4>
+        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
+          {t("feature.workPreview.files")} ({files.length})
+        </h4>
         <div className="space-y-2">
           {files.map((file) => (
             <div
@@ -78,7 +83,7 @@ export function WorkPreviewCard({
               <button
                 onClick={() => onDownloadFile(file.id)}
                 className="p-2 hover:bg-[#e6e8ee] rounded-[8px] transition-colors"
-                aria-label="Скачать файл"
+                aria-label={t("feature.workPreview.downloadFile")}
               >
                 <Download className="w-4 h-4 text-[#5b8def]" />
               </button>
@@ -90,14 +95,16 @@ export function WorkPreviewCard({
       {/* Validation Checks */}
       {checksSummary && (
         <div>
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">Проверки</h4>
+          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
+            {t("feature.workPreview.checks")}
+          </h4>
           <div className="bg-[#f9f9f9] rounded-[12px] p-3">
             <div className="flex items-center gap-4 flex-wrap">
               {checksSummary.passed > 0 && (
                 <div className="flex items-center gap-1.5">
                   <CheckCircle className="w-4 h-4 text-[#4caf50]" />
                   <span className="text-[13px] text-[#4caf50] font-medium">
-                    {checksSummary.passed} пройдено
+                    {checksSummary.passed} {t("feature.workPreview.passed")}
                   </span>
                 </div>
               )}
@@ -105,7 +112,7 @@ export function WorkPreviewCard({
                 <div className="flex items-center gap-1.5">
                   <AlertCircle className="w-4 h-4 text-[#ff9800]" />
                   <span className="text-[13px] text-[#ff9800] font-medium">
-                    {checksSummary.warnings} предупреждений
+                    {checksSummary.warnings} {t("feature.workPreview.warnings")}
                   </span>
                 </div>
               )}
@@ -113,7 +120,7 @@ export function WorkPreviewCard({
                 <div className="flex items-center gap-1.5">
                   <XCircle className="w-4 h-4 text-[#d4183d]" />
                   <span className="text-[13px] text-[#d4183d] font-medium">
-                    {checksSummary.failed} не пройдено
+                    {checksSummary.failed} {t("feature.workPreview.failed")}
                   </span>
                 </div>
               )}

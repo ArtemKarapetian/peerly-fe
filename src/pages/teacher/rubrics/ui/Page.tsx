@@ -1,5 +1,6 @@
 import { Search, Plus, Filter, Copy, Eye, Edit } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -179,6 +180,7 @@ const getInitialRubrics = (): RubricData[] => {
 };
 
 export default function TeacherRubricsPage() {
+  const { t } = useTranslation();
   const [rubrics, setRubrics] = useState<RubricData[]>(getInitialRubrics);
   const [selectedRubricId, setSelectedRubricId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("edit");
@@ -209,15 +211,15 @@ export default function TeacherRubricsPage() {
   const handleCreateNew = () => {
     const newRubric: RubricData = {
       id: `r${Date.now()}`,
-      name: "Новая рубрика",
-      description: "Описание рубрики",
+      name: t("teacher.rubrics.newRubricName"),
+      description: t("teacher.rubrics.newRubricDesc"),
       taskType: "project",
       tags: [],
       criteria: [
         {
           id: `c${Date.now()}`,
-          name: "Критерий 1",
-          description: "Описание критерия",
+          name: t("teacher.rubrics.newCriterionName"),
+          description: t("teacher.rubrics.newCriterionDesc"),
           maxScore: 5,
           required: true,
         },
@@ -237,7 +239,7 @@ export default function TeacherRubricsPage() {
     const duplicated: RubricData = {
       ...rubric,
       id: `r${newId}`,
-      name: `${rubric.name} (копия)`,
+      name: `${rubric.name} ${t("teacher.rubrics.copySuffix")}`,
       criteria: rubric.criteria.map((c) => ({
         ...c,
         id: `c${crypto.randomUUID()}`,
@@ -261,7 +263,7 @@ export default function TeacherRubricsPage() {
 
   // Delete rubric
   const handleDeleteRubric = (rubricId: string) => {
-    if (confirm("Удалить эту рубрику?")) {
+    if (confirm(t("teacher.rubrics.deleteConfirm"))) {
       setRubrics(rubrics.filter((r) => r.id !== rubricId));
       if (selectedRubricId === rubricId) {
         setSelectedRubricId(null);
@@ -272,19 +274,19 @@ export default function TeacherRubricsPage() {
   const getTaskTypeLabel = (type: string) => {
     switch (type) {
       case "text":
-        return "Текст";
+        return t("teacher.rubrics.typeText");
       case "code":
-        return "Код";
+        return t("teacher.rubrics.typeCode");
       case "project":
-        return "Проект";
+        return t("teacher.rubrics.typeProject");
       default:
         return type;
     }
   };
 
   return (
-    <AppShell title="Библиотека рубрик">
-      <Breadcrumbs items={[{ label: "Рубрики" }]} />
+    <AppShell title={t("teacher.rubrics.title")}>
+      <Breadcrumbs items={[{ label: t("teacher.rubrics.breadcrumb") }]} />
 
       <div className="mt-6 grid grid-cols-[400px_1fr] gap-6 h-[calc(100vh-180px)]">
         {/* Left Column - Rubric List */}
@@ -292,14 +294,14 @@ export default function TeacherRubricsPage() {
           {/* Header */}
           <div className="px-5 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between flex-shrink-0">
             <h2 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-              Мои рубрики
+              {t("teacher.rubrics.myRubrics")}
             </h2>
             <button
               onClick={handleCreateNew}
               className="flex items-center gap-2 px-3 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors text-[14px] font-medium"
             >
               <Plus className="w-4 h-4" />
-              Создать
+              {t("teacher.rubrics.create")}
             </button>
           </div>
 
@@ -309,7 +311,7 @@ export default function TeacherRubricsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
               <input
                 type="text"
-                placeholder="Поиск по названию, описанию, тегам..."
+                placeholder={t("teacher.rubrics.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#2563eb] transition-colors"
@@ -325,10 +327,10 @@ export default function TeacherRubricsPage() {
                 }
                 className="flex-1 px-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
               >
-                <option value="all">Все типы заданий</option>
-                <option value="text">Текст</option>
-                <option value="code">Код</option>
-                <option value="project">Проект</option>
+                <option value="all">{t("teacher.rubrics.allTaskTypes")}</option>
+                <option value="text">{t("teacher.rubrics.typeText")}</option>
+                <option value="code">{t("teacher.rubrics.typeCode")}</option>
+                <option value="project">{t("teacher.rubrics.typeProject")}</option>
               </select>
             </div>
           </div>
@@ -340,8 +342,8 @@ export default function TeacherRubricsPage() {
                 <Filter className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
                 <p className="text-[15px] text-[#767692]">
                   {searchQuery || taskTypeFilter !== "all"
-                    ? "Рубрики не найдены"
-                    : "Создайте первую рубрику"}
+                    ? t("teacher.rubrics.notFound")
+                    : t("teacher.rubrics.createFirst")}
                 </p>
               </div>
             )}
@@ -369,7 +371,7 @@ export default function TeacherRubricsPage() {
                       handleDuplicate(rubric);
                     }}
                     className="p-1.5 hover:bg-white rounded-[6px] transition-colors"
-                    title="Дублировать"
+                    title={t("teacher.rubrics.duplicate")}
                   >
                     <Copy className="w-4 h-4 text-[#767692]" />
                   </button>
@@ -395,8 +397,12 @@ export default function TeacherRubricsPage() {
                 </div>
 
                 <div className="flex items-center justify-between text-[12px] text-[#767692]">
-                  <span>{rubric.criteria.length} критериев</span>
-                  <span>Обновлено {rubric.updatedAt.toLocaleDateString("ru-RU")}</span>
+                  <span>
+                    {rubric.criteria.length} {t("teacher.rubrics.criteriaCount")}
+                  </span>
+                  <span>
+                    {t("teacher.rubrics.updated")} {rubric.updatedAt.toLocaleDateString("ru-RU")}
+                  </span>
                 </div>
               </div>
             ))}
@@ -412,16 +418,16 @@ export default function TeacherRubricsPage() {
                   <Filter className="w-8 h-8 text-[#767692]" />
                 </div>
                 <h3 className="text-[20px] font-medium text-[#21214f] mb-2 tracking-[-0.5px]">
-                  Выберите рубрику
+                  {t("teacher.rubrics.selectRubric")}
                 </h3>
                 <p className="text-[15px] text-[#767692] mb-6">
-                  Выберите рубрику из списка слева или создайте новую
+                  {t("teacher.rubrics.selectRubricHint")}
                 </p>
                 <button
                   onClick={handleCreateNew}
                   className="px-6 py-3 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors font-medium"
                 >
-                  Создать рубрику
+                  {t("teacher.rubrics.createRubric")}
                 </button>
               </div>
             </div>
@@ -431,7 +437,9 @@ export default function TeacherRubricsPage() {
               <div className="px-5 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <h2 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-                    {viewMode === "edit" ? "Редактирование" : "Предпросмотр"}
+                    {viewMode === "edit"
+                      ? t("teacher.rubrics.editing")
+                      : t("teacher.rubrics.preview")}
                   </h2>
                   <div className="flex items-center gap-1 bg-[#f9f9f9] rounded-[8px] p-1">
                     <button
@@ -442,7 +450,7 @@ export default function TeacherRubricsPage() {
                       `}
                     >
                       <Edit className="w-3 h-3 inline-block mr-1" />
-                      Редактор
+                      {t("teacher.rubrics.editor")}
                     </button>
                     <button
                       onClick={() => setViewMode("preview")}
@@ -452,7 +460,7 @@ export default function TeacherRubricsPage() {
                       `}
                     >
                       <Eye className="w-3 h-3 inline-block mr-1" />
-                      Превью
+                      {t("teacher.rubrics.previewTab")}
                     </button>
                   </div>
                 </div>
@@ -462,7 +470,7 @@ export default function TeacherRubricsPage() {
                     onClick={() => handleDeleteRubric(selectedRubric.id)}
                     className="px-3 py-2 border-2 border-[#e6e8ee] text-[#d4183d] rounded-[12px] hover:border-[#d4183d] hover:bg-[#fff5f5] transition-colors text-[14px] font-medium"
                   >
-                    Удалить
+                    {t("teacher.rubrics.deleteBtn")}
                   </button>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import { Plus, GripVertical, Trash2, Save, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { RubricData, RubricCriterionData } from "../model/types";
 
@@ -19,6 +20,7 @@ interface RubricEditorProps {
 }
 
 export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
+  const { t } = useTranslation();
   const [editedRubric, setEditedRubric] = useState<RubricData>(rubric);
   const [isDirty, setIsDirty] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -55,7 +57,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   const addCriterion = () => {
     const newCriterion: RubricCriterionData = {
       id: `c${Date.now()}`,
-      name: "Новый критерий",
+      name: t("widget.rubricEditor.newCriterion"),
       description: "",
       maxScore: 5,
       required: true,
@@ -65,10 +67,10 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
   const removeCriterion = (index: number) => {
     if (editedRubric.criteria.length === 1) {
-      alert("Нельзя удалить последний критерий");
+      alert(t("widget.rubricEditor.cannotDeleteLast"));
       return;
     }
-    if (confirm("Удалить этот критерий?")) {
+    if (confirm(t("widget.rubricEditor.deleteCriterionConfirm"))) {
       const newCriteria = editedRubric.criteria.filter((_, i) => i !== index);
       updateRubric({ criteria: newCriteria });
     }
@@ -117,7 +119,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-[#f57c00]" />
             <span className="text-[14px] text-[#f57c00] font-medium">
-              Есть несохранённые изменения
+              {t("widget.rubricEditor.unsavedChanges")}
             </span>
           </div>
           <button
@@ -125,7 +127,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
             className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
           >
             <Save className="w-4 h-4" />
-            Сохранить
+            {t("common.save")}
           </button>
         </div>
       )}
@@ -133,40 +135,40 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       {/* Basic Info */}
       <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[16px] p-6 mb-6">
         <h3 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
-          Основная информация
+          {t("widget.rubricEditor.basicInfo")}
         </h3>
 
         <div className="space-y-4">
           {/* Name */}
           <div>
             <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-              Название рубрики *
+              {t("widget.rubricEditor.rubricName")}
             </label>
             <input
               type="text"
               value={editedRubric.name}
               onChange={(e) => updateRubric({ name: e.target.value })}
               className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
-              placeholder="Оценка веб-проекта"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">Описание</label>
+            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+              {t("widget.rubricEditor.description")}
+            </label>
             <textarea
               value={editedRubric.description}
               onChange={(e) => updateRubric({ description: e.target.value })}
               rows={3}
               className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors resize-none"
-              placeholder="Критерии оценки для..."
             />
           </div>
 
           {/* Task Type */}
           <div>
             <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-              Тип задания *
+              {t("widget.rubricEditor.taskType")}
             </label>
             <select
               value={editedRubric.taskType}
@@ -175,15 +177,17 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
               }
               className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
             >
-              <option value="text">Текст</option>
-              <option value="code">Код</option>
-              <option value="project">Проект</option>
+              <option value="text">{t("widget.rubricEditor.typeText")}</option>
+              <option value="code">{t("widget.rubricEditor.typeCode")}</option>
+              <option value="project">{t("widget.rubricEditor.typeProject")}</option>
             </select>
           </div>
 
           {/* Tags */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">Теги</label>
+            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+              {t("widget.rubricEditor.tags")}
+            </label>
             <div className="flex gap-2 mb-2 flex-wrap">
               {editedRubric.tags.map((tag) => (
                 <span
@@ -209,13 +213,13 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                   }
                 }}
                 className="flex-1 px-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
-                placeholder="Добавить тег..."
+                placeholder={t("widget.rubricEditor.addTagPlaceholder")}
               />
               <button
                 onClick={addTag}
                 className="px-4 py-2 bg-[#f9f9f9] border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#e6e8ee] transition-colors text-[14px] font-medium"
               >
-                Добавить
+                {t("widget.rubricEditor.addTag")}
               </button>
             </div>
           </div>
@@ -226,14 +230,14 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[18px] font-medium text-[#21214f] tracking-[-0.5px]">
-            Критерии оценивания
+            {t("widget.rubricEditor.gradingCriteria")}
           </h3>
           <button
             onClick={addCriterion}
             className="flex items-center gap-2 px-3 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
           >
             <Plus className="w-4 h-4" />
-            Добавить критерий
+            {t("widget.rubricEditor.addCriterion")}
           </button>
         </div>
 
@@ -255,7 +259,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
               <div className="flex items-start gap-3 mb-4">
                 <button
                   className="mt-1 cursor-grab active:cursor-grabbing text-[#767692] hover:text-[#21214f]"
-                  title="Перетащите для изменения порядка"
+                  title={t("widget.rubricEditor.dragToReorder")}
                 >
                   <GripVertical className="w-5 h-5" />
                 </button>
@@ -267,7 +271,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     value={criterion.name}
                     onChange={(e) => updateCriterion(index, { name: e.target.value })}
                     className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[15px] font-medium focus:outline-none focus:border-[#5b8def] transition-colors"
-                    placeholder="Название критерия"
+                    placeholder={t("widget.rubricEditor.criterionNamePlaceholder")}
                   />
 
                   {/* Description */}
@@ -276,14 +280,16 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     onChange={(e) => updateCriterion(index, { description: e.target.value })}
                     rows={2}
                     className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors resize-none"
-                    placeholder="Описание критерия..."
+                    placeholder={t("widget.rubricEditor.criterionDescPlaceholder")}
                   />
 
                   {/* Settings Row */}
                   <div className="grid grid-cols-2 gap-3">
                     {/* Max Score */}
                     <div>
-                      <label className="block text-[12px] text-[#767692] mb-1">Макс. баллов</label>
+                      <label className="block text-[12px] text-[#767692] mb-1">
+                        {t("widget.rubricEditor.maxPoints")}
+                      </label>
                       <input
                         type="number"
                         min="1"
@@ -298,7 +304,9 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
                     {/* Weight */}
                     <div>
-                      <label className="block text-[12px] text-[#767692] mb-1">Вес (%)</label>
+                      <label className="block text-[12px] text-[#767692] mb-1">
+                        {t("widget.rubricEditor.weight")}
+                      </label>
                       <input
                         type="number"
                         min="0"
@@ -310,7 +318,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                           })
                         }
                         className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
-                        placeholder="Опционально"
+                        placeholder={t("widget.rubricEditor.optional")}
                       />
                     </div>
                   </div>
@@ -324,7 +332,9 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         onChange={(e) => updateCriterion(index, { required: e.target.checked })}
                         className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-[#5b8def]"
                       />
-                      <span className="text-[13px] text-[#21214f]">Обязательный</span>
+                      <span className="text-[13px] text-[#21214f]">
+                        {t("widget.rubricEditor.required")}
+                      </span>
                     </label>
 
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -336,12 +346,16 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         }
                         className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-[#5b8def]"
                       />
-                      <span className="text-[13px] text-[#21214f]">Комментарий обязателен</span>
+                      <span className="text-[13px] text-[#21214f]">
+                        {t("widget.rubricEditor.commentRequired")}
+                      </span>
                     </label>
 
                     {criterion.commentRequired && (
                       <div className="flex items-center gap-2">
-                        <span className="text-[12px] text-[#767692]">Мин. символов:</span>
+                        <span className="text-[12px] text-[#767692]">
+                          {t("widget.rubricEditor.minChars")}
+                        </span>
                         <input
                           type="number"
                           min="0"
@@ -364,7 +378,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                 <button
                   onClick={() => removeCriterion(index)}
                   className="p-2 hover:bg-[#fff5f5] rounded-[8px] transition-colors"
-                  title="Удалить критерий"
+                  title={t("widget.rubricEditor.deleteCriterion")}
                 >
                   <Trash2 className="w-4 h-4 text-[#d4183d]" />
                 </button>
@@ -382,7 +396,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
           className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
         >
           <Save className="w-4 h-4" />
-          Сохранить изменения
+          {t("widget.rubricEditor.saveChanges")}
         </button>
       </div>
     </div>

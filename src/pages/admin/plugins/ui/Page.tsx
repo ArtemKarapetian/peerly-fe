@@ -12,6 +12,7 @@ import {
   Package,
 } from "lucide-react";
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -19,20 +20,13 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 /**
- * AdminPluginsPage - Каталог плагинов
- *
- * Функции:
- * - Две вкладки: Installed, Available
- * - Карточки плагинов: name, version, status, last run
- * - Действия: install/update/uninstall, configure, view logs
- * - Плагины: Plagiarism scanner, Code linter, File validator, Anonymizer, Toxicity checker
- * - Модальная форма конфигурации с валидацией
+ * AdminPluginsPage - Plugin catalog
  */
 
 interface Plugin {
   id: string;
   name: string;
-  description: string;
+  descriptionKey: string;
   version: string;
   category: string;
   status: "healthy" | "degraded" | "error" | "not-installed";
@@ -44,7 +38,7 @@ interface Plugin {
 
 interface ConfigField {
   key: string;
-  label: string;
+  labelKey: string;
   type: "text" | "number" | "select" | "boolean";
   required: boolean;
   placeholder?: string;
@@ -63,8 +57,7 @@ const createInitialPlugins = (): Plugin[] => {
     {
       id: "plagiarism-scanner",
       name: "Plagiarism Scanner",
-      description:
-        "Автоматическая проверка работ на плагиат с использованием алгоритмов сравнения текстов",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.plagiarismScanner",
       version: "2.1.0",
       category: "Quality Assurance",
       status: "healthy",
@@ -78,25 +71,30 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "apiKey",
-          label: "API Key",
+          labelKey: "admin.pluginsPage.configLabels.apiKeyPlaceholder",
           type: "text",
           required: true,
-          placeholder: "Введите ключ API",
+          placeholder: "API Key",
         },
         {
           key: "threshold",
-          label: "Порог совпадения (%)",
+          labelKey: "admin.pluginsPage.configLabels.matchThreshold",
           type: "number",
           required: true,
           validation: { min: 0, max: 100 },
         },
-        { key: "checkInternet", label: "Проверять в интернете", type: "boolean", required: false },
+        {
+          key: "checkInternet",
+          labelKey: "admin.pluginsPage.configLabels.checkInternet",
+          type: "boolean",
+          required: false,
+        },
       ],
     },
     {
       id: "code-linter",
       name: "Code Linter",
-      description: "Автоматический анализ кода на соответствие стандартам и best practices",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.codeLinter",
       version: "3.4.2",
       category: "Code Quality",
       status: "healthy",
@@ -110,25 +108,30 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "language",
-          label: "Язык программирования",
+          labelKey: "admin.pluginsPage.configLabels.programmingLanguage",
           type: "select",
           required: true,
           options: ["javascript", "python", "java", "cpp", "csharp"],
         },
         {
           key: "strictness",
-          label: "Строгость проверки",
+          labelKey: "admin.pluginsPage.configLabels.strictness",
           type: "select",
           required: true,
           options: ["low", "medium", "high"],
         },
-        { key: "autofix", label: "Автоматическое исправление", type: "boolean", required: false },
+        {
+          key: "autofix",
+          labelKey: "admin.pluginsPage.configLabels.autoFix",
+          type: "boolean",
+          required: false,
+        },
       ],
     },
     {
       id: "file-validator",
       name: "File Format Validator",
-      description: "Проверка загружаемых файлов на соответствие требованиям формата и размера",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.fileValidator",
       version: "1.8.5",
       category: "Validation",
       status: "degraded",
@@ -142,26 +145,30 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "maxSize",
-          label: "Максимальный размер (MB)",
+          labelKey: "admin.pluginsPage.configLabels.maxSize",
           type: "number",
           required: true,
           validation: { min: 1, max: 100 },
         },
         {
           key: "allowedFormats",
-          label: "Разрешённые форматы",
+          labelKey: "admin.pluginsPage.configLabels.allowedFormats",
           type: "text",
           required: true,
           placeholder: "pdf,docx,txt",
         },
-        { key: "scanViruses", label: "Сканировать на вирусы", type: "boolean", required: false },
+        {
+          key: "scanViruses",
+          labelKey: "admin.pluginsPage.configLabels.scanViruses",
+          type: "boolean",
+          required: false,
+        },
       ],
     },
     {
       id: "anonymizer",
       name: "Anonymizer",
-      description:
-        "Автоматическая анонимизация имён и идентификаторов в работах для честного peer review",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.anonymizer",
       version: "2.0.3",
       category: "Privacy",
       status: "healthy",
@@ -174,14 +181,14 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "mode",
-          label: "Режим анонимизации",
+          labelKey: "admin.pluginsPage.configLabels.anonymizationMode",
           type: "select",
           required: true,
           options: ["full", "partial", "minimal"],
         },
         {
           key: "preserveMetadata",
-          label: "Сохранять метаданные",
+          labelKey: "admin.pluginsPage.configLabels.preserveMetadata",
           type: "boolean",
           required: false,
         },
@@ -190,7 +197,7 @@ const createInitialPlugins = (): Plugin[] => {
     {
       id: "toxicity-checker",
       name: "Toxicity Checker",
-      description: "Модерация комментариев и отзывов на токсичность и неуместный контент",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.toxicityChecker",
       version: "1.5.0",
       category: "Moderation",
       status: "healthy",
@@ -204,26 +211,30 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "sensitivity",
-          label: "Чувствительность",
+          labelKey: "admin.pluginsPage.configLabels.sensitivity",
           type: "select",
           required: true,
           options: ["low", "medium", "high"],
         },
-        { key: "autoBlock", label: "Автоматическая блокировка", type: "boolean", required: false },
+        {
+          key: "autoBlock",
+          labelKey: "admin.pluginsPage.configLabels.autoBlock",
+          type: "boolean",
+          required: false,
+        },
         {
           key: "language",
-          label: "Язык модерации",
+          labelKey: "admin.pluginsPage.configLabels.moderationLanguage",
           type: "select",
           required: true,
           options: ["ru", "en", "multi"],
         },
       ],
     },
-    // Available plugins (not installed)
     {
       id: "ai-grader",
       name: "AI Auto-Grader",
-      description: "Автоматическая оценка работ с использованием машинного обучения",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.aiGrader",
       version: "1.0.0",
       category: "AI/ML",
       status: "not-installed",
@@ -231,14 +242,14 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "model",
-          label: "Модель ML",
+          labelKey: "admin.pluginsPage.configLabels.mlModel",
           type: "select",
           required: true,
           options: ["gpt-4", "claude", "local"],
         },
         {
           key: "confidence",
-          label: "Минимальная уверенность (%)",
+          labelKey: "admin.pluginsPage.configLabels.minConfidence",
           type: "number",
           required: true,
           validation: { min: 0, max: 100 },
@@ -248,7 +259,7 @@ const createInitialPlugins = (): Plugin[] => {
     {
       id: "slack-integration",
       name: "Slack Integration",
-      description: "Уведомления и интеграция с Slack для команд",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.slackIntegration",
       version: "2.3.1",
       category: "Integration",
       status: "not-installed",
@@ -256,14 +267,14 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "webhookUrl",
-          label: "Webhook URL",
+          labelKey: "admin.pluginsPage.configLabels.apiKeyPlaceholder",
           type: "text",
           required: true,
           placeholder: "https://hooks.slack.com/...",
         },
         {
           key: "channel",
-          label: "Канал по умолчанию",
+          labelKey: "admin.pluginsPage.configLabels.defaultChannel",
           type: "text",
           required: true,
           placeholder: "#general",
@@ -273,7 +284,7 @@ const createInitialPlugins = (): Plugin[] => {
     {
       id: "citation-checker",
       name: "Citation Checker",
-      description: "Проверка правильности оформления библиографии и цитирования",
+      descriptionKey: "admin.pluginsPage.pluginDescriptions.citationChecker",
       version: "1.2.0",
       category: "Quality Assurance",
       status: "not-installed",
@@ -281,7 +292,7 @@ const createInitialPlugins = (): Plugin[] => {
       configSchema: [
         {
           key: "style",
-          label: "Стиль цитирования",
+          labelKey: "admin.pluginsPage.configLabels.citationStyle",
           type: "select",
           required: true,
           options: ["APA", "MLA", "Chicago", "GOST"],
@@ -295,6 +306,7 @@ const createInitialPlugins = (): Plugin[] => {
 const INITIAL_PLUGINS = createInitialPlugins();
 
 export default function AdminPluginsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"installed" | "available">("installed");
   const [configModal, setConfigModal] = useState<{
     plugin: Plugin;
@@ -315,12 +327,16 @@ export default function AdminPluginsPage() {
           : p,
       ),
     );
-    logAuditEntry("INSTALL_PLUGIN", "Plugin", `Плагин ${plugin.name} установлен`);
-    alert(`✅ Плагин "${plugin.name}" успешно установлен`);
+    logAuditEntry(
+      "INSTALL_PLUGIN",
+      "Plugin",
+      t("admin.pluginsPage.auditInstalled", { name: plugin.name }),
+    );
+    alert(t("admin.pluginsPage.pluginInstalled", { name: plugin.name }));
   };
 
   const handleUninstall = (plugin: Plugin) => {
-    if (!confirm(`Вы уверены, что хотите удалить плагин "${plugin.name}"?`)) return;
+    if (!confirm(t("admin.pluginsPage.confirmUninstall", { name: plugin.name }))) return;
 
     setPlugins(
       plugins.map((p) =>
@@ -329,8 +345,12 @@ export default function AdminPluginsPage() {
           : p,
       ),
     );
-    logAuditEntry("UNINSTALL_PLUGIN", "Plugin", `Плагин ${plugin.name} удалён`);
-    alert(`🗑️ Плагин "${plugin.name}" удалён`);
+    logAuditEntry(
+      "UNINSTALL_PLUGIN",
+      "Plugin",
+      t("admin.pluginsPage.auditUninstalled", { name: plugin.name }),
+    );
+    alert(t("admin.pluginsPage.pluginUninstalled", { name: plugin.name }));
   };
 
   const handleUpdate = (plugin: Plugin) => {
@@ -340,8 +360,12 @@ export default function AdminPluginsPage() {
         p.id === plugin.id ? { ...p, version: newVersion, lastRun: new Date() } : p,
       ),
     );
-    logAuditEntry("UPDATE_PLUGIN", "Plugin", `Плагин ${plugin.name} обновлён до ${newVersion}`);
-    alert(`🔄 Плагин "${plugin.name}" обновлён до версии ${newVersion}`);
+    logAuditEntry(
+      "UPDATE_PLUGIN",
+      "Plugin",
+      t("admin.pluginsPage.auditUpdated", { name: plugin.name, version: newVersion }),
+    );
+    alert(t("admin.pluginsPage.pluginUpdated", { name: plugin.name, version: newVersion }));
   };
 
   const handleConfigure = (plugin: Plugin) => {
@@ -353,7 +377,6 @@ export default function AdminPluginsPage() {
   };
 
   const handleViewLogs = (plugin: Plugin) => {
-    // Navigate to logs page with filter
     window.location.hash = `#/admin/logs?plugin=${plugin.id}`;
   };
 
@@ -364,21 +387,19 @@ export default function AdminPluginsPage() {
     schema.forEach((field) => {
       const value = config[field.key];
 
-      // Required field check
       if (field.required && (!value || value.trim() === "")) {
-        errors[field.key] = "Это поле обязательно";
+        errors[field.key] = t("admin.pluginsPage.requiredField");
         return;
       }
 
-      // Number validation
       if (field.type === "number" && value) {
         const num = parseFloat(value);
         if (isNaN(num)) {
-          errors[field.key] = "Введите число";
+          errors[field.key] = t("admin.pluginsPage.enterNumber");
         } else if (field.validation?.min !== undefined && num < field.validation.min) {
-          errors[field.key] = `Минимум: ${field.validation.min}`;
+          errors[field.key] = t("admin.pluginsPage.minimum", { value: field.validation.min });
         } else if (field.validation?.max !== undefined && num > field.validation.max) {
-          errors[field.key] = `Максимум: ${field.validation.max}`;
+          errors[field.key] = t("admin.pluginsPage.maximum", { value: field.validation.max });
         }
       }
     });
@@ -397,9 +418,13 @@ export default function AdminPluginsPage() {
 
     setPlugins(plugins.map((p) => (p.id === plugin.id ? { ...p, config } : p)));
 
-    logAuditEntry("CONFIGURE_PLUGIN", "Plugin", `Плагин ${plugin.name} настроен`);
+    logAuditEntry(
+      "CONFIGURE_PLUGIN",
+      "Plugin",
+      t("admin.pluginsPage.auditConfigured", { name: plugin.name }),
+    );
     setConfigModal(null);
-    alert(`⚙️ Конфигурация "${plugin.name}" сохранена`);
+    alert(t("admin.pluginsPage.pluginConfigured", { name: plugin.name }));
   };
 
   // Audit logging
@@ -423,27 +448,27 @@ export default function AdminPluginsPage() {
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
-            Работает
+            {t("admin.pluginsPage.statusHealthy")}
           </span>
         );
       case "degraded":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
             <AlertTriangle className="w-3 h-3" />
-            Ухудшено
+            {t("admin.pluginsPage.statusDegraded")}
           </span>
         );
       case "error":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
             <XCircle className="w-3 h-3" />
-            Ошибка
+            {t("admin.pluginsPage.statusError")}
           </span>
         );
       case "not-installed":
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
-            Не установлен
+            {t("admin.pluginsPage.statusNotInstalled")}
           </span>
         );
       default:
@@ -464,7 +489,7 @@ export default function AdminPluginsPage() {
           </div>
           <div className="flex-1">
             <h3 className="text-[18px] font-medium text-[#21214f] mb-1">{plugin.name}</h3>
-            <p className="text-[13px] text-[#767692]">{plugin.description}</p>
+            <p className="text-[13px] text-[#767692]">{t(plugin.descriptionKey)}</p>
           </div>
         </div>
       </div>
@@ -472,20 +497,20 @@ export default function AdminPluginsPage() {
       {/* Meta Info */}
       <div className="space-y-2 mb-4 pb-4 border-b-2 border-[#e6e8ee]">
         <div className="flex items-center justify-between text-[13px]">
-          <span className="text-[#767692]">Версия:</span>
+          <span className="text-[#767692]">{t("admin.pluginsPage.versionLabel")}</span>
           <span className="text-[#21214f] font-medium font-mono">{plugin.version}</span>
         </div>
         <div className="flex items-center justify-between text-[13px]">
-          <span className="text-[#767692]">Категория:</span>
+          <span className="text-[#767692]">{t("admin.pluginsPage.categoryLabel")}</span>
           <span className="text-[#21214f]">{plugin.category}</span>
         </div>
         <div className="flex items-center justify-between text-[13px]">
-          <span className="text-[#767692]">Статус:</span>
+          <span className="text-[#767692]">{t("admin.pluginsPage.statusLabel")}</span>
           {getStatusBadge(plugin.status)}
         </div>
         {plugin.lastRun && (
           <div className="flex items-center justify-between text-[13px]">
-            <span className="text-[#767692]">Последний запуск:</span>
+            <span className="text-[#767692]">{t("admin.pluginsPage.lastRunLabel")}</span>
             <span className="text-[#21214f]">{plugin.lastRun.toLocaleString("ru-RU")}</span>
           </div>
         )}
@@ -495,21 +520,20 @@ export default function AdminPluginsPage() {
       <div className="space-y-2">
         {plugin.installed ? (
           <>
-            {/* Installed plugin actions */}
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handleConfigure(plugin)}
                 className="flex items-center justify-center gap-2 px-3 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[13px] font-medium"
               >
                 <Settings className="w-4 h-4" />
-                Настроить
+                {t("admin.pluginsPage.configure")}
               </button>
               <button
                 onClick={() => handleViewLogs(plugin)}
                 className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[13px] font-medium"
               >
                 <FileText className="w-4 h-4" />
-                Логи
+                {t("admin.pluginsPage.logs")}
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -518,25 +542,24 @@ export default function AdminPluginsPage() {
                 className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[13px] font-medium"
               >
                 <RefreshCw className="w-4 h-4" />
-                Обновить
+                {t("admin.pluginsPage.update")}
               </button>
               <button
                 onClick={() => handleUninstall(plugin)}
                 className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-[#d4183d] text-[#d4183d] rounded-[8px] hover:bg-[#fff5f5] transition-colors text-[13px] font-medium"
               >
                 <Trash2 className="w-4 h-4" />
-                Удалить
+                {t("admin.pluginsPage.uninstall")}
               </button>
             </div>
           </>
         ) : (
-          /* Available plugin action */
           <button
             onClick={() => handleInstall(plugin)}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors text-[14px] font-medium"
           >
             <Download className="w-5 h-5" />
-            Установить
+            {t("admin.pluginsPage.install")}
           </button>
         )}
       </div>
@@ -544,13 +567,10 @@ export default function AdminPluginsPage() {
   );
 
   return (
-    <AppShell title="Каталог плагинов">
-      <Breadcrumbs items={[{ label: "Плагины" }]} />
+    <AppShell title={t("admin.plugins.title")}>
+      <Breadcrumbs items={[{ label: t("admin.plugins.title") }]} />
 
-      <PageHeader
-        title="Каталог плагинов"
-        subtitle="Установка и настройка плагинов для расширения функциональности системы"
-      />
+      <PageHeader title={t("admin.plugins.title")} subtitle={t("admin.plugins.subtitle")} />
 
       <div>
         {/* Tabs */}
@@ -561,7 +581,7 @@ export default function AdminPluginsPage() {
               activeTab === "installed" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"
             }`}
           >
-            Установленные
+            {t("admin.pluginsPage.tabInstalled")}
             {activeTab === "installed" && (
               <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#5b8def]" />
             )}
@@ -575,7 +595,7 @@ export default function AdminPluginsPage() {
               activeTab === "available" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"
             }`}
           >
-            Доступные
+            {t("admin.pluginsPage.tabAvailable")}
             {activeTab === "available" && (
               <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#5b8def]" />
             )}
@@ -602,9 +622,11 @@ export default function AdminPluginsPage() {
         {activeTab === "installed" && installedPlugins.length === 0 && (
           <div className="text-center py-16 bg-white border-2 border-[#e6e8ee] rounded-[20px]">
             <Package className="w-16 h-16 text-[#d7d7d7] mx-auto mb-4" />
-            <h3 className="text-[20px] font-medium text-[#21214f] mb-2">Плагины не установлены</h3>
+            <h3 className="text-[20px] font-medium text-[#21214f] mb-2">
+              {t("admin.pluginsPage.noPluginsInstalled")}
+            </h3>
             <p className="text-[14px] text-[#767692] mb-4">
-              Перейдите на вкладку "Доступные" для установки плагинов
+              {t("admin.pluginsPage.goToAvailable")}
             </p>
           </div>
         )}
@@ -623,7 +645,9 @@ export default function AdminPluginsPage() {
             {/* Modal Header */}
             <div className="px-6 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between">
               <div>
-                <h2 className="text-[20px] font-medium text-[#21214f]">Настройка плагина</h2>
+                <h2 className="text-[20px] font-medium text-[#21214f]">
+                  {t("admin.pluginsPage.configurePlugin")}
+                </h2>
                 <p className="text-[13px] text-[#767692] mt-1">{configModal.plugin.name}</p>
               </div>
               <button
@@ -640,7 +664,7 @@ export default function AdminPluginsPage() {
                 {configModal.plugin.configSchema?.map((field) => (
                   <div key={field.key}>
                     <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                      {field.label}
+                      {t(field.labelKey)}
                       {field.required && <span className="text-[#d4183d] ml-1">*</span>}
                     </label>
 
@@ -698,7 +722,7 @@ export default function AdminPluginsPage() {
                             : "border-[#e6e8ee] focus:border-[#5b8def]"
                         }`}
                       >
-                        <option value="">Выберите...</option>
+                        <option value="">{t("admin.pluginsPage.selectPlaceholder")}</option>
                         {field.options?.map((option) => (
                           <option key={option} value={option}>
                             {option}
@@ -723,7 +747,7 @@ export default function AdminPluginsPage() {
                           }
                           className="w-5 h-5 text-[#5b8def] rounded-[4px]"
                         />
-                        <span className="text-[14px] text-[#767692]">{field.label}</span>
+                        <span className="text-[14px] text-[#767692]">{t(field.labelKey)}</span>
                       </label>
                     )}
 
@@ -744,13 +768,13 @@ export default function AdminPluginsPage() {
                 onClick={() => setConfigModal(null)}
                 className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px] font-medium"
               >
-                Отмена
+                {t("admin.pluginsPage.cancel")}
               </button>
               <button
                 onClick={handleSaveConfig}
                 className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
               >
-                Сохранить
+                {t("admin.pluginsPage.save")}
               </button>
             </div>
           </div>

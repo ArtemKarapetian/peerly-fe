@@ -1,4 +1,5 @@
 import { useState, useEffect, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import { SideNav } from "../navigation/SideNavRoleAware.tsx";
 import { TopBar } from "../navigation/TopBar.tsx";
@@ -57,6 +58,7 @@ const getInitialCollapsed = () => {
 };
 
 export function AppShell({ children, title }: AppShellProps) {
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(getInitialCollapsed);
   const [windowWidth, setWindowWidth] = useState(
@@ -168,13 +170,13 @@ export function AppShell({ children, title }: AppShellProps) {
               <div className="flex flex-col tablet:flex-row justify-between items-center gap-3 text-sm text-muted-foreground">
                 <nav className="flex items-center gap-4">
                   <a href="#/help" className="hover:text-foreground transition-colors">
-                    Помощь
+                    {t("footer.help")}
                   </a>
                   <a href="#/status" className="hover:text-foreground transition-colors">
-                    Статус
+                    {t("footer.status")}
                   </a>
                   <a href="#/terms" className="hover:text-foreground transition-colors">
-                    Условия
+                    {t("footer.terms")}
                   </a>
                 </nav>
                 <p className="text-sm">© {new Date().getFullYear()} Peerly</p>

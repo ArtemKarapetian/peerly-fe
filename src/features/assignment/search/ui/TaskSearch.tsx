@@ -1,7 +1,8 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
- * TaskSearch - Поле поиска заданий
+ * TaskSearch - Assignment search field
  */
 
 interface TaskSearchProps {
@@ -10,7 +11,9 @@ interface TaskSearchProps {
   placeholder?: string;
 }
 
-export function TaskSearch({ value, onChange, placeholder = "Поиск заданий" }: TaskSearchProps) {
+export function TaskSearch({ value, onChange, placeholder }: TaskSearchProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="relative">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
@@ -18,7 +21,7 @@ export function TaskSearch({ value, onChange, placeholder = "Поиск зада
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t("feature.taskSearch.placeholder")}
         className="
           w-full pl-9 pr-4 py-2.5
           text-[14px] leading-[1.4] text-[#21214f]

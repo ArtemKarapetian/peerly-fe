@@ -1,5 +1,6 @@
 import { FileText, CheckCircle, Clock } from "lucide-react";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -50,6 +51,7 @@ function StatusSection({
 }
 
 export default function AppealsListPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null);
 
@@ -62,13 +64,13 @@ export default function AppealsListPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Апелляции">
+      <AppShell title={t("student.appeals.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Апелляции">
+      <AppShell title={t("student.appeals.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
@@ -80,24 +82,26 @@ export default function AppealsListPage() {
   };
 
   return (
-    <AppShell title="Апелляции">
-      <Breadcrumbs items={[{ label: "Апелляции" }]} />
+    <AppShell title={t("student.appeals.title")}>
+      <Breadcrumbs items={[{ label: t("student.appeals.title") }]} />
 
       <div className="max-w-[1000px]">
-        <PageHeader title="Апелляции" subtitle="Список всех ваших запросов на пересмотр оценок" />
+        <PageHeader title={t("student.appeals.title")} subtitle={t("student.appeals.subtitle")} />
 
         {(appeals ?? []).length === 0 ? (
           <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
             <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-[18px] font-medium text-foreground mb-2">У вас нет апелляций</h3>
+            <h3 className="text-[18px] font-medium text-foreground mb-2">
+              {t("student.appeals.noAppeals")}
+            </h3>
             <p className="text-[14px] text-muted-foreground mb-6">
-              Если вы не согласны с оценкой, вы можете подать апелляцию из страницы задания
+              {t("student.appeals.noAppealsDesc")}
             </p>
             <a
               href="#/courses"
               className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium"
             >
-              Перейти к курсам
+              {t("student.receivedReviews.goToCourses")}
             </a>
           </div>
         ) : (

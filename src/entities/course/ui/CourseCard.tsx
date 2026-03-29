@@ -1,4 +1,5 @@
 import { AlertCircle, BookOpen, CheckCircle2, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * CourseCard — карточка курса (студент).
@@ -31,22 +32,6 @@ function getInitials(name: string): string {
   return name.substring(0, 2).toUpperCase();
 }
 
-function formatDeadline(isoDate: string): { label: string; urgent: boolean } {
-  const date = new Date(isoDate);
-  const now = new Date();
-  const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return { label: "Дедлайн истёк", urgent: true };
-  if (diffDays === 0) return { label: "Сегодня", urgent: true };
-  if (diffDays === 1) return { label: "Завтра", urgent: true };
-  if (diffDays <= 3) return { label: `Через ${diffDays} дня`, urgent: true };
-  if (diffDays <= 7) return { label: `Через ${diffDays} дней`, urgent: false };
-  return {
-    label: date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
-    urgent: false,
-  };
-}
-
 export function CourseCard({
   title,
   teacher,
@@ -58,7 +43,27 @@ export function CourseCard({
   status = "active",
   onClick,
 }: CourseCardProps) {
+  const { t } = useTranslation();
   const isCompleted = status === "completed";
+
+  const formatDeadline = (isoDate: string): { label: string; urgent: boolean } => {
+    const date = new Date(isoDate);
+    const now = new Date();
+    const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return { label: t("entity.course.deadlineExpired"), urgent: true };
+    if (diffDays === 0) return { label: t("entity.course.today"), urgent: true };
+    if (diffDays === 1) return { label: t("entity.course.tomorrow"), urgent: true };
+    if (diffDays <= 3)
+      return { label: t("entity.course.inDays", { count: diffDays }), urgent: true };
+    if (diffDays <= 7)
+      return { label: t("entity.course.inDaysMany", { count: diffDays }), urgent: false };
+    return {
+      label: date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
+      urgent: false,
+    };
+  };
+
   const deadlineInfo = !isCompleted && deadline ? formatDeadline(deadline) : null;
   const isUrgent = deadlineInfo?.urgent === true;
 
@@ -85,7 +90,8 @@ export function CourseCard({
         {!isCompleted && newAssignments && newAssignments > 0 ? (
           <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[11px] font-semibold text-[--brand-primary] shadow-sm">
             <BookOpen className="w-3 h-3" />
-            {newAssignments} {newAssignments === 1 ? "новое" : "новых"}
+            {newAssignments}{" "}
+            {newAssignments === 1 ? t("entity.course.newOne") : t("entity.course.newMany")}
           </span>
         ) : null}
 
@@ -129,7 +135,9 @@ export function CourseCard({
               />
             </div>
             <p className="text-[11px] text-[--text-tertiary]">
-              {isCompleted ? "100% выполнено" : `${progress}% выполнено`}
+              {isCompleted
+                ? `100% ${t("entity.course.percentComplete")}`
+                : `${progress}% ${t("entity.course.percentComplete")}`}
             </p>
           </div>
         )}
@@ -140,7 +148,7 @@ export function CourseCard({
             /* Completed: green badge with checkmark */
             <div className="flex items-center gap-1.5 pt-1 text-[--success]">
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[12px] font-medium">Завершён</span>
+              <span className="text-[12px] font-medium">{t("entity.course.completed")}</span>
             </div>
           ) : deadlineInfo ? (
             /* Active with deadline */

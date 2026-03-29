@@ -1,5 +1,6 @@
 import { Send, Clock, CheckCheck } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface ChatMessage {
   id: string;
@@ -18,7 +19,7 @@ interface ChatThreadProps {
 
 function formatTime(timestamp: string) {
   const date = new Date(timestamp);
-  return date.toLocaleTimeString("ru-RU", {
+  return date.toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -31,11 +32,11 @@ function formatDate(timestamp: string) {
   yesterday.setDate(yesterday.getDate() - 1);
 
   if (date.toDateString() === today.toDateString()) {
-    return "Сегодня";
+    return "today";
   } else if (date.toDateString() === yesterday.toDateString()) {
-    return "Вчера";
+    return "yesterday";
   } else {
-    return date.toLocaleDateString("ru-RU", {
+    return date.toLocaleDateString(undefined, {
       day: "numeric",
       month: "long",
     });
@@ -43,6 +44,7 @@ function formatDate(timestamp: string) {
 }
 
 export function ChatThread({ messages, onSendMessage, headerAction, compact }: ChatThreadProps) {
+  const { t } = useTranslation();
   const [newMessage, setNewMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,6 +52,12 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
     if (!newMessage.trim()) return;
     onSendMessage(newMessage);
     setNewMessage("");
+  };
+
+  const translateDate = (dateKey: string) => {
+    if (dateKey === "today") return t("widget.chatThread.today");
+    if (dateKey === "yesterday") return t("widget.chatThread.yesterday");
+    return dateKey;
   };
 
   // Group messages by date
@@ -79,14 +87,16 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
         {headerAction}
         <div className="flex-1">
           <h2 className={`font-semibold text-foreground ${compact ? "" : "text-xl mb-1"}`}>
-            Служба поддержки
+            {t("widget.chatThread.supportService")}
           </h2>
           <div
             className={`flex items-center gap-1.5 text-muted-foreground ${compact ? "text-xs" : "text-sm"}`}
           >
             <Clock className={compact ? "w-3 h-3" : "w-4 h-4"} />
             <span>
-              {compact ? "Обычно отвечаем в течение 24ч" : "Обычно отвечаем в течение 24 часов"}
+              {compact
+                ? t("widget.chatThread.responseTimeShort")
+                : t("widget.chatThread.responseTime")}
             </span>
           </div>
         </div>
@@ -100,7 +110,7 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
               <span
                 className={`text-xs text-muted-foreground bg-muted px-3 ${compact ? "py-1" : "py-1.5"} rounded-full`}
               >
-                {date}
+                {translateDate(date)}
               </span>
             </div>
             {msgs.map((message) => (
@@ -146,7 +156,7 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Напишите сообщение..."
+            placeholder={t("widget.chatThread.placeholder")}
             className={`flex-1 px-4 ${compact ? "py-2.5" : "py-3"} border border-border rounded-[12px] bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors`}
           />
           <button

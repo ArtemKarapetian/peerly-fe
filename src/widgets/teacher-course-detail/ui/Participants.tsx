@@ -1,5 +1,6 @@
 import { Search, Filter, Upload } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { ParticipantImportModal } from "@/features/participant/import";
 
@@ -26,6 +27,7 @@ interface TeacherCourseParticipantsProps {
 }
 
 export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipantsProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<"all" | "student" | "assistant">("all");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "invited">("all");
@@ -35,7 +37,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
   const allParticipants: Participant[] = [
     {
       id: "p1",
-      name: "Иван Петров",
+      name: t("widget.participants.nameIvan"),
       email: "ivan.petrov@student.ru",
       role: "student",
       status: "active",
@@ -43,7 +45,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     },
     {
       id: "p2",
-      name: "Мария Сидорова",
+      name: t("widget.participants.nameMaria"),
       email: "maria.sidorova@student.ru",
       role: "student",
       status: "active",
@@ -51,7 +53,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     },
     {
       id: "p3",
-      name: "Алексей Смирнов",
+      name: t("widget.participants.nameAlexey"),
       email: "alex.smirnov@student.ru",
       role: "student",
       status: "active",
@@ -59,7 +61,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     },
     {
       id: "p4",
-      name: "Екатерина Волкова",
+      name: t("widget.participants.nameEkaterina"),
       email: "kate.volkova@student.ru",
       role: "assistant",
       status: "active",
@@ -67,7 +69,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     },
     {
       id: "p5",
-      name: "Дмитрий Козлов",
+      name: t("widget.participants.nameDmitry"),
       email: "dmitry.kozlov@student.ru",
       role: "student",
       status: "invited",
@@ -89,13 +91,13 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     if (role === "student") {
       return (
         <span className="px-2 py-1 bg-[#dbeafe] text-[#2563eb] rounded-[6px] text-[12px] font-medium">
-          Студент
+          {t("widget.participants.roleBadgeStudent")}
         </span>
       );
     }
     return (
       <span className="px-2 py-1 bg-[#fff8e1] text-[#f57c00] rounded-[6px] text-[12px] font-medium">
-        Ассистент
+        {t("widget.participants.roleBadgeAssistant")}
       </span>
     );
   };
@@ -104,13 +106,13 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
     if (status === "active") {
       return (
         <span className="px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
-          Активен
+          {t("widget.participants.statusActive")}
         </span>
       );
     }
     return (
       <span className="px-2 py-1 bg-[#fff8e1] text-[#f57c00] rounded-[6px] text-[12px] font-medium">
-        Приглашён
+        {t("widget.participants.statusInvited")}
       </span>
     );
   };
@@ -124,7 +126,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
           <input
             type="text"
-            placeholder="Поиск по имени или email..."
+            placeholder={t("widget.participants.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors"
@@ -137,9 +139,9 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           onChange={(e) => setRoleFilter(e.target.value as "all" | "student" | "assistant")}
           className="px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
         >
-          <option value="all">Все роли</option>
-          <option value="student">Студенты</option>
-          <option value="assistant">Ассистенты</option>
+          <option value="all">{t("widget.participants.allRoles")}</option>
+          <option value="student">{t("widget.participants.studentsRole")}</option>
+          <option value="assistant">{t("widget.participants.assistantsRole")}</option>
         </select>
 
         {/* Status Filter */}
@@ -148,9 +150,9 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "invited")}
           className="px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
         >
-          <option value="all">Все статусы</option>
-          <option value="active">Активные</option>
-          <option value="invited">Приглашённые</option>
+          <option value="all">{t("widget.participants.allStatuses")}</option>
+          <option value="active">{t("widget.participants.activeStatus")}</option>
+          <option value="invited">{t("widget.participants.invitedStatus")}</option>
         </select>
 
         {/* Import Button */}
@@ -159,7 +161,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors"
         >
           <Upload className="w-4 h-4" />
-          Импорт
+          {t("widget.participants.import")}
         </button>
       </div>
 
@@ -184,7 +186,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
                 {getRoleBadge(participant.role)}
                 {getStatusBadge(participant.status)}
                 <p className="text-[14px] text-[#767692] w-24 text-right">
-                  {participant.joinedAt.toLocaleDateString("ru-RU")}
+                  {participant.joinedAt.toLocaleDateString()}
                 </p>
               </div>
             </div>
@@ -194,7 +196,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {filteredParticipants.length === 0 && (
           <div className="p-12 text-center">
             <Filter className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692]">Участники не найдены</p>
+            <p className="text-[15px] text-[#767692]">{t("widget.participants.notFound")}</p>
           </div>
         )}
       </div>
@@ -202,16 +204,17 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
       {/* Stats */}
       <div className="mt-4 flex items-center gap-6 text-[14px] text-[#767692]">
         <span>
-          Всего: <strong className="text-[#21214f]">{allParticipants.length}</strong>
+          {t("widget.participants.total")}{" "}
+          <strong className="text-[#21214f]">{allParticipants.length}</strong>
         </span>
         <span>
-          Активных:{" "}
+          {t("widget.participants.activeCount")}{" "}
           <strong className="text-[#21214f]">
             {allParticipants.filter((p) => p.status === "active").length}
           </strong>
         </span>
         <span>
-          Приглашённых:{" "}
+          {t("widget.participants.invitedCount")}{" "}
           <strong className="text-[#21214f]">
             {allParticipants.filter((p) => p.status === "invited").length}
           </strong>

@@ -1,4 +1,5 @@
 import { MoreVertical } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * ParticipantsList - Список участников курса
@@ -19,14 +20,16 @@ interface ParticipantsListProps {
 }
 
 export function ParticipantsList({ participants, onParticipantClick }: ParticipantsListProps) {
+  const { t } = useTranslation();
+
   const getRoleLabel = (role: Participant["role"]) => {
     switch (role) {
       case "student":
-        return "Студент";
+        return t("entity.user.roleStudent");
       case "teacher":
-        return "Преподаватель";
+        return t("entity.user.roleTeacher");
       case "assistant":
-        return "Ассистент";
+        return t("entity.user.roleAssistant");
     }
   };
 
@@ -48,7 +51,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
   if (participants.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-[14px] text-[#767692]">Участники не найдены</p>
+        <p className="text-[14px] text-[#767692]">{t("entity.user.participantsNotFound")}</p>
       </div>
     );
   }
@@ -93,7 +96,9 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
                 </span>
               </div>
               {participant.status === "inactive" && (
-                <p className="text-[13px] leading-[1.4] text-[#c7c7c7]">Неактивен</p>
+                <p className="text-[13px] leading-[1.4] text-[#c7c7c7]">
+                  {t("entity.user.inactive")}
+                </p>
               )}
             </div>
 

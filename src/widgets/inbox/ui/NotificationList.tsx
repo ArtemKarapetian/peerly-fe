@@ -1,4 +1,5 @@
 import { Bell, Clock, MessageSquare, FileCheck, AlertCircle, Award } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type NotificationType =
   | "DEADLINE"
@@ -62,7 +63,7 @@ function getNotificationBgColor(type: NotificationType, isRead: boolean) {
   }
 }
 
-function formatTime(timeStr: string) {
+function formatTime(timeStr: string, t: (key: string) => string) {
   const date = new Date(timeStr);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -70,11 +71,11 @@ function formatTime(timeStr: string) {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return "Только что";
-  if (diffMins < 60) return `${diffMins} мин назад`;
-  if (diffHours < 24) return `${diffHours} ч назад`;
-  if (diffDays === 1) return "Вчера";
-  if (diffDays < 7) return `${diffDays} дн назад`;
+  if (diffMins < 1) return t("widget.notificationList.justNow");
+  if (diffMins < 60) return `${diffMins} ${t("widget.notificationList.minAgo")}`;
+  if (diffHours < 24) return `${diffHours} ${t("widget.notificationList.hAgo")}`;
+  if (diffDays === 1) return t("widget.notificationList.yesterday");
+  if (diffDays < 7) return `${diffDays} ${t("widget.notificationList.dAgo")}`;
 
   return date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
 }
@@ -85,6 +86,8 @@ export function NotificationList({
   onNotificationClick,
   onResetFilter,
 }: NotificationListProps) {
+  const { t } = useTranslation();
+
   if (notifications.length === 0) {
     return (
       <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] py-16 text-center">
@@ -93,24 +96,24 @@ export function NotificationList({
         </div>
         <h3 className="text-[18px] font-medium text-[#21214f]">
           {selectedFilter === "ALL"
-            ? "Нет уведомлений"
+            ? t("widget.notificationList.noNotifications")
             : selectedFilter === "DEADLINES"
-              ? "Нет уведомлений о дедлайнах"
+              ? t("widget.notificationList.noDeadlineNotifications")
               : selectedFilter === "REVIEWS"
-                ? "Нет уведомлений о рецензиях"
-                : "Нет уведомлений"}
+                ? t("widget.notificationList.noReviewNotifications")
+                : t("widget.notificationList.noNotifications")}
         </h3>
         <p className="text-[14px] text-[#767692] mb-6">
           {selectedFilter === "ALL"
-            ? "Здесь будут отображаться все ваши уведомления"
-            : "Попробуйте выбрать другой фильтр"}
+            ? t("widget.notificationList.willAppearHere")
+            : t("widget.notificationList.tryAnotherFilter")}
         </p>
         {selectedFilter !== "ALL" && (
           <button
             onClick={onResetFilter}
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#d2e1f8] hover:bg-[#c5d5f5] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
           >
-            Показать все
+            {t("widget.notificationList.showAll")}
           </button>
         )}
       </div>
@@ -159,7 +162,7 @@ export function NotificationList({
               </p>
               <div className="flex items-center gap-1.5 text-[13px] text-[#a0a0b8]">
                 <Clock className="w-3.5 h-3.5" />
-                <span>{formatTime(notification.time)}</span>
+                <span>{formatTime(notification.time, t)}</span>
               </div>
             </div>
           </div>

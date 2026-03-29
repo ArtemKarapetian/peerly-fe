@@ -1,11 +1,13 @@
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ConfirmationFormProps {
   onDelete: () => void;
 }
 
 export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
+  const { t } = useTranslation();
   const [understoodConsequences, setUnderstoodConsequences] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +19,9 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
   return (
     <>
       <div className="bg-card border border-border rounded-[20px] p-6">
-        <h2 className="text-lg font-semibold text-foreground mb-5">Подтверждение удаления</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-5">
+          {t("widget.deleteAccount.confirmationTitle")}
+        </h2>
 
         <div className="space-y-6">
           {/* Step 1: Checkbox */}
@@ -27,7 +31,7 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
                 1
               </div>
               <span className="text-sm font-medium text-foreground">
-                Подтвердите понимание последствий
+                {t("widget.deleteAccount.step1Label")}
               </span>
             </div>
 
@@ -39,7 +43,7 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
                 className="mt-0.5 w-5 h-5 rounded border-2 border-input bg-background text-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
               />
               <span className="text-sm text-foreground flex-1">
-                Я понимаю последствия удаления аккаунта и подтверждаю, что это действие необратимо
+                {t("widget.deleteAccount.step1Checkbox")}
               </span>
             </label>
           </div>
@@ -50,30 +54,32 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary">
                 2
               </div>
-              <span className="text-sm font-medium text-foreground">Введите кодовое слово</span>
+              <span className="text-sm font-medium text-foreground">
+                {t("widget.deleteAccount.step2Label")}
+              </span>
             </div>
 
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                Введите &quot;УДАЛИТЬ&quot; для подтверждения
+                {t("widget.deleteAccount.step2Instruction")}
               </label>
               <input
                 type="text"
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                placeholder="УДАЛИТЬ"
+                placeholder={t("widget.deleteAccount.step2Placeholder")}
                 className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:border-destructive focus:ring-2 focus:ring-destructive/20 focus:outline-none transition-colors font-mono text-sm"
               />
               {confirmText && !textMatches && (
                 <p className="mt-2 text-xs text-destructive flex items-center gap-1">
                   <span>⚠</span>
-                  Текст не совпадает. Введите точно: УДАЛИТЬ
+                  {t("widget.deleteAccount.textMismatch")}
                 </p>
               )}
               {textMatches && (
                 <p className="mt-2 text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
                   <span>✓</span>
-                  Текст подтверждён
+                  {t("widget.deleteAccount.textConfirmed")}
                 </p>
               )}
             </div>
@@ -85,22 +91,24 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary">
                 3
               </div>
-              <span className="text-sm font-medium text-foreground">Введите ваш пароль</span>
+              <span className="text-sm font-medium text-foreground">
+                {t("widget.deleteAccount.step3Label")}
+              </span>
             </div>
 
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-2">
-                Пароль (демо)
+                {t("widget.deleteAccount.passwordLabel")}
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Введите ваш пароль"
+                placeholder={t("widget.deleteAccount.passwordPlaceholder")}
                 className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
               />
               <p className="mt-2 text-xs text-muted-foreground">
-                В demo-режиме подойдёт любой пароль
+                {t("widget.deleteAccount.passwordDemoNote")}
               </p>
             </div>
           </div>
@@ -119,21 +127,21 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
           }`}
         >
           <Trash2 className="w-5 h-5" />
-          Удалить аккаунт
+          {t("widget.deleteAccount.deleteButton")}
         </button>
         <a
           href="#/settings"
           className="tablet:w-auto px-6 py-3 border border-border text-foreground rounded-lg hover:bg-accent transition-colors font-medium text-center"
         >
-          Отмена
+          {t("widget.deleteAccount.cancelButton")}
         </a>
       </div>
 
       {/* Help section */}
       <div className="p-4 bg-muted/50 rounded-lg border border-border">
         <p className="text-sm text-muted-foreground">
-          <strong className="text-foreground">Нужна помощь?</strong> Если у вас возникли проблемы
-          или вы хотите обсудить альтернативы, свяжитесь с нами:{" "}
+          <strong className="text-foreground">{t("widget.deleteAccount.needHelp")}</strong>{" "}
+          {t("widget.deleteAccount.needHelpText")}{" "}
           <a href="mailto:support@peerly.edu" className="text-accent-blue hover:underline">
             support@peerly.edu
           </a>

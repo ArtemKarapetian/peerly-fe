@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { ReviewAssignment } from "@/entities/review/model/types.ts";
 
@@ -23,6 +24,7 @@ interface ReviewListProps {
 
 export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps) {
   const [now] = useState(() => Date.now());
+  const { t } = useTranslation();
 
   if (reviews.length === 0) {
     return null;
@@ -31,7 +33,8 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
   const twoDays = 2 * 24 * 60 * 60 * 1000;
 
   // Group reviews
-  const groupedReviews = groupBy === "course" ? groupByCourse(reviews) : groupByDeadline(reviews);
+  const groupedReviews =
+    groupBy === "course" ? groupByCourse(reviews) : groupByDeadline(reviews, t);
 
   return (
     <div className="space-y-8">
@@ -44,7 +47,10 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
                 {group.title}
               </h2>
               <span className="text-[14px] text-[#767692]">
-                {group.reviews.length} {group.reviews.length === 1 ? "рецензия" : "рецензии"}
+                {group.reviews.length}{" "}
+                {group.reviews.length === 1
+                  ? t("widget.reviewList.reviewOne")
+                  : t("widget.reviewList.reviewFew")}
               </span>
             </div>
           </div>
@@ -57,7 +63,11 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
                 id={review.id}
                 courseName={review.courseName}
                 taskTitle={review.taskTitle}
-                studentName={review.isAnonymous ? "Анонимный автор" : "Студент"}
+                studentName={
+                  review.isAnonymous
+                    ? t("widget.reviewList.anonymousAuthor")
+                    : t("widget.reviewList.studentLabel")
+                }
                 reviewDeadline={review.reviewDeadline}
                 status={review.status}
                 isDeadlineSoon={
@@ -94,7 +104,7 @@ function groupByCourse(reviews: ReviewAssignment[]) {
 }
 
 // Helper: Group by deadline
-function groupByDeadline(reviews: ReviewAssignment[]) {
+function groupByDeadline(reviews: ReviewAssignment[], t: (key: string) => string) {
   const now = Date.now();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -131,7 +141,7 @@ function groupByDeadline(reviews: ReviewAssignment[]) {
   if (groups.overdue.length > 0) {
     result.push({
       key: "overdue",
-      title: "⚠️ Просрочено",
+      title: `⚠️ ${t("widget.reviewList.overdue")}`,
       reviews: groups.overdue.sort((a, b) => b.reviewDeadlineTimestamp - a.reviewDeadlineTimestamp),
     });
   }
@@ -139,7 +149,7 @@ function groupByDeadline(reviews: ReviewAssignment[]) {
   if (groups.today.length > 0) {
     result.push({
       key: "today",
-      title: "Сегодня",
+      title: t("widget.reviewList.today"),
       reviews: groups.today.sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp),
     });
   }
@@ -147,7 +157,7 @@ function groupByDeadline(reviews: ReviewAssignment[]) {
   if (groups.tomorrow.length > 0) {
     result.push({
       key: "tomorrow",
-      title: "Завтра",
+      title: t("widget.reviewList.tomorrow"),
       reviews: groups.tomorrow.sort(
         (a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp,
       ),
@@ -157,7 +167,7 @@ function groupByDeadline(reviews: ReviewAssignment[]) {
   if (groups.thisWeek.length > 0) {
     result.push({
       key: "thisWeek",
-      title: "На этой неделе",
+      title: t("widget.reviewList.thisWeek"),
       reviews: groups.thisWeek.sort(
         (a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp,
       ),
@@ -167,7 +177,7 @@ function groupByDeadline(reviews: ReviewAssignment[]) {
   if (groups.later.length > 0) {
     result.push({
       key: "later",
-      title: "Позже",
+      title: t("widget.reviewList.later"),
       reviews: groups.later.sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp),
     });
   }

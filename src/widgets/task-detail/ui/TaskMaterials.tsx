@@ -1,4 +1,5 @@
 import { FileText, Download } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Material {
   name: string;
@@ -6,17 +7,33 @@ interface Material {
   type: string;
 }
 
-const materials: Material[] = [
-  { name: "Методические указания.pdf", size: "2.3 МБ", type: "PDF" },
-  { name: "Примеры прототипов.fig", size: "1.8 МБ", type: "Figma" },
-  { name: "Чек-лист требований.docx", size: "124 КБ", type: "DOCX" },
-];
+// Materials data is populated with translation keys in the component below
 
 export function TaskMaterials() {
+  const { t } = useTranslation();
+
+  const materials: Material[] = [
+    {
+      name: t("widget.taskMaterials.mockFile1Name"),
+      size: t("widget.taskMaterials.mockFile1Size"),
+      type: "PDF",
+    },
+    {
+      name: t("widget.taskMaterials.mockFile2Name"),
+      size: t("widget.taskMaterials.mockFile2Size"),
+      type: "Figma",
+    },
+    {
+      name: t("widget.taskMaterials.mockFile3Name"),
+      size: t("widget.taskMaterials.mockFile3Size"),
+      type: "DOCX",
+    },
+  ];
+
   return (
     <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
-        Материалы
+        {t("widget.taskMaterials.title")}
       </h2>
 
       <div className="space-y-2">

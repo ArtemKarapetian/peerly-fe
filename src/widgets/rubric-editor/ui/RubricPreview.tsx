@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { CriterionScore } from "@/entities/review/model/types.ts";
 import { RubricSectionData } from "@/entities/rubric/model/types.ts";
@@ -19,6 +20,7 @@ interface RubricPreviewProps {
 }
 
 export function RubricPreview({ rubric }: RubricPreviewProps) {
+  const { t } = useTranslation();
   const [scores, setScores] = useState<CriterionScore[]>([]);
 
   // Convert RubricData to RubricSectionData format
@@ -61,11 +63,10 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
     <div className="max-w-[900px] mx-auto">
       {/* Info Banner */}
       <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6">
-        <h3 className="text-[16px] font-medium text-[#21214f] mb-2">Режим предпросмотра</h3>
-        <p className="text-[14px] text-[#767692]">
-          Так будет выглядеть эта рубрика для студентов при оценивании работ. Вы можете
-          взаимодействовать с формой, чтобы проверить, как она работает.
-        </p>
+        <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+          {t("widget.rubricPreview.previewMode")}
+        </h3>
+        <p className="text-[14px] text-[#767692]">{t("widget.rubricPreview.previewDesc")}</p>
       </div>
 
       {/* Rubric Metadata */}
@@ -79,9 +80,9 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
           </div>
           <div className="ml-4">
             <span className="inline-block px-3 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[13px] font-medium">
-              {rubric.taskType === "text" && "Текст"}
-              {rubric.taskType === "code" && "Код"}
-              {rubric.taskType === "project" && "Проект"}
+              {rubric.taskType === "text" && t("widget.rubricEditor.typeText")}
+              {rubric.taskType === "code" && t("widget.rubricEditor.typeCode")}
+              {rubric.taskType === "project" && t("widget.rubricEditor.typeProject")}
             </span>
           </div>
         </div>
@@ -108,25 +109,25 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
             <p className="text-[24px] font-medium text-[#21214f]">
               {completedCount}/{totalCriteria}
             </p>
-            <p className="text-[12px] text-[#767692]">Оценено критериев</p>
+            <p className="text-[12px] text-[#767692]">{t("widget.rubricPreview.criteriaRated")}</p>
           </div>
           <div>
             <p className="text-[24px] font-medium text-[#21214f]">
               {completedRequiredCount}/{requiredCount}
             </p>
-            <p className="text-[12px] text-[#767692]">Обязательных</p>
+            <p className="text-[12px] text-[#767692]">{t("widget.rubricPreview.requiredLabel")}</p>
           </div>
           <div>
             <p className="text-[24px] font-medium text-[#5b8def]">
               {totalScored}/{totalPossible}
             </p>
-            <p className="text-[12px] text-[#767692]">Баллов набрано</p>
+            <p className="text-[12px] text-[#767692]">{t("widget.rubricPreview.pointsScored")}</p>
           </div>
           <div>
             <p className="text-[24px] font-medium text-[#4caf50]">
               {totalPossible > 0 ? Math.round((totalScored / totalPossible) * 100) : 0}%
             </p>
-            <p className="text-[12px] text-[#767692]">Процент</p>
+            <p className="text-[12px] text-[#767692]">{t("widget.rubricPreview.percent")}</p>
           </div>
         </div>
       </div>
@@ -142,13 +143,17 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
       {/* Weights Info (if any criterion has weight) */}
       {rubric.criteria.some((c) => c.weight) && (
         <div className="mt-6 bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-3">Весовые коэффициенты</h4>
+          <h4 className="text-[14px] font-medium text-[#21214f] mb-3">
+            {t("widget.rubricPreview.weightCoefficients")}
+          </h4>
           <div className="space-y-2">
             {rubric.criteria.map((criterion) => (
               <div key={criterion.id} className="flex items-center justify-between">
                 <span className="text-[13px] text-[#767692]">{criterion.name}</span>
                 <span className="text-[13px] font-medium text-[#21214f]">
-                  {criterion.weight ? `${criterion.weight}%` : "Не указан"}
+                  {criterion.weight
+                    ? `${criterion.weight}%`
+                    : t("widget.rubricPreview.notSpecified")}
                 </span>
               </div>
             ))}
@@ -156,8 +161,7 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
           {rubric.criteria.reduce((sum, c) => sum + (c.weight || 0), 0) !== 100 && (
             <p className="text-[12px] text-[#f57c00] mt-3 flex items-center gap-1">
               <span>⚠️</span>
-              Сумма весов не равна 100%. Веса используются для информации, итоговая оценка
-              рассчитывается как сумма баллов.
+              {t("widget.rubricPreview.weightsWarning")}
             </p>
           )}
         </div>
@@ -169,7 +173,7 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
           onClick={() => setScores([])}
           className="px-4 py-2 border-2 border-[#e6e8ee] text-[#767692] rounded-[12px] hover:border-[#a0b8f1] hover:text-[#21214f] transition-colors text-[14px]"
         >
-          Сбросить оценки
+          {t("widget.rubricPreview.resetScores")}
         </button>
       </div>
     </div>

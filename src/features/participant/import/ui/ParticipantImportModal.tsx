@@ -1,5 +1,6 @@
 import { X, Upload, UserPlus, Key, AlertCircle, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * ParticipantImportModal - Модальное окно импорта участников
@@ -33,6 +34,7 @@ export function ParticipantImportModal({
   courseId: _courseId,
   onClose,
 }: ParticipantImportModalProps) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<ImportMode>("csv");
   const [csvText, setCsvText] = useState("");
   const [parsedUsers, setParsedUsers] = useState<ParsedUser[]>([]);
@@ -61,7 +63,7 @@ export function ParticipantImportModal({
           name: parts[0] || "",
           surname: parts[1] || "",
           login: parts[2] || "",
-          error: "Не все поля заполнены",
+          error: t("feature.participantImport.notAllFieldsFilled"),
         });
         return;
       }
@@ -72,11 +74,11 @@ export function ParticipantImportModal({
       let error: string | undefined;
 
       if (!name || !surname || !login) {
-        error = "Не все поля заполнены";
+        error = t("feature.participantImport.notAllFieldsFilled");
       } else if (seenLogins.has(login)) {
-        error = `Дубликат логина: ${login}`;
+        error = t("feature.participantImport.duplicateLogin", { login });
       } else if (login.length < 3) {
-        error = "Логин слишком короткий (мин. 3 символа)";
+        error = t("feature.participantImport.loginTooShort");
       }
 
       if (!error) {
@@ -93,11 +95,17 @@ export function ParticipantImportModal({
   // Add manual user
   const handleAddManual = () => {
     if (!manualName || !manualSurname || !manualLogin) {
-      alert("Заполните все поля");
+      alert(t("feature.participantImport.fillAllFields"));
       return;
     }
 
-    alert(`Добавлен пользователь: ${manualName} ${manualSurname} (${manualLogin})`);
+    alert(
+      t("feature.participantImport.userAdded", {
+        name: manualName,
+        surname: manualSurname,
+        login: manualLogin,
+      }),
+    );
     setManualName("");
     setManualSurname("");
     setManualLogin("");
@@ -117,10 +125,10 @@ export function ParticipantImportModal({
   const handleImportCSV = () => {
     const validUsers = parsedUsers.filter((u) => !u.error);
     if (validUsers.length === 0) {
-      alert("Нет валидных пользователей для импорта");
+      alert(t("feature.participantImport.noValidUsers"));
       return;
     }
-    alert(`Импортировано ${validUsers.length} пользователей`);
+    alert(t("feature.participantImport.importedCount", { count: validUsers.length }));
     onClose();
   };
 
@@ -133,7 +141,7 @@ export function ParticipantImportModal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b-2 border-[#e6e8ee]">
           <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px]">
-            Импорт участников
+            {t("feature.participantImport.title")}
           </h2>
           <button
             onClick={onClose}
@@ -153,7 +161,7 @@ export function ParticipantImportModal({
             `}
           >
             <Upload className="w-4 h-4 inline-block mr-2" />
-            CSV импорт
+            {t("feature.participantImport.csvImport")}
             {mode === "csv" && (
               <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
             )}
@@ -166,7 +174,7 @@ export function ParticipantImportModal({
             `}
           >
             <UserPlus className="w-4 h-4 inline-block mr-2" />
-            Добавить вручную
+            {t("feature.participantImport.addManually")}
             {mode === "manual" && (
               <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
             )}
@@ -179,7 +187,7 @@ export function ParticipantImportModal({
             `}
           >
             <Key className="w-4 h-4 inline-block mr-2" />
-            Инвайт-коды
+            {t("feature.participantImport.inviteCodes")}
             {mode === "invite" && (
               <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
             )}
@@ -192,7 +200,7 @@ export function ParticipantImportModal({
           {mode === "csv" && (
             <div>
               <p className="text-[14px] text-[#767692] mb-4">
-                Вставьте CSV данные в формате:{" "}
+                {t("feature.participantImport.csvHint")}{" "}
                 <code className="bg-[#f9f9f9] px-2 py-1 rounded">имя,фамилия,логин</code>
               </p>
 
@@ -208,7 +216,7 @@ export function ParticipantImportModal({
                 disabled={!csvText.trim()}
                 className="mt-4 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
               >
-                Проверить и показать preview
+                {t("feature.participantImport.parseAndPreview")}
               </button>
 
               {/* Preview */}
@@ -216,17 +224,17 @@ export function ParticipantImportModal({
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-[18px] font-medium text-[#21214f]">
-                      Предпросмотр ({parsedUsers.length})
+                      {t("feature.participantImport.preview")} ({parsedUsers.length})
                     </h3>
                     <div className="flex items-center gap-4 text-[13px]">
                       <span className="text-[#4caf50] flex items-center gap-1">
                         <CheckCircle className="w-4 h-4" />
-                        {validCount} валидных
+                        {validCount} {t("feature.participantImport.valid")}
                       </span>
                       {errorCount > 0 && (
                         <span className="text-[#d4183d] flex items-center gap-1">
                           <AlertCircle className="w-4 h-4" />
-                          {errorCount} ошибок
+                          {errorCount} {t("feature.participantImport.errors")}
                         </span>
                       )}
                     </div>
@@ -237,16 +245,16 @@ export function ParticipantImportModal({
                       <thead className="bg-[#f9f9f9] sticky top-0">
                         <tr>
                           <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
-                            Имя
+                            {t("feature.participantImport.nameHeader")}
                           </th>
                           <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
-                            Фамилия
+                            {t("feature.participantImport.surnameHeader")}
                           </th>
                           <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
-                            Логин
+                            {t("feature.participantImport.loginHeader")}
                           </th>
                           <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
-                            Статус
+                            {t("feature.participantImport.statusHeader")}
                           </th>
                         </tr>
                       </thead>
@@ -283,7 +291,7 @@ export function ParticipantImportModal({
                     disabled={validCount === 0}
                     className="mt-4 px-6 py-2 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
                   >
-                    Импортировать {validCount} пользователей
+                    {t("feature.participantImport.importUsers", { count: validCount })}
                   </button>
                 </div>
               )}
@@ -294,12 +302,14 @@ export function ParticipantImportModal({
           {mode === "manual" && (
             <div>
               <p className="text-[14px] text-[#767692] mb-4">
-                Добавьте одного пользователя вручную
+                {t("feature.participantImport.addOneManually")}
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">Имя *</label>
+                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                    {t("feature.participantImport.nameLabel")}
+                  </label>
                   <input
                     type="text"
                     value={manualName}
@@ -311,7 +321,7 @@ export function ParticipantImportModal({
 
                 <div>
                   <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    Фамилия *
+                    {t("feature.participantImport.surnameLabel")}
                   </label>
                   <input
                     type="text"
@@ -324,7 +334,7 @@ export function ParticipantImportModal({
 
                 <div>
                   <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    Логин *
+                    {t("feature.participantImport.loginLabel")}
                   </label>
                   <input
                     type="text"
@@ -339,7 +349,7 @@ export function ParticipantImportModal({
                   onClick={handleAddManual}
                   className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
                 >
-                  Добавить участника
+                  {t("feature.participantImport.addParticipant")}
                 </button>
               </div>
             </div>
@@ -349,13 +359,13 @@ export function ParticipantImportModal({
           {mode === "invite" && (
             <div>
               <p className="text-[14px] text-[#767692] mb-4">
-                Сгенерируйте одноразовые инвайт-коды для самостоятельной регистрации
+                {t("feature.participantImport.generateInviteDesc")}
               </p>
 
               <div className="space-y-4">
                 <div>
                   <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    Количество кодов
+                    {t("feature.participantImport.codeCount")}
                   </label>
                   <input
                     type="number"
@@ -371,13 +381,13 @@ export function ParticipantImportModal({
                   onClick={handleGenerateInvites}
                   className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
                 >
-                  Сгенерировать коды
+                  {t("feature.participantImport.generateCodes")}
                 </button>
 
                 {generatedCodes.length > 0 && (
                   <div className="mt-6">
                     <h3 className="text-[16px] font-medium text-[#21214f] mb-3">
-                      Сгенерированные коды ({generatedCodes.length})
+                      {t("feature.participantImport.generatedCodes")} ({generatedCodes.length})
                     </h3>
                     <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4 max-h-[300px] overflow-y-auto">
                       <div className="space-y-2 font-mono text-[14px]">
@@ -391,7 +401,7 @@ export function ParticipantImportModal({
                               onClick={() => void navigator.clipboard.writeText(code)}
                               className="text-[13px] text-[#5b8def] hover:underline"
                             >
-                              Копировать
+                              {t("feature.participantImport.copy")}
                             </button>
                           </div>
                         ))}
@@ -410,7 +420,7 @@ export function ParticipantImportModal({
             onClick={onClose}
             className="px-4 py-2 text-[#767692] hover:bg-[#f9f9f9] rounded-[12px] transition-colors"
           >
-            Закрыть
+            {t("feature.participantImport.close")}
           </button>
         </div>
       </div>

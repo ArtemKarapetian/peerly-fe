@@ -1,4 +1,5 @@
 import { FileText, Download, Trash2, RefreshCw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * FilePreviewCard - Превью загруженного файла с действиями
@@ -31,11 +32,13 @@ export function FilePreviewCard({
   onDelete,
   disabled = false,
 }: FilePreviewCardProps) {
+  const { t } = useTranslation();
+
   // Format file size
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+    if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
   };
 
   // Get file icon based on extension
@@ -73,7 +76,9 @@ export function FilePreviewCard({
           <div className="flex items-center gap-2 text-[13px] text-[#767692]">
             <span>{formatFileSize(file.size)}</span>
             <span>•</span>
-            <span>Загружено {file.uploadedAt}</span>
+            <span>
+              {t("feature.filePreview.uploadedAt")} {file.uploadedAt}
+            </span>
           </div>
         </div>
       </div>
@@ -86,7 +91,7 @@ export function FilePreviewCard({
           className="flex items-center gap-2 px-4 py-2 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>Заменить файл</span>
+          <span>{t("feature.filePreview.replaceFile")}</span>
         </button>
 
         <button
@@ -95,7 +100,7 @@ export function FilePreviewCard({
           className="flex items-center gap-2 px-4 py-2 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Download className="w-4 h-4" />
-          <span>Скачать</span>
+          <span>{t("common.download")}</span>
         </button>
 
         <button
@@ -104,7 +109,7 @@ export function FilePreviewCard({
           className="ml-auto flex items-center gap-2 px-4 py-2 bg-[#fff5f5] hover:bg-[#ffe6e6] text-[#d4183d] rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Trash2 className="w-4 h-4" />
-          <span>Удалить</span>
+          <span>{t("common.delete")}</span>
         </button>
       </div>
     </div>

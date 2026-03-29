@@ -1,6 +1,8 @@
 import { ShieldAlert } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Error403Page() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen w-full bg-background flex items-center justify-center p-8">
       <div className="max-w-md w-full text-center space-y-6">
@@ -14,14 +16,11 @@ export default function Error403Page() {
         {/* Error code */}
         <div className="space-y-2">
           <h1 className="text-6xl font-semibold text-foreground/40">403</h1>
-          <h2 className="text-2xl font-semibold text-foreground">Доступ запрещён</h2>
+          <h2 className="text-2xl font-semibold text-foreground">{t("errors.accessDenied")}</h2>
         </div>
 
         {/* Explanation */}
-        <p className="text-muted-foreground">
-          У вас недостаточно прав для доступа к этому ресурсу. Если вы считаете, что это ошибка,
-          обратитесь к администратору.
-        </p>
+        <p className="text-muted-foreground">{t("errors.accessDeniedDesc")}</p>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
@@ -29,13 +28,13 @@ export default function Error403Page() {
             onClick={() => (window.location.hash = "/dashboard")}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
-            В личный кабинет
+            {t("errors.toDashboard")}
           </button>
           <button
             onClick={() => (window.location.hash = "/courses")}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
-            К курсам
+            {t("errors.toCourses")}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle, Info, X } from "lucide-react";
 import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Alert - Компонент для отображения уведомлений и ошибок
@@ -33,6 +34,7 @@ const variantStyles = {
 };
 
 export function Alert({ variant = "error", children, onClose, className = "" }: AlertProps) {
+  const { t } = useTranslation();
   const styles = variantStyles[variant];
   const Icon = styles.icon;
 
@@ -56,7 +58,7 @@ export function Alert({ variant = "error", children, onClose, className = "" }: 
         <button
           onClick={onClose}
           className={`shrink-0 ${styles.text} hover:opacity-70 transition-opacity`}
-          aria-label="Закрыть"
+          aria-label={t("common.close")}
         >
           <X className="w-4 h-4" />
         </button>

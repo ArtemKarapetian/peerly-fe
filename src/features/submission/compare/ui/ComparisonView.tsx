@@ -1,4 +1,5 @@
 import { X, FileText, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import type { Version } from "@/entities/work";
 
@@ -18,22 +19,24 @@ interface ComparisonViewProps {
 }
 
 export function ComparisonView({ version1, version2, onClose }: ComparisonViewProps) {
+  const { t } = useTranslation();
+
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+    if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
   };
 
   const getStatusLabel = (status: Version["status"]) => {
     switch (status) {
       case "draft":
-        return "Черновик";
+        return t("entity.work.statusDraft");
       case "submitted":
-        return "Отправлено";
+        return t("entity.work.statusSubmitted");
       case "accepted":
-        return "Принято";
+        return t("entity.work.statusAccepted");
       case "rejected":
-        return "Отклонено";
+        return t("entity.work.statusRejected");
     }
   };
 
@@ -57,7 +60,7 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
       {/* Header */}
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#e6e8ee]">
         <h3 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
-          Сравнение версий
+          {t("feature.comparison.title")}
         </h3>
         <button
           onClick={onClose}
@@ -73,14 +76,14 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
         <div>
           <div className="bg-[#f0f5ff] rounded-[12px] p-4 mb-4">
             <h4 className="text-[18px] font-medium text-[#21214f] mb-1">
-              Версия {version1.versionNumber}
+              {t("entity.work.version")} {version1.versionNumber}
             </h4>
             <p className="text-[13px] text-[#767692]">{version1.timestamp}</p>
           </div>
 
           {/* Status */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">Статус</div>
+            <div className="text-[13px] text-[#767692] mb-1">{t("feature.comparison.status")}</div>
             <div className="text-[15px] font-medium text-[#21214f]">
               {getStatusLabel(version1.status)}
             </div>
@@ -88,7 +91,9 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
           {/* Files */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-2">Файлы ({version1.files.length})</div>
+            <div className="text-[13px] text-[#767692] mb-2">
+              {t("feature.comparison.files")} ({version1.files.length})
+            </div>
             <div className="space-y-1">
               {version1.files.map((file) => (
                 <div
@@ -105,18 +110,22 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
           {/* Note */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">Комментарий</div>
+            <div className="text-[13px] text-[#767692] mb-1">{t("feature.comparison.comment")}</div>
             <div className="text-[14px] text-[#21214f] bg-[#f9f9f9] rounded-[8px] p-3 min-h-[60px]">
-              {version1.note || <span className="text-[#767692] italic">Нет комментария</span>}
+              {version1.note || (
+                <span className="text-[#767692] italic">{t("feature.comparison.noComment")}</span>
+              )}
             </div>
           </div>
 
           {/* Checks */}
           <div>
-            <div className="text-[13px] text-[#767692] mb-2">Проверки</div>
+            <div className="text-[13px] text-[#767692] mb-2">{t("feature.comparison.checks")}</div>
             <div className="flex items-center gap-3 bg-[#f9f9f9] rounded-[8px] p-3">
               {checks1.total === 0 ? (
-                <span className="text-[13px] text-[#767692] italic">Нет проверок</span>
+                <span className="text-[13px] text-[#767692] italic">
+                  {t("feature.comparison.noChecks")}
+                </span>
               ) : (
                 <>
                   {checks1.passed > 0 && (
@@ -153,14 +162,14 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
         <div>
           <div className="bg-[#f0f5ff] rounded-[12px] p-4 mb-4">
             <h4 className="text-[18px] font-medium text-[#21214f] mb-1">
-              Версия {version2.versionNumber}
+              {t("entity.work.version")} {version2.versionNumber}
             </h4>
             <p className="text-[13px] text-[#767692]">{version2.timestamp}</p>
           </div>
 
           {/* Status */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">Статус</div>
+            <div className="text-[13px] text-[#767692] mb-1">{t("feature.comparison.status")}</div>
             <div
               className={`text-[15px] font-medium ${
                 version1.status !== version2.status ? "text-[#5b8def]" : "text-[#21214f]"
@@ -174,7 +183,7 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
           {/* Files */}
           <div className="mb-4">
             <div className="text-[13px] text-[#767692] mb-2">
-              Файлы ({version2.files.length})
+              {t("feature.comparison.files")} ({version2.files.length})
               {version1.files.length !== version2.files.length && (
                 <span className="ml-1 text-[#5b8def]">✓</span>
               )}
@@ -204,7 +213,7 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
           {/* Note */}
           <div className="mb-4">
             <div className="text-[13px] text-[#767692] mb-1">
-              Комментарий
+              {t("feature.comparison.comment")}
               {version1.note !== version2.note && <span className="ml-1 text-[#5b8def]">✓</span>}
             </div>
             <div
@@ -214,14 +223,16 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
                   : "bg-[#f9f9f9] text-[#21214f]"
               }`}
             >
-              {version2.note || <span className="text-[#767692] italic">Нет комментария</span>}
+              {version2.note || (
+                <span className="text-[#767692] italic">{t("feature.comparison.noComment")}</span>
+              )}
             </div>
           </div>
 
           {/* Checks */}
           <div>
             <div className="text-[13px] text-[#767692] mb-2">
-              Проверки
+              {t("feature.comparison.checks")}
               {(checks1.passed !== checks2.passed ||
                 checks1.failed !== checks2.failed ||
                 checks1.warnings !== checks2.warnings) && (
@@ -238,7 +249,9 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
               }`}
             >
               {checks2.total === 0 ? (
-                <span className="text-[13px] text-[#767692] italic">Нет проверок</span>
+                <span className="text-[13px] text-[#767692] italic">
+                  {t("feature.comparison.noChecks")}
+                </span>
               ) : (
                 <>
                   {checks2.passed > 0 && (
@@ -276,7 +289,7 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
       <div className="mt-6 pt-4 border-t border-[#e6e8ee]">
         <p className="text-[13px] text-[#767692] flex items-center gap-1">
           <span className="text-[#5b8def]">✓</span>
-          <span>— изменения по сравнению с другой версией</span>
+          <span>{t("feature.comparison.changesLegend")}</span>
         </p>
       </div>
     </div>

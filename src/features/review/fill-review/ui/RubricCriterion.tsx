@@ -1,4 +1,5 @@
 import { AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { CriterionScore } from "@/entities/review/model/types.ts";
 import { Criterion } from "@/entities/rubric/model/types.ts";
@@ -30,6 +31,8 @@ export function RubricCriterion({
   readonly = false,
   onFocus,
 }: RubricCriterionProps) {
+  const { t } = useTranslation();
+
   const handleScoreChange = (score: number) => {
     if (readonly) return;
     onChange({ ...value, score });
@@ -58,7 +61,7 @@ export function RubricCriterion({
             {criterion.required && <span className="text-[#d4183d] ml-1">*</span>}
           </h4>
           <span className="text-[13px] text-[#767692] shrink-0">
-            Макс. {criterion.maxScore} баллов
+            {t("feature.rubricCriterion.maxPoints", { count: criterion.maxScore })}
           </span>
         </div>
         {criterion.description && (
@@ -69,10 +72,12 @@ export function RubricCriterion({
       {/* Score Selector */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-[13px] text-[#4b4963]">Оценка</label>
+          <label className="block text-[13px] text-[#4b4963]">
+            {t("feature.rubricCriterion.score")}
+          </label>
           {!readonly && (
             <span className="text-[11px] text-[#a0a0a0] italic">
-              Подсказка: 1–5, 0 очистить, ↑/↓ навигация
+              {t("feature.rubricCriterion.scoreHint")}
             </span>
           )}
         </div>
@@ -102,11 +107,11 @@ export function RubricCriterion({
       {/* Comment Field */}
       <div className="mb-2">
         <label className="block text-[13px] text-[#4b4963] mb-2">
-          Комментарий
+          {t("feature.rubricCriterion.comment")}
           {criterion.commentRequired && <span className="text-[#d4183d] ml-1">*</span>}
           {criterion.minCommentLength && (
             <span className="text-[#767692] ml-1">
-              (мин. {criterion.minCommentLength} символов)
+              ({t("feature.rubricCriterion.minChars", { count: criterion.minCommentLength })})
             </span>
           )}
         </label>
@@ -115,7 +120,7 @@ export function RubricCriterion({
           onChange={(e) => handleCommentChange(e.target.value)}
           disabled={readonly}
           rows={2}
-          placeholder="Оставьте комментарий по этому критерию"
+          placeholder={t("feature.rubricCriterion.commentPlaceholder")}
           className={`
             w-full px-3 py-2 border-2 rounded-[8px] text-[14px] text-[#21214f] 
             placeholder:text-[#b4b4b4] transition-colors resize-none
@@ -132,7 +137,8 @@ export function RubricCriterion({
                 : "text-[#767692]"
             }`}
           >
-            {value.comment.length} / {criterion.minCommentLength} символов
+            {value.comment.length} / {criterion.minCommentLength}{" "}
+            {t("feature.rubricCriterion.characters")}
           </p>
         )}
       </div>

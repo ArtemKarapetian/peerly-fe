@@ -1,5 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 /**
- * CourseFilters — сегментированный контрол для фильтрации курсов.
+ * CourseFilters - Segmented control for filtering courses.
  */
 
 export type CourseFilterType = "all" | "active" | "completed";
@@ -9,17 +11,19 @@ interface CourseFiltersProps {
   onFilterChange: (filter: CourseFilterType) => void;
 }
 
-const FILTERS: { value: CourseFilterType; label: string }[] = [
-  { value: "all", label: "Все" },
-  { value: "active", label: "Активные" },
-  { value: "completed", label: "Завершённые" },
-];
-
 export function CourseFilters({ activeFilter, onFilterChange }: CourseFiltersProps) {
+  const { t } = useTranslation();
+
+  const FILTERS: { value: CourseFilterType; label: string }[] = [
+    { value: "all", label: t("feature.courseFilters.all") },
+    { value: "active", label: t("feature.courseFilters.active") },
+    { value: "completed", label: t("feature.courseFilters.completed") },
+  ];
+
   return (
     <div
       role="tablist"
-      aria-label="Фильтр курсов"
+      aria-label={t("feature.courseFilters.ariaLabel")}
       className="flex gap-1 p-1 bg-[#e8eaed] rounded-[var(--radius-md)] w-fit shrink-0"
     >
       {FILTERS.map((filter) => {

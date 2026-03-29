@@ -1,5 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 /**
- * TaskFilters - Чипы фильтров для списка заданий
+ * TaskFilters - Filter chips for the assignment list
  */
 
 export type TaskFilter = "all" | "due-soon" | "completed";
@@ -10,10 +12,12 @@ interface TaskFiltersProps {
 }
 
 export function TaskFilters({ activeFilter, onFilterChange }: TaskFiltersProps) {
+  const { t } = useTranslation();
+
   const filters: { id: TaskFilter; label: string }[] = [
-    { id: "all", label: "Все" },
-    { id: "due-soon", label: "Истекает срок сдачи" },
-    { id: "completed", label: "Завершенные" },
+    { id: "all", label: t("feature.taskFilters.all") },
+    { id: "due-soon", label: t("feature.taskFilters.dueSoon") },
+    { id: "completed", label: t("feature.taskFilters.completed") },
   ];
 
   return (

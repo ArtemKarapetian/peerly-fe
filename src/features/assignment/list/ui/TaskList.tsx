@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { TaskListItem } from "@/entities/assignment";
 import type { TaskStatus } from "@/entities/assignment";
 
@@ -19,10 +21,12 @@ interface TaskListProps {
 }
 
 export function TaskList({ tasks, onTaskClick }: TaskListProps) {
+  const { t } = useTranslation();
+
   if (tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-[14px] text-[#767692]">Заданий не найдено</p>
+        <p className="text-[14px] text-[#767692]">{t("feature.taskList.notFound")}</p>
       </div>
     );
   }

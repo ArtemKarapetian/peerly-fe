@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronUp, AlertCircle, CheckCircle, Clock, FileText } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ReviewCriterion {
   name: string;
@@ -34,27 +35,33 @@ interface TaskReviewAccordionProps {
   tasks: TaskSubmission[];
 }
 
-function StatusBadge({ status }: { status: TaskSubmission["status"] }) {
+function StatusBadge({
+  status,
+  t,
+}: {
+  status: TaskSubmission["status"];
+  t: (key: string) => string;
+}) {
   switch (status) {
     case "PUBLISHED":
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
           <CheckCircle className="w-3.5 h-3.5" />
-          Опубликовано
+          {t("widget.taskReviewAccordion.published")}
         </span>
       );
     case "IN_REVIEW":
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[8px] text-[13px] font-medium">
           <Clock className="w-3.5 h-3.5" />
-          На проверке
+          {t("widget.taskReviewAccordion.inReview")}
         </span>
       );
     case "PENDING":
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[13px] font-medium">
           <Clock className="w-3.5 h-3.5" />
-          Ожидание
+          {t("widget.taskReviewAccordion.pending")}
         </span>
       );
     default:
@@ -65,6 +72,7 @@ function StatusBadge({ status }: { status: TaskSubmission["status"] }) {
 export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
   const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
   const [expandedReviews, setExpandedReviews] = useState<Set<string>>(new Set());
+  const { t } = useTranslation();
 
   const toggleTask = (taskId: string) => {
     setExpandedTasks((prev) => {
@@ -113,22 +121,25 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 mb-2">
-                  <StatusBadge status={task.status} />
+                  <StatusBadge status={task.status} t={t} />
 
                   {task.status === "PUBLISHED" && task.currentScore !== undefined && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#d2e1f8] text-[#21214f] rounded-[8px] text-[13px] font-medium">
-                      Оценка: {task.currentScore}/{task.maxScore}
+                      {t("widget.taskReviewAccordion.score")} {task.currentScore}/{task.maxScore}
                     </span>
                   )}
 
                   {task.status === "IN_REVIEW" && (
                     <span className="text-[13px] text-[#767692]">
-                      Проверяют: {task.reviewsReceived}/{task.reviewsRequired}
+                      {t("widget.taskReviewAccordion.reviewing")} {task.reviewsReceived}/
+                      {task.reviewsRequired}
                     </span>
                   )}
 
                   {task.status === "PENDING" && (
-                    <span className="text-[13px] text-[#767692]">Ожидание проверки</span>
+                    <span className="text-[13px] text-[#767692]">
+                      {t("widget.taskReviewAccordion.awaitingReview")}
+                    </span>
                   )}
                 </div>
 
@@ -136,15 +147,15 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                   <FileText className="w-4 h-4" />
                   <span>
                     {task.reviewsReceived > 0
-                      ? `${task.reviewsReceived} ${task.reviewsReceived === 1 ? "рецензия" : "рецензии"}`
-                      : "Нет рецензий"}
+                      ? `${task.reviewsReceived} ${task.reviewsReceived === 1 ? t("widget.taskReviewAccordion.reviewOne") : t("widget.taskReviewAccordion.reviewFew")}`
+                      : t("widget.taskReviewAccordion.noReviews")}
                   </span>
                 </div>
 
                 {task.status === "IN_REVIEW" && (
                   <div className="mt-3 flex items-start gap-2 text-[13px] text-[#767692] bg-[#f9f9f9] rounded-[8px] p-3">
                     <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <span>Итог будет доступен после завершения этапа проверки</span>
+                    <span>{t("widget.taskReviewAccordion.resultAfterReview")}</span>
                   </div>
                 )}
               </div>
@@ -176,7 +187,9 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-1">
                             <span className="text-[14px] font-medium text-[#21214f]">
-                              {review.isAnonymous ? "Анонимный рецензент" : review.reviewerName}
+                              {review.isAnonymous
+                                ? t("widget.taskReviewAccordion.anonymousReviewer")
+                                : review.reviewerName}
                             </span>
                             <span className="text-[12px] text-[#767692]">{review.submittedAt}</span>
                           </div>
@@ -199,7 +212,7 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                       <div className="border-t-2 border-[#e6e8ee] p-4 space-y-4">
                         <div>
                           <h4 className="text-[14px] font-medium text-[#21214f] mb-3">
-                            Оценки по критериям
+                            {t("widget.taskReviewAccordion.scoresByCriteria")}
                           </h4>
                           <div className="space-y-3">
                             {review.criteria.map((criterion, idx) => (
@@ -224,7 +237,7 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
 
                         <div>
                           <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
-                            Общий комментарий
+                            {t("widget.taskReviewAccordion.overallComment")}
                           </h4>
                           <p className="text-[14px] text-[#4b4963] leading-[1.6] bg-[#f9f9f9] rounded-[8px] p-3">
                             {review.overallComment}
@@ -240,12 +253,12 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                 <div className="mt-4 pt-4 border-t-2 border-[#e6e8ee]">
                   <button
                     onClick={() => {
-                      alert("Форма запроса пересмотра будет добавлена позже");
+                      alert(t("widget.taskReviewAccordion.requestReviewAlert"));
                     }}
                     className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-[#d2def8] hover:bg-[#f9f9f9] hover:border-[#a0b8f1] text-[#21214f] rounded-[12px] text-[14px] font-medium transition-colors"
                   >
                     <AlertCircle className="w-4 h-4" />
-                    Запросить пересмотр
+                    {t("widget.taskReviewAccordion.requestReview")}
                   </button>
                 </div>
               )}
@@ -258,7 +271,7 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                 <Clock className="w-6 h-6 text-[#767692]" />
               </div>
               <p className="text-[14px] text-[#767692]">
-                Рецензии ещё не получены. Ожидайте завершения проверки.
+                {t("widget.taskReviewAccordion.noReviewsYet")}
               </p>
             </div>
           )}

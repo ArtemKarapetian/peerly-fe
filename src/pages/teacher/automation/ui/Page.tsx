@@ -1,5 +1,6 @@
 import { Plus, Pencil, Trash2, Zap, CheckCircle2, XCircle } from "lucide-react";
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -22,6 +23,7 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * TeacherAutomationPage - Manage automation rules
  */
 export default function TeacherAutomationPage() {
+  const { t } = useTranslation();
   const [rules, setRules] = useState<AutomationRule[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingRule, setEditingRule] = useState<AutomationRule | null>(null);
@@ -34,15 +36,19 @@ export default function TeacherAutomationPage() {
     const updated = toggleRuleEnabled(id);
     if (updated) {
       loadRules();
-      toast.success(updated.enabled ? "Правило включено" : "Правило выключено");
+      toast.success(
+        updated.enabled
+          ? t("teacher.automation.ruleEnabled")
+          : t("teacher.automation.ruleDisabled"),
+      );
     }
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Вы уверены, что хотите удалить это правило?")) {
+    if (confirm(t("teacher.automation.deleteConfirm"))) {
       deleteRule(id);
       loadRules();
-      toast.success("Правило удалено");
+      toast.success(t("teacher.automation.ruleDeleted"));
     }
   };
 
@@ -58,37 +64,35 @@ export default function TeacherAutomationPage() {
   };
 
   const getConditionsSummary = (rule: AutomationRule) => {
-    if (rule.conditions.length === 0) return "Нет условий";
+    if (rule.conditions.length === 0) return t("teacher.automation.noConditions");
     return rule.conditions.map((c) => getConditionLabel(c)).join(", ");
   };
 
   const getActionsSummary = (rule: AutomationRule) => {
-    if (rule.actions.length === 0) return "Нет действий";
+    if (rule.actions.length === 0) return t("teacher.automation.noActions");
     return rule.actions.map((a) => getActionLabel(a)).join(", ");
   };
 
   return (
-    <AppShell title="Автоматизация">
+    <AppShell title={t("teacher.automation.title")}>
       <div className="max-w-[1400px]">
-        <Breadcrumbs items={[{ label: "Автоматизация" }]} />
+        <Breadcrumbs items={[{ label: t("teacher.automation.breadcrumb") }]} />
 
         <div className="mt-6">
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-                Правила автоматизации
+                {t("teacher.automation.title")}
               </h1>
-              <p className="text-muted-foreground">
-                Создавайте IF/THEN правила для автоматической обработки событий
-              </p>
+              <p className="text-muted-foreground">{t("teacher.automation.subtitle")}</p>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
               className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
             >
               <Plus className="w-5 h-5" />
-              Создать правило
+              {t("teacher.automation.createRule")}
             </button>
           </div>
 
@@ -98,12 +102,10 @@ export default function TeacherAutomationPage() {
               <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
               <div>
                 <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
-                  Как работают правила автоматизации
+                  {t("teacher.automation.howRulesWork")}
                 </h3>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Правила автоматически выполняются при наступлении событий (триггеров). Вы можете
-                  задать условия для более точного контроля и определить действия, которые будут
-                  применены.
+                  {t("teacher.automation.howRulesWorkDesc")}
                 </p>
               </div>
             </div>
@@ -114,16 +116,16 @@ export default function TeacherAutomationPage() {
             {rules.length === 0 ? (
               <div className="p-12 text-center">
                 <Zap className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <p className="text-muted-foreground mb-2">Нет правил автоматизации</p>
+                <p className="text-muted-foreground mb-2">{t("teacher.automation.noRules")}</p>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Создайте первое правило для автоматизации рутинных задач
+                  {t("teacher.automation.createFirstDesc")}
                 </p>
                 <button
                   onClick={() => setShowCreateModal(true)}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
                 >
                   <Plus className="w-4 h-4" />
-                  Создать правило
+                  {t("teacher.automation.createRule")}
                 </button>
               </div>
             ) : (
@@ -132,25 +134,25 @@ export default function TeacherAutomationPage() {
                   <thead>
                     <tr className="border-b border-border bg-muted/50">
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground w-[50px]">
-                        Статус
+                        {t("teacher.automation.statusCol")}
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                        Название
+                        {t("teacher.automation.nameCol")}
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                        Триггер
+                        {t("teacher.automation.triggerCol")}
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                        Условия
+                        {t("teacher.automation.conditionsCol")}
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
-                        Действия
+                        {t("teacher.automation.actionsCol")}
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground w-[60px]">
-                        Приоритет
+                        {t("teacher.automation.priorityCol")}
                       </th>
                       <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground w-[120px]">
-                        Действия
+                        {t("teacher.automation.actionsColHeader")}
                       </th>
                     </tr>
                   </thead>
@@ -168,7 +170,11 @@ export default function TeacherAutomationPage() {
                                 ? "text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30"
                                 : "text-muted-foreground hover:bg-muted"
                             }`}
-                            title={rule.enabled ? "Включено" : "Выключено"}
+                            title={
+                              rule.enabled
+                                ? t("teacher.automation.enabledTitle")
+                                : t("teacher.automation.disabledTitle")
+                            }
                           >
                             {rule.enabled ? (
                               <CheckCircle2 className="w-5 h-5" />
@@ -212,14 +218,14 @@ export default function TeacherAutomationPage() {
                             <button
                               onClick={() => handleEdit(rule)}
                               className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
-                              title="Редактировать"
+                              title={t("teacher.automation.editTitle")}
                             >
                               <Pencil className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDelete(rule.id)}
                               className="p-1.5 text-destructive hover:bg-destructive/10 rounded transition-colors"
-                              title="Удалить"
+                              title={t("teacher.automation.deleteTitle")}
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -238,25 +244,33 @@ export default function TeacherAutomationPage() {
             <div className="mt-6 grid grid-cols-2 tablet:grid-cols-4 gap-4">
               <div className="bg-card border border-border rounded-[12px] p-4">
                 <div className="text-2xl font-semibold text-foreground mb-1">{rules.length}</div>
-                <div className="text-sm text-muted-foreground">Всего правил</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("teacher.automation.totalRules")}
+                </div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
                 <div className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-1">
                   {rules.filter((r) => r.enabled).length}
                 </div>
-                <div className="text-sm text-muted-foreground">Активных</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("teacher.automation.activeRules")}
+                </div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
                 <div className="text-2xl font-semibold text-muted-foreground mb-1">
                   {rules.filter((r) => !r.enabled).length}
                 </div>
-                <div className="text-sm text-muted-foreground">Отключено</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("teacher.automation.disabledRules")}
+                </div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
                 <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-1">
                   {rules.reduce((sum, r) => sum + r.actions.length, 0)}
                 </div>
-                <div className="text-sm text-muted-foreground">Действий</div>
+                <div className="text-sm text-muted-foreground">
+                  {t("teacher.automation.totalActions")}
+                </div>
               </div>
             </div>
           )}

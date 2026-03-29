@@ -1,4 +1,5 @@
 import { BookOpen, Clock, CheckSquare, MessageSquare } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { StatCard } from "@/shared/ui/StatCard";
@@ -8,7 +9,7 @@ import { DeadlinesList, ActionCards, NotificationsList } from "@/widgets/student
 
 import { mockDeadlines, mockActionData, mockNotifications } from "../model/mockData";
 
-const todayRaw = new Date().toLocaleDateString("ru-RU", {
+const todayRaw = new Date().toLocaleDateString(undefined, {
   weekday: "long",
   day: "numeric",
   month: "long",
@@ -37,37 +38,38 @@ function SectionCard({
 }
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const hasActions = mockActionData.reviewsPending > 0 || mockActionData.newFeedback > 0;
 
   return (
-    <AppShell title="Главная">
-      <PageHeader title="Главная" subtitle={todayLabel} />
+    <AppShell title={t("student.dashboard.title")}>
+      <PageHeader title={t("student.dashboard.title")} subtitle={todayLabel} />
 
       {/* Overview strip — 4 cols on tablet+, 2x2 on mobile */}
       <div className="grid grid-cols-2 gap-2 tablet:grid-cols-4 mb-5">
         <StatCard
-          label="Активных курсов"
+          label={t("student.dashboard.activeCourses")}
           value={3}
           icon={<BookOpen className="w-4 h-4" />}
           accent="#2563eb"
           compact
         />
         <StatCard
-          label="Дедлайнов сегодня"
+          label={t("student.dashboard.deadlinesToday")}
           value={mockDeadlines.filter((d) => d.isUrgent).length}
           icon={<Clock className="w-4 h-4" />}
           accent="#d97706"
           compact
         />
         <StatCard
-          label="Нужно проверить"
+          label={t("student.dashboard.needToReview")}
           value={mockActionData.reviewsPending}
           icon={<CheckSquare className="w-4 h-4" />}
           accent="#7c3aed"
           compact
         />
         <StatCard
-          label="Новых отзывов"
+          label={t("student.dashboard.newFeedback")}
           value={mockActionData.newFeedback}
           icon={<MessageSquare className="w-4 h-4" />}
           accent="#059669"
@@ -79,7 +81,7 @@ export default function DashboardPage() {
       <div className="task-layout">
         {/* Left: single main focus block */}
         <div className="space-y-4">
-          <SectionCard title="К выполнению" noPadding>
+          <SectionCard title={t("student.dashboard.toDo")} noPadding>
             {/* Action items pinned at top when present */}
             {hasActions && (
               <>
@@ -96,7 +98,7 @@ export default function DashboardPage() {
                 {mockDeadlines.length > 0 && (
                   <div className="px-5 py-2 bg-[--surface-hover] border-y border-[--surface-border]">
                     <span className="text-[10px] font-semibold text-[--text-tertiary] uppercase tracking-[0.5px]">
-                      Предстоящие
+                      {t("student.dashboard.upcoming")}
                     </span>
                   </div>
                 )}
@@ -112,7 +114,7 @@ export default function DashboardPage() {
 
           {/* Mobile: notifications inline */}
           <div className="hide-on-desktop">
-            <SectionCard title="Уведомления" noPadding>
+            <SectionCard title={t("student.dashboard.notifications")} noPadding>
               <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
@@ -129,7 +131,7 @@ export default function DashboardPage() {
         {/* Right sidebar — desktop only, secondary info */}
         <div className="hide-below-desktop">
           <div className="task-sidebar-sticky">
-            <SectionCard title="Уведомления" noPadding>
+            <SectionCard title={t("student.dashboard.notifications")} noPadding>
               <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {

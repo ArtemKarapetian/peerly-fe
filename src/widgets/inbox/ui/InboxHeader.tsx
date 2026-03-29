@@ -1,5 +1,6 @@
 import { Filter, CheckCheck, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 
@@ -20,22 +21,23 @@ export function InboxHeader({
   onFilterChange,
   onMarkAllAsRead,
 }: InboxHeaderProps) {
+  const { t } = useTranslation();
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const subtitleText =
     unreadCount > 0
-      ? `У вас ${unreadCount} ${unreadCount === 1 ? "непрочитанное уведомление" : "непрочитанных уведомлений"}`
-      : "Все уведомления прочитаны";
+      ? t("student.inbox.unreadCount", { count: unreadCount })
+      : t("student.inbox.allRead");
 
   return (
     <>
-      <PageHeader title="Уведомления" subtitle={subtitleText} />
+      <PageHeader title={t("student.inbox.title")} subtitle={subtitleText} />
 
       {/* Filters + Actions */}
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center gap-2 text-[14px] text-[#767692]">
           <Filter className="w-4 h-4" />
-          <span className="hidden tablet:inline">Фильтр:</span>
+          <span className="hidden tablet:inline">{t("common.filter")}:</span>
         </div>
 
         {/* Desktop Tabs */}
@@ -95,7 +97,7 @@ export function InboxHeader({
               className="hidden tablet:flex items-center gap-2 px-4 py-2.5 bg-[#3d6bc6] hover:bg-[#2e5bb8] text-white rounded-[8px] text-[14px] font-medium transition-colors ml-auto"
             >
               <CheckCheck className="w-4 h-4" />
-              Прочитать все
+              {t("student.inbox.markAllRead")}
             </button>
             <button
               onClick={onMarkAllAsRead}

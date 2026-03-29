@@ -1,4 +1,5 @@
 import { Bell, MessageSquare, CheckCircle, AlertCircle, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type NotificationType = "feedback" | "grade" | "reminder" | "info";
 
@@ -49,13 +50,17 @@ export function NotificationsList({
   onNotificationClick,
   onViewAllClick,
 }: NotificationsListProps) {
+  const { t } = useTranslation();
+
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center px-5">
         <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
           <Bell className="w-5 h-5 text-[--text-tertiary]" />
         </div>
-        <p className="text-[13px] text-[--text-secondary]">Нет новых уведомлений</p>
+        <p className="text-[13px] text-[--text-secondary]">
+          {t("widget.notificationsList.noNewNotifications")}
+        </p>
       </div>
     );
   }
@@ -116,7 +121,7 @@ export function NotificationsList({
           onClick={onViewAllClick}
           className="w-full text-center text-[13px] font-medium text-[--brand-primary] hover:text-[--brand-primary-hover] py-3 border-t border-[--surface-border] transition-colors"
         >
-          Все уведомления ({items.length})
+          {t("widget.notificationsList.allNotifications")} ({items.length})
         </button>
       )}
     </>

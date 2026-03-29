@@ -1,4 +1,5 @@
 import { Check, Calendar, Users, Layers, Shield, Save, Send } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 
@@ -19,11 +20,12 @@ interface StepPublishProps {
 }
 
 export function StepPublish({ data, onPublish }: StepPublishProps) {
+  const { t } = useTranslation();
   const { data: courses } = useAsync(() => courseRepo.getAll(), []);
   const course = (courses ?? []).find((c) => c.id === data.courseId);
 
   const formatDate = (date: Date | null) => {
-    if (!date) return "Не указано";
+    if (!date) return t("feature.assignmentCreate.publish.notSpecified");
     return new Intl.DateTimeFormat("ru-RU", {
       day: "numeric",
       month: "long",
@@ -36,13 +38,13 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
   const getTaskTypeLabel = (type: string) => {
     switch (type) {
       case "text":
-        return "Текст";
+        return t("feature.assignmentCreate.publish.typeText");
       case "code":
-        return "Код";
+        return t("feature.assignmentCreate.publish.typeCode");
       case "project":
-        return "Проект";
+        return t("feature.assignmentCreate.publish.typeProject");
       case "files":
-        return "Файлы";
+        return t("feature.assignmentCreate.publish.typeFiles");
       default:
         return type;
     }
@@ -51,11 +53,11 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
   const getDistributionLabel = (mode: string) => {
     switch (mode) {
       case "random":
-        return "Случайное";
+        return t("feature.assignmentCreate.publish.distributionRandom");
       case "skill-based":
-        return "На основе навыков";
+        return t("feature.assignmentCreate.publish.distributionSkillBased");
       case "manual":
-        return "Вручную";
+        return t("feature.assignmentCreate.publish.distributionManual");
       default:
         return mode;
     }
@@ -64,31 +66,34 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
   const getAnonymityLabel = (mode: string) => {
     switch (mode) {
       case "full":
-        return "Полная";
+        return t("feature.assignmentCreate.publish.anonymityFull");
       case "partial":
-        return "Частичная";
+        return t("feature.assignmentCreate.publish.anonymityPartial");
       case "none":
-        return "Без анонимности";
+        return t("feature.assignmentCreate.publish.anonymityNone");
       default:
         return mode;
     }
   };
 
   const enabledPlugins = [
-    data.enablePlagiarismCheck && `Плагиат (порог ${data.plagiarismThreshold}%)`,
-    data.enableLinter && "Линтинг кода",
-    data.enableFormatCheck && "Проверка форматов",
-    data.enableAnonymization && "Анонимизация",
+    data.enablePlagiarismCheck &&
+      t("feature.assignmentCreate.publish.pluginPlagiarism", {
+        threshold: data.plagiarismThreshold,
+      }),
+    data.enableLinter && t("feature.assignmentCreate.publish.pluginLinter"),
+    data.enableFormatCheck && t("feature.assignmentCreate.publish.pluginFormatCheck"),
+    data.enableAnonymization && t("feature.assignmentCreate.publish.pluginAnonymization"),
   ].filter(Boolean);
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
-          Готово к публикации
+          {t("feature.assignmentCreate.publish.title")}
         </h2>
         <p className="text-[15px] text-[#767692]">
-          Проверьте настройки и опубликуйте задание или сохраните как черновик
+          {t("feature.assignmentCreate.publish.subtitle")}
         </p>
       </div>
 
@@ -101,36 +106,53 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Check className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Основная информация</h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.publish.basicInfo")}
+              </h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Курс</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.courseLabel")}
+              </p>
               <p className="text-[14px] text-[#21214f] font-medium">
-                {course?.name || "Не выбран"}
+                {course?.name || t("feature.assignmentCreate.publish.courseNotSelected")}
               </p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Название</p>
-              <p className="text-[14px] text-[#21214f] font-medium">{data.title || "Не указано"}</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.titleLabel")}
+              </p>
+              <p className="text-[14px] text-[#21214f] font-medium">
+                {data.title || t("feature.assignmentCreate.publish.notSpecified")}
+              </p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Тип задания</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.taskTypeLabel")}
+              </p>
               <p className="text-[14px] text-[#21214f]">{getTaskTypeLabel(data.taskType)}</p>
             </div>
             {data.description && (
               <div>
-                <p className="text-[12px] text-[#767692] mb-1">Описание</p>
+                <p className="text-[12px] text-[#767692] mb-1">
+                  {t("feature.assignmentCreate.publish.descriptionLabel")}
+                </p>
                 <p className="text-[13px] text-[#21214f] line-clamp-3">{data.description}</p>
               </div>
             )}
             {data.attachments.length > 0 && (
               <div>
-                <p className="text-[12px] text-[#767692] mb-1">Прикрепленные файлы</p>
+                <p className="text-[12px] text-[#767692] mb-1">
+                  {t("feature.assignmentCreate.publish.attachmentsLabel")}
+                </p>
                 <p className="text-[13px] text-[#21214f]">
-                  {data.attachments.length} {data.attachments.length === 1 ? "файл" : "файлов"}
+                  {data.attachments.length}{" "}
+                  {data.attachments.length === 1
+                    ? t("feature.assignmentCreate.publish.fileOne")
+                    : t("feature.assignmentCreate.publish.fileMany")}
                 </p>
               </div>
             )}
@@ -144,25 +166,35 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Calendar className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Дедлайны</h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.publish.deadlines")}
+              </h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Дедлайн сдачи работы</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.submissionDeadline")}
+              </p>
               <p className="text-[14px] text-[#21214f]">{formatDate(data.submissionDeadline)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Дедлайн рецензирования</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.reviewDeadline")}
+              </p>
               <p className="text-[14px] text-[#21214f]">{formatDate(data.reviewDeadline)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Политика опозданий</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.latePolicyLabel")}
+              </p>
               <p className="text-[14px] text-[#21214f]">
                 {data.latePolicy === "soft"
-                  ? `Мягкая (${data.latePenalty}% штрафа в день)`
-                  : "Жесткая (работы не принимаются)"}
+                  ? t("feature.assignmentCreate.publish.latePolicySoft", {
+                      penalty: data.latePenalty,
+                    })
+                  : t("feature.assignmentCreate.publish.latePolicyHard")}
               </p>
             </div>
           </div>
@@ -175,12 +207,16 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Layers className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Рубрика оценивания</h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.publish.rubricLabel")}
+              </h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
-            <p className="text-[14px] text-[#21214f]">{data.rubricName || "Не выбрана"}</p>
+            <p className="text-[14px] text-[#21214f]">
+              {data.rubricName || t("feature.assignmentCreate.publish.rubricNotSelected")}
+            </p>
           </div>
         </div>
 
@@ -191,29 +227,41 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Users className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Peer Review</h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.publish.peerReviewLabel")}
+              </h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Рецензий на работу</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.reviewsPerSubmission")}
+              </p>
               <p className="text-[14px] text-[#21214f]">{data.reviewsPerSubmission}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Распределение</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.distributionLabel")}
+              </p>
               <p className="text-[14px] text-[#21214f]">
                 {getDistributionLabel(data.distributionMode)}
               </p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Анонимность</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.anonymityLabel")}
+              </p>
               <p className="text-[14px] text-[#21214f]">{getAnonymityLabel(data.anonymityMode)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">Переназначение</p>
+              <p className="text-[12px] text-[#767692] mb-1">
+                {t("feature.assignmentCreate.publish.reassignmentLabel")}
+              </p>
               <p className="text-[14px] text-[#21214f]">
-                {data.allowReassignment ? "Разрешено" : "Запрещено"}
+                {data.allowReassignment
+                  ? t("feature.assignmentCreate.publish.reassignmentAllowed")
+                  : t("feature.assignmentCreate.publish.reassignmentForbidden")}
               </p>
             </div>
           </div>
@@ -226,13 +274,17 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
               <Shield className="w-5 h-5 text-[#5b8def]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">Плагины и проверки</h3>
+              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                {t("feature.assignmentCreate.publish.pluginsLabel")}
+              </h3>
             </div>
           </div>
 
           <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
             {enabledPlugins.length === 0 ? (
-              <p className="text-[14px] text-[#767692]">Автоматические проверки отключены</p>
+              <p className="text-[14px] text-[#767692]">
+                {t("feature.assignmentCreate.publish.noPlugins")}
+              </p>
             ) : (
               <ul className="space-y-2">
                 {enabledPlugins.map((plugin, index) => (
@@ -250,9 +302,8 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
       {/* Warning */}
       <div className="bg-[#fff8e1] border border-[#ffe082] rounded-[12px] p-4">
         <p className="text-[13px] text-[#21214f]">
-          <strong>Обратите внимание:</strong> После публикации задание станет видимым для студентов.
-          Вы сможете редактировать настройки, но некоторые изменения (например, дедлайны) могут
-          повлиять на уже начатые работы.
+          <strong>{t("feature.assignmentCreate.publish.warningAttention")}</strong>{" "}
+          {t("feature.assignmentCreate.publish.warningText")}
         </p>
       </div>
 
@@ -263,23 +314,23 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
           className="flex-1 flex items-center justify-center gap-2 px-6 py-4 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors font-medium"
         >
           <Save className="w-5 h-5" />
-          Сохранить черновик
+          {t("feature.assignmentCreate.publish.saveDraft")}
         </button>
         <button
           onClick={() => onPublish(false)}
           className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium text-[16px]"
         >
           <Send className="w-5 h-5" />
-          Опубликовать задание
+          {t("feature.assignmentCreate.publish.publishAssignment")}
         </button>
       </div>
 
       {/* Help Text */}
       <div className="text-center">
         <p className="text-[13px] text-[#767692]">
-          Черновики сохраняются автоматически и доступны только вам.
+          {t("feature.assignmentCreate.publish.draftsInfo")}
           <br />
-          Опубликованные задания сразу становятся видимы студентам курса.
+          {t("feature.assignmentCreate.publish.publishedInfo")}
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { Calendar, Award, FileText, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface TaskHeaderProps {
   title: string;
@@ -26,6 +27,8 @@ export function TaskHeader({
   statusColor,
   extensionInfo,
 }: TaskHeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-[#f9f9f9] dark:bg-card rounded-[16px] p-4 desktop:p-8 mb-6 desktop:mb-8">
       <div className="flex flex-col desktop:flex-row items-start desktop:items-start desktop:justify-between gap-4 mb-4">
@@ -48,11 +51,11 @@ export function TaskHeader({
         <div className="flex items-center gap-2">
           <Calendar className="size-5 text-[#4b4963] dark:text-muted-foreground" />
           <span className="text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#4b4963] dark:text-muted-foreground">
-            Дедлайн: {deadline}
+            {t("widget.taskHeader.deadline")} {deadline}
             {extensionInfo?.isExtended && (
               <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs font-medium">
                 <Clock className="w-3 h-3" />
-                продлено
+                {t("widget.taskHeader.extended")}
               </span>
             )}
           </span>
@@ -60,13 +63,13 @@ export function TaskHeader({
         <div className="flex items-center gap-2">
           <Award className="size-5 text-[#4b4963] dark:text-muted-foreground" />
           <span className="text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#4b4963] dark:text-muted-foreground">
-            Баллы: {points}
+            {t("widget.taskHeader.points")} {points}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <FileText className="size-5 text-[#4b4963] dark:text-muted-foreground" />
           <span className="text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#4b4963] dark:text-muted-foreground">
-            Тип: {type}
+            {t("widget.taskHeader.type")} {type}
           </span>
         </div>
       </div>

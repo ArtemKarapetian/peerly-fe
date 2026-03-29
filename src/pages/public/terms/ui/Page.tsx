@@ -1,4 +1,5 @@
 import { FileText, Shield, Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
@@ -13,6 +14,8 @@ import { PublicLayout } from "@/widgets/public-layout";
  */
 
 export default function TermsPage() {
+  const { t } = useTranslation();
+
   // Scroll to section
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -32,35 +35,33 @@ export default function TermsPage() {
                 <FileText className="size-6 text-primary" />
               </div>
               <h1 className="text-[32px] tablet:text-[40px] font-medium text-foreground tracking-[-0.5px]">
-                Условия и политика
+                {t("page.terms.title")}
               </h1>
             </div>
-            <p className="text-[15px] text-muted-foreground">
-              Последнее обновление: 25 января 2026
-            </p>
+            <p className="text-[15px] text-muted-foreground">{t("page.terms.lastUpdated")}</p>
           </div>
 
           {/* Table of Contents */}
           <div className="bg-accent/50 border-2 border-border rounded-xl p-6 mb-8">
-            <h2 className="text-[18px] font-medium text-foreground mb-4">Содержание</h2>
+            <h2 className="text-[18px] font-medium text-foreground mb-4">{t("page.terms.toc")}</h2>
             <nav className="space-y-2">
               <button
                 onClick={() => scrollToSection("terms-of-use")}
                 className="block text-[15px] text-primary hover:underline text-left"
               >
-                → Условия использования
+                → {t("page.terms.tocTerms")}
               </button>
               <button
                 onClick={() => scrollToSection("privacy-policy")}
                 className="block text-[15px] text-primary hover:underline text-left"
               >
-                → Политика конфиденциальности
+                → {t("page.terms.tocPrivacy")}
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
                 className="block text-[15px] text-primary hover:underline text-left"
               >
-                → Контакты
+                → {t("page.terms.tocContact")}
               </button>
             </nav>
           </div>
@@ -72,82 +73,76 @@ export default function TermsPage() {
           >
             <div className="flex items-center gap-3 mb-6">
               <FileText className="size-6 text-primary" />
-              <h2 className="text-[28px] font-medium text-foreground">Условия использования</h2>
+              <h2 className="text-[28px] font-medium text-foreground">
+                {t("page.terms.termsTitle")}
+              </h2>
             </div>
 
             <div className="space-y-6">
               {/* Section 1 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  1. Принятие условий
+                  {t("page.terms.terms1Title")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Используя платформу Peerly, вы соглашаетесь с настоящими условиями использования.
-                  Если вы не согласны с этими условиями, пожалуйста, не используйте сервис.
+                  {t("page.terms.terms1Text")}
                 </p>
               </div>
 
               {/* Section 2 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  2. Использование сервиса
+                  {t("page.terms.terms2Title")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  Peerly предоставляет платформу для взаимного рецензирования студенческих работ. Вы
-                  обязуетесь:
+                  {t("page.terms.terms2Text")}
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>Использовать сервис только в образовательных целях</li>
-                  <li>Предоставлять честные и конструктивные отзывы</li>
-                  <li>Не загружать материалы, нарушающие авторские права</li>
-                  <li>Соблюдать академическую честность</li>
-                  <li>Уважительно относиться к работам других студентов</li>
+                  <li>{t("page.terms.terms2Item1")}</li>
+                  <li>{t("page.terms.terms2Item2")}</li>
+                  <li>{t("page.terms.terms2Item3")}</li>
+                  <li>{t("page.terms.terms2Item4")}</li>
+                  <li>{t("page.terms.terms2Item5")}</li>
                 </ul>
               </div>
 
               {/* Section 3 */}
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">3. Учётные записи</h3>
+                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                  {t("page.terms.terms3Title")}
+                </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Вы несёте ответственность за сохранность данных своей учётной записи. Немедленно
-                  сообщайте о любом несанкционированном использовании вашего аккаунта.
-                  Предоставление ложной информации при регистрации может привести к блокировке
-                  аккаунта.
+                  {t("page.terms.terms3Text")}
                 </p>
               </div>
 
               {/* Section 4 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  4. Интеллектуальная собственность
+                  {t("page.terms.terms4Title")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Вы сохраняете все права на загружаемый контент. Загружая работы, вы предоставляете
-                  ограниченную лицензию на использование материалов в рамках процесса обучения и
-                  рецензирования внутри вашего курса.
+                  {t("page.terms.terms4Text")}
                 </p>
               </div>
 
               {/* Section 5 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  5. Ограничение ответственности
+                  {t("page.terms.terms5Title")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Сервис предоставляется "как есть". Мы не несём ответственности за точность оценок
-                  или отзывов, предоставленных другими пользователями. Финальные оценки определяются
-                  преподавателем курса.
+                  {t("page.terms.terms5Text")}
                 </p>
               </div>
 
               {/* Section 6 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  6. Изменения условий
+                  {t("page.terms.terms6Title")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Мы оставляем за собой право изменять эти условия в любое время. Продолжая
-                  использовать сервис после изменений, вы принимаете новые условия.
+                  {t("page.terms.terms6Text")}
                 </p>
               </div>
             </div>
@@ -161,84 +156,88 @@ export default function TermsPage() {
             <div className="flex items-center gap-3 mb-6">
               <Shield className="size-6 text-primary" />
               <h2 className="text-[28px] font-medium text-foreground">
-                Политика конфиденциальности
+                {t("page.terms.privacyTitle")}
               </h2>
             </div>
 
             <div className="space-y-6">
               {/* Section 1 */}
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">1. Сбор данных</h3>
+                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                  {t("page.terms.privacy1Title")}
+                </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  Мы собираем следующую информацию:
+                  {t("page.terms.privacy1Text")}
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>Имя, email и учебная информация при регистрации</li>
-                  <li>Загружаемые академические работы и отзывы</li>
-                  <li>Данные об использовании платформы (логи, метрики)</li>
-                  <li>Информация о курсах и заданиях</li>
+                  <li>{t("page.terms.privacy1Item1")}</li>
+                  <li>{t("page.terms.privacy1Item2")}</li>
+                  <li>{t("page.terms.privacy1Item3")}</li>
+                  <li>{t("page.terms.privacy1Item4")}</li>
                 </ul>
               </div>
 
               {/* Section 2 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  2. Использование данных
+                  {t("page.terms.privacy2Title")}
                 </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  Собранные данные используются для:
+                  {t("page.terms.privacy2Text")}
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>Предоставления и улучшения сервиса</li>
-                  <li>Организации процесса peer review</li>
-                  <li>Формирования оценок и аналитики</li>
-                  <li>Коммуникации с пользователями</li>
-                  <li>Обеспечения безопасности платформы</li>
+                  <li>{t("page.terms.privacy2Item1")}</li>
+                  <li>{t("page.terms.privacy2Item2")}</li>
+                  <li>{t("page.terms.privacy2Item3")}</li>
+                  <li>{t("page.terms.privacy2Item4")}</li>
+                  <li>{t("page.terms.privacy2Item5")}</li>
                 </ul>
               </div>
 
               {/* Section 3 */}
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">3. Доступ к данным</h3>
+                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                  {t("page.terms.privacy3Title")}
+                </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Загружаемые работы видны только преподавателю курса и студентам, назначенным для
-                  рецензирования (в соответствии с настройками анонимности задания). Преподаватели
-                  имеют доступ ко всем работам и отзывам в своих курсах.
+                  {t("page.terms.privacy3Text")}
                 </p>
               </div>
 
               {/* Section 4 */}
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">4. Хранение данных</h3>
+                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                  {t("page.terms.privacy4Title")}
+                </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Мы храним ваши данные в течение активного использования сервиса и разумного
-                  периода после завершения курса для архивных целей. Вы можете запросить удаление
-                  своих данных в любое время.
+                  {t("page.terms.privacy4Text")}
                 </p>
               </div>
 
               {/* Section 5 */}
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">5. Безопасность</h3>
+                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                  {t("page.terms.privacy5Title")}
+                </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  Мы применяем современные меры безопасности для защиты ваших данных, включая
-                  шифрование при передаче и хранении, контроль доступа и регулярный аудит систем
-                  безопасности.
+                  {t("page.terms.privacy5Text")}
                 </p>
               </div>
 
               {/* Section 6 */}
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">6. Ваши права</h3>
+                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                  {t("page.terms.privacy6Title")}
+                </h3>
                 <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  Вы имеете право:
+                  {t("page.terms.privacy6Text")}
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>Получить копию своих персональных данных</li>
-                  <li>Исправить неточную информацию</li>
-                  <li>Запросить удаление данных (с учётом академических требований)</li>
-                  <li>Ограничить обработку данных</li>
-                  <li>Отозвать согласие на обработку</li>
+                  <li>{t("page.terms.privacy6Item1")}</li>
+                  <li>{t("page.terms.privacy6Item2")}</li>
+                  <li>{t("page.terms.privacy6Item3")}</li>
+                  <li>{t("page.terms.privacy6Item4")}</li>
+                  <li>{t("page.terms.privacy6Item5")}</li>
                 </ul>
               </div>
             </div>
@@ -251,12 +250,14 @@ export default function TermsPage() {
           >
             <div className="flex items-center gap-3 mb-6">
               <Mail className="size-6 text-primary" />
-              <h2 className="text-[28px] font-medium text-foreground">Контакты</h2>
+              <h2 className="text-[28px] font-medium text-foreground">
+                {t("page.terms.contactTitle")}
+              </h2>
             </div>
 
             <div className="space-y-4">
               <p className="text-[15px] text-muted-foreground leading-relaxed">
-                По вопросам условий использования и политики конфиденциальности обращайтесь к нам:
+                {t("page.terms.contactText")}
               </p>
 
               <div className="bg-accent/50 border border-border rounded-lg p-4 space-y-3">
@@ -274,7 +275,7 @@ export default function TermsPage() {
 
                 <div>
                   <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
-                    Поддержка
+                    {t("page.terms.contactSupport")}
                   </p>
                   <a
                     href="mailto:support@peerly.edu"
@@ -286,16 +287,16 @@ export default function TermsPage() {
 
                 <div>
                   <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
-                    Справка
+                    {t("page.terms.contactReference")}
                   </p>
                   <a href="#/help" className="text-[15px] text-primary hover:underline font-medium">
-                    Центр помощи
+                    {t("page.terms.contactHelpCenter")}
                   </a>
                 </div>
               </div>
 
               <p className="text-[13px] text-muted-foreground pt-4 border-t border-border">
-                Мы стремимся ответить на все запросы в течение 2-3 рабочих дней.
+                {t("page.terms.contactResponseTime")}
               </p>
             </div>
           </section>

@@ -1,7 +1,8 @@
 import { Clock, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -25,6 +26,8 @@ interface TaskPageProps {
 }
 
 export default function TaskPage({ taskId = "1" }: TaskPageProps) {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const { user } = useAuth();
   const [taskStatus, setTaskStatus] = useState<TaskStatus>("NOT_STARTED");
 
@@ -34,7 +37,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
     [taskId, user?.id],
   );
 
-  const taskTitle = `Задание ${taskId || "1"}`;
+  const taskTitle = `${t("widget.gradeTable.assignment")} ${taskId || "1"}`;
   const courseId = "1"; // Mock course ID
 
   const getStatusColor = () => {
@@ -59,26 +62,26 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
   const getStatusLabel = () => {
     switch (taskStatus) {
       case "NOT_STARTED":
-        return "Не начато";
+        return t("student.task.notStarted");
       case "SUBMITTED":
-        return "Сдана работа";
+        return t("student.task.workSubmitted");
       case "PEER_REVIEW":
-        return "Взаимная проверка";
+        return t("student.task.peerReview");
       case "TEACHER_REVIEW":
-        return "Проверка преподавателем";
+        return t("student.task.teacherReview");
       case "GRADING":
-        return "Выставление оценок";
+        return t("student.task.grading");
       case "GRADED":
-        return "Оценки выставлены";
+        return t("student.task.graded");
       case "OVERDUE":
-        return "Просрочено";
+        return t("student.task.overdue");
     }
   };
 
   const formatExtensionDeadline = (deadline?: string) => {
     if (!deadline) return "";
     const date = new Date(deadline);
-    return date.toLocaleString("ru-RU", {
+    return date.toLocaleString(undefined, {
       day: "2-digit",
       month: "long",
       year: "numeric",
@@ -98,7 +101,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
       <Breadcrumbs
         items={[
           CRUMBS.courses,
-          { label: "Веб-программирование", href: ROUTES.course(courseId) },
+          { label: t("student.task.mockCourseName"), href: ROUTES.course(courseId) },
           { label: taskTitle },
         ]}
       />
@@ -110,26 +113,26 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
             <Clock className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <h3 className="font-medium text-green-900 dark:text-green-100 mb-1">
-                Ваш дедлайн продлён
+                {t("student.task.deadlineExtended")}
               </h3>
               <p className="text-sm text-green-700 dark:text-green-300">
                 {extension.submissionDeadlineOverride && (
                   <>
-                    Новый дедлайн сдачи:{" "}
+                    {t("student.task.newSubmissionDeadline")}{" "}
                     <strong>{formatExtensionDeadline(extension.submissionDeadlineOverride)}</strong>
                   </>
                 )}
                 {extension.type === "both" && extension.reviewDeadlineOverride && <br />}
                 {extension.reviewDeadlineOverride && (
                   <>
-                    Новый дедлайн проверки:{" "}
+                    {t("student.task.newReviewDeadline")}{" "}
                     <strong>{formatExtensionDeadline(extension.reviewDeadlineOverride)}</strong>
                   </>
                 )}
               </p>
               {extension.reason && (
                 <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                  Причина: {extension.reason}
+                  {t("student.task.reason")} {extension.reason}
                 </p>
               )}
             </div>
@@ -144,11 +147,10 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
             <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <h3 className="font-medium text-yellow-900 dark:text-yellow-100 mb-1">
-                Запрос на продление ожидает рассмотрения
+                {t("student.task.extensionPending")}
               </h3>
               <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                Ваш запрос на продление дедлайна отправлен преподавателю. Вы получите уведомление,
-                когда он будет рассмотрен.
+                {t("student.task.extensionPendingDesc")}
               </p>
             </div>
           </div>
@@ -158,11 +160,11 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
       {/* Page Header - H1 после breadcrumbs */}
       <TaskHeader
         title={taskTitle}
-        courseName="Название курса"
-        teacher="Преподаватель"
-        deadline="31 января 2026"
+        courseName={t("student.task.mockCourseName")}
+        teacher={t("student.task.mockTeacher")}
+        deadline={t("student.task.mockDeadline")}
         points={100}
-        type="Индивидуальное с взаимопроверкой"
+        type={t("student.task.mockType")}
         status={getStatusLabel()}
         statusColor={getStatusColor()}
         extensionInfo={
@@ -207,7 +209,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
       <div className="hide-on-desktop mb-4">
         <StatusCard
           status={taskStatus}
-          deadline="31 января 2026, 23:59"
+          deadline={t("student.task.mockDeadlineFull")}
           courseId={courseId}
           taskId={taskId || "1"}
           hasSubmission={false}
@@ -221,7 +223,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
             className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
             <Clock className="w-4 h-4" />
-            Запросить продление дедлайна
+            {t("student.task.requestExtension")}
           </a>
         )}
       </div>
@@ -244,7 +246,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
           <div className="task-sidebar-sticky">
             <StatusCard
               status={taskStatus}
-              deadline="31 января 2026, 23:59"
+              deadline={t("student.task.mockDeadlineFull")}
               courseId={courseId}
               taskId={taskId || "1"}
               hasSubmission={false}
@@ -258,7 +260,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
                 className="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
               >
                 <Clock className="w-4 h-4" />
-                Запросить продление
+                {t("student.task.requestExtensionShort")}
               </a>
             )}
           </div>

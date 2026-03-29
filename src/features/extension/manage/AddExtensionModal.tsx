@@ -1,5 +1,6 @@
 import { Bell, Calendar, MessageSquare, User, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { extensionRepo, type Extension, type ExtensionType } from "@/entities/extension";
@@ -19,6 +20,7 @@ export function AddExtensionModal({
   existingExtension,
   onClose,
 }: AddExtensionModalProps) {
+  const { t } = useTranslation();
   const [selectedStudent, setSelectedStudent] = useState(existingExtension?.studentId || "");
   const [type, setType] = useState<ExtensionType>(existingExtension?.type || "submission");
   const [submissionDeadline, setSubmissionDeadline] = useState(
@@ -40,27 +42,27 @@ export function AddExtensionModal({
     e.preventDefault();
 
     if (!selectedStudent) {
-      toast.error("Выберите студента");
+      toast.error(t("feature.addExtension.selectStudent"));
       return;
     }
 
     if (type === "submission" && !submissionDeadline) {
-      toast.error("Укажите новый дедлайн сдачи");
+      toast.error(t("feature.addExtension.specifySubmissionDeadline"));
       return;
     }
 
     if (type === "review" && !reviewDeadline) {
-      toast.error("Укажите новый дедлайн проверки");
+      toast.error(t("feature.addExtension.specifyReviewDeadline"));
       return;
     }
 
     if (type === "both" && (!submissionDeadline || !reviewDeadline)) {
-      toast.error("Укажите оба дедлайна");
+      toast.error(t("feature.addExtension.specifyBothDeadlines"));
       return;
     }
 
     if (!reason.trim()) {
-      toast.error("Укажите причину продления");
+      toast.error(t("feature.addExtension.specifyReason"));
       return;
     }
 
@@ -74,7 +76,7 @@ export function AddExtensionModal({
         reason,
         notifyStudent,
       });
-      toast.success("Продление обновлено");
+      toast.success(t("feature.addExtension.extensionUpdated"));
     } else {
       void extensionRepo.create({
         assignmentId,
@@ -89,7 +91,11 @@ export function AddExtensionModal({
         processedBy: "teacher1",
         notifyStudent,
       });
-      toast.success(notifyStudent ? "Продление создано, студент уведомлён" : "Продление создано");
+      toast.success(
+        notifyStudent
+          ? t("feature.addExtension.createdAndNotified")
+          : t("feature.addExtension.created"),
+      );
     }
 
     onClose();
@@ -101,7 +107,9 @@ export function AddExtensionModal({
         {/* Header */}
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-[20px]">
           <h2 className="text-xl font-semibold text-foreground">
-            {isEditing ? "Редактировать продление" : "Добавить продление"}
+            {isEditing
+              ? t("feature.addExtension.editExtension")
+              : t("feature.addExtension.addExtension")}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-accent rounded-lg transition-colors">
             <X className="w-5 h-5 text-muted-foreground" />
@@ -115,7 +123,7 @@ export function AddExtensionModal({
             <label className="block text-sm font-medium text-foreground mb-2">
               <div className="flex items-center gap-2 mb-2">
                 <User className="w-4 h-4" />
-                Студент
+                {t("feature.addExtension.student")}
               </div>
             </label>
             <select
@@ -124,7 +132,7 @@ export function AddExtensionModal({
               disabled={isEditing}
               className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground disabled:opacity-50 disabled:cursor-not-allowed focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors"
             >
-              <option value="">Выберите студента</option>
+              <option value="">{t("feature.addExtension.selectStudent")}</option>
               {MOCK_STUDENTS.map((student) => (
                 <option key={student.id} value={student.id}>
                   {student.name}
@@ -133,14 +141,16 @@ export function AddExtensionModal({
             </select>
             {isEditing && (
               <p className="mt-1 text-xs text-muted-foreground">
-                Студента нельзя изменить после создания
+                {t("feature.addExtension.cannotChangeStudent")}
               </p>
             )}
           </div>
 
           {/* Extension Type */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-3">Тип продления</label>
+            <label className="block text-sm font-medium text-foreground mb-3">
+              {t("feature.addExtension.extensionType")}
+            </label>
             <div className="space-y-2">
               <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
                 <input
@@ -152,8 +162,12 @@ export function AddExtensionModal({
                   className="w-4 h-4 text-primary"
                 />
                 <div className="flex-1">
-                  <div className="font-medium text-foreground">Только сдача работы</div>
-                  <div className="text-xs text-muted-foreground">Продлить дедлайн submission</div>
+                  <div className="font-medium text-foreground">
+                    {t("feature.addExtension.submissionOnly")}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("feature.addExtension.extendSubmissionDeadline")}
+                  </div>
                 </div>
               </label>
               <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
@@ -166,8 +180,12 @@ export function AddExtensionModal({
                   className="w-4 h-4 text-primary"
                 />
                 <div className="flex-1">
-                  <div className="font-medium text-foreground">Только проверка работ</div>
-                  <div className="text-xs text-muted-foreground">Продлить дедлайн peer review</div>
+                  <div className="font-medium text-foreground">
+                    {t("feature.addExtension.reviewOnly")}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("feature.addExtension.extendReviewDeadline")}
+                  </div>
                 </div>
               </label>
               <label className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
@@ -180,8 +198,12 @@ export function AddExtensionModal({
                   className="w-4 h-4 text-primary"
                 />
                 <div className="flex-1">
-                  <div className="font-medium text-foreground">Оба дедлайна</div>
-                  <div className="text-xs text-muted-foreground">Продлить submission и review</div>
+                  <div className="font-medium text-foreground">
+                    {t("feature.addExtension.bothDeadlines")}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("feature.addExtension.extendBoth")}
+                  </div>
                 </div>
               </label>
             </div>
@@ -193,7 +215,7 @@ export function AddExtensionModal({
               <label className="block text-sm font-medium text-foreground mb-2">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="w-4 h-4" />
-                  Новый дедлайн сдачи
+                  {t("feature.addExtension.newSubmissionDeadline")}
                 </div>
               </label>
               <input
@@ -211,7 +233,7 @@ export function AddExtensionModal({
               <label className="block text-sm font-medium text-foreground mb-2">
                 <div className="flex items-center gap-2 mb-2">
                   <Calendar className="w-4 h-4" />
-                  Новый дедлайн проверки
+                  {t("feature.addExtension.newReviewDeadline")}
                 </div>
               </label>
               <input
@@ -228,14 +250,14 @@ export function AddExtensionModal({
             <label className="block text-sm font-medium text-foreground mb-2">
               <div className="flex items-center gap-2 mb-2">
                 <MessageSquare className="w-4 h-4" />
-                Причина продления
+                {t("feature.addExtension.extensionReason")}
               </div>
             </label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              placeholder="Укажите причину продления дедлайна..."
+              placeholder={t("feature.addExtension.reasonPlaceholder")}
               className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-colors resize-none"
             />
           </div>
@@ -245,8 +267,12 @@ export function AddExtensionModal({
             <div className="flex items-center gap-3">
               <Bell className="w-5 h-5 text-muted-foreground" />
               <div>
-                <div className="font-medium text-foreground">Уведомить студента</div>
-                <div className="text-xs text-muted-foreground">Отправить email о продлении</div>
+                <div className="font-medium text-foreground">
+                  {t("feature.addExtension.notifyStudent")}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {t("feature.addExtension.sendEmail")}
+                </div>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -266,14 +292,16 @@ export function AddExtensionModal({
               type="submit"
               className="flex-1 px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
             >
-              {isEditing ? "Сохранить изменения" : "Создать продление"}
+              {isEditing
+                ? t("feature.addExtension.saveChanges")
+                : t("feature.addExtension.createExtension")}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
             >
-              Отмена
+              {t("common.cancel")}
             </button>
           </div>
         </form>

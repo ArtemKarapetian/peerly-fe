@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface ReviewCount {
   all: number;
   notStarted: number;
@@ -13,14 +15,16 @@ interface ReviewFiltersProps {
   onFilterChange: (filter: ReviewFilter) => void;
 }
 
-const FILTER_OPTIONS: { value: ReviewFilter; label: string; countKey: keyof ReviewCount }[] = [
-  { value: "all", label: "Все", countKey: "all" },
-  { value: "not_started", label: "Не начато", countKey: "notStarted" },
-  { value: "drafts", label: "Черновики", countKey: "drafts" },
-  { value: "submitted", label: "Отправлено", countKey: "submitted" },
-];
-
 export function ReviewFilters({ filter, counts, onFilterChange }: ReviewFiltersProps) {
+  const { t } = useTranslation();
+
+  const FILTER_OPTIONS: { value: ReviewFilter; label: string; countKey: keyof ReviewCount }[] = [
+    { value: "all", label: t("widget.reviewFilters.all"), countKey: "all" },
+    { value: "not_started", label: t("widget.reviewFilters.notStarted"), countKey: "notStarted" },
+    { value: "drafts", label: t("widget.reviewFilters.drafts"), countKey: "drafts" },
+    { value: "submitted", label: t("widget.reviewFilters.submitted"), countKey: "submitted" },
+  ];
+
   return (
     <div className="mb-6 flex items-center gap-2 flex-wrap">
       {FILTER_OPTIONS.map(({ value, label, countKey }) => (

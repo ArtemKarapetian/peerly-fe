@@ -1,7 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { CRUMBS } from "@/shared/config/breadcrumbs.ts";
+import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { useAuth } from "@/entities/user";
@@ -15,6 +16,8 @@ import {
 } from "@/widgets/delete-account";
 
 export default function DeleteAccountPage() {
+  const { t } = useTranslation();
+  const CRUMBS = getCrumbs();
   const { logout } = useAuth();
   const [step, setStep] = useState<"confirm" | "success">("confirm");
 
@@ -39,9 +42,9 @@ export default function DeleteAccountPage() {
   }
 
   return (
-    <AppShell title="Удаление аккаунта">
+    <AppShell title={t("widget.deleteAccount.pageTitle")}>
       <div className="max-w-[800px]">
-        <Breadcrumbs items={[CRUMBS.settings, { label: "Удаление аккаунта" }]} />
+        <Breadcrumbs items={[CRUMBS.settings, { label: t("widget.deleteAccount.pageTitle") }]} />
 
         <div className="mt-6 space-y-6">
           <a
@@ -49,7 +52,7 @@ export default function DeleteAccountPage() {
             className="inline-flex items-center gap-2 text-sm text-accent-blue hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
-            Вернуться к настройкам
+            {t("widget.deleteAccount.backToSettings")}
           </a>
 
           <DeleteWarningCard />

@@ -1,4 +1,5 @@
 import { Clock, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type DeadlineStatus =
   | "NOT_STARTED"
@@ -41,30 +42,36 @@ function getStatusBadge(status: DeadlineStatus): string {
   }
 }
 
-function getStatusLabel(status: DeadlineStatus): string {
+function getStatusLabel(status: DeadlineStatus, t: (key: string) => string): string {
   switch (status) {
     case "NOT_STARTED":
-      return "Не начато";
+      return t("widget.deadlinesList.notStarted");
     case "DRAFT":
-      return "Черновик";
+      return t("widget.deadlinesList.draft");
     case "SUBMITTED":
-      return "Сдано";
+      return t("widget.deadlinesList.submitted");
     case "IN_REVIEW":
-      return "На проверке";
+      return t("widget.deadlinesList.inReview");
     case "NEED_YOUR_REVIEW":
-      return "Нужна рецензия";
+      return t("widget.deadlinesList.needYourReview");
   }
 }
 
 export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
+  const { t } = useTranslation();
+
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-10 text-center px-5">
         <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
           <Clock className="w-5 h-5 text-[--text-tertiary]" />
         </div>
-        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">Нет дедлайнов</p>
-        <p className="text-[13px] text-[--text-secondary]">Все задания выполнены</p>
+        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">
+          {t("widget.deadlinesList.noDeadlines")}
+        </p>
+        <p className="text-[13px] text-[--text-secondary]">
+          {t("widget.deadlinesList.allCompleted")}
+        </p>
       </div>
     );
   }
@@ -100,7 +107,9 @@ export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
                     <Clock className="w-3 h-3 shrink-0" />
                     <span>{item.dueDate}</span>
                   </div>
-                  <span className={getStatusBadge(item.status)}>{getStatusLabel(item.status)}</span>
+                  <span className={getStatusBadge(item.status)}>
+                    {getStatusLabel(item.status, t)}
+                  </span>
                 </div>
               </div>
 

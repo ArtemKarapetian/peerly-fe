@@ -1,4 +1,5 @@
 import { Clock, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ReviewCardProps {
   id: string;
@@ -11,29 +12,45 @@ interface ReviewCardProps {
   onClick: () => void;
 }
 
-function getStatusInfo(status: string) {
+function getStatusInfo(status: string, t: (key: string) => string) {
   switch (status) {
     case "not_started":
-      return { label: "Не начато", color: "bg-[#e4e4e4]", textColor: "text-[#4b4963]" };
+      return {
+        label: t("widget.reviewCard.notStarted"),
+        color: "bg-[#e4e4e4]",
+        textColor: "text-[#4b4963]",
+      };
     case "draft":
-      return { label: "Черновик", color: "bg-[#ffd4a3]", textColor: "text-[#21214f]" };
+      return {
+        label: t("widget.reviewCard.draft"),
+        color: "bg-[#ffd4a3]",
+        textColor: "text-[#21214f]",
+      };
     case "submitted":
-      return { label: "Отправлено", color: "bg-[#9cf38d]", textColor: "text-[#21214f]" };
+      return {
+        label: t("widget.reviewCard.submitted"),
+        color: "bg-[#9cf38d]",
+        textColor: "text-[#21214f]",
+      };
     default:
-      return { label: "Не начато", color: "bg-[#e4e4e4]", textColor: "text-[#4b4963]" };
+      return {
+        label: t("widget.reviewCard.notStarted"),
+        color: "bg-[#e4e4e4]",
+        textColor: "text-[#4b4963]",
+      };
   }
 }
 
-function getCtaLabel(status: string) {
+function getCtaLabel(status: string, t: (key: string) => string) {
   switch (status) {
     case "not_started":
-      return "Начать рецензию";
+      return t("widget.reviewCard.ctaStart");
     case "draft":
-      return "Продолжить";
+      return t("widget.reviewCard.ctaContinue");
     case "submitted":
-      return "Посмотреть";
+      return t("widget.reviewCard.ctaView");
     default:
-      return "Открыть";
+      return t("widget.reviewCard.ctaOpen");
   }
 }
 
@@ -46,7 +63,8 @@ export function ReviewCard({
   isDeadlineSoon,
   onClick,
 }: ReviewCardProps) {
-  const statusInfo = getStatusInfo(status);
+  const { t } = useTranslation();
+  const statusInfo = getStatusInfo(status, t);
 
   return (
     <div
@@ -72,7 +90,7 @@ export function ReviewCard({
       {/* Student */}
       <div className="mb-3">
         <p className="text-[14px] text-[#4b4963]">
-          Студент: <span className="font-medium">{studentName}</span>
+          {t("widget.reviewCard.student")} <span className="font-medium">{studentName}</span>
         </p>
       </div>
 
@@ -82,14 +100,14 @@ export function ReviewCard({
         <p
           className={`text-[13px] ${isDeadlineSoon ? "text-[#ff9800] font-medium" : "text-[#767692]"}`}
         >
-          Дедлайн: {reviewDeadline}
+          {t("widget.reviewCard.deadline")} {reviewDeadline}
         </p>
       </div>
 
       {/* CTA Arrow */}
       <div className="flex items-center justify-end">
         <div className="inline-flex items-center gap-1 text-[13px] text-[#5b8def] group-hover:text-[#3d6bc6] transition-colors">
-          <span>{getCtaLabel(status)}</span>
+          <span>{getCtaLabel(status, t)}</span>
           <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </div>
       </div>

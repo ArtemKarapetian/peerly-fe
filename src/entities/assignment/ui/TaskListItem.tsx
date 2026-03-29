@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { TaskStatus } from "./StatusCard";
 
 /**
@@ -12,22 +14,52 @@ interface TaskListItemProps {
 }
 
 export function TaskListItem({ title, deadline, status, onClick }: TaskListItemProps) {
+  const { t } = useTranslation();
+
   const getStatusInfo = () => {
     switch (status) {
       case "NOT_STARTED":
-        return { label: "Не начато", color: "bg-[#e4e4e4]", textColor: "text-[#4b4963]" };
+        return {
+          label: t("entity.assignment.statusNotStarted"),
+          color: "bg-[#e4e4e4]",
+          textColor: "text-[#4b4963]",
+        };
       case "SUBMITTED":
-        return { label: "Сдано", color: "bg-[#b7bdff]", textColor: "text-[#21214f]" };
+        return {
+          label: t("entity.assignment.statusSubmitted"),
+          color: "bg-[#b7bdff]",
+          textColor: "text-[#21214f]",
+        };
       case "PEER_REVIEW":
-        return { label: "На проверке", color: "bg-[#b0e9fb]", textColor: "text-[#21214f]" };
+        return {
+          label: t("entity.assignment.statusPeerReview"),
+          color: "bg-[#b0e9fb]",
+          textColor: "text-[#21214f]",
+        };
       case "TEACHER_REVIEW":
-        return { label: "Нужно проверить", color: "bg-[#ffd4a3]", textColor: "text-[#21214f]" };
+        return {
+          label: t("entity.assignment.statusTeacherReview"),
+          color: "bg-[#ffd4a3]",
+          textColor: "text-[#21214f]",
+        };
       case "GRADING":
-        return { label: "Черновик", color: "bg-[#e6e8ee]", textColor: "text-[#4b4963]" };
+        return {
+          label: t("entity.assignment.statusGrading"),
+          color: "bg-[#e6e8ee]",
+          textColor: "text-[#4b4963]",
+        };
       case "GRADED":
-        return { label: "Оценено", color: "bg-[#9cf38d]", textColor: "text-[#21214f]" };
+        return {
+          label: t("entity.assignment.statusGraded"),
+          color: "bg-[#9cf38d]",
+          textColor: "text-[#21214f]",
+        };
       case "OVERDUE":
-        return { label: "Просрочено", color: "bg-[#ffb8b8]", textColor: "text-[#21214f]" };
+        return {
+          label: t("entity.assignment.statusOverdue"),
+          color: "bg-[#ffb8b8]",
+          textColor: "text-[#21214f]",
+        };
     }
   };
 

@@ -1,4 +1,5 @@
 import { CheckCircle, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   backToTaskHref: string;
@@ -6,6 +7,8 @@ type Props = {
 };
 
 export function ExtensionRequestSuccess({ backToTaskHref, backToCoursesHref }: Props) {
+  const { t } = useTranslation();
+
   return (
     <div className="max-w-[600px] mx-auto">
       <div className="mt-12 text-center space-y-6">
@@ -16,21 +19,19 @@ export function ExtensionRequestSuccess({ backToTaskHref, backToCoursesHref }: P
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-foreground">Запрос отправлен</h1>
-          <p className="text-muted-foreground">
-            Ваш запрос на продление дедлайна получен преподавателем. Вы получите уведомление, когда
-            он будет рассмотрен.
-          </p>
+          <h1 className="text-2xl font-semibold text-foreground">
+            {t("feature.extension.success.title")}
+          </h1>
+          <p className="text-muted-foreground">{t("feature.extension.success.description")}</p>
         </div>
 
         <div className="bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-[12px] p-4 text-left">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-foreground/80">
-              <strong>Что дальше?</strong>
+              <strong>{t("feature.extension.success.whatNext")}</strong>
               <p className="mt-1 text-muted-foreground">
-                Преподаватель рассмотрит ваш запрос в ближайшее время. Статус запроса вы можете
-                отслеживать на странице задания.
+                {t("feature.extension.success.whatNextDesc")}
               </p>
             </div>
           </div>
@@ -41,13 +42,13 @@ export function ExtensionRequestSuccess({ backToTaskHref, backToCoursesHref }: P
             href={backToTaskHref}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
-            Вернуться к заданию
+            {t("feature.extension.success.backToTask")}
           </a>
           <a
             href={backToCoursesHref}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
-            К курсам
+            {t("feature.extension.success.toCourses")}
           </a>
         </div>
       </div>

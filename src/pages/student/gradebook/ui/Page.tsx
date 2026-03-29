@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { GradebookHeader, GradeTable } from "@/widgets/gradebook";
@@ -7,6 +8,7 @@ import type { GradeEntry } from "@/widgets/gradebook";
 import { mockGrades, statusLabels, statusColors } from "../model/mockGrades";
 
 export default function GradebookPage() {
+  const { t } = useTranslation();
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
@@ -66,11 +68,13 @@ export default function GradebookPage() {
         {/* Mobile Stats */}
         <div className="desktop:hidden mb-6 grid grid-cols-2 gap-4">
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <div className="text-[13px] text-[#767692] mb-1">Средний балл</div>
+            <div className="text-[13px] text-[#767692] mb-1">{t("student.gradebook.avgScore")}</div>
             <div className="text-[24px] font-semibold text-[#21214f]">{stats.avgPercentage}%</div>
           </div>
           <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <div className="text-[13px] text-[#767692] mb-1">Оценок получено</div>
+            <div className="text-[13px] text-[#767692] mb-1">
+              {t("student.gradebook.gradesReceived")}
+            </div>
             <div className="text-[24px] font-semibold text-[#21214f]">
               {stats.published} / {stats.total}
             </div>
@@ -91,11 +95,11 @@ export default function GradebookPage() {
               <span className="text-white text-[14px] font-semibold">i</span>
             </div>
             <div>
-              <h4 className="text-[15px] font-medium text-[#21214f] mb-1">О журнале оценок</h4>
+              <h4 className="text-[15px] font-medium text-[#21214f] mb-1">
+                {t("student.gradebook.about")}
+              </h4>
               <p className="text-[14px] text-[#767692] leading-[1.6]">
-                Здесь отображаются ваши оценки по всем заданиям. Некоторые оценки могут быть скрыты
-                до тех пор, пока преподаватель не опубликует результаты. Нажмите на строку, чтобы
-                перейти к деталям задания.
+                {t("student.gradebook.aboutDesc")}
               </p>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { BookOpen, ChevronRight, GraduationCap, Users } from "lucide-react";
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -15,16 +16,17 @@ import { CourseSearch } from "@/features/course/search";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/** Имя преподавателя по teacherId (мок) */
+/** Teacher name by teacherId (mock) */
 function resolveTeacher(teacherId: string): string {
   const map: Record<string, string> = {
     u2: "Иванов И.И.",
     "teacher-1": "Петров П.П.",
   };
-  return map[teacherId] ?? "Преподаватель";
+  return map[teacherId] ?? teacherId;
 }
 
 export default function AdminCoursesPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
@@ -60,46 +62,45 @@ export default function AdminCoursesPage() {
 
   if (isLoading)
     return (
-      <AppShell title="Все курсы">
+      <AppShell title={t("admin.courses.title")}>
         <PageSkeleton />
       </AppShell>
     );
   if (error)
     return (
-      <AppShell title="Все курсы">
+      <AppShell title={t("admin.courses.title")}>
         <ErrorBanner message={error.message} onRetry={refetch} />
       </AppShell>
     );
 
   return (
-    <AppShell title="Все курсы">
-      <Breadcrumbs items={[{ label: "Курсы" }]} />
+    <AppShell title={t("admin.courses.title")}>
+      <Breadcrumbs items={[{ label: t("nav.courses") }]} />
 
-      <PageHeader title="Все курсы" subtitle="Все курсы системы, включая архивные" />
+      <PageHeader title={t("admin.courses.title")} subtitle={t("admin.courses.subtitle")} />
 
       <div>
-        {/* Stat cards — admin-специфичные метрики */}
         <div className="grid grid-cols-2 gap-2.5 tablet:grid-cols-4 mb-5">
           <StatCard
-            label="Всего курсов"
+            label={t("admin.coursesPage.totalCourses")}
             value={allCourses.length}
             icon={<BookOpen className="w-4 h-4" />}
             accent="#2563eb"
           />
           <StatCard
-            label="Активных"
+            label={t("admin.coursesPage.activeCourses")}
             value={activeCourses.length}
             icon={<BookOpen className="w-4 h-4" />}
             accent="#059669"
           />
           <StatCard
-            label="Студентов записано"
+            label={t("admin.coursesPage.enrolledStudents")}
             value={totalStudents}
             icon={<Users className="w-4 h-4" />}
             accent="#d97706"
           />
           <StatCard
-            label="Преподавателей"
+            label={t("admin.coursesPage.teachers")}
             value={uniqueTeachers}
             icon={<GraduationCap className="w-4 h-4" />}
             accent="#7c3aed"
@@ -111,7 +112,7 @@ export default function AdminCoursesPage() {
           <CourseSearch
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="Поиск по названию или коду курса..."
+            placeholder={t("admin.coursesPage.searchPlaceholder")}
           />
         </div>
 
@@ -119,7 +120,7 @@ export default function AdminCoursesPage() {
         {filteredCourses.length > 0 ? (
           <>
             <p className="text-[12px] text-[--text-tertiary] mb-2">
-              Курсов: {filteredCourses.length}
+              {t("admin.coursesPage.coursesCount", { count: filteredCourses.length })}
             </p>
 
             <div className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
@@ -136,19 +137,19 @@ export default function AdminCoursesPage() {
                   <thead>
                     <tr className="border-b border-[--surface-border] bg-[--surface-hover]">
                       <th className="text-left px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide">
-                        Курс
+                        {t("admin.coursesPage.headerCourse")}
                       </th>
                       <th className="text-left px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide hidden tablet:table-cell">
-                        Преподаватель
+                        {t("admin.coursesPage.headerTeacher")}
                       </th>
                       <th className="text-center px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide hidden tablet:table-cell">
-                        Студенты
+                        {t("admin.coursesPage.headerStudents")}
                       </th>
                       <th className="text-center px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide hidden tablet:table-cell">
-                        Задания
+                        {t("admin.coursesPage.headerAssignments")}
                       </th>
                       <th className="text-left px-5 py-3 text-[11px] font-medium text-[--text-tertiary] uppercase tracking-wide">
-                        Статус
+                        {t("admin.coursesPage.headerStatus")}
                       </th>
                       <th className="pl-3 pr-4 py-3" />
                     </tr>
@@ -162,7 +163,7 @@ export default function AdminCoursesPage() {
                         onKeyDown={(e) => handleRowKeyDown(e, course.id)}
                         role="button"
                         tabIndex={0}
-                        aria-label={`Открыть курс ${course.title}`}
+                        aria-label={t("admin.coursesPage.openCourseLabel", { title: course.title })}
                       >
                         {/* Курс */}
                         <td className="px-5 py-3.5">
@@ -198,9 +199,13 @@ export default function AdminCoursesPage() {
                         {/* Статус — архивные тоже видны (admin sees all) */}
                         <td className="px-5 py-3.5">
                           {course.archived || course.status === "archived" ? (
-                            <span className="badge badge-neutral">Архив</span>
+                            <span className="badge badge-neutral">
+                              {t("admin.coursesPage.statusArchived")}
+                            </span>
                           ) : (
-                            <span className="badge badge-success">Активен</span>
+                            <span className="badge badge-success">
+                              {t("admin.coursesPage.statusActive")}
+                            </span>
                           )}
                         </td>
 
@@ -234,10 +239,12 @@ export default function AdminCoursesPage() {
               <BookOpen className="w-6 h-6 text-[--text-tertiary]" />
             </div>
             <h3 className="text-[17px] font-semibold text-[--text-primary] mb-2">
-              Курсы не найдены
+              {t("admin.coursesPage.notFound")}
             </h3>
             <p className="text-[14px] text-[--text-secondary]">
-              {searchQuery ? "Попробуйте изменить поисковый запрос" : "В системе пока нет курсов"}
+              {searchQuery
+                ? t("admin.coursesPage.notFoundWithSearch")
+                : t("admin.coursesPage.notFoundEmpty")}
             </p>
           </div>
         )}

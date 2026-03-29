@@ -1,5 +1,6 @@
 import { User, Settings, HelpCircle, Activity, LogOut } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/entities/user";
 
@@ -23,13 +24,12 @@ interface ProfileDropdownProps {
   userName?: string;
 }
 
-export function ProfileDropdown({
-  collapsed = false,
-  userName = "Пользователь",
-}: ProfileDropdownProps) {
+export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { logout } = useAuth();
+  const { t } = useTranslation();
+  const displayName = userName || t("widget.profileDropdown.defaultUser");
 
   // Handle click outside
   useEffect(() => {
@@ -68,7 +68,7 @@ export function ProfileDropdown({
   const menuItems = [
     {
       icon: User,
-      label: "Профиль",
+      label: t("widget.profileDropdown.profile"),
       onClick: () => {
         window.location.hash = "/profile";
         setIsOpen(false);
@@ -76,7 +76,7 @@ export function ProfileDropdown({
     },
     {
       icon: Settings,
-      label: "Настройки",
+      label: t("widget.profileDropdown.settings"),
       onClick: () => {
         window.location.hash = "/settings";
         setIsOpen(false);
@@ -84,7 +84,7 @@ export function ProfileDropdown({
     },
     {
       icon: HelpCircle,
-      label: "Помощь",
+      label: t("widget.profileDropdown.help"),
       onClick: () => {
         window.location.hash = "/help";
         setIsOpen(false);
@@ -92,7 +92,7 @@ export function ProfileDropdown({
     },
     {
       icon: Activity,
-      label: "Статус сервиса",
+      label: t("widget.profileDropdown.serviceStatus"),
       onClick: () => {
         window.location.hash = "/status";
         setIsOpen(false);
@@ -112,7 +112,7 @@ export function ProfileDropdown({
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-10 h-10 rounded-full bg-[--brand-primary-lighter] flex items-center justify-center hover:bg-[--brand-primary-light] transition-colors focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
-          aria-label="Меню профиля"
+          aria-label={t("widget.profileDropdown.profileMenu")}
           aria-expanded={isOpen}
         >
           <User className="size-5 text-[--brand-primary]" />
@@ -137,7 +137,7 @@ export function ProfileDropdown({
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[--text-primary] hover:bg-[--surface-hover] transition-colors"
             >
               <LogOut className="size-4 text-[--text-secondary]" />
-              <span>Выйти</span>
+              <span>{t("widget.profileDropdown.logout")}</span>
             </button>
           </div>
         )}
@@ -151,13 +151,13 @@ export function ProfileDropdown({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center gap-3 px-3 py-2 hover:bg-[--surface-hover] rounded-[var(--radius-md)] transition-colors focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
-        aria-label="Меню профиля"
+        aria-label={t("widget.profileDropdown.profileMenu")}
         aria-expanded={isOpen}
       >
         <div className="w-8 h-8 rounded-full bg-[--brand-primary-lighter] flex items-center justify-center shrink-0">
           <User className="size-4 text-[--brand-primary]" />
         </div>
-        <span className="text-sm text-[--text-primary] truncate">{userName}</span>
+        <span className="text-sm text-[--text-primary] truncate">{displayName}</span>
       </button>
 
       {/* Dropdown menu */}
@@ -179,7 +179,7 @@ export function ProfileDropdown({
             className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[--text-primary] hover:bg-[--surface-hover] transition-colors"
           >
             <LogOut className="size-4 text-[--text-secondary]" />
-            <span>Выйти</span>
+            <span>{t("widget.profileDropdown.logout")}</span>
           </button>
         </div>
       )}
