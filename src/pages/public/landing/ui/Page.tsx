@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 
 /**
  * LandingPage - Яркая и красочная главная страница Peerly
@@ -19,6 +20,7 @@ import { PublicLayout } from "@/widgets/public-layout";
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   // Скролл наверх при загрузке страницы
   useEffect(() => {
@@ -31,25 +33,25 @@ export default function LandingPage() {
       <div className="w-full bg-background border-b border-border">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 h-16 flex items-center justify-between">
           {/* Logo */}
-          <a
-            href="#/"
+          <Link
+            to="/"
             className="text-xl font-semibold text-primary hover:opacity-80 transition-opacity"
           >
             Peerly
-          </a>
+          </Link>
 
           {/* Top Right Links */}
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <button
-                onClick={() => (window.location.hash = "/dashboard")}
+                onClick={() => void navigate("/dashboard")}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.openDashboard")}
               </button>
             ) : (
               <button
-                onClick={() => (window.location.hash = "/register")}
+                onClick={() => void navigate("/register")}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.getStarted")}
@@ -79,14 +81,14 @@ export default function LandingPage() {
               <div className="flex flex-col tablet:flex-row items-start tablet:items-center gap-3">
                 {isAuthenticated ? (
                   <button
-                    onClick={() => (window.location.hash = "/dashboard")}
+                    onClick={() => void navigate("/dashboard")}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2"
                   >
                     {t("page.landing.openDashboard")}
                   </button>
                 ) : (
                   <button
-                    onClick={() => (window.location.hash = "/register")}
+                    onClick={() => void navigate("/register")}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2"
                   >
                     {t("page.landing.getStarted")}
@@ -249,14 +251,14 @@ export default function LandingPage() {
             <div className="flex flex-col tablet:flex-row items-center justify-center gap-3">
               {isAuthenticated ? (
                 <button
-                  onClick={() => (window.location.hash = "/dashboard")}
+                  onClick={() => void navigate("/dashboard")}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2 text-base h-11"
                 >
                   {t("page.landing.openDashboard")}
                 </button>
               ) : (
                 <button
-                  onClick={() => (window.location.hash = "/register")}
+                  onClick={() => void navigate("/register")}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2 text-base h-11"
                 >
                   {t("page.landing.getStarted")}
@@ -273,18 +275,18 @@ export default function LandingPage() {
           <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
             {/* Links */}
             <nav className="flex items-center gap-6">
-              <a
-                href="#/help"
+              <Link
+                to="/help"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("page.landing.footerHelp")}
-              </a>
-              <a
-                href="#/status"
+              </Link>
+              <Link
+                to="/status"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("page.landing.footerStatus")}
-              </a>
+              </Link>
             </nav>
 
             {/* Copyright */}

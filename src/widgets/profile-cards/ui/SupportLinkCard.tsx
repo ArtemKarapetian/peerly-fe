@@ -1,5 +1,6 @@
 import { MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 
@@ -18,13 +19,13 @@ export function SupportLinkCard() {
             {t("widget.support.title")}
           </h2>
           <p className="text-[14px] text-muted-foreground mb-4">{t("widget.support.subtitle")}</p>
-          <a
-            href="#/support/chat"
+          <Link
+            to="/support/chat"
             className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[14px] font-medium"
           >
             <MessageCircle className="w-4 h-4" />
             {t("widget.support.chatButton")}
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Clock, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
@@ -21,11 +22,9 @@ import {
   TaskQuestionsComments,
 } from "@/widgets/task-detail";
 
-interface TaskPageProps {
-  taskId?: string | null;
-}
-
-export default function TaskPage({ taskId = "1" }: TaskPageProps) {
+export default function TaskPage() {
+  const { taskId: taskIdParam } = useParams();
+  const taskId = taskIdParam ?? "1";
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const { user } = useAuth();

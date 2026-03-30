@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -14,9 +15,13 @@ import { mockCourses } from "../model/mockCourses";
 
 export default function CoursesListPage() {
   const { t } = useTranslation();
-  const handleCourseClick = useCallback((courseId: string) => {
-    window.location.hash = `/course/${courseId}`;
-  }, []);
+  const navigate = useNavigate();
+  const handleCourseClick = useCallback(
+    (courseId: string) => {
+      void navigate(`/course/${courseId}`);
+    },
+    [navigate],
+  );
 
   return (
     <AppShell title={t("student.courses.title")}>

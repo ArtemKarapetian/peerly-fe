@@ -1,1 +1,1 @@
-export { TeacherAssignmentExtensionsPage } from "./ui/Page";
+export { default as TeacherAssignmentExtensionsPage } from "./ui/Page";

@@ -1,5 +1,6 @@
 import { Info, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export function AboutCard() {
   const { t } = useTranslation();
@@ -17,13 +18,13 @@ export function AboutCard() {
         {/* Security Link */}
         <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.security")}</span>
-          <a
-            href="#/security"
+          <Link
+            to="/security"
             className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
           >
             {t("widget.about.passwordAnd2FA")}
             <ExternalLink className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {/* App Version */}
@@ -37,25 +38,25 @@ export function AboutCard() {
           <span className="text-[15px] text-muted-foreground">
             {t("widget.about.systemStatus")}
           </span>
-          <a
-            href="#/status"
+          <Link
+            to="/status"
             className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
           >
             {t("widget.about.checkStatus")}
             <ExternalLink className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {/* Terms Link */}
         <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.termsOfUse")}</span>
-          <a
-            href="#/terms"
+          <Link
+            to="/terms"
             className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
           >
             {t("widget.about.read")}
             <ExternalLink className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {/* Privacy Policy Link */}
@@ -63,13 +64,13 @@ export function AboutCard() {
           <span className="text-[15px] text-muted-foreground">
             {t("widget.about.privacyPolicy")}
           </span>
-          <a
-            href="#/privacy"
+          <Link
+            to="/privacy"
             className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
           >
             {t("widget.about.read")}
             <ExternalLink className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>

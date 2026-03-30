@@ -9,6 +9,7 @@ import {
   History,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export type TaskStatus =
   | "NOT_STARTED"
@@ -41,6 +42,7 @@ export function StatusCard({
   onStatusChange,
 }: StatusCardProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const getStatusInfo = () => {
     switch (status) {
@@ -150,7 +152,7 @@ export function StatusCard({
               className="w-full bg-brand-primary hover:bg-brand-primary-hover transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-medium text-text-inverse flex items-center justify-center gap-2 mb-3"
               onClick={() => {
                 // Navigate to submit page
-                window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
+                void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
               }}
             >
               <Upload className="size-4" />
@@ -161,7 +163,7 @@ export function StatusCard({
             {hasSubmission && (
               <button
                 onClick={() => {
-                  window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
+                  void navigate(`/courses/${courseId}/tasks/${taskId}/submissions`);
                 }}
                 className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
               >
@@ -198,7 +200,7 @@ export function StatusCard({
             {allowResubmissions && (
               <button
                 onClick={() => {
-                  window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
+                  void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
                 }}
                 className="w-full bg-card border-2 border-border hover:border-brand-primary-lighter hover:bg-surface-hover transition-colors py-2 desktop:py-3 rounded-[12px] text-[13px] desktop:text-[14px] font-medium text-text-primary mb-3"
               >
@@ -208,7 +210,7 @@ export function StatusCard({
 
             <button
               onClick={() => {
-                window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
+                void navigate(`/courses/${courseId}/tasks/${taskId}/submissions`);
               }}
               className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
@@ -294,7 +296,7 @@ export function StatusCard({
               <button
                 onClick={() => {
                   // Navigate to reviews inbox
-                  window.location.hash = "/reviews";
+                  void navigate("/reviews");
                 }}
                 className="w-full bg-brand-primary-lighter hover:bg-info-light transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-text-primary flex items-center justify-center gap-2"
               >
@@ -340,7 +342,7 @@ export function StatusCard({
             <button
               className="w-full bg-brand-primary hover:bg-brand-primary-hover transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-medium text-text-inverse flex items-center justify-center gap-2 mb-3"
               onClick={() => {
-                window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
+                void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
               }}
             >
               <Upload className="size-4" />
@@ -349,7 +351,7 @@ export function StatusCard({
 
             <button
               onClick={() => {
-                window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
+                void navigate(`/courses/${courseId}/tasks/${taskId}/submissions`);
               }}
               className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
@@ -377,7 +379,7 @@ export function StatusCard({
 
             <button
               onClick={() => {
-                window.location.hash = "/reviews/received";
+                void navigate("/reviews/received");
               }}
               className="w-full bg-brand-primary-lighter hover:bg-info-light transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-text-primary mb-3"
             >
@@ -386,7 +388,7 @@ export function StatusCard({
 
             <button
               onClick={() => {
-                window.location.hash = `/courses/${courseId}/tasks/${taskId}/appeal`;
+                void navigate(`/courses/${courseId}/tasks/${taskId}/appeal`);
               }}
               className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >

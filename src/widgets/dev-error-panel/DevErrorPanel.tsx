@@ -1,5 +1,6 @@
 import { Bug, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Dev-only panel for testing error pages
@@ -7,6 +8,7 @@ import { useState } from "react";
  */
 export function DevErrorPanel() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Only show in development
   if (import.meta.env.PROD) {
@@ -43,7 +45,7 @@ export function DevErrorPanel() {
             {errorLinks.map((error) => (
               <button
                 key={error.code}
-                onClick={() => (window.location.hash = error.path)}
+                onClick={() => void navigate(error.path)}
                 className="w-full px-3 py-2 text-left rounded hover:bg-accent transition-colors flex items-center justify-between group"
               >
                 <span className="text-sm">{error.label}</span>

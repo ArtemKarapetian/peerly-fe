@@ -1,6 +1,7 @@
 import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
@@ -14,13 +15,10 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * Отображает созданное задание с его статусом и управляющими кнопками
  */
 
-interface TeacherAssignmentDetailsPageProps {
-  assignmentId: string;
-}
-
-export default function TeacherAssignmentDetailsPage({
-  assignmentId,
-}: TeacherAssignmentDetailsPageProps) {
+export default function TeacherAssignmentDetailsPage() {
+  const { assignmentId: routeAssignmentId } = useParams<{ assignmentId: string }>();
+  const assignmentId = routeAssignmentId ?? "a1";
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   // In a real app, we'd load assignment data from storage/API
@@ -102,7 +100,7 @@ export default function TeacherAssignmentDetailsPage({
           <div className="flex items-center gap-2 ml-4">
             <button
               onClick={() => {
-                window.location.hash = `/teacher/assignments/new?edit=${assignmentId}`;
+                void navigate(`/teacher/assignments/new?edit=${assignmentId}`);
               }}
               className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors"
             >
@@ -114,7 +112,7 @@ export default function TeacherAssignmentDetailsPage({
             <button
               onClick={() => {
                 if (confirm(t("teacher.assignmentDetail.deleteConfirm"))) {
-                  window.location.hash = "/teacher/assignments";
+                  void navigate("/teacher/assignments");
                 }
               }}
               className="flex items-center gap-2 px-4 py-3 border-2 border-border text-error rounded-[12px] hover:border-error hover:bg-error-light transition-colors"
@@ -230,7 +228,7 @@ export default function TeacherAssignmentDetailsPage({
       <div className="mt-6 grid grid-cols-3 gap-4">
         <button
           onClick={() => {
-            window.location.hash = `/teacher/peer-session-settings/${assignmentId}`;
+            void navigate(`/teacher/peer-session-settings/${assignmentId}`);
           }}
           className="p-6 bg-card border-2 border-border rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
         >
@@ -245,7 +243,7 @@ export default function TeacherAssignmentDetailsPage({
 
         <button
           onClick={() => {
-            window.location.hash = `/teacher/submissions?assignmentId=${assignmentId}`;
+            void navigate(`/teacher/submissions?assignmentId=${assignmentId}`);
           }}
           className="p-6 bg-card border-2 border-border rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
         >
@@ -260,7 +258,7 @@ export default function TeacherAssignmentDetailsPage({
 
         <button
           onClick={() => {
-            window.location.hash = `/teacher/assignment/${assignmentId}/analytics`;
+            void navigate(`/teacher/assignment/${assignmentId}/analytics`);
           }}
           className="p-6 bg-card border-2 border-border rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
         >

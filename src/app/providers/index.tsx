@@ -1,5 +1,7 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
+import { queryClient } from "@/shared/api/queryClient";
 import { FeatureFlagsProvider } from "@/shared/lib/feature-flags-provider";
 
 import { AuthProvider, RoleProvider } from "@/entities/user";
@@ -12,12 +14,14 @@ interface AppProvidersProps {
 
 export const AppProviders = ({ children }: AppProvidersProps) => {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <RoleProvider>
-          <FeatureFlagsProvider>{children}</FeatureFlagsProvider>
-        </RoleProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <RoleProvider>
+            <FeatureFlagsProvider>{children}</FeatureFlagsProvider>
+          </RoleProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };

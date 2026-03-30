@@ -1,1 +1,1 @@
-export { SubmitWorkPage } from "./ui/Page.tsx";
+export { default as SubmitWorkPage } from "./ui/Page.tsx";

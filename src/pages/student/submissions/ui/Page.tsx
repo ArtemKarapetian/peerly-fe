@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
@@ -28,12 +29,9 @@ import { mockVersions } from "../model/mockVersions";
  * - Handle work limits
  */
 
-interface SubmissionsPageProps {
-  courseId: string;
-  taskId: string;
-}
-
-export default function SubmissionsPage({ courseId, taskId }: SubmissionsPageProps) {
+export default function SubmissionsPage() {
+  const { courseId = "", taskId = "" } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [comparisonMode, setComparisonMode] = useState(false);
@@ -95,7 +93,7 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
       alert(t("student.submissions.maxVersionsReached", { max: maxSubmissions }));
       return;
     }
-    window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
+    void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
   };
 
   // Update versions with selected state for comparison
@@ -132,7 +130,7 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
             </p>
             <button
               onClick={() => {
-                window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
+                void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
               }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
             >

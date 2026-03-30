@@ -1,6 +1,7 @@
 import { BookOpen, ChevronRight, GraduationCap, Users } from "lucide-react";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -27,6 +28,7 @@ function resolveTeacher(teacherId: string): string {
 
 export default function AdminCoursesPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
@@ -44,9 +46,12 @@ export default function AdminCoursesPage() {
   const totalStudents = allCourses.reduce((sum, c) => sum + c.enrollmentCount, 0);
   const uniqueTeachers = new Set(allCourses.map((c) => c.teacherId)).size;
 
-  const handleOpenCourse = useCallback((courseId: string) => {
-    window.location.hash = `/teacher/course/${courseId}`;
-  }, []);
+  const handleOpenCourse = useCallback(
+    (courseId: string) => {
+      void navigate(`/teacher/course/${courseId}`);
+    },
+    [navigate],
+  );
 
   const handleRowKeyDown = (e: React.KeyboardEvent, courseId: string) => {
     if (e.key === "Enter" || e.key === " ") {

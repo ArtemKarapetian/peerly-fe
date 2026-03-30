@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -132,15 +133,10 @@ function SubmissionsContent({
   const { t } = useTranslation();
   const { users, assignments, demoSubmissions } = data;
 
-  // Get pre-filter from URL hash params
+  // Get pre-filter from URL search params
+  const [searchParams] = useSearchParams();
   const getPreFilterAssignmentId = (): string => {
-    const hash = window.location.hash.slice(1); // Remove #
-    const queryStart = hash.indexOf("?");
-    if (queryStart === -1) return "";
-
-    const queryString = hash.substring(queryStart + 1);
-    const params = new URLSearchParams(queryString);
-    return params.get("assignmentId") || "";
+    return searchParams.get("assignmentId") || "";
   };
 
   // Generate comprehensive work data

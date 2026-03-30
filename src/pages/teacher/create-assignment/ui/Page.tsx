@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -100,6 +101,7 @@ interface TeacherCreateAssignmentPageProps {
 export default function TeacherCreateAssignmentPage({
   courseId,
 }: TeacherCreateAssignmentPageProps) {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const STEPS = STEP_KEYS.map((s) => ({
@@ -158,7 +160,7 @@ export default function TeacherCreateAssignmentPage({
 
     // Navigate to assignment details (mock for now)
     const assignmentId = `a${Date.now()}`;
-    window.location.hash = `/teacher/assignment/${assignmentId}`;
+    void navigate(`/teacher/assignment/${assignmentId}`);
   };
 
   const canProceed = () => {

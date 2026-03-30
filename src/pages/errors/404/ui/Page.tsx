@@ -1,8 +1,10 @@
 import { SearchX } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function Error404Page() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen w-full bg-background flex items-center justify-center p-8">
       <div className="max-w-md w-full text-center space-y-6">
@@ -25,13 +27,13 @@ export default function Error404Page() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
           <button
-            onClick={() => (window.location.hash = "/dashboard")}
+            onClick={() => void navigate("/dashboard")}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             {t("errors.toDashboard")}
           </button>
           <button
-            onClick={() => (window.location.hash = "/courses")}
+            onClick={() => void navigate("/courses")}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
             {t("errors.toCourses")}

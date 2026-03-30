@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/ui/button.tsx";
@@ -29,8 +30,9 @@ interface FormErrors {
   confirmPassword?: string;
 }
 
-export function RegisterPage() {
+export default function RegisterPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -198,7 +200,7 @@ export function RegisterPage() {
 
       // Navigate to login
       setTimeout(() => {
-        window.location.hash = "/login";
+        void navigate("/login");
       }, 1000);
     } catch (error) {
       console.error("Registration error:", error);
@@ -334,17 +336,17 @@ export function RegisterPage() {
             {/* Footer link */}
             <div className="text-center border-t border-border pt-4">
               <p className="text-sm text-muted-foreground mb-2">{t("auth.alreadyHaveAccount")}</p>
-              <a href="#/login" className="text-sm font-medium text-primary hover:underline">
+              <Link to="/login" className="text-sm font-medium text-primary hover:underline">
                 {t("auth.signIn")}
-              </a>
+              </Link>
 
               {/* Terms link */}
               <div className="mt-4 pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground">
                   {t("auth.agreeWith")}{" "}
-                  <a href="#/terms" className="text-primary hover:underline">
+                  <Link to="/terms" className="text-primary hover:underline">
                     {t("auth.termsOfUse")}
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>

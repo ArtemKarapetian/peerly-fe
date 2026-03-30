@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 
@@ -11,6 +12,7 @@ import type { ReviewFilter } from "@/widgets/reviews-inbox";
 
 export default function ReviewsInboxPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { reviews } = useReviewStore();
   const [filter, setFilter] = useState<ReviewFilter>("all");
 
@@ -24,7 +26,7 @@ export default function ReviewsInboxPage() {
 
   const handleReviewClick = (reviewId: string) => {
     setTimeout(() => {
-      window.location.hash = `/reviews/${reviewId}`;
+      void navigate(`/reviews/${reviewId}`);
     }, 0);
   };
 
@@ -35,7 +37,7 @@ export default function ReviewsInboxPage() {
     (deadlineTimestamp: number) => {
       return deadlineTimestamp - now < twoDays && deadlineTimestamp > now;
     },
-    [now],
+    [now, twoDays],
   );
 
   const counts = {

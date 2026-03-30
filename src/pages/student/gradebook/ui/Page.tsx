@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { GradebookHeader, GradeTable } from "@/widgets/gradebook";
@@ -9,6 +10,7 @@ import { mockGrades, statusLabels, statusColors } from "../model/mockGrades";
 
 export default function GradebookPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
@@ -42,9 +44,12 @@ export default function GradebookPage() {
     };
   }, [filteredGrades]);
 
-  const handleRowClick = useCallback((grade: GradeEntry) => {
-    window.location.hash = `/task/${grade.taskId}`;
-  }, []);
+  const handleRowClick = useCallback(
+    (grade: GradeEntry) => {
+      void navigate(`/task/${grade.taskId}`);
+    },
+    [navigate],
+  );
 
   const handleReset = () => {
     setSelectedCourse("all");

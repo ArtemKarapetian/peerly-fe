@@ -1,233 +1,237 @@
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, lazy } from "react";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
-import { ROUTES } from "@/shared/config/routes.ts";
-import { isFlagEnabled } from "@/shared/lib/feature-flags";
+import { FeatureRoute } from "@/app/routing/FeatureRoute";
+import { NavigateRegistrar } from "@/app/routing/NavigateRegistrar";
+import { ProtectedRoute } from "@/app/routing/ProtectedRoute";
+import { PublicOnlyRoute } from "@/app/routing/PublicOnlyRoute";
 
-import { useAuth } from "@/entities/user";
+// ── Lazy page imports ────────────────────────────────────────────────
+// Admin
+const AdminCoursesPage = lazy(() => import("@/pages/admin/courses/ui/Page"));
+const AdminFlagsPage = lazy(() => import("@/pages/admin/flags/ui/Page"));
+const AdminIntegrationsPage = lazy(() => import("@/pages/admin/integrations/ui/Page"));
+const AdminLimitsPage = lazy(() => import("@/pages/admin/limits/ui/Page"));
+const AdminOrgsPage = lazy(() => import("@/pages/admin/orgs/ui/Page"));
+const AdminOverviewPage = lazy(() => import("@/pages/admin/overview/ui/Page"));
+const AdminPluginsPage = lazy(() => import("@/pages/admin/plugins/ui/Page"));
+const AdminRetentionPage = lazy(() => import("@/pages/admin/retention/ui/Page"));
+const AdminSettingsPage = lazy(() => import("@/pages/admin/settings/ui/Page"));
+const AdminUsersPage = lazy(() => import("@/pages/admin/users/ui/Page"));
 
-import AdminCoursesPage from "@/pages/admin/courses/ui/Page.tsx";
-import AdminFlagsPage from "@/pages/admin/flags/ui/Page.tsx";
-import AdminIntegrationsPage from "@/pages/admin/integrations/ui/Page.tsx";
-import AdminLimitsPage from "@/pages/admin/limits/ui/Page.tsx";
-import AdminOrgsPage from "@/pages/admin/orgs/ui/Page.tsx";
-import AdminOverviewPage from "@/pages/admin/overview/ui/Page.tsx";
-import AdminPluginsPage from "@/pages/admin/plugins/ui/Page.tsx";
-import AdminRetentionPage from "@/pages/admin/retention/ui/Page.tsx";
-import AdminSettingsPage from "@/pages/admin/settings/ui/Page.tsx";
-import AdminUsersPage from "@/pages/admin/users/ui/Page.tsx";
-import { LoginPage } from "@/pages/auth/login";
-import { RegisterPage } from "@/pages/auth/register";
-import Error401Page from "@/pages/errors/401/ui/Page.tsx";
-import Error403Page from "@/pages/errors/403/ui/Page.tsx";
-import Error404Page from "@/pages/errors/404/ui/Page.tsx";
-import Error500Page from "@/pages/errors/500/ui/Page.tsx";
-import HelpPage from "@/pages/public/help/ui/Page.tsx";
-import LandingPage from "@/pages/public/landing/ui/Page.tsx";
-import ResetPasswordPage from "@/pages/public/reset-password/ui/Page.tsx";
-import StatusPage from "@/pages/public/status/ui/Page.tsx";
-import TermsPage from "@/pages/public/terms/ui/Page.tsx";
-import VerifyEmailPage from "@/pages/public/verify-email/ui/Page.tsx";
-import DeleteAccountPage from "@/pages/shared/delete-account/ui/Page.tsx";
-import ProfilePage from "@/pages/shared/profile/ui/Page.tsx";
-import SecurityPage from "@/pages/shared/security/ui/Page.tsx";
-import SettingsPage from "@/pages/shared/settings/ui/Page.tsx";
-import CreateAppealPage from "@/pages/student/appeals/create/ui/Page.tsx";
-import AppealsListPage from "@/pages/student/appeals/list/ui/Page.tsx";
-import CoursePage from "@/pages/student/courses/detail/ui/Page.tsx";
-import CoursesListPage from "@/pages/student/courses/list/ui/Page.tsx";
-import DashboardPage from "@/pages/student/dashboard/ui/Page.tsx";
-import GradebookPage from "@/pages/student/gradebook/ui/Page.tsx";
-import InboxPage from "@/pages/student/inbox/ui/Page.tsx";
-import ReviewsInboxPage from "@/pages/student/reviews/inbox/ui/Page.tsx";
-import ReceivedReviewsPage from "@/pages/student/reviews/received/ui/Page.tsx";
-import ReviewPage from "@/pages/student/reviews/review/ui/Page.tsx";
-import { SubmitWorkPage } from "@/pages/student/submissions/submit-work";
-import SubmissionsPage from "@/pages/student/submissions/ui/Page.tsx";
-import TaskPage from "@/pages/student/task/detail/ui/Page.tsx";
-import TeacherAnalyticsPage from "@/pages/teacher/analytics/ui/Page.tsx";
-import TeacherAnnouncementsPage from "@/pages/teacher/announcements/ui/Page.tsx";
-import TeacherAppealsPage from "@/pages/teacher/appeals/ui/Page.tsx";
-import TeacherAssignmentDetailsPage from "@/pages/teacher/assignment-detail/ui/Page.tsx";
-import { TeacherAssignmentExtensionsPage } from "@/pages/teacher/assignment-extensinsions";
-import TeacherAssignmentsPage from "@/pages/teacher/assignments/ui/Page.tsx";
-import TeacherAutomationPage from "@/pages/teacher/automation/ui/Page.tsx";
-import TeacherCourseDetailsPage from "@/pages/teacher/course-detail/ui/Page.tsx";
-import TeacherCoursesPage from "@/pages/teacher/courses/ui/Page.tsx";
-import TeacherCreateAssignmentPage from "@/pages/teacher/create-assignment/ui/Page.tsx";
-import TeacherDistributionPage from "@/pages/teacher/distribution/ui/Page.tsx";
-import TeacherExtensionsPage from "@/pages/teacher/extensions/ui/Page.tsx";
-import TeacherModerationPage from "@/pages/teacher/moderation/ui/Page.tsx";
-import TeacherPeerSessionSettingsPage from "@/pages/teacher/peer-session-settings/ui/Page.tsx";
-import TeacherRubricsPage from "@/pages/teacher/rubrics/ui/Page.tsx";
-import TeacherSubmissionsPage from "@/pages/teacher/submissions/ui/Page.tsx";
+// Auth
+const LoginPage = lazy(() => import("@/pages/auth/login/ui/Page"));
+const RegisterPage = lazy(() => import("@/pages/auth/register/ui/Page"));
 
-import { getAuthRedirect, isAuthPage, isProtectedRoute } from "@/app/routing/guards.ts";
-import { getCurrentHashPath, navigateHash, parseHash } from "@/app/routing/parseHash.ts";
+// Errors
+const Error401Page = lazy(() => import("@/pages/errors/401/ui/Page"));
+const Error403Page = lazy(() => import("@/pages/errors/403/ui/Page"));
+const Error404Page = lazy(() => import("@/pages/errors/404/ui/Page"));
+const Error500Page = lazy(() => import("@/pages/errors/500/ui/Page"));
+
+// Public
+const HelpPage = lazy(() => import("@/pages/public/help/ui/Page"));
+const LandingPage = lazy(() => import("@/pages/public/landing/ui/Page"));
+const ResetPasswordPage = lazy(() => import("@/pages/public/reset-password/ui/Page"));
+const StatusPage = lazy(() => import("@/pages/public/status/ui/Page"));
+const TermsPage = lazy(() => import("@/pages/public/terms/ui/Page"));
+const VerifyEmailPage = lazy(() => import("@/pages/public/verify-email/ui/Page"));
+
+// Shared (authenticated)
+const DeleteAccountPage = lazy(() => import("@/pages/shared/delete-account/ui/Page"));
+const ProfilePage = lazy(() => import("@/pages/shared/profile/ui/Page"));
+const SecurityPage = lazy(() => import("@/pages/shared/security/ui/Page"));
+const SettingsPage = lazy(() => import("@/pages/shared/settings/ui/Page"));
+
+// Student
+const CreateAppealPage = lazy(() => import("@/pages/student/appeals/create/ui/Page"));
+const AppealsListPage = lazy(() => import("@/pages/student/appeals/list/ui/Page"));
+const CoursePage = lazy(() => import("@/pages/student/courses/detail/ui/Page"));
+const CoursesListPage = lazy(() => import("@/pages/student/courses/list/ui/Page"));
+const DashboardPage = lazy(() => import("@/pages/student/dashboard/ui/Page"));
+const GradebookPage = lazy(() => import("@/pages/student/gradebook/ui/Page"));
+const InboxPage = lazy(() => import("@/pages/student/inbox/ui/Page"));
+const ReviewsInboxPage = lazy(() => import("@/pages/student/reviews/inbox/ui/Page"));
+const ReceivedReviewsPage = lazy(() => import("@/pages/student/reviews/received/ui/Page"));
+const ReviewPage = lazy(() => import("@/pages/student/reviews/review/ui/Page"));
+const SubmitWorkPage = lazy(() => import("@/pages/student/submissions/submit-work/ui/Page"));
+const SubmissionsPage = lazy(() => import("@/pages/student/submissions/ui/Page"));
+const TaskPage = lazy(() => import("@/pages/student/task/detail/ui/Page"));
+
+// Teacher
+const TeacherAnalyticsPage = lazy(() => import("@/pages/teacher/analytics/ui/Page"));
+const TeacherAnnouncementsPage = lazy(() => import("@/pages/teacher/announcements/ui/Page"));
+const TeacherAppealsPage = lazy(() => import("@/pages/teacher/appeals/ui/Page"));
+const TeacherAssignmentDetailsPage = lazy(
+  () => import("@/pages/teacher/assignment-detail/ui/Page"),
+);
+const TeacherAssignmentExtensionsPage = lazy(
+  () => import("@/pages/teacher/assignment-extensinsions/ui/Page"),
+);
+const TeacherAssignmentsPage = lazy(() => import("@/pages/teacher/assignments/ui/Page"));
+const TeacherAutomationPage = lazy(() => import("@/pages/teacher/automation/ui/Page"));
+const TeacherCourseDetailsPage = lazy(() => import("@/pages/teacher/course-detail/ui/Page"));
+const TeacherCoursesPage = lazy(() => import("@/pages/teacher/courses/ui/Page"));
+const TeacherCreateAssignmentPage = lazy(() => import("@/pages/teacher/create-assignment/ui/Page"));
+const TeacherDistributionPage = lazy(() => import("@/pages/teacher/distribution/ui/Page"));
+const TeacherExtensionsPage = lazy(() => import("@/pages/teacher/extensions/ui/Page"));
+const TeacherModerationPage = lazy(() => import("@/pages/teacher/moderation/ui/Page"));
+const TeacherPeerSessionSettingsPage = lazy(
+  () => import("@/pages/teacher/peer-session-settings/ui/Page"),
+);
+const TeacherRubricsPage = lazy(() => import("@/pages/teacher/rubrics/ui/Page"));
+const TeacherSubmissionsPage = lazy(() => import("@/pages/teacher/submissions/ui/Page"));
+
+function PageFallback() {
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </div>
+  );
+}
 
 export function Router() {
-  const { isAuthenticated } = useAuth();
+  return (
+    <Suspense fallback={<PageFallback />}>
+      <NavigateRegistrar />
+      <Routes>
+        {/* ── Public pages ──────────────────────────────── */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path="/status" element={<StatusPage />} />
+        <Route path="/terms" element={<TermsPage />} />
 
-  const [hashPath, setHashPath] = useState<string>(() => getCurrentHashPath());
+        {/* Feature-flagged public */}
+        <Route element={<FeatureRoute flag="enablePasswordReset" redirectTo="/login" />}>
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+        </Route>
+        <Route element={<FeatureRoute flag="enableEmailConfirmation" redirectTo="/login" />}>
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+        </Route>
 
-  useEffect(() => {
-    const onHashChange = () => setHashPath(getCurrentHashPath());
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+        {/* ── Auth pages (redirect if already logged in) ─ */}
+        <Route element={<PublicOnlyRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
 
-  const parsed = useMemo(() => parseHash(hashPath), [hashPath]);
-  const pathname = parsed.pathname;
-  const params = parsed.params;
-  const routeKey = parsed.routeKey;
+        {/* ── Protected pages ───────────────────────────── */}
+        <Route element={<ProtectedRoute />}>
+          {/* Student */}
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/courses" element={<CoursesListPage />} />
+          <Route path="/courses/:courseId" element={<CoursePage />} />
+          <Route path="/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
+          <Route path="/courses/:courseId/tasks/:taskId/submit" element={<SubmitWorkPage />} />
+          <Route
+            path="/courses/:courseId/tasks/:taskId/submissions"
+            element={<SubmissionsPage />}
+          />
+          <Route path="/courses/:courseId/tasks/:taskId/appeal" element={<CreateAppealPage />} />
+          <Route path="/reviews" element={<ReviewsInboxPage />} />
+          <Route path="/reviews/received" element={<ReceivedReviewsPage />} />
+          <Route path="/reviews/:reviewId" element={<ReviewPage />} />
+          <Route path="/gradebook" element={<GradebookPage />} />
+          <Route path="/inbox" element={<InboxPage />} />
+          <Route path="/appeals" element={<AppealsListPage />} />
 
-  // (опционально) мягко нормализуем legacy URL -> canonical
-  const legacyRedirect = useMemo(() => {
-    if (routeKey === "legacyCourse" && params.courseId) return ROUTES.course(params.courseId);
-    if (routeKey === "legacyTeacherCourse" && params.courseId)
-      return ROUTES.teacherCourse(params.courseId);
-    // Teacher dashboard removed — redirect to courses
-    if (pathname === ROUTES.teacherDashboard) return ROUTES.teacherCourses;
-    return null;
-  }, [routeKey, params.courseId, pathname]);
+          {/* Profile / Settings */}
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/security" element={<SecurityPage />} />
+          <Route path="/offboarding/delete-account" element={<DeleteAccountPage />} />
 
-  const authRedirect = useMemo(
-    () => getAuthRedirect(pathname, isAuthenticated),
-    [pathname, isAuthenticated],
+          {/* Teacher (static) */}
+          <Route path="/teacher/courses" element={<TeacherCoursesPage />} />
+          <Route path="/teacher/courses/:courseId" element={<TeacherCourseDetailsPage />} />
+          <Route path="/teacher/rubrics" element={<TeacherRubricsPage />} />
+          <Route path="/teacher/assignments" element={<TeacherAssignmentsPage />} />
+          <Route path="/teacher/assignments/new" element={<TeacherCreateAssignmentPage />} />
+          <Route
+            path="/teacher/assignment/:assignmentId"
+            element={<TeacherAssignmentDetailsPage />}
+          />
+          <Route
+            path="/teacher/assignment/:assignmentId/extensions"
+            element={<TeacherAssignmentExtensionsPage />}
+          />
+          <Route
+            path="/teacher/peer-session-settings/:assignmentId"
+            element={<TeacherPeerSessionSettingsPage />}
+          />
+          <Route path="/teacher/distribution" element={<TeacherDistributionPage />} />
+          <Route path="/teacher/moderation" element={<TeacherModerationPage />} />
+          <Route path="/teacher/submissions" element={<TeacherSubmissionsPage />} />
+          <Route path="/teacher/appeals" element={<TeacherAppealsPage />} />
+
+          {/* Teacher (feature-flagged) */}
+          <Route element={<FeatureRoute flag="enableAnalytics" />}>
+            <Route path="/teacher/analytics" element={<TeacherAnalyticsPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableAnnouncements" />}>
+            <Route path="/teacher/announcements" element={<TeacherAnnouncementsPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableExtensions" />}>
+            <Route path="/teacher/extensions" element={<TeacherExtensionsPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableAutomation" />}>
+            <Route path="/teacher/automation" element={<TeacherAutomationPage />} />
+          </Route>
+
+          {/* Admin */}
+          <Route path="/admin/overview" element={<AdminOverviewPage />} />
+          <Route path="/admin/courses" element={<AdminCoursesPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/orgs" element={<AdminOrgsPage />} />
+          <Route path="/admin/settings" element={<AdminSettingsPage />} />
+          <Route path="/admin/flags" element={<AdminFlagsPage />} />
+
+          {/* Admin (feature-flagged) */}
+          <Route element={<FeatureRoute flag="enablePlugins" />}>
+            <Route path="/admin/plugins" element={<AdminPluginsPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableIntegrations" />}>
+            <Route path="/admin/integrations" element={<AdminIntegrationsPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableRetention" />}>
+            <Route path="/admin/retention" element={<AdminRetentionPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableLimits" />}>
+            <Route path="/admin/limits" element={<AdminLimitsPage />} />
+          </Route>
+        </Route>
+
+        {/* ── Legacy redirects ──────────────────────────── */}
+        <Route path="/course/:courseId" element={<LegacyRedirect to="/courses/:courseId" />} />
+        <Route path="/task/:taskId" element={<LegacyRedirect to="/courses/1/tasks/:taskId" />} />
+        <Route
+          path="/teacher/course/:courseId"
+          element={<LegacyRedirect to="/teacher/courses/:courseId" />}
+        />
+        <Route path="/teacher/dashboard" element={<Navigate to="/teacher/courses" replace />} />
+
+        {/* ── Error pages ───────────────────────────────── */}
+        <Route path="/401" element={<Error401Page />} />
+        <Route path="/403" element={<Error403Page />} />
+        <Route path="/404" element={<Error404Page />} />
+        <Route path="/500" element={<Error500Page />} />
+
+        {/* ── Catch-all ─────────────────────────────────── */}
+        <Route path="*" element={<Error404Page />} />
+      </Routes>
+    </Suspense>
   );
+}
 
-  const featureRedirect = useMemo(() => {
-    if (pathname === ROUTES.resetPassword && !isFlagEnabled("enablePasswordReset"))
-      return ROUTES.login;
-    if (pathname === ROUTES.verifyEmail && !isFlagEnabled("enableEmailConfirmation"))
-      return ROUTES.login;
-    return null;
-  }, [pathname]);
+/** Handles legacy URL patterns by substituting route params into the target path. */
+function LegacyRedirect({ to }: { to: string }) {
+  // useParams provides the values matched by React Router (e.g. :courseId)
+  const params = useParams();
 
-  const redirectTo = legacyRedirect ?? authRedirect ?? featureRedirect;
-
-  useEffect(() => {
-    if (redirectTo && redirectTo !== pathname) {
-      navigateHash(redirectTo);
-    }
-  }, [redirectTo, pathname]);
-
-  // Чтобы не мигал "404" до редиректа — сразу отрисуем ожидаемую страницу
-  if (!isAuthenticated && isProtectedRoute(pathname)) return <LoginPage />;
-  if (isAuthenticated && isAuthPage(pathname)) return <DashboardPage />;
-
-  // Teacher (static)
-  if (pathname === ROUTES.teacherCourses) return <TeacherCoursesPage />;
-  if (pathname === ROUTES.teacherRubrics) return <TeacherRubricsPage />;
-  if (pathname === ROUTES.teacherAssignments) return <TeacherAssignmentsPage />;
-  if (pathname === ROUTES.teacherCreateAssignment) return <TeacherCreateAssignmentPage />;
-  if (pathname === ROUTES.teacherDistribution) return <TeacherDistributionPage />;
-  if (pathname === ROUTES.teacherModeration) return <TeacherModerationPage />;
-  if (pathname === ROUTES.teacherSubmissions) return <TeacherSubmissionsPage />;
-  if (pathname === ROUTES.teacherAppeals) return <TeacherAppealsPage />;
-
-  // Teacher (feature-flagged)
-  if (pathname === ROUTES.teacherAnalytics)
-    return isFlagEnabled("enableAnalytics") ? <TeacherAnalyticsPage /> : <Error404Page />;
-  if (pathname === ROUTES.teacherAnnouncements)
-    return isFlagEnabled("enableAnnouncements") ? <TeacherAnnouncementsPage /> : <Error404Page />;
-  if (pathname === ROUTES.teacherExtensions)
-    return isFlagEnabled("enableExtensions") ? <TeacherExtensionsPage /> : <Error404Page />;
-  if (pathname === ROUTES.teacherAutomation)
-    return isFlagEnabled("enableAutomation") ? <TeacherAutomationPage /> : <Error404Page />;
-
-  // Teacher (dynamic)
-  if (routeKey === "teacherCourse" && params.courseId) {
-    return <TeacherCourseDetailsPage courseId={params.courseId} />;
-  }
-  if (routeKey === "teacherAssignmentExtensions" && params.assignmentId) {
-    return <TeacherAssignmentExtensionsPage assignmentId={params.assignmentId} />;
-  }
-  if (routeKey === "teacherAssignment" && params.assignmentId) {
-    return <TeacherAssignmentDetailsPage assignmentId={params.assignmentId} />;
-  }
-  if (routeKey === "teacherPeerSessionSettings" && params.assignmentId) {
-    return <TeacherPeerSessionSettingsPage assignmentId={params.assignmentId} />;
+  let target = to;
+  for (const [key, value] of Object.entries(params)) {
+    if (value) target = target.replace(`:${key}`, value);
   }
 
-  // Admin
-  if (pathname === ROUTES.adminOverview) return <AdminOverviewPage />;
-  if (pathname === ROUTES.adminCourses) return <AdminCoursesPage />;
-  if (pathname === ROUTES.adminUsers) return <AdminUsersPage />;
-  if (pathname === ROUTES.adminOrgs) return <AdminOrgsPage />;
-  if (pathname === ROUTES.adminSettings) return <AdminSettingsPage />;
-  if (pathname === ROUTES.adminFlags) return <AdminFlagsPage />;
-
-  // Admin (feature-flagged)
-  if (pathname === ROUTES.adminPlugins)
-    return isFlagEnabled("enablePlugins") ? <AdminPluginsPage /> : <Error404Page />;
-  if (pathname === ROUTES.adminIntegrations)
-    return isFlagEnabled("enableIntegrations") ? <AdminIntegrationsPage /> : <Error404Page />;
-  if (pathname === ROUTES.adminRetention)
-    return isFlagEnabled("enableRetention") ? <AdminRetentionPage /> : <Error404Page />;
-  if (pathname === ROUTES.adminLimits)
-    return isFlagEnabled("enableLimits") ? <AdminLimitsPage /> : <Error404Page />;
-
-  // Student (static)
-  if (pathname === ROUTES.dashboard) return <DashboardPage />;
-  if (pathname === ROUTES.courses) return <CoursesListPage />;
-  if (pathname === ROUTES.reviews) return <ReviewsInboxPage />;
-  if (pathname === ROUTES.receivedReviews) return <ReceivedReviewsPage />;
-  if (pathname === ROUTES.gradebook) return <GradebookPage />;
-  if (pathname === ROUTES.inbox) return <InboxPage />;
-  if (pathname === ROUTES.appeals) return <AppealsListPage />;
-
-  // Student (dynamic)
-  if (routeKey === "courseDetails" && params.courseId) {
-    return <CoursePage courseId={params.courseId} />;
-  }
-  if (routeKey === "taskDetails" && params.taskId) {
-    return <TaskPage taskId={params.taskId} />;
-  }
-  if (routeKey === "submitWork" && params.courseId && params.taskId) {
-    return <SubmitWorkPage courseId={params.courseId} taskId={params.taskId} />;
-  }
-  if (routeKey === "submissions" && params.courseId && params.taskId) {
-    return <SubmissionsPage courseId={params.courseId} taskId={params.taskId} />;
-  }
-  if (routeKey === "taskAppeal" && params.courseId && params.taskId) {
-    return <CreateAppealPage courseId={params.courseId} taskId={params.taskId} />;
-  }
-  if (routeKey === "review" && params.reviewId && pathname !== ROUTES.receivedReviews) {
-    return <ReviewPage reviewId={params.reviewId} />;
-  }
-
-  // Legacy: /task/:id, /submit/:taskId
-  if (routeKey === "legacyTask" && params.taskId) return <TaskPage taskId={params.taskId} />;
-  if (routeKey === "legacySubmit" && params.taskId)
-    return <SubmitWorkPage courseId={"1"} taskId={params.taskId} />;
-
-  // Profile / settings
-  if (pathname === ROUTES.profile) return <ProfilePage />;
-  if (pathname === ROUTES.settings) return <SettingsPage />;
-  if (pathname === ROUTES.security) return <SecurityPage />;
-  if (pathname === ROUTES.deleteAccount) return <DeleteAccountPage />;
-
-  // Public (auth)
-  if (pathname === ROUTES.login) return <LoginPage />;
-  if (pathname === ROUTES.register) return <RegisterPage />;
-
-  // Public (static)
-  if (pathname === ROUTES.help) return <HelpPage />;
-  if (pathname === ROUTES.status) return <StatusPage />;
-  if (pathname === ROUTES.terms) return <TermsPage />;
-
-  // Feature-flagged public
-  if (pathname === ROUTES.resetPassword) return <ResetPasswordPage />;
-  if (pathname === ROUTES.verifyEmail) return <VerifyEmailPage />;
-
-  // Landing
-  if (pathname === ROUTES.landing) return <LandingPage />;
-
-  // Errors
-  if (pathname === ROUTES.error401) return <Error401Page />;
-  if (pathname === ROUTES.error403) return <Error403Page />;
-  if (pathname === ROUTES.error404) return <Error404Page />;
-  if (pathname === ROUTES.error500) return <Error500Page />;
-
-  return <Error404Page />;
+  return <Navigate to={target} replace />;
 }

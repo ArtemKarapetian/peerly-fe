@@ -1,6 +1,7 @@
 import { Send, CheckCircle, RotateCcw, AlertTriangle } from "lucide-react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { debounce } from "@/shared/lib/debounce.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -29,11 +30,9 @@ import {
   minOverallCommentLength,
 } from "../model/mockReviewData";
 
-interface ReviewPageProps {
-  reviewId: string;
-}
-
-export default function ReviewPage({ reviewId }: ReviewPageProps) {
+export default function ReviewPage() {
+  const { reviewId = "" } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { getReview } = useReviewStore();
   const review = getReview(reviewId);
@@ -262,7 +261,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
               {t("page.reviewFill.notFoundDesc")}
             </p>
             <button
-              onClick={() => (window.location.hash = "/reviews")}
+              onClick={() => void navigate("/reviews")}
               className="px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
             >
               {t("page.reviewFill.backToReviews")}

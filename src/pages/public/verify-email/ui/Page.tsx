@@ -1,6 +1,7 @@
 import { CheckCircle, Mail, AlertCircle, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/ui/button.tsx";
@@ -24,7 +25,7 @@ type VerificationState = "pending" | "verified" | "expired";
 export default function VerifyEmailPage() {
   // Check URL param for initial state (e.g., ?state=verified)
   const getInitialState = (): VerificationState => {
-    const urlParams = new URLSearchParams(window.location.hash.split("?")[1]);
+    const urlParams = new URLSearchParams(window.location.search);
     const stateParam = urlParams.get("state") as VerificationState;
     return ["pending", "verified", "expired"].includes(stateParam) ? stateParam : "pending";
   };
@@ -36,6 +37,7 @@ export default function VerifyEmailPage() {
   };
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setState] = useState<VerificationState>(getInitialState());
   const [email, setEmail] = useState(getInitialEmail());
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -101,7 +103,7 @@ export default function VerifyEmailPage() {
                 variant="primary"
                 size="lg"
                 fullWidth
-                onClick={() => (window.location.hash = "/courses")}
+                onClick={() => void navigate("/courses")}
               >
                 {t("page.verifyEmail.goToApp")}
               </Button>
@@ -170,12 +172,12 @@ export default function VerifyEmailPage() {
 
               {/* Back to Login */}
               <div className="text-center">
-                <a
-                  href="#/login"
+                <Link
+                  to="/login"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("page.resetPassword.backToLogin")}
-                </a>
+                </Link>
               </div>
 
               {/* Demo State Switcher */}

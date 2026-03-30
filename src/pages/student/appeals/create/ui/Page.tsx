@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -19,12 +20,9 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * Allows students to request a regrade or appeal a review decision
  */
 
-interface CreateAppealPageProps {
-  courseId?: string;
-  taskId?: string;
-}
-
-export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageProps = {}) {
+export default function CreateAppealPage() {
+  const { courseId, taskId } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
   const [showSuccess, setShowSuccess] = useState(false);
@@ -47,8 +45,8 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
     return (
       <AppShell title={t("feature.appeal.success.title")}>
         <CreateAppealSuccess
-          onGoToAppeals={() => (window.location.hash = "/appeals")}
-          onGoToCourse={() => (window.location.hash = `/courses/${resolvedCourseId}`)}
+          onGoToAppeals={() => void navigate("/appeals")}
+          onGoToCourse={() => void navigate(`/courses/${resolvedCourseId}`)}
         />
       </AppShell>
     );
@@ -70,9 +68,7 @@ export default function CreateAppealPage({ courseId, taskId }: CreateAppealPageP
         courseId={resolvedCourseId}
         taskId={resolvedTaskId}
         context={context}
-        onCancel={() =>
-          (window.location.hash = `/courses/${resolvedCourseId}/tasks/${resolvedTaskId}`)
-        }
+        onCancel={() => void navigate(`/courses/${resolvedCourseId}/tasks/${resolvedTaskId}`)}
         onSuccess={() => setShowSuccess(true)}
       />
     </AppShell>

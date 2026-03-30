@@ -1,6 +1,7 @@
 import { Save, EyeOff, Users, Shuffle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -39,13 +40,9 @@ interface AuditLogEntry {
   userName: string;
 }
 
-interface TeacherPeerSessionSettingsPageProps {
-  assignmentId: string;
-}
-
-export default function TeacherPeerSessionSettingsPage({
-  assignmentId,
-}: TeacherPeerSessionSettingsPageProps) {
+export default function TeacherPeerSessionSettingsPage() {
+  const { assignmentId: routeAssignmentId } = useParams<{ assignmentId: string }>();
+  const assignmentId = routeAssignmentId ?? "a1";
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [settings, setSettings] = useState<PeerSessionSettings>(() => {
@@ -139,8 +136,8 @@ export default function TeacherPeerSessionSettingsPage({
 
       // Log changes
       Object.keys(updates).forEach((key) => {
-        const oldValue = String(prev[key as keyof PeerSessionSettings]);
-        const newValue = String(updates[key as keyof PeerSessionSettings]);
+        const oldValue = JSON.stringify(prev[key as keyof PeerSessionSettings] ?? "");
+        const newValue = JSON.stringify(updates[key as keyof PeerSessionSettings] ?? "");
         if (oldValue !== newValue) {
           addAuditEntry(t("teacher.peerSettings.settingChange"), key, oldValue, newValue);
         }

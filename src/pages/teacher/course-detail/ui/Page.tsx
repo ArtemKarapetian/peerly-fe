@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
@@ -31,13 +32,9 @@ import {
 
 type TabKey = "assignments" | "participants" | "announcements" | "settings";
 
-interface TeacherCourseDetailsPageProps {
-  courseId?: string | null;
-}
-
-export default function TeacherCourseDetailsPage({
-  courseId = "c1",
-}: TeacherCourseDetailsPageProps) {
+export default function TeacherCourseDetailsPage() {
+  const { courseId: routeCourseId } = useParams<{ courseId: string }>();
+  const courseId = routeCourseId ?? "c1";
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<TabKey>("assignments");

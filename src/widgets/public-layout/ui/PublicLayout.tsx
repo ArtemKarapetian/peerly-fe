@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/shared/ui/button.tsx";
 
@@ -19,17 +20,18 @@ interface PublicTopBarProps {
 export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <header className="w-full border-b border-border bg-background">
       <div className="max-w-[1200px] mx-auto px-4 tablet:px-6 desktop:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a
-          href="#/"
+        <Link
+          to="/"
           className="text-xl font-semibold text-primary hover:opacity-80 transition-opacity"
         >
           Peerly
-        </a>
+        </Link>
 
         {/* Navigation & Actions */}
         {showAuthControls && (
@@ -37,11 +39,7 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
             {isAuthenticated ? (
               <ProfileDropdown />
             ) : (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => (window.location.hash = "/login")}
-              >
+              <Button variant="secondary" size="sm" onClick={() => void navigate("/login")}>
                 {t("widget.publicLayout.signIn")}
               </Button>
             )}
@@ -100,24 +98,24 @@ export function PublicLayout({
             <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
               {/* Links */}
               <nav className="flex items-center gap-4">
-                <a
-                  href="#/help"
+                <Link
+                  to="/help"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("widget.publicLayout.help")}
-                </a>
-                <a
-                  href="#/status"
+                </Link>
+                <Link
+                  to="/status"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("widget.publicLayout.status")}
-                </a>
-                <a
-                  href="#/terms"
+                </Link>
+                <Link
+                  to="/terms"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("widget.publicLayout.terms")}
-                </a>
+                </Link>
               </nav>
 
               {/* Copyright */}

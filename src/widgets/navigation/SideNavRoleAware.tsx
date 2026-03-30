@@ -24,8 +24,8 @@ import {
   Archive,
   AlertTriangle,
 } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
 
 import { isFlagEnabled, type FeatureFlags } from "@/shared/lib/feature-flags";
 
@@ -69,15 +69,8 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
     variant === "tablet-collapsed" ||
     variant === "tablet-expanded";
 
-  const [currentPath, setCurrentPath] = useState(
-    () => window.location.hash.slice(1) || "/dashboard",
-  );
-
-  useEffect(() => {
-    const onHashChange = () => setCurrentPath(window.location.hash.slice(1));
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const isActive = (hash: string) => currentPath === hash || currentPath.startsWith(hash + "/");
 
@@ -172,12 +165,12 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
-            <a
-              href="#/dashboard"
+            <Link
+              to="/dashboard"
               className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
             >
               Peerly
-            </a>
+            </Link>
             <button
               onClick={onClose}
               className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-surface-hover hover:text-[--text-primary] transition-colors duration-150 ${focusRing}`}
@@ -193,15 +186,15 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
               const Icon = item.icon;
               const active = isActive(item.hash);
               return (
-                <a
+                <Link
                   key={item.hash}
-                  href={`#${item.hash}`}
+                  to={item.hash}
                   onClick={() => onClose?.()}
                   className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${navItemClass(active)}`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
                   <span className="text-[14px]">{item.label}</span>
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -213,22 +206,22 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
           {/* Profile & Settings */}
           <div className="border-t border-[--surface-border] shrink-0 px-2.5 py-2 space-y-0.5 pb-3">
-            <a
-              href="#/profile"
+            <Link
+              to="/profile"
               onClick={() => onClose?.()}
               className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
             >
               <User className="w-4 h-4 shrink-0" />
               <span className="text-[14px]">{t("nav.profile")}</span>
-            </a>
-            <a
-              href="#/settings"
+            </Link>
+            <Link
+              to="/settings"
               onClick={() => onClose?.()}
               className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
             >
               <Settings className="w-4 h-4 shrink-0" />
               <span className="text-[14px]">{t("nav.settings")}</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -245,12 +238,12 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       {/* Header */}
       <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
         {!isCollapsed && (
-          <a
-            href="#/dashboard"
+          <Link
+            to="/dashboard"
             className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
           >
             Peerly
-          </a>
+          </Link>
         )}
         {showToggleButton && (
           <button
@@ -273,9 +266,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           const Icon = item.icon;
           const active = isActive(item.hash);
           return (
-            <a
+            <Link
               key={item.hash}
-              href={`#${item.hash}`}
+              to={item.hash}
               className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${
                 isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
               } ${navItemClass(active)}`}
@@ -283,7 +276,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             >
               <Icon className="w-4 h-4 shrink-0" />
               {!isCollapsed && <span className="text-[14px]">{item.label}</span>}
-            </a>
+            </Link>
           );
         })}
       </nav>
@@ -297,8 +290,8 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
         {/* Profile & Settings */}
         <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
-          <a
-            href="#/profile"
+          <Link
+            to="/profile"
             className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
               isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
             }`}
@@ -306,9 +299,9 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           >
             <User className="w-4 h-4 shrink-0" />
             {!isCollapsed && <span className="text-[14px]">{t("nav.profile")}</span>}
-          </a>
-          <a
-            href="#/settings"
+          </Link>
+          <Link
+            to="/settings"
             className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
               isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
             }`}
@@ -316,7 +309,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           >
             <Settings className="w-4 h-4 shrink-0" />
             {!isCollapsed && <span className="text-[14px]">{t("nav.settings")}</span>}
-          </a>
+          </Link>
         </div>
       </div>
     </div>
