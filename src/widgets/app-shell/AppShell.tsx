@@ -125,7 +125,7 @@ export function AppShell({ children, title }: AppShellProps) {
   const isDesktopOrTablet = windowWidth >= 800;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Sidebar Navigation - Always rendered for Desktop/Tablet */}
       {isDesktopOrTablet && (
         <SideNav

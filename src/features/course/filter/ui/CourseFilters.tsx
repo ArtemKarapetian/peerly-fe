@@ -24,7 +24,7 @@ export function CourseFilters({ activeFilter, onFilterChange }: CourseFiltersPro
     <div
       role="tablist"
       aria-label={t("feature.courseFilters.ariaLabel")}
-      className="flex gap-1 p-1 bg-[#e8eaed] rounded-[var(--radius-md)] w-fit shrink-0"
+      className="flex gap-1 p-1 bg-muted rounded-[var(--radius-md)] w-fit shrink-0"
     >
       {FILTERS.map((filter) => {
         const isActive = activeFilter === filter.value;
@@ -37,11 +37,11 @@ export function CourseFilters({ activeFilter, onFilterChange }: CourseFiltersPro
             className={`
               px-3.5 py-1.5 rounded-[var(--radius-sm)] text-[13px] font-medium
               transition-all duration-150 whitespace-nowrap
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary]/40
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40
               ${
                 isActive
-                  ? "bg-white text-[--text-primary] shadow-[0_1px_4px_rgba(0,0,0,0.13)]"
-                  : "text-[--text-secondary] hover:bg-white/50 hover:text-[--text-primary]"
+                  ? "bg-card text-text-primary shadow-[0_1px_4px_rgba(0,0,0,0.13)]"
+                  : "text-text-secondary hover:bg-card/50 hover:text-text-primary"
               }
             `}
           >

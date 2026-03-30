@@ -47,44 +47,44 @@ export function StatusCard({
       case "NOT_STARTED":
         return {
           label: t("entity.assignment.statusNotStarted"),
-          color: "bg-[#e4e4e4]",
-          textColor: "text-[#4b4963]",
+          color: "bg-muted",
+          textColor: "text-muted-foreground",
         };
       case "SUBMITTED":
         return {
           label: t("entity.assignment.statusSubmitted"),
-          color: "bg-[#b7bdff]",
-          textColor: "text-[#21214f]",
+          color: "bg-info-light",
+          textColor: "text-foreground",
         };
       case "PEER_REVIEW":
         return {
           label: t("entity.assignment.statusPeerReview"),
-          color: "bg-[#b0e9fb]",
-          textColor: "text-[#21214f]",
+          color: "bg-info-light",
+          textColor: "text-foreground",
         };
       case "TEACHER_REVIEW":
         return {
           label: t("entity.assignment.statusTeacherReview"),
-          color: "bg-[#ffd4a3]",
-          textColor: "text-[#21214f]",
+          color: "bg-warning-light",
+          textColor: "text-foreground",
         };
       case "GRADING":
         return {
           label: t("entity.assignment.statusGrading"),
-          color: "bg-[#e6e8ee]",
-          textColor: "text-[#4b4963]",
+          color: "bg-muted",
+          textColor: "text-muted-foreground",
         };
       case "GRADED":
         return {
           label: t("entity.assignment.statusGraded"),
-          color: "bg-[#9cf38d]",
-          textColor: "text-[#21214f]",
+          color: "bg-success-light",
+          textColor: "text-foreground",
         };
       case "OVERDUE":
         return {
           label: t("entity.assignment.statusOverdue"),
-          color: "bg-[#ffb8b8]",
-          textColor: "text-[#21214f]",
+          color: "bg-error-light",
+          textColor: "text-foreground",
         };
     }
   };
@@ -111,8 +111,8 @@ export function StatusCard({
 
   return (
     <div>
-      <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
-        <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
+      <div className="bg-surface-hover rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
+        <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-text-primary mb-4">
           {t("entity.assignment.statusAndActions")}
         </h2>
 
@@ -127,13 +127,13 @@ export function StatusCard({
         </div>
 
         {/* Deadline */}
-        <div className="flex items-center gap-2 mb-4 desktop:mb-6 pb-4 border-b border-[#c7c7c7]">
-          <Clock className="size-5 text-[#4b4963]" />
+        <div className="flex items-center gap-2 mb-4 desktop:mb-6 pb-4 border-b border-border">
+          <Clock className="size-5 text-muted-foreground" />
           <div>
-            <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
+            <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-tertiary">
               {t("entity.assignment.deadline")}
             </p>
-            <p className="text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
+            <p className="text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-text-primary">
               {deadline}
             </p>
           </div>
@@ -142,12 +142,12 @@ export function StatusCard({
         {/* Status-specific content */}
         {status === "NOT_STARTED" && (
           <div>
-            <h3 className="text-[16px] desktop:text-[18px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.54px] text-[#21214f] mb-3">
+            <h3 className="text-[16px] desktop:text-[18px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.54px] text-text-primary mb-3">
               {t("entity.assignment.submitWork")}
             </h3>
 
             <button
-              className="w-full bg-[#3d6bc6] hover:bg-[#2d5bb6] transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-medium text-white flex items-center justify-center gap-2 mb-3"
+              className="w-full bg-brand-primary hover:bg-brand-primary-hover transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-medium text-text-inverse flex items-center justify-center gap-2 mb-3"
               onClick={() => {
                 // Navigate to submit page
                 window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
@@ -163,7 +163,7 @@ export function StatusCard({
                 onClick={() => {
                   window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
                 }}
-                className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
+                className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
               >
                 <History className="size-4" />
                 <span>{t("entity.assignment.versionHistory")}</span>
@@ -174,14 +174,14 @@ export function StatusCard({
 
         {status === "SUBMITTED" && (
           <div>
-            <div className="bg-[#e9f5ff] rounded-[12px] p-4 mb-4">
+            <div className="bg-info-light rounded-[12px] p-4 mb-4">
               <div className="flex items-start gap-3">
-                <CheckCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
+                <CheckCircle className="size-5 text-text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
+                  <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-1">
                     {t("entity.assignment.workSubmitted")}
                   </p>
-                  <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+                  <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                     {t("entity.assignment.awaitingReviewers")}
                   </p>
                 </div>
@@ -189,8 +189,8 @@ export function StatusCard({
             </div>
 
             <div className="flex items-center gap-2 mb-3">
-              <FileText className="size-4 text-[#4b4963]" />
-              <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+              <FileText className="size-4 text-text-secondary" />
+              <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                 essay_final.pdf
               </p>
             </div>
@@ -200,7 +200,7 @@ export function StatusCard({
                 onClick={() => {
                   window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
                 }}
-                className="w-full bg-white border-2 border-[#d2def8] hover:border-[#a0b8f1] hover:bg-[#f9f9f9] transition-colors py-2 desktop:py-3 rounded-[12px] text-[13px] desktop:text-[14px] font-medium text-[#21214f] mb-3"
+                className="w-full bg-card border-2 border-border hover:border-brand-primary-lighter hover:bg-surface-hover transition-colors py-2 desktop:py-3 rounded-[12px] text-[13px] desktop:text-[14px] font-medium text-text-primary mb-3"
               >
                 {t("entity.assignment.uploadNewVersion")}
               </button>
@@ -210,7 +210,7 @@ export function StatusCard({
               onClick={() => {
                 window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
               }}
-              className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
               <History className="size-4" />
               <span>{t("entity.assignment.versionHistory")}</span>
@@ -222,23 +222,23 @@ export function StatusCard({
           <div>
             {/* Your work being reviewed */}
             <div className="mb-6">
-              <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-3">
+              <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-3">
                 {t("entity.assignment.yourWorkBeingReviewed")}
               </h3>
 
-              <div className="bg-white rounded-[12px] p-4 mb-2">
+              <div className="bg-card rounded-[12px] p-4 mb-2">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+                  <span className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                     {t("entity.assignment.reviewProgress")}
                   </span>
-                  <span className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f]">
+                  <span className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-text-primary">
                     {myWorkReviewProgress.completed}/{myWorkReviewProgress.total}
                   </span>
                 </div>
 
-                <div className="w-full bg-[#e4e4e4] rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div
-                    className="bg-[#b0e9fb] h-2 rounded-full transition-all"
+                    className="bg-info h-2 rounded-full transition-all"
                     style={{
                       width: `${(myWorkReviewProgress.completed / myWorkReviewProgress.total) * 100}%`,
                     }}
@@ -246,7 +246,7 @@ export function StatusCard({
                 </div>
               </div>
 
-              <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
+              <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-tertiary">
                 {myWorkReviewProgress.total - myWorkReviewProgress.completed}{" "}
                 {t("entity.assignment.reviewerNotFinished_other")}
               </p>
@@ -254,7 +254,7 @@ export function StatusCard({
 
             {/* Reviews you need to do */}
             <div>
-              <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-3">
+              <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-3">
                 {t("entity.assignment.youNeedToReview")}
               </h3>
 
@@ -262,18 +262,18 @@ export function StatusCard({
                 {peerReviewAssignments.map((assignment) => (
                   <div
                     key={assignment.id}
-                    className="bg-white rounded-[12px] p-3 border border-[#c7c7c7]"
+                    className="bg-card rounded-[12px] p-3 border border-border"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="size-8 rounded-full bg-[#d2def8] flex items-center justify-center">
-                          <User className="size-4 text-[#21214f]" />
+                        <div className="size-8 rounded-full bg-brand-primary-lighter flex items-center justify-center">
+                          <User className="size-4 text-text-primary" />
                         </div>
                         <div>
-                          <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#21214f]">
+                          <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-text-primary">
                             {assignment.studentName}
                           </p>
-                          <p className="text-[11px] desktop:text-[12px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
+                          <p className="text-[11px] desktop:text-[12px] font-['Work_Sans:Regular',sans-serif] text-text-tertiary">
                             {assignment.reviewed
                               ? t("entity.assignment.reviewed")
                               : t("entity.assignment.awaitingReview")}
@@ -282,9 +282,9 @@ export function StatusCard({
                       </div>
 
                       {assignment.reviewed ? (
-                        <CheckCircle className="size-5 text-[#9cf38d]" />
+                        <CheckCircle className="size-5 text-success" />
                       ) : (
-                        <AlertCircle className="size-5 text-[#ffb8b8]" />
+                        <AlertCircle className="size-5 text-error" />
                       )}
                     </div>
                   </div>
@@ -296,7 +296,7 @@ export function StatusCard({
                   // Navigate to reviews inbox
                   window.location.hash = "/reviews";
                 }}
-                className="w-full bg-[#d2def8] hover:bg-[#b7bdff] transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-[#21214f] flex items-center justify-center gap-2"
+                className="w-full bg-brand-primary-lighter hover:bg-info-light transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-text-primary flex items-center justify-center gap-2"
               >
                 {t("entity.assignment.startReview")}
                 <ArrowRight className="size-4" />
@@ -306,14 +306,14 @@ export function StatusCard({
         )}
 
         {status === "TEACHER_REVIEW" && (
-          <div className="bg-[#e9f5ff] rounded-[12px] p-4">
+          <div className="bg-info-light rounded-[12px] p-4">
             <div className="flex items-start gap-3">
-              <CheckCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
+              <CheckCircle className="size-5 text-text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
+                <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-1">
                   {t("entity.assignment.peerReviewCompleted")}
                 </p>
-                <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+                <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                   {t("entity.assignment.teacherReviewingWork")}
                 </p>
               </div>
@@ -323,14 +323,14 @@ export function StatusCard({
 
         {status === "GRADING" && (
           <div>
-            <div className="bg-[#fff8e1] rounded-[12px] p-4 mb-4">
+            <div className="bg-warning-light rounded-[12px] p-4 mb-4">
               <div className="flex items-start gap-3">
-                <AlertCircle className="size-5 text-[#f57c00] shrink-0 mt-0.5" />
+                <AlertCircle className="size-5 text-warning shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
+                  <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-1">
                     {t("entity.assignment.draftSaved")}
                   </p>
-                  <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+                  <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                     {t("entity.assignment.dontForgetSubmit")}
                   </p>
                 </div>
@@ -338,7 +338,7 @@ export function StatusCard({
             </div>
 
             <button
-              className="w-full bg-[#3d6bc6] hover:bg-[#2d5bb6] transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-medium text-white flex items-center justify-center gap-2 mb-3"
+              className="w-full bg-brand-primary hover:bg-brand-primary-hover transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-medium text-text-inverse flex items-center justify-center gap-2 mb-3"
               onClick={() => {
                 window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
               }}
@@ -351,7 +351,7 @@ export function StatusCard({
               onClick={() => {
                 window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
               }}
-              className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
               <History className="size-4" />
               <span>{t("entity.assignment.versionHistory")}</span>
@@ -361,14 +361,14 @@ export function StatusCard({
 
         {status === "GRADED" && (
           <div>
-            <div className="bg-[#e9f9e6] rounded-[12px] p-4 mb-4">
+            <div className="bg-success-light rounded-[12px] p-4 mb-4">
               <div className="flex items-start gap-3">
-                <CheckCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
+                <CheckCircle className="size-5 text-text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
+                  <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-1">
                     {t("entity.assignment.gradeAssigned")}
                   </p>
-                  <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+                  <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                     {t("entity.assignment.scoreReceived")}
                   </p>
                 </div>
@@ -379,7 +379,7 @@ export function StatusCard({
               onClick={() => {
                 window.location.hash = "/reviews/received";
               }}
-              className="w-full bg-[#d2def8] hover:bg-[#b7bdff] transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-[#21214f] mb-3"
+              className="w-full bg-brand-primary-lighter hover:bg-info-light transition-colors py-3 desktop:py-4 rounded-[12px] text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] text-text-primary mb-3"
             >
               {t("entity.assignment.viewFeedback")}
             </button>
@@ -388,7 +388,7 @@ export function StatusCard({
               onClick={() => {
                 window.location.hash = `/courses/${courseId}/tasks/${taskId}/appeal`;
               }}
-              className="w-full text-center text-[13px] text-[#5b8def] hover:text-[#3d6bc6] font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full text-center text-[13px] text-brand-primary hover:text-brand-primary-hover font-medium py-2 transition-colors flex items-center justify-center gap-1.5"
             >
               <AlertCircle className="size-4" />
               <span>{t("entity.assignment.requestGradeReview")}</span>
@@ -397,14 +397,14 @@ export function StatusCard({
         )}
 
         {status === "OVERDUE" && (
-          <div className="bg-[#ffe9e9] rounded-[12px] p-4">
+          <div className="bg-error-light rounded-[12px] p-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="size-5 text-[#21214f] shrink-0 mt-0.5" />
+              <AlertCircle className="size-5 text-text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f] mb-1">
+                <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-1">
                   {t("entity.assignment.deadlineExpired")}
                 </p>
-                <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#4b4963]">
+                <p className="text-[12px] desktop:text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-secondary">
                   {t("entity.assignment.contactTeacher")}
                 </p>
               </div>
@@ -415,14 +415,14 @@ export function StatusCard({
 
       {/* Demo status selector (remove in production) */}
       {onStatusChange && (
-        <div className="bg-white border border-[#c7c7c7] rounded-[12px] p-4">
-          <p className="text-[12px] font-['Work_Sans:Medium',sans-serif] text-[#767692] mb-2">
+        <div className="bg-card border border-border rounded-[12px] p-4">
+          <p className="text-[12px] font-['Work_Sans:Medium',sans-serif] text-text-tertiary mb-2">
             {t("entity.assignment.demoSelectStatus")}
           </p>
           <select
             value={status}
             onChange={(e) => onStatusChange(e.target.value as TaskStatus)}
-            className="w-full px-3 py-2 bg-white border border-[#c7c7c7] rounded-[8px] text-[13px] font-['Work_Sans:Regular',sans-serif] text-[#21214f]"
+            className="w-full px-3 py-2 bg-card border border-border rounded-[8px] text-[13px] font-['Work_Sans:Regular',sans-serif] text-text-primary"
           >
             <option value="NOT_STARTED">{t("entity.assignment.optionNotStarted")}</option>
             <option value="SUBMITTED">{t("entity.assignment.optionSubmitted")}</option>

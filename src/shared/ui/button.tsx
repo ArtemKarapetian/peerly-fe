@@ -13,7 +13,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary: `
-                bg-[var(--brand-primary)] text-white 
+                bg-[var(--brand-primary)] text-text-inverse 
                 hover:bg-[var(--brand-primary-hover)] 
                 focus:ring-[var(--brand-primary)]/50
                 `,
@@ -28,14 +28,14 @@ export const buttonVariants = cva(
                 focus:ring-[var(--brand-primary)]/30
                 `,
         danger: `
-                bg-[var(--error)] text-white 
+                bg-[var(--error)] text-text-inverse 
                 hover:bg-[var(--error)]/90 
                 focus:ring-[var(--error)]/50
                 `,
         outline: `
                 bg-transparent text-[var(--brand-primary)] border border-[var(--brand-primary)] 
                 hover:bg-[var(--brand-primary)] 
-                hover:text-white 
+                hover:text-text-inverse 
                 focus:ring-[var(--brand-primary)]/50
                 `,
       },

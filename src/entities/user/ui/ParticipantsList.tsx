@@ -36,12 +36,12 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
   const getRoleBadgeColor = (role: Participant["role"]) => {
     switch (role) {
       case "teacher":
-        return "bg-[#3d6bc6] text-white";
+        return "bg-brand-primary text-text-inverse";
       case "assistant":
-        return "bg-[#f57c00] text-white";
+        return "bg-warning text-text-inverse";
       case "student":
       default:
-        return "bg-[#e6e8ee] text-[#21214f]";
+        return "bg-muted text-foreground";
     }
   };
   const getInitials = (firstName: string, lastName: string) => {
@@ -51,7 +51,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
   if (participants.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-[14px] text-[#767692]">{t("entity.user.participantsNotFound")}</p>
+        <p className="text-[14px] text-text-tertiary">{t("entity.user.participantsNotFound")}</p>
       </div>
     );
   }
@@ -66,7 +66,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
               w-full flex items-center gap-4 px-5 py-4
               text-left
               transition-all
-              hover:bg-white hover:shadow-sm hover:rounded-[12px]
+              hover:bg-card hover:shadow-sm hover:rounded-[12px]
               group
             "
           >
@@ -75,10 +75,10 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
               className="
                 w-10 h-10 rounded-full
                 flex items-center justify-center
-                text-[14px] font-semibold text-white
+                text-[14px] font-semibold text-text-inverse
                 shrink-0
               "
-              style={{ backgroundColor: participant.avatarColor || "#b7bdff" }}
+              style={{ backgroundColor: participant.avatarColor || "var(--brand-primary-lighter)" }}
             >
               {getInitials(participant.firstName, participant.lastName)}
             </div>
@@ -86,7 +86,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
             {/* Name and Role */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-[15px] leading-[1.3] tracking-[-0.3px] text-[#21214f] font-semibold truncate">
+                <h3 className="text-[15px] leading-[1.3] tracking-[-0.3px] text-text-primary font-semibold truncate">
                   {participant.firstName} {participant.lastName}
                 </h3>
                 <span
@@ -96,7 +96,7 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
                 </span>
               </div>
               {participant.status === "inactive" && (
-                <p className="text-[13px] leading-[1.4] text-[#c7c7c7]">
+                <p className="text-[13px] leading-[1.4] text-text-tertiary">
                   {t("entity.user.inactive")}
                 </p>
               )}
@@ -104,12 +104,12 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
 
             {/* Menu Icon */}
             <div className="shrink-0">
-              <MoreVertical className="w-4 h-4 text-[#c7c7c7] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <MoreVertical className="w-4 h-4 text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           </button>
 
           {/* Divider - не показываем после последнего элемента */}
-          {index < participants.length - 1 && <div className="border-b border-[#e6e8ee]" />}
+          {index < participants.length - 1 && <div className="border-b border-border" />}
         </div>
       ))}
     </div>

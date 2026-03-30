@@ -56,17 +56,14 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
   const checks2 = getChecksSummary(version2);
 
   return (
-    <div className="bg-white border-2 border-[#5b8def] rounded-[20px] p-6 mb-6">
+    <div className="bg-card border-2 border-brand-primary rounded-[20px] p-6 mb-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#e6e8ee]">
-        <h3 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+        <h3 className="text-[20px] font-medium text-foreground tracking-[-0.5px]">
           {t("feature.comparison.title")}
         </h3>
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
-        >
-          <X className="w-5 h-5 text-[#767692]" />
+        <button onClick={onClose} className="p-2 hover:bg-muted rounded-[8px] transition-colors">
+          <X className="w-5 h-5 text-muted-foreground" />
         </button>
       </div>
 
@@ -74,35 +71,39 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
       <div className="grid grid-cols-1 tablet:grid-cols-2 gap-6">
         {/* Version 1 */}
         <div>
-          <div className="bg-[#f0f5ff] rounded-[12px] p-4 mb-4">
-            <h4 className="text-[18px] font-medium text-[#21214f] mb-1">
+          <div className="bg-brand-primary-light rounded-[12px] p-4 mb-4">
+            <h4 className="text-[18px] font-medium text-foreground mb-1">
               {t("entity.work.version")} {version1.versionNumber}
             </h4>
-            <p className="text-[13px] text-[#767692]">{version1.timestamp}</p>
+            <p className="text-[13px] text-muted-foreground">{version1.timestamp}</p>
           </div>
 
           {/* Status */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">{t("feature.comparison.status")}</div>
-            <div className="text-[15px] font-medium text-[#21214f]">
+            <div className="text-[13px] text-muted-foreground mb-1">
+              {t("feature.comparison.status")}
+            </div>
+            <div className="text-[15px] font-medium text-foreground">
               {getStatusLabel(version1.status)}
             </div>
           </div>
 
           {/* Files */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-2">
+            <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.files")} ({version1.files.length})
             </div>
             <div className="space-y-1">
               {version1.files.map((file) => (
                 <div
                   key={file.id}
-                  className="flex items-center gap-2 text-[13px] text-[#4b4963] bg-[#f9f9f9] rounded-[8px] px-3 py-2"
+                  className="flex items-center gap-2 text-[13px] text-muted-foreground bg-muted rounded-[8px] px-3 py-2"
                 >
-                  <FileText className="w-4 h-4 text-[#767692] shrink-0" />
+                  <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
                   <span className="flex-1 min-w-0 truncate">{file.name}</span>
-                  <span className="text-[#767692] shrink-0">{formatFileSize(file.size)}</span>
+                  <span className="text-muted-foreground shrink-0">
+                    {formatFileSize(file.size)}
+                  </span>
                 </div>
               ))}
             </div>
@@ -110,44 +111,48 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
           {/* Note */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">{t("feature.comparison.comment")}</div>
-            <div className="text-[14px] text-[#21214f] bg-[#f9f9f9] rounded-[8px] p-3 min-h-[60px]">
+            <div className="text-[13px] text-muted-foreground mb-1">
+              {t("feature.comparison.comment")}
+            </div>
+            <div className="text-[14px] text-foreground bg-muted rounded-[8px] p-3 min-h-[60px]">
               {version1.note || (
-                <span className="text-[#767692] italic">{t("feature.comparison.noComment")}</span>
+                <span className="text-muted-foreground italic">
+                  {t("feature.comparison.noComment")}
+                </span>
               )}
             </div>
           </div>
 
           {/* Checks */}
           <div>
-            <div className="text-[13px] text-[#767692] mb-2">{t("feature.comparison.checks")}</div>
-            <div className="flex items-center gap-3 bg-[#f9f9f9] rounded-[8px] p-3">
+            <div className="text-[13px] text-muted-foreground mb-2">
+              {t("feature.comparison.checks")}
+            </div>
+            <div className="flex items-center gap-3 bg-muted rounded-[8px] p-3">
               {checks1.total === 0 ? (
-                <span className="text-[13px] text-[#767692] italic">
+                <span className="text-[13px] text-muted-foreground italic">
                   {t("feature.comparison.noChecks")}
                 </span>
               ) : (
                 <>
                   {checks1.passed > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-                      <span className="text-[13px] text-[#4caf50] font-medium">
-                        {checks1.passed}
-                      </span>
+                      <CheckCircle className="w-4 h-4 text-success" />
+                      <span className="text-[13px] text-success font-medium">{checks1.passed}</span>
                     </div>
                   )}
                   {checks1.warnings > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <AlertCircle className="w-4 h-4 text-[#ff9800]" />
-                      <span className="text-[13px] text-[#ff9800] font-medium">
+                      <AlertCircle className="w-4 h-4 text-warning" />
+                      <span className="text-[13px] text-warning font-medium">
                         {checks1.warnings}
                       </span>
                     </div>
                   )}
                   {checks1.failed > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <XCircle className="w-4 h-4 text-[#d4183d]" />
-                      <span className="text-[13px] text-[#d4183d] font-medium">
+                      <XCircle className="w-4 h-4 text-destructive" />
+                      <span className="text-[13px] text-destructive font-medium">
                         {checks1.failed}
                       </span>
                     </div>
@@ -160,19 +165,21 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
         {/* Version 2 */}
         <div>
-          <div className="bg-[#f0f5ff] rounded-[12px] p-4 mb-4">
-            <h4 className="text-[18px] font-medium text-[#21214f] mb-1">
+          <div className="bg-brand-primary-light rounded-[12px] p-4 mb-4">
+            <h4 className="text-[18px] font-medium text-foreground mb-1">
               {t("entity.work.version")} {version2.versionNumber}
             </h4>
-            <p className="text-[13px] text-[#767692]">{version2.timestamp}</p>
+            <p className="text-[13px] text-muted-foreground">{version2.timestamp}</p>
           </div>
 
           {/* Status */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">{t("feature.comparison.status")}</div>
+            <div className="text-[13px] text-muted-foreground mb-1">
+              {t("feature.comparison.status")}
+            </div>
             <div
               className={`text-[15px] font-medium ${
-                version1.status !== version2.status ? "text-[#5b8def]" : "text-[#21214f]"
+                version1.status !== version2.status ? "text-brand-primary" : "text-foreground"
               }`}
             >
               {getStatusLabel(version2.status)}
@@ -182,10 +189,10 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
           {/* Files */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-2">
+            <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.files")} ({version2.files.length})
               {version1.files.length !== version2.files.length && (
-                <span className="ml-1 text-[#5b8def]">✓</span>
+                <span className="ml-1 text-brand-primary">✓</span>
               )}
             </div>
             <div className="space-y-1">
@@ -196,14 +203,16 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
                     key={file.id}
                     className={`flex items-center gap-2 text-[13px] rounded-[8px] px-3 py-2 ${
                       isDifferent
-                        ? "bg-[#f0f5ff] text-[#21214f] border border-[#d2e1f8]"
-                        : "bg-[#f9f9f9] text-[#4b4963]"
+                        ? "bg-brand-primary-light text-foreground border border-brand-primary"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    <FileText className="w-4 h-4 text-[#767692] shrink-0" />
+                    <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
                     <span className="flex-1 min-w-0 truncate">{file.name}</span>
-                    <span className="text-[#767692] shrink-0">{formatFileSize(file.size)}</span>
-                    {isDifferent && <span className="text-[#5b8def]">✓</span>}
+                    <span className="text-muted-foreground shrink-0">
+                      {formatFileSize(file.size)}
+                    </span>
+                    {isDifferent && <span className="text-brand-primary">✓</span>}
                   </div>
                 );
               })}
@@ -212,31 +221,35 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
           {/* Note */}
           <div className="mb-4">
-            <div className="text-[13px] text-[#767692] mb-1">
+            <div className="text-[13px] text-muted-foreground mb-1">
               {t("feature.comparison.comment")}
-              {version1.note !== version2.note && <span className="ml-1 text-[#5b8def]">✓</span>}
+              {version1.note !== version2.note && (
+                <span className="ml-1 text-brand-primary">✓</span>
+              )}
             </div>
             <div
               className={`text-[14px] rounded-[8px] p-3 min-h-[60px] ${
                 version1.note !== version2.note
-                  ? "bg-[#f0f5ff] text-[#21214f] border border-[#d2e1f8]"
-                  : "bg-[#f9f9f9] text-[#21214f]"
+                  ? "bg-brand-primary-light text-foreground border border-brand-primary"
+                  : "bg-muted text-foreground"
               }`}
             >
               {version2.note || (
-                <span className="text-[#767692] italic">{t("feature.comparison.noComment")}</span>
+                <span className="text-muted-foreground italic">
+                  {t("feature.comparison.noComment")}
+                </span>
               )}
             </div>
           </div>
 
           {/* Checks */}
           <div>
-            <div className="text-[13px] text-[#767692] mb-2">
+            <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.checks")}
               {(checks1.passed !== checks2.passed ||
                 checks1.failed !== checks2.failed ||
                 checks1.warnings !== checks2.warnings) && (
-                <span className="ml-1 text-[#5b8def]">✓</span>
+                <span className="ml-1 text-brand-primary">✓</span>
               )}
             </div>
             <div
@@ -244,36 +257,34 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
                 checks1.passed !== checks2.passed ||
                 checks1.failed !== checks2.failed ||
                 checks1.warnings !== checks2.warnings
-                  ? "bg-[#f0f5ff] border border-[#d2e1f8]"
-                  : "bg-[#f9f9f9]"
+                  ? "bg-brand-primary-light border border-brand-primary"
+                  : "bg-muted"
               }`}
             >
               {checks2.total === 0 ? (
-                <span className="text-[13px] text-[#767692] italic">
+                <span className="text-[13px] text-muted-foreground italic">
                   {t("feature.comparison.noChecks")}
                 </span>
               ) : (
                 <>
                   {checks2.passed > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-                      <span className="text-[13px] text-[#4caf50] font-medium">
-                        {checks2.passed}
-                      </span>
+                      <CheckCircle className="w-4 h-4 text-success" />
+                      <span className="text-[13px] text-success font-medium">{checks2.passed}</span>
                     </div>
                   )}
                   {checks2.warnings > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <AlertCircle className="w-4 h-4 text-[#ff9800]" />
-                      <span className="text-[13px] text-[#ff9800] font-medium">
+                      <AlertCircle className="w-4 h-4 text-warning" />
+                      <span className="text-[13px] text-warning font-medium">
                         {checks2.warnings}
                       </span>
                     </div>
                   )}
                   {checks2.failed > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <XCircle className="w-4 h-4 text-[#d4183d]" />
-                      <span className="text-[13px] text-[#d4183d] font-medium">
+                      <XCircle className="w-4 h-4 text-destructive" />
+                      <span className="text-[13px] text-destructive font-medium">
                         {checks2.failed}
                       </span>
                     </div>
@@ -286,9 +297,9 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
       </div>
 
       {/* Legend */}
-      <div className="mt-6 pt-4 border-t border-[#e6e8ee]">
-        <p className="text-[13px] text-[#767692] flex items-center gap-1">
-          <span className="text-[#5b8def]">✓</span>
+      <div className="mt-6 pt-4 border-t border-border">
+        <p className="text-[13px] text-muted-foreground flex items-center gap-1">
+          <span className="text-brand-primary">✓</span>
           <span>{t("feature.comparison.changesLegend")}</span>
         </p>
       </div>

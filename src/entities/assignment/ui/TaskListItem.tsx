@@ -21,44 +21,44 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
       case "NOT_STARTED":
         return {
           label: t("entity.assignment.statusNotStarted"),
-          color: "bg-[#e4e4e4]",
-          textColor: "text-[#4b4963]",
+          color: "bg-muted",
+          textColor: "text-muted-foreground",
         };
       case "SUBMITTED":
         return {
           label: t("entity.assignment.statusSubmitted"),
-          color: "bg-[#b7bdff]",
-          textColor: "text-[#21214f]",
+          color: "bg-info-light",
+          textColor: "text-foreground",
         };
       case "PEER_REVIEW":
         return {
           label: t("entity.assignment.statusPeerReview"),
-          color: "bg-[#b0e9fb]",
-          textColor: "text-[#21214f]",
+          color: "bg-info-light",
+          textColor: "text-foreground",
         };
       case "TEACHER_REVIEW":
         return {
           label: t("entity.assignment.statusTeacherReview"),
-          color: "bg-[#ffd4a3]",
-          textColor: "text-[#21214f]",
+          color: "bg-warning-light",
+          textColor: "text-foreground",
         };
       case "GRADING":
         return {
           label: t("entity.assignment.statusGrading"),
-          color: "bg-[#e6e8ee]",
-          textColor: "text-[#4b4963]",
+          color: "bg-muted",
+          textColor: "text-muted-foreground",
         };
       case "GRADED":
         return {
           label: t("entity.assignment.statusGraded"),
-          color: "bg-[#9cf38d]",
-          textColor: "text-[#21214f]",
+          color: "bg-success-light",
+          textColor: "text-foreground",
         };
       case "OVERDUE":
         return {
           label: t("entity.assignment.statusOverdue"),
-          color: "bg-[#ffb8b8]",
-          textColor: "text-[#21214f]",
+          color: "bg-error-light",
+          textColor: "text-foreground",
         };
     }
   };
@@ -72,14 +72,16 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
         w-full flex items-center gap-4 px-5 py-4
         text-left
         transition-all
-        hover:bg-white hover:shadow-sm hover:rounded-[12px]
+        hover:bg-card hover:shadow-sm hover:rounded-[12px]
         group
       "
     >
       {/* Left: Title and Deadline */}
       <div className="flex-1 min-w-[100px] space-y-1">
-        <p className="text-[18px] leading-[1.05] tracking-[-0.81px] text-[#21214f]">{title}</p>
-        <p className="text-[16px] leading-[1.1] tracking-[-0.72px] text-[#4b4963]">{deadline}</p>
+        <p className="text-[18px] leading-[1.05] tracking-[-0.81px] text-text-primary">{title}</p>
+        <p className="text-[16px] leading-[1.1] tracking-[-0.72px] text-text-secondary">
+          {deadline}
+        </p>
       </div>
 
       {/* Right: Status Pill */}

@@ -31,16 +31,16 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
       {/* Deadline */}
       <div className="flex items-start gap-3">
         <div
-          className={`w-10 h-10 ${rules.isDeadlinePassed ? "bg-[#ffb8b8]" : "bg-[#ffd4a3]"} rounded-[8px] flex items-center justify-center shrink-0`}
+          className={`w-10 h-10 ${rules.isDeadlinePassed ? "bg-error-light" : "bg-warning-light"} rounded-[8px] flex items-center justify-center shrink-0`}
         >
-          <Clock className="w-5 h-5 text-[#21214f]" />
+          <Clock className="w-5 h-5 text-foreground" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-[#767692] mb-0.5">
+          <div className="text-[13px] text-muted-foreground mb-0.5">
             {t("feature.submission.rules.deadline")}
           </div>
           <div
-            className={`text-[15px] font-medium ${rules.isDeadlinePassed ? "text-[#d4183d]" : "text-[#21214f]"}`}
+            className={`text-[15px] font-medium ${rules.isDeadlinePassed ? "text-destructive" : "text-foreground"}`}
           >
             {rules.deadline}
             {rules.isDeadlinePassed && (
@@ -52,25 +52,27 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
 
       {/* Resubmissions */}
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 bg-[#b0e9fb] rounded-[8px] flex items-center justify-center shrink-0">
-          <RefreshCw className="w-5 h-5 text-[#21214f]" />
+        <div className="w-10 h-10 bg-info-light rounded-[8px] flex items-center justify-center shrink-0">
+          <RefreshCw className="w-5 h-5 text-foreground" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-[#767692] mb-0.5">
+          <div className="text-[13px] text-muted-foreground mb-0.5">
             {t("feature.submission.rules.resubmissions")}
           </div>
-          <div className="text-[15px] font-medium text-[#21214f]">
+          <div className="text-[15px] font-medium text-foreground">
             {remainingResubmissions > 0 ? (
               <>
                 {t("feature.submission.rules.remaining")}{" "}
-                <span className="text-[#5b8def]">{remainingResubmissions}</span>
+                <span className="text-brand-primary">{remainingResubmissions}</span>
               </>
             ) : (
-              <span className="text-[#767692]">{t("feature.submission.rules.noneRemaining")}</span>
+              <span className="text-muted-foreground">
+                {t("feature.submission.rules.noneRemaining")}
+              </span>
             )}
           </div>
           {rules.currentVersion > 0 && (
-            <div className="text-[13px] text-[#767692] mt-1">
+            <div className="text-[13px] text-muted-foreground mt-1">
               {t("feature.submission.rules.currentVersion")} v{rules.currentVersion}
             </div>
           )}
@@ -80,14 +82,14 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
       {/* Late policy */}
       {rules.latePolicy && (
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-[#ffe8cc] rounded-[8px] flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5 text-[#21214f]" />
+          <div className="w-10 h-10 bg-warning-light rounded-[8px] flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-5 h-5 text-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] text-[#767692] mb-0.5">
+            <div className="text-[13px] text-muted-foreground mb-0.5">
               {t("feature.submission.rules.latePolicy")}
             </div>
-            <div className="text-[13px] text-[#21214f] leading-[1.5]">{rules.latePolicy}</div>
+            <div className="text-[13px] text-foreground leading-[1.5]">{rules.latePolicy}</div>
           </div>
         </div>
       )}

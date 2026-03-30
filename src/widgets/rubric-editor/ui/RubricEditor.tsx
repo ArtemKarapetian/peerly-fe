@@ -115,16 +115,16 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
     <div className="max-w-[900px] mx-auto">
       {/* Save indicator */}
       {isDirty && (
-        <div className="mb-4 flex items-center justify-between bg-[#fff8e1] border border-[#ffe082] rounded-[12px] p-3">
+        <div className="mb-4 flex items-center justify-between bg-warning-light border border-warning rounded-[12px] p-3">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-[#f57c00]" />
-            <span className="text-[14px] text-[#f57c00] font-medium">
+            <AlertCircle className="w-4 h-4 text-warning" />
+            <span className="text-[14px] text-warning font-medium">
               {t("widget.rubricEditor.unsavedChanges")}
             </span>
           </div>
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
           >
             <Save className="w-4 h-4" />
             {t("common.save")}
@@ -133,41 +133,41 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       )}
 
       {/* Basic Info */}
-      <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[16px] p-6 mb-6">
-        <h3 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
+      <div className="bg-muted border-2 border-border rounded-[16px] p-6 mb-6">
+        <h3 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
           {t("widget.rubricEditor.basicInfo")}
         </h3>
 
         <div className="space-y-4">
           {/* Name */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+            <label className="block text-[13px] font-medium text-foreground mb-2">
               {t("widget.rubricEditor.rubricName")}
             </label>
             <input
               type="text"
               value={editedRubric.name}
               onChange={(e) => updateRubric({ name: e.target.value })}
-              className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+              className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+            <label className="block text-[13px] font-medium text-foreground mb-2">
               {t("widget.rubricEditor.description")}
             </label>
             <textarea
               value={editedRubric.description}
               onChange={(e) => updateRubric({ description: e.target.value })}
               rows={3}
-              className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors resize-none"
+              className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors resize-none"
             />
           </div>
 
           {/* Task Type */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+            <label className="block text-[13px] font-medium text-foreground mb-2">
               {t("widget.rubricEditor.taskType")}
             </label>
             <select
@@ -175,7 +175,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
               onChange={(e) =>
                 updateRubric({ taskType: e.target.value as "text" | "code" | "project" })
               }
-              className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
+              className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
             >
               <option value="text">{t("widget.rubricEditor.typeText")}</option>
               <option value="code">{t("widget.rubricEditor.typeCode")}</option>
@@ -185,17 +185,17 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
           {/* Tags */}
           <div>
-            <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+            <label className="block text-[13px] font-medium text-foreground mb-2">
               {t("widget.rubricEditor.tags")}
             </label>
             <div className="flex gap-2 mb-2 flex-wrap">
               {editedRubric.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[8px] text-[13px]"
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-info-light text-brand-primary rounded-[8px] text-[13px]"
                 >
                   {tag}
-                  <button onClick={() => removeTag(tag)} className="hover:text-[#d4183d]">
+                  <button onClick={() => removeTag(tag)} className="hover:text-destructive">
                     ×
                   </button>
                 </span>
@@ -212,12 +212,12 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     addTag();
                   }
                 }}
-                className="flex-1 px-3 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                className="flex-1 px-3 py-2 border-2 border-border rounded-[12px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors"
                 placeholder={t("widget.rubricEditor.addTagPlaceholder")}
               />
               <button
                 onClick={addTag}
-                className="px-4 py-2 bg-[#f9f9f9] border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#e6e8ee] transition-colors text-[14px] font-medium"
+                className="px-4 py-2 bg-muted border-2 border-border text-foreground rounded-[12px] hover:bg-surface-hover transition-colors text-[14px] font-medium"
               >
                 {t("widget.rubricEditor.addTag")}
               </button>
@@ -229,12 +229,12 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       {/* Criteria */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[18px] font-medium text-[#21214f] tracking-[-0.5px]">
+          <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px]">
             {t("widget.rubricEditor.gradingCriteria")}
           </h3>
           <button
             onClick={addCriterion}
-            className="flex items-center gap-2 px-3 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+            className="flex items-center gap-2 px-3 py-2 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
           >
             <Plus className="w-4 h-4" />
             {t("widget.rubricEditor.addCriterion")}
@@ -250,15 +250,15 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               className={`
-                bg-white border-2 rounded-[16px] p-4 transition-all
+                bg-card border-2 rounded-[16px] p-4 transition-all
                 ${draggedIndex === index ? "opacity-50" : "opacity-100"}
-                border-[#e6e8ee] hover:border-[#a0b8f1]
+                border-border hover:border-brand-primary
               `}
             >
               {/* Header */}
               <div className="flex items-start gap-3 mb-4">
                 <button
-                  className="mt-1 cursor-grab active:cursor-grabbing text-[#767692] hover:text-[#21214f]"
+                  className="mt-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
                   title={t("widget.rubricEditor.dragToReorder")}
                 >
                   <GripVertical className="w-5 h-5" />
@@ -270,7 +270,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     type="text"
                     value={criterion.name}
                     onChange={(e) => updateCriterion(index, { name: e.target.value })}
-                    className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[15px] font-medium focus:outline-none focus:border-[#5b8def] transition-colors"
+                    className="w-full px-3 py-2 border-2 border-border rounded-[8px] text-[15px] font-medium focus:outline-none focus:border-brand-primary transition-colors"
                     placeholder={t("widget.rubricEditor.criterionNamePlaceholder")}
                   />
 
@@ -279,7 +279,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     value={criterion.description}
                     onChange={(e) => updateCriterion(index, { description: e.target.value })}
                     rows={2}
-                    className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors resize-none"
+                    className="w-full px-3 py-2 border-2 border-border rounded-[8px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors resize-none"
                     placeholder={t("widget.rubricEditor.criterionDescPlaceholder")}
                   />
 
@@ -287,7 +287,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                   <div className="grid grid-cols-2 gap-3">
                     {/* Max Score */}
                     <div>
-                      <label className="block text-[12px] text-[#767692] mb-1">
+                      <label className="block text-[12px] text-muted-foreground mb-1">
                         {t("widget.rubricEditor.maxPoints")}
                       </label>
                       <input
@@ -298,13 +298,13 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         onChange={(e) =>
                           updateCriterion(index, { maxScore: parseInt(e.target.value) || 5 })
                         }
-                        className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                        className="w-full px-3 py-2 border-2 border-border rounded-[8px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors"
                       />
                     </div>
 
                     {/* Weight */}
                     <div>
-                      <label className="block text-[12px] text-[#767692] mb-1">
+                      <label className="block text-[12px] text-muted-foreground mb-1">
                         {t("widget.rubricEditor.weight")}
                       </label>
                       <input
@@ -317,7 +317,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                             weight: e.target.value ? parseInt(e.target.value) : undefined,
                           })
                         }
-                        className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                        className="w-full px-3 py-2 border-2 border-border rounded-[8px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors"
                         placeholder={t("widget.rubricEditor.optional")}
                       />
                     </div>
@@ -330,9 +330,9 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         type="checkbox"
                         checked={criterion.required}
                         onChange={(e) => updateCriterion(index, { required: e.target.checked })}
-                        className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-[#5b8def]"
+                        className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
                       />
-                      <span className="text-[13px] text-[#21214f]">
+                      <span className="text-[13px] text-foreground">
                         {t("widget.rubricEditor.required")}
                       </span>
                     </label>
@@ -344,16 +344,16 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         onChange={(e) =>
                           updateCriterion(index, { commentRequired: e.target.checked })
                         }
-                        className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-[#5b8def]"
+                        className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
                       />
-                      <span className="text-[13px] text-[#21214f]">
+                      <span className="text-[13px] text-foreground">
                         {t("widget.rubricEditor.commentRequired")}
                       </span>
                     </label>
 
                     {criterion.commentRequired && (
                       <div className="flex items-center gap-2">
-                        <span className="text-[12px] text-[#767692]">
+                        <span className="text-[12px] text-muted-foreground">
                           {t("widget.rubricEditor.minChars")}
                         </span>
                         <input
@@ -367,7 +367,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                                 : undefined,
                             })
                           }
-                          className="w-16 px-2 py-1 border-2 border-[#e6e8ee] rounded-[6px] text-[13px] focus:outline-none focus:border-[#5b8def]"
+                          className="w-16 px-2 py-1 border-2 border-border rounded-[6px] text-[13px] focus:outline-none focus:border-brand-primary"
                           placeholder="20"
                         />
                       </div>
@@ -377,10 +377,10 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
                 <button
                   onClick={() => removeCriterion(index)}
-                  className="p-2 hover:bg-[#fff5f5] rounded-[8px] transition-colors"
+                  className="p-2 hover:bg-error-light rounded-[8px] transition-colors"
                   title={t("widget.rubricEditor.deleteCriterion")}
                 >
-                  <Trash2 className="w-4 h-4 text-[#d4183d]" />
+                  <Trash2 className="w-4 h-4 text-destructive" />
                 </button>
               </div>
             </div>
@@ -393,7 +393,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         <button
           onClick={handleSave}
           disabled={!isDirty}
-          className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium disabled:bg-muted disabled:cursor-not-allowed"
         >
           <Save className="w-4 h-4" />
           {t("widget.rubricEditor.saveChanges")}

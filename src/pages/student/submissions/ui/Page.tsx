@@ -118,23 +118,23 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
         />
 
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-[#f9f9f9] rounded-[20px] p-8 max-w-[480px] text-center">
+          <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
             <div className="mb-4">
-              <div className="w-16 h-16 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center">
+              <div className="w-16 h-16 bg-brand-primary-lighter rounded-full mx-auto flex items-center justify-center">
                 <span className="text-[32px]">📝</span>
               </div>
             </div>
-            <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
+            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
               {t("student.submissions.noSubmissions")}
             </h2>
-            <p className="text-[16px] text-[#767692] leading-[1.5] mb-6">
+            <p className="text-[16px] text-muted-foreground leading-[1.5] mb-6">
               {t("student.submissions.noSubmissionsDesc")}
             </p>
             <button
               onClick={() => {
                 window.location.hash = `/courses/${courseId}/tasks/${taskId}/submit`;
               }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] transition-colors text-[15px] font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
             >
               {t("student.submissions.submitWork")}
             </button>
@@ -157,10 +157,10 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
 
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("student.submissions.title")}
         </h1>
-        <p className="text-[16px] text-[#767692] leading-[1.5]">{taskTitle}</p>
+        <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
       </div>
 
       {/* Comparison Mode Toggle */}
@@ -172,8 +172,8 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
           }}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-[12px] text-[14px] font-medium transition-colors ${
             comparisonMode
-              ? "bg-[#5b8def] text-white hover:bg-[#4a7ddf]"
-              : "bg-[#d2def8] text-[#21214f] hover:bg-[#c5d5f5]"
+              ? "bg-brand-primary text-primary-foreground hover:bg-brand-primary-hover"
+              : "bg-brand-primary-lighter text-foreground hover:bg-brand-primary-lighter"
           }`}
         >
           {comparisonMode
@@ -182,14 +182,14 @@ export default function SubmissionsPage({ courseId, taskId }: SubmissionsPagePro
         </button>
 
         {comparisonMode && (
-          <p className="text-[13px] text-[#767692]">
+          <p className="text-[13px] text-muted-foreground">
             {t("student.submissions.selectTwoVersions")} ({selectedVersions.length}/2)
           </p>
         )}
 
         {!allowResubmissions && (
-          <div className="bg-[#fff8f0] border border-[#ffe8cc] rounded-[12px] px-4 py-2 flex-1 max-w-md">
-            <p className="text-[13px] text-[#4b4963]">
+          <div className="bg-warning-light border border-warning rounded-[12px] px-4 py-2 flex-1 max-w-md">
+            <p className="text-[13px] text-foreground">
               {t("student.submissions.singleSubmission")}
             </p>
           </div>

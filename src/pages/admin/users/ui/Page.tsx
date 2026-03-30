@@ -81,27 +81,27 @@ export default function AdminUsersPage() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case "Admin":
-        return "bg-[#f3e5f5] text-[#7b1fa2]";
+        return "bg-accent text-brand-primary";
       case "Teacher":
-        return "bg-[#e3f2fd] text-[#1976d2]";
+        return "bg-info-light text-brand-primary";
       case "Student":
-        return "bg-[#e8f5e9] text-[#388e3c]";
+        return "bg-success-light text-success";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-muted text-muted-foreground";
     }
   };
 
   const getStatusBadge = (status: string) => {
     if (status === "active") {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
           <CheckCircle className="w-3 h-3" />
           {t("admin.usersPage.statusActive")}
         </span>
       );
     } else {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[11px] font-medium">
           <XCircle className="w-3 h-3" />
           {t("admin.usersPage.statusInactive")}
         </span>
@@ -115,21 +115,21 @@ export default function AdminUsersPage() {
 
       <div>
         {/* Search and Filters */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.usersPage.searchLabel")}
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t("admin.usersPage.searchPlaceholder")}
-                  className="w-full pl-11 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                  className="w-full pl-11 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -137,14 +137,14 @@ export default function AdminUsersPage() {
 
           {/* Active filters */}
           {searchQuery && (
-            <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
-              <span className="text-[13px] text-[#767692]">
+            <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
+              <span className="text-[13px] text-muted-foreground">
                 {t("admin.usersPage.filtersLabel")}
               </span>
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px]">
                   {t("admin.usersPage.searchFilter", { query: searchQuery })}
-                  <button onClick={() => setSearchQuery("")} className="hover:text-[#d4183d]">
+                  <button onClick={() => setSearchQuery("")} className="hover:text-error">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -154,27 +154,27 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
+        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b-2 border-[#e6e8ee] bg-[#fafbfc]">
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
+                <tr className="border-b-2 border-border bg-surface-hover">
+                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerUser")}
                   </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
+                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerRole")}
                   </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
+                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerOrg")}
                   </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
+                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerLastLogin")}
                   </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
+                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerStatus")}
                   </th>
-                  <th className="text-right px-6 py-4 text-[13px] font-medium text-[#767692] uppercase tracking-wide">
+                  <th className="text-right px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerActions")}
                   </th>
                 </tr>
@@ -185,14 +185,14 @@ export default function AdminUsersPage() {
                   return (
                     <tr
                       key={user.id}
-                      className={`border-b border-[#e6e8ee] last:border-0 hover:bg-[#fafbfc] transition-colors ${
-                        index % 2 === 0 ? "bg-white" : "bg-[#f9f9f9]"
+                      className={`border-b border-border last:border-0 hover:bg-surface-hover transition-colors ${
+                        index % 2 === 0 ? "bg-card" : "bg-muted"
                       }`}
                     >
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-[15px] font-medium text-[#21214f]">{user.name}</p>
-                          <p className="text-[13px] text-[#767692]">{user.email}</p>
+                          <p className="text-[15px] font-medium text-foreground">{user.name}</p>
+                          <p className="text-[13px] text-muted-foreground">{user.email}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -203,10 +203,10 @@ export default function AdminUsersPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-[14px] text-[#21214f]">{org?.name || "Unknown"}</p>
+                        <p className="text-[14px] text-foreground">{org?.name || "Unknown"}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-[14px] text-[#767692]">
+                        <p className="text-[14px] text-muted-foreground">
                           {user.lastLogin?.toLocaleString("ru-RU")}
                         </p>
                       </td>
@@ -214,7 +214,7 @@ export default function AdminUsersPage() {
                       <td className="px-6 py-4 text-right">
                         <button
                           onClick={() => setSelectedUser(user)}
-                          className="inline-flex items-center gap-1 px-3 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[13px]"
+                          className="inline-flex items-center gap-1 px-3 py-2 bg-brand-primary text-primary-foreground rounded-[8px] hover:bg-brand-primary-hover transition-colors text-[13px]"
                         >
                           {t("admin.usersPage.manage")}
                         </button>
@@ -228,11 +228,13 @@ export default function AdminUsersPage() {
 
           {filteredUsers.length === 0 && (
             <div className="text-center py-12">
-              <Users className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+              <Users className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+              <h3 className="text-[18px] font-medium text-foreground mb-2">
                 {t("admin.usersPage.notFound")}
               </h3>
-              <p className="text-[14px] text-[#767692]">{t("admin.usersPage.notFoundHint")}</p>
+              <p className="text-[14px] text-muted-foreground">
+                {t("admin.usersPage.notFoundHint")}
+              </p>
             </div>
           )}
         </div>

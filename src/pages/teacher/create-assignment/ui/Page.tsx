@@ -207,7 +207,7 @@ export default function TeacherCreateAssignmentPage({
 
       <div className="mt-6 max-w-[1000px] mx-auto">
         {/* Step Indicator */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex items-center justify-between">
             {STEPS.map((step, index) => (
               <div key={step.id} className="flex items-center flex-1">
@@ -218,10 +218,10 @@ export default function TeacherCreateAssignmentPage({
                       w-10 h-10 rounded-full flex items-center justify-center text-[14px] font-medium transition-all
                       ${
                         currentStep > step.id
-                          ? "bg-[#4caf50] text-white"
+                          ? "bg-success text-primary-foreground"
                           : currentStep === step.id
-                            ? "bg-[#5b8def] text-white"
-                            : "bg-[#f9f9f9] text-[#767692] border-2 border-[#e6e8ee]"
+                            ? "bg-brand-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground border-2 border-border"
                       }
                     `}
                   >
@@ -231,7 +231,7 @@ export default function TeacherCreateAssignmentPage({
                   <span
                     className={`
                       mt-2 text-[12px] desktop:text-[13px] text-center
-                      ${currentStep === step.id ? "text-[#21214f] font-medium" : "text-[#767692]"}
+                      ${currentStep === step.id ? "text-foreground font-medium" : "text-muted-foreground"}
                     `}
                   >
                     {step.shortName}
@@ -243,7 +243,7 @@ export default function TeacherCreateAssignmentPage({
                   <div
                     className={`
                       h-0.5 flex-1 mx-2 transition-all
-                      ${currentStep > step.id ? "bg-[#4caf50]" : "bg-[#e6e8ee]"}
+                      ${currentStep > step.id ? "bg-success" : "bg-border"}
                     `}
                   />
                 )}
@@ -253,9 +253,7 @@ export default function TeacherCreateAssignmentPage({
         </div>
 
         {/* Step Content */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-8 mb-6">
-          {renderStep()}
-        </div>
+        <div className="bg-card border-2 border-border rounded-[20px] p-8 mb-6">{renderStep()}</div>
 
         {/* Navigation */}
         {currentStep < 6 && (
@@ -263,20 +261,20 @@ export default function TeacherCreateAssignmentPage({
             <button
               onClick={handlePrev}
               disabled={currentStep === 1}
-              className="flex items-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
               {t("teacher.createAssignment.backBtn")}
             </button>
 
-            <div className="text-[14px] text-[#767692]">
+            <div className="text-[14px] text-muted-foreground">
               {t("teacher.createAssignment.stepOf", { current: currentStep, total: STEPS.length })}
             </div>
 
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors disabled:bg-muted disabled:cursor-not-allowed font-medium"
             >
               {t("teacher.createAssignment.nextBtn")}
               <ChevronRight className="w-4 h-4" />

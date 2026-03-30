@@ -23,23 +23,19 @@ export function ExtensionsSummary({ extensions }: Props) {
       </div>
 
       <div className="bg-card border border-border rounded-[12px] p-4">
-        <div className="text-2xl font-semibold text-yellow-600 dark:text-yellow-400 mb-1">
-          {requested}
-        </div>
+        <div className="text-2xl font-semibold text-warning mb-1">{requested}</div>
         <div className="text-sm text-muted-foreground">
           {t("widget.extensions.awaitingResponse")}
         </div>
       </div>
 
       <div className="bg-card border border-border rounded-[12px] p-4">
-        <div className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-1">
-          {approved}
-        </div>
+        <div className="text-2xl font-semibold text-success mb-1">{approved}</div>
         <div className="text-sm text-muted-foreground">{t("widget.extensions.approved")}</div>
       </div>
 
       <div className="bg-card border border-border rounded-[12px] p-4">
-        <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-1">{manual}</div>
+        <div className="text-2xl font-semibold text-info mb-1">{manual}</div>
         <div className="text-sm text-muted-foreground">{t("widget.extensions.manual")}</div>
       </div>
     </div>

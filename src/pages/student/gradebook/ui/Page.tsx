@@ -67,15 +67,17 @@ export default function GradebookPage() {
       <div className="max-w-[1400px] mx-auto px-4 tablet:px-6 desktop:px-8 py-6 desktop:py-8">
         {/* Mobile Stats */}
         <div className="desktop:hidden mb-6 grid grid-cols-2 gap-4">
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <div className="text-[13px] text-[#767692] mb-1">{t("student.gradebook.avgScore")}</div>
-            <div className="text-[24px] font-semibold text-[#21214f]">{stats.avgPercentage}%</div>
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <div className="text-[13px] text-muted-foreground mb-1">
+              {t("student.gradebook.avgScore")}
+            </div>
+            <div className="text-[24px] font-semibold text-foreground">{stats.avgPercentage}%</div>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <div className="text-[13px] text-[#767692] mb-1">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <div className="text-[13px] text-muted-foreground mb-1">
               {t("student.gradebook.gradesReceived")}
             </div>
-            <div className="text-[24px] font-semibold text-[#21214f]">
+            <div className="text-[24px] font-semibold text-foreground">
               {stats.published} / {stats.total}
             </div>
           </div>
@@ -89,16 +91,16 @@ export default function GradebookPage() {
         />
 
         {/* Info Card */}
-        <div className="mt-6 bg-[#f0f4ff] border-2 border-[#d2e1f8] rounded-[16px] p-5">
+        <div className="mt-6 bg-info-light border-2 border-brand-primary-lighter rounded-[16px] p-5">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-[#3d6bc6] rounded-full flex items-center justify-center shrink-0">
-              <span className="text-white text-[14px] font-semibold">i</span>
+            <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center shrink-0">
+              <span className="text-primary-foreground text-[14px] font-semibold">i</span>
             </div>
             <div>
-              <h4 className="text-[15px] font-medium text-[#21214f] mb-1">
+              <h4 className="text-[15px] font-medium text-foreground mb-1">
                 {t("student.gradebook.about")}
               </h4>
-              <p className="text-[14px] text-[#767692] leading-[1.6]">
+              <p className="text-[14px] text-muted-foreground leading-[1.6]">
                 {t("student.gradebook.aboutDesc")}
               </p>
             </div>

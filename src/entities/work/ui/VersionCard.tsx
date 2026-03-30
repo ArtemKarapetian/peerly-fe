@@ -70,26 +70,26 @@ export function VersionCard({
       case "draft":
         return {
           label: t("entity.work.statusDraft"),
-          color: "bg-[#e4e4e4]",
-          textColor: "text-[#4b4963]",
+          color: "bg-muted",
+          textColor: "text-muted-foreground",
         };
       case "submitted":
         return {
           label: t("entity.work.statusSubmitted"),
-          color: "bg-[#b7bdff]",
-          textColor: "text-[#21214f]",
+          color: "bg-info-light",
+          textColor: "text-foreground",
         };
       case "accepted":
         return {
           label: t("entity.work.statusAccepted"),
-          color: "bg-[#9cf38d]",
-          textColor: "text-[#21214f]",
+          color: "bg-success-light",
+          textColor: "text-foreground",
         };
       case "rejected":
         return {
           label: t("entity.work.statusRejected"),
-          color: "bg-[#ffb8b8]",
-          textColor: "text-[#21214f]",
+          color: "bg-error-light",
+          textColor: "text-foreground",
         };
     }
   };
@@ -120,26 +120,26 @@ export function VersionCard({
 
   return (
     <div
-      className={`bg-white border-2 rounded-[16px] p-4 desktop:p-6 transition-all ${
+      className={`bg-card border-2 rounded-[16px] p-4 desktop:p-6 transition-all ${
         comparisonMode && version.selected
-          ? "border-[#5b8def] bg-[#f0f5ff]"
-          : "border-[#e6e8ee] hover:border-[#d2def8]"
+          ? "border-brand-primary bg-info-light"
+          : "border-border hover:border-brand-primary-lighter"
       }`}
     >
       {/* Header: Version + Status + Select (if comparison) */}
-      <div className="flex items-start justify-between gap-3 mb-4 pb-4 border-b border-[#e6e8ee]">
+      <div className="flex items-start justify-between gap-3 mb-4 pb-4 border-b border-border">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
+            <h3 className="text-[20px] font-medium text-text-primary tracking-[-0.5px]">
               {t("entity.work.version")} {version.versionNumber}
               {isLatest && (
-                <span className="ml-2 text-[13px] font-normal text-[#5b8def]">
+                <span className="ml-2 text-[13px] font-normal text-brand-primary">
                   ({t("entity.work.current")})
                 </span>
               )}
             </h3>
           </div>
-          <p className="text-[14px] text-[#767692]">{version.timestamp}</p>
+          <p className="text-[14px] text-text-tertiary">{version.timestamp}</p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -152,11 +152,11 @@ export function VersionCard({
               onClick={onToggleSelect}
               className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${
                 version.selected
-                  ? "bg-[#5b8def] border-[#5b8def]"
-                  : "bg-white border-[#d2def8] hover:border-[#a0b8f1]"
+                  ? "bg-brand-primary border-brand-primary"
+                  : "bg-card border-brand-primary-lighter hover:border-brand-primary-light"
               }`}
             >
-              {version.selected && <CheckCircle className="w-4 h-4 text-white" />}
+              {version.selected && <CheckCircle className="w-4 h-4 text-text-inverse" />}
             </button>
           )}
         </div>
@@ -164,16 +164,16 @@ export function VersionCard({
 
       {/* Files */}
       <div className="mb-4">
-        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">{t("entity.work.files")}</h4>
+        <h4 className="text-[14px] font-medium text-text-primary mb-2">{t("entity.work.files")}</h4>
         <div className="space-y-2">
           {version.files.map((file) => (
             <div
               key={file.id}
-              className="flex items-center gap-2 text-[13px] text-[#4b4963] bg-[#f9f9f9] rounded-[8px] px-3 py-2"
+              className="flex items-center gap-2 text-[13px] text-text-secondary bg-surface-hover rounded-[8px] px-3 py-2"
             >
-              <FileText className="w-4 h-4 text-[#767692] shrink-0" />
+              <FileText className="w-4 h-4 text-text-tertiary shrink-0" />
               <span className="flex-1 min-w-0 truncate">{file.name}</span>
-              <span className="text-[#767692] shrink-0">{formatFileSize(file.size)}</span>
+              <span className="text-text-tertiary shrink-0">{formatFileSize(file.size)}</span>
             </div>
           ))}
         </div>
@@ -181,38 +181,40 @@ export function VersionCard({
 
       {/* Note */}
       {version.note && (
-        <div className="mb-4 bg-[#f9f9f9] rounded-[12px] p-3">
-          <h4 className="text-[13px] font-medium text-[#767692] mb-1">
+        <div className="mb-4 bg-surface-hover rounded-[12px] p-3">
+          <h4 className="text-[13px] font-medium text-text-tertiary mb-1">
             {t("entity.work.comment")}
           </h4>
-          <p className="text-[14px] text-[#21214f] leading-[1.5]">{version.note}</p>
+          <p className="text-[14px] text-text-primary leading-[1.5]">{version.note}</p>
         </div>
       )}
 
       {/* Validation Checks Summary */}
       {checksSummary && (
         <div className="mb-4">
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">{t("entity.work.checks")}</h4>
+          <h4 className="text-[14px] font-medium text-text-primary mb-2">
+            {t("entity.work.checks")}
+          </h4>
           <div className="flex items-center gap-3">
             {checksSummary.passed > 0 && (
               <div className="flex items-center gap-1.5 text-[13px]">
-                <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-                <span className="text-[#4caf50] font-medium">{checksSummary.passed}</span>
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span className="text-success font-medium">{checksSummary.passed}</span>
               </div>
             )}
             {checksSummary.warnings > 0 && (
               <div className="flex items-center gap-1.5 text-[13px]">
-                <AlertCircle className="w-4 h-4 text-[#ff9800]" />
-                <span className="text-[#ff9800] font-medium">{checksSummary.warnings}</span>
+                <AlertCircle className="w-4 h-4 text-warning" />
+                <span className="text-warning font-medium">{checksSummary.warnings}</span>
               </div>
             )}
             {checksSummary.failed > 0 && (
               <div className="flex items-center gap-1.5 text-[13px]">
-                <XCircle className="w-4 h-4 text-[#d4183d]" />
-                <span className="text-[#d4183d] font-medium">{checksSummary.failed}</span>
+                <XCircle className="w-4 h-4 text-error" />
+                <span className="text-error font-medium">{checksSummary.failed}</span>
               </div>
             )}
-            <span className="text-[13px] text-[#767692]">
+            <span className="text-[13px] text-text-tertiary">
               ({checksSummary.total}{" "}
               {checksSummary.total === 1 ? t("entity.work.checkOne") : t("entity.work.checkMany")})
             </span>
@@ -224,7 +226,7 @@ export function VersionCard({
       <div className="flex flex-wrap gap-2">
         <button
           onClick={onDownload}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#d2def8] hover:bg-[#c5d5f5] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-primary-lighter hover:bg-info-light text-text-primary rounded-[8px] text-[14px] font-medium transition-colors"
         >
           <Download className="w-4 h-4" />
           <span>{t("common.download")}</span>
@@ -232,7 +234,7 @@ export function VersionCard({
 
         <button
           onClick={onViewReports}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border-2 border-[#e6e8ee] hover:border-[#d2def8] hover:bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-card border-2 border-border hover:border-brand-primary-lighter hover:bg-surface-hover text-text-primary rounded-[8px] text-[14px] font-medium transition-colors"
         >
           <ChevronRight className="w-4 h-4" />
           <span>{t("entity.work.openReports")}</span>
@@ -241,7 +243,7 @@ export function VersionCard({
         {version.status === "draft" && onMakeCurrent && (
           <button
             onClick={onMakeCurrent}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border-2 border-[#d2def8] hover:border-[#a0b8f1] hover:bg-[#f9f9f9] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-card border-2 border-brand-primary-lighter hover:border-brand-primary-light hover:bg-surface-hover text-text-primary rounded-[8px] text-[14px] font-medium transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             <span>{t("entity.work.makeCurrent")}</span>
@@ -251,7 +253,7 @@ export function VersionCard({
         {isLatest && allowResubmissions && (
           <button
             onClick={onCreateNewVersion}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[8px] text-[14px] font-medium transition-colors ml-auto"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover text-text-inverse rounded-[8px] text-[14px] font-medium transition-colors ml-auto"
           >
             <span>{t("entity.work.createNewVersion")}</span>
             <ChevronRight className="w-4 h-4" />

@@ -82,8 +82,8 @@ export default function VerifyEmailPage() {
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
               {/* Success Icon */}
-              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 bg-success-light rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8 text-success" />
               </div>
 
               {/* Success Message */}
@@ -213,8 +213,8 @@ export default function VerifyEmailPage() {
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
               {/* Email Icon */}
-              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
-                <Mail className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-info-light rounded-full flex items-center justify-center mx-auto">
+                <Mail className="w-8 h-8 text-info" />
               </div>
 
               {/* Message */}
@@ -234,8 +234,8 @@ export default function VerifyEmailPage() {
                     {t("page.verifyEmail.lastSent")}: {lastSentTime}
                   </p>
                 )}
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
-                  <p className="text-xs text-amber-800">
+                <div className="bg-warning-light border border-warning rounded-lg p-3 mt-3">
+                  <p className="text-xs text-warning">
                     <strong>Demo only:</strong> {t("page.verifyEmail.demoNote")}
                   </p>
                 </div>

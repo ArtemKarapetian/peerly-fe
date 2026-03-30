@@ -71,7 +71,9 @@ export default function TeacherCourseDetailsPage({
     return (
       <AppShell title={t("teacher.courseDetail.courseNotFound")}>
         <div className="text-center py-12">
-          <p className="text-[16px] text-[#767692]">{t("teacher.courseDetail.courseNotFound")}</p>
+          <p className="text-[16px] text-muted-foreground">
+            {t("teacher.courseDetail.courseNotFound")}
+          </p>
         </div>
       </AppShell>
     );
@@ -90,46 +92,46 @@ export default function TeacherCourseDetailsPage({
 
       <div className="mt-6">
         {/* Header */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
+                <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
                   {course.name}
                 </h1>
                 {course.status === "active" ? (
-                  <span className="px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[13px] font-medium">
+                  <span className="px-3 py-1 bg-success-light text-success rounded-[8px] text-[13px] font-medium">
                     {t("teacher.courseDetail.status.active")}
                   </span>
                 ) : (
-                  <span className="px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[13px] font-medium">
+                  <span className="px-3 py-1 bg-muted text-muted-foreground rounded-[8px] text-[13px] font-medium">
                     {t("teacher.courseDetail.status.archived")}
                   </span>
                 )}
               </div>
-              <p className="text-[15px] text-[#767692] mb-3">
+              <p className="text-[15px] text-muted-foreground mb-3">
                 {course.code} • {t("teacher.courseDetail.springTerm")}
               </p>
               {teacher && (
-                <p className="text-[14px] text-[#767692]">
+                <p className="text-[14px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.teacherLabel")}{" "}
-                  <span className="text-[#21214f] font-medium">{teacher.name}</span>
+                  <span className="text-foreground font-medium">{teacher.name}</span>
                 </p>
               )}
             </div>
             <div className="flex items-center gap-4 text-center">
               <div>
-                <p className="text-[24px] font-medium text-[#21214f]">{course.enrollmentCount}</p>
-                <p className="text-[13px] text-[#767692]">
+                <p className="text-[24px] font-medium text-foreground">{course.enrollmentCount}</p>
+                <p className="text-[13px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.participants")}
                 </p>
               </div>
-              <div className="w-px h-12 bg-[#e6e8ee]"></div>
+              <div className="w-px h-12 bg-border"></div>
               <div>
-                <p className="text-[24px] font-medium text-[#21214f]">
+                <p className="text-[24px] font-medium text-foreground">
                   {courseAssignments.filter((a) => a.status === "published").length}
                 </p>
-                <p className="text-[13px] text-[#767692]">
+                <p className="text-[13px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.assignments")}
                 </p>
               </div>
@@ -138,8 +140,8 @@ export default function TeacherCourseDetailsPage({
         </div>
 
         {/* Tabs - Straight underline indicator */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
-          <div className="border-b-2 border-[#e6e8ee]">
+        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+          <div className="border-b-2 border-border">
             <div className="flex gap-0">
               {tabs.map((tab) => (
                 <button
@@ -149,15 +151,15 @@ export default function TeacherCourseDetailsPage({
                     relative px-6 py-4 text-[16px] font-medium transition-colors
                     ${
                       activeTab === tab.key
-                        ? "text-[#2563eb]"
-                        : "text-[#767692] hover:text-[#21214f]"
+                        ? "text-brand-primary"
+                        : "text-muted-foreground hover:text-foreground"
                     }
                   `}
                 >
                   {tab.label}
                   {/* Straight underline indicator */}
                   {activeTab === tab.key && (
-                    <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#2563eb]"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand-primary"></div>
                   )}
                 </button>
               ))}

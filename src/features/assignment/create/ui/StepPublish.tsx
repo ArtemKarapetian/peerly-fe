@@ -89,10 +89,10 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.publish.title")}
         </h2>
-        <p className="text-[15px] text-[#767692]">
+        <p className="text-[15px] text-muted-foreground">
           {t("feature.assignmentCreate.publish.subtitle")}
         </p>
       </div>
@@ -100,55 +100,55 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
       {/* Summary Cards */}
       <div className="space-y-4">
         {/* Basic Info */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-5">
+        <div className="bg-card border-2 border-border rounded-[16px] p-5">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-              <Check className="w-5 h-5 text-[#5b8def]" />
+            <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
+              <Check className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              <h3 className="text-[16px] font-medium text-foreground mb-1">
                 {t("feature.assignmentCreate.publish.basicInfo")}
               </h3>
             </div>
           </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
+          <div className="ml-13 pl-5 border-l-2 border-border space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.courseLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f] font-medium">
+              <p className="text-[14px] text-foreground font-medium">
                 {course?.name || t("feature.assignmentCreate.publish.courseNotSelected")}
               </p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.titleLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f] font-medium">
+              <p className="text-[14px] text-foreground font-medium">
                 {data.title || t("feature.assignmentCreate.publish.notSpecified")}
               </p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.taskTypeLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f]">{getTaskTypeLabel(data.taskType)}</p>
+              <p className="text-[14px] text-foreground">{getTaskTypeLabel(data.taskType)}</p>
             </div>
             {data.description && (
               <div>
-                <p className="text-[12px] text-[#767692] mb-1">
+                <p className="text-[12px] text-muted-foreground mb-1">
                   {t("feature.assignmentCreate.publish.descriptionLabel")}
                 </p>
-                <p className="text-[13px] text-[#21214f] line-clamp-3">{data.description}</p>
+                <p className="text-[13px] text-foreground line-clamp-3">{data.description}</p>
               </div>
             )}
             {data.attachments.length > 0 && (
               <div>
-                <p className="text-[12px] text-[#767692] mb-1">
+                <p className="text-[12px] text-muted-foreground mb-1">
                   {t("feature.assignmentCreate.publish.attachmentsLabel")}
                 </p>
-                <p className="text-[13px] text-[#21214f]">
+                <p className="text-[13px] text-foreground">
                   {data.attachments.length}{" "}
                   {data.attachments.length === 1
                     ? t("feature.assignmentCreate.publish.fileOne")
@@ -160,36 +160,36 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
         </div>
 
         {/* Deadlines */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-5">
+        <div className="bg-card border-2 border-border rounded-[16px] p-5">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-[#5b8def]" />
+            <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              <h3 className="text-[16px] font-medium text-foreground mb-1">
                 {t("feature.assignmentCreate.publish.deadlines")}
               </h3>
             </div>
           </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
+          <div className="ml-13 pl-5 border-l-2 border-border space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.submissionDeadline")}
               </p>
-              <p className="text-[14px] text-[#21214f]">{formatDate(data.submissionDeadline)}</p>
+              <p className="text-[14px] text-foreground">{formatDate(data.submissionDeadline)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.reviewDeadline")}
               </p>
-              <p className="text-[14px] text-[#21214f]">{formatDate(data.reviewDeadline)}</p>
+              <p className="text-[14px] text-foreground">{formatDate(data.reviewDeadline)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.latePolicyLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f]">
+              <p className="text-[14px] text-foreground">
                 {data.latePolicy === "soft"
                   ? t("feature.assignmentCreate.publish.latePolicySoft", {
                       penalty: data.latePenalty,
@@ -201,64 +201,64 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
         </div>
 
         {/* Rubric */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-5">
+        <div className="bg-card border-2 border-border rounded-[16px] p-5">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-              <Layers className="w-5 h-5 text-[#5b8def]" />
+            <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
+              <Layers className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              <h3 className="text-[16px] font-medium text-foreground mb-1">
                 {t("feature.assignmentCreate.publish.rubricLabel")}
               </h3>
             </div>
           </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
-            <p className="text-[14px] text-[#21214f]">
+          <div className="ml-13 pl-5 border-l-2 border-border">
+            <p className="text-[14px] text-foreground">
               {data.rubricName || t("feature.assignmentCreate.publish.rubricNotSelected")}
             </p>
           </div>
         </div>
 
         {/* Peer Review Settings */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-5">
+        <div className="bg-card border-2 border-border rounded-[16px] p-5">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-              <Users className="w-5 h-5 text-[#5b8def]" />
+            <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
+              <Users className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              <h3 className="text-[16px] font-medium text-foreground mb-1">
                 {t("feature.assignmentCreate.publish.peerReviewLabel")}
               </h3>
             </div>
           </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee] space-y-3">
+          <div className="ml-13 pl-5 border-l-2 border-border space-y-3">
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.reviewsPerSubmission")}
               </p>
-              <p className="text-[14px] text-[#21214f]">{data.reviewsPerSubmission}</p>
+              <p className="text-[14px] text-foreground">{data.reviewsPerSubmission}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.distributionLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f]">
+              <p className="text-[14px] text-foreground">
                 {getDistributionLabel(data.distributionMode)}
               </p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.anonymityLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f]">{getAnonymityLabel(data.anonymityMode)}</p>
+              <p className="text-[14px] text-foreground">{getAnonymityLabel(data.anonymityMode)}</p>
             </div>
             <div>
-              <p className="text-[12px] text-[#767692] mb-1">
+              <p className="text-[12px] text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.reassignmentLabel")}
               </p>
-              <p className="text-[14px] text-[#21214f]">
+              <p className="text-[14px] text-foreground">
                 {data.allowReassignment
                   ? t("feature.assignmentCreate.publish.reassignmentAllowed")
                   : t("feature.assignmentCreate.publish.reassignmentForbidden")}
@@ -268,29 +268,29 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
         </div>
 
         {/* Plugins */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-5">
+        <div className="bg-card border-2 border-border rounded-[16px] p-5">
           <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-              <Shield className="w-5 h-5 text-[#5b8def]" />
+            <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
+              <Shield className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+              <h3 className="text-[16px] font-medium text-foreground mb-1">
                 {t("feature.assignmentCreate.publish.pluginsLabel")}
               </h3>
             </div>
           </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-[#e6e8ee]">
+          <div className="ml-13 pl-5 border-l-2 border-border">
             {enabledPlugins.length === 0 ? (
-              <p className="text-[14px] text-[#767692]">
+              <p className="text-[14px] text-muted-foreground">
                 {t("feature.assignmentCreate.publish.noPlugins")}
               </p>
             ) : (
               <ul className="space-y-2">
                 {enabledPlugins.map((plugin, index) => (
                   <li key={index} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#4caf50]" />
-                    <span className="text-[14px] text-[#21214f]">{plugin}</span>
+                    <Check className="w-4 h-4 text-success" />
+                    <span className="text-[14px] text-foreground">{plugin}</span>
                   </li>
                 ))}
               </ul>
@@ -300,8 +300,8 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
       </div>
 
       {/* Warning */}
-      <div className="bg-[#fff8e1] border border-[#ffe082] rounded-[12px] p-4">
-        <p className="text-[13px] text-[#21214f]">
+      <div className="bg-warning-light border border-warning rounded-[12px] p-4">
+        <p className="text-[13px] text-foreground">
           <strong>{t("feature.assignmentCreate.publish.warningAttention")}</strong>{" "}
           {t("feature.assignmentCreate.publish.warningText")}
         </p>
@@ -311,14 +311,14 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
       <div className="flex items-center gap-3 pt-4">
         <button
           onClick={() => onPublish(true)}
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-4 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors font-medium"
+          className="flex-1 flex items-center justify-center gap-2 px-6 py-4 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors font-medium"
         >
           <Save className="w-5 h-5" />
           {t("feature.assignmentCreate.publish.saveDraft")}
         </button>
         <button
           onClick={() => onPublish(false)}
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium text-[16px]"
+          className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium text-[16px]"
         >
           <Send className="w-5 h-5" />
           {t("feature.assignmentCreate.publish.publishAssignment")}
@@ -327,7 +327,7 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
 
       {/* Help Text */}
       <div className="text-center">
-        <p className="text-[13px] text-[#767692]">
+        <p className="text-[13px] text-muted-foreground">
           {t("feature.assignmentCreate.publish.draftsInfo")}
           <br />
           {t("feature.assignmentCreate.publish.publishedInfo")}

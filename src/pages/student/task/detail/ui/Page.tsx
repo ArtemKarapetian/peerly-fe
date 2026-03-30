@@ -43,19 +43,19 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
   const getStatusColor = () => {
     switch (taskStatus) {
       case "NOT_STARTED":
-        return "bg-[#e4e4e4]";
+        return "bg-muted";
       case "SUBMITTED":
-        return "bg-[#b7bdff]";
+        return "bg-brand-primary-lighter";
       case "PEER_REVIEW":
-        return "bg-[#b0e9fb]";
+        return "bg-info-light";
       case "TEACHER_REVIEW":
-        return "bg-[#b7bdff]";
+        return "bg-brand-primary-lighter";
       case "GRADING":
-        return "bg-[#b7bdff]";
+        return "bg-brand-primary-lighter";
       case "GRADED":
-        return "bg-[#9cf38d]";
+        return "bg-success-light";
       case "OVERDUE":
-        return "bg-[#ffb8b8]";
+        return "bg-error-light";
     }
   };
 
@@ -108,14 +108,14 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
 
       {/* Extension Banner - Approved/Manual */}
       {showExtensionBanner && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-[12px] p-4 mb-6">
+        <div className="bg-success-light border border-success rounded-[12px] p-4 mb-6">
           <div className="flex items-start gap-3">
-            <Clock className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+            <Clock className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <h3 className="font-medium text-green-900 dark:text-green-100 mb-1">
+              <h3 className="font-medium text-foreground mb-1">
                 {t("student.task.deadlineExtended")}
               </h3>
-              <p className="text-sm text-green-700 dark:text-green-300">
+              <p className="text-sm text-success">
                 {extension.submissionDeadlineOverride && (
                   <>
                     {t("student.task.newSubmissionDeadline")}{" "}
@@ -131,7 +131,7 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
                 )}
               </p>
               {extension.reason && (
-                <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                <p className="text-xs text-success mt-1">
                   {t("student.task.reason")} {extension.reason}
                 </p>
               )}
@@ -142,16 +142,14 @@ export default function TaskPage({ taskId = "1" }: TaskPageProps) {
 
       {/* Extension Banner - Requested */}
       {showRequestedBanner && (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-[12px] p-4 mb-6">
+        <div className="bg-warning-light border border-warning rounded-[12px] p-4 mb-6">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <h3 className="font-medium text-yellow-900 dark:text-yellow-100 mb-1">
+              <h3 className="font-medium text-foreground mb-1">
                 {t("student.task.extensionPending")}
               </h3>
-              <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                {t("student.task.extensionPendingDesc")}
-              </p>
+              <p className="text-sm text-warning">{t("student.task.extensionPendingDesc")}</p>
             </div>
           </div>
         </div>

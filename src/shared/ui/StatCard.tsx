@@ -10,7 +10,7 @@ interface StatCardProps {
 export function StatCard({ label, value, icon, accent, compact = false }: StatCardProps) {
   return (
     <div
-      className={`bg-white border border-[--surface-border] rounded-[var(--radius-lg)] px-4 flex items-center gap-3 shadow-[var(--shadow-sm)] ${compact ? "py-2.5" : "py-3"}`}
+      className={`bg-card border border-surface-border rounded-[var(--radius-lg)] px-4 flex items-center gap-3 shadow-[var(--shadow-sm)] ${compact ? "py-2.5" : "py-3"}`}
     >
       <div
         className={`rounded-[var(--radius-sm)] flex items-center justify-center shrink-0 ${compact ? "w-7 h-7" : "w-8 h-8"}`}

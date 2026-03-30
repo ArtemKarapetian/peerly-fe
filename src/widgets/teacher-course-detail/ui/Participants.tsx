@@ -90,13 +90,13 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
   const getRoleBadge = (role: "student" | "assistant") => {
     if (role === "student") {
       return (
-        <span className="px-2 py-1 bg-[#dbeafe] text-[#2563eb] rounded-[6px] text-[12px] font-medium">
+        <span className="px-2 py-1 bg-info-light text-info rounded-[6px] text-[12px] font-medium">
           {t("widget.participants.roleBadgeStudent")}
         </span>
       );
     }
     return (
-      <span className="px-2 py-1 bg-[#fff8e1] text-[#f57c00] rounded-[6px] text-[12px] font-medium">
+      <span className="px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
         {t("widget.participants.roleBadgeAssistant")}
       </span>
     );
@@ -105,13 +105,13 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
   const getStatusBadge = (status: "active" | "invited") => {
     if (status === "active") {
       return (
-        <span className="px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+        <span className="px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
           {t("widget.participants.statusActive")}
         </span>
       );
     }
     return (
-      <span className="px-2 py-1 bg-[#fff8e1] text-[#f57c00] rounded-[6px] text-[12px] font-medium">
+      <span className="px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
         {t("widget.participants.statusInvited")}
       </span>
     );
@@ -123,13 +123,13 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
       <div className="flex items-center gap-4 mb-6">
         {/* Search */}
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             placeholder={t("widget.participants.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors"
+            className="w-full pl-10 pr-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
 
@@ -137,7 +137,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value as "all" | "student" | "assistant")}
-          className="px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
+          className="px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
         >
           <option value="all">{t("widget.participants.allRoles")}</option>
           <option value="student">{t("widget.participants.studentsRole")}</option>
@@ -148,7 +148,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "invited")}
-          className="px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#2563eb] transition-colors bg-white"
+          className="px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
         >
           <option value="all">{t("widget.participants.allStatuses")}</option>
           <option value="active">{t("widget.participants.activeStatus")}</option>
@@ -158,7 +158,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {/* Import Button */}
         <button
           onClick={() => setIsImportModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors"
         >
           <Upload className="w-4 h-4" />
           {t("widget.participants.import")}
@@ -170,22 +170,22 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         {filteredParticipants.map((participant, index) => (
           <div
             key={participant.id}
-            className={`p-4 hover:bg-white hover:shadow-sm hover:rounded-[12px] transition-all ${
-              index !== filteredParticipants.length - 1 ? "border-b border-[#e6e8ee]" : ""
+            className={`p-4 hover:bg-card hover:shadow-sm hover:rounded-[12px] transition-all ${
+              index !== filteredParticipants.length - 1 ? "border-b border-border" : ""
             }`}
           >
             <div className="flex items-center justify-between">
               {/* Left: Name + Email */}
               <div className="flex-1 min-w-0 mr-4">
-                <p className="text-[15px] font-medium text-[#21214f] mb-0.5">{participant.name}</p>
-                <p className="text-[14px] text-[#767692]">{participant.email}</p>
+                <p className="text-[15px] font-medium text-foreground mb-0.5">{participant.name}</p>
+                <p className="text-[14px] text-muted-foreground">{participant.email}</p>
               </div>
 
               {/* Right: Role, Status, Date */}
               <div className="flex items-center gap-3">
                 {getRoleBadge(participant.role)}
                 {getStatusBadge(participant.status)}
-                <p className="text-[14px] text-[#767692] w-24 text-right">
+                <p className="text-[14px] text-muted-foreground w-24 text-right">
                   {participant.joinedAt.toLocaleDateString()}
                 </p>
               </div>
@@ -195,27 +195,27 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
 
         {filteredParticipants.length === 0 && (
           <div className="p-12 text-center">
-            <Filter className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <p className="text-[15px] text-[#767692]">{t("widget.participants.notFound")}</p>
+            <Filter className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+            <p className="text-[15px] text-muted-foreground">{t("widget.participants.notFound")}</p>
           </div>
         )}
       </div>
 
       {/* Stats */}
-      <div className="mt-4 flex items-center gap-6 text-[14px] text-[#767692]">
+      <div className="mt-4 flex items-center gap-6 text-[14px] text-muted-foreground">
         <span>
           {t("widget.participants.total")}{" "}
-          <strong className="text-[#21214f]">{allParticipants.length}</strong>
+          <strong className="text-foreground">{allParticipants.length}</strong>
         </span>
         <span>
           {t("widget.participants.activeCount")}{" "}
-          <strong className="text-[#21214f]">
+          <strong className="text-foreground">
             {allParticipants.filter((p) => p.status === "active").length}
           </strong>
         </span>
         <span>
           {t("widget.participants.invitedCount")}{" "}
-          <strong className="text-[#21214f]">
+          <strong className="text-foreground">
             {allParticipants.filter((p) => p.status === "invited").length}
           </strong>
         </span>

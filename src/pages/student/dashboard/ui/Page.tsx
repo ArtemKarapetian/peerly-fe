@@ -26,7 +26,7 @@ function SectionCard({
   noPadding?: boolean;
 }) {
   return (
-    <section className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
+    <section className="bg-card border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
       <div className="px-5 py-3.5 border-b border-[--surface-border]">
         <h2 className="text-[15px] font-semibold text-[--text-primary] tracking-[-0.2px]">
           {title}
@@ -51,28 +51,28 @@ export default function DashboardPage() {
           label={t("student.dashboard.activeCourses")}
           value={3}
           icon={<BookOpen className="w-4 h-4" />}
-          accent="#2563eb"
+          accent="var(--brand-primary)"
           compact
         />
         <StatCard
           label={t("student.dashboard.deadlinesToday")}
           value={mockDeadlines.filter((d) => d.isUrgent).length}
           icon={<Clock className="w-4 h-4" />}
-          accent="#d97706"
+          accent="var(--warning)"
           compact
         />
         <StatCard
           label={t("student.dashboard.needToReview")}
           value={mockActionData.reviewsPending}
           icon={<CheckSquare className="w-4 h-4" />}
-          accent="#7c3aed"
+          accent="var(--chart-4)"
           compact
         />
         <StatCard
           label={t("student.dashboard.newFeedback")}
           value={mockActionData.newFeedback}
           icon={<MessageSquare className="w-4 h-4" />}
-          accent="#059669"
+          accent="var(--success)"
           compact
         />
       </div>

@@ -20,7 +20,7 @@ export function CourseTabs({
 }: CourseTabsProps) {
   const { t } = useTranslation();
   return (
-    <div className="border-b border-[#e6e8ee]">
+    <div className="border-b border-border">
       <div className="flex items-center gap-8 px-5">
         <button
           onClick={() => onTabChange("assignments")}
@@ -29,8 +29,8 @@ export function CourseTabs({
             transition-colors
             ${
               activeTab === "assignments"
-                ? "text-[#21214f] font-semibold"
-                : "text-[#767692] hover:text-[#21214f]"
+                ? "text-text-primary font-semibold"
+                : "text-text-tertiary hover:text-text-primary"
             }
           `}
         >
@@ -38,7 +38,7 @@ export function CourseTabs({
           {assignmentsCount !== undefined && ` (${assignmentsCount})`}
           {/* Underline для активного таба */}
           {activeTab === "assignments" && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#21214f]" />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary" />
           )}
         </button>
 
@@ -49,8 +49,8 @@ export function CourseTabs({
             transition-colors
             ${
               activeTab === "participants"
-                ? "text-[#21214f] font-semibold"
-                : "text-[#767692] hover:text-[#21214f]"
+                ? "text-text-primary font-semibold"
+                : "text-text-tertiary hover:text-text-primary"
             }
           `}
         >
@@ -58,7 +58,7 @@ export function CourseTabs({
           {participantsCount !== undefined && ` (${participantsCount})`}
           {/* Underline для активного таба */}
           {activeTab === "participants" && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#21214f]" />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary" />
           )}
         </button>
       </div>

@@ -109,37 +109,37 @@ const SERVICES = ["api", "worker", "database", "auth", "storage", "plugin"];
 
 const CLASSES = {
   input:
-    "w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#2563eb] focus:outline-none transition-colors",
-  card: "bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4",
+    "w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-ring focus:outline-none transition-colors",
+  card: "bg-card border-2 border-border rounded-[12px] p-4",
   statValue: "text-[28px] font-medium",
-  statLabel: "text-[12px] text-[#767692] uppercase tracking-wide mb-1",
+  statLabel: "text-[12px] text-muted-foreground uppercase tracking-wide mb-1",
   badge: "inline-flex items-center gap-1 px-2 py-1 rounded-[6px] text-[11px] font-medium",
   filterTag:
-    "inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]",
+    "inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px]",
 };
 
 const LEVEL_CONFIG = {
   info: {
-    bg: "bg-[#e9f5ff]",
-    text: "text-[#2563eb]",
+    bg: "bg-info-light",
+    text: "text-brand-primary",
     icon: Info,
     label: "INFO",
   },
   warn: {
-    bg: "bg-[#fff4e5]",
-    text: "text-[#ff9800]",
+    bg: "bg-warning-light",
+    text: "text-warning",
     icon: AlertTriangle,
     label: "WARN",
   },
   error: {
-    bg: "bg-[#fff5f5]",
-    text: "text-[#d4183d]",
+    bg: "bg-error-light",
+    text: "text-error",
     icon: XCircle,
     label: "ERROR",
   },
   debug: {
-    bg: "bg-[#f5f5f5]",
-    text: "text-[#767692]",
+    bg: "bg-muted",
+    text: "text-muted-foreground",
     icon: Activity,
     label: "DEBUG",
   },
@@ -236,7 +236,7 @@ interface StatCardProps {
   valueColor?: string;
 }
 
-const StatCard = ({ label, value, valueColor = "text-[#21214f]" }: StatCardProps) => (
+const StatCard = ({ label, value, valueColor = "text-foreground" }: StatCardProps) => (
   <div className={CLASSES.card}>
     <p className={CLASSES.statLabel}>{label}</p>
     <p className={`${CLASSES.statValue} ${valueColor}`}>{value}</p>
@@ -251,7 +251,7 @@ interface FilterTagProps {
 const FilterTag = ({ label, onRemove }: FilterTagProps) => (
   <span className={CLASSES.filterTag}>
     {label}
-    <button onClick={onRemove} className="hover:text-[#d4183d]">
+    <button onClick={onRemove} className="hover:text-error">
       <X className="w-3 h-3" />
     </button>
   </span>
@@ -264,10 +264,10 @@ interface EmptyStateProps {
 }
 
 const EmptyState = ({ icon: Icon, title, description }: EmptyStateProps) => (
-  <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
-    <Icon className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-    <h3 className="text-[18px] font-medium text-[#21214f] mb-2">{title}</h3>
-    <p className="text-[14px] text-[#767692]">{description}</p>
+  <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
+    <Icon className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+    <h3 className="text-[18px] font-medium text-foreground mb-2">{title}</h3>
+    <p className="text-[14px] text-muted-foreground">{description}</p>
   </div>
 );
 
@@ -442,15 +442,15 @@ export default function AdminLogsPage() {
       <div>
         {/* Header actions */}
         <div className="flex items-center justify-end gap-2 mb-6">
-          <div className="flex items-center gap-2 px-3 py-2 bg-[#f9f9f9] rounded-[8px] border-2 border-[#e6e8ee]">
-            <RefreshCw className="w-4 h-4 text-[#767692]" />
-            <span className="text-[12px] text-[#767692]">
+          <div className="flex items-center gap-2 px-3 py-2 bg-muted rounded-[8px] border-2 border-border">
+            <RefreshCw className="w-4 h-4 text-muted-foreground" />
+            <span className="text-[12px] text-muted-foreground">
               {lastUpdate.toLocaleTimeString("ru-RU")}
             </span>
           </div>
           <button
             onClick={handleExport}
-            className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white rounded-[12px] hover:bg-[#1d4ed8] transition-colors text-[14px] font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
           >
             <Download className="w-4 h-4" />
             {t("admin.logsPage.exportCsv")}
@@ -463,8 +463,8 @@ export default function AdminLogsPage() {
             onClick={() => setActiveTab("system")}
             className={`px-6 py-3 rounded-[12px] text-[14px] font-medium transition-colors ${
               activeTab === "system"
-                ? "bg-[#2563eb] text-white"
-                : "bg-white border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]"
+                ? "bg-brand-primary text-primary-foreground"
+                : "bg-card border-2 border-border text-foreground hover:bg-muted"
             }`}
           >
             {t("admin.logsPage.tabSystemLogs")} ({stats.system.total})
@@ -473,8 +473,8 @@ export default function AdminLogsPage() {
             onClick={() => setActiveTab("audit")}
             className={`px-6 py-3 rounded-[12px] text-[14px] font-medium transition-colors ${
               activeTab === "audit"
-                ? "bg-[#2563eb] text-white"
-                : "bg-white border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]"
+                ? "bg-brand-primary text-primary-foreground"
+                : "bg-card border-2 border-border text-foreground hover:bg-muted"
             }`}
           >
             {t("admin.logsPage.tabAudit")} ({stats.audit.total})
@@ -485,9 +485,9 @@ export default function AdminLogsPage() {
         {activeTab === "system" && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <StatCard label={t("admin.logsPage.statsTotal")} value={stats.system.total} />
-            <StatCard label="Info" value={stats.system.info} valueColor="text-[#2563eb]" />
-            <StatCard label="Warnings" value={stats.system.warn} valueColor="text-[#ff9800]" />
-            <StatCard label="Errors" value={stats.system.error} valueColor="text-[#d4183d]" />
+            <StatCard label="Info" value={stats.system.info} valueColor="text-brand-primary" />
+            <StatCard label="Warnings" value={stats.system.warn} valueColor="text-warning" />
+            <StatCard label="Errors" value={stats.system.error} valueColor="text-error" />
           </div>
         )}
 
@@ -497,20 +497,20 @@ export default function AdminLogsPage() {
             <StatCard
               label={t("admin.logsPage.statsToday")}
               value={stats.audit.today}
-              valueColor="text-[#2563eb]"
+              valueColor="text-brand-primary"
             />
           </div>
         )}
 
         {/* Search and Filters */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.logsPage.searchLabel")}
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -524,7 +524,7 @@ export default function AdminLogsPage() {
             {activeTab === "system" && (
               <>
                 <div className="w-full md:w-[200px]">
-                  <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                  <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                     {t("admin.logsPage.serviceLabel")}
                   </label>
                   <select
@@ -542,7 +542,7 @@ export default function AdminLogsPage() {
                 </div>
 
                 <div className="w-full md:w-[200px]">
-                  <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                  <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                     {t("admin.logsPage.levelLabel")}
                   </label>
                   <select
@@ -562,8 +562,10 @@ export default function AdminLogsPage() {
           </div>
 
           {hasActiveFilters && (
-            <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
-              <span className="text-[13px] text-[#767692]">{t("admin.logsPage.filtersLabel")}</span>
+            <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
+              <span className="text-[13px] text-muted-foreground">
+                {t("admin.logsPage.filtersLabel")}
+              </span>
               {searchQuery && (
                 <FilterTag label={`"${searchQuery}"`} onRemove={() => setSearchQuery("")} />
               )}
@@ -579,25 +581,25 @@ export default function AdminLogsPage() {
 
         {/* System Logs Table */}
         {activeTab === "system" && (
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
+          <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
             {filteredSystemLogs.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-[#f9f9f9] border-b-2 border-[#e6e8ee]">
+                  <thead className="bg-muted border-b-2 border-border">
                     <tr>
-                      <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
+                      <th className="px-4 py-3 text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                         {t("admin.logsPage.headerTime")}
                       </th>
-                      <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
+                      <th className="px-4 py-3 text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                         {t("admin.logsPage.headerService")}
                       </th>
-                      <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
+                      <th className="px-4 py-3 text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                         {t("admin.logsPage.headerLevel")}
                       </th>
-                      <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
+                      <th className="px-4 py-3 text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                         {t("admin.logsPage.headerMessage")}
                       </th>
-                      <th className="px-4 py-3 text-left text-[12px] font-medium text-[#767692] uppercase tracking-wide">
+                      <th className="px-4 py-3 text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                         {t("admin.logsPage.headerDetails")}
                       </th>
                     </tr>
@@ -606,19 +608,19 @@ export default function AdminLogsPage() {
                     {filteredSystemLogs.map((log, index) => (
                       <tr
                         key={log.id}
-                        className={`border-b border-[#e6e8ee] ${index % 2 === 0 ? "bg-white" : "bg-[#fafafa]"}`}
+                        className={`border-b border-border ${index % 2 === 0 ? "bg-card" : "bg-surface-hover"}`}
                       >
-                        <td className="px-4 py-3 text-[13px] text-[#767692] whitespace-nowrap">
+                        <td className="px-4 py-3 text-[13px] text-muted-foreground whitespace-nowrap">
                           {log.timestamp.toLocaleString("ru-RU")}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="inline-flex px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px] font-mono">
+                          <span className="inline-flex px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px] font-mono">
                             {log.service}
                           </span>
                         </td>
                         <td className="px-4 py-3">{getLevelBadge(log.level)}</td>
-                        <td className="px-4 py-3 text-[13px] text-[#21214f]">{log.message}</td>
-                        <td className="px-4 py-3 text-[12px] text-[#767692]">
+                        <td className="px-4 py-3 text-[13px] text-foreground">{log.message}</td>
+                        <td className="px-4 py-3 text-[12px] text-muted-foreground">
                           {log.details || "—"}
                         </td>
                       </tr>
@@ -628,11 +630,13 @@ export default function AdminLogsPage() {
               </div>
             ) : (
               <div className="p-12 text-center">
-                <FileSearch className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-                <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+                <FileSearch className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+                <h3 className="text-[18px] font-medium text-foreground mb-2">
                   {t("admin.logsPage.noLogs")}
                 </h3>
-                <p className="text-[14px] text-[#767692]">{t("admin.logsPage.noLogsHint")}</p>
+                <p className="text-[14px] text-muted-foreground">
+                  {t("admin.logsPage.noLogsHint")}
+                </p>
               </div>
             )}
           </div>
@@ -643,23 +647,23 @@ export default function AdminLogsPage() {
           <div className="space-y-3">
             {filteredAuditLogs.length > 0 ? (
               filteredAuditLogs.map((log) => (
-                <div key={log.id} className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-5">
+                <div key={log.id} className="bg-card border-2 border-border rounded-[16px] p-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-[#e9f5ff] rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="w-5 h-5 text-[#2563eb]" />
+                    <div className="w-10 h-10 bg-info-light rounded-full flex items-center justify-center flex-shrink-0">
+                      <User className="w-5 h-5 text-brand-primary" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-[15px] font-medium text-[#21214f]">{log.userName}</h3>
-                        <span className="inline-flex px-2 py-1 bg-[#f9f9f9] text-[#767692] rounded-[6px] text-[11px] font-mono">
+                        <h3 className="text-[15px] font-medium text-foreground">{log.userName}</h3>
+                        <span className="inline-flex px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[11px] font-mono">
                           {log.action}
                         </span>
                       </div>
-                      <p className="text-[13px] text-[#767692] mb-2">
-                        <span className="font-medium text-[#21214f]">{log.resource}</span>:{" "}
+                      <p className="text-[13px] text-muted-foreground mb-2">
+                        <span className="font-medium text-foreground">{log.resource}</span>:{" "}
                         {log.details}
                       </p>
-                      <div className="flex items-center gap-4 text-[12px] text-[#767692]">
+                      <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
                         <span>🕒 {log.timestamp.toLocaleString("ru-RU")}</span>
                         {log.ipAddress && <span>📍 IP: {log.ipAddress}</span>}
                       </div>

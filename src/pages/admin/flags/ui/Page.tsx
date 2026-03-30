@@ -354,21 +354,21 @@ export default function AdminFlagsPage() {
     switch (status) {
       case "stable":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("admin.flagsPage.statusLabels.stable")}
           </span>
         );
       case "beta":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
             <Clock className="w-3 h-3" />
             Beta
           </span>
         );
       case "alpha":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f3e5f5] text-[#8e24aa] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-accent text-brand-primary rounded-[6px] text-[11px] font-medium">
             <AlertCircle className="w-3 h-3" />
             Alpha
           </span>
@@ -380,10 +380,10 @@ export default function AdminFlagsPage() {
 
   const getCategoryBadge = (category: string) => {
     const styles = {
-      ui: "bg-[#e9f5ff] text-[#5b8def]",
-      performance: "bg-[#e8f5e9] text-[#4caf50]",
-      experimental: "bg-[#f3e5f5] text-[#8e24aa]",
-      integration: "bg-[#fff4e5] text-[#ff9800]",
+      ui: "bg-info-light text-brand-primary",
+      performance: "bg-success-light text-success",
+      experimental: "bg-accent text-brand-primary",
+      integration: "bg-warning-light text-warning",
     };
 
     const labels: Record<string, string> = {
@@ -421,12 +421,12 @@ export default function AdminFlagsPage() {
       <div>
         {/* Success Message */}
         {showSuccess && (
-          <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6">
+          <div className="bg-success-light border-2 border-success rounded-[16px] p-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#4caf50] rounded-full flex items-center justify-center">
-                <Save className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                <Save className="w-4 h-4 text-primary-foreground" />
               </div>
-              <p className="text-[14px] font-medium text-[#4caf50]">
+              <p className="text-[14px] font-medium text-success">
                 {t("admin.flagsPage.savedSuccess")}
               </p>
             </div>
@@ -435,61 +435,61 @@ export default function AdminFlagsPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
               {t("admin.flagsPage.statsTotal")}
             </p>
-            <p className="text-[24px] font-medium text-[#21214f]">{stats.total}</p>
+            <p className="text-[24px] font-medium text-foreground">{stats.total}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
               {t("admin.flagsPage.statsEnabled")}
             </p>
-            <p className="text-[24px] font-medium text-[#4caf50]">{stats.enabled}</p>
+            <p className="text-[24px] font-medium text-success">{stats.enabled}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Stable</p>
-            <p className="text-[24px] font-medium text-[#4caf50]">{stats.stable}</p>
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">Stable</p>
+            <p className="text-[24px] font-medium text-success">{stats.stable}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Beta</p>
-            <p className="text-[24px] font-medium text-[#ff9800]">{stats.beta}</p>
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">Beta</p>
+            <p className="text-[24px] font-medium text-warning">{stats.beta}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">Alpha</p>
-            <p className="text-[24px] font-medium text-[#8e24aa]">{stats.alpha}</p>
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
+            <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">Alpha</p>
+            <p className="text-[24px] font-medium text-brand-primary">{stats.alpha}</p>
           </div>
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.flagsPage.searchLabel")}
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t("admin.flagsPage.searchPlaceholder")}
-                  className="w-full pl-11 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                  className="w-full pl-11 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             {/* Category Filter */}
             <div className="w-full md:w-[200px]">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.flagsPage.categoryLabel")}
               </label>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
               >
                 <option value="all">{t("admin.flagsPage.allOption")}</option>
                 <option value="ui">UI</option>
@@ -507,13 +507,13 @@ export default function AdminFlagsPage() {
 
             {/* Status Filter */}
             <div className="w-full md:w-[200px]">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.flagsPage.statusLabel")}
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
               >
                 <option value="all">{t("admin.flagsPage.allOption")}</option>
                 <option value="stable">Stable</option>
@@ -525,30 +525,30 @@ export default function AdminFlagsPage() {
 
           {/* Active filters */}
           {(searchQuery || filterCategory !== "all" || filterStatus !== "all") && (
-            <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-[#e6e8ee]">
-              <span className="text-[13px] text-[#767692]">
+            <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
+              <span className="text-[13px] text-muted-foreground">
                 {t("admin.flagsPage.filtersLabel")}
               </span>
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px]">
                   "{searchQuery}"
-                  <button onClick={() => setSearchQuery("")} className="hover:text-[#d4183d]">
+                  <button onClick={() => setSearchQuery("")} className="hover:text-error">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               )}
               {filterCategory !== "all" && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px]">
                   {filterCategory}
-                  <button onClick={() => setFilterCategory("all")} className="hover:text-[#d4183d]">
+                  <button onClick={() => setFilterCategory("all")} className="hover:text-error">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
               )}
               {filterStatus !== "all" && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[12px]">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px]">
                   {filterStatus}
-                  <button onClick={() => setFilterStatus("all")} className="hover:text-[#d4183d]">
+                  <button onClick={() => setFilterStatus("all")} className="hover:text-error">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -567,28 +567,30 @@ export default function AdminFlagsPage() {
             return (
               <div
                 key={flag.id}
-                className="bg-white border-2 border-[#e6e8ee] rounded-[16px] overflow-hidden"
+                className="bg-card border-2 border-border rounded-[16px] overflow-hidden"
               >
                 {/* Main Row */}
                 <div className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-[16px] font-medium text-[#21214f]">
+                        <h3 className="text-[16px] font-medium text-foreground">
                           {t(flag.nameKey)}
                         </h3>
                         {getCategoryBadge(flag.category)}
                         {getStatusBadge(flag.status)}
                         {hasOverrides && (
-                          <span className="inline-flex px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] text-[11px] font-medium">
+                          <span className="inline-flex px-2 py-1 bg-info-light text-brand-primary rounded-[6px] text-[11px] font-medium">
                             {t("admin.flagsPage.overridesCount_other", {
                               count: Object.keys(flag.tenantOverrides!).length,
                             })}
                           </span>
                         )}
                       </div>
-                      <p className="text-[13px] text-[#767692] mb-2">{t(flag.descriptionKey)}</p>
-                      <p className="text-[12px] text-[#767692] font-mono">Key: {flag.key}</p>
+                      <p className="text-[13px] text-muted-foreground mb-2">
+                        {t(flag.descriptionKey)}
+                      </p>
+                      <p className="text-[12px] text-muted-foreground font-mono">Key: {flag.key}</p>
                     </div>
 
                     {/* Toggle */}
@@ -600,16 +602,16 @@ export default function AdminFlagsPage() {
                           onChange={() => handleToggleGlobal(flag.id)}
                           className="sr-only peer"
                         />
-                        <div className="w-14 h-8 bg-[#e6e8ee] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#4caf50]"></div>
+                        <div className="w-14 h-8 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-card after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-success"></div>
                       </label>
 
                       {/* Expand Button */}
                       <button
                         onClick={() => setExpandedFlag(isExpanded ? null : flag.id)}
-                        className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                        className="p-2 hover:bg-muted rounded-[8px] transition-colors"
                       >
                         <ChevronDown
-                          className={`w-5 h-5 text-[#767692] transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                          className={`w-5 h-5 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
                         />
                       </button>
                     </div>
@@ -618,9 +620,9 @@ export default function AdminFlagsPage() {
 
                 {/* Tenant Overrides */}
                 {isExpanded && (
-                  <div className="px-6 pb-6 pt-0 border-t-2 border-[#e6e8ee]">
+                  <div className="px-6 pb-6 pt-0 border-t-2 border-border">
                     <div className="pt-4">
-                      <h4 className="text-[14px] font-medium text-[#21214f] mb-3">
+                      <h4 className="text-[14px] font-medium text-foreground mb-3">
                         {t("admin.flagsPage.tenantOverridesTitle")}
                       </h4>
                       <div className="space-y-2">
@@ -634,18 +636,18 @@ export default function AdminFlagsPage() {
                           return (
                             <div
                               key={tenant.id}
-                              className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]"
+                              className="flex items-center justify-between p-3 bg-muted rounded-[8px]"
                             >
                               <div className="flex items-center gap-3">
-                                <span className="text-[14px] text-[#21214f] font-medium">
+                                <span className="text-[14px] text-foreground font-medium">
                                   {tenant.name}
                                 </span>
                                 {hasOverride ? (
-                                  <span className="text-[11px] px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] font-medium">
+                                  <span className="text-[11px] px-2 py-1 bg-info-light text-brand-primary rounded-[6px] font-medium">
                                     {t("admin.flagsPage.overridden")}
                                   </span>
                                 ) : (
-                                  <span className="text-[11px] text-[#767692]">
+                                  <span className="text-[11px] text-muted-foreground">
                                     (
                                     {flag.enabled
                                       ? t("admin.flagsPage.globalEnabled")
@@ -661,13 +663,13 @@ export default function AdminFlagsPage() {
                                   onChange={() => handleToggleTenant(flag.id, tenant.id)}
                                   className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-[#e6e8ee] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4caf50]"></div>
+                                <div className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
                               </label>
                             </div>
                           );
                         })}
                       </div>
-                      <p className="text-[12px] text-[#767692] mt-3">
+                      <p className="text-[12px] text-muted-foreground mt-3">
                         {t("admin.flagsPage.overridesHint")}
                       </p>
                     </div>
@@ -680,24 +682,26 @@ export default function AdminFlagsPage() {
 
         {/* Empty State */}
         {filteredFlags.length === 0 && (
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
-            <Flag className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-            <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+          <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
+            <Flag className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+            <h3 className="text-[18px] font-medium text-foreground mb-2">
               {t("admin.flagsPage.noFlagsFound")}
             </h3>
-            <p className="text-[14px] text-[#767692]">{t("admin.flagsPage.noFlagsFoundHint")}</p>
+            <p className="text-[14px] text-muted-foreground">
+              {t("admin.flagsPage.noFlagsFoundHint")}
+            </p>
           </div>
         )}
 
         {/* Info Box */}
-        <div className="bg-[#fff4e5] border-2 border-[#ff9800] rounded-[16px] p-4 mb-6">
+        <div className="bg-warning-light border-2 border-warning rounded-[16px] p-4 mb-6">
           <div className="flex gap-3">
-            <AlertCircle className="w-5 h-5 text-[#ff9800] flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
+              <h4 className="text-[14px] font-medium text-foreground mb-1">
                 {t("admin.flagsPage.experimentalWarningTitle")}
               </h4>
-              <p className="text-[13px] text-[#767692]">
+              <p className="text-[13px] text-muted-foreground">
                 {t("admin.flagsPage.experimentalWarningText")}
               </p>
             </div>
@@ -711,8 +715,8 @@ export default function AdminFlagsPage() {
             disabled={!hasChanges}
             className={`flex items-center gap-2 px-6 py-3 rounded-[12px] text-[14px] font-medium transition-all ${
               hasChanges
-                ? "bg-[#5b8def] text-white hover:bg-[#4a7de8]"
-                : "bg-[#e6e8ee] text-[#767692] cursor-not-allowed"
+                ? "bg-brand-primary text-primary-foreground hover:bg-brand-primary-hover"
+                : "bg-border text-muted-foreground cursor-not-allowed"
             }`}
           >
             <Save className="w-5 h-5" />

@@ -72,7 +72,7 @@ export function CourseCard({
       onClick={onClick}
       className={`
         flex flex-col
-        bg-white rounded-[var(--radius-xl)] overflow-hidden w-full text-left
+        bg-card rounded-[var(--radius-xl)] overflow-hidden w-full text-left
         border transition-all duration-200
         shadow-[var(--shadow-md)]
         hover:shadow-[0_6px_20px_rgba(0,0,0,0.1)] hover:-translate-y-0.5
@@ -88,7 +88,7 @@ export function CourseCard({
       >
         {/* New assignments badge — visible only on active cards */}
         {!isCompleted && newAssignments && newAssignments > 0 ? (
-          <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[11px] font-semibold text-[--brand-primary] shadow-sm">
+          <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-card/90 backdrop-blur-sm rounded-full text-[11px] font-semibold text-[--brand-primary] shadow-sm">
             <BookOpen className="w-3 h-3" />
             {newAssignments}{" "}
             {newAssignments === 1 ? t("entity.course.newOne") : t("entity.course.newMany")}

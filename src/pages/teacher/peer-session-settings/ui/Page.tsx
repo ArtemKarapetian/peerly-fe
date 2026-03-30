@@ -169,25 +169,27 @@ export default function TeacherPeerSessionSettingsPage({
 
       {/* Save Success Banner */}
       {showSaveSuccess && (
-        <div className="mt-6 bg-[#e8f5e9] border border-[#4caf50] rounded-[12px] p-4 animate-fade-in">
-          <p className="text-[14px] text-[#21214f] font-medium">
+        <div className="mt-6 bg-success-light border border-success rounded-[12px] p-4 animate-fade-in">
+          <p className="text-[14px] text-foreground font-medium">
             {t("teacher.peerSettings.savedSuccess")}
           </p>
         </div>
       )}
 
       {/* Main Settings Card */}
-      <div className="mt-6 bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
+      <div className="mt-6 bg-card border-2 border-border rounded-[20px] p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+            <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
               {t("teacher.peerSettings.title")}
             </h1>
-            <p className="text-[15px] text-[#767692]">{t("teacher.peerSettings.subtitle")}</p>
+            <p className="text-[15px] text-muted-foreground">
+              {t("teacher.peerSettings.subtitle")}
+            </p>
           </div>
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+            className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium"
           >
             <Save className="w-4 h-4" />
             {t("teacher.peerSettings.saveChanges")}
@@ -198,8 +200,8 @@ export default function TeacherPeerSessionSettingsPage({
           {/* Anonymity Mode */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <EyeOff className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+              <EyeOff className="w-5 h-5 text-brand-primary" />
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("teacher.peerSettings.anonymityMode")}
               </h2>
             </div>
@@ -211,15 +213,15 @@ export default function TeacherPeerSessionSettingsPage({
                   w-full p-4 border-2 rounded-[12px] text-left transition-all
                   ${
                     settings.anonymityMode === "none"
-                      ? "border-[#5b8def] bg-[#e9f5ff]"
-                      : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                      ? "border-brand-primary bg-info-light"
+                      : "border-border hover:border-brand-primary-light bg-card"
                   }
                 `}
               >
-                <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                <div className="text-[15px] font-medium text-foreground mb-1">
                   {t("teacher.peerSettings.noAnonymity")}
                 </div>
-                <div className="text-[13px] text-[#767692]">
+                <div className="text-[13px] text-muted-foreground">
                   {t("teacher.peerSettings.noAnonymityDesc")}
                 </div>
               </button>
@@ -231,15 +233,15 @@ export default function TeacherPeerSessionSettingsPage({
                   w-full p-4 border-2 rounded-[12px] text-left transition-all
                   ${
                     settings.anonymityMode === "hide-student"
-                      ? "border-[#5b8def] bg-[#e9f5ff]"
-                      : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                      ? "border-brand-primary bg-info-light"
+                      : "border-border hover:border-brand-primary-light bg-card"
                   }
                 `}
               >
-                <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                <div className="text-[15px] font-medium text-foreground mb-1">
                   {t("teacher.peerSettings.hideAuthor")}
                 </div>
-                <div className="text-[13px] text-[#767692]">
+                <div className="text-[13px] text-muted-foreground">
                   {t("teacher.peerSettings.hideAuthorDesc")}
                 </div>
               </button>
@@ -251,15 +253,15 @@ export default function TeacherPeerSessionSettingsPage({
                   w-full p-4 border-2 rounded-[12px] text-left transition-all
                   ${
                     settings.anonymityMode === "double-anonymous"
-                      ? "border-[#5b8def] bg-[#e9f5ff]"
-                      : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                      ? "border-brand-primary bg-info-light"
+                      : "border-border hover:border-brand-primary-light bg-card"
                   }
                 `}
               >
-                <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                <div className="text-[15px] font-medium text-foreground mb-1">
                   {t("teacher.peerSettings.doubleAnonymous")}
                 </div>
-                <div className="text-[13px] text-[#767692]">
+                <div className="text-[13px] text-muted-foreground">
                   {t("teacher.peerSettings.doubleAnonymousDesc")}
                 </div>
               </button>
@@ -269,8 +271,8 @@ export default function TeacherPeerSessionSettingsPage({
           {/* Reviews Per Submission */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Users className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+              <Users className="w-5 h-5 text-brand-primary" />
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("teacher.peerSettings.reviewsPerSubmission")}
               </h2>
             </div>
@@ -299,14 +301,14 @@ export default function TeacherPeerSessionSettingsPage({
                       reviewsPerSubmission: parseInt(e.target.value) || 1,
                     })
                   }
-                  className="w-20 px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[15px] font-medium text-center focus:outline-none focus:border-[#5b8def]"
+                  className="w-20 px-3 py-2 border-2 border-border rounded-[8px] text-[15px] font-medium text-center focus:outline-none focus:border-brand-primary"
                 />
-                <span className="text-[14px] text-[#767692]">
+                <span className="text-[14px] text-muted-foreground">
                   {t("teacher.peerSettings.reviewsLabel")}
                 </span>
               </div>
             </div>
-            <p className="text-[13px] text-[#767692] mt-2">
+            <p className="text-[13px] text-muted-foreground mt-2">
               {t("teacher.peerSettings.recommendedRange")}
             </p>
           </div>
@@ -314,8 +316,8 @@ export default function TeacherPeerSessionSettingsPage({
           {/* Assignment Algorithm */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Shuffle className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+              <Shuffle className="w-5 h-5 text-brand-primary" />
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("teacher.peerSettings.distributionAlgorithm")}
               </h2>
             </div>
@@ -327,15 +329,15 @@ export default function TeacherPeerSessionSettingsPage({
                   p-4 border-2 rounded-[12px] text-left transition-all
                   ${
                     settings.assignmentAlgorithm === "random"
-                      ? "border-[#5b8def] bg-[#e9f5ff]"
-                      : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                      ? "border-brand-primary bg-info-light"
+                      : "border-border hover:border-brand-primary-light bg-card"
                   }
                 `}
               >
-                <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                <div className="text-[15px] font-medium text-foreground mb-1">
                   {t("teacher.peerSettings.randomDistribution")}
                 </div>
-                <div className="text-[13px] text-[#767692]">
+                <div className="text-[13px] text-muted-foreground">
                   {t("teacher.peerSettings.randomDistributionDesc")}
                 </div>
               </button>
@@ -347,22 +349,22 @@ export default function TeacherPeerSessionSettingsPage({
                   p-4 border-2 rounded-[12px] text-left transition-all
                   ${
                     settings.assignmentAlgorithm === "avoid-collusion"
-                      ? "border-[#5b8def] bg-[#e9f5ff]"
-                      : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                      ? "border-brand-primary bg-info-light"
+                      : "border-border hover:border-brand-primary-light bg-card"
                   }
                 `}
               >
-                <div className="text-[15px] font-medium text-[#21214f] mb-1">
+                <div className="text-[15px] font-medium text-foreground mb-1">
                   {t("teacher.peerSettings.collusionProtection")}
                 </div>
-                <div className="text-[13px] text-[#767692]">
+                <div className="text-[13px] text-muted-foreground">
                   {t("teacher.peerSettings.collusionProtectionDesc")}
                 </div>
               </button>
             </div>
             {settings.assignmentAlgorithm === "avoid-collusion" && (
-              <div className="mt-3 bg-[#e9f5ff] border border-[#a0b8f1] rounded-[8px] p-3">
-                <p className="text-[13px] text-[#21214f]">
+              <div className="mt-3 bg-info-light border border-brand-primary-light rounded-[8px] p-3">
+                <p className="text-[13px] text-foreground">
                   <strong>Demo:</strong> {t("teacher.peerSettings.collusionDemoNote")}
                 </p>
               </div>

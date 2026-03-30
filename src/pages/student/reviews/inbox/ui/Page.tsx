@@ -55,19 +55,19 @@ export default function ReviewsInboxPage() {
 
       {isEmpty && (
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-[#f9f9f9] rounded-[20px] p-8 max-w-[480px] text-center">
+          <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
             <div className="mb-4">
-              <div className="w-16 h-16 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center">
+              <div className="w-16 h-16 bg-brand-primary-lighter rounded-full mx-auto flex items-center justify-center">
                 <span className="text-[32px]">📝</span>
               </div>
             </div>
-            <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
+            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
               {filter === "all" && t("student.reviews.noAssigned")}
               {filter === "not_started" && t("student.reviews.noToStart")}
               {filter === "drafts" && t("student.reviews.noDrafts")}
               {filter === "submitted" && t("student.reviews.noSubmitted")}
             </h2>
-            <p className="text-[16px] text-[#767692] leading-[1.5]">
+            <p className="text-[16px] text-muted-foreground leading-[1.5]">
               {filter === "all" && t("student.reviews.willAppear")}
               {filter === "not_started" && t("student.reviews.allStarted")}
               {filter === "drafts" && t("student.reviews.noDraftReviews")}

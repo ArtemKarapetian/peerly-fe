@@ -34,14 +34,14 @@ function getNotificationIcon(type: NotificationType) {
 function getNotificationAccent(type: NotificationType): string {
   switch (type) {
     case "feedback":
-      return "#059669";
+      return "var(--success)";
     case "grade":
-      return "#2563eb";
+      return "var(--brand-primary)";
     case "reminder":
-      return "#d97706";
+      return "var(--warning)";
     case "info":
     default:
-      return "#7c3aed";
+      return "var(--chart-3)";
   }
 }
 
@@ -78,7 +78,7 @@ export function NotificationsList({
             <button
               key={notification.id}
               onClick={() => onNotificationClick(notification.id)}
-              className="w-full text-left px-5 py-3.5 hover:bg-[#f0f5ff] active:bg-[#e8efff] transition-colors duration-150 group"
+              className="w-full text-left px-5 py-3.5 hover:bg-surface-hover active:bg-accent transition-colors duration-150 group"
             >
               <div className="flex items-start gap-3">
                 {/* Icon */}

@@ -326,21 +326,21 @@ function SubmissionsContent({
     switch (status) {
       case "submitted":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("teacher.submissions.submitted")}
           </span>
         );
       case "late":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
             <Clock className="w-3 h-3" />
             {t("teacher.submissions.late")}
           </span>
         );
       case "draft":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium">
             <FileText className="w-3 h-3" />
             {t("teacher.submissions.draft")}
           </span>
@@ -352,21 +352,21 @@ function SubmissionsContent({
     switch (risk) {
       case "high":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[12px] font-medium">
             <AlertTriangle className="w-3 h-3" />
             {t("teacher.submissions.high")}
           </span>
         );
       case "medium":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
             <AlertTriangle className="w-3 h-3" />
             {t("teacher.submissions.medium")}
           </span>
         );
       case "low":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("teacher.submissions.low")}
           </span>
@@ -391,21 +391,21 @@ function SubmissionsContent({
     switch (status) {
       case "passed":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             Passed
           </span>
         );
       case "warning":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
             <AlertTriangle className="w-3 h-3" />
             Warning
           </span>
         );
       case "failed":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
             <X className="w-3 h-3" />
             Failed
           </span>
@@ -445,22 +445,22 @@ function SubmissionsContent({
 
       <div>
         {/* Filters */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-5 h-5 text-[#767692]" />
-            <h2 className="text-[16px] font-medium text-[#21214f]">{t("common.filters")}</h2>
+            <Filter className="w-5 h-5 text-muted-foreground" />
+            <h2 className="text-[16px] font-medium text-foreground">{t("common.filters")}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Assignment Filter */}
             <div>
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("common.assignments")}
               </label>
               <select
                 value={filterAssignment}
                 onChange={(e) => setFilterAssignment(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
               >
                 <option value="all">
                   {t("teacher.submissions.allAssignments")} ({submissions.length})
@@ -475,13 +475,13 @@ function SubmissionsContent({
 
             {/* Status Filter */}
             <div>
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("common.status")}
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as SubmissionStatus | "all")}
-                className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
               >
                 <option value="all">{t("teacher.submissions.allStatuses")}</option>
                 <option value="submitted">{t("teacher.submissions.submitted")}</option>
@@ -492,13 +492,13 @@ function SubmissionsContent({
 
             {/* Plagiarism Risk Filter */}
             <div>
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("teacher.submissions.plagiarismRisk")}
               </label>
               <select
                 value={filterPlagiarism}
                 onChange={(e) => setFilterPlagiarism(e.target.value as PlagiarismRisk | "all")}
-                className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
               >
                 <option value="all">{t("teacher.submissions.anyRisk")}</option>
                 <option value="high">{t("teacher.submissions.high")}</option>
@@ -509,34 +509,34 @@ function SubmissionsContent({
 
             {/* Student Search */}
             <div>
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("teacher.submissions.studentSearch")}
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#767692]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchStudent}
                   onChange={(e) => setSearchStudent(e.target.value)}
                   placeholder={t("teacher.submissions.studentNamePlaceholder")}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             {/* Failed Checks Filter */}
             <div className="md:col-span-2 lg:col-span-1">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("common.additional")}
               </label>
-              <label className="flex items-center gap-3 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] cursor-pointer hover:bg-[#f9f9f9] transition-colors">
+              <label className="flex items-center gap-3 px-4 py-3 border-2 border-border rounded-[12px] cursor-pointer hover:bg-muted transition-colors">
                 <input
                   type="checkbox"
                   checked={filterFailedChecks}
                   onChange={(e) => setFilterFailedChecks(e.target.checked)}
-                  className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-0"
+                  className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-2 focus:ring-ring focus:ring-offset-0"
                 />
-                <span className="text-[15px] text-[#21214f]">
+                <span className="text-[15px] text-foreground">
                   {t("teacher.submissions.onlyWithErrors")}
                 </span>
               </label>
@@ -544,9 +544,9 @@ function SubmissionsContent({
           </div>
 
           <div className="mt-4 flex items-center justify-between">
-            <p className="text-[14px] text-[#767692]">
+            <p className="text-[14px] text-muted-foreground">
               {t("teacher.submissions.foundSubmissions")}{" "}
-              <strong className="text-[#21214f]">{filteredSubmissions.length}</strong>
+              <strong className="text-foreground">{filteredSubmissions.length}</strong>
             </p>
             {(filterStatus !== "all" ||
               filterPlagiarism !== "all" ||
@@ -561,7 +561,7 @@ function SubmissionsContent({
                   setFilterAssignment("all");
                   setSearchStudent("");
                 }}
-                className="flex items-center gap-2 px-3 py-2 text-[#5b8def] hover:bg-[#e9f5ff] rounded-[8px] transition-colors text-[14px]"
+                className="flex items-center gap-2 px-3 py-2 text-brand-primary hover:bg-info-light rounded-[8px] transition-colors text-[14px]"
               >
                 <X className="w-4 h-4" />
                 {t("teacher.submissions.resetFilters")}
@@ -571,34 +571,34 @@ function SubmissionsContent({
         </div>
 
         {/* Submissions List */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
+        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
           {filteredSubmissions.length > 0 ? (
-            <div className="divide-y divide-[#e6e8ee]">
+            <div className="divide-y divide-border">
               {filteredSubmissions.map((submission) => (
                 <div
                   key={submission.id}
-                  className="p-6 hover:bg-[#fafbfc] transition-colors cursor-pointer"
+                  className="p-6 hover:bg-surface-hover transition-colors cursor-pointer"
                   onClick={() => setSelectedSubmission(submission)}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-[18px] font-medium text-[#21214f]">
+                        <h3 className="text-[18px] font-medium text-foreground">
                           {submission.studentName}
                         </h3>
                         {getStatusBadge(submission.status)}
                         {getPlagiarismBadge(submission.plagiarismRisk)}
                         {hasFailedChecks(submission) && (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[12px] font-medium">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[12px] font-medium">
                             <AlertTriangle className="w-3 h-3" />
                             {t("teacher.submissions.hasErrors")}
                           </span>
                         )}
                       </div>
-                      <p className="text-[14px] text-[#767692] mb-2">
+                      <p className="text-[14px] text-muted-foreground mb-2">
                         {submission.assignmentTitle}
                       </p>
-                      <div className="flex items-center gap-4 text-[13px] text-[#767692]">
+                      <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <FileText className="w-3 h-3" />
                           {t("teacher.submissions.files")}: {submission.files.length}
@@ -614,18 +614,18 @@ function SubmissionsContent({
                         )}
                       </div>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-[#767692] shrink-0" />
+                    <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
-              <Send className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+              <Send className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+              <h3 className="text-[18px] font-medium text-foreground mb-2">
                 {t("teacher.submissions.noSubmissions")}
               </h3>
-              <p className="text-[14px] text-[#767692]">
+              <p className="text-[14px] text-muted-foreground">
                 {t("teacher.submissions.tryChangingFilters")}
               </p>
             </div>
@@ -643,16 +643,16 @@ function SubmissionsContent({
           }}
         >
           <div
-            className="bg-white h-full w-full md:w-[700px] shadow-2xl overflow-y-auto"
+            className="bg-card h-full w-full md:w-[700px] shadow-2xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
-            <div className="sticky top-0 bg-white border-b-2 border-[#e6e8ee] px-6 py-4 flex items-center justify-between z-10">
+            <div className="sticky top-0 bg-card border-b-2 border-border px-6 py-4 flex items-center justify-between z-10">
               <div>
-                <h2 className="text-[20px] font-medium text-[#21214f]">
+                <h2 className="text-[20px] font-medium text-foreground">
                   {selectedSubmission.studentName}
                 </h2>
-                <p className="text-[13px] text-[#767692] mt-1">
+                <p className="text-[13px] text-muted-foreground mt-1">
                   {selectedSubmission.assignmentTitle}
                 </p>
               </div>
@@ -661,43 +661,43 @@ function SubmissionsContent({
                   setSelectedSubmission(null);
                   setEditingNotes(false);
                 }}
-                className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-muted rounded-[8px] transition-colors"
               >
-                <X className="w-5 h-5 text-[#767692]" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
 
             {/* Drawer Content */}
             <div className="p-6 space-y-6">
               {/* Status Summary */}
-              <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
+              <div className="bg-muted border-2 border-border rounded-[12px] p-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.submissions.statusLabel")}
                     </p>
                     {getStatusBadge(selectedSubmission.status)}
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.submissions.plagiarismRiskLabel")}
                     </p>
                     {getPlagiarismBadge(selectedSubmission.plagiarismRisk)}
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.submissions.submittedAt")}
                     </p>
-                    <p className="text-[14px] text-[#21214f]">
+                    <p className="text-[14px] text-foreground">
                       {selectedSubmission.submittedAt?.toLocaleString() ||
                         t("teacher.submissions.notSubmitted")}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.submissions.deadlineLabel")}
                     </p>
-                    <p className="text-[14px] text-[#21214f]">
+                    <p className="text-[14px] text-foreground">
                       {selectedSubmission.deadline.toLocaleString()}
                     </p>
                   </div>
@@ -706,7 +706,7 @@ function SubmissionsContent({
 
               {/* Files List */}
               <div>
-                <h3 className="text-[16px] font-medium text-[#21214f] mb-3 flex items-center gap-2">
+                <h3 className="text-[16px] font-medium text-foreground mb-3 flex items-center gap-2">
                   <FileText className="w-4 h-4" />
                   {t("teacher.submissions.filesTitle")} ({selectedSubmission.files.length})
                 </h3>
@@ -714,18 +714,18 @@ function SubmissionsContent({
                   {selectedSubmission.files.map((file) => (
                     <div
                       key={file.id}
-                      className="flex items-center justify-between p-3 bg-[#f9f9f9] border border-[#e6e8ee] rounded-[8px]"
+                      className="flex items-center justify-between p-3 bg-muted border border-border rounded-[8px]"
                     >
                       <div className="flex-1">
-                        <p className="text-[14px] font-medium text-[#21214f]">{file.name}</p>
-                        <p className="text-[12px] text-[#767692]">
+                        <p className="text-[14px] font-medium text-foreground">{file.name}</p>
+                        <p className="text-[12px] text-muted-foreground">
                           {file.size} • {t("teacher.submissions.uploadedAt")}{" "}
                           {file.uploadedAt.toLocaleString()}
                         </p>
                       </div>
                       <button
                         onClick={() => handleDownloadFile(file.name)}
-                        className="flex items-center gap-2 px-3 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[13px]"
+                        className="flex items-center gap-2 px-3 py-2 bg-brand-primary text-primary-foreground rounded-[8px] hover:bg-brand-primary-hover transition-colors text-[13px]"
                       >
                         <Download className="w-4 h-4" />
                         {t("teacher.submissions.downloadBtn")}
@@ -737,7 +737,7 @@ function SubmissionsContent({
 
               {/* Versions Timeline */}
               <div>
-                <h3 className="text-[16px] font-medium text-[#21214f] mb-3 flex items-center gap-2">
+                <h3 className="text-[16px] font-medium text-foreground mb-3 flex items-center gap-2">
                   <History className="w-4 h-4" />
                   {t("teacher.submissions.versionHistory")}
                 </h3>
@@ -745,21 +745,23 @@ function SubmissionsContent({
                   {selectedSubmission.versions.map((version, index) => (
                     <div
                       key={version.id}
-                      className="relative pl-6 pb-3 border-l-2 border-[#e6e8ee] last:border-0"
+                      className="relative pl-6 pb-3 border-l-2 border-border last:border-0"
                     >
-                      <div className="absolute left-[-5px] top-0 w-2 h-2 bg-[#5b8def] rounded-full" />
+                      <div className="absolute left-[-5px] top-0 w-2 h-2 bg-brand-primary rounded-full" />
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-[14px] font-medium text-[#21214f]">
+                          <p className="text-[14px] font-medium text-foreground">
                             {t("teacher.submissions.versionLabel")} {version.version}
                             {index === selectedSubmission.versions.length - 1 && (
-                              <span className="ml-2 text-[12px] text-[#4caf50]">
+                              <span className="ml-2 text-[12px] text-success">
                                 {t("teacher.submissions.current")}
                               </span>
                             )}
                           </p>
-                          <p className="text-[13px] text-[#767692] mt-1">{version.changes}</p>
-                          <p className="text-[12px] text-[#767692] mt-1">
+                          <p className="text-[13px] text-muted-foreground mt-1">
+                            {version.changes}
+                          </p>
+                          <p className="text-[12px] text-muted-foreground mt-1">
                             {version.filesCount} {t("teacher.submissions.filesCount")} •{" "}
                             {version.submittedAt.toLocaleString()}
                           </p>
@@ -772,7 +774,7 @@ function SubmissionsContent({
 
               {/* Plugin Reports */}
               <div>
-                <h3 className="text-[16px] font-medium text-[#21214f] mb-3 flex items-center gap-2">
+                <h3 className="text-[16px] font-medium text-foreground mb-3 flex items-center gap-2">
                   <Shield className="w-4 h-4" />
                   {t("teacher.submissions.pluginReports")}
                 </h3>
@@ -780,28 +782,28 @@ function SubmissionsContent({
                   {selectedSubmission.pluginReports.map((report) => (
                     <div
                       key={report.id}
-                      className="p-4 bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px]"
+                      className="p-4 bg-muted border-2 border-border rounded-[12px]"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
                           {getPluginIcon(report.pluginType)}
-                          <h4 className="text-[14px] font-medium text-[#21214f]">
+                          <h4 className="text-[14px] font-medium text-foreground">
                             {report.pluginName}
                           </h4>
                         </div>
                         {getPluginStatusBadge(report.status)}
                       </div>
-                      <p className="text-[13px] text-[#21214f] mb-2">{report.message}</p>
+                      <p className="text-[13px] text-foreground mb-2">{report.message}</p>
                       {report.score !== undefined && (
-                        <p className="text-[13px] text-[#767692] mb-2">
+                        <p className="text-[13px] text-muted-foreground mb-2">
                           {t("teacher.submissions.scoreLabel")}:{" "}
-                          <strong className="text-[#21214f]">{report.score}%</strong>
+                          <strong className="text-foreground">{report.score}%</strong>
                         </p>
                       )}
                       {report.details && (
-                        <p className="text-[12px] text-[#767692] mb-2">{report.details}</p>
+                        <p className="text-[12px] text-muted-foreground mb-2">{report.details}</p>
                       )}
-                      <p className="text-[11px] text-[#767692]">
+                      <p className="text-[11px] text-muted-foreground">
                         {t("teacher.submissions.checkedAt")}: {report.timestamp.toLocaleString()}
                       </p>
                     </div>
@@ -812,23 +814,23 @@ function SubmissionsContent({
               {/* Teacher Notes */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-[16px] font-medium text-[#21214f] flex items-center gap-2">
+                  <h3 className="text-[16px] font-medium text-foreground flex items-center gap-2">
                     <StickyNote className="w-4 h-4" />
                     {t("teacher.submissions.teacherNotes")}
                   </h3>
                   {!editingNotes && (
                     <button
                       onClick={() => setEditingNotes(true)}
-                      className="text-[14px] text-[#5b8def] hover:underline"
+                      className="text-[14px] text-brand-primary hover:underline"
                     >
                       {t("teacher.submissions.editBtn")}
                     </button>
                   )}
                 </div>
-                <div className="p-4 bg-[#fff9e5] border-2 border-[#f59e0b] rounded-[12px]">
+                <div className="p-4 bg-warning-light border-2 border-warning rounded-[12px]">
                   <div className="flex items-start gap-2 mb-2">
-                    <AlertTriangle className="w-4 h-4 text-[#f59e0b] shrink-0 mt-0.5" />
-                    <p className="text-[12px] text-[#767692]">
+                    <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" />
+                    <p className="text-[12px] text-muted-foreground">
                       {t("teacher.submissions.notesVisibility")}
                     </p>
                   </div>
@@ -838,12 +840,12 @@ function SubmissionsContent({
                         value={notesText}
                         onChange={(e) => setNotesText(e.target.value)}
                         placeholder={t("teacher.submissions.notesPlaceholder")}
-                        className="w-full px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors min-h-[120px] resize-y"
+                        className="w-full px-3 py-2 border-2 border-border rounded-[8px] text-[14px] text-foreground focus:border-brand-primary focus:outline-none transition-colors min-h-[120px] resize-y"
                       />
                       <div className="flex gap-2 mt-3">
                         <button
                           onClick={handleSaveNotes}
-                          className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[14px]"
+                          className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[8px] hover:bg-brand-primary-hover transition-colors text-[14px]"
                         >
                           <Save className="w-4 h-4" />
                           {t("teacher.submissions.saveBtn")}
@@ -853,16 +855,16 @@ function SubmissionsContent({
                             setEditingNotes(false);
                             setNotesText(selectedSubmission.teacherNotes);
                           }}
-                          className="px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
+                          className="px-4 py-2 border-2 border-border text-foreground rounded-[8px] hover:bg-muted transition-colors text-[14px]"
                         >
                           {t("teacher.submissions.cancelBtn")}
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[14px] text-[#21214f] leading-relaxed">
+                    <p className="text-[14px] text-foreground leading-relaxed">
                       {selectedSubmission.teacherNotes || (
-                        <span className="text-[#767692] italic">
+                        <span className="text-muted-foreground italic">
                           {t("teacher.submissions.noNotes")}
                         </span>
                       )}

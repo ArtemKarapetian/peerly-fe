@@ -79,13 +79,13 @@ export default function AdminOrgsPage() {
   const getPlanColor = (plan: string) => {
     switch (plan) {
       case "Enterprise":
-        return "bg-[#e8f5e9] text-[#388e3c]";
+        return "bg-success-light text-success";
       case "Pro":
-        return "bg-[#e3f2fd] text-[#1976d2]";
+        return "bg-info-light text-brand-primary";
       case "Free":
-        return "bg-[#f5f5f5] text-[--text-secondary]";
+        return "bg-muted text-[--text-secondary]";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -98,8 +98,8 @@ export default function AdminOrgsPage() {
         <div className="grid grid-cols-1 tablet:grid-cols-3 gap-4 mb-6">
           <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#e3f2fd] rounded-[var(--radius-md)] flex items-center justify-center">
-                <Database className="w-5 h-5 text-[#1976d2]" />
+              <div className="w-10 h-10 bg-info-light rounded-[var(--radius-md)] flex items-center justify-center">
+                <Database className="w-5 h-5 text-brand-primary" />
               </div>
               <div>
                 <p className="text-xs text-[--text-secondary]">{t("admin.orgsPage.totalOrgs")}</p>
@@ -109,8 +109,8 @@ export default function AdminOrgsPage() {
           </div>
           <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#e8f5e9] rounded-[var(--radius-md)] flex items-center justify-center">
-                <Users className="w-5 h-5 text-[#388e3c]" />
+              <div className="w-10 h-10 bg-success-light rounded-[var(--radius-md)] flex items-center justify-center">
+                <Users className="w-5 h-5 text-success" />
               </div>
               <div>
                 <p className="text-xs text-[--text-secondary]">{t("admin.orgsPage.totalUsers")}</p>
@@ -122,8 +122,8 @@ export default function AdminOrgsPage() {
           </div>
           <div className="bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#fff8e1] rounded-[var(--radius-md)] flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-[#f57c00]" />
+              <div className="w-10 h-10 bg-warning-light rounded-[var(--radius-md)] flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-warning" />
               </div>
               <div>
                 <p className="text-xs text-[--text-secondary]">
@@ -192,7 +192,7 @@ export default function AdminOrgsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex px-2.5 py-1 bg-[#e8f5e9] text-[#388e3c] rounded-md text-xs font-medium">
+                      <span className="inline-flex px-2.5 py-1 bg-success-light text-success rounded-md text-xs font-medium">
                         {t("admin.orgsPage.statusActive")}
                       </span>
                     </td>

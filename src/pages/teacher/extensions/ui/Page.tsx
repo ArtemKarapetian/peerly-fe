@@ -45,21 +45,21 @@ export default function TeacherExtensionsPage() {
     switch (status) {
       case "pending":
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[8px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-warning-light text-warning rounded-[8px] text-[12px] font-medium">
             <Clock className="w-4 h-4" />
             {t("teacher.extensions.pending")}
           </span>
         );
       case "approved":
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[8px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-success-light text-success rounded-[8px] text-[12px] font-medium">
             <CheckCircle className="w-4 h-4" />
             {t("teacher.extensions.approved")}
           </span>
         );
       case "rejected":
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[8px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-3 py-1 bg-error-light text-error rounded-[8px] text-[12px] font-medium">
             <XCircle className="w-4 h-4" />
             {t("teacher.extensions.rejected")}
           </span>
@@ -81,11 +81,11 @@ export default function TeacherExtensionsPage() {
       <div>
         <div className="space-y-4">
           {extensions.map((ext) => (
-            <div key={ext.id} className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-4">
+            <div key={ext.id} className="bg-card border-2 border-border rounded-[20px] p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="text-[16px] font-medium text-[#21214f]">{ext.student}</h3>
-                  <p className="text-[13px] text-[#767692] mt-0.5">
+                  <h3 className="text-[16px] font-medium text-foreground">{ext.student}</h3>
+                  <p className="text-[13px] text-muted-foreground mt-0.5">
                     {ext.course} • {ext.assignment}
                   </p>
                 </div>
@@ -93,28 +93,34 @@ export default function TeacherExtensionsPage() {
               </div>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-3 text-[13px]">
                 <div>
-                  <span className="text-[#767692]">{t("teacher.extensions.requested")} </span>
-                  <span className="text-[#21214f] font-medium">
+                  <span className="text-muted-foreground">
+                    {t("teacher.extensions.requested")}{" "}
+                  </span>
+                  <span className="text-foreground font-medium">
                     {new Date(ext.requested).toLocaleDateString()}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#767692]">{t("teacher.extensions.newDeadline")} </span>
-                  <span className="text-[#21214f] font-medium">
+                  <span className="text-muted-foreground">
+                    {t("teacher.extensions.newDeadline")}{" "}
+                  </span>
+                  <span className="text-foreground font-medium">
                     {new Date(ext.newDeadline).toLocaleDateString()}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#767692]">{t("teacher.extensions.reasonLabel")} </span>
-                  <span className="text-[#21214f] font-medium">{ext.reason}</span>
+                  <span className="text-muted-foreground">
+                    {t("teacher.extensions.reasonLabel")}{" "}
+                  </span>
+                  <span className="text-foreground font-medium">{ext.reason}</span>
                 </div>
               </div>
               {ext.status === "pending" && (
-                <div className="flex gap-2 pt-2 border-t border-[#e6e8ee]">
-                  <button className="px-3 py-1.5 bg-[#4caf50] text-white rounded-[8px] hover:bg-[#45a049] text-[13px] font-medium transition-colors">
+                <div className="flex gap-2 pt-2 border-t border-border">
+                  <button className="px-3 py-1.5 bg-success text-primary-foreground rounded-[8px] hover:bg-success text-[13px] font-medium transition-colors">
                     {t("teacher.extensions.approve")}
                   </button>
-                  <button className="px-3 py-1.5 bg-[#d4183d] text-white rounded-[8px] hover:bg-[#b71c2c] text-[13px] font-medium transition-colors">
+                  <button className="px-3 py-1.5 bg-destructive text-primary-foreground rounded-[8px] hover:bg-destructive text-[13px] font-medium transition-colors">
                     {t("teacher.extensions.reject")}
                   </button>
                 </div>

@@ -23,15 +23,15 @@ export function SaveStatusIndicator({ status, lastSavedTimestamp }: SaveStatusIn
         return {
           icon: AlertCircle,
           text: t("shared.saveStatus.unsaved"),
-          color: "text-[#f57c00]",
-          bgColor: "bg-[#fff8e1]",
+          color: "text-warning",
+          bgColor: "bg-warning-light",
         };
       case "saving":
         return {
           icon: Loader2,
           text: t("shared.saveStatus.saving"),
-          color: "text-[#5b8def]",
-          bgColor: "bg-[#e9f5ff]",
+          color: "text-info",
+          bgColor: "bg-info-light",
           animate: true,
         };
       case "saved":
@@ -40,15 +40,15 @@ export function SaveStatusIndicator({ status, lastSavedTimestamp }: SaveStatusIn
           text: lastSavedTimestamp
             ? t("shared.saveStatus.savedAt", { time: formatSaveTime(lastSavedTimestamp) })
             : t("shared.saveStatus.saved"),
-          color: "text-[#4caf50]",
-          bgColor: "bg-[#e8f5e9]",
+          color: "text-success",
+          bgColor: "bg-success-light",
         };
       case "error":
         return {
           icon: AlertCircle,
           text: t("shared.saveStatus.error"),
-          color: "text-[#d4183d]",
-          bgColor: "bg-[#fff5f5]",
+          color: "text-error",
+          bgColor: "bg-error-light",
         };
     }
   };

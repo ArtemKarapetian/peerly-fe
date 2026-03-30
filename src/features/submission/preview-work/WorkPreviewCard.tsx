@@ -47,16 +47,16 @@ export function WorkPreviewCard({
   const checksSummary = getChecksSummary();
 
   return (
-    <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-4 desktop:p-6">
+    <div className="bg-card border-2 border-border rounded-[16px] p-4 desktop:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 pb-4 border-b border-[#e6e8ee]">
-        <h3 className="text-[18px] desktop:text-[20px] font-medium text-[#21214f] tracking-[-0.5px]">
+      <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
+        <h3 className="text-[18px] desktop:text-[20px] font-medium text-foreground tracking-[-0.5px]">
           {t("feature.workPreview.title")}
         </h3>
         {onOpenInNewWindow && (
           <button
             onClick={onOpenInNewWindow}
-            className="inline-flex items-center gap-1.5 text-[13px] text-[#5b8def] hover:text-[#3d6bc6] transition-colors"
+            className="inline-flex items-center gap-1.5 text-[13px] text-brand-primary hover:text-brand-primary transition-colors"
           >
             <span>{t("feature.workPreview.openInNewWindow")}</span>
             <ExternalLink className="w-4 h-4" />
@@ -66,26 +66,26 @@ export function WorkPreviewCard({
 
       {/* Files */}
       <div className="mb-4">
-        <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
+        <h4 className="text-[14px] font-medium text-foreground mb-2">
           {t("feature.workPreview.files")} ({files.length})
         </h4>
         <div className="space-y-2">
           {files.map((file) => (
             <div
               key={file.id}
-              className="flex items-center gap-2 bg-[#f9f9f9] rounded-[8px] px-3 py-2.5"
+              className="flex items-center gap-2 bg-muted rounded-[8px] px-3 py-2.5"
             >
-              <FileText className="w-4 h-4 text-[#767692] shrink-0" />
+              <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-[14px] text-[#21214f] truncate">{file.name}</p>
-                <p className="text-[12px] text-[#767692]">{formatFileSize(file.size)}</p>
+                <p className="text-[14px] text-foreground truncate">{file.name}</p>
+                <p className="text-[12px] text-muted-foreground">{formatFileSize(file.size)}</p>
               </div>
               <button
                 onClick={() => onDownloadFile(file.id)}
-                className="p-2 hover:bg-[#e6e8ee] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-surface-hover rounded-[8px] transition-colors"
                 aria-label={t("feature.workPreview.downloadFile")}
               >
-                <Download className="w-4 h-4 text-[#5b8def]" />
+                <Download className="w-4 h-4 text-brand-primary" />
               </button>
             </div>
           ))}
@@ -95,31 +95,31 @@ export function WorkPreviewCard({
       {/* Validation Checks */}
       {checksSummary && (
         <div>
-          <h4 className="text-[14px] font-medium text-[#21214f] mb-2">
+          <h4 className="text-[14px] font-medium text-foreground mb-2">
             {t("feature.workPreview.checks")}
           </h4>
-          <div className="bg-[#f9f9f9] rounded-[12px] p-3">
+          <div className="bg-muted rounded-[12px] p-3">
             <div className="flex items-center gap-4 flex-wrap">
               {checksSummary.passed > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-                  <span className="text-[13px] text-[#4caf50] font-medium">
+                  <CheckCircle className="w-4 h-4 text-success" />
+                  <span className="text-[13px] text-success font-medium">
                     {checksSummary.passed} {t("feature.workPreview.passed")}
                   </span>
                 </div>
               )}
               {checksSummary.warnings > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <AlertCircle className="w-4 h-4 text-[#ff9800]" />
-                  <span className="text-[13px] text-[#ff9800] font-medium">
+                  <AlertCircle className="w-4 h-4 text-warning" />
+                  <span className="text-[13px] text-warning font-medium">
                     {checksSummary.warnings} {t("feature.workPreview.warnings")}
                   </span>
                 </div>
               )}
               {checksSummary.failed > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <XCircle className="w-4 h-4 text-[#d4183d]" />
-                  <span className="text-[13px] text-[#d4183d] font-medium">
+                  <XCircle className="w-4 h-4 text-destructive" />
+                  <span className="text-[13px] text-destructive font-medium">
                     {checksSummary.failed} {t("feature.workPreview.failed")}
                   </span>
                 </div>
@@ -131,17 +131,19 @@ export function WorkPreviewCard({
               {validationChecks.map((check) => (
                 <div key={check.id} className="flex items-start gap-2 text-[13px]">
                   {check.status === "passed" && (
-                    <CheckCircle className="w-4 h-4 text-[#4caf50] shrink-0 mt-0.5" />
+                    <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
                   )}
                   {check.status === "warning" && (
-                    <AlertCircle className="w-4 h-4 text-[#ff9800] shrink-0 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 text-warning shrink-0 mt-0.5" />
                   )}
                   {check.status === "failed" && (
-                    <XCircle className="w-4 h-4 text-[#d4183d] shrink-0 mt-0.5" />
+                    <XCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#21214f] font-medium">{check.name}</p>
-                    {check.message && <p className="text-[#767692] mt-0.5">{check.message}</p>}
+                    <p className="text-foreground font-medium">{check.name}</p>
+                    {check.message && (
+                      <p className="text-muted-foreground mt-0.5">{check.message}</p>
+                    )}
                   </div>
                 </div>
               ))}

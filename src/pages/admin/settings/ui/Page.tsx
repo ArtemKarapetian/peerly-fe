@@ -25,8 +25,8 @@ export default function AdminSettingsPage() {
       description: t("admin.settingsCard.featureFlagsDesc"),
       icon: Shield,
       href: "/admin/flags",
-      bgColor: "bg-[#e9f5ff]",
-      iconColor: "text-[#5b8def]",
+      bgColor: "bg-info-light",
+      iconColor: "text-brand-primary",
       statusLabel: t("admin.settingsCard.synchronized"),
       statusOk: true,
     },
@@ -36,8 +36,8 @@ export default function AdminSettingsPage() {
       description: t("admin.settingsCard.limitsDesc"),
       icon: AlertTriangle,
       href: "/admin/limits",
-      bgColor: "bg-[#fff4e5]",
-      iconColor: "text-[#ff9800]",
+      bgColor: "bg-warning-light",
+      iconColor: "text-warning",
       statusLabel: t("admin.settingsCard.compliant"),
       statusOk: true,
     },
@@ -47,8 +47,8 @@ export default function AdminSettingsPage() {
       description: t("admin.settingsCard.retentionDesc"),
       icon: Database,
       href: "/admin/retention",
-      bgColor: "bg-[#f3e5f5]",
-      iconColor: "text-[#8e24aa]",
+      bgColor: "bg-accent",
+      iconColor: "text-brand-primary",
       statusLabel: t("admin.settingsCard.running"),
       statusOk: true,
     },
@@ -72,7 +72,7 @@ export default function AdminSettingsPage() {
               <button
                 key={section.id}
                 onClick={() => handleNavigate(section.href)}
-                className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-[#2563eb] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
+                className="bg-card border-2 border-border rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-brand-primary hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div
@@ -82,18 +82,18 @@ export default function AdminSettingsPage() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div
-                      className={`w-2 h-2 rounded-full ${section.statusOk ? "bg-[#4caf50]" : "bg-[#ff9800]"}`}
+                      className={`w-2 h-2 rounded-full ${section.statusOk ? "bg-success" : "bg-warning"}`}
                     ></div>
                     <span
-                      className={`text-[11px] font-medium ${section.statusOk ? "text-[#4caf50]" : "text-[#ff9800]"}`}
+                      className={`text-[11px] font-medium ${section.statusOk ? "text-success" : "text-warning"}`}
                     >
                       {section.statusLabel}
                     </span>
                   </div>
                 </div>
-                <h3 className="text-[16px] font-medium text-[#21214f] mb-1">{section.title}</h3>
-                <p className="text-[13px] text-[#767692] mb-3">{section.description}</p>
-                <div className="flex items-center gap-1 text-[13px] text-[#5b8def] font-medium">
+                <h3 className="text-[16px] font-medium text-foreground mb-1">{section.title}</h3>
+                <p className="text-[13px] text-muted-foreground mb-3">{section.description}</p>
+                <div className="flex items-center gap-1 text-[13px] text-brand-primary font-medium">
                   {t("common.configure")}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>

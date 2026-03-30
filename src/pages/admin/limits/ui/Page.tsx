@@ -187,12 +187,12 @@ export default function AdminLimitsPage() {
 
       <div>
         {showSuccess && (
-          <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6">
+          <div className="bg-success-light border-2 border-success rounded-[16px] p-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#4caf50] rounded-full flex items-center justify-center">
-                <Save className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                <Save className="w-4 h-4 text-primary-foreground" />
               </div>
-              <p className="text-[14px] font-medium text-[#4caf50]">
+              <p className="text-[14px] font-medium text-success">
                 {t("admin.limitsPage.savedSuccess")}
               </p>
             </div>
@@ -200,31 +200,30 @@ export default function AdminLimitsPage() {
         )}
 
         <div className="mb-8">
-          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">
+          <h2 className="text-[20px] font-medium text-foreground mb-4">
             {t("admin.limitsPage.globalLimits")}
           </h2>
           <div className="space-y-4">
             {limitSettings.map((setting) => (
-              <div
-                key={setting.key}
-                className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6"
-              >
+              <div key={setting.key} className="bg-card border-2 border-border rounded-[16px] p-6">
                 <div className="flex items-start gap-4">
                   <div className="text-[32px] flex-shrink-0">{setting.icon}</div>
                   <div className="flex-1">
-                    <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                    <h3 className="text-[16px] font-medium text-foreground mb-1">
                       {t(setting.labelKey)}
                     </h3>
-                    <p className="text-[13px] text-[#767692] mb-3">{t(setting.descriptionKey)}</p>
+                    <p className="text-[13px] text-muted-foreground mb-3">
+                      {t(setting.descriptionKey)}
+                    </p>
                     <div className="flex items-center gap-2 max-w-[250px]">
                       <input
                         type="number"
                         min="1"
                         value={globalLimits[setting.key as keyof GlobalLimits] as number}
                         onChange={(e) => handleGlobalChange(setting.key, e.target.value)}
-                        className="flex-1 px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:border-[#5b8def] focus:outline-none transition-colors"
+                        className="flex-1 px-4 py-2 border-2 border-border rounded-[8px] text-[14px] focus:border-brand-primary focus:outline-none transition-colors"
                       />
-                      <span className="text-[14px] text-[#767692] min-w-[80px]">
+                      <span className="text-[14px] text-muted-foreground min-w-[80px]">
                         {setting.unit || t(setting.unitKey!)}
                       </span>
                     </div>
@@ -234,19 +233,19 @@ export default function AdminLimitsPage() {
             ))}
 
             {/* Rate Limits */}
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
+            <div className="bg-card border-2 border-border rounded-[16px] p-6">
               <div className="flex items-start gap-4">
                 <div className="text-[32px] flex-shrink-0">⚡</div>
                 <div className="flex-1">
-                  <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+                  <h3 className="text-[16px] font-medium text-foreground mb-1">
                     {t("admin.limitsPage.rateLimiting")}
                   </h3>
-                  <p className="text-[13px] text-[#767692] mb-4">
+                  <p className="text-[13px] text-muted-foreground mb-4">
                     {t("admin.limitsPage.rateLimitingDesc")}
                   </p>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[12px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                      <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                         {t("admin.limitsPage.requestsPerMinute")}
                       </label>
                       <div className="flex items-center gap-2">
@@ -257,13 +256,15 @@ export default function AdminLimitsPage() {
                           onChange={(e) =>
                             handleGlobalChange("rateLimit.requestsPerMinute", e.target.value)
                           }
-                          className="flex-1 px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:border-[#5b8def] focus:outline-none transition-colors"
+                          className="flex-1 px-4 py-2 border-2 border-border rounded-[8px] text-[14px] focus:border-brand-primary focus:outline-none transition-colors"
                         />
-                        <span className="text-[14px] text-[#767692] min-w-[60px]">req/min</span>
+                        <span className="text-[14px] text-muted-foreground min-w-[60px]">
+                          req/min
+                        </span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[12px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                      <label className="block text-[12px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                         {t("admin.limitsPage.requestsPerHour")}
                       </label>
                       <div className="flex items-center gap-2">
@@ -274,9 +275,11 @@ export default function AdminLimitsPage() {
                           onChange={(e) =>
                             handleGlobalChange("rateLimit.requestsPerHour", e.target.value)
                           }
-                          className="flex-1 px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] focus:border-[#5b8def] focus:outline-none transition-colors"
+                          className="flex-1 px-4 py-2 border-2 border-border rounded-[8px] text-[14px] focus:border-brand-primary focus:outline-none transition-colors"
                         />
-                        <span className="text-[14px] text-[#767692] min-w-[60px]">req/hour</span>
+                        <span className="text-[14px] text-muted-foreground min-w-[60px]">
+                          req/hour
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -290,17 +293,17 @@ export default function AdminLimitsPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-[20px] font-medium text-[#21214f]">
+              <h2 className="text-[20px] font-medium text-foreground">
                 {t("admin.limitsPage.tenantOverrides")}
               </h2>
-              <p className="text-[13px] text-[#767692] mt-1">
+              <p className="text-[13px] text-muted-foreground mt-1">
                 {t("admin.limitsPage.tenantOverridesDesc")}
               </p>
             </div>
             {tenantOverrides.length < availableTenants.length && (
               <button
                 onClick={() => setShowAddOverride(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
               >
                 <Plus className="w-4 h-4" />
                 {t("admin.limitsPage.addBtn")}
@@ -315,21 +318,25 @@ export default function AdminLimitsPage() {
                 return (
                   <div
                     key={override.tenantId}
-                    className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6"
+                    className="bg-card border-2 border-border rounded-[20px] p-6"
                   >
-                    <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-[#e6e8ee]">
+                    <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-border">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-                          <Building className="w-5 h-5 text-[#5b8def]" />
+                        <div className="w-10 h-10 bg-info-light rounded-[8px] flex items-center justify-center">
+                          <Building className="w-5 h-5 text-brand-primary" />
                         </div>
                         <div>
-                          <h3 className="text-[16px] font-medium text-[#21214f]">{tenant?.name}</h3>
-                          <p className="text-[12px] text-[#767692]">ID: {override.tenantId}</p>
+                          <h3 className="text-[16px] font-medium text-foreground">
+                            {tenant?.name}
+                          </h3>
+                          <p className="text-[12px] text-muted-foreground">
+                            ID: {override.tenantId}
+                          </p>
                         </div>
                       </div>
                       <button
                         onClick={() => handleRemoveOverride(override.tenantId)}
-                        className="p-2 text-[#d4183d] hover:bg-[#fff5f5] rounded-[8px] transition-colors"
+                        className="p-2 text-error hover:bg-error-light rounded-[8px] transition-colors"
                       >
                         <X className="w-5 h-5" />
                       </button>
@@ -337,7 +344,7 @@ export default function AdminLimitsPage() {
                     <div className="grid md:grid-cols-2 gap-4">
                       {limitSettings.map((setting) => (
                         <div key={setting.key}>
-                          <label className="block text-[12px] font-medium text-[#767692] mb-2">
+                          <label className="block text-[12px] font-medium text-muted-foreground mb-2">
                             {t(setting.labelKey)}
                           </label>
                           <div className="flex items-center gap-2">
@@ -353,17 +360,17 @@ export default function AdminLimitsPage() {
                               placeholder={t("admin.limitsPage.defaultPlaceholder", {
                                 value: globalLimits[setting.key as keyof GlobalLimits],
                               })}
-                              className="flex-1 px-3 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[13px] focus:border-[#5b8def] focus:outline-none transition-colors"
+                              className="flex-1 px-3 py-2 border-2 border-border rounded-[8px] text-[13px] focus:border-brand-primary focus:outline-none transition-colors"
                             />
-                            <span className="text-[12px] text-[#767692] min-w-[60px]">
+                            <span className="text-[12px] text-muted-foreground min-w-[60px]">
                               {setting.unit || t(setting.unitKey!)}
                             </span>
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-4 p-3 bg-[#f9f9f9] rounded-[8px]">
-                      <p className="text-[12px] text-[#767692]">
+                    <div className="mt-4 p-3 bg-muted rounded-[8px]">
+                      <p className="text-[12px] text-muted-foreground">
                         {t("admin.limitsPage.overrideHint")}
                       </p>
                     </div>
@@ -372,26 +379,28 @@ export default function AdminLimitsPage() {
               })}
             </div>
           ) : (
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-12 text-center">
-              <Building className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+            <div className="bg-card border-2 border-border rounded-[16px] p-12 text-center">
+              <Building className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+              <h3 className="text-[16px] font-medium text-foreground mb-2">
                 {t("admin.limitsPage.noOverrides")}
               </h3>
-              <p className="text-[13px] text-[#767692] mb-4">
+              <p className="text-[13px] text-muted-foreground mb-4">
                 {t("admin.limitsPage.noOverridesDesc")}
               </p>
             </div>
           )}
         </div>
 
-        <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6">
+        <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4 mb-6">
           <div className="flex gap-3">
-            <AlertCircle className="w-5 h-5 text-[#5b8def] flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-brand-primary flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
+              <h4 className="text-[14px] font-medium text-foreground mb-1">
                 {t("admin.limitsPage.aboutLimitsTitle")}
               </h4>
-              <p className="text-[13px] text-[#767692]">{t("admin.limitsPage.aboutLimitsText")}</p>
+              <p className="text-[13px] text-muted-foreground">
+                {t("admin.limitsPage.aboutLimitsText")}
+              </p>
             </div>
           </div>
         </div>
@@ -402,8 +411,8 @@ export default function AdminLimitsPage() {
             disabled={!hasChanges}
             className={`flex items-center gap-2 px-6 py-3 rounded-[12px] text-[14px] font-medium transition-all ${
               hasChanges
-                ? "bg-[#5b8def] text-white hover:bg-[#4a7de8]"
-                : "bg-[#e6e8ee] text-[#767692] cursor-not-allowed"
+                ? "bg-brand-primary text-primary-foreground hover:bg-brand-primary-hover"
+                : "bg-border text-muted-foreground cursor-not-allowed"
             }`}
           >
             <Save className="w-5 h-5" />
@@ -418,20 +427,20 @@ export default function AdminLimitsPage() {
           onClick={() => setShowAddOverride(false)}
         >
           <div
-            className="bg-white rounded-[20px] w-full max-w-[500px] shadow-2xl"
+            className="bg-card rounded-[20px] w-full max-w-[500px] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-6 py-4 border-b-2 border-[#e6e8ee]">
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+            <div className="px-6 py-4 border-b-2 border-border">
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("admin.limitsPage.addOverrideTitle")}
               </h2>
             </div>
             <div className="p-6">
-              <p className="text-[14px] text-[#767692] mb-4">
+              <p className="text-[14px] text-muted-foreground mb-4">
                 {t("admin.limitsPage.addOverrideText")}
               </p>
-              <div className="p-4 bg-[#f9f9f9] rounded-[12px] border-2 border-[#e6e8ee]">
-                <p className="text-[13px] text-[#21214f]">
+              <div className="p-4 bg-muted rounded-[12px] border-2 border-border">
+                <p className="text-[13px] text-foreground">
                   {t("admin.limitsPage.availableOrgs")}{" "}
                   <strong>
                     {availableTenants
@@ -442,16 +451,16 @@ export default function AdminLimitsPage() {
                 </p>
               </div>
             </div>
-            <div className="px-6 py-4 border-t-2 border-[#e6e8ee] flex gap-3">
+            <div className="px-6 py-4 border-t-2 border-border flex gap-3">
               <button
                 onClick={() => setShowAddOverride(false)}
-                className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px] font-medium"
+                className="flex-1 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors text-[14px] font-medium"
               >
                 {t("admin.limitsPage.cancel")}
               </button>
               <button
                 onClick={handleAddOverride}
-                className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+                className="flex-1 px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
               >
                 {t("admin.limitsPage.add")}
               </button>

@@ -43,14 +43,14 @@ export default function LandingPage() {
             {isAuthenticated ? (
               <button
                 onClick={() => (window.location.hash = "/dashboard")}
-                className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-white text-sm font-medium rounded-[var(--radius-md)] transition-all"
+                className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.openDashboard")}
               </button>
             ) : (
               <button
                 onClick={() => (window.location.hash = "/register")}
-                className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-white text-sm font-medium rounded-[var(--radius-md)] transition-all"
+                className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.getStarted")}
               </button>
@@ -60,18 +60,18 @@ export default function LandingPage() {
       </div>
 
       {/* Hero Section - Яркий голубой фон */}
-      <section className="w-full bg-[#a0b8f1] rounded-bl-[20px] rounded-br-[20px]">
+      <section className="w-full bg-brand-primary-light rounded-bl-[20px] rounded-br-[20px]">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 py-16 tablet:py-20 desktop:py-24">
           <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-16 items-center">
             {/* Text Content - Left */}
             <div className="space-y-6 tablet:space-y-8">
               {/* Heading */}
-              <h1 className="text-5xl tablet:text-6xl desktop:text-7xl font-semibold text-[#21214f] leading-[1.1]">
+              <h1 className="text-5xl tablet:text-6xl desktop:text-7xl font-semibold text-foreground leading-[1.1]">
                 {t("page.landing.heroTitle")}
               </h1>
 
               {/* Description */}
-              <p className="text-base tablet:text-lg text-[#21214f]/80">
+              <p className="text-base tablet:text-lg text-foreground/80">
                 {t("page.landing.heroDescription")}
               </p>
 
@@ -80,14 +80,14 @@ export default function LandingPage() {
                 {isAuthenticated ? (
                   <button
                     onClick={() => (window.location.hash = "/dashboard")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2f5aaf] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#3d6bc6]/50 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2"
                   >
                     {t("page.landing.openDashboard")}
                   </button>
                 ) : (
                   <button
                     onClick={() => (window.location.hash = "/register")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2f5aaf] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#3d6bc6]/50 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2"
                   >
                     {t("page.landing.getStarted")}
                   </button>
@@ -106,25 +106,25 @@ export default function LandingPage() {
       </section>
 
       {/* Intro Section */}
-      <section className="w-full bg-[#f9f9f9] py-16 tablet:py-20 desktop:py-24">
+      <section className="w-full bg-muted py-16 tablet:py-20 desktop:py-24">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
           <div className="text-center space-y-6 max-w-[860px] mx-auto">
-            <h2 className="text-sm font-medium text-[#21214f]/60 uppercase tracking-wide">
+            <h2 className="text-sm font-medium text-foreground/60 uppercase tracking-wide">
               {t("page.landing.introLabel")}
             </h2>
-            <h3 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-[#21214f] leading-[1.1]">
+            <h3 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-foreground leading-[1.1]">
               {t("page.landing.introTitle")}
             </h3>
-            <p className="text-base text-[#21214f]/70">{t("page.landing.introSubtitle")}</p>
+            <p className="text-base text-foreground/70">{t("page.landing.introSubtitle")}</p>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="w-full bg-[#f9f9f9] pb-16 tablet:pb-20 desktop:pb-24">
+      <section className="w-full bg-muted pb-16 tablet:pb-20 desktop:pb-24">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 space-y-8">
           {/* Feature 1 - Самостоятельная платформа */}
-          <div className="bg-[#d2e1f8] rounded-[20px] p-6 tablet:p-10 desktop:p-12">
+          <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-10 desktop:p-12">
             <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 items-center">
               <div className="order-2 desktop:order-1 flex justify-center">
                 <img
@@ -134,22 +134,22 @@ export default function LandingPage() {
                 />
               </div>
               <div className="order-1 desktop:order-2 space-y-4 tablet:space-y-6">
-                <h3 className="text-3xl tablet:text-4xl font-semibold text-[#21214f] leading-[1.1]">
+                <h3 className="text-3xl tablet:text-4xl font-semibold text-foreground leading-[1.1]">
                   {t("page.landing.feature1Title")}
                 </h3>
-                <p className="text-base text-[#21214f]/80">{t("page.landing.feature1Desc")}</p>
+                <p className="text-base text-foreground/80">{t("page.landing.feature1Desc")}</p>
               </div>
             </div>
           </div>
 
           {/* Feature 2 - Снижение нагрузки */}
-          <div className="bg-[#d2e1f8] rounded-[20px] p-6 tablet:p-10 desktop:p-12">
+          <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-10 desktop:p-12">
             <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 items-center">
               <div className="space-y-4 tablet:space-y-6">
-                <h3 className="text-3xl tablet:text-4xl font-semibold text-[#21214f] leading-[1.1]">
+                <h3 className="text-3xl tablet:text-4xl font-semibold text-foreground leading-[1.1]">
                   {t("page.landing.feature2Title")}
                 </h3>
-                <p className="text-base text-[#21214f]/80">{t("page.landing.feature2Desc")}</p>
+                <p className="text-base text-foreground/80">{t("page.landing.feature2Desc")}</p>
               </div>
               <div className="flex justify-center">
                 <img
@@ -162,7 +162,7 @@ export default function LandingPage() {
           </div>
 
           {/* Feature 3 - Гибкая настройка */}
-          <div className="bg-[#d2e1f8] rounded-[20px] p-6 tablet:p-10 desktop:p-12">
+          <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-10 desktop:p-12">
             <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 items-center">
               <div className="order-2 desktop:order-1 flex justify-center">
                 <img
@@ -172,10 +172,10 @@ export default function LandingPage() {
                 />
               </div>
               <div className="order-1 desktop:order-2 space-y-4 tablet:space-y-6">
-                <h3 className="text-3xl tablet:text-4xl font-semibold text-[#21214f] leading-[1.1]">
+                <h3 className="text-3xl tablet:text-4xl font-semibold text-foreground leading-[1.1]">
                   {t("page.landing.feature3Title")}
                 </h3>
-                <p className="text-base text-[#21214f]/80">{t("page.landing.feature3Desc")}</p>
+                <p className="text-base text-foreground/80">{t("page.landing.feature3Desc")}</p>
               </div>
             </div>
           </div>
@@ -183,14 +183,14 @@ export default function LandingPage() {
       </section>
 
       {/* Roles Section */}
-      <section className="w-full bg-white py-16 tablet:py-20 desktop:py-24">
+      <section className="w-full bg-card py-16 tablet:py-20 desktop:py-24">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
           {/* Header */}
           <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 mb-12 tablet:mb-16 desktop:mb-20">
-            <h2 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-[#21214f] leading-[1.1]">
+            <h2 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-foreground leading-[1.1]">
               {t("page.landing.rolesTitle")}
             </h2>
-            <p className="text-base text-[#21214f]/70 desktop:pt-4">
+            <p className="text-base text-foreground/70 desktop:pt-4">
               {t("page.landing.rolesDesc")}
             </p>
           </div>
@@ -198,66 +198,66 @@ export default function LandingPage() {
           {/* Roles Grid */}
           <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-8">
             {/* Students */}
-            <div className="border-l-2 border-[#21214f] pl-6 tablet:pl-8 space-y-4">
+            <div className="border-l-2 border-foreground pl-6 tablet:pl-8 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">
+                <h3 className="text-2xl tablet:text-3xl font-semibold text-foreground">
                   {t("page.landing.roleStudentsTitle")}
                 </h3>
-                <p className="text-base font-medium text-[#21214f]/80">
+                <p className="text-base font-medium text-foreground/80">
                   {t("page.landing.roleStudentsSubtitle")}
                 </p>
               </div>
-              <p className="text-base text-[#21214f]/70">{t("page.landing.roleStudentsDesc")}</p>
+              <p className="text-base text-foreground/70">{t("page.landing.roleStudentsDesc")}</p>
             </div>
 
             {/* Teachers */}
-            <div className="border-l-2 border-[#21214f] pl-6 tablet:pl-8 space-y-4">
+            <div className="border-l-2 border-foreground pl-6 tablet:pl-8 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">
+                <h3 className="text-2xl tablet:text-3xl font-semibold text-foreground">
                   {t("page.landing.roleTeachersTitle")}
                 </h3>
-                <p className="text-base font-medium text-[#21214f]/80">
+                <p className="text-base font-medium text-foreground/80">
                   {t("page.landing.roleTeachersSubtitle")}
                 </p>
               </div>
-              <p className="text-base text-[#21214f]/70">{t("page.landing.roleTeachersDesc")}</p>
+              <p className="text-base text-foreground/70">{t("page.landing.roleTeachersDesc")}</p>
             </div>
 
             {/* Admin */}
-            <div className="border-l-2 border-[#21214f] pl-6 tablet:pl-8 space-y-4">
+            <div className="border-l-2 border-foreground pl-6 tablet:pl-8 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-2xl tablet:text-3xl font-semibold text-[#21214f]">
+                <h3 className="text-2xl tablet:text-3xl font-semibold text-foreground">
                   {t("page.landing.roleAdminTitle")}
                 </h3>
-                <p className="text-base font-medium text-[#21214f]/80">
+                <p className="text-base font-medium text-foreground/80">
                   {t("page.landing.roleAdminSubtitle")}
                 </p>
               </div>
-              <p className="text-base text-[#21214f]/70">{t("page.landing.roleAdminDesc")}</p>
+              <p className="text-base text-foreground/70">{t("page.landing.roleAdminDesc")}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="w-full bg-[#f9f9f9] py-16 tablet:py-20 desktop:py-28">
+      <section className="w-full bg-muted py-16 tablet:py-20 desktop:py-28">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
           <div className="text-center space-y-8 tablet:space-y-10">
-            <h2 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-[#21214f] leading-[1.1] max-w-[900px] mx-auto">
+            <h2 className="text-4xl tablet:text-5xl desktop:text-6xl font-semibold text-foreground leading-[1.1] max-w-[900px] mx-auto">
               {t("page.landing.ctaTitle")}
             </h2>
             <div className="flex flex-col tablet:flex-row items-center justify-center gap-3">
               {isAuthenticated ? (
                 <button
                   onClick={() => (window.location.hash = "/dashboard")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#5b8def] hover:bg-[#4a7cd8] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#5b8def]/50 focus:ring-offset-2 text-base h-11"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2 text-base h-11"
                 >
                   {t("page.landing.openDashboard")}
                 </button>
               ) : (
                 <button
                   onClick={() => (window.location.hash = "/register")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#5b8def] hover:bg-[#4a7cd8] text-white font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#5b8def]/50 focus:ring-offset-2 text-base h-11"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2 text-base h-11"
                 >
                   {t("page.landing.getStarted")}
                 </button>

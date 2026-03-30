@@ -47,33 +47,33 @@ export function FilePreviewCard({
 
     // Different colors for different file types
     const colors: Record<string, string> = {
-      pdf: "bg-[#ffb8b8]",
-      zip: "bg-[#ffd4a3]",
-      doc: "bg-[#b7bdff]",
-      docx: "bg-[#b7bdff]",
-      jpg: "bg-[#b0e9fb]",
-      jpeg: "bg-[#b0e9fb]",
-      png: "bg-[#b0e9fb]",
-      default: "bg-[#d2e1f8]",
+      pdf: "bg-error-light",
+      zip: "bg-warning-light",
+      doc: "bg-brand-primary-light",
+      docx: "bg-brand-primary-light",
+      jpg: "bg-info-light",
+      jpeg: "bg-info-light",
+      png: "bg-info-light",
+      default: "bg-brand-primary-light",
     };
 
     return colors[ext || "default"] || colors.default;
   };
 
   return (
-    <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
+    <div className="bg-card border-2 border-border rounded-[12px] p-4">
       <div className="flex items-start gap-4">
         {/* File icon */}
         <div
           className={`w-12 h-12 ${getFileIcon()} rounded-[8px] flex items-center justify-center shrink-0`}
         >
-          <FileText className="w-6 h-6 text-[#21214f]" />
+          <FileText className="w-6 h-6 text-foreground" />
         </div>
 
         {/* File info */}
         <div className="flex-1 min-w-0">
-          <div className="text-[15px] font-medium text-[#21214f] mb-1 truncate">{file.name}</div>
-          <div className="flex items-center gap-2 text-[13px] text-[#767692]">
+          <div className="text-[15px] font-medium text-foreground mb-1 truncate">{file.name}</div>
+          <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
             <span>{formatFileSize(file.size)}</span>
             <span>•</span>
             <span>
@@ -84,11 +84,11 @@ export function FilePreviewCard({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2 mt-4 pt-4 border-t border-[#e6e8ee]">
+      <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
         <button
           onClick={onReplace}
           disabled={disabled}
-          className="flex items-center gap-2 px-4 py-2 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-muted hover:bg-surface-hover text-foreground rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshCw className="w-4 h-4" />
           <span>{t("feature.filePreview.replaceFile")}</span>
@@ -97,7 +97,7 @@ export function FilePreviewCard({
         <button
           onClick={onDownload}
           disabled={disabled}
-          className="flex items-center gap-2 px-4 py-2 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-4 py-2 bg-muted hover:bg-surface-hover text-foreground rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Download className="w-4 h-4" />
           <span>{t("common.download")}</span>
@@ -106,7 +106,7 @@ export function FilePreviewCard({
         <button
           onClick={onDelete}
           disabled={disabled}
-          className="ml-auto flex items-center gap-2 px-4 py-2 bg-[#fff5f5] hover:bg-[#ffe6e6] text-[#d4183d] rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="ml-auto flex items-center gap-2 px-4 py-2 bg-error-light hover:bg-error-light text-destructive rounded-[8px] text-[14px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Trash2 className="w-4 h-4" />
           <span>{t("common.delete")}</span>

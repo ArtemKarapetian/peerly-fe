@@ -77,7 +77,7 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
                 </p>
               )}
               {textMatches && (
-                <p className="mt-2 text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                <p className="mt-2 text-xs text-success flex items-center gap-1">
                   <span>✓</span>
                   {t("widget.deleteAccount.textConfirmed")}
                 </p>

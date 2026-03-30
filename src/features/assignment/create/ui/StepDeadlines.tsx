@@ -53,51 +53,51 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.deadlines.title")}
         </h2>
-        <p className="text-[15px] text-[#767692]">
+        <p className="text-[15px] text-muted-foreground">
           {t("feature.assignmentCreate.deadlines.subtitle")}
         </p>
       </div>
 
       {/* Submission Deadline */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}{" "}
-          <span className="text-[#d4183d]">*</span>
+          <span className="text-destructive">*</span>
         </label>
         <div className="relative">
-          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692] pointer-events-none" />
+          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           <input
             type="datetime-local"
             value={formatDateForInput(data.submissionDeadline)}
             onChange={(e) => handleDateChange("submissionDeadline", e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
-        <p className="text-[13px] text-[#767692] mt-1">
+        <p className="text-[13px] text-muted-foreground mt-1">
           {t("feature.assignmentCreate.deadlines.submissionDeadlineHint")}
         </p>
       </div>
 
       {/* Review Deadline */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}{" "}
-          <span className="text-[#d4183d]">*</span>
+          <span className="text-destructive">*</span>
         </label>
         <div className="relative">
-          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692] pointer-events-none" />
+          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           <input
             type="datetime-local"
             value={formatDateForInput(data.reviewDeadline)}
             onChange={(e) => handleDateChange("reviewDeadline", e.target.value)}
             min={formatDateForInput(data.submissionDeadline)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
-        <p className="text-[13px] text-[#767692] mt-1">
+        <p className="text-[13px] text-muted-foreground mt-1">
           {t("feature.assignmentCreate.deadlines.reviewDeadlineHint")}
         </p>
       </div>
@@ -109,21 +109,21 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             flex items-start gap-3 p-4 rounded-[12px] border
             ${
               timeDiff.total < 2 * 24 * 60 * 60 * 1000
-                ? "bg-[#fff8e1] border-[#ffe082]"
-                : "bg-[#e8f5e9] border-[#c8e6c9]"
+                ? "bg-warning-light border-warning"
+                : "bg-success-light border-success"
             }
           `}
         >
-          <Clock className="w-5 h-5 text-[#21214f] mt-0.5" />
+          <Clock className="w-5 h-5 text-foreground mt-0.5" />
           <div>
-            <p className="text-[14px] font-medium text-[#21214f] mb-1">
+            <p className="text-[14px] font-medium text-foreground mb-1">
               {t("feature.assignmentCreate.deadlines.timeForReview")}{" "}
               {timeDiff.days > 0 &&
                 `${timeDiff.days} ${t("feature.assignmentCreate.deadlines.days")} `}
               {timeDiff.hours} {t("feature.assignmentCreate.deadlines.hours")}
             </p>
             {timeDiff.total < 2 * 24 * 60 * 60 * 1000 && (
-              <p className="text-[13px] text-[#f57c00]">
+              <p className="text-[13px] text-warning">
                 {t("feature.assignmentCreate.deadlines.reviewTimeWarning")}
               </p>
             )}
@@ -133,7 +133,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
 
       {/* Late Policy */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-3">
+        <label className="block text-[14px] font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.deadlines.latePolicyLabel")}
         </label>
         <div className="grid grid-cols-1 desktop:grid-cols-2 gap-3">
@@ -144,15 +144,15 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
               p-4 border-2 rounded-[12px] text-left transition-all
               ${
                 data.latePolicy === "soft"
-                  ? "border-[#5b8def] bg-[#e9f5ff]"
-                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                  ? "border-brand-primary bg-brand-primary-light"
+                  : "border-border hover:border-brand-primary bg-card"
               }
             `}
           >
-            <div className="text-[15px] font-medium text-[#21214f] mb-1">
+            <div className="text-[15px] font-medium text-foreground mb-1">
               {t("feature.assignmentCreate.deadlines.latePolicySoft")}
             </div>
-            <div className="text-[13px] text-[#767692]">
+            <div className="text-[13px] text-muted-foreground">
               {t("feature.assignmentCreate.deadlines.latePolicySoftDesc")}
             </div>
           </button>
@@ -164,15 +164,15 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
               p-4 border-2 rounded-[12px] text-left transition-all
               ${
                 data.latePolicy === "hard"
-                  ? "border-[#5b8def] bg-[#e9f5ff]"
-                  : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                  ? "border-brand-primary bg-brand-primary-light"
+                  : "border-border hover:border-brand-primary bg-card"
               }
             `}
           >
-            <div className="text-[15px] font-medium text-[#21214f] mb-1">
+            <div className="text-[15px] font-medium text-foreground mb-1">
               {t("feature.assignmentCreate.deadlines.latePolicyHard")}
             </div>
-            <div className="text-[13px] text-[#767692]">
+            <div className="text-[13px] text-muted-foreground">
               {t("feature.assignmentCreate.deadlines.latePolicyHardDesc")}
             </div>
           </button>
@@ -182,7 +182,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
       {/* Late Penalty (if soft policy) */}
       {data.latePolicy === "soft" && (
         <div>
-          <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+          <label className="block text-[14px] font-medium text-foreground mb-2">
             {t("feature.assignmentCreate.deadlines.latePenaltyLabel")}
           </label>
           <div className="flex items-center gap-4">
@@ -195,11 +195,11 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
               onChange={(e) => onUpdate({ latePenalty: parseInt(e.target.value) })}
               className="flex-1"
             />
-            <span className="text-[18px] font-medium text-[#21214f] w-16 text-right">
+            <span className="text-[18px] font-medium text-foreground w-16 text-right">
               {data.latePenalty}%
             </span>
           </div>
-          <p className="text-[13px] text-[#767692] mt-2">
+          <p className="text-[13px] text-muted-foreground mt-2">
             {t("feature.assignmentCreate.deadlines.latePenaltyExample", {
               penalty: data.latePenalty,
               max: 100 - data.latePenalty * 2,
@@ -210,13 +210,13 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
 
       {/* Timezone */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.timezoneLabel")}
         </label>
         <select
           value={data.timezone}
           onChange={(e) => onUpdate({ timezone: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
+          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
         >
           <option value="Europe/Moscow">
             {t("feature.assignmentCreate.deadlines.timezoneMoscow")}
@@ -234,17 +234,19 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             {t("feature.assignmentCreate.deadlines.timezoneSydney")}
           </option>
         </select>
-        <p className="text-[13px] text-[#767692] mt-1">
+        <p className="text-[13px] text-muted-foreground mt-1">
           {t("feature.assignmentCreate.deadlines.timezoneHint")}
         </p>
       </div>
 
       {/* Warning */}
-      <div className="flex items-start gap-3 bg-[#fff8e1] border border-[#ffe082] rounded-[12px] p-4">
-        <AlertTriangle className="w-5 h-5 text-[#f57c00] shrink-0 mt-0.5" />
-        <div className="text-[13px] text-[#21214f]">
+      <div className="flex items-start gap-3 bg-warning-light border border-warning rounded-[12px] p-4">
+        <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+        <div className="text-[13px] text-foreground">
           <p className="font-medium mb-1">{t("feature.assignmentCreate.deadlines.warningTitle")}</p>
-          <p className="text-[#767692]">{t("feature.assignmentCreate.deadlines.warningText")}</p>
+          <p className="text-muted-foreground">
+            {t("feature.assignmentCreate.deadlines.warningText")}
+          </p>
         </div>
       </div>
     </div>

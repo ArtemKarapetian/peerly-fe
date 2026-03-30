@@ -446,28 +446,28 @@ export default function AdminPluginsPage() {
     switch (status) {
       case "healthy":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("admin.pluginsPage.statusHealthy")}
           </span>
         );
       case "degraded":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
             <AlertTriangle className="w-3 h-3" />
             {t("admin.pluginsPage.statusDegraded")}
           </span>
         );
       case "error":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
             <XCircle className="w-3 h-3" />
             {t("admin.pluginsPage.statusError")}
           </span>
         );
       case "not-installed":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[11px] font-medium">
             {t("admin.pluginsPage.statusNotInstalled")}
           </span>
         );
@@ -479,39 +479,39 @@ export default function AdminPluginsPage() {
   const renderPluginCard = (plugin: Plugin) => (
     <div
       key={plugin.id}
-      className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all"
+      className="bg-card border-2 border-border rounded-[20px] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-start gap-3 flex-1">
-          <div className="w-12 h-12 bg-[#e9f5ff] rounded-[12px] flex items-center justify-center flex-shrink-0">
-            <Zap className="w-6 h-6 text-[#5b8def]" />
+          <div className="w-12 h-12 bg-info-light rounded-[12px] flex items-center justify-center flex-shrink-0">
+            <Zap className="w-6 h-6 text-brand-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="text-[18px] font-medium text-[#21214f] mb-1">{plugin.name}</h3>
-            <p className="text-[13px] text-[#767692]">{t(plugin.descriptionKey)}</p>
+            <h3 className="text-[18px] font-medium text-foreground mb-1">{plugin.name}</h3>
+            <p className="text-[13px] text-muted-foreground">{t(plugin.descriptionKey)}</p>
           </div>
         </div>
       </div>
 
       {/* Meta Info */}
-      <div className="space-y-2 mb-4 pb-4 border-b-2 border-[#e6e8ee]">
+      <div className="space-y-2 mb-4 pb-4 border-b-2 border-border">
         <div className="flex items-center justify-between text-[13px]">
-          <span className="text-[#767692]">{t("admin.pluginsPage.versionLabel")}</span>
-          <span className="text-[#21214f] font-medium font-mono">{plugin.version}</span>
+          <span className="text-muted-foreground">{t("admin.pluginsPage.versionLabel")}</span>
+          <span className="text-foreground font-medium font-mono">{plugin.version}</span>
         </div>
         <div className="flex items-center justify-between text-[13px]">
-          <span className="text-[#767692]">{t("admin.pluginsPage.categoryLabel")}</span>
-          <span className="text-[#21214f]">{plugin.category}</span>
+          <span className="text-muted-foreground">{t("admin.pluginsPage.categoryLabel")}</span>
+          <span className="text-foreground">{plugin.category}</span>
         </div>
         <div className="flex items-center justify-between text-[13px]">
-          <span className="text-[#767692]">{t("admin.pluginsPage.statusLabel")}</span>
+          <span className="text-muted-foreground">{t("admin.pluginsPage.statusLabel")}</span>
           {getStatusBadge(plugin.status)}
         </div>
         {plugin.lastRun && (
           <div className="flex items-center justify-between text-[13px]">
-            <span className="text-[#767692]">{t("admin.pluginsPage.lastRunLabel")}</span>
-            <span className="text-[#21214f]">{plugin.lastRun.toLocaleString("ru-RU")}</span>
+            <span className="text-muted-foreground">{t("admin.pluginsPage.lastRunLabel")}</span>
+            <span className="text-foreground">{plugin.lastRun.toLocaleString("ru-RU")}</span>
           </div>
         )}
       </div>
@@ -523,14 +523,14 @@ export default function AdminPluginsPage() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handleConfigure(plugin)}
-                className="flex items-center justify-center gap-2 px-3 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[13px] font-medium"
+                className="flex items-center justify-center gap-2 px-3 py-2 bg-brand-primary text-primary-foreground rounded-[8px] hover:bg-brand-primary-hover transition-colors text-[13px] font-medium"
               >
                 <Settings className="w-4 h-4" />
                 {t("admin.pluginsPage.configure")}
               </button>
               <button
                 onClick={() => handleViewLogs(plugin)}
-                className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[13px] font-medium"
+                className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-border text-foreground rounded-[8px] hover:bg-muted transition-colors text-[13px] font-medium"
               >
                 <FileText className="w-4 h-4" />
                 {t("admin.pluginsPage.logs")}
@@ -539,14 +539,14 @@ export default function AdminPluginsPage() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handleUpdate(plugin)}
-                className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[13px] font-medium"
+                className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-border text-foreground rounded-[8px] hover:bg-muted transition-colors text-[13px] font-medium"
               >
                 <RefreshCw className="w-4 h-4" />
                 {t("admin.pluginsPage.update")}
               </button>
               <button
                 onClick={() => handleUninstall(plugin)}
-                className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-[#d4183d] text-[#d4183d] rounded-[8px] hover:bg-[#fff5f5] transition-colors text-[13px] font-medium"
+                className="flex items-center justify-center gap-2 px-3 py-2 border-2 border-error text-error rounded-[8px] hover:bg-error-light transition-colors text-[13px] font-medium"
               >
                 <Trash2 className="w-4 h-4" />
                 {t("admin.pluginsPage.uninstall")}
@@ -556,7 +556,7 @@ export default function AdminPluginsPage() {
         ) : (
           <button
             onClick={() => handleInstall(plugin)}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors text-[14px] font-medium"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-success text-primary-foreground rounded-[12px] hover:bg-success transition-colors text-[14px] font-medium"
           >
             <Download className="w-5 h-5" />
             {t("admin.pluginsPage.install")}
@@ -574,32 +574,36 @@ export default function AdminPluginsPage() {
 
       <div>
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b-2 border-[#e6e8ee]">
+        <div className="flex gap-2 mb-6 border-b-2 border-border">
           <button
             onClick={() => setActiveTab("installed")}
             className={`px-6 py-3 text-[15px] font-medium transition-colors relative ${
-              activeTab === "installed" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"
+              activeTab === "installed"
+                ? "text-brand-primary"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {t("admin.pluginsPage.tabInstalled")}
             {activeTab === "installed" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#5b8def]" />
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-primary" />
             )}
-            <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] text-[12px] font-medium">
+            <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-info-light text-brand-primary rounded-[6px] text-[12px] font-medium">
               {installedPlugins.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab("available")}
             className={`px-6 py-3 text-[15px] font-medium transition-colors relative ${
-              activeTab === "available" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"
+              activeTab === "available"
+                ? "text-brand-primary"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {t("admin.pluginsPage.tabAvailable")}
             {activeTab === "available" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#5b8def]" />
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-primary" />
             )}
-            <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
+            <span className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium">
               {availablePlugins.length}
             </span>
           </button>
@@ -620,12 +624,12 @@ export default function AdminPluginsPage() {
 
         {/* Empty State */}
         {activeTab === "installed" && installedPlugins.length === 0 && (
-          <div className="text-center py-16 bg-white border-2 border-[#e6e8ee] rounded-[20px]">
-            <Package className="w-16 h-16 text-[#d7d7d7] mx-auto mb-4" />
-            <h3 className="text-[20px] font-medium text-[#21214f] mb-2">
+          <div className="text-center py-16 bg-card border-2 border-border rounded-[20px]">
+            <Package className="w-16 h-16 text-text-tertiary mx-auto mb-4" />
+            <h3 className="text-[20px] font-medium text-foreground mb-2">
               {t("admin.pluginsPage.noPluginsInstalled")}
             </h3>
-            <p className="text-[14px] text-[#767692] mb-4">
+            <p className="text-[14px] text-muted-foreground mb-4">
               {t("admin.pluginsPage.goToAvailable")}
             </p>
           </div>
@@ -639,22 +643,22 @@ export default function AdminPluginsPage() {
           onClick={() => setConfigModal(null)}
         >
           <div
-            className="bg-white rounded-[20px] w-full max-w-[600px] max-h-[90vh] overflow-hidden shadow-2xl"
+            className="bg-card rounded-[20px] w-full max-w-[600px] max-h-[90vh] overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between">
+            <div className="px-6 py-4 border-b-2 border-border flex items-center justify-between">
               <div>
-                <h2 className="text-[20px] font-medium text-[#21214f]">
+                <h2 className="text-[20px] font-medium text-foreground">
                   {t("admin.pluginsPage.configurePlugin")}
                 </h2>
-                <p className="text-[13px] text-[#767692] mt-1">{configModal.plugin.name}</p>
+                <p className="text-[13px] text-muted-foreground mt-1">{configModal.plugin.name}</p>
               </div>
               <button
                 onClick={() => setConfigModal(null)}
-                className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-muted rounded-[8px] transition-colors"
               >
-                <X className="w-5 h-5 text-[#767692]" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
 
@@ -663,9 +667,9 @@ export default function AdminPluginsPage() {
               <div className="space-y-4">
                 {configModal.plugin.configSchema?.map((field) => (
                   <div key={field.key}>
-                    <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                    <label className="block text-[13px] font-medium text-foreground mb-2">
                       {t(field.labelKey)}
-                      {field.required && <span className="text-[#d4183d] ml-1">*</span>}
+                      {field.required && <span className="text-error ml-1">*</span>}
                     </label>
 
                     {field.type === "text" && (
@@ -681,8 +685,8 @@ export default function AdminPluginsPage() {
                         placeholder={field.placeholder}
                         className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors ${
                           configErrors[field.key]
-                            ? "border-[#d4183d] focus:border-[#d4183d]"
-                            : "border-[#e6e8ee] focus:border-[#5b8def]"
+                            ? "border-error focus:border-error"
+                            : "border-border focus:border-brand-primary"
                         }`}
                       />
                     )}
@@ -701,8 +705,8 @@ export default function AdminPluginsPage() {
                         max={field.validation?.max}
                         className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors ${
                           configErrors[field.key]
-                            ? "border-[#d4183d] focus:border-[#d4183d]"
-                            : "border-[#e6e8ee] focus:border-[#5b8def]"
+                            ? "border-error focus:border-error"
+                            : "border-border focus:border-brand-primary"
                         }`}
                       />
                     )}
@@ -718,8 +722,8 @@ export default function AdminPluginsPage() {
                         }
                         className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors ${
                           configErrors[field.key]
-                            ? "border-[#d4183d] focus:border-[#d4183d]"
-                            : "border-[#e6e8ee] focus:border-[#5b8def]"
+                            ? "border-error focus:border-error"
+                            : "border-border focus:border-brand-primary"
                         }`}
                       >
                         <option value="">{t("admin.pluginsPage.selectPlaceholder")}</option>
@@ -732,7 +736,7 @@ export default function AdminPluginsPage() {
                     )}
 
                     {field.type === "boolean" && (
-                      <label className="flex items-center gap-3 p-4 border-2 border-[#e6e8ee] rounded-[12px] cursor-pointer hover:bg-[#f9f9f9] transition-colors">
+                      <label className="flex items-center gap-3 p-4 border-2 border-border rounded-[12px] cursor-pointer hover:bg-muted transition-colors">
                         <input
                           type="checkbox"
                           checked={configModal.config[field.key] === "true"}
@@ -745,14 +749,16 @@ export default function AdminPluginsPage() {
                               },
                             })
                           }
-                          className="w-5 h-5 text-[#5b8def] rounded-[4px]"
+                          className="w-5 h-5 text-brand-primary rounded-[4px]"
                         />
-                        <span className="text-[14px] text-[#767692]">{t(field.labelKey)}</span>
+                        <span className="text-[14px] text-muted-foreground">
+                          {t(field.labelKey)}
+                        </span>
                       </label>
                     )}
 
                     {configErrors[field.key] && (
-                      <p className="text-[12px] text-[#d4183d] mt-1 flex items-center gap-1">
+                      <p className="text-[12px] text-error mt-1 flex items-center gap-1">
                         <XCircle className="w-3 h-3" />
                         {configErrors[field.key]}
                       </p>
@@ -763,16 +769,16 @@ export default function AdminPluginsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 border-t-2 border-[#e6e8ee] flex gap-3">
+            <div className="px-6 py-4 border-t-2 border-border flex gap-3">
               <button
                 onClick={() => setConfigModal(null)}
-                className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px] font-medium"
+                className="flex-1 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors text-[14px] font-medium"
               >
                 {t("admin.pluginsPage.cancel")}
               </button>
               <button
                 onClick={handleSaveConfig}
-                className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+                className="flex-1 px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
               >
                 {t("admin.pluginsPage.save")}
               </button>

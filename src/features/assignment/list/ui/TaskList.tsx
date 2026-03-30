@@ -26,7 +26,7 @@ export function TaskList({ tasks, onTaskClick }: TaskListProps) {
   if (tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-[14px] text-[#767692]">{t("feature.taskList.notFound")}</p>
+        <p className="text-[14px] text-muted-foreground">{t("feature.taskList.notFound")}</p>
       </div>
     );
   }
@@ -42,7 +42,7 @@ export function TaskList({ tasks, onTaskClick }: TaskListProps) {
             onClick={() => onTaskClick?.(task.id)}
           />
           {/* Divider - не показываем после последнего элемента */}
-          {index < tasks.length - 1 && <div className="border-b border-[#e6e8ee]" />}
+          {index < tasks.length - 1 && <div className="border-b border-border" />}
         </div>
       ))}
     </div>

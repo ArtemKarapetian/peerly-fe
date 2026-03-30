@@ -214,16 +214,16 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
         />
 
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-[#f1f8f4] border-2 border-[#9cf38d] rounded-[20px] p-8 max-w-[480px] text-center">
+          <div className="bg-success-light border-2 border-success rounded-[20px] p-8 max-w-[480px] text-center">
             <div className="mb-4">
-              <div className="w-16 h-16 bg-[#9cf38d] rounded-full mx-auto flex items-center justify-center">
+              <div className="w-16 h-16 bg-success-light rounded-full mx-auto flex items-center justify-center">
                 <span className="text-[32px]">✓</span>
               </div>
             </div>
-            <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
+            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
               {t("page.submitWork.successTitle")}
             </h2>
-            <p className="text-[16px] text-[#767692] leading-[1.5] mb-6">
+            <p className="text-[16px] text-muted-foreground leading-[1.5] mb-6">
               {t("page.submitWork.successDesc")}
             </p>
             <div className="flex flex-col gap-3">
@@ -231,7 +231,7 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
                 onClick={() => {
                   window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
                 }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] transition-colors text-[15px] font-medium"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
               >
                 {t("page.submitWork.goToVersionHistory")}
               </button>
@@ -239,7 +239,7 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
                 onClick={() => {
                   window.location.hash = `/task/${taskId}`;
                 }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:border-[#d2def8] hover:bg-[#f9f9f9] transition-colors text-[15px] font-medium"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card border-2 border-border text-foreground rounded-[12px] hover:border-brand-primary-lighter hover:bg-muted transition-colors text-[15px] font-medium"
               >
                 {t("page.submitWork.backToTask")}
               </button>
@@ -264,10 +264,10 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
 
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("page.submitWork.pageTitle")}
         </h1>
-        <p className="text-[16px] text-[#767692] leading-[1.5]">{taskTitle}</p>
+        <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
       </div>
 
       {/* 2-column layout: Form + Status Rail */}
@@ -275,8 +275,8 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
         {/* Left column: Form */}
         <div className="space-y-6">
           {/* Upload area */}
-          <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-            <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
+          <section className="bg-muted rounded-[20px] p-6">
+            <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
               {t("page.submitWork.uploadFiles")}
             </h2>
             <FileUploadArea
@@ -296,8 +296,8 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
 
           {/* Current draft/work preview */}
           {uploadedFile && (
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
+            <section className="bg-muted rounded-[20px] p-6">
+              <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
                 {t("page.submitWork.uploadedFiles")}
               </h2>
               <FilePreviewCard
@@ -311,15 +311,15 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
           )}
 
           {/* Comment to teacher */}
-          <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-            <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
+          <section className="bg-muted rounded-[20px] p-6">
+            <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
               {t("page.submitWork.commentToTeacher")}
-              <span className="text-[#767692] font-normal ml-2">
+              <span className="text-muted-foreground font-normal ml-2">
                 {t("page.submitWork.commentOptional")}
               </span>
             </h2>
             <textarea
-              className="w-full min-h-[120px] px-4 py-3 bg-white border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] placeholder:text-[#767692] focus:border-[#a0b8f1] focus:outline-none resize-none transition-colors"
+              className="w-full min-h-[120px] px-4 py-3 bg-card border-2 border-border rounded-[12px] text-[15px] text-foreground placeholder:text-muted-foreground focus:border-brand-primary-light focus:outline-none resize-none transition-colors"
               placeholder={t("page.submitWork.commentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -327,19 +327,19 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
           </section>
 
           {/* CTAs */}
-          <section className="bg-white rounded-[20px] p-6 border-2 border-[#e6e8ee]">
+          <section className="bg-card rounded-[20px] p-6 border-2 border-border">
             <div className="flex flex-col tablet:flex-row gap-3">
               <button
                 onClick={handleSaveDraft}
                 disabled={!uploadedFile || isSaving || isSubmitting}
-                className="flex-1 px-6 py-3 bg-white border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] text-[16px] font-medium hover:border-[#d2def8] hover:bg-[#f9f9f9] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-1 px-6 py-3 bg-card border-2 border-border text-foreground rounded-[12px] text-[16px] font-medium hover:border-brand-primary-lighter hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 {isSaving ? t("page.submitWork.saving") : t("page.submitWork.saveDraft")}
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={!uploadedFile || isSaving || isSubmitting}
-                className="flex-1 px-6 py-3 bg-[#3d6bc6] text-white rounded-[12px] text-[16px] font-medium hover:bg-[#2d5bb6] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-1 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] text-[16px] font-medium hover:bg-brand-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 {isSubmitting
                   ? t("page.submitWork.submitting")
@@ -353,17 +353,17 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
 
             {/* Inline hints */}
             {!uploadedFile && (
-              <p className="text-[13px] text-[#767692] mt-3 text-center">
+              <p className="text-[13px] text-muted-foreground mt-3 text-center">
                 {t("page.submitWork.uploadFileHint")}
               </p>
             )}
             {taskRules.currentVersion > 0 && uploadedFile && (
-              <p className="text-[13px] text-[#5b8def] mt-3 text-center">
+              <p className="text-[13px] text-brand-primary mt-3 text-center">
                 {t("page.submitWork.newVersionHint", { version: taskRules.currentVersion + 1 })}
               </p>
             )}
             {taskRules.isDeadlinePassed && (
-              <p className="text-[13px] text-[#d4183d] mt-3 text-center font-medium">
+              <p className="text-[13px] text-error mt-3 text-center font-medium">
                 ⚠️ {t("page.submitWork.deadlinePassedHint")}
               </p>
             )}
@@ -374,16 +374,16 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
         <div className="space-y-6 hide-below-desktop">
           <div className="task-sidebar-sticky space-y-6">
             {/* Task rules placeholder */}
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
+            <section className="bg-muted rounded-[20px] p-6">
+              <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
                 {t("page.submitWork.taskRules")}
               </h2>
               <TaskRulesCard rules={taskRules} />
             </section>
 
             {/* Validation checks placeholder */}
-            <section className="bg-[#f9f9f9] rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-[#21214f] mb-4 tracking-[-0.5px]">
+            <section className="bg-muted rounded-[20px] p-6">
+              <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
                 {t("page.submitWork.validationChecks")}
               </h2>
               <ValidationChecks checks={validationChecks} />
