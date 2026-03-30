@@ -137,59 +137,59 @@ export function ParticipantImportModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-card rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b-2 border-[#e6e8ee]">
-          <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px]">
+        <div className="flex items-center justify-between p-6 border-b-2 border-border">
+          <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px]">
             {t("feature.participantImport.title")}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-[8px] transition-colors"
+            className="p-2 hover:bg-surface-hover rounded-[8px] transition-colors"
           >
-            <X className="w-5 h-5 text-[#767692]" />
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
         {/* Mode Tabs */}
-        <div className="flex border-b-2 border-[#e6e8ee]">
+        <div className="flex border-b-2 border-border">
           <button
             onClick={() => setMode("csv")}
             className={`
               flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
-              ${mode === "csv" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"}
+              ${mode === "csv" ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"}
             `}
           >
             <Upload className="w-4 h-4 inline-block mr-2" />
             {t("feature.participantImport.csvImport")}
             {mode === "csv" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand-primary"></div>
             )}
           </button>
           <button
             onClick={() => setMode("manual")}
             className={`
               flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
-              ${mode === "manual" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"}
+              ${mode === "manual" ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"}
             `}
           >
             <UserPlus className="w-4 h-4 inline-block mr-2" />
             {t("feature.participantImport.addManually")}
             {mode === "manual" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand-primary"></div>
             )}
           </button>
           <button
             onClick={() => setMode("invite")}
             className={`
               flex-1 px-4 py-3 text-[15px] font-medium transition-colors relative
-              ${mode === "invite" ? "text-[#5b8def]" : "text-[#767692] hover:text-[#21214f]"}
+              ${mode === "invite" ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"}
             `}
           >
             <Key className="w-4 h-4 inline-block mr-2" />
             {t("feature.participantImport.inviteCodes")}
             {mode === "invite" && (
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#5b8def]"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand-primary"></div>
             )}
           </button>
         </div>
@@ -199,22 +199,22 @@ export function ParticipantImportModal({
           {/* CSV Import Mode */}
           {mode === "csv" && (
             <div>
-              <p className="text-[14px] text-[#767692] mb-4">
+              <p className="text-[14px] text-muted-foreground mb-4">
                 {t("feature.participantImport.csvHint")}{" "}
-                <code className="bg-[#f9f9f9] px-2 py-1 rounded">имя,фамилия,логин</code>
+                <code className="bg-muted px-2 py-1 rounded">имя,фамилия,логин</code>
               </p>
 
               <textarea
                 value={csvText}
                 onChange={(e) => setCsvText(e.target.value)}
                 placeholder="Иван,Петров,ivan.petrov&#10;Мария,Сидорова,maria.sidorova&#10;Алексей,Смирнов,alex.smirnov"
-                className="w-full h-[200px] p-4 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] font-mono resize-none focus:outline-none focus:border-[#5b8def] transition-colors"
+                className="w-full h-[200px] p-4 border-2 border-border rounded-[12px] text-[14px] font-mono resize-none focus:outline-none focus:border-brand-primary transition-colors"
               />
 
               <button
                 onClick={handleParseCSV}
                 disabled={!csvText.trim()}
-                className="mt-4 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
+                className="mt-4 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors disabled:bg-muted disabled:cursor-not-allowed"
               >
                 {t("feature.participantImport.parseAndPreview")}
               </button>
@@ -223,16 +223,16 @@ export function ParticipantImportModal({
               {showPreview && parsedUsers.length > 0 && (
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[18px] font-medium text-[#21214f]">
+                    <h3 className="text-[18px] font-medium text-foreground">
                       {t("feature.participantImport.preview")} ({parsedUsers.length})
                     </h3>
                     <div className="flex items-center gap-4 text-[13px]">
-                      <span className="text-[#4caf50] flex items-center gap-1">
+                      <span className="text-success flex items-center gap-1">
                         <CheckCircle className="w-4 h-4" />
                         {validCount} {t("feature.participantImport.valid")}
                       </span>
                       {errorCount > 0 && (
-                        <span className="text-[#d4183d] flex items-center gap-1">
+                        <span className="text-destructive flex items-center gap-1">
                           <AlertCircle className="w-4 h-4" />
                           {errorCount} {t("feature.participantImport.errors")}
                         </span>
@@ -240,20 +240,20 @@ export function ParticipantImportModal({
                     </div>
                   </div>
 
-                  <div className="border-2 border-[#e6e8ee] rounded-[12px] overflow-hidden max-h-[300px] overflow-y-auto">
+                  <div className="border-2 border-border rounded-[12px] overflow-hidden max-h-[300px] overflow-y-auto">
                     <table className="w-full text-[14px]">
-                      <thead className="bg-[#f9f9f9] sticky top-0">
+                      <thead className="bg-muted sticky top-0">
                         <tr>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-muted-foreground uppercase">
                             {t("feature.participantImport.nameHeader")}
                           </th>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-muted-foreground uppercase">
                             {t("feature.participantImport.surnameHeader")}
                           </th>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-muted-foreground uppercase">
                             {t("feature.participantImport.loginHeader")}
                           </th>
-                          <th className="text-left px-3 py-2 text-[12px] font-medium text-[#767692] uppercase">
+                          <th className="text-left px-3 py-2 text-[12px] font-medium text-muted-foreground uppercase">
                             {t("feature.participantImport.statusHeader")}
                           </th>
                         </tr>
@@ -262,19 +262,19 @@ export function ParticipantImportModal({
                         {parsedUsers.map((user, index) => (
                           <tr
                             key={index}
-                            className={`border-t border-[#e6e8ee] ${user.error ? "bg-[#fff5f5]" : ""}`}
+                            className={`border-t border-border ${user.error ? "bg-error-light" : ""}`}
                           >
                             <td className="px-3 py-2">{user.name || "-"}</td>
                             <td className="px-3 py-2">{user.surname || "-"}</td>
                             <td className="px-3 py-2 font-mono text-[13px]">{user.login || "-"}</td>
                             <td className="px-3 py-2">
                               {user.error ? (
-                                <span className="text-[#d4183d] text-[12px] flex items-center gap-1">
+                                <span className="text-destructive text-[12px] flex items-center gap-1">
                                   <AlertCircle className="w-3 h-3" />
                                   {user.error}
                                 </span>
                               ) : (
-                                <span className="text-[#4caf50] text-[12px] flex items-center gap-1">
+                                <span className="text-success text-[12px] flex items-center gap-1">
                                   <CheckCircle className="w-3 h-3" />
                                   OK
                                 </span>
@@ -289,7 +289,7 @@ export function ParticipantImportModal({
                   <button
                     onClick={handleImportCSV}
                     disabled={validCount === 0}
-                    className="mt-4 px-6 py-2 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors disabled:bg-[#d7d7d7] disabled:cursor-not-allowed"
+                    className="mt-4 px-6 py-2 bg-success text-primary-foreground rounded-[12px] hover:bg-success/90 transition-colors disabled:bg-muted disabled:cursor-not-allowed"
                   >
                     {t("feature.participantImport.importUsers", { count: validCount })}
                   </button>
@@ -301,13 +301,13 @@ export function ParticipantImportModal({
           {/* Manual Add Mode */}
           {mode === "manual" && (
             <div>
-              <p className="text-[14px] text-[#767692] mb-4">
+              <p className="text-[14px] text-muted-foreground mb-4">
                 {t("feature.participantImport.addOneManually")}
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
                     {t("feature.participantImport.nameLabel")}
                   </label>
                   <input
@@ -315,12 +315,12 @@ export function ParticipantImportModal({
                     value={manualName}
                     onChange={(e) => setManualName(e.target.value)}
                     placeholder="Иван"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
                     {t("feature.participantImport.surnameLabel")}
                   </label>
                   <input
@@ -328,12 +328,12 @@ export function ParticipantImportModal({
                     value={manualSurname}
                     onChange={(e) => setManualSurname(e.target.value)}
                     placeholder="Петров"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
                     {t("feature.participantImport.loginLabel")}
                   </label>
                   <input
@@ -341,13 +341,13 @@ export function ParticipantImportModal({
                     value={manualLogin}
                     onChange={(e) => setManualLogin(e.target.value)}
                     placeholder="ivan.petrov"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] font-mono focus:outline-none focus:border-[#5b8def] transition-colors"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] font-mono focus:outline-none focus:border-brand-primary transition-colors"
                   />
                 </div>
 
                 <button
                   onClick={handleAddManual}
-                  className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+                  className="w-full px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium"
                 >
                   {t("feature.participantImport.addParticipant")}
                 </button>
@@ -358,13 +358,13 @@ export function ParticipantImportModal({
           {/* Invite Codes Mode */}
           {mode === "invite" && (
             <div>
-              <p className="text-[14px] text-[#767692] mb-4">
+              <p className="text-[14px] text-muted-foreground mb-4">
                 {t("feature.participantImport.generateInviteDesc")}
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
                     {t("feature.participantImport.codeCount")}
                   </label>
                   <input
@@ -373,33 +373,33 @@ export function ParticipantImportModal({
                     max="100"
                     value={inviteCount}
                     onChange={(e) => setInviteCount(parseInt(e.target.value) || 1)}
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
                   />
                 </div>
 
                 <button
                   onClick={handleGenerateInvites}
-                  className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+                  className="w-full px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium"
                 >
                   {t("feature.participantImport.generateCodes")}
                 </button>
 
                 {generatedCodes.length > 0 && (
                   <div className="mt-6">
-                    <h3 className="text-[16px] font-medium text-[#21214f] mb-3">
+                    <h3 className="text-[16px] font-medium text-foreground mb-3">
                       {t("feature.participantImport.generatedCodes")} ({generatedCodes.length})
                     </h3>
-                    <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4 max-h-[300px] overflow-y-auto">
+                    <div className="bg-muted border-2 border-border rounded-[12px] p-4 max-h-[300px] overflow-y-auto">
                       <div className="space-y-2 font-mono text-[14px]">
                         {generatedCodes.map((code, index) => (
                           <div
                             key={index}
-                            className="flex items-center justify-between p-2 bg-white rounded-[8px]"
+                            className="flex items-center justify-between p-2 bg-card rounded-[8px]"
                           >
-                            <span className="text-[#21214f]">{code}</span>
+                            <span className="text-foreground">{code}</span>
                             <button
                               onClick={() => void navigator.clipboard.writeText(code)}
-                              className="text-[13px] text-[#5b8def] hover:underline"
+                              className="text-[13px] text-brand-primary hover:underline"
                             >
                               {t("feature.participantImport.copy")}
                             </button>
@@ -415,10 +415,10 @@ export function ParticipantImportModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-[#e6e8ee]">
+        <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-border">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-[#767692] hover:bg-[#f9f9f9] rounded-[12px] transition-colors"
+            className="px-4 py-2 text-muted-foreground hover:bg-muted rounded-[12px] transition-colors"
           >
             {t("feature.participantImport.close")}
           </button>

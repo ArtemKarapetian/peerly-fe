@@ -17,18 +17,18 @@ interface AlertProps {
 
 const variantStyles = {
   error: {
-    container: "bg-[#fef2f2] border-[#d4183d]",
-    text: "text-[#d4183d]",
+    container: "bg-error-light border-destructive",
+    text: "text-error",
     icon: AlertCircle,
   },
   success: {
-    container: "bg-[#f0fdf4] border-[#16a34a]",
-    text: "text-[#16a34a]",
+    container: "bg-success-light border-success",
+    text: "text-success",
     icon: CheckCircle,
   },
   info: {
-    container: "bg-[#eff6ff] border-[#3b82f6]",
-    text: "text-[#3b82f6]",
+    container: "bg-info-light border-info",
+    text: "text-info",
     icon: Info,
   },
 };

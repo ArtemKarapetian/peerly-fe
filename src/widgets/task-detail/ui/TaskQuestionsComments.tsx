@@ -20,10 +20,10 @@ export function TaskQuestionsComments() {
   ];
 
   return (
-    <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
+    <div className="bg-muted rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <div className="flex items-center gap-2 mb-4">
-        <MessageCircle className="size-5 text-[#21214f]" />
-        <h2 className="text-[18px] desktop:text-[20px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.72px] text-[#21214f]">
+        <MessageCircle className="size-5 text-foreground" />
+        <h2 className="text-[18px] desktop:text-[20px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.72px] text-foreground">
           {t("widget.taskQuestionsComments.title")}
         </h2>
       </div>
@@ -31,16 +31,16 @@ export function TaskQuestionsComments() {
       {/* Comments list */}
       <div className="space-y-3 mb-4">
         {comments.map((item, index) => (
-          <div key={index} className="bg-white rounded-[12px] p-3">
+          <div key={index} className="bg-card rounded-[12px] p-3">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[12px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-[#21214f]">
+              <span className="text-[12px] desktop:text-[14px] font-['Work_Sans:Medium',sans-serif] text-foreground">
                 {item.author}
               </span>
-              <span className="text-[11px] desktop:text-[12px] font-['Work_Sans:Regular',sans-serif] text-[#767692]">
+              <span className="text-[11px] desktop:text-[12px] font-['Work_Sans:Regular',sans-serif] text-text-tertiary">
                 {item.date}
               </span>
             </div>
-            <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.42px] text-[#4b4963] leading-[1.5]">
+            <p className="text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.42px] text-muted-foreground leading-[1.5]">
               {item.text}
             </p>
           </div>
@@ -54,9 +54,9 @@ export function TaskQuestionsComments() {
           onChange={(e) => setComment(e.target.value)}
           placeholder={t("widget.taskQuestionsComments.placeholder")}
           rows={3}
-          className="w-full px-3 py-2 bg-white border border-[#c7c7c7] rounded-[8px] text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#21214f] placeholder:text-[#767692] focus:outline-none focus:border-[#b7bdff] resize-none"
+          className="w-full px-3 py-2 bg-card border border-border rounded-[8px] text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-brand-primary resize-none"
         />
-        <button className="flex items-center justify-center gap-2 bg-[#d2def8] hover:bg-[#b7bdff] transition-colors px-4 py-2 rounded-[8px] text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-[#21214f]">
+        <button className="flex items-center justify-center gap-2 bg-brand-primary-light hover:bg-brand-primary-hover transition-colors px-4 py-2 rounded-[8px] text-[13px] desktop:text-[14px] font-['Work_Sans:Regular',sans-serif] text-foreground">
           <Send className="size-4" />
           {t("widget.taskQuestionsComments.send")}
         </button>

@@ -48,7 +48,7 @@ export default function InboxPage() {
 
   return (
     <AppShell>
-      <div className="min-h-screen bg-[#fafbfc]">
+      <div className="min-h-screen bg-surface-hover">
         <InboxHeader
           unreadCount={unreadCount}
           selectedFilter={selectedFilter}
@@ -66,16 +66,16 @@ export default function InboxPage() {
           />
 
           {/* Info Card */}
-          <div className="mt-6 bg-[#f0f4ff] border-2 border-[#d2e1f8] rounded-[16px] p-5">
+          <div className="mt-6 bg-info-light border-2 border-brand-primary-lighter rounded-[16px] p-5">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-[#3d6bc6] rounded-full flex items-center justify-center shrink-0">
-                <span className="text-white text-[14px] font-semibold">i</span>
+              <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center shrink-0">
+                <span className="text-primary-foreground text-[14px] font-semibold">i</span>
               </div>
               <div>
-                <h4 className="text-[15px] font-medium text-[#21214f] mb-1">
+                <h4 className="text-[15px] font-medium text-foreground mb-1">
                   {t("student.inbox.about")}
                 </h4>
-                <p className="text-[14px] text-[#767692] leading-[1.6]">
+                <p className="text-[14px] text-muted-foreground leading-[1.6]">
                   {t("student.inbox.aboutDesc")}
                 </p>
               </div>

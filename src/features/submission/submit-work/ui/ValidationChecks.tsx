@@ -33,36 +33,36 @@ export function ValidationChecks({ checks }: ValidationChecksProps) {
   const getStatusIcon = (status: CheckStatus) => {
     switch (status) {
       case "queued":
-        return <Clock className="w-5 h-5 text-[#767692]" />;
+        return <Clock className="w-5 h-5 text-muted-foreground" />;
       case "running":
-        return <Loader2 className="w-5 h-5 text-[#5b8def] animate-spin" />;
+        return <Loader2 className="w-5 h-5 text-brand-primary animate-spin" />;
       case "passed":
-        return <CheckCircle className="w-5 h-5 text-[#4caf50]" />;
+        return <CheckCircle className="w-5 h-5 text-success" />;
       case "failed":
-        return <XCircle className="w-5 h-5 text-[#d4183d]" />;
+        return <XCircle className="w-5 h-5 text-destructive" />;
       case "warning":
-        return <AlertCircle className="w-5 h-5 text-[#ff9800]" />;
+        return <AlertCircle className="w-5 h-5 text-warning" />;
       case "not-started":
       default:
-        return <div className="w-5 h-5 border-2 border-[#e6e8ee] rounded-full" />;
+        return <div className="w-5 h-5 border-2 border-border rounded-full" />;
     }
   };
 
   const getStatusColor = (status: CheckStatus) => {
     switch (status) {
       case "queued":
-        return "text-[#767692]";
+        return "text-muted-foreground";
       case "running":
-        return "text-[#5b8def]";
+        return "text-brand-primary";
       case "passed":
-        return "text-[#4caf50]";
+        return "text-success";
       case "failed":
-        return "text-[#d4183d]";
+        return "text-destructive";
       case "warning":
-        return "text-[#ff9800]";
+        return "text-warning";
       case "not-started":
       default:
-        return "text-[#767692]";
+        return "text-muted-foreground";
     }
   };
 
@@ -87,7 +87,7 @@ export function ValidationChecks({ checks }: ValidationChecksProps) {
   if (checks.length === 0) {
     return (
       <div className="text-center py-6">
-        <p className="text-[13px] text-[#767692]">
+        <p className="text-[13px] text-muted-foreground">
           {t("feature.validationChecks.willRunAfterUpload")}
         </p>
       </div>
@@ -100,7 +100,7 @@ export function ValidationChecks({ checks }: ValidationChecksProps) {
         <div
           key={check.id}
           className={`p-3 transition-all ${
-            index !== checks.length - 1 ? "border-b border-[#e6e8ee]" : ""
+            index !== checks.length - 1 ? "border-b border-border" : ""
           }`}
         >
           <div className="flex items-start gap-3">
@@ -110,12 +110,14 @@ export function ValidationChecks({ checks }: ValidationChecksProps) {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2 mb-1">
-                <div className="text-[14px] font-medium text-[#21214f]">{check.name}</div>
+                <div className="text-[14px] font-medium text-foreground">{check.name}</div>
                 <div className={`text-[12px] font-medium ${getStatusColor(check.status)} shrink-0`}>
                   {getStatusLabel(check.status)}
                 </div>
               </div>
-              <div className="text-[12px] text-[#767692] leading-[1.4]">{check.description}</div>
+              <div className="text-[12px] text-muted-foreground leading-[1.4]">
+                {check.description}
+              </div>
               {check.message && (
                 <div className={`text-[12px] ${getStatusColor(check.status)} mt-2 font-medium`}>
                   {check.message}

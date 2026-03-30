@@ -33,8 +33,8 @@ export function ReviewFilters({ filter, counts, onFilterChange }: ReviewFiltersP
           onClick={() => onFilterChange(value)}
           className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
             filter === value
-              ? "bg-[#5b8def] text-white"
-              : "bg-[#f9f9f9] text-[#4b4963] hover:bg-[#e6e8ee]"
+              ? "bg-brand-primary text-text-inverse"
+              : "bg-muted text-muted-foreground hover:bg-surface-hover"
           }`}
         >
           {label} ({counts[countKey]})

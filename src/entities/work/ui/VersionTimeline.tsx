@@ -45,11 +45,11 @@ export function VersionTimeline({
         <div key={version.id} className="relative">
           {/* Timeline connector */}
           {index < sortedVersions.length - 1 && (
-            <div className="absolute left-6 top-full w-0.5 h-6 bg-[#e6e8ee]" />
+            <div className="absolute left-6 top-full w-0.5 h-6 bg-border" />
           )}
 
           {/* Version dot */}
-          <div className="absolute left-3 top-8 w-6 h-6 bg-[#5b8def] rounded-full border-4 border-white shadow-sm z-10" />
+          <div className="absolute left-3 top-8 w-6 h-6 bg-brand-primary rounded-full border-4 border-card shadow-sm z-10" />
 
           {/* Version card with left padding for timeline */}
           <div className="ml-12">

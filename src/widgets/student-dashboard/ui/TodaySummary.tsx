@@ -17,13 +17,13 @@ export function TodaySummary({ data }: TodaySummaryProps) {
       icon: CheckSquare,
       label: t("widget.todaySummary.tasksToday"),
       count: data.tasksToday,
-      accent: "#2563eb",
+      accent: "var(--brand-primary)",
     },
     {
       icon: MessageSquare,
       label: t("widget.todaySummary.reviewsPending"),
       count: data.reviewsPending,
-      accent: "#059669",
+      accent: "var(--success)",
     },
   ];
 

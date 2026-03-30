@@ -146,8 +146,8 @@ export default function ResetPasswordPage() {
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
               {/* Success Icon */}
-              <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 bg-success-light rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8 text-success" />
               </div>
 
               {/* Success Message */}
@@ -297,7 +297,7 @@ export default function ResetPasswordPage() {
                 <ul className="space-y-1">
                   <li
                     className={`text-xs flex items-center gap-2 ${
-                      newPassword.length >= 8 ? "text-green-600" : "text-muted-foreground"
+                      newPassword.length >= 8 ? "text-success" : "text-muted-foreground"
                     }`}
                   >
                     <span className="text-lg leading-none">•</span>
@@ -306,7 +306,7 @@ export default function ResetPasswordPage() {
                   <li
                     className={`text-xs flex items-center gap-2 ${
                       newPassword && confirmPassword && newPassword === confirmPassword
-                        ? "text-green-600"
+                        ? "text-success"
                         : "text-muted-foreground"
                     }`}
                   >

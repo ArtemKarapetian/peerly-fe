@@ -280,21 +280,21 @@ export default function AdminIntegrationsPage() {
     switch (status) {
       case "active":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("admin.integrationsPage.statusActive")}
           </span>
         );
       case "inactive":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[11px] font-medium">
             <Clock className="w-3 h-3" />
             {t("admin.integrationsPage.statusInactive")}
           </span>
         );
       case "error":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
             <XCircle className="w-3 h-3" />
             {t("admin.integrationsPage.statusError")}
           </span>
@@ -316,21 +316,21 @@ export default function AdminIntegrationsPage() {
       <div className="space-y-8">
         {/* External Integrations Section */}
         <div>
-          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">
+          <h2 className="text-[20px] font-medium text-foreground mb-4">
             {t("admin.integrationsPage.externalIntegrations")}
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Moodle Integration */}
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 opacity-60">
+            <div className="bg-card border-2 border-border rounded-[20px] p-6 opacity-60">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 bg-[#fff4e5] rounded-[12px] flex items-center justify-center">
-                    <Link2 className="w-6 h-6 text-[#ff9800]" />
+                  <div className="w-12 h-12 bg-warning-light rounded-[12px] flex items-center justify-center">
+                    <Link2 className="w-6 h-6 text-warning" />
                   </div>
                   <div>
-                    <h3 className="text-[18px] font-medium text-[#21214f] mb-1">Moodle</h3>
-                    <p className="text-[13px] text-[#767692]">
+                    <h3 className="text-[18px] font-medium text-foreground mb-1">Moodle</h3>
+                    <p className="text-[13px] text-muted-foreground">
                       {t("admin.integrationsPage.moodleDesc")}
                     </p>
                   </div>
@@ -338,7 +338,7 @@ export default function AdminIntegrationsPage() {
               </div>
 
               <div className="mb-4">
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[12px] font-medium">
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-muted text-muted-foreground rounded-[8px] text-[12px] font-medium">
                   <Lock className="w-3 h-3" />
                   Out of MVP
                 </span>
@@ -346,47 +346,47 @@ export default function AdminIntegrationsPage() {
 
               <div className="space-y-3 mb-4">
                 <div>
-                  <label className="block text-[12px] font-medium text-[#767692] mb-1 uppercase tracking-wide">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-1 uppercase tracking-wide">
                     Moodle URL
                   </label>
                   <input
                     type="text"
                     disabled
                     placeholder="https://your-moodle.edu"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] bg-[#f9f9f9] cursor-not-allowed"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[8px] text-[14px] bg-muted cursor-not-allowed"
                   />
                 </div>
                 <div>
-                  <label className="block text-[12px] font-medium text-[#767692] mb-1 uppercase tracking-wide">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-1 uppercase tracking-wide">
                     API Token
                   </label>
                   <input
                     type="password"
                     disabled
                     placeholder="••••••••••••••••"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] bg-[#f9f9f9] cursor-not-allowed"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[8px] text-[14px] bg-muted cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <button
                 disabled
-                className="w-full px-4 py-2 bg-[#e6e8ee] text-[#767692] rounded-[8px] text-[14px] font-medium cursor-not-allowed"
+                className="w-full px-4 py-2 bg-border text-muted-foreground rounded-[8px] text-[14px] font-medium cursor-not-allowed"
               >
                 {t("admin.integrationsPage.connectUnavailable")}
               </button>
             </div>
 
             {/* Office 365 Integration */}
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 opacity-60">
+            <div className="bg-card border-2 border-border rounded-[20px] p-6 opacity-60">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 bg-[#e9f5ff] rounded-[12px] flex items-center justify-center">
-                    <Link2 className="w-6 h-6 text-[#5b8def]" />
+                  <div className="w-12 h-12 bg-info-light rounded-[12px] flex items-center justify-center">
+                    <Link2 className="w-6 h-6 text-brand-primary" />
                   </div>
                   <div>
-                    <h3 className="text-[18px] font-medium text-[#21214f] mb-1">Office 365</h3>
-                    <p className="text-[13px] text-[#767692]">
+                    <h3 className="text-[18px] font-medium text-foreground mb-1">Office 365</h3>
+                    <p className="text-[13px] text-muted-foreground">
                       {t("admin.integrationsPage.office365Desc")}
                     </p>
                   </div>
@@ -394,7 +394,7 @@ export default function AdminIntegrationsPage() {
               </div>
 
               <div className="mb-4">
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#f5f5f5] text-[#767692] rounded-[8px] text-[12px] font-medium">
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-muted text-muted-foreground rounded-[8px] text-[12px] font-medium">
                   <Lock className="w-3 h-3" />
                   Out of MVP
                 </span>
@@ -402,32 +402,32 @@ export default function AdminIntegrationsPage() {
 
               <div className="space-y-3 mb-4">
                 <div>
-                  <label className="block text-[12px] font-medium text-[#767692] mb-1 uppercase tracking-wide">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-1 uppercase tracking-wide">
                     Client ID
                   </label>
                   <input
                     type="text"
                     disabled
                     placeholder="00000000-0000-0000-0000-000000000000"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] bg-[#f9f9f9] cursor-not-allowed"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[8px] text-[14px] bg-muted cursor-not-allowed"
                   />
                 </div>
                 <div>
-                  <label className="block text-[12px] font-medium text-[#767692] mb-1 uppercase tracking-wide">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-1 uppercase tracking-wide">
                     Client Secret
                   </label>
                   <input
                     type="password"
                     disabled
                     placeholder="••••••••••••••••"
-                    className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[8px] text-[14px] bg-[#f9f9f9] cursor-not-allowed"
+                    className="w-full px-4 py-2 border-2 border-border rounded-[8px] text-[14px] bg-muted cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <button
                 disabled
-                className="w-full px-4 py-2 bg-[#e6e8ee] text-[#767692] rounded-[8px] text-[14px] font-medium cursor-not-allowed"
+                className="w-full px-4 py-2 bg-border text-muted-foreground rounded-[8px] text-[14px] font-medium cursor-not-allowed"
               >
                 {t("admin.integrationsPage.connectUnavailable")}
               </button>
@@ -438,12 +438,12 @@ export default function AdminIntegrationsPage() {
         {/* Webhooks Section */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[20px] font-medium text-[#21214f]">
+            <h2 className="text-[20px] font-medium text-foreground">
               {t("admin.integrationsPage.webhooks")}
             </h2>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
             >
               <Plus className="w-4 h-4" />
               {t("admin.integrationsPage.createWebhook")}
@@ -453,17 +453,14 @@ export default function AdminIntegrationsPage() {
           {webhooks.length > 0 ? (
             <div className="space-y-4">
               {webhooks.map((webhook) => (
-                <div
-                  key={webhook.id}
-                  className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6"
-                >
+                <div key={webhook.id} className="bg-card border-2 border-border rounded-[20px] p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-[18px] font-medium text-[#21214f]">{webhook.name}</h3>
+                        <h3 className="text-[18px] font-medium text-foreground">{webhook.name}</h3>
                         {getStatusBadge(webhook.status)}
                       </div>
-                      <div className="flex items-center gap-2 text-[13px] text-[#767692] mb-2">
+                      <div className="flex items-center gap-2 text-[13px] text-muted-foreground mb-2">
                         <ExternalLink className="w-3 h-3" />
                         <span className="font-mono">{webhook.url}</span>
                       </div>
@@ -473,7 +470,7 @@ export default function AdminIntegrationsPage() {
                           return (
                             <span
                               key={event}
-                              className="px-2 py-1 bg-[#f9f9f9] text-[#21214f] rounded-[6px] text-[11px]"
+                              className="px-2 py-1 bg-muted text-foreground rounded-[6px] text-[11px]"
                             >
                               {eventInfo?.label || event}
                             </span>
@@ -484,48 +481,48 @@ export default function AdminIntegrationsPage() {
                   </div>
 
                   {webhook.lastDelivery && (
-                    <div className="p-4 bg-[#f9f9f9] rounded-[12px] mb-4">
+                    <div className="p-4 bg-muted rounded-[12px] mb-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[12px] font-medium text-[#767692] uppercase tracking-wide">
+                        <span className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                           {t("admin.integrationsPage.lastDelivery")}
                         </span>
                         {webhook.lastDelivery.status === "success" ? (
-                          <span className="text-[11px] text-[#4caf50] font-medium">
+                          <span className="text-[11px] text-success font-medium">
                             {t("admin.integrationsPage.deliverySuccess")}
                           </span>
                         ) : (
-                          <span className="text-[11px] text-[#d4183d] font-medium">
+                          <span className="text-[11px] text-error font-medium">
                             {t("admin.integrationsPage.deliveryFailed")}
                           </span>
                         )}
                       </div>
                       <div className="grid grid-cols-3 gap-4 text-[12px]">
                         <div>
-                          <span className="text-[#767692]">
+                          <span className="text-muted-foreground">
                             {t("admin.integrationsPage.eventLabel")}
                           </span>
-                          <p className="text-[#21214f] font-medium mt-1">
+                          <p className="text-foreground font-medium mt-1">
                             {webhook.lastDelivery.event}
                           </p>
                         </div>
                         <div>
-                          <span className="text-[#767692]">
+                          <span className="text-muted-foreground">
                             {t("admin.integrationsPage.responseCodeLabel")}
                           </span>
-                          <p className="text-[#21214f] font-medium mt-1">
+                          <p className="text-foreground font-medium mt-1">
                             {webhook.lastDelivery.responseCode}
                           </p>
                         </div>
                         <div>
-                          <span className="text-[#767692]">
+                          <span className="text-muted-foreground">
                             {t("admin.integrationsPage.timeLabel")}
                           </span>
-                          <p className="text-[#21214f] font-medium mt-1">
+                          <p className="text-foreground font-medium mt-1">
                             {webhook.lastDelivery.responseTime}ms
                           </p>
                         </div>
                       </div>
-                      <p className="text-[11px] text-[#767692] mt-2">
+                      <p className="text-[11px] text-muted-foreground mt-2">
                         {webhook.lastDelivery.timestamp.toLocaleString("ru-RU")}
                       </p>
                     </div>
@@ -534,7 +531,7 @@ export default function AdminIntegrationsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleTestWebhook(webhook)}
-                      className="flex items-center gap-2 px-3 py-2 bg-[#5b8def] text-white rounded-[8px] hover:bg-[#4a7de8] transition-colors text-[13px] font-medium"
+                      className="flex items-center gap-2 px-3 py-2 bg-brand-primary text-primary-foreground rounded-[8px] hover:bg-brand-primary-hover transition-colors text-[13px] font-medium"
                     >
                       <Send className="w-4 h-4" />
                       {t("admin.integrationsPage.testBtn")}
@@ -543,8 +540,8 @@ export default function AdminIntegrationsPage() {
                       onClick={() => handleToggleStatus(webhook)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-[8px] transition-colors text-[13px] font-medium ${
                         webhook.status === "active"
-                          ? "border-2 border-[#e6e8ee] text-[#21214f] hover:bg-[#f9f9f9]"
-                          : "bg-[#4caf50] text-white hover:bg-[#45a049]"
+                          ? "border-2 border-border text-foreground hover:bg-muted"
+                          : "bg-success text-primary-foreground hover:bg-success"
                       }`}
                     >
                       {webhook.status === "active"
@@ -553,14 +550,14 @@ export default function AdminIntegrationsPage() {
                     </button>
                     <button
                       onClick={() => setShowSecretModal(webhook.secret)}
-                      className="flex items-center gap-2 px-3 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[13px] font-medium"
+                      className="flex items-center gap-2 px-3 py-2 border-2 border-border text-foreground rounded-[8px] hover:bg-muted transition-colors text-[13px] font-medium"
                     >
                       <Eye className="w-4 h-4" />
                       Secret
                     </button>
                     <button
                       onClick={() => handleDelete(webhook)}
-                      className="ml-auto flex items-center gap-2 px-3 py-2 border-2 border-[#d4183d] text-[#d4183d] rounded-[8px] hover:bg-[#fff5f5] transition-colors text-[13px] font-medium"
+                      className="ml-auto flex items-center gap-2 px-3 py-2 border-2 border-error text-error rounded-[8px] hover:bg-error-light transition-colors text-[13px] font-medium"
                     >
                       <Trash2 className="w-4 h-4" />
                       {t("admin.integrationsPage.deleteBtn")}
@@ -570,17 +567,17 @@ export default function AdminIntegrationsPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
-              <Link2 className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+            <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
+              <Link2 className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+              <h3 className="text-[18px] font-medium text-foreground mb-2">
                 {t("admin.integrationsPage.noWebhooks")}
               </h3>
-              <p className="text-[14px] text-[#767692] mb-4">
+              <p className="text-[14px] text-muted-foreground mb-4">
                 {t("admin.integrationsPage.noWebhooksHint")}
               </p>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
               >
                 <Plus className="w-4 h-4" />
                 {t("admin.integrationsPage.createFirstWebhook")}
@@ -590,14 +587,14 @@ export default function AdminIntegrationsPage() {
         </div>
 
         {/* Info Box */}
-        <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4">
+        <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4">
           <div className="flex gap-3">
-            <AlertCircle className="w-5 h-5 text-[#5b8def] flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-brand-primary flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
+              <h4 className="text-[14px] font-medium text-foreground mb-1">
                 {t("admin.integrationsPage.aboutWebhooksTitle")}
               </h4>
-              <p className="text-[13px] text-[#767692]">
+              <p className="text-[13px] text-muted-foreground">
                 {t("admin.integrationsPage.aboutWebhooksText")}
               </p>
             </div>
@@ -612,27 +609,26 @@ export default function AdminIntegrationsPage() {
           onClick={() => setShowCreateModal(false)}
         >
           <div
-            className="bg-white rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden shadow-2xl"
+            className="bg-card rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-6 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between">
-              <h2 className="text-[20px] font-medium text-[#21214f]">
+            <div className="px-6 py-4 border-b-2 border-border flex items-center justify-between">
+              <h2 className="text-[20px] font-medium text-foreground">
                 {t("admin.integrationsPage.createWebhookModal")}
               </h2>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-muted rounded-[8px] transition-colors"
               >
-                <X className="w-5 h-5 text-[#767692]" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    {t("admin.integrationsPage.nameLabel")}{" "}
-                    <span className="text-[#d4183d]">*</span>
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
+                    {t("admin.integrationsPage.nameLabel")} <span className="text-error">*</span>
                   </label>
                   <input
                     type="text"
@@ -641,12 +637,12 @@ export default function AdminIntegrationsPage() {
                     placeholder={t("admin.integrationsPage.namePlaceholder")}
                     className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors ${
                       formErrors.name
-                        ? "border-[#d4183d] focus:border-[#d4183d]"
-                        : "border-[#e6e8ee] focus:border-[#5b8def]"
+                        ? "border-error focus:border-error"
+                        : "border-border focus:border-brand-primary"
                     }`}
                   />
                   {formErrors.name && (
-                    <p className="text-[12px] text-[#d4183d] mt-1 flex items-center gap-1">
+                    <p className="text-[12px] text-error mt-1 flex items-center gap-1">
                       <XCircle className="w-3 h-3" />
                       {formErrors.name}
                     </p>
@@ -654,9 +650,8 @@ export default function AdminIntegrationsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    {t("admin.integrationsPage.endpointUrl")}{" "}
-                    <span className="text-[#d4183d]">*</span>
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
+                    {t("admin.integrationsPage.endpointUrl")} <span className="text-error">*</span>
                   </label>
                   <input
                     type="url"
@@ -665,12 +660,12 @@ export default function AdminIntegrationsPage() {
                     placeholder="https://example.com/webhook"
                     className={`w-full px-4 py-3 border-2 rounded-[12px] text-[15px] focus:outline-none transition-colors font-mono ${
                       formErrors.url
-                        ? "border-[#d4183d] focus:border-[#d4183d]"
-                        : "border-[#e6e8ee] focus:border-[#5b8def]"
+                        ? "border-error focus:border-error"
+                        : "border-border focus:border-brand-primary"
                     }`}
                   />
                   {formErrors.url && (
-                    <p className="text-[12px] text-[#d4183d] mt-1 flex items-center gap-1">
+                    <p className="text-[12px] text-error mt-1 flex items-center gap-1">
                       <XCircle className="w-3 h-3" />
                       {formErrors.url}
                     </p>
@@ -678,7 +673,7 @@ export default function AdminIntegrationsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
                     {t("admin.integrationsPage.secretLabel")}
                   </label>
                   <div className="flex gap-2">
@@ -687,40 +682,39 @@ export default function AdminIntegrationsPage() {
                       value={formSecret}
                       onChange={(e) => setFormSecret(e.target.value)}
                       placeholder={t("admin.integrationsPage.secretPlaceholder")}
-                      className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:border-[#5b8def] focus:outline-none transition-colors font-mono"
+                      className="flex-1 px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:border-brand-primary focus:outline-none transition-colors font-mono"
                     />
                     <button
                       onClick={() => setFormSecret(generateSecret())}
-                      className="px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[13px] font-medium"
+                      className="px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors text-[13px] font-medium"
                     >
                       {t("admin.integrationsPage.generateBtn")}
                     </button>
                   </div>
-                  <p className="text-[12px] text-[#767692] mt-1">
+                  <p className="text-[12px] text-muted-foreground mt-1">
                     {t("admin.integrationsPage.secretUsedFor")}
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-[13px] font-medium text-[#21214f] mb-2">
-                    {t("admin.integrationsPage.eventsLabel")}{" "}
-                    <span className="text-[#d4183d]">*</span>
+                  <label className="block text-[13px] font-medium text-foreground mb-2">
+                    {t("admin.integrationsPage.eventsLabel")} <span className="text-error">*</span>
                   </label>
                   <div className="space-y-2">
                     {WEBHOOK_EVENTS.map((event) => (
                       <label
                         key={event.value}
-                        className="flex items-start gap-3 p-3 border-2 border-[#e6e8ee] rounded-[12px] cursor-pointer hover:bg-[#f9f9f9] transition-colors"
+                        className="flex items-start gap-3 p-3 border-2 border-border rounded-[12px] cursor-pointer hover:bg-muted transition-colors"
                       >
                         <input
                           type="checkbox"
                           checked={formEvents.includes(event.value)}
                           onChange={() => toggleEvent(event.value)}
-                          className="w-5 h-5 text-[#5b8def] rounded-[4px] mt-0.5"
+                          className="w-5 h-5 text-brand-primary rounded-[4px] mt-0.5"
                         />
                         <div className="flex-1">
-                          <p className="text-[14px] font-medium text-[#21214f]">{event.label}</p>
-                          <p className="text-[12px] text-[#767692] mt-0.5">
+                          <p className="text-[14px] font-medium text-foreground">{event.label}</p>
+                          <p className="text-[12px] text-muted-foreground mt-0.5">
                             {t(event.descriptionKey)}
                           </p>
                         </div>
@@ -728,7 +722,7 @@ export default function AdminIntegrationsPage() {
                     ))}
                   </div>
                   {formErrors.events && (
-                    <p className="text-[12px] text-[#d4183d] mt-2 flex items-center gap-1">
+                    <p className="text-[12px] text-error mt-2 flex items-center gap-1">
                       <XCircle className="w-3 h-3" />
                       {formErrors.events}
                     </p>
@@ -737,16 +731,16 @@ export default function AdminIntegrationsPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t-2 border-[#e6e8ee] flex gap-3">
+            <div className="px-6 py-4 border-t-2 border-border flex gap-3">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px] font-medium"
+                className="flex-1 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors text-[14px] font-medium"
               >
                 {t("admin.integrationsPage.cancel")}
               </button>
               <button
                 onClick={handleCreate}
-                className="flex-1 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+                className="flex-1 px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
               >
                 {t("admin.integrationsPage.create")}
               </button>
@@ -762,35 +756,35 @@ export default function AdminIntegrationsPage() {
           onClick={() => setShowSecretModal(null)}
         >
           <div
-            className="bg-white rounded-[20px] w-full max-w-[500px] shadow-2xl"
+            className="bg-card rounded-[20px] w-full max-w-[500px] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-6 py-4 border-b-2 border-[#e6e8ee] flex items-center justify-between">
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+            <div className="px-6 py-4 border-b-2 border-border flex items-center justify-between">
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("admin.integrationsPage.webhookSecret")}
               </h2>
               <button
                 onClick={() => setShowSecretModal(null)}
-                className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-muted rounded-[8px] transition-colors"
               >
-                <X className="w-5 h-5 text-[#767692]" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
             <div className="p-6">
-              <div className="p-4 bg-[#f9f9f9] rounded-[12px] border-2 border-[#e6e8ee] mb-4">
-                <p className="text-[14px] font-mono text-[#21214f] break-all">{showSecretModal}</p>
+              <div className="p-4 bg-muted rounded-[12px] border-2 border-border mb-4">
+                <p className="text-[14px] font-mono text-foreground break-all">{showSecretModal}</p>
               </div>
-              <p className="text-[13px] text-[#767692]">
+              <p className="text-[13px] text-muted-foreground">
                 {t("admin.integrationsPage.secretWarning")}
               </p>
             </div>
-            <div className="px-6 py-4 border-t-2 border-[#e6e8ee]">
+            <div className="px-6 py-4 border-t-2 border-border">
               <button
                 onClick={() => {
                   void navigator.clipboard.writeText(showSecretModal);
                   alert(t("admin.integrationsPage.secretCopied"));
                 }}
-                className="w-full px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors text-[14px] font-medium"
+                className="w-full px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
               >
                 {t("admin.integrationsPage.copyToClipboard")}
               </button>

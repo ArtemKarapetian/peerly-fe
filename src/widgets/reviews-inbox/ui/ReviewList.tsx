@@ -41,12 +41,12 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
       {groupedReviews.map((group) => (
         <div key={group.key}>
           {/* Group Header */}
-          <div className="mb-4 pb-3 border-b border-[#e6e8ee]">
+          <div className="mb-4 pb-3 border-b border-border">
             <div className="flex items-center justify-between">
-              <h2 className="text-[20px] desktop:text-[24px] font-medium text-[#21214f] tracking-[-0.5px]">
+              <h2 className="text-[20px] desktop:text-[24px] font-medium text-foreground tracking-[-0.5px]">
                 {group.title}
               </h2>
-              <span className="text-[14px] text-[#767692]">
+              <span className="text-[14px] text-muted-foreground">
                 {group.reviews.length}{" "}
                 {group.reviews.length === 1
                   ? t("widget.reviewList.reviewOne")

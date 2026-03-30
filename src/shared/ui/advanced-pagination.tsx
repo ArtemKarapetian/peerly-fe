@@ -109,7 +109,7 @@ export function AdvancedPagination({
               return (
                 <div
                   key={`ellipsis-${index}`}
-                  className="flex h-8 w-8 items-center justify-center text-[#767692]"
+                  className="flex h-8 w-8 items-center justify-center text-muted-foreground"
                 >
                   <MoreHorizontal className="size-4" />
                 </div>
@@ -123,8 +123,8 @@ export function AdvancedPagination({
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-[8px] text-[14px] font-medium transition-all",
                   currentPage === page
-                    ? "bg-[#2563eb] text-white shadow-[0_2px_4px_rgba(37,99,235,0.3)]"
-                    : "text-[#21214f] hover:bg-[#f0f6ff] hover:text-[#2563eb]",
+                    ? "bg-brand-primary text-text-inverse shadow-[0_2px_4px_color-mix(in_srgb,var(--brand-primary)_30%,transparent)]"
+                    : "text-foreground hover:bg-info-light hover:text-brand-primary",
                 )}
                 aria-label={t("shared.pagination.page", { page })}
                 aria-current={currentPage === page ? "page" : undefined}

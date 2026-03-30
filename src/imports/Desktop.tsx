@@ -5,7 +5,7 @@ import svgPaths from "./svg-vp0aa5bptg";
 function Logo() {
   return (
     <div className="content-stretch flex flex-col items-start relative shrink-0" data-name="Logo">
-      <p className="css-ew64yg font-['Work_Sans:Medium',sans-serif] font-medium leading-[1.05] relative shrink-0 text-[#21214f] text-[20px] tracking-[-0.9px]">
+      <p className="css-ew64yg font-['Work_Sans:Medium',sans-serif] font-medium leading-[1.05] relative shrink-0 text-primary text-[20px] tracking-[-0.9px]">
         Peerly
       </p>
     </div>
@@ -39,7 +39,7 @@ function NavHeader() {
                     <path
                       d="M1.5 1.5V9.5H9.5"
                       id="arrow"
-                      stroke="var(--stroke-0, #21214F)"
+                      stroke="var(--primary)"
                       strokeLinecap="round"
                       strokeWidth="3"
                     />
@@ -62,7 +62,7 @@ function UpperSection() {
     >
       <div
         aria-hidden="true"
-        className="absolute border-[#c7c7c7] border-b-2 border-solid inset-0 pointer-events-none"
+        className="absolute border-border border-b-2 border-solid inset-0 pointer-events-none"
       />
       <NavHeader />
     </div>
@@ -77,7 +77,7 @@ function Book24DpE3E3E3Fill0Wght400Grad0Opsz() {
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 19 19">
         <g id="book_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24 1">
-          <path d={svgPaths.p2232b200} fill="var(--fill-0, #21214F)" id="Vector" />
+          <path d={svgPaths.p2232b200} fill="var(--primary)" id="Vector" />
         </g>
       </svg>
     </div>
@@ -86,11 +86,14 @@ function Book24DpE3E3E3Fill0Wght400Grad0Opsz() {
 
 function Profile() {
   return (
-    <div className="bg-[#d2def8] relative rounded-[8px] shrink-0 w-full" data-name="Profile">
+    <div
+      className="bg-brand-primary-lighter relative rounded-[8px] shrink-0 w-full"
+      data-name="Profile"
+    >
       <div className="flex flex-row items-end size-full">
         <div className="content-stretch flex gap-[8px] items-end p-[4px] relative w-full">
           <Book24DpE3E3E3Fill0Wght400Grad0Opsz />
-          <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.54px]">
+          <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.54px]">
             Курсы
           </p>
         </div>
@@ -116,7 +119,7 @@ function Frame() {
     <div className="relative shrink-0 size-[19px]">
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 19 19">
         <g id="Frame 1">
-          <circle cx="9.5" cy="9.5" fill="var(--fill-0, #D7D7D7)" id="Ellipse 1" r="9.5" />
+          <circle cx="9.5" cy="9.5" fill="var(--border)" id="Ellipse 1" r="9.5" />
         </g>
       </svg>
     </div>
@@ -129,7 +132,7 @@ function Profile1() {
       <div className="flex flex-row items-end size-full">
         <div className="content-stretch flex gap-[8px] items-end p-[10px] relative w-full">
           <Frame />
-          <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.54px]">
+          <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.54px]">
             Профиль
           </p>
         </div>
@@ -146,7 +149,7 @@ function BottomSection() {
     >
       <div
         aria-hidden="true"
-        className="absolute border-[#c7c7c7] border-solid border-t-2 inset-0 pointer-events-none"
+        className="absolute border-border border-solid border-t-2 inset-0 pointer-events-none"
       />
       <Profile1 />
     </div>
@@ -169,12 +172,12 @@ function AllSections() {
 function NavSide() {
   return (
     <div
-      className="bg-white content-stretch flex items-center relative self-stretch shrink-0 w-[180px]"
+      className="bg-background content-stretch flex items-center relative self-stretch shrink-0 w-[180px]"
       data-name="NavSide"
     >
       <div
         aria-hidden="true"
-        className="absolute border-[#c7c7c7] border-r-3 border-solid inset-0 pointer-events-none"
+        className="absolute border-border border-r-3 border-solid inset-0 pointer-events-none"
       />
       <AllSections />
     </div>
@@ -183,7 +186,10 @@ function NavSide() {
 
 function Component() {
   return (
-    <div className="bg-[#f2b2d6] h-[100px] rounded-[20px] shrink-0 w-full" data-name="Картинка" />
+    <div
+      className="bg-brand-primary-lighter h-[100px] rounded-[20px] shrink-0 w-full"
+      data-name="Картинка"
+    />
   );
 }
 
@@ -209,7 +215,7 @@ function Profile2() {
       className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full"
       data-name="Profile"
     >
-      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#4b4963] text-[16px] tracking-[-0.72px]">
+      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-text-secondary text-[16px] tracking-[-0.72px]">
         Преподаватель
       </p>
       <Frame1 />
@@ -221,7 +227,7 @@ function Component1() {
   return (
     <div className="relative shrink-0 w-full" data-name="Текстовка">
       <div className="content-stretch flex flex-col gap-[4px] items-start px-[20px] py-0 relative w-full">
-        <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[40px] tracking-[-1.8px] w-full">
+        <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[40px] tracking-[-1.8px] w-full">
           Название курса
         </p>
         <Profile2 />
@@ -233,7 +239,7 @@ function Component1() {
 function CourseHeader() {
   return (
     <div
-      className="bg-[#f9f9f9] content-stretch flex flex-col gap-[12px] items-start justify-center max-w-[1200px] min-w-[180px] pb-[20px] pt-0 px-0 relative rounded-[20px] shrink-0 w-[800px]"
+      className="bg-surface-hover content-stretch flex flex-col gap-[12px] items-start justify-center max-w-[1200px] min-w-[180px] pb-[20px] pt-0 px-0 relative rounded-[20px] shrink-0 w-[800px]"
       data-name="Course header"
     >
       <Component />
@@ -250,9 +256,9 @@ function Component2() {
     >
       <div
         aria-hidden="true"
-        className="absolute border-[#21264f] border-b-2 border-solid inset-0 pointer-events-none"
+        className="absolute border-primary border-b-2 border-solid inset-0 pointer-events-none"
       />
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px] w-full">
         Задания
       </p>
     </div>
@@ -265,7 +271,7 @@ function Component3() {
       className="content-stretch flex flex-col items-start p-[8px] relative rounded-[12px] shrink-0"
       data-name="Участники"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#4b4963] text-[16px] tracking-[-0.72px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-text-secondary text-[16px] tracking-[-0.72px] w-full">
         Участники
       </p>
     </div>
@@ -293,8 +299,8 @@ function Search24DpE3E3E3Fill0Wght400Grad0Opsz() {
     >
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
         <g id="search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24 1">
-          <path d={svgPaths.p378bce80} fill="var(--fill-0, #767692)" id="Vector" />
-          <path d={svgPaths.p378bce80} fill="var(--fill-0, #767692)" id="Vector_2" />
+          <path d={svgPaths.p378bce80} fill="var(--text-tertiary)" id="Vector" />
+          <path d={svgPaths.p378bce80} fill="var(--text-tertiary)" id="Vector_2" />
         </g>
       </svg>
     </div>
@@ -303,11 +309,11 @@ function Search24DpE3E3E3Fill0Wght400Grad0Opsz() {
 
 function Component5() {
   return (
-    <div className="bg-[#e4e4e4] relative rounded-[12px] shrink-0 w-full" data-name="Поиск заданий">
+    <div className="bg-muted relative rounded-[12px] shrink-0 w-full" data-name="Поиск заданий">
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[4px] items-center p-[8px] relative w-full">
           <Search24DpE3E3E3Fill0Wght400Grad0Opsz />
-          <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#767692] text-[18px] tracking-[-0.81px]">
+          <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-text-tertiary text-[18px] tracking-[-0.81px]">
             Поиск заданий
           </p>
         </div>
@@ -319,10 +325,10 @@ function Component5() {
 function Component7() {
   return (
     <div
-      className="bg-[#d2def8] content-stretch flex flex-col items-start p-[8px] relative rounded-[8px] shrink-0"
+      className="bg-brand-primary-lighter content-stretch flex flex-col items-start p-[8px] relative rounded-[8px] shrink-0"
       data-name="Все"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px] w-full">
         Все
       </p>
     </div>
@@ -332,10 +338,10 @@ function Component7() {
 function Component8() {
   return (
     <div
-      className="bg-[#e4e4e4] content-stretch flex flex-col items-start p-[8px] relative rounded-[8px] shrink-0"
+      className="bg-muted content-stretch flex flex-col items-start p-[8px] relative rounded-[8px] shrink-0"
       data-name="Истекает срок сдачи"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#4b4963] text-[16px] tracking-[-0.72px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-text-secondary text-[16px] tracking-[-0.72px] w-full">
         Истекает срок сдачи
       </p>
     </div>
@@ -345,10 +351,10 @@ function Component8() {
 function Component9() {
   return (
     <div
-      className="bg-[#e4e4e4] content-stretch flex flex-col items-start p-[8px] relative rounded-[8px] shrink-0"
+      className="bg-muted content-stretch flex flex-col items-start p-[8px] relative rounded-[8px] shrink-0"
       data-name="Завершенные"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#4b4963] text-[16px] tracking-[-0.72px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-text-secondary text-[16px] tracking-[-0.72px] w-full">
         Завершенные
       </p>
     </div>
@@ -371,7 +377,7 @@ function Component6() {
 function Component12() {
   return (
     <div className="content-stretch flex items-center relative shrink-0 w-full" data-name="Дедлайн">
-      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-[#4b4963] text-[16px] tracking-[-0.72px]">
+      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-text-secondary text-[16px] tracking-[-0.72px]">
         Дедлайн: 31 января
       </p>
     </div>
@@ -384,7 +390,7 @@ function Component11() {
       className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[100px] relative"
       data-name="Задание"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.81px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.81px] w-full">
         Задание 1
       </p>
       <Component12 />
@@ -395,10 +401,10 @@ function Component11() {
 function Component13() {
   return (
     <div
-      className="bg-[#b7bdff] content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
+      className="bg-info-light content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
       data-name="Статус"
     >
-      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px]">
+      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px]">
         Сдана работа
       </p>
     </div>
@@ -435,7 +441,7 @@ function Task() {
 function Component16() {
   return (
     <div className="content-stretch flex items-center relative shrink-0 w-full" data-name="Дедлайн">
-      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-[#4b4963] text-[16px] tracking-[-0.72px]">
+      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-text-secondary text-[16px] tracking-[-0.72px]">
         Дедлайн: 31 января
       </p>
     </div>
@@ -448,7 +454,7 @@ function Component15() {
       className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[100px] relative"
       data-name="Задание"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.81px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.81px] w-full">
         Задание 2
       </p>
       <Component16 />
@@ -459,10 +465,10 @@ function Component15() {
 function Component17() {
   return (
     <div
-      className="bg-[#b0e9fb] content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
+      className="bg-info-light content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
       data-name="Статус"
     >
-      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px]">
+      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px]">
         Взаимная проверка
       </p>
     </div>
@@ -499,7 +505,7 @@ function Task1() {
 function Component20() {
   return (
     <div className="content-stretch flex items-center relative shrink-0 w-full" data-name="Дедлайн">
-      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-[#4b4963] text-[16px] tracking-[-0.72px]">
+      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-text-secondary text-[16px] tracking-[-0.72px]">
         Дедлайн: 31 января
       </p>
     </div>
@@ -512,7 +518,7 @@ function Component19() {
       className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[100px] relative"
       data-name="Задание"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.81px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.81px] w-full">
         Задание 3
       </p>
       <Component20 />
@@ -523,10 +529,10 @@ function Component19() {
 function Component21() {
   return (
     <div
-      className="bg-[#b7bdff] content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
+      className="bg-info-light content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
       data-name="Статус"
     >
-      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px]">
+      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px]">
         Проверка преподавтелем
       </p>
     </div>
@@ -563,7 +569,7 @@ function Task2() {
 function Component24() {
   return (
     <div className="content-stretch flex items-center relative shrink-0 w-full" data-name="Дедлайн">
-      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-[#4b4963] text-[16px] tracking-[-0.72px]">
+      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-text-secondary text-[16px] tracking-[-0.72px]">
         Дедлайн: 31 января
       </p>
     </div>
@@ -576,7 +582,7 @@ function Component23() {
       className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[100px] relative"
       data-name="Задание"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.81px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.81px] w-full">
         Задание 4
       </p>
       <Component24 />
@@ -587,10 +593,10 @@ function Component23() {
 function Component25() {
   return (
     <div
-      className="bg-[#b7bdff] content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
+      className="bg-info-light content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
       data-name="Статус"
     >
-      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px]">
+      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px]">
         Выставление оценок
       </p>
     </div>
@@ -627,7 +633,7 @@ function Task3() {
 function Component28() {
   return (
     <div className="content-stretch flex items-center relative shrink-0 w-full" data-name="Дедлайн">
-      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-[#4b4963] text-[16px] tracking-[-0.72px]">
+      <p className="css-4hzbpn flex-[1_0_0] font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] min-h-px min-w-px relative text-text-secondary text-[16px] tracking-[-0.72px]">
         Дедлайн: 31 января
       </p>
     </div>
@@ -640,7 +646,7 @@ function Component27() {
       className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-[100px] relative"
       data-name="Задание"
     >
-      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-[#21214f] text-[18px] tracking-[-0.81px] w-full">
+      <p className="css-4hzbpn font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.05] relative shrink-0 text-primary text-[18px] tracking-[-0.81px] w-full">
         Задание 4
       </p>
       <Component28 />
@@ -651,10 +657,10 @@ function Component27() {
 function Component29() {
   return (
     <div
-      className="bg-[#9cf38d] content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
+      className="bg-success-light content-stretch flex items-center p-[8px] relative rounded-[12px] shrink-0"
       data-name="Статус"
     >
-      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-[#21214f] text-[16px] tracking-[-0.72px]">
+      <p className="css-ew64yg font-['Work_Sans:Regular','Noto_Sans:Regular',sans-serif] font-normal leading-[1.1] relative shrink-0 text-primary text-[16px] tracking-[-0.72px]">
         Оценки выставлены
       </p>
     </div>
@@ -703,7 +709,7 @@ function Tasks() {
             preserveAspectRatio="none"
             viewBox="0 0 760 1"
           >
-            <line id="Divider" stroke="var(--stroke-0, #C7C7C7)" x2="760" y1="0.5" y2="0.5" />
+            <line id="Divider" stroke="var(--border)" x2="760" y1="0.5" y2="0.5" />
           </svg>
         </div>
       </div>
@@ -716,7 +722,7 @@ function Tasks() {
             preserveAspectRatio="none"
             viewBox="0 0 760 1"
           >
-            <line id="Divider" stroke="var(--stroke-0, #C7C7C7)" x2="760" y1="0.5" y2="0.5" />
+            <line id="Divider" stroke="var(--border)" x2="760" y1="0.5" y2="0.5" />
           </svg>
         </div>
       </div>
@@ -729,7 +735,7 @@ function Tasks() {
             preserveAspectRatio="none"
             viewBox="0 0 760 1"
           >
-            <line id="Divider" stroke="var(--stroke-0, #C7C7C7)" x2="760" y1="0.5" y2="0.5" />
+            <line id="Divider" stroke="var(--border)" x2="760" y1="0.5" y2="0.5" />
           </svg>
         </div>
       </div>
@@ -742,7 +748,7 @@ function Tasks() {
             preserveAspectRatio="none"
             viewBox="0 0 760 1"
           >
-            <line id="Divider" stroke="var(--stroke-0, #C7C7C7)" x2="760" y1="0.5" y2="0.5" />
+            <line id="Divider" stroke="var(--border)" x2="760" y1="0.5" y2="0.5" />
           </svg>
         </div>
       </div>
@@ -754,7 +760,7 @@ function Tasks() {
 function Component4() {
   return (
     <div
-      className="bg-[#f9f9f9] flex-[1_0_0] min-h-px min-w-px relative rounded-[20px]"
+      className="bg-surface-hover flex-[1_0_0] min-h-px min-w-px relative rounded-[20px]"
       data-name="Задания"
     >
       <div className="content-stretch flex flex-col gap-[12px] items-start p-[20px] relative w-full">
@@ -805,7 +811,7 @@ function Main() {
 export default function Desktop() {
   return (
     <div
-      className="bg-white content-stretch flex items-start justify-center relative size-full"
+      className="bg-background content-stretch flex items-start justify-center relative size-full"
       data-name="Desktop"
     >
       <NavSide />

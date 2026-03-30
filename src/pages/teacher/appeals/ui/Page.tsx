@@ -189,21 +189,21 @@ function AppealsContent({
     switch (status) {
       case "new":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e9f5ff] text-[#5b8def] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-info-light text-brand-primary rounded-[6px] text-[12px] font-medium">
             <AlertCircle className="w-3 h-3" />
             {t("teacher.appeals.newStatus")}
           </span>
         );
       case "in_review":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
             <Edit3 className="w-3 h-3" />
             {t("teacher.appeals.inReviewStatus")}
           </span>
         );
       case "resolved":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("teacher.appeals.resolvedStatus")}
           </span>
@@ -217,21 +217,21 @@ function AppealsContent({
     switch (resolution) {
       case "approved":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
             <CheckCircle className="w-3 h-3" />
             {t("teacher.appeals.approved")}
           </span>
         );
       case "denied":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
             <XCircle className="w-3 h-3" />
             {t("teacher.appeals.denied")}
           </span>
         );
       case "adjusted":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
             <Edit3 className="w-3 h-3" />
             {t("teacher.appeals.adjusted")}
           </span>
@@ -355,40 +355,40 @@ function AppealsContent({
       <div>
         {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="w-4 h-4 text-[#5b8def]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+              <AlertCircle className="w-4 h-4 text-brand-primary" />
+              <span className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 {t("teacher.appeals.new")}
               </span>
             </div>
-            <p className="text-[28px] font-medium text-[#5b8def]">{newCount}</p>
+            <p className="text-[28px] font-medium text-brand-primary">{newCount}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Edit3 className="w-4 h-4 text-[#ff9800]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+              <Edit3 className="w-4 h-4 text-warning" />
+              <span className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 {t("teacher.appeals.underReview")}
               </span>
             </div>
-            <p className="text-[28px] font-medium text-[#ff9800]">{inReviewCount}</p>
+            <p className="text-[28px] font-medium text-warning">{inReviewCount}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+              <CheckCircle className="w-4 h-4 text-success" />
+              <span className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 {t("teacher.appeals.resolved")}
               </span>
             </div>
-            <p className="text-[28px] font-medium text-[#4caf50]">{resolvedCount}</p>
+            <p className="text-[28px] font-medium text-success">{resolvedCount}</p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-5 h-5 text-[#767692]" />
-            <h2 className="text-[16px] font-medium text-[#21214f]">
+            <Filter className="w-5 h-5 text-muted-foreground" />
+            <h2 className="text-[16px] font-medium text-foreground">
               {t("teacher.appeals.filtersLabel")}
             </h2>
           </div>
@@ -398,8 +398,8 @@ function AppealsContent({
               onClick={() => setFilterStatus("all")}
               className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
                 filterStatus === "all"
-                  ? "bg-[#5b8def] text-white"
-                  : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
+                  ? "bg-brand-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-border"
               }`}
             >
               {t("common.all")} ({appeals.length})
@@ -408,8 +408,8 @@ function AppealsContent({
               onClick={() => setFilterStatus("new")}
               className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
                 filterStatus === "new"
-                  ? "bg-[#5b8def] text-white"
-                  : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
+                  ? "bg-brand-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-border"
               }`}
             >
               {t("teacher.appeals.new")} ({newCount})
@@ -418,8 +418,8 @@ function AppealsContent({
               onClick={() => setFilterStatus("in_review")}
               className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
                 filterStatus === "in_review"
-                  ? "bg-[#5b8def] text-white"
-                  : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
+                  ? "bg-brand-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-border"
               }`}
             >
               {t("teacher.appeals.underReview")} ({inReviewCount})
@@ -428,8 +428,8 @@ function AppealsContent({
               onClick={() => setFilterStatus("resolved")}
               className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
                 filterStatus === "resolved"
-                  ? "bg-[#5b8def] text-white"
-                  : "bg-[#f9f9f9] text-[#767692] hover:bg-[#e6e8ee]"
+                  ? "bg-brand-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-border"
               }`}
             >
               {t("teacher.appeals.resolvedPlural")} ({resolvedCount})
@@ -438,13 +438,13 @@ function AppealsContent({
         </div>
 
         {/* Appeals List */}
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] overflow-hidden">
+        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
           {filteredAppeals.length > 0 ? (
-            <div className="divide-y divide-[#e6e8ee]">
+            <div className="divide-y divide-border">
               {filteredAppeals.map((appeal) => (
                 <div
                   key={appeal.id}
-                  className="p-6 hover:bg-[#fafbfc] transition-colors cursor-pointer"
+                  className="p-6 hover:bg-surface-hover transition-colors cursor-pointer"
                   onClick={() => {
                     setSelectedAppeal(appeal);
                     setResponseText("");
@@ -457,31 +457,33 @@ function AppealsContent({
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-[18px] font-medium text-[#21214f]">
+                        <h3 className="text-[18px] font-medium text-foreground">
                           {appeal.studentName}
                         </h3>
                         {getStatusBadge(appeal.status)}
                         {appeal.resolution && getResolutionBadge(appeal.resolution)}
                       </div>
-                      <p className="text-[14px] text-[#767692] mb-2">{appeal.assignmentTitle}</p>
-                      <p className="text-[14px] text-[#21214f] line-clamp-2 mb-2">
+                      <p className="text-[14px] text-muted-foreground mb-2">
+                        {appeal.assignmentTitle}
+                      </p>
+                      <p className="text-[14px] text-foreground line-clamp-2 mb-2">
                         {appeal.message}
                       </p>
-                      <div className="flex items-center gap-4 text-[13px] text-[#767692]">
+                      <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {appeal.createdAt.toLocaleDateString()}
                         </span>
                         <span>
                           {t("teacher.appeals.scoreLabel")}{" "}
-                          <strong className="text-[#21214f]">
+                          <strong className="text-foreground">
                             {appeal.originalScore.toFixed(1)}
                           </strong>
                         </span>
                         {appeal.requestedScore && (
                           <span>
                             {t("teacher.appeals.requestedLabel")}{" "}
-                            <strong className="text-[#5b8def]">
+                            <strong className="text-brand-primary">
                               {appeal.requestedScore.toFixed(1)}
                             </strong>
                           </span>
@@ -489,7 +491,7 @@ function AppealsContent({
                         {appeal.newScore && (
                           <span>
                             {t("teacher.appeals.newScoreCardLabel")}{" "}
-                            <strong className="text-[#4caf50]">{appeal.newScore.toFixed(1)}</strong>
+                            <strong className="text-success">{appeal.newScore.toFixed(1)}</strong>
                           </span>
                         )}
                       </div>
@@ -500,11 +502,13 @@ function AppealsContent({
             </div>
           ) : (
             <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+              <AlertCircle className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+              <h3 className="text-[18px] font-medium text-foreground mb-2">
                 {t("teacher.appeals.noAppeals")}
               </h3>
-              <p className="text-[14px] text-[#767692]">{t("teacher.appeals.appealsWillAppear")}</p>
+              <p className="text-[14px] text-muted-foreground">
+                {t("teacher.appeals.appealsWillAppear")}
+              </p>
             </div>
           )}
         </div>
@@ -517,24 +521,24 @@ function AppealsContent({
           onClick={() => setSelectedAppeal(null)}
         >
           <div
-            className="bg-white h-full w-full md:w-[700px] shadow-2xl overflow-y-auto"
+            className="bg-card h-full w-full md:w-[700px] shadow-2xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
-            <div className="sticky top-0 bg-white border-b-2 border-[#e6e8ee] px-6 py-4 flex items-center justify-between z-10">
+            <div className="sticky top-0 bg-card border-b-2 border-border px-6 py-4 flex items-center justify-between z-10">
               <div>
-                <h2 className="text-[20px] font-medium text-[#21214f]">
+                <h2 className="text-[20px] font-medium text-foreground">
                   {t("teacher.appeals.appealTitle", { id: selectedAppeal.id })}
                 </h2>
-                <p className="text-[13px] text-[#767692] mt-1">
+                <p className="text-[13px] text-muted-foreground mt-1">
                   {selectedAppeal.studentName} • {selectedAppeal.createdAt.toLocaleString()}
                 </p>
               </div>
               <button
                 onClick={() => setSelectedAppeal(null)}
-                className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-muted rounded-[8px] transition-colors"
               >
-                <X className="w-5 h-5 text-[#767692]" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
 
@@ -547,54 +551,54 @@ function AppealsContent({
               </div>
 
               {/* Assignment Info */}
-              <div className="bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[12px] p-4">
+              <div className="bg-muted border-2 border-border rounded-[12px] p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <FileText className="w-4 h-4 text-[#767692]" />
-                  <h3 className="text-[15px] font-medium text-[#21214f]">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <h3 className="text-[15px] font-medium text-foreground">
                     {t("teacher.appeals.assignmentInfo")}
                   </h3>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.appeals.assignment")}
                     </p>
-                    <p className="text-[14px] text-[#21214f] font-medium">
+                    <p className="text-[14px] text-foreground font-medium">
                       {selectedAppeal.assignmentTitle}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.appeals.studentLabel")}
                     </p>
-                    <p className="text-[14px] text-[#21214f] font-medium">
+                    <p className="text-[14px] text-foreground font-medium">
                       {selectedAppeal.studentName}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                    <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.appeals.originalScore")}
                     </p>
-                    <p className="text-[20px] text-[#d4183d] font-medium">
+                    <p className="text-[20px] text-error font-medium">
                       {selectedAppeal.originalScore.toFixed(1)}/5
                     </p>
                   </div>
                   {selectedAppeal.requestedScore && (
                     <div>
-                      <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                         {t("teacher.appeals.requestedScore")}
                       </p>
-                      <p className="text-[20px] text-[#5b8def] font-medium">
+                      <p className="text-[20px] text-brand-primary font-medium">
                         {selectedAppeal.requestedScore.toFixed(1)}/5
                       </p>
                     </div>
                   )}
                   {selectedAppeal.newScore && (
                     <div>
-                      <p className="text-[12px] text-[#767692] uppercase tracking-wide mb-1">
+                      <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                         {t("teacher.appeals.newScore")}
                       </p>
-                      <p className="text-[20px] text-[#4caf50] font-medium">
+                      <p className="text-[20px] text-success font-medium">
                         {selectedAppeal.newScore.toFixed(1)}/5
                       </p>
                     </div>
@@ -605,13 +609,13 @@ function AppealsContent({
               {/* Student Message */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <MessageSquare className="w-4 h-4 text-[#767692]" />
-                  <h3 className="text-[15px] font-medium text-[#21214f]">
+                  <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                  <h3 className="text-[15px] font-medium text-foreground">
                     {t("teacher.appeals.studentMessage")}
                   </h3>
                 </div>
-                <div className="p-4 bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[12px]">
-                  <p className="text-[14px] text-[#21214f] leading-relaxed">
+                <div className="p-4 bg-info-light border-2 border-brand-primary rounded-[12px]">
+                  <p className="text-[14px] text-foreground leading-relaxed">
                     {selectedAppeal.message}
                   </p>
                 </div>
@@ -621,17 +625,17 @@ function AppealsContent({
               {selectedAppeal.status === "resolved" && selectedAppeal.teacherResponse && (
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <User className="w-4 h-4 text-[#767692]" />
-                    <h3 className="text-[15px] font-medium text-[#21214f]">
+                    <User className="w-4 h-4 text-muted-foreground" />
+                    <h3 className="text-[15px] font-medium text-foreground">
                       {t("teacher.appeals.teacherResponse")}
                     </h3>
                   </div>
-                  <div className="p-4 bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[12px]">
-                    <p className="text-[14px] text-[#21214f] leading-relaxed">
+                  <div className="p-4 bg-success-light border-2 border-success rounded-[12px]">
+                    <p className="text-[14px] text-foreground leading-relaxed">
                       {selectedAppeal.teacherResponse}
                     </p>
                     {selectedAppeal.resolvedAt && (
-                      <p className="text-[12px] text-[#767692] mt-2">
+                      <p className="text-[12px] text-muted-foreground mt-2">
                         {t("teacher.appeals.resolvedAt")}{" "}
                         {selectedAppeal.resolvedAt.toLocaleString()}
                       </p>
@@ -643,20 +647,20 @@ function AppealsContent({
               {/* Actions (if not resolved) */}
               {selectedAppeal.status !== "resolved" && (
                 <div>
-                  <h3 className="text-[15px] font-medium text-[#21214f] mb-3">
+                  <h3 className="text-[15px] font-medium text-foreground mb-3">
                     {t("teacher.appeals.actionsTitle")}
                   </h3>
 
                   {/* Response textarea */}
                   <div className="mb-4">
-                    <label className="block text-[13px] font-medium text-[#767692] mb-2">
+                    <label className="block text-[13px] font-medium text-muted-foreground mb-2">
                       {t("teacher.appeals.commentOptional")}
                     </label>
                     <textarea
                       value={responseText}
                       onChange={(e) => setResponseText(e.target.value)}
                       placeholder={t("teacher.appeals.addResolutionComment")}
-                      className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors min-h-[100px] resize-y"
+                      className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[14px] text-foreground focus:border-brand-primary focus:outline-none transition-colors min-h-[100px] resize-y"
                     />
                   </div>
 
@@ -665,7 +669,7 @@ function AppealsContent({
                     {/* Approve */}
                     <button
                       onClick={handleApprove}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#4caf50] text-white rounded-[12px] hover:bg-[#45a049] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-success text-primary-foreground rounded-[12px] hover:bg-success transition-colors"
                     >
                       <CheckCircle className="w-5 h-5" />
                       <span className="text-[15px] font-medium">
@@ -685,11 +689,11 @@ function AppealsContent({
                         value={adjustedScore || ""}
                         onChange={(e) => setAdjustedScore(parseFloat(e.target.value))}
                         placeholder={t("teacher.appeals.newScoreRange")}
-                        className="flex-1 px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[14px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                        className="flex-1 px-4 py-3 border-2 border-border rounded-[12px] text-[14px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                       />
                       <button
                         onClick={handleAdjust}
-                        className="flex items-center gap-2 px-6 py-3 bg-[#ff9800] text-white rounded-[12px] hover:bg-[#f57c00] transition-colors"
+                        className="flex items-center gap-2 px-6 py-3 bg-warning text-primary-foreground rounded-[12px] hover:bg-warning transition-colors"
                       >
                         <Edit3 className="w-5 h-5" />
                         <span className="text-[15px] font-medium">
@@ -701,7 +705,7 @@ function AppealsContent({
                     {/* Deny */}
                     <button
                       onClick={handleDeny}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-[#d4183d] text-[#d4183d] rounded-[12px] hover:bg-[#fff5f5] transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-error text-error rounded-[12px] hover:bg-error-light transition-colors"
                     >
                       <XCircle className="w-5 h-5" />
                       <span className="text-[15px] font-medium">

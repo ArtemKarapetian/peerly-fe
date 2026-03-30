@@ -43,7 +43,7 @@ export function ConsequencesCard() {
         ))}
       </ul>
 
-      <div className="mt-6 p-4 bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-[12px]">
+      <div className="mt-6 p-4 bg-info-light border border-info rounded-[12px]">
         <p className="text-sm text-foreground/80">
           <strong>{t("widget.deleteAccount.importantNote")}</strong>{" "}
           {t("widget.deleteAccount.importantNoteText")}

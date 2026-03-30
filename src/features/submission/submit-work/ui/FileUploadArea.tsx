@@ -152,10 +152,10 @@ export function FileUploadArea({
           relative border-2 border-dashed rounded-[16px] p-8 text-center transition-all cursor-pointer
           ${
             isDragging
-              ? "border-[#5b8def] bg-[#f0f5ff]"
+              ? "border-brand-primary bg-brand-primary-light"
               : error
-                ? "border-[#ffb8b8] bg-[#fff5f5]"
-                : "border-[#d2def8] bg-white hover:border-[#a0b8f1] hover:bg-[#f9f9f9]"
+                ? "border-error bg-error-light"
+                : "border-border bg-card hover:border-brand-primary hover:bg-muted"
           }
           ${disabled || isUploading ? "opacity-50 cursor-not-allowed" : ""}
         `}
@@ -172,15 +172,15 @@ export function FileUploadArea({
         {isUploading ? (
           // Uploading state
           <div className="space-y-3">
-            <div className="w-12 h-12 bg-[#d2e1f8] rounded-full mx-auto flex items-center justify-center animate-pulse">
-              <Upload className="w-6 h-6 text-[#5b8def]" />
+            <div className="w-12 h-12 bg-brand-primary-light rounded-full mx-auto flex items-center justify-center animate-pulse">
+              <Upload className="w-6 h-6 text-brand-primary" />
             </div>
-            <p className="text-[15px] text-[#21214f] font-medium">
+            <p className="text-[15px] text-foreground font-medium">
               {t("feature.submission.upload.uploading")} {uploadProgress}%
             </p>
-            <div className="max-w-[300px] mx-auto bg-[#e6e8ee] rounded-full h-2 overflow-hidden">
+            <div className="max-w-[300px] mx-auto bg-border rounded-full h-2 overflow-hidden">
               <div
-                className="bg-[#5b8def] h-full transition-all duration-300"
+                className="bg-brand-primary h-full transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
               />
             </div>
@@ -189,23 +189,23 @@ export function FileUploadArea({
           // Default state
           <div className="space-y-3">
             <div
-              className={`w-12 h-12 ${error ? "bg-[#ffb8b8]" : "bg-[#d2e1f8]"} rounded-full mx-auto flex items-center justify-center`}
+              className={`w-12 h-12 ${error ? "bg-error-light" : "bg-brand-primary-light"} rounded-full mx-auto flex items-center justify-center`}
             >
               {error ? (
-                <AlertCircle className="w-6 h-6 text-[#d4183d]" />
+                <AlertCircle className="w-6 h-6 text-destructive" />
               ) : (
-                <Upload className="w-6 h-6 text-[#5b8def]" />
+                <Upload className="w-6 h-6 text-brand-primary" />
               )}
             </div>
             <div>
-              <p className="text-[15px] text-[#21214f] font-medium mb-1">
+              <p className="text-[15px] text-foreground font-medium mb-1">
                 {isDragging
                   ? t("feature.submission.upload.dropFile")
                   : t("feature.submission.upload.dragFileHere")}
               </p>
-              <p className="text-[13px] text-[#767692]">
+              <p className="text-[13px] text-muted-foreground">
                 {t("feature.submission.upload.or")}{" "}
-                <span className="text-[#5b8def] font-medium">
+                <span className="text-brand-primary font-medium">
                   {t("feature.submission.upload.browseFile")}
                 </span>
               </p>
@@ -215,7 +215,7 @@ export function FileUploadArea({
       </div>
 
       {/* Format & size info */}
-      <div className="flex items-start gap-2 text-[13px] text-[#767692]">
+      <div className="flex items-start gap-2 text-[13px] text-muted-foreground">
         <div className="shrink-0">ℹ️</div>
         <div>
           <p>
@@ -230,9 +230,9 @@ export function FileUploadArea({
 
       {/* Error message */}
       {error && (
-        <div className="flex items-start gap-2 bg-[#fff5f5] border border-[#ffb8b8] rounded-[8px] p-3">
-          <AlertCircle className="w-4 h-4 text-[#d4183d] shrink-0 mt-0.5" />
-          <p className="text-[13px] text-[#d4183d]">{error}</p>
+        <div className="flex items-start gap-2 bg-error-light border border-error rounded-[8px] p-3">
+          <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+          <p className="text-[13px] text-destructive">{error}</p>
         </div>
       )}
     </div>

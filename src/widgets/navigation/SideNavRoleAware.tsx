@@ -154,16 +154,17 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
   const navItemClass = (active: boolean) =>
     active
-      ? "bg-[#eef4ff] text-[--brand-primary] font-medium hover:bg-[#dce6fd]"
-      : "text-[--text-secondary] hover:bg-[#f3f4f6] hover:text-[--text-primary]";
+      ? "bg-brand-primary-light text-[--brand-primary] font-medium hover:bg-[--brand-primary-light]"
+      : "text-[--text-secondary] hover:bg-surface-hover hover:text-[--text-primary]";
 
-  const footerItemClass = "text-[--text-secondary] hover:bg-[#f3f4f6] hover:text-[--text-primary]";
+  const footerItemClass =
+    "text-[--text-secondary] hover:bg-surface-hover hover:text-[--text-primary]";
 
   // ── Mobile Drawer ──────────────────────────────────────────────────────
   if (isMobileDrawer) {
     return (
       <div
-        className={`fixed inset-y-0 left-0 z-50 bg-white transform transition-transform duration-300 w-[272px] ${
+        className={`fixed inset-y-0 left-0 z-50 bg-sidebar transform transition-transform duration-300 w-[272px] ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.08)" }}
@@ -179,7 +180,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             </a>
             <button
               onClick={onClose}
-              className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-[#f3f4f6] hover:text-[--text-primary] transition-colors duration-150 ${focusRing}`}
+              className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-surface-hover hover:text-[--text-primary] transition-colors duration-150 ${focusRing}`}
               aria-label={t("nav.closeMenu")}
             >
               <X className="w-4 h-4" />
@@ -237,7 +238,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
   // ── Desktop / Tablet Sidebar ───────────────────────────────────────────
   return (
     <div
-      className={`bg-white border-r border-[--surface-border] h-screen flex flex-col shrink-0 transition-all duration-300 ${
+      className={`bg-sidebar border-r border-sidebar-border h-screen flex flex-col shrink-0 transition-all duration-300 ${
         isCollapsed ? "w-[72px]" : "w-[240px]"
       }`}
     >
@@ -254,7 +255,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         {showToggleButton && (
           <button
             onClick={onToggleCollapse}
-            className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-[#f3f4f6] hover:text-[--text-primary] transition-colors duration-150 ${focusRing} ${isCollapsed ? "mx-auto" : ""}`}
+            className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-surface-hover hover:text-[--text-primary] transition-colors duration-150 ${focusRing} ${isCollapsed ? "mx-auto" : ""}`}
             aria-label={isCollapsed ? t("nav.expand") : t("nav.collapse")}
           >
             {isCollapsed ? (

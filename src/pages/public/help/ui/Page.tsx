@@ -170,10 +170,10 @@ export default function HelpPage() {
     const isOpen = openItems.has(item.id);
 
     return (
-      <div key={item.id} className="border border-border rounded-[12px] overflow-hidden bg-white">
+      <div key={item.id} className="border border-border rounded-[12px] overflow-hidden bg-card">
         <button
           onClick={() => toggleItem(item.id)}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface-hover transition-colors text-left"
         >
           <span className="font-medium text-foreground pr-4">{item.question}</span>
           <ChevronDown
@@ -192,7 +192,7 @@ export default function HelpPage() {
       <div className="py-12 px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl tablet:text-5xl font-semibold text-[#21214f] mb-4">
+          <h1 className="text-4xl tablet:text-5xl font-semibold text-foreground mb-4">
             {t("page.help.title")}
           </h1>
           <p className="text-lg text-muted-foreground max-w-[600px] mx-auto">
@@ -209,7 +209,7 @@ export default function HelpPage() {
               placeholder={t("page.help.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-border rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#a0b8f1] focus:border-transparent"
+              className="w-full pl-12 pr-4 py-3 border border-border rounded-[12px] focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
         </div>
@@ -219,7 +219,7 @@ export default function HelpPage() {
           {/* Getting Started */}
           {sections["getting-started"].length > 0 && (
             <section>
-              <h2 className="text-2xl font-semibold text-[#21214f] mb-6">
+              <h2 className="text-2xl font-semibold text-foreground mb-6">
                 {t("page.help.gettingStarted")}
               </h2>
               <div className="space-y-3">{sections["getting-started"].map(renderFAQItem)}</div>
@@ -229,7 +229,7 @@ export default function HelpPage() {
           {/* Troubleshooting */}
           {sections.troubleshooting.length > 0 && (
             <section>
-              <h2 className="text-2xl font-semibold text-[#21214f] mb-6">
+              <h2 className="text-2xl font-semibold text-foreground mb-6">
                 {t("page.help.troubleshooting")}
               </h2>
               <div className="space-y-3">{sections.troubleshooting.map(renderFAQItem)}</div>
@@ -238,7 +238,7 @@ export default function HelpPage() {
 
           {/* Contact Support */}
           <section>
-            <h2 className="text-2xl font-semibold text-[#21214f] mb-6">
+            <h2 className="text-2xl font-semibold text-foreground mb-6">
               {t("page.help.contactSupport")}
             </h2>
 
@@ -248,18 +248,18 @@ export default function HelpPage() {
             )}
 
             {/* Support Options */}
-            <div className="bg-[#d2e1f8] rounded-[20px] p-6 tablet:p-8">
-              <h3 className="text-xl font-semibold text-[#21214f] mb-4">
+            <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-8">
+              <h3 className="text-xl font-semibold text-foreground mb-4">
                 {t("page.help.noAnswerFound")}
               </h3>
 
               {flags.supportChat ? (
                 // Show chat link if supportChat flag is enabled
                 <div className="space-y-4">
-                  <p className="text-[#21214f]/80">{t("page.help.chatSupportDesc")}</p>
+                  <p className="text-foreground/80">{t("page.help.chatSupportDesc")}</p>
                   <a
                     href="#/support/chat"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#3d6bc6] hover:bg-[#2f5aaf] text-white font-medium rounded-[12px] transition-colors"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[12px] transition-colors"
                   >
                     <MessageCircle className="size-5" />
                     {t("page.help.openChatSupport")}
@@ -268,14 +268,14 @@ export default function HelpPage() {
               ) : (
                 // Show instructor/admin contact info if chat is disabled
                 <div className="space-y-4">
-                  <p className="text-[#21214f]/80">{t("page.help.contactInstructorDesc")}</p>
-                  <div className="flex items-start gap-3 p-4 bg-white rounded-[12px]">
-                    <Mail className="size-5 text-[#3d6bc6] shrink-0 mt-0.5" />
+                  <p className="text-foreground/80">{t("page.help.contactInstructorDesc")}</p>
+                  <div className="flex items-start gap-3 p-4 bg-card rounded-[12px]">
+                    <Mail className="size-5 text-brand-primary shrink-0 mt-0.5" />
                     <div>
-                      <div className="font-medium text-[#21214f] mb-1">
+                      <div className="font-medium text-foreground mb-1">
                         {t("page.help.contactInstructor")}
                       </div>
-                      <div className="text-sm text-[#21214f]/70">
+                      <div className="text-sm text-foreground/70">
                         {t("page.help.contactInstructorHint")}
                       </div>
                     </div>

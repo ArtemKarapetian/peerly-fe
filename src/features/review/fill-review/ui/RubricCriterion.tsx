@@ -56,27 +56,27 @@ export function RubricCriterion({
       {/* Criterion Header */}
       <div className="mb-3">
         <div className="flex items-start justify-between gap-2 mb-1">
-          <h4 className="text-[15px] desktop:text-[16px] font-medium text-[#21214f]">
+          <h4 className="text-[15px] desktop:text-[16px] font-medium text-foreground">
             {criterion.name}
-            {criterion.required && <span className="text-[#d4183d] ml-1">*</span>}
+            {criterion.required && <span className="text-destructive ml-1">*</span>}
           </h4>
-          <span className="text-[13px] text-[#767692] shrink-0">
+          <span className="text-[13px] text-muted-foreground shrink-0">
             {t("feature.rubricCriterion.maxPoints", { count: criterion.maxScore })}
           </span>
         </div>
         {criterion.description && (
-          <p className="text-[13px] text-[#767692] leading-[1.4]">{criterion.description}</p>
+          <p className="text-[13px] text-muted-foreground leading-[1.4]">{criterion.description}</p>
         )}
       </div>
 
       {/* Score Selector */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-[13px] text-[#4b4963]">
+          <label className="block text-[13px] text-muted-foreground">
             {t("feature.rubricCriterion.score")}
           </label>
           {!readonly && (
-            <span className="text-[11px] text-[#a0a0a0] italic">
+            <span className="text-[11px] text-text-tertiary italic">
               {t("feature.rubricCriterion.scoreHint")}
             </span>
           )}
@@ -92,8 +92,8 @@ export function RubricCriterion({
                 w-10 h-10 rounded-[8px] text-[14px] font-medium transition-all
                 ${
                   value.score === score
-                    ? "bg-[#5b8def] text-white shadow-sm"
-                    : "bg-[#f9f9f9] text-[#21214f] hover:bg-[#e6e8ee]"
+                    ? "bg-brand-primary text-primary-foreground shadow-sm"
+                    : "bg-muted text-foreground hover:bg-surface-hover"
                 }
                 ${readonly ? "cursor-not-allowed" : "cursor-pointer"}
               `}
@@ -106,11 +106,11 @@ export function RubricCriterion({
 
       {/* Comment Field */}
       <div className="mb-2">
-        <label className="block text-[13px] text-[#4b4963] mb-2">
+        <label className="block text-[13px] text-muted-foreground mb-2">
           {t("feature.rubricCriterion.comment")}
-          {criterion.commentRequired && <span className="text-[#d4183d] ml-1">*</span>}
+          {criterion.commentRequired && <span className="text-destructive ml-1">*</span>}
           {criterion.minCommentLength && (
-            <span className="text-[#767692] ml-1">
+            <span className="text-muted-foreground ml-1">
               ({t("feature.rubricCriterion.minChars", { count: criterion.minCommentLength })})
             </span>
           )}
@@ -122,10 +122,10 @@ export function RubricCriterion({
           rows={2}
           placeholder={t("feature.rubricCriterion.commentPlaceholder")}
           className={`
-            w-full px-3 py-2 border-2 rounded-[8px] text-[14px] text-[#21214f] 
-            placeholder:text-[#b4b4b4] transition-colors resize-none
-            ${error ? "border-[#d4183d] bg-[#fff5f5]" : "border-[#e6e8ee] focus:border-[#a0b8f1]"}
-            ${readonly ? "bg-[#f9f9f9] cursor-not-allowed" : "bg-white"}
+            w-full px-3 py-2 border-2 rounded-[8px] text-[14px] text-foreground 
+            placeholder:text-text-tertiary transition-colors resize-none
+            ${error ? "border-destructive bg-error-light" : "border-border focus:border-brand-primary"}
+            ${readonly ? "bg-muted cursor-not-allowed" : "bg-card"}
           `}
           onFocus={onFocus}
         />
@@ -133,8 +133,8 @@ export function RubricCriterion({
           <p
             className={`text-[12px] mt-1 ${
               value.comment.length >= criterion.minCommentLength
-                ? "text-[#4caf50]"
-                : "text-[#767692]"
+                ? "text-success"
+                : "text-muted-foreground"
             }`}
           >
             {value.comment.length} / {criterion.minCommentLength}{" "}
@@ -145,9 +145,9 @@ export function RubricCriterion({
 
       {/* Error */}
       {error && (
-        <div className="flex items-start gap-2 bg-[#fff5f5] border border-[#ffcccc] rounded-[8px] p-2 mb-2">
-          <AlertCircle className="w-4 h-4 text-[#d4183d] shrink-0 mt-0.5" />
-          <p className="text-[13px] text-[#d4183d]">{error}</p>
+        <div className="flex items-start gap-2 bg-error-light border border-error rounded-[8px] p-2 mb-2">
+          <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+          <p className="text-[13px] text-destructive">{error}</p>
         </div>
       )}
     </div>

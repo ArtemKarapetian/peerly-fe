@@ -16,49 +16,49 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
 
   return (
     <div className="max-w-[600px]">
-      <p className="text-[15px] text-[#767692] mb-6">{t("widget.settings.subtitle")}</p>
+      <p className="text-[15px] text-muted-foreground mb-6">{t("widget.settings.subtitle")}</p>
 
       <div className="space-y-6">
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+          <label className="block text-[13px] font-medium text-foreground mb-2">
             {t("widget.settings.courseName")}
           </label>
           <input
             type="text"
             defaultValue={course.name}
-            className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+            className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+          <label className="block text-[13px] font-medium text-foreground mb-2">
             {t("widget.settings.courseCode")}
           </label>
           <input
             type="text"
             defaultValue={course.code}
-            className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+            className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+          <label className="block text-[13px] font-medium text-foreground mb-2">
             {t("widget.settings.description")}
           </label>
           <textarea
             defaultValue={t("widget.settings.descriptionDefault")}
             rows={4}
-            className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] resize-none focus:outline-none focus:border-[#5b8def] transition-colors"
+            className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] resize-none focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-[#21214f] mb-2">
+          <label className="block text-[13px] font-medium text-foreground mb-2">
             {t("widget.settings.courseStatus")}
           </label>
           <select
             defaultValue={course.status}
-            className="w-full px-4 py-2 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] bg-white focus:outline-none focus:border-[#5b8def] transition-colors"
+            className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] bg-card focus:outline-none focus:border-brand-primary transition-colors"
           >
             <option value="active">{t("widget.settings.statusActive")}</option>
             <option value="archived">{t("widget.settings.statusArchived")}</option>
@@ -68,7 +68,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         <div className="pt-4">
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+            className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium"
           >
             <Save className="w-4 h-4" />
             {t("widget.settings.saveChanges")}
@@ -76,12 +76,14 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         </div>
       </div>
 
-      <div className="mt-8 pt-6 border-t-2 border-[#e6e8ee]">
-        <h3 className="text-[16px] font-medium text-[#d4183d] mb-2">
+      <div className="mt-8 pt-6 border-t-2 border-border">
+        <h3 className="text-[16px] font-medium text-destructive mb-2">
           {t("widget.settings.dangerZone")}
         </h3>
-        <p className="text-[14px] text-[#767692] mb-4">{t("widget.settings.dangerDescription")}</p>
-        <button className="px-4 py-2 bg-[#fff5f5] text-[#d4183d] border-2 border-[#d4183d] rounded-[12px] hover:bg-[#d4183d] hover:text-white transition-colors">
+        <p className="text-[14px] text-muted-foreground mb-4">
+          {t("widget.settings.dangerDescription")}
+        </p>
+        <button className="px-4 py-2 bg-error-light text-destructive border-2 border-destructive rounded-[12px] hover:bg-destructive hover:text-text-inverse transition-colors">
           {t("widget.settings.deleteCourse")}
         </button>
       </div>

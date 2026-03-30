@@ -12,8 +12,8 @@ export function DeleteSuccessScreen({ onGoToLanding }: DeleteSuccessScreenProps)
     <div className="min-h-screen w-full bg-background flex items-center justify-center p-8">
       <div className="max-w-md w-full text-center space-y-6">
         <div className="flex justify-center">
-          <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
-            <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+          <div className="w-20 h-20 rounded-full bg-success-light flex items-center justify-center">
+            <CheckCircle className="w-10 h-10 text-success" />
           </div>
         </div>
 

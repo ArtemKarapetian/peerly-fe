@@ -254,16 +254,16 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
     return (
       <AppShell title={t("page.reviewFill.notFoundTitle")}>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-[#f9f9f9] rounded-[20px] p-8 max-w-[480px] text-center">
-            <h2 className="text-[24px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
+          <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
+            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
               {t("page.reviewFill.notFoundTitle")}
             </h2>
-            <p className="text-[16px] text-[#767692] leading-[1.5] mb-6">
+            <p className="text-[16px] text-muted-foreground leading-[1.5] mb-6">
               {t("page.reviewFill.notFoundDesc")}
             </p>
             <button
               onClick={() => (window.location.hash = "/reviews")}
-              className="px-6 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] text-[15px] font-medium transition-colors"
+              className="px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
             >
               {t("page.reviewFill.backToReviews")}
             </button>
@@ -390,7 +390,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
           {!isSubmitted && (
             <button
               onClick={handleResetDraft}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] text-[12px] font-medium text-[#767692] hover:text-[#21214f] hover:bg-[#f9f9f9] transition-colors"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               title={t("page.reviewFill.resetDraft")}
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -402,39 +402,39 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
 
       {/* Save Error Banner */}
       {showSaveError && (
-        <div className="bg-[#fff5f5] border-2 border-[#ffb8b8] rounded-[16px] p-4 mb-6 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-[#d4183d] shrink-0 mt-0.5" />
+        <div className="bg-error-light border-2 border-error rounded-[16px] p-4 mb-6 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-error shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+            <h3 className="text-[16px] font-medium text-foreground mb-1">
               {t("page.reviewFill.saveErrorTitle")}
             </h3>
-            <p className="text-[14px] text-[#4b4963]">{t("page.reviewFill.saveErrorDesc")}</p>
+            <p className="text-[14px] text-foreground">{t("page.reviewFill.saveErrorDesc")}</p>
           </div>
         </div>
       )}
 
       {/* Draft Restored Toast */}
       {showDraftToast && (
-        <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6 flex items-start gap-3">
-          <CheckCircle className="w-5 h-5 text-[#5b8def] shrink-0 mt-0.5" />
+        <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4 mb-6 flex items-start gap-3">
+          <CheckCircle className="w-5 h-5 text-brand-primary shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+            <h3 className="text-[16px] font-medium text-foreground mb-1">
               {t("page.reviewFill.draftRestoredTitle")}
             </h3>
-            <p className="text-[14px] text-[#4b4963]">{t("page.reviewFill.draftRestoredDesc")}</p>
+            <p className="text-[14px] text-foreground">{t("page.reviewFill.draftRestoredDesc")}</p>
           </div>
         </div>
       )}
 
       {/* Success Banner */}
       {isSubmitted && (
-        <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6 flex items-start gap-3">
-          <CheckCircle className="w-5 h-5 text-[#4caf50] shrink-0 mt-0.5" />
+        <div className="bg-success-light border-2 border-success rounded-[16px] p-4 mb-6 flex items-start gap-3">
+          <CheckCircle className="w-5 h-5 text-success shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-[16px] font-medium text-[#21214f] mb-1">
+            <h3 className="text-[16px] font-medium text-foreground mb-1">
               {t("page.reviewFill.submittedTitle")}
             </h3>
-            <p className="text-[14px] text-[#4b4963]">{t("page.reviewFill.submittedDesc")}</p>
+            <p className="text-[14px] text-foreground">{t("page.reviewFill.submittedDesc")}</p>
           </div>
         </div>
       )}
@@ -461,10 +461,10 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
             />
           ))}
 
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-4 desktop:p-6">
-            <h3 className="text-[18px] desktop:text-[20px] font-medium text-[#21214f] tracking-[-0.5px] mb-4">
+          <div className="bg-card border-2 border-border rounded-[16px] p-4 desktop:p-6">
+            <h3 className="text-[18px] desktop:text-[20px] font-medium text-foreground tracking-[-0.5px] mb-4">
               {t("page.reviewFill.overallComment")}
-              <span className="text-[#d4183d] ml-1">*</span>
+              <span className="text-error ml-1">*</span>
             </h3>
             <textarea
               value={overallComment}
@@ -482,38 +482,36 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
               rows={6}
               placeholder={t("page.reviewFill.overallCommentPlaceholder")}
               className={`
-                w-full px-4 py-3 border-2 rounded-[12px] text-[14px] text-[#21214f] 
-                placeholder:text-[#b4b4b4] transition-colors resize-none
-                ${errors["overall"] ? "border-[#d4183d] bg-[#fff5f5]" : "border-[#e6e8ee] focus:border-[#a0b8f1]"}
-                ${isSubmitted ? "bg-[#f9f9f9] cursor-not-allowed" : "bg-white"}
+                w-full px-4 py-3 border-2 rounded-[12px] text-[14px] text-foreground 
+                placeholder:text-text-tertiary transition-colors resize-none
+                ${errors["overall"] ? "border-error bg-error-light" : "border-border focus:border-brand-primary-light"}
+                ${isSubmitted ? "bg-muted cursor-not-allowed" : "bg-card"}
               `}
             />
             <div className="flex items-center justify-between mt-2">
               <p
                 className={`text-[13px] ${
                   overallComment.length >= minOverallCommentLength
-                    ? "text-[#4caf50]"
+                    ? "text-success"
                     : errors["overall"]
-                      ? "text-[#d4183d]"
-                      : "text-[#767692]"
+                      ? "text-error"
+                      : "text-muted-foreground"
                 }`}
               >
                 {overallComment.length} / {minOverallCommentLength}{" "}
                 {t("page.reviewFill.characters")}
               </p>
-              {errors["overall"] && (
-                <p className="text-[13px] text-[#d4183d]">{errors["overall"]}</p>
-              )}
+              {errors["overall"] && <p className="text-[13px] text-error">{errors["overall"]}</p>}
             </div>
           </div>
 
           {/* Mobile/Tablet Actions */}
           {!isSubmitted && (
-            <div className="desktop:hidden bg-[#f9f9f9] border-2 border-[#e6e8ee] rounded-[16px] p-4">
+            <div className="desktop:hidden bg-muted border-2 border-border rounded-[16px] p-4">
               <button
                 onClick={handleSubmit}
                 disabled={!canSubmit()}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[12px] text-[15px] font-medium transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 <Send className="w-4 h-4" />
                 <span>{t("page.reviewFill.submitReview")}</span>
@@ -533,11 +531,11 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
           />
 
           {!isSubmitted && (
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-4">
+            <div className="bg-card border-2 border-border rounded-[16px] p-4">
               <button
                 onClick={handleSubmit}
                 disabled={!canSubmit()}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[12px] text-[15px] font-medium transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 <Send className="w-4 h-4" />
                 <span>{t("page.reviewFill.submitReview")}</span>
@@ -561,23 +559,23 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
       {/* Confirm Submit Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[20px] p-6 max-w-md w-full">
-            <h3 className="text-[20px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
+          <div className="bg-card rounded-[20px] p-6 max-w-md w-full">
+            <h3 className="text-[20px] font-medium text-foreground mb-3 tracking-[-0.5px]">
               {t("page.reviewFill.confirmTitle")}
             </h3>
-            <p className="text-[15px] text-[#767692] leading-[1.5] mb-6">
+            <p className="text-[15px] text-muted-foreground leading-[1.5] mb-6">
               {t("page.reviewFill.confirmDesc")}
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="flex-1 px-4 py-3 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[12px] text-[15px] font-medium transition-colors"
+                className="flex-1 px-4 py-3 bg-muted hover:bg-border text-foreground rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 {t("page.reviewFill.confirmCancel")}
               </button>
               <button
                 onClick={() => void confirmSubmit()}
-                className="flex-1 px-4 py-3 bg-[#3d6bc6] hover:bg-[#2d5bb6] text-white rounded-[12px] text-[15px] font-medium transition-colors"
+                className="flex-1 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 {t("page.reviewFill.confirmSubmit")}
               </button>
@@ -589,23 +587,23 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
       {/* Reset Draft Confirmation Modal */}
       {showResetModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-[20px] p-6 max-w-md w-full">
-            <h3 className="text-[20px] font-medium text-[#21214f] mb-3 tracking-[-0.5px]">
+          <div className="bg-card rounded-[20px] p-6 max-w-md w-full">
+            <h3 className="text-[20px] font-medium text-foreground mb-3 tracking-[-0.5px]">
               {t("page.reviewFill.resetTitle")}
             </h3>
-            <p className="text-[15px] text-[#767692] leading-[1.5] mb-6">
+            <p className="text-[15px] text-muted-foreground leading-[1.5] mb-6">
               {t("page.reviewFill.resetDesc")}
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowResetModal(false)}
-                className="flex-1 px-4 py-3 bg-[#f9f9f9] hover:bg-[#e6e8ee] text-[#21214f] rounded-[12px] text-[15px] font-medium transition-colors"
+                className="flex-1 px-4 py-3 bg-muted hover:bg-border text-foreground rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 {t("page.reviewFill.resetCancel")}
               </button>
               <button
                 onClick={confirmResetDraft}
-                className="flex-1 px-4 py-3 bg-[#d4183d] hover:bg-[#c01030] text-white rounded-[12px] text-[15px] font-medium transition-colors"
+                className="flex-1 px-4 py-3 bg-destructive hover:bg-destructive text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
               >
                 {t("page.reviewFill.resetConfirm")}
               </button>
@@ -616,7 +614,7 @@ export default function ReviewPage({ reviewId }: ReviewPageProps) {
 
       {/* Success Toast */}
       {showSuccessToast && (
-        <div className="fixed top-20 right-4 bg-[#4caf50] text-white rounded-[12px] px-4 py-3 shadow-lg z-50 flex items-center gap-2 animate-slide-in">
+        <div className="fixed top-20 right-4 bg-success text-primary-foreground rounded-[12px] px-4 py-3 shadow-lg z-50 flex items-center gap-2 animate-slide-in">
           <CheckCircle className="w-5 h-5" />
           <span className="text-[14px] font-medium">{t("page.reviewFill.successToast")}</span>
         </div>

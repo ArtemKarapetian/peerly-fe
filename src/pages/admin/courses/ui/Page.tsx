@@ -85,25 +85,25 @@ export default function AdminCoursesPage() {
             label={t("admin.coursesPage.totalCourses")}
             value={allCourses.length}
             icon={<BookOpen className="w-4 h-4" />}
-            accent="#2563eb"
+            accent="var(--brand-primary)"
           />
           <StatCard
             label={t("admin.coursesPage.activeCourses")}
             value={activeCourses.length}
             icon={<BookOpen className="w-4 h-4" />}
-            accent="#059669"
+            accent="var(--success)"
           />
           <StatCard
             label={t("admin.coursesPage.enrolledStudents")}
             value={totalStudents}
             icon={<Users className="w-4 h-4" />}
-            accent="#d97706"
+            accent="var(--warning)"
           />
           <StatCard
             label={t("admin.coursesPage.teachers")}
             value={uniqueTeachers}
             icon={<GraduationCap className="w-4 h-4" />}
-            accent="#7c3aed"
+            accent="var(--chart-4)"
           />
         </div>
 
@@ -123,7 +123,7 @@ export default function AdminCoursesPage() {
               {t("admin.coursesPage.coursesCount", { count: filteredCourses.length })}
             </p>
 
-            <div className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
+            <div className="bg-card border border-[--surface-border] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-sm)]">
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
@@ -158,7 +158,7 @@ export default function AdminCoursesPage() {
                     {currentItems.map((course) => (
                       <tr
                         key={course.id}
-                        className="hover:bg-[#f7f9ff] transition-colors duration-150 cursor-pointer group"
+                        className="hover:bg-brand-primary-lighter transition-colors duration-150 cursor-pointer group"
                         onClick={() => handleOpenCourse(course.id)}
                         onKeyDown={(e) => handleRowKeyDown(e, course.id)}
                         role="button"
@@ -184,7 +184,7 @@ export default function AdminCoursesPage() {
 
                         {/* Студенты */}
                         <td className="px-5 py-3.5 text-center hidden tablet:table-cell">
-                          <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 bg-[#eff6ff] text-[--brand-primary] rounded-[var(--radius-sm)] text-[13px] font-semibold tabular-nums">
+                          <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 bg-info-light text-[--brand-primary] rounded-[var(--radius-sm)] text-[13px] font-semibold tabular-nums">
                             {course.enrollmentCount}
                           </span>
                         </td>
@@ -234,7 +234,7 @@ export default function AdminCoursesPage() {
             )}
           </>
         ) : (
-          <div className="bg-white border border-[--surface-border] rounded-[var(--radius-xl)] p-12 text-center shadow-[var(--shadow-sm)]">
+          <div className="bg-card border border-[--surface-border] rounded-[var(--radius-xl)] p-12 text-center shadow-[var(--shadow-sm)]">
             <div className="w-12 h-12 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mx-auto mb-4">
               <BookOpen className="w-6 h-6 text-[--text-tertiary]" />
             </div>

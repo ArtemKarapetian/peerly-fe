@@ -263,7 +263,7 @@ function AnnouncementsContent({
           !isCreating && !editingId ? (
             <button
               onClick={() => setIsCreating(true)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-[#2563eb] text-white rounded-[10px] hover:bg-[#1d4ed8] transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium"
+              className="flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-[10px] hover:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium"
             >
               <Plus className="w-4 h-4" />
               {t("teacher.announcements.create")}
@@ -275,47 +275,47 @@ function AnnouncementsContent({
       <div>
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+              <CheckCircle className="w-4 h-4 text-success" />
+              <span className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 {t("teacher.announcements.published")}
               </span>
             </div>
-            <p className="text-[28px] font-medium text-[#4caf50]">{publishedCount}</p>
+            <p className="text-[28px] font-medium text-success">{publishedCount}</p>
           </div>
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Edit className="w-4 h-4 text-[#767692]" />
-              <span className="text-[12px] text-[#767692] uppercase tracking-wide">
+              <Edit className="w-4 h-4 text-muted-foreground" />
+              <span className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 {t("teacher.announcements.drafts")}
               </span>
             </div>
-            <p className="text-[28px] font-medium text-[#767692]">{draftCount}</p>
+            <p className="text-[28px] font-medium text-muted-foreground">{draftCount}</p>
           </div>
         </div>
 
         {/* Create/Edit Form */}
         {(isCreating || editingId) && (
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6 mb-6">
+          <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+              <h2 className="text-[18px] font-medium text-foreground">
                 {editingId
                   ? t("teacher.announcements.editTitle")
                   : t("teacher.announcements.newTitle")}
               </h2>
               <button
                 onClick={handleCancel}
-                className="p-2 hover:bg-[#f9f9f9] rounded-[8px] transition-colors"
+                className="p-2 hover:bg-muted rounded-[8px] transition-colors"
               >
-                <X className="w-5 h-5 text-[#767692]" />
+                <X className="w-5 h-5 text-muted-foreground" />
               </button>
             </div>
 
             <div className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {t("teacher.announcements.titleLabel")}
                 </label>
                 <input
@@ -323,19 +323,19 @@ function AnnouncementsContent({
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   placeholder={t("teacher.announcements.titlePlaceholder")}
-                  className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                 />
               </div>
 
               {/* Course */}
               <div>
-                <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {t("teacher.announcements.courseLabel")}
                 </label>
                 <select
                   value={formCourseId}
                   onChange={(e) => setFormCourseId(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                 >
                   {courses.map((course) => (
                     <option key={course.id} value={course.id}>
@@ -347,14 +347,14 @@ function AnnouncementsContent({
 
               {/* Content */}
               <div>
-                <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+                <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {t("teacher.announcements.contentLabel")}
                 </label>
                 <textarea
                   value={formContent}
                   onChange={(e) => setFormContent(e.target.value)}
                   placeholder={t("teacher.announcements.contentPlaceholder")}
-                  className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors min-h-[150px] resize-y"
+                  className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors min-h-[150px] resize-y"
                 />
               </div>
 
@@ -365,9 +365,9 @@ function AnnouncementsContent({
                     type="checkbox"
                     checked={formPinned}
                     onChange={(e) => setFormPinned(e.target.checked)}
-                    className="w-4 h-4 rounded border-2 border-[#e6e8ee] text-[#5b8def] focus:ring-2 focus:ring-[#5b8def] focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-2 focus:ring-ring focus:ring-offset-0"
                   />
-                  <span className="text-[14px] text-[#21214f]">
+                  <span className="text-[14px] text-foreground">
                     {t("teacher.announcements.pinAnnouncement")}
                   </span>
                 </label>
@@ -377,7 +377,7 @@ function AnnouncementsContent({
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={editingId ? handleUpdate : handleCreate}
-                  className="flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors"
                 >
                   <CheckCircle className="w-5 h-5" />
                   <span className="text-[15px] font-medium">
@@ -388,7 +388,7 @@ function AnnouncementsContent({
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="px-6 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[15px] font-medium"
+                  className="px-6 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors text-[15px] font-medium"
                 >
                   {t("teacher.announcements.cancelBtn")}
                 </button>
@@ -403,32 +403,32 @@ function AnnouncementsContent({
             announcements.map((announcement) => (
               <div
                 key={announcement.id}
-                className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6"
+                className="bg-card border-2 border-border rounded-[20px] p-6"
               >
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-[20px] font-medium text-[#21214f]">
+                      <h3 className="text-[20px] font-medium text-foreground">
                         {announcement.title}
                       </h3>
                       {announcement.isPublished ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[12px] font-medium">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
                           <CheckCircle className="w-3 h-3" />
                           {t("teacher.announcements.publishedBadge")}
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f5f5f5] text-[#767692] rounded-[6px] text-[12px] font-medium">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium">
                           <Edit className="w-3 h-3" />
                           {t("teacher.announcements.draftBadge")}
                         </span>
                       )}
                       {announcement.isPinned && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[12px] font-medium">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
                           {t("teacher.announcements.pinnedBadge")}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 mb-3 text-[13px] text-[#767692]">
+                    <div className="flex items-center gap-3 mb-3 text-[13px] text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <BookOpen className="w-3 h-3" />
                         {announcement.courseName}
@@ -446,18 +446,18 @@ function AnnouncementsContent({
                         </span>
                       )}
                     </div>
-                    <p className="text-[15px] text-[#21214f] leading-relaxed">
+                    <p className="text-[15px] text-foreground leading-relaxed">
                       {announcement.content}
                     </p>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-4 border-t-2 border-[#e6e8ee]">
+                <div className="flex items-center gap-2 pt-4 border-t-2 border-border">
                   {!announcement.isPublished ? (
                     <button
                       onClick={() => handlePublish(announcement.id)}
-                      className="flex items-center gap-2 px-4 py-2 bg-[#4caf50] text-white rounded-[8px] hover:bg-[#45a049] transition-colors text-[14px]"
+                      className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-[8px] hover:bg-success transition-colors text-[14px]"
                     >
                       <Send className="w-4 h-4" />
                       {t("teacher.announcements.publishBtn")}
@@ -465,14 +465,14 @@ function AnnouncementsContent({
                   ) : (
                     <button
                       onClick={() => handleUnpublish(announcement.id)}
-                      className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#767692] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
+                      className="flex items-center gap-2 px-4 py-2 border-2 border-border text-muted-foreground rounded-[8px] hover:bg-muted transition-colors text-[14px]"
                     >
                       {t("teacher.announcements.unpublishBtn")}
                     </button>
                   )}
                   <button
                     onClick={() => handleTogglePin(announcement.id)}
-                    className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
+                    className="flex items-center gap-2 px-4 py-2 border-2 border-border text-foreground rounded-[8px] hover:bg-muted transition-colors text-[14px]"
                   >
                     {announcement.isPinned
                       ? t("teacher.announcements.unpinBtn")
@@ -480,14 +480,14 @@ function AnnouncementsContent({
                   </button>
                   <button
                     onClick={() => handleEdit(announcement)}
-                    className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#21214f] rounded-[8px] hover:bg-[#f9f9f9] transition-colors text-[14px]"
+                    className="flex items-center gap-2 px-4 py-2 border-2 border-border text-foreground rounded-[8px] hover:bg-muted transition-colors text-[14px]"
                   >
                     <Edit className="w-4 h-4" />
                     {t("teacher.announcements.editBtn")}
                   </button>
                   <button
                     onClick={() => handleDelete(announcement.id)}
-                    className="flex items-center gap-2 px-4 py-2 border-2 border-[#e6e8ee] text-[#d4183d] rounded-[8px] hover:border-[#d4183d] hover:bg-[#fff5f5] transition-colors text-[14px] ml-auto"
+                    className="flex items-center gap-2 px-4 py-2 border-2 border-border text-error rounded-[8px] hover:border-error hover:bg-error-light transition-colors text-[14px] ml-auto"
                   >
                     <Trash2 className="w-4 h-4" />
                     {t("teacher.announcements.deleteBtn")}
@@ -496,17 +496,17 @@ function AnnouncementsContent({
               </div>
             ))
           ) : (
-            <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-12 text-center">
-              <Megaphone className="w-12 h-12 text-[#d7d7d7] mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-[#21214f] mb-2">
+            <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
+              <Megaphone className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
+              <h3 className="text-[18px] font-medium text-foreground mb-2">
                 {t("teacher.announcements.noAnnouncements")}
               </h3>
-              <p className="text-[14px] text-[#767692] mb-4">
+              <p className="text-[14px] text-muted-foreground mb-4">
                 {t("teacher.announcements.createFirstDesc")}
               </p>
               <button
                 onClick={() => setIsCreating(true)}
-                className="inline-flex items-center gap-2 px-4 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors"
               >
                 <Plus className="w-5 h-5" />
                 <span className="text-[15px] font-medium">

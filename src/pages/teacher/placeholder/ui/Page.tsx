@@ -33,26 +33,28 @@ export function TeacherPlaceholderPage({
       <Breadcrumbs items={breadcrumbs} />
 
       <div className="mt-6">
-        <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-8 text-center max-w-[600px] mx-auto">
-          <div className="w-16 h-16 bg-[#e9f5ff] rounded-[16px] flex items-center justify-center mx-auto mb-4">
-            <Icon className="w-8 h-8 text-[#5b8def]" />
+        <div className="bg-card border-2 border-border rounded-[20px] p-8 text-center max-w-[600px] mx-auto">
+          <div className="w-16 h-16 bg-info-light rounded-[16px] flex items-center justify-center mx-auto mb-4">
+            <Icon className="w-8 h-8 text-brand-primary" />
           </div>
-          <h1 className="text-[28px] font-medium text-[#21214f] tracking-[-0.5px] mb-3">{title}</h1>
-          <p className="text-[16px] text-[#767692] leading-[1.6] mb-6">{description}</p>
+          <h1 className="text-[28px] font-medium text-foreground tracking-[-0.5px] mb-3">
+            {title}
+          </h1>
+          <p className="text-[16px] text-muted-foreground leading-[1.6] mb-6">{description}</p>
 
           {primaryAction && (
             <div className="mb-6">
               <a
                 href={primaryAction.href}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#5b8def] text-white rounded-[12px] hover:bg-[#4a7de8] transition-colors font-medium"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium"
               >
                 {primaryAction.label}
               </a>
             </div>
           )}
 
-          <div className="bg-[#f9f9f9] border border-[#e6e8ee] rounded-[12px] p-4">
-            <p className="text-[14px] text-[#767692]">
+          <div className="bg-muted border border-border rounded-[12px] p-4">
+            <p className="text-[14px] text-muted-foreground">
               <strong>{t("teacher.placeholder.demoMode")}</strong>{" "}
               {t("teacher.placeholder.demoDesc")}
             </p>

@@ -45,20 +45,22 @@ export function GradebookHeader({
       <PageHeader title={t("student.gradebook.title")} subtitle={t("student.gradebook.subtitle")} />
 
       {/* Desktop stats strip */}
-      <div className="hidden desktop:flex items-center gap-6 bg-[#f9f9f9] rounded-[16px] px-6 py-4 mb-6">
+      <div className="hidden desktop:flex items-center gap-6 bg-muted rounded-[16px] px-6 py-4 mb-6">
         <div className="flex items-center gap-3">
-          <TrendingUp className="w-5 h-5 text-[#3d6bc6]" />
+          <TrendingUp className="w-5 h-5 text-brand-primary" />
           <div>
-            <div className="text-[13px] text-[#767692] mb-1">{t("student.gradebook.avgScore")}</div>
-            <div className="text-[20px] font-semibold text-[#21214f]">{stats.avgPercentage}%</div>
+            <div className="text-[13px] text-muted-foreground mb-1">
+              {t("student.gradebook.avgScore")}
+            </div>
+            <div className="text-[20px] font-semibold text-foreground">{stats.avgPercentage}%</div>
           </div>
         </div>
-        <div className="w-px h-12 bg-[#e6e8ee]"></div>
+        <div className="w-px h-12 bg-border"></div>
         <div>
-          <div className="text-[13px] text-[#767692] mb-1">
+          <div className="text-[13px] text-muted-foreground mb-1">
             {t("student.gradebook.gradesReceived")}
           </div>
-          <div className="text-[20px] font-semibold text-[#21214f]">
+          <div className="text-[20px] font-semibold text-foreground">
             {stats.published} / {stats.total}
           </div>
         </div>
@@ -66,7 +68,7 @@ export function GradebookHeader({
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <div className="flex items-center gap-2 text-[14px] text-[#767692]">
+        <div className="flex items-center gap-2 text-[14px] text-muted-foreground">
           <Filter className="w-4 h-4" />
           <span className="hidden tablet:inline">{t("common.filters")}:</span>
         </div>
@@ -78,27 +80,27 @@ export function GradebookHeader({
               setShowCourseFilter(!showCourseFilter);
               setShowStatusFilter(false);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] hover:border-[#a0b8f1] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-card border-2 border-border rounded-[8px] text-[14px] text-foreground hover:border-brand-primary transition-colors"
           >
             <span>
               {selectedCourse === "all"
                 ? `${t("common.all")} ${t("nav.courses").toLowerCase()}`
                 : courses.find((c) => c.id === selectedCourse)?.name}
             </span>
-            <ChevronDown className="w-4 h-4 text-[#767692]" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </button>
 
           {showCourseFilter && (
-            <div className="absolute top-full left-0 mt-2 w-[280px] bg-white border-2 border-[#e6e8ee] rounded-[12px] shadow-lg z-10 overflow-hidden">
+            <div className="absolute top-full left-0 mt-2 w-[280px] bg-card border-2 border-border rounded-[12px] shadow-lg z-10 overflow-hidden">
               <button
                 onClick={() => {
                   onCourseChange("all");
                   setShowCourseFilter(false);
                 }}
-                className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
+                className={`w-full text-left px-4 py-3 text-[14px] hover:bg-muted transition-colors ${
                   selectedCourse === "all"
-                    ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
-                    : "text-[#21214f]"
+                    ? "bg-brand-primary-light text-brand-primary font-medium"
+                    : "text-foreground"
                 }`}
               >
                 {t("common.all")} {t("nav.courses").toLowerCase()}
@@ -110,10 +112,10 @@ export function GradebookHeader({
                     onCourseChange(course.id);
                     setShowCourseFilter(false);
                   }}
-                  className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
+                  className={`w-full text-left px-4 py-3 text-[14px] hover:bg-muted transition-colors ${
                     selectedCourse === course.id
-                      ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
-                      : "text-[#21214f]"
+                      ? "bg-brand-primary-light text-brand-primary font-medium"
+                      : "text-foreground"
                   }`}
                 >
                   {course.name}
@@ -130,27 +132,27 @@ export function GradebookHeader({
               setShowStatusFilter(!showStatusFilter);
               setShowCourseFilter(false);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-[#e6e8ee] rounded-[8px] text-[14px] text-[#21214f] hover:border-[#a0b8f1] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-card border-2 border-border rounded-[8px] text-[14px] text-foreground hover:border-brand-primary transition-colors"
           >
             <span>
               {selectedStatus === "all"
                 ? `${t("common.all")} ${t("common.status").toLowerCase()}`
                 : statusLabels[selectedStatus]}
             </span>
-            <ChevronDown className="w-4 h-4 text-[#767692]" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </button>
 
           {showStatusFilter && (
-            <div className="absolute top-full left-0 mt-2 w-[220px] bg-white border-2 border-[#e6e8ee] rounded-[12px] shadow-lg z-10 overflow-hidden">
+            <div className="absolute top-full left-0 mt-2 w-[220px] bg-card border-2 border-border rounded-[12px] shadow-lg z-10 overflow-hidden">
               <button
                 onClick={() => {
                   onStatusChange("all");
                   setShowStatusFilter(false);
                 }}
-                className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
+                className={`w-full text-left px-4 py-3 text-[14px] hover:bg-muted transition-colors ${
                   selectedStatus === "all"
-                    ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
-                    : "text-[#21214f]"
+                    ? "bg-brand-primary-light text-brand-primary font-medium"
+                    : "text-foreground"
                 }`}
               >
                 {t("common.all")} {t("common.status").toLowerCase()}
@@ -162,10 +164,10 @@ export function GradebookHeader({
                     onStatusChange(key);
                     setShowStatusFilter(false);
                   }}
-                  className={`w-full text-left px-4 py-3 text-[14px] hover:bg-[#f9f9f9] transition-colors ${
+                  className={`w-full text-left px-4 py-3 text-[14px] hover:bg-muted transition-colors ${
                     selectedStatus === key
-                      ? "bg-[#f0f4ff] text-[#3d6bc6] font-medium"
-                      : "text-[#21214f]"
+                      ? "bg-brand-primary-light text-brand-primary font-medium"
+                      : "text-foreground"
                   }`}
                 >
                   {label}
@@ -176,7 +178,7 @@ export function GradebookHeader({
         </div>
 
         {(selectedCourse !== "all" || selectedStatus !== "all") && (
-          <button onClick={onReset} className="text-[14px] text-[#3d6bc6] hover:underline">
+          <button onClick={onReset} className="text-[14px] text-brand-primary hover:underline">
             {t("common.reset")}
           </button>
         )}

@@ -81,10 +81,10 @@ export function getRoleDisplayName(role: UserRole): string {
 export function getRoleBadgeColor(role: UserRole): string {
   switch (role) {
     case "Student":
-      return "bg-[#e9f5ff] text-[#5b8def]";
+      return "bg-info-light text-brand-primary";
     case "Teacher":
-      return "bg-[#fff8e1] text-[#f57c00]";
+      return "bg-warning-light text-warning";
     case "Admin":
-      return "bg-[#f3e5f5] text-[#8e24aa]";
+      return "bg-secondary text-foreground";
   }
 }

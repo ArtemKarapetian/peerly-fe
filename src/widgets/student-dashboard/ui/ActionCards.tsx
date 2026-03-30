@@ -21,7 +21,7 @@ export function ActionCards({ data, onReviewsClick, onFeedbackClick }: ActionCar
       icon: CheckSquare,
       label: t("widget.actionCards.needToReview"),
       count: data.reviewsPending,
-      accent: "#7c3aed",
+      accent: "var(--chart-3)",
       onClick: onReviewsClick,
     },
     {
@@ -29,7 +29,7 @@ export function ActionCards({ data, onReviewsClick, onFeedbackClick }: ActionCar
       icon: MessageSquare,
       label: t("widget.actionCards.newFeedback"),
       count: data.newFeedback,
-      accent: "#059669",
+      accent: "var(--success)",
       onClick: onFeedbackClick,
     },
   ];
@@ -46,7 +46,7 @@ export function ActionCards({ data, onReviewsClick, onFeedbackClick }: ActionCar
             onClick={hasItems ? item.onClick : undefined}
             disabled={!hasItems}
             className={`w-full text-left px-5 py-3.5 transition-colors duration-150 group ${
-              hasItems ? "hover:bg-[#f7f9ff] cursor-pointer" : "cursor-default"
+              hasItems ? "hover:bg-surface-hover cursor-pointer" : "cursor-default"
             }`}
           >
             <div className="flex items-center gap-3">

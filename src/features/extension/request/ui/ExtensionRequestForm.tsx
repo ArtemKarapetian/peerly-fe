@@ -66,10 +66,10 @@ export function ExtensionRequestForm({
         <p className="text-muted-foreground">{t("feature.extension.request.subtitle")}</p>
       </div>
 
-      <div className="bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-[20px] p-6">
+      <div className="bg-info-light border border-info rounded-[20px] p-6">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-            <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          <div className="w-12 h-12 rounded-full bg-info-light flex items-center justify-center flex-shrink-0">
+            <Clock className="w-6 h-6 text-info" />
           </div>
           <div>
             <h2 className="font-semibold text-foreground mb-2">

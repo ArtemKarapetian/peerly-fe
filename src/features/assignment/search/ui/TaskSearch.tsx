@@ -16,7 +16,7 @@ export function TaskSearch({ value, onChange, placeholder }: TaskSearchProps) {
 
   return (
     <div className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#767692]" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
       <input
         type="text"
         value={value}
@@ -24,13 +24,13 @@ export function TaskSearch({ value, onChange, placeholder }: TaskSearchProps) {
         placeholder={placeholder ?? t("feature.taskSearch.placeholder")}
         className="
           w-full pl-9 pr-4 py-2.5
-          text-[14px] leading-[1.4] text-[#21214f]
-          placeholder:text-[#c7c7c7]
-          bg-white
-          border border-[#e6e8ee] rounded-[12px]
+          text-[14px] leading-[1.4] text-foreground
+          placeholder:text-text-tertiary
+          bg-card
+          border border-border rounded-[12px]
           outline-none
           transition-colors
-          focus:border-[#b7bdff] focus:ring-2 focus:ring-[#b7bdff]/20
+          focus:border-ring focus:ring-2 focus:ring-ring/20
         "
       />
     </div>

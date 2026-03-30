@@ -57,24 +57,24 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.basics.title")}
         </h2>
-        <p className="text-[15px] text-[#767692]">
+        <p className="text-[15px] text-muted-foreground">
           {t("feature.assignmentCreate.basics.subtitle")}
         </p>
       </div>
 
       {/* Course Selection */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.courseLabel")}{" "}
-          <span className="text-[#d4183d]">*</span>
+          <span className="text-destructive">*</span>
         </label>
         <select
           value={data.courseId}
           onChange={(e) => onUpdate({ courseId: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors bg-white"
+          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
         >
           <option value="">{t("feature.assignmentCreate.basics.coursePlaceholder")}</option>
           {(courses ?? []).map((course) => (
@@ -87,22 +87,22 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
 
       {/* Title */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.titleLabel")}{" "}
-          <span className="text-[#d4183d]">*</span>
+          <span className="text-destructive">*</span>
         </label>
         <input
           type="text"
           value={data.title}
           onChange={(e) => onUpdate({ title: e.target.value })}
           placeholder={t("feature.assignmentCreate.basics.titlePlaceholder")}
-          className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors"
+          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.descriptionLabel")}
         </label>
         <textarea
@@ -110,18 +110,18 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
           onChange={(e) => onUpdate({ description: e.target.value })}
           rows={6}
           placeholder={t("feature.assignmentCreate.basics.descriptionPlaceholder")}
-          className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] focus:outline-none focus:border-[#5b8def] transition-colors resize-none"
+          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors resize-none"
         />
-        <p className="text-[13px] text-[#767692] mt-1">
+        <p className="text-[13px] text-muted-foreground mt-1">
           {data.description.length} {t("feature.assignmentCreate.basics.characters")}
         </p>
       </div>
 
       {/* Task Type */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-3">
+        <label className="block text-[14px] font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.basics.taskTypeLabel")}{" "}
-          <span className="text-[#d4183d]">*</span>
+          <span className="text-destructive">*</span>
         </label>
         <div className="grid grid-cols-2 desktop:grid-cols-4 gap-3">
           {[
@@ -156,13 +156,13 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
                 p-4 border-2 rounded-[12px] text-left transition-all
                 ${
                   data.taskType === type.value
-                    ? "border-[#5b8def] bg-[#e9f5ff]"
-                    : "border-[#e6e8ee] hover:border-[#a0b8f1] bg-white"
+                    ? "border-brand-primary bg-brand-primary-light"
+                    : "border-border hover:border-brand-primary bg-card"
                 }
               `}
             >
-              <div className="text-[15px] font-medium text-[#21214f] mb-1">{type.label}</div>
-              <div className="text-[12px] text-[#767692]">{type.desc}</div>
+              <div className="text-[15px] font-medium text-foreground mb-1">{type.label}</div>
+              <div className="text-[12px] text-muted-foreground">{type.desc}</div>
             </button>
           ))}
         </div>
@@ -170,15 +170,15 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
 
       {/* Attachments */}
       <div>
-        <label className="block text-[14px] font-medium text-[#21214f] mb-2">
+        <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.attachmentsLabel")}
         </label>
-        <p className="text-[13px] text-[#767692] mb-3">
+        <p className="text-[13px] text-muted-foreground mb-3">
           {t("feature.assignmentCreate.basics.attachmentsHint")}
         </p>
 
         {/* Upload Button */}
-        <label className="inline-flex items-center gap-2 px-4 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors cursor-pointer">
+        <label className="inline-flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-surface-hover transition-colors cursor-pointer">
           <Upload className="w-4 h-4" />
           <span className="text-[14px] font-medium">
             {t("feature.assignmentCreate.basics.uploadFiles")}
@@ -192,20 +192,20 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
             {data.attachments.map((file) => (
               <div
                 key={file.id}
-                className="flex items-center justify-between p-3 bg-[#f9f9f9] border border-[#e6e8ee] rounded-[8px]"
+                className="flex items-center justify-between p-3 bg-muted border border-border rounded-[8px]"
               >
                 <div className="flex items-center gap-3">
-                  <FileText className="w-4 h-4 text-[#767692]" />
+                  <FileText className="w-4 h-4 text-muted-foreground" />
                   <div>
-                    <p className="text-[14px] text-[#21214f]">{file.name}</p>
-                    <p className="text-[12px] text-[#767692]">{formatFileSize(file.size)}</p>
+                    <p className="text-[14px] text-foreground">{file.name}</p>
+                    <p className="text-[12px] text-muted-foreground">{formatFileSize(file.size)}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => removeAttachment(file.id)}
-                  className="p-1 hover:bg-white rounded-[6px] transition-colors"
+                  className="p-1 hover:bg-surface-hover rounded-[6px] transition-colors"
                 >
-                  <X className="w-4 h-4 text-[#767692]" />
+                  <X className="w-4 h-4 text-muted-foreground" />
                 </button>
               </div>
             ))}
@@ -214,8 +214,8 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
       </div>
 
       {/* Help Text */}
-      <div className="bg-[#e9f5ff] border border-[#a0b8f1] rounded-[12px] p-4">
-        <p className="text-[13px] text-[#21214f]">
+      <div className="bg-info-light border border-info rounded-[12px] p-4">
+        <p className="text-[13px] text-foreground">
           <strong>{t("feature.assignmentCreate.basics.tip")}</strong>{" "}
           {t("feature.assignmentCreate.basics.tipText")}
         </p>

@@ -139,14 +139,14 @@ export default function AdminRetentionPage() {
 
       <div>
         {hasAnyRiskySettings && (
-          <div className="bg-[#fff5f5] border-2 border-[#d4183d] rounded-[16px] p-4 mb-6">
+          <div className="bg-error-light border-2 border-error rounded-[16px] p-4 mb-6">
             <div className="flex gap-3">
-              <AlertTriangle className="w-5 h-5 text-[#d4183d] flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-[14px] font-medium text-[#d4183d] mb-1">
+                <h4 className="text-[14px] font-medium text-error mb-1">
                   {t("admin.retentionPage.riskySettingsTitle")}
                 </h4>
-                <p className="text-[13px] text-[#767692]">
+                <p className="text-[13px] text-muted-foreground">
                   {t("admin.retentionPage.riskySettingsText")}
                 </p>
               </div>
@@ -155,12 +155,12 @@ export default function AdminRetentionPage() {
         )}
 
         {showSuccess && (
-          <div className="bg-[#e8f5e9] border-2 border-[#4caf50] rounded-[16px] p-4 mb-6">
+          <div className="bg-success-light border-2 border-success rounded-[16px] p-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#4caf50] rounded-full flex items-center justify-center">
-                <Save className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                <Save className="w-4 h-4 text-primary-foreground" />
               </div>
-              <p className="text-[14px] font-medium text-[#4caf50]">
+              <p className="text-[14px] font-medium text-success">
                 {t("admin.retentionPage.savedSuccess")}
               </p>
             </div>
@@ -175,21 +175,23 @@ export default function AdminRetentionPage() {
             return (
               <div
                 key={setting.key}
-                className={`bg-white border-2 rounded-[20px] p-6 transition-colors ${
-                  risky ? "border-[#d4183d]" : "border-[#e6e8ee]"
+                className={`bg-card border-2 rounded-[20px] p-6 transition-colors ${
+                  risky ? "border-error" : "border-border"
                 }`}
               >
                 <div className="flex items-start gap-4">
                   <div className="text-[32px] flex-shrink-0">{setting.icon}</div>
                   <div className="flex-1">
-                    <h3 className="text-[18px] font-medium text-[#21214f] mb-1">
+                    <h3 className="text-[18px] font-medium text-foreground mb-1">
                       {t(setting.labelKey)}
                     </h3>
-                    <p className="text-[13px] text-[#767692] mb-4">{t(setting.descriptionKey)}</p>
+                    <p className="text-[13px] text-muted-foreground mb-4">
+                      {t(setting.descriptionKey)}
+                    </p>
 
                     <div className="flex items-center gap-4 mb-3">
                       <div className="flex items-center gap-2 flex-1 max-w-[300px]">
-                        <Clock className="w-4 h-4 text-[#767692]" />
+                        <Clock className="w-4 h-4 text-muted-foreground" />
                         <input
                           type="number"
                           min="1"
@@ -197,22 +199,22 @@ export default function AdminRetentionPage() {
                           onChange={(e) => handleChange(setting.key, e.target.value)}
                           className={`flex-1 px-4 py-2 border-2 rounded-[8px] text-[14px] focus:outline-none transition-colors ${
                             risky
-                              ? "border-[#d4183d] focus:border-[#d4183d]"
-                              : "border-[#e6e8ee] focus:border-[#5b8def]"
+                              ? "border-error focus:border-error"
+                              : "border-border focus:border-brand-primary"
                           }`}
                         />
-                        <span className="text-[14px] text-[#767692] min-w-[60px]">
+                        <span className="text-[14px] text-muted-foreground min-w-[60px]">
                           {t("admin.retentionPage.daysUnit")}
                         </span>
                       </div>
 
-                      <div className="text-[12px] text-[#767692]">
+                      <div className="text-[12px] text-muted-foreground">
                         {value === 0 ? (
-                          <span className="inline-flex px-2 py-1 bg-[#f5f5f5] rounded-[6px]">
+                          <span className="inline-flex px-2 py-1 bg-muted rounded-[6px]">
                             {t("admin.retentionPage.disabled")}
                           </span>
                         ) : value < 30 ? (
-                          <span className="text-[#d4183d]">
+                          <span className="text-error">
                             {t("admin.retentionPage.weeksApprox", {
                               value: Math.floor(value / 7),
                             })}
@@ -234,9 +236,9 @@ export default function AdminRetentionPage() {
                     </div>
 
                     {risky && (
-                      <div className="flex items-start gap-2 p-3 bg-[#fff5f5] rounded-[8px]">
-                        <AlertTriangle className="w-4 h-4 text-[#d4183d] flex-shrink-0 mt-0.5" />
-                        <p className="text-[12px] text-[#d4183d]">
+                      <div className="flex items-start gap-2 p-3 bg-error-light rounded-[8px]">
+                        <AlertTriangle className="w-4 h-4 text-error flex-shrink-0 mt-0.5" />
+                        <p className="text-[12px] text-error">
                           <strong>{t("admin.retentionPage.warningPrefix")}</strong>{" "}
                           {t(setting.warningKey)}
                         </p>
@@ -244,9 +246,9 @@ export default function AdminRetentionPage() {
                     )}
 
                     {!risky && value < DEFAULT_RETENTION[setting.key] && (
-                      <div className="flex items-start gap-2 p-3 bg-[#fff4e5] rounded-[8px]">
-                        <AlertTriangle className="w-4 h-4 text-[#ff9800] flex-shrink-0 mt-0.5" />
-                        <p className="text-[12px] text-[#767692]">
+                      <div className="flex items-start gap-2 p-3 bg-warning-light rounded-[8px]">
+                        <AlertTriangle className="w-4 h-4 text-warning flex-shrink-0 mt-0.5" />
+                        <p className="text-[12px] text-muted-foreground">
                           {t("admin.retentionPage.recommendedValue")}{" "}
                           <strong>
                             {t("admin.retentionPage.recommendedDays", {
@@ -263,17 +265,17 @@ export default function AdminRetentionPage() {
           })}
         </div>
 
-        <div className="bg-[#e9f5ff] border-2 border-[#5b8def] rounded-[16px] p-4 mb-6">
+        <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4 mb-6">
           <div className="flex gap-3">
-            <Database className="w-5 h-5 text-[#5b8def] flex-shrink-0 mt-0.5" />
+            <Database className="w-5 h-5 text-brand-primary flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-[14px] font-medium text-[#21214f] mb-1">
+              <h4 className="text-[14px] font-medium text-foreground mb-1">
                 {t("admin.retentionPage.aboutRetentionTitle")}
               </h4>
-              <p className="text-[13px] text-[#767692] mb-2">
+              <p className="text-[13px] text-muted-foreground mb-2">
                 {t("admin.retentionPage.aboutRetentionText1")}
               </p>
-              <p className="text-[13px] text-[#767692]">
+              <p className="text-[13px] text-muted-foreground">
                 {t("admin.retentionPage.aboutRetentionText2")}
               </p>
             </div>
@@ -286,8 +288,8 @@ export default function AdminRetentionPage() {
             disabled={!hasChanges}
             className={`flex items-center gap-2 px-6 py-3 rounded-[12px] text-[14px] font-medium transition-all ${
               hasChanges
-                ? "bg-[#5b8def] text-white hover:bg-[#4a7de8]"
-                : "bg-[#e6e8ee] text-[#767692] cursor-not-allowed"
+                ? "bg-brand-primary text-primary-foreground hover:bg-brand-primary-hover"
+                : "bg-border text-muted-foreground cursor-not-allowed"
             }`}
           >
             <Save className="w-5 h-5" />
@@ -295,7 +297,7 @@ export default function AdminRetentionPage() {
           </button>
           <button
             onClick={handleReset}
-            className="flex items-center gap-2 px-6 py-3 border-2 border-[#e6e8ee] text-[#21214f] rounded-[12px] hover:bg-[#f9f9f9] transition-colors text-[14px] font-medium"
+            className="flex items-center gap-2 px-6 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors text-[14px] font-medium"
           >
             <RotateCcw className="w-5 h-5" />
             {t("admin.retentionPage.resetToDefaults")}

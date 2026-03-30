@@ -111,32 +111,32 @@ export default function AdminOverviewPage() {
       descriptionKey: "admin.overviewPage.qlUsersDesc",
       icon: Users,
       href: "/admin/users",
-      color: "bg-[#e9f5ff]",
-      iconColor: "text-[#5b8def]",
+      color: "bg-info-light",
+      iconColor: "text-brand-primary",
     },
     {
       titleKey: "admin.overviewPage.qlPlugins",
       descriptionKey: "admin.overviewPage.qlPluginsDesc",
       icon: Zap,
       href: "/admin/plugins",
-      color: "bg-[#fff4e5]",
-      iconColor: "text-[#ff9800]",
+      color: "bg-warning-light",
+      iconColor: "text-warning",
     },
     {
       titleKey: "admin.overviewPage.qlLogs",
       descriptionKey: "admin.overviewPage.qlLogsDesc",
       icon: FileText,
       href: "/admin/logs",
-      color: "bg-[#f3e5f5]",
-      iconColor: "text-[#8e24aa]",
+      color: "bg-accent",
+      iconColor: "text-brand-primary",
     },
     {
       titleKey: "admin.overviewPage.qlHealth",
       descriptionKey: "admin.overviewPage.qlHealthDesc",
       icon: Activity,
       href: "/admin/health",
-      color: "bg-[#e8f5e9]",
-      iconColor: "text-[#4caf50]",
+      color: "bg-success-light",
+      iconColor: "text-success",
     },
   ];
 
@@ -152,19 +152,19 @@ export default function AdminOverviewPage() {
         <div className="mb-6">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex-1">
-              <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
                 {t("admin.overview.title")}
               </h1>
-              <p className="text-[16px] text-[#767692]">{t("admin.overview.subtitle")}</p>
+              <p className="text-[16px] text-muted-foreground">{t("admin.overview.subtitle")}</p>
             </div>
             <div className="min-w-[280px]">
-              <label className="block text-[13px] font-medium text-[#767692] mb-2 uppercase tracking-wide">
+              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.overviewPage.orgLabel")}
               </label>
               <select
                 value={selectedOrg}
                 onChange={(e) => setSelectedOrg(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-[#e6e8ee] rounded-[12px] text-[15px] text-[#21214f] focus:border-[#5b8def] focus:outline-none transition-colors bg-white"
+                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors bg-card"
               >
                 {demoOrgs.map((org) => (
                   <option key={org.id} value={org.id}>
@@ -175,26 +175,26 @@ export default function AdminOverviewPage() {
             </div>
           </div>
 
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[12px] p-4 flex items-center justify-between">
+          <div className="bg-card border-2 border-border rounded-[12px] p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center">
-                <Database className="w-6 h-6 text-[#5b8def]" />
+              <div className="w-12 h-12 bg-info-light rounded-[8px] flex items-center justify-center">
+                <Database className="w-6 h-6 text-brand-primary" />
               </div>
               <div>
-                <h3 className="text-[16px] font-medium text-[#21214f]">{currentOrg.name}</h3>
+                <h3 className="text-[16px] font-medium text-foreground">{currentOrg.name}</h3>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-[13px] text-[#767692]">
-                    Slug: <span className="text-[#21214f] font-mono">{currentOrg.slug}</span>
+                  <span className="text-[13px] text-muted-foreground">
+                    Slug: <span className="text-foreground font-mono">{currentOrg.slug}</span>
                   </span>
-                  <span className="inline-flex px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium uppercase">
+                  <span className="inline-flex px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium uppercase">
                     {currentOrg.plan}
                   </span>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-[#4caf50]" />
-              <span className="text-[13px] text-[#4caf50] font-medium">
+              <CheckCircle className="w-4 h-4 text-success" />
+              <span className="text-[13px] text-success font-medium">
                 {t("admin.overviewPage.orgActive")}
               </span>
             </div>
@@ -202,116 +202,118 @@ export default function AdminOverviewPage() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
-            <div className="w-12 h-12 bg-[#e9f5ff] rounded-[12px] flex items-center justify-center mb-4">
-              <Users className="w-6 h-6 text-[#5b8def]" />
+          <div className="bg-card border-2 border-border rounded-[16px] p-6">
+            <div className="w-12 h-12 bg-info-light rounded-[12px] flex items-center justify-center mb-4">
+              <Users className="w-6 h-6 text-brand-primary" />
             </div>
-            <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
+            <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
               {t("admin.overviewPage.totalUsers")}
             </p>
-            <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
+            <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
               {orgUsers.toLocaleString()}
             </p>
-            <p className="text-[12px] text-[#4caf50] mt-2 flex items-center gap-1">
+            <p className="text-[12px] text-success mt-2 flex items-center gap-1">
               <span>↗</span> {t("admin.overviewPage.monthGrowth")}
             </p>
           </div>
 
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
-            <div className="w-12 h-12 bg-[#e8f5e9] rounded-[12px] flex items-center justify-center mb-4">
-              <BookOpen className="w-6 h-6 text-[#4caf50]" />
+          <div className="bg-card border-2 border-border rounded-[16px] p-6">
+            <div className="w-12 h-12 bg-success-light rounded-[12px] flex items-center justify-center mb-4">
+              <BookOpen className="w-6 h-6 text-success" />
             </div>
-            <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
+            <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
               {t("admin.overviewPage.activeCourses")}
             </p>
-            <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
+            <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
               {activeCourses}
             </p>
-            <p className="text-[12px] text-[#767692] mt-2">
+            <p className="text-[12px] text-muted-foreground mt-2">
               {t("admin.overviewPage.archivedCount", {
                 count: Math.floor(activeCourses * 0.15),
               })}
             </p>
           </div>
 
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
-            <div className="w-12 h-12 bg-[#fff4e5] rounded-[12px] flex items-center justify-center mb-4">
-              <Activity className="w-6 h-6 text-[#ff9800]" />
+          <div className="bg-card border-2 border-border rounded-[16px] p-6">
+            <div className="w-12 h-12 bg-warning-light rounded-[12px] flex items-center justify-center mb-4">
+              <Activity className="w-6 h-6 text-warning" />
             </div>
-            <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
+            <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
               {t("admin.overviewPage.queueJobs")}
             </p>
-            <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
+            <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
               {queueStats.running}
             </p>
-            <p className="text-[12px] text-[#767692] mt-2">
+            <p className="text-[12px] text-muted-foreground mt-2">
               {t("admin.overviewPage.pendingCount", { count: queueStats.pending })}
             </p>
           </div>
 
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6">
-            <div className="w-12 h-12 bg-[#e8f5e9] rounded-[12px] flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-[#4caf50]" />
+          <div className="bg-card border-2 border-border rounded-[16px] p-6">
+            <div className="w-12 h-12 bg-success-light rounded-[12px] flex items-center justify-center mb-4">
+              <Zap className="w-6 h-6 text-success" />
             </div>
-            <p className="text-[13px] text-[#767692] uppercase tracking-wide mb-1">
+            <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
               {t("admin.overviewPage.pluginStatus")}
             </p>
-            <p className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px]">
+            <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
               {healthyPlugins}/{pluginHealth.length}
             </p>
             <div className="flex items-center gap-2 mt-2 text-[12px]">
-              {warningPlugins > 0 && <span className="text-[#ff9800]">{warningPlugins} ⚠️</span>}
-              {errorPlugins > 0 && <span className="text-[#d4183d]">{errorPlugins} ❌</span>}
+              {warningPlugins > 0 && <span className="text-warning">{warningPlugins} ⚠️</span>}
+              {errorPlugins > 0 && <span className="text-error">{errorPlugins} ❌</span>}
               {warningPlugins === 0 && errorPlugins === 0 && (
-                <span className="text-[#4caf50]">{t("admin.overviewPage.allRunning")}</span>
+                <span className="text-success">{t("admin.overviewPage.allRunning")}</span>
               )}
             </div>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
+          <div className="bg-card border-2 border-border rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Activity className="w-5 h-5 text-[#ff9800]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+              <Activity className="w-5 h-5 text-warning" />
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("admin.overviewPage.queueDetails")}
               </h2>
             </div>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
+              <div className="flex items-center justify-between p-3 bg-muted rounded-[8px]">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#ff9800] rounded-full"></div>
-                  <span className="text-[14px] text-[#21214f]">
+                  <div className="w-2 h-2 bg-warning rounded-full"></div>
+                  <span className="text-[14px] text-foreground">
                     {t("admin.overviewPage.running")}
                   </span>
                 </div>
-                <span className="text-[16px] font-medium text-[#ff9800]">{queueStats.running}</span>
+                <span className="text-[16px] font-medium text-warning">{queueStats.running}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
+              <div className="flex items-center justify-between p-3 bg-muted rounded-[8px]">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#5b8def] rounded-full"></div>
-                  <span className="text-[14px] text-[#21214f]">
+                  <div className="w-2 h-2 bg-brand-primary rounded-full"></div>
+                  <span className="text-[14px] text-foreground">
                     {t("admin.overviewPage.pending")}
                   </span>
                 </div>
-                <span className="text-[16px] font-medium text-[#5b8def]">{queueStats.pending}</span>
+                <span className="text-[16px] font-medium text-brand-primary">
+                  {queueStats.pending}
+                </span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]">
+              <div className="flex items-center justify-between p-3 bg-muted rounded-[8px]">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-[#d4183d] rounded-full"></div>
-                  <span className="text-[14px] text-[#21214f]">
+                  <div className="w-2 h-2 bg-destructive rounded-full"></div>
+                  <span className="text-[14px] text-foreground">
                     {t("admin.overviewPage.errors")}
                   </span>
                 </div>
-                <span className="text-[16px] font-medium text-[#d4183d]">{queueStats.failed}</span>
+                <span className="text-[16px] font-medium text-error">{queueStats.failed}</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
+          <div className="bg-card border-2 border-border rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-[#5b8def]" />
-              <h2 className="text-[18px] font-medium text-[#21214f]">
+              <Zap className="w-5 h-5 text-brand-primary" />
+              <h2 className="text-[18px] font-medium text-foreground">
                 {t("admin.overviewPage.pluginHealth")}
               </h2>
             </div>
@@ -319,30 +321,30 @@ export default function AdminOverviewPage() {
               {pluginHealth.slice(0, 3).map((plugin) => (
                 <div
                   key={plugin.id}
-                  className="flex items-center justify-between p-3 bg-[#f9f9f9] rounded-[8px]"
+                  className="flex items-center justify-between p-3 bg-muted rounded-[8px]"
                 >
                   <div className="flex-1">
-                    <p className="text-[14px] font-medium text-[#21214f]">{plugin.name}</p>
-                    <p className="text-[12px] text-[#767692]">
+                    <p className="text-[14px] font-medium text-foreground">{plugin.name}</p>
+                    <p className="text-[12px] text-muted-foreground">
                       {t("admin.overviewPage.checked")}{" "}
                       {plugin.lastCheck.toLocaleTimeString("ru-RU")}
                     </p>
                   </div>
                   <div>
                     {plugin.status === "healthy" && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#e8f5e9] text-[#4caf50] rounded-[6px] text-[11px] font-medium">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
                         <CheckCircle className="w-3 h-3" />
                         {t("admin.overviewPage.statusOk")}
                       </span>
                     )}
                     {plugin.status === "warning" && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff4e5] text-[#ff9800] rounded-[6px] text-[11px] font-medium">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
                         <AlertTriangle className="w-3 h-3" />
                         {t("admin.overviewPage.statusWarning")}
                       </span>
                     )}
                     {plugin.status === "error" && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#fff5f5] text-[#d4183d] rounded-[6px] text-[11px] font-medium">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
                         <XCircle className="w-3 h-3" />
                         {t("admin.overviewPage.statusError")}
                       </span>
@@ -355,7 +357,7 @@ export default function AdminOverviewPage() {
         </div>
 
         <div>
-          <h2 className="text-[20px] font-medium text-[#21214f] mb-4">
+          <h2 className="text-[20px] font-medium text-foreground mb-4">
             {t("admin.overviewPage.quickLinks")}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -365,18 +367,18 @@ export default function AdminOverviewPage() {
                 <button
                   key={link.href}
                   onClick={() => handleNavigate(link.href)}
-                  className="bg-white border-2 border-[#e6e8ee] rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-[#2563eb] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
+                  className="bg-card border-2 border-border rounded-[16px] p-6 text-left shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:border-brand-primary hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all group"
                 >
                   <div
                     className={`w-12 h-12 ${link.color} rounded-[12px] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
                   >
                     <Icon className={`w-6 h-6 ${link.iconColor}`} />
                   </div>
-                  <h3 className="text-[16px] font-medium text-[#21214f] mb-2">
+                  <h3 className="text-[16px] font-medium text-foreground mb-2">
                     {t(link.titleKey)}
                   </h3>
-                  <p className="text-[13px] text-[#767692] mb-3">{t(link.descriptionKey)}</p>
-                  <div className="flex items-center gap-1 text-[13px] text-[#5b8def] font-medium">
+                  <p className="text-[13px] text-muted-foreground mb-3">{t(link.descriptionKey)}</p>
+                  <div className="flex items-center gap-1 text-[13px] text-brand-primary font-medium">
                     {t("admin.overviewPage.goTo")}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -386,49 +388,49 @@ export default function AdminOverviewPage() {
           </div>
         </div>
 
-        <div className="mt-6 bg-white border-2 border-[#e6e8ee] rounded-[20px] p-6">
+        <div className="mt-6 bg-card border-2 border-border rounded-[20px] p-6">
           <div className="flex items-center gap-2 mb-4">
-            <FileText className="w-5 h-5 text-[#767692]" />
-            <h2 className="text-[18px] font-medium text-[#21214f]">
+            <FileText className="w-5 h-5 text-muted-foreground" />
+            <h2 className="text-[18px] font-medium text-foreground">
               {t("admin.overviewPage.recentEvents")}
             </h2>
           </div>
           <div className="space-y-3">
-            <div className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
-              <div className="w-8 h-8 bg-[#e8f5e9] rounded-[8px] flex items-center justify-center flex-shrink-0">
-                <CheckCircle className="w-4 h-4 text-[#4caf50]" />
+            <div className="flex items-start gap-3 p-3 hover:bg-surface-hover rounded-[8px] transition-colors">
+              <div className="w-8 h-8 bg-success-light rounded-[8px] flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 text-success" />
               </div>
               <div className="flex-1">
-                <p className="text-[14px] text-[#21214f]">
+                <p className="text-[14px] text-foreground">
                   {t("admin.overviewPage.eventOrgCreated", { name: currentOrg.name })}
                 </p>
-                <p className="text-[12px] text-[#767692] mt-1">
+                <p className="text-[12px] text-muted-foreground mt-1">
                   {t("admin.overviewPage.timeAgo2h")}
                 </p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
-              <div className="w-8 h-8 bg-[#fff4e5] rounded-[8px] flex items-center justify-center flex-shrink-0">
-                <Zap className="w-4 h-4 text-[#ff9800]" />
+            <div className="flex items-start gap-3 p-3 hover:bg-surface-hover rounded-[8px] transition-colors">
+              <div className="w-8 h-8 bg-warning-light rounded-[8px] flex items-center justify-center flex-shrink-0">
+                <Zap className="w-4 h-4 text-warning" />
               </div>
               <div className="flex-1">
-                <p className="text-[14px] text-[#21214f]">
+                <p className="text-[14px] text-foreground">
                   {t("admin.overviewPage.eventPluginUpdated")}
                 </p>
-                <p className="text-[12px] text-[#767692] mt-1">
+                <p className="text-[12px] text-muted-foreground mt-1">
                   {t("admin.overviewPage.timeAgo5h")}
                 </p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 hover:bg-[#fafbfc] rounded-[8px] transition-colors">
-              <div className="w-8 h-8 bg-[#e9f5ff] rounded-[8px] flex items-center justify-center flex-shrink-0">
-                <Database className="w-4 h-4 text-[#5b8def]" />
+            <div className="flex items-start gap-3 p-3 hover:bg-surface-hover rounded-[8px] transition-colors">
+              <div className="w-8 h-8 bg-info-light rounded-[8px] flex items-center justify-center flex-shrink-0">
+                <Database className="w-4 h-4 text-brand-primary" />
               </div>
               <div className="flex-1">
-                <p className="text-[14px] text-[#21214f]">
+                <p className="text-[14px] text-foreground">
                   {t("admin.overviewPage.eventBackupComplete")}
                 </p>
-                <p className="text-[12px] text-[#767692] mt-1">
+                <p className="text-[12px] text-muted-foreground mt-1">
                   {t("admin.overviewPage.timeAgo1d")}
                 </p>
               </div>

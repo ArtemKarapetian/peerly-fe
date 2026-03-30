@@ -192,30 +192,30 @@ export default function StatusPage() {
             label: t("page.status.operational"),
             desc: t("page.status.operationalDesc"),
             icon: CheckCircle2,
-            color: "text-green-600",
-            bg: "bg-green-50",
+            color: "text-success",
+            bg: "bg-success-light",
             border: "border-green-200",
-            dotColor: "bg-green-500",
+            dotColor: "bg-success-light0",
           };
         case "degraded":
           return {
             label: t("page.status.degraded"),
             desc: t("page.status.degradedDesc"),
             icon: AlertTriangle,
-            color: "text-yellow-600",
-            bg: "bg-yellow-50",
+            color: "text-warning",
+            bg: "bg-warning-light",
             border: "border-yellow-200",
-            dotColor: "bg-yellow-500",
+            dotColor: "bg-warning-light0",
           };
         case "outage":
           return {
             label: t("page.status.outage"),
             desc: t("page.status.outageDesc"),
             icon: AlertCircle,
-            color: "text-red-600",
-            bg: "bg-red-50",
+            color: "text-error",
+            bg: "bg-error-light",
             border: "border-red-200",
-            dotColor: "bg-red-500",
+            dotColor: "bg-error-light0",
           };
       }
     },
@@ -229,22 +229,22 @@ export default function StatusPage() {
         case "investigating":
           return {
             label: t("page.status.investigating"),
-            color: "text-red-700",
-            bg: "bg-red-100",
+            color: "text-error",
+            bg: "bg-error-light",
             border: "border-red-300",
           };
         case "monitoring":
           return {
             label: t("page.status.monitoring"),
-            color: "text-yellow-700",
-            bg: "bg-yellow-100",
+            color: "text-warning",
+            bg: "bg-warning-light",
             border: "border-yellow-300",
           };
         case "resolved":
           return {
             label: t("page.status.resolved"),
-            color: "text-green-700",
-            bg: "bg-green-100",
+            color: "text-success",
+            bg: "bg-success-light",
             border: "border-green-300",
           };
       }

@@ -31,8 +31,8 @@ export function TaskFilters({ activeFilter, onFilterChange }: TaskFiltersProps) 
             transition-colors
             ${
               activeFilter === filter.id
-                ? "bg-[#d2def8] text-[#21214f]"
-                : "bg-[#e4e4e4] text-[#4b4963] hover:bg-[#d7d7d7]"
+                ? "bg-accent text-foreground"
+                : "bg-muted text-muted-foreground hover:bg-surface-hover"
             }
           `}
         >

@@ -82,7 +82,7 @@ export default function TeacherAutomationPage() {
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h1 className="text-[32px] font-medium text-[#21214f] tracking-[-0.5px] mb-2">
+              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
                 {t("teacher.automation.title")}
               </h1>
               <p className="text-muted-foreground">{t("teacher.automation.subtitle")}</p>
@@ -97,16 +97,14 @@ export default function TeacherAutomationPage() {
           </div>
 
           {/* Info Banner */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-[12px] p-4 mb-6">
+          <div className="bg-info-light border border-info rounded-[12px] p-4 mb-6">
             <div className="flex items-start gap-3">
-              <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+              <Zap className="w-5 h-5 text-info flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
+                <h3 className="font-medium text-foreground mb-1">
                   {t("teacher.automation.howRulesWork")}
                 </h3>
-                <p className="text-sm text-blue-700 dark:text-blue-300">
-                  {t("teacher.automation.howRulesWorkDesc")}
-                </p>
+                <p className="text-sm text-info">{t("teacher.automation.howRulesWorkDesc")}</p>
               </div>
             </div>
           </div>
@@ -167,7 +165,7 @@ export default function TeacherAutomationPage() {
                             onClick={() => handleToggleEnabled(rule.id)}
                             className={`p-1.5 rounded transition-colors ${
                               rule.enabled
-                                ? "text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30"
+                                ? "text-success hover:bg-success-light"
                                 : "text-muted-foreground hover:bg-muted"
                             }`}
                             title={
@@ -194,7 +192,7 @@ export default function TeacherAutomationPage() {
                           </div>
                         </td>
                         <td className="py-4 px-4">
-                          <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                          <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium bg-info-light text-info border border-info">
                             {getTriggerLabel(rule.trigger)}
                           </span>
                         </td>
@@ -249,7 +247,7 @@ export default function TeacherAutomationPage() {
                 </div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
-                <div className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-1">
+                <div className="text-2xl font-semibold text-success mb-1">
                   {rules.filter((r) => r.enabled).length}
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -265,7 +263,7 @@ export default function TeacherAutomationPage() {
                 </div>
               </div>
               <div className="bg-card border border-border rounded-[12px] p-4">
-                <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-1">
+                <div className="text-2xl font-semibold text-info mb-1">
                   {rules.reduce((sum, r) => sum + r.actions.length, 0)}
                 </div>
                 <div className="text-sm text-muted-foreground">

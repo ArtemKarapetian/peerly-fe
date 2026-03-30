@@ -118,8 +118,8 @@ export const statusLabels: Record<string, string> = {
 };
 
 export const statusColors: Record<string, string> = {
-  PUBLISHED: "bg-[#e8f5e9] text-[#2e7d32]",
-  IN_REVIEW: "bg-[#fff3e0] text-[#e65100]",
-  PENDING: "bg-[#f3f4f6] text-[#6b7280]",
-  NOT_SUBMITTED: "bg-[#ffebee] text-[#c62828]",
+  PUBLISHED: "bg-success-light text-success",
+  IN_REVIEW: "bg-warning-light text-warning",
+  PENDING: "bg-muted text-muted-foreground",
+  NOT_SUBMITTED: "bg-error-light text-error",
 };

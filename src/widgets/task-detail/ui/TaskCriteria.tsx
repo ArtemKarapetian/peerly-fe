@@ -42,22 +42,22 @@ export function TaskCriteria() {
   const totalPoints = criteria.reduce((sum, c) => sum + c.points, 0);
 
   return (
-    <div className="bg-[#f9f9f9] rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
-      <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-[#21214f] mb-4">
+    <div className="bg-muted rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
+      <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-foreground mb-4">
         {t("widget.taskCriteria.title")}
       </h2>
 
-      <div className="overflow-x-auto rounded-[12px] border border-[#c7c7c7]">
+      <div className="overflow-x-auto rounded-[12px] border border-border">
         <table className="w-full">
-          <thead className="bg-[#e4e4e4]">
+          <thead className="bg-muted">
             <tr>
-              <th className="text-left p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
+              <th className="text-left p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                 {t("widget.taskCriteria.criterion")}
               </th>
-              <th className="text-center p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f] w-20 desktop:w-24">
+              <th className="text-center p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground w-20 desktop:w-24">
                 {t("widget.taskCriteria.points")}
               </th>
-              <th className="text-left p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f] hidden tablet:table-cell">
+              <th className="text-left p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground hidden tablet:table-cell">
                 {t("widget.taskCriteria.description")}
               </th>
             </tr>
@@ -66,24 +66,24 @@ export function TaskCriteria() {
             {criteria.map((criterion, index) => (
               <tr
                 key={index}
-                className="border-t border-[#c7c7c7] hover:bg-[#f2f2f2] transition-colors"
+                className="border-t border-border hover:bg-surface-hover transition-colors"
               >
-                <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
+                <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                   {criterion.name}
                 </td>
-                <td className="p-2 desktop:p-3 text-center text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
+                <td className="p-2 desktop:p-3 text-center text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                   {criterion.points}
                 </td>
-                <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#4b4963] hidden tablet:table-cell">
+                <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-muted-foreground hidden tablet:table-cell">
                   {criterion.description}
                 </td>
               </tr>
             ))}
-            <tr className="border-t-2 border-[#21214f] bg-[#e4e4e4]">
-              <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
+            <tr className="border-t-2 border-foreground bg-muted">
+              <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                 {t("widget.taskCriteria.total")}
               </td>
-              <td className="p-2 desktop:p-3 text-center text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-[#21214f]">
+              <td className="p-2 desktop:p-3 text-center text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                 {totalPoints}
               </td>
               <td className="p-2 desktop:p-3 hidden tablet:table-cell"></td>

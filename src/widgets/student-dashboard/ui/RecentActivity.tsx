@@ -44,7 +44,7 @@ export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
           <button
             key={item.id}
             onClick={() => onItemClick(item.id, item.type)}
-            className="w-full text-left px-5 py-3.5 hover:bg-[#f7f9ff] transition-colors duration-150 group"
+            className="w-full text-left px-5 py-3.5 hover:bg-surface-hover transition-colors duration-150 group"
           >
             <div className="flex items-center gap-3">
               {/* Icon */}

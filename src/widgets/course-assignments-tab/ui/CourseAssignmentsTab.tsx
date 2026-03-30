@@ -14,7 +14,7 @@ export function CourseAssignmentsTab({ courseId }: CourseAssignmentsTabProps) {
   };
 
   return (
-    <div className="bg-[#f9f9f9] rounded-[20px] p-5 space-y-3 mt-2">
+    <div className="bg-muted rounded-[20px] p-5 space-y-3 mt-2">
       <TaskFilterBar tasks={mockTasks}>
         {(filteredTasks) => (
           <TaskList tasks={filteredTasks} onTaskClick={handleTaskClick} courseId={courseId} />

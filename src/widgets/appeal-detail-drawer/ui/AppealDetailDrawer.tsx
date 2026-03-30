@@ -159,7 +159,7 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
               </div>
               {appeal.status !== "new" && (
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2" />
+                  <div className="w-2 h-2 bg-warning rounded-full mt-2" />
                   <div className="flex-1">
                     <p className="text-[14px] text-foreground font-medium">
                       {t("widget.appealDetailDrawer.takenForReview")}

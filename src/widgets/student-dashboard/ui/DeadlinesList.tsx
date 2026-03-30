@@ -86,7 +86,7 @@ export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
           <button
             key={item.id}
             onClick={() => onTaskClick(item.taskId)}
-            className={`w-full text-left py-3.5 pr-5 hover:bg-[#f7f9ff] transition-colors duration-150 group ${
+            className={`w-full text-left py-3.5 pr-5 hover:bg-surface-hover transition-colors duration-150 group ${
               isPrimary ? "pl-[17px] border-l-[3px] border-[--warning]" : "pl-5"
             }`}
           >

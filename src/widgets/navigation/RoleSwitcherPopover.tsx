@@ -80,7 +80,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
               onClick={() => handleSelectRole(role)}
               className={`w-full text-left px-2.5 py-[6px] rounded-[6px] text-[13px] transition-colors flex items-center justify-between ${
                 role === currentRole
-                  ? "bg-[#eef4ff] text-[--brand-primary] font-medium"
+                  ? "bg-brand-primary-light text-[--brand-primary] font-medium"
                   : "text-[--text-secondary] hover:bg-[--surface-hover] hover:text-[--text-primary]"
               }`}
             >
@@ -101,17 +101,17 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
       <div className="flex justify-center">
         <button
           onClick={handleToggle}
-          className="w-7 h-7 rounded-full bg-gradient-to-br from-[#5b8def] to-[#3d6bc6] flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
+          className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-primary to-brand-primary-hover flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
           title={`${t("roles.switchRole")}: ${t(ROLE_KEYS[currentRole])}`}
           aria-label={t("roles.switchRole")}
           aria-expanded={isOpen}
         >
-          <span className="text-white text-[10px] font-bold">{currentRole[0]}</span>
+          <span className="text-text-inverse text-[10px] font-bold">{currentRole[0]}</span>
         </button>
       </div>
 
       {isOpen && (
-        <div className="absolute left-full ml-2 top-0 bg-white border border-[--surface-border] rounded-[8px] shadow-[var(--shadow-lg)] py-1 z-50 w-[170px]">
+        <div className="absolute left-full ml-2 top-0 bg-popover border border-[--surface-border] rounded-[8px] shadow-[var(--shadow-lg)] py-1 z-50 w-[170px]">
           <p className="px-3 py-1 text-[10px] text-[--text-tertiary] font-medium uppercase tracking-wider">
             {t("roles.switchRole")}
           </p>
@@ -121,7 +121,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
               onClick={() => handleSelectRole(role)}
               className={`w-full text-left px-3 py-[6px] text-[13px] transition-colors ${
                 role === currentRole
-                  ? "bg-[#eef4ff] text-[--brand-primary] font-medium"
+                  ? "bg-brand-primary-light text-[--brand-primary] font-medium"
                   : "text-[--text-primary] hover:bg-[--surface-hover]"
               }`}
             >

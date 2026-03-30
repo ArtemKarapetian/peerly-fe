@@ -13,8 +13,8 @@ export function ExtensionRequestSuccess({ backToTaskHref, backToCoursesHref }: P
     <div className="max-w-[600px] mx-auto">
       <div className="mt-12 text-center space-y-6">
         <div className="flex justify-center">
-          <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
-            <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+          <div className="w-20 h-20 rounded-full bg-success-light flex items-center justify-center">
+            <CheckCircle className="w-10 h-10 text-success" />
           </div>
         </div>
 
@@ -25,9 +25,9 @@ export function ExtensionRequestSuccess({ backToTaskHref, backToCoursesHref }: P
           <p className="text-muted-foreground">{t("feature.extension.success.description")}</p>
         </div>
 
-        <div className="bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-[12px] p-4 text-left">
+        <div className="bg-info-light border border-info rounded-[12px] p-4 text-left">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-info flex-shrink-0 mt-0.5" />
             <div className="text-sm text-foreground/80">
               <strong>{t("feature.extension.success.whatNext")}</strong>
               <p className="mt-1 text-muted-foreground">
