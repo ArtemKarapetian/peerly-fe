@@ -1,6 +1,7 @@
 import { Plus, Calendar, Users, FileText } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
 
@@ -12,6 +13,7 @@ interface TeacherCourseAssignmentsProps {
 
 export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: assignments, isLoading } = useAsync(
     () => assignmentRepo.getByCourse(courseId),
     [courseId],
@@ -42,12 +44,15 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
     }
   };
 
-  const handleAssignmentClick = useCallback((assignmentId: string) => {
-    window.location.hash = `/teacher/assignment/${assignmentId}`;
-  }, []);
+  const handleAssignmentClick = useCallback(
+    (assignmentId: string) => {
+      void navigate(`/teacher/assignment/${assignmentId}`);
+    },
+    [navigate],
+  );
 
   const handleCreateAssignment = () => {
-    window.location.hash = `/teacher/assignments/new`;
+    void navigate("/teacher/assignments/new");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, assignmentId: string) => {

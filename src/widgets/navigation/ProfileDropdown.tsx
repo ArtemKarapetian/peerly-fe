@@ -1,6 +1,7 @@
 import { User, Settings, HelpCircle, Activity, LogOut } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/entities/user";
 
@@ -29,6 +30,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
   const containerRef = useRef<HTMLDivElement>(null);
   const { logout } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const displayName = userName || t("widget.profileDropdown.defaultUser");
 
   // Handle click outside
@@ -70,7 +72,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: User,
       label: t("widget.profileDropdown.profile"),
       onClick: () => {
-        window.location.hash = "/profile";
+        void navigate("/profile");
         setIsOpen(false);
       },
     },
@@ -78,7 +80,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: Settings,
       label: t("widget.profileDropdown.settings"),
       onClick: () => {
-        window.location.hash = "/settings";
+        void navigate("/settings");
         setIsOpen(false);
       },
     },
@@ -86,7 +88,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: HelpCircle,
       label: t("widget.profileDropdown.help"),
       onClick: () => {
-        window.location.hash = "/help";
+        void navigate("/help");
         setIsOpen(false);
       },
     },
@@ -94,7 +96,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: Activity,
       label: t("widget.profileDropdown.serviceStatus"),
       onClick: () => {
-        window.location.hash = "/status";
+        void navigate("/status");
         setIsOpen(false);
       },
     },

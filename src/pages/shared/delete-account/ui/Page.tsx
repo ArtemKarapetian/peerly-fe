@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -17,6 +18,7 @@ import {
 
 export default function DeleteAccountPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const CRUMBS = getCrumbs();
   const { logout } = useAuth();
   const [step, setStep] = useState<"confirm" | "success">("confirm");
@@ -34,7 +36,7 @@ export default function DeleteAccountPage() {
 
   const handleGoToLanding = () => {
     logout();
-    window.location.hash = "/";
+    void navigate("/");
   };
 
   if (step === "success") {
@@ -47,13 +49,13 @@ export default function DeleteAccountPage() {
         <Breadcrumbs items={[CRUMBS.settings, { label: t("widget.deleteAccount.pageTitle") }]} />
 
         <div className="mt-6 space-y-6">
-          <a
-            href="#/settings"
+          <Link
+            to="/settings"
             className="inline-flex items-center gap-2 text-sm text-accent-blue hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
             {t("widget.deleteAccount.backToSettings")}
-          </a>
+          </Link>
 
           <DeleteWarningCard />
           <ConsequencesCard />

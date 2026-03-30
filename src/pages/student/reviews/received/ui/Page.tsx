@@ -1,5 +1,6 @@
 import { FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 
@@ -10,6 +11,7 @@ import { mockReceivedReviews } from "../model/mockReceivedReviews";
 
 export default function ReceivedReviewsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <AppShell title={t("student.receivedReviews.title")}>
@@ -33,7 +35,7 @@ export default function ReceivedReviewsPage() {
               {t("student.receivedReviews.willAppear")}
             </p>
             <button
-              onClick={() => (window.location.hash = "/courses")}
+              onClick={() => void navigate("/courses")}
               className="inline-flex items-center justify-center px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
             >
               {t("student.receivedReviews.goToCourses")}

@@ -11,6 +11,7 @@
 
 import { ChevronRight } from "lucide-react";
 import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface BreadcrumbItem {
   label: string;
@@ -22,11 +23,14 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
+  const navigate = useNavigate();
   // Hooks must be called before any early returns
-  const handleClick = useCallback((href: string) => {
-    // Поддержка hash-роутинга
-    window.location.hash = href.startsWith("#") ? href : `#${href}`;
-  }, []);
+  const handleClick = useCallback(
+    (href: string) => {
+      void navigate(href.startsWith("#") ? href.slice(1) : href);
+    },
+    [navigate],
+  );
 
   if (items.length <= 1) {
     return null;

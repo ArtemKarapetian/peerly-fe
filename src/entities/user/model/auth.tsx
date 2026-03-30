@@ -1,15 +1,24 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+import { clearTokens, setTokens } from "@/shared/api/httpClient";
+import { appNavigate } from "@/shared/lib/navigate";
+
 interface User {
   id: string;
   name: string;
   email: string;
 }
 
+interface LoginResponse {
+  user?: User;
+  accessToken?: string;
+  refreshToken?: string;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (userData?: User) => void;
+  login: (data?: LoginResponse) => void;
   logout: () => void;
 }
 
@@ -34,16 +43,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, user]);
 
-  const login = (userData?: User) => {
+  const login = (data?: LoginResponse) => {
     const defaultUser: User = { id: "student-1", name: "Студент", email: "student@example.com" };
-    setUser(userData ?? defaultUser);
+    setUser(data?.user ?? defaultUser);
     setIsAuthenticated(true);
+
+    if (data?.accessToken) {
+      setTokens(data.accessToken, data.refreshToken);
+    }
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    window.location.hash = "/";
+    clearTokens();
+    appNavigate("/");
   };
 
   return <Auth.Provider value={{ isAuthenticated, user, login, logout }}>{children}</Auth.Provider>;

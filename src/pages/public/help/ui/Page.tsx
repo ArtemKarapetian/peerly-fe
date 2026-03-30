@@ -1,6 +1,7 @@
 import { Search, ChevronDown, MessageCircle, Mail } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 
@@ -257,13 +258,13 @@ export default function HelpPage() {
                 // Show chat link if supportChat flag is enabled
                 <div className="space-y-4">
                   <p className="text-foreground/80">{t("page.help.chatSupportDesc")}</p>
-                  <a
-                    href="#/support/chat"
+                  <Link
+                    to="/support/chat"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[12px] transition-colors"
                   >
                     <MessageCircle className="size-5" />
                     {t("page.help.openChatSupport")}
-                  </a>
+                  </Link>
                 </div>
               ) : (
                 // Show instructor/admin contact info if chat is disabled

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -307,6 +308,7 @@ const INITIAL_PLUGINS = createInitialPlugins();
 
 export default function AdminPluginsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"installed" | "available">("installed");
   const [configModal, setConfigModal] = useState<{
     plugin: Plugin;
@@ -377,7 +379,7 @@ export default function AdminPluginsPage() {
   };
 
   const handleViewLogs = (plugin: Plugin) => {
-    window.location.hash = `#/admin/logs?plugin=${plugin.id}`;
+    void navigate(`/admin/logs?plugin=${plugin.id}`);
   };
 
   // Configuration modal

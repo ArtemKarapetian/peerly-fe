@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 interface ConfirmationFormProps {
   onDelete: () => void;
@@ -129,12 +130,12 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
           <Trash2 className="w-5 h-5" />
           {t("widget.deleteAccount.deleteButton")}
         </button>
-        <a
-          href="#/settings"
+        <Link
+          to="/settings"
           className="tablet:w-auto px-6 py-3 border border-border text-foreground rounded-lg hover:bg-accent transition-colors font-medium text-center"
         >
           {t("widget.deleteAccount.cancelButton")}
-        </a>
+        </Link>
       </div>
 
       {/* Help section */}

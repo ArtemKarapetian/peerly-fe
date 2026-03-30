@@ -56,6 +56,7 @@ export default [
       "**/.next/**",
       "**/coverage/**",
       "**/src/pages/_archived/**",
+      "**/.storybook/**",
     ],
   },
 

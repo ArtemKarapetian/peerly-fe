@@ -1,5 +1,6 @@
 import { FileText, Shield, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
@@ -289,9 +290,9 @@ export default function TermsPage() {
                   <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
                     {t("page.terms.contactReference")}
                   </p>
-                  <a href="#/help" className="text-[15px] text-primary hover:underline font-medium">
+                  <Link to="/help" className="text-[15px] text-primary hover:underline font-medium">
                     {t("page.terms.contactHelpCenter")}
-                  </a>
+                  </Link>
                 </div>
               </div>
 

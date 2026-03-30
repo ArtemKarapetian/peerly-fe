@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { InboxHeader, NotificationList } from "@/widgets/inbox";
@@ -12,6 +13,7 @@ import {
 
 export default function InboxPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const [selectedFilter, setSelectedFilter] = useState<FilterType>("ALL");
 
@@ -35,12 +37,15 @@ export default function InboxPage() {
     return notifications.filter((n) => !n.isRead).length;
   }, [notifications]);
 
-  const handleNotificationClick = useCallback((notification: Notification) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notification.id ? { ...n, isRead: true } : n)),
-    );
-    window.location.hash = notification.link.replace("#", "");
-  }, []);
+  const handleNotificationClick = useCallback(
+    (notification: Notification) => {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notification.id ? { ...n, isRead: true } : n)),
+      );
+      void navigate(notification.link.replace("#", ""));
+    },
+    [navigate],
+  );
 
   const handleMarkAllAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));

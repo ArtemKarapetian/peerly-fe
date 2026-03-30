@@ -1,1 +1,1 @@
-export { RegisterPage } from "./ui/Page.tsx";
+export { default as RegisterPage } from "./ui/Page.tsx";

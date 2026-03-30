@@ -1,5 +1,6 @@
 import { AlertTriangle, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 
@@ -9,11 +10,12 @@ export function DangerZoneCard() {
   const { t } = useTranslation();
   const { logout } = useAuth();
   const { flags } = useFeatureFlags();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     if (confirm(t("widget.profileDanger.confirmLogout"))) {
       logout();
-      window.location.hash = "/login";
+      void navigate("/login");
     }
   };
 
@@ -39,7 +41,7 @@ export function DangerZoneCard() {
             {flags.deleteAccount && (
               <button
                 onClick={() => {
-                  window.location.hash = "/offboarding/delete-account";
+                  void navigate("/offboarding/delete-account");
                 }}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-[12px] hover:bg-destructive/80 transition-colors text-[14px] font-medium"
               >

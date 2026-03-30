@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { useAsync } from "@/shared/lib/useAsync";
@@ -21,16 +22,12 @@ import {
   ExtensionsTable,
 } from "@/widgets/assignment-extensions";
 
-interface TeacherAssignmentExtensionsPageProps {
-  assignmentId: string;
-}
-
 /**
  * TeacherAssignmentExtensionsPage - Manage deadline extensions for an assignment
  */
-export function TeacherAssignmentExtensionsPage({
-  assignmentId,
-}: TeacherAssignmentExtensionsPageProps) {
+export default function TeacherAssignmentExtensionsPage() {
+  const { assignmentId: routeAssignmentId } = useParams<{ assignmentId: string }>();
+  const assignmentId = routeAssignmentId ?? "a1";
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const {

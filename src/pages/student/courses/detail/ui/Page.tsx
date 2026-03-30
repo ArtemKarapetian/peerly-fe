@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -10,11 +11,9 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { CourseAssignmentsTab } from "@/widgets/course-assignments-tab";
 import { CourseParticipantsTab } from "@/widgets/course-participants-tab";
 
-interface CoursePageProps {
-  courseId?: string;
-}
-
-export default function CoursePage({ courseId = "1" }: CoursePageProps) {
+export default function CoursePage() {
+  const { courseId: courseIdParam } = useParams();
+  const courseId = courseIdParam ?? "1";
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<"assignments" | "participants">("assignments");

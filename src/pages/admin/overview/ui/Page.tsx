@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -49,6 +50,7 @@ interface QueueStats {
 
 export default function AdminOverviewPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const demoOrgs: Organization[] = [
     {
@@ -140,9 +142,12 @@ export default function AdminOverviewPage() {
     },
   ];
 
-  const handleNavigate = useCallback((href: string) => {
-    window.location.hash = `#${href}`;
-  }, []);
+  const handleNavigate = useCallback(
+    (href: string) => {
+      void navigate(href);
+    },
+    [navigate],
+  );
 
   return (
     <AppShell title={t("admin.overview.title")}>

@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { TaskList } from "@/features/assignment/list";
 
 import { TaskFilterBar } from "@/widgets/task-filter-bar";
@@ -9,8 +11,9 @@ interface CourseAssignmentsTabProps {
 }
 
 export function CourseAssignmentsTab({ courseId }: CourseAssignmentsTabProps) {
+  const navigate = useNavigate();
   const handleTaskClick = (taskId: string) => {
-    window.location.hash = `/task/${taskId}`;
+    void navigate(`/task/${taskId}`);
   };
 
   return (

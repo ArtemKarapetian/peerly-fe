@@ -1,6 +1,7 @@
 import { BookOpen, ChevronRight, ClipboardList, Plus, Users } from "lucide-react";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -25,6 +26,7 @@ interface CourseRow {
 }
 
 export default function TeacherCoursesPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -53,9 +55,12 @@ export default function TeacherCoursesPage() {
   const totalStudents = activeCourses.reduce((sum, c) => sum + c.participantsCount, 0);
   const totalAssignments = activeCourses.reduce((sum, c) => sum + c.activeAssignments, 0);
 
-  const handleOpenCourse = useCallback((courseId: string) => {
-    window.location.hash = `/teacher/courses/${courseId}`;
-  }, []);
+  const handleOpenCourse = useCallback(
+    (courseId: string) => {
+      void navigate(`/teacher/courses/${courseId}`);
+    },
+    [navigate],
+  );
 
   const handleRowKeyDown = (e: React.KeyboardEvent, courseId: string) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -120,7 +125,7 @@ export default function TeacherCoursesPage() {
                 <div className="w-px h-10 bg-border"></div>
               </div>
               <button
-                onClick={() => (window.location.hash = "/teacher/course/create")}
+                onClick={() => void navigate("/teacher/course/create")}
                 className="flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-[10px] hover:bg-brand-primary-hover active:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring"
               >
                 <Plus className="w-4 h-4" />
@@ -317,7 +322,7 @@ export default function TeacherCoursesPage() {
             </p>
             {!searchQuery && (
               <button
-                onClick={() => (window.location.hash = "/teacher/course/create")}
+                onClick={() => void navigate("/teacher/course/create")}
                 className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-[10px] hover:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-[14px] font-medium"
               >
                 <Plus className="w-4 h-4" />

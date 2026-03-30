@@ -1,6 +1,7 @@
 import { Save, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -12,6 +13,7 @@ import { courseRepo } from "@/entities/course";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 export default function CreateCoursePage() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [name, setName] = useState("");
@@ -35,7 +37,7 @@ export default function CreateCoursePage() {
       });
 
       // Navigate to the new course
-      window.location.hash = `/teacher/course/${newCourse.id}`;
+      void navigate(`/teacher/course/${newCourse.id}`);
     } catch {
       alert(t("teacher.createCourse.errorCreating"));
     }
@@ -170,7 +172,7 @@ export default function CreateCoursePage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => (window.location.hash = "/teacher/courses")}
+              onClick={() => void navigate("/teacher/courses")}
             >
               <X className="w-4 h-4" />
               {t("teacher.createCourse.cancelBtn")}

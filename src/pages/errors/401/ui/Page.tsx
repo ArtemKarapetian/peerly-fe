@@ -1,8 +1,10 @@
 import { AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function Error401Page() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen w-full bg-background flex items-center justify-center p-8">
       <div className="max-w-md w-full text-center space-y-6">
@@ -25,13 +27,13 @@ export default function Error401Page() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
           <button
-            onClick={() => (window.location.hash = "/login")}
+            onClick={() => void navigate("/login")}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             {t("auth.signIn")}
           </button>
           <button
-            onClick={() => (window.location.hash = "/")}
+            onClick={() => void navigate("/")}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
             {t("errors.toHome")}

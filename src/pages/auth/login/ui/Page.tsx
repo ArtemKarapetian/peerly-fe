@@ -1,6 +1,7 @@
 import { AlertCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 
 import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Button } from "@/shared/ui/button.tsx";
@@ -21,8 +22,9 @@ import { PublicLayout } from "@/widgets/public-layout";
  * - Feature-flagged password reset
  */
 
-export function LoginPage() {
+export default function LoginPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { login: authLogin } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +60,7 @@ export function LoginPage() {
     if (user) {
       // Success - login and navigate
       authLogin();
-      window.location.hash = "/courses";
+      void navigate("/courses");
     } else {
       // Failed - show error
       setIsLoading(false);
@@ -161,21 +163,21 @@ export function LoginPage() {
               {/* Forgot password link (feature flag controlled) */}
               {enablePasswordReset && (
                 <div className="text-center">
-                  <a
-                    href="#/reset-password"
+                  <Link
+                    to="/reset-password"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {t("auth.forgotPassword")}
-                  </a>
+                  </Link>
                 </div>
               )}
 
               {/* Register link */}
               <div className="text-center border-t border-border pt-4">
                 <p className="text-sm text-muted-foreground mb-2">{t("auth.noAccount")}</p>
-                <a href="#/register" className="text-sm font-medium text-primary hover:underline">
+                <Link to="/register" className="text-sm font-medium text-primary hover:underline">
                   {t("auth.createAccount")}
-                </a>
+                </Link>
               </div>
             </div>
           </div>

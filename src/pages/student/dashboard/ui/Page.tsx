@@ -1,5 +1,6 @@
 import { BookOpen, Clock, CheckSquare, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { StatCard } from "@/shared/ui/StatCard";
@@ -39,6 +40,7 @@ function SectionCard({
 
 export default function DashboardPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const hasActions = mockActionData.reviewsPending > 0 || mockActionData.newFeedback > 0;
 
   return (
@@ -88,10 +90,10 @@ export default function DashboardPage() {
                 <ActionCards
                   data={mockActionData}
                   onReviewsClick={() => {
-                    window.location.hash = "/reviews";
+                    void navigate("/reviews");
                   }}
                   onFeedbackClick={() => {
-                    window.location.hash = "/reviews/received";
+                    void navigate("/reviews/received");
                   }}
                 />
                 {/* Section break before deadlines */}
@@ -107,7 +109,7 @@ export default function DashboardPage() {
             <DeadlinesList
               items={mockDeadlines}
               onTaskClick={(taskId) => {
-                window.location.hash = `/task/${taskId}`;
+                void navigate(`/task/${taskId}`);
               }}
             />
           </SectionCard>
@@ -118,10 +120,10 @@ export default function DashboardPage() {
               <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
-                  window.location.hash = `/inbox/${id}`;
+                  void navigate(`/inbox/${id}`);
                 }}
                 onViewAllClick={() => {
-                  window.location.hash = "/inbox";
+                  void navigate("/inbox");
                 }}
               />
             </SectionCard>
@@ -135,10 +137,10 @@ export default function DashboardPage() {
               <NotificationsList
                 items={mockNotifications}
                 onNotificationClick={(id) => {
-                  window.location.hash = `/inbox/${id}`;
+                  void navigate(`/inbox/${id}`);
                 }}
                 onViewAllClick={() => {
-                  window.location.hash = "/inbox";
+                  void navigate("/inbox");
                 }}
               />
             </SectionCard>

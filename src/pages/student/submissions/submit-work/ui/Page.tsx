@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
@@ -21,12 +22,9 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * Route: /courses/:courseId/tasks/:taskId/submit
  */
 
-interface SubmitWorkPageProps {
-  courseId: string;
-  taskId: string;
-}
-
-export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
+export default function SubmitWorkPage() {
+  const { courseId = "", taskId = "" } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [isUploading, setIsUploading] = useState(false);
@@ -229,7 +227,7 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => {
-                  window.location.hash = `/courses/${courseId}/tasks/${taskId}/submissions`;
+                  void navigate(`/courses/${courseId}/tasks/${taskId}/submissions`);
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
               >
@@ -237,7 +235,7 @@ export function SubmitWorkPage({ courseId, taskId }: SubmitWorkPageProps) {
               </button>
               <button
                 onClick={() => {
-                  window.location.hash = `/task/${taskId}`;
+                  void navigate(`/task/${taskId}`);
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card border-2 border-border text-foreground rounded-[12px] hover:border-brand-primary-lighter hover:bg-muted transition-colors text-[15px] font-medium"
               >

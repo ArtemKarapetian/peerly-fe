@@ -1,6 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
@@ -25,6 +26,7 @@ type Step = "login" | "password" | "success";
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [step, setStep] = useState<Step>("login");
   const [login, setLogin] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -161,11 +163,7 @@ export default function ResetPasswordPage() {
               </div>
 
               {/* Back to Login Button */}
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => (window.location.hash = "/login")}
-              >
+              <Button variant="outline" className="w-full" onClick={() => void navigate("/login")}>
                 {t("page.resetPassword.backToLogin")}
               </Button>
             </div>
@@ -225,9 +223,9 @@ export default function ResetPasswordPage() {
 
               {/* Back to Login Link */}
               <div className="text-center">
-                <a href="#/login" className="text-sm text-primary hover:underline">
+                <Link to="/login" className="text-sm text-primary hover:underline">
                   {t("page.resetPassword.backToLogin")}
-                </a>
+                </Link>
               </div>
             </div>
           </div>

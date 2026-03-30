@@ -1,6 +1,7 @@
 import { Shield, Database, AlertTriangle, ArrowRight } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -18,6 +19,7 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 export default function AdminSettingsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const settingsSections = [
     {
       id: "flags",
@@ -54,9 +56,12 @@ export default function AdminSettingsPage() {
     },
   ];
 
-  const handleNavigate = useCallback((href: string) => {
-    window.location.hash = `#${href}`;
-  }, []);
+  const handleNavigate = useCallback(
+    (href: string) => {
+      void navigate(href);
+    },
+    [navigate],
+  );
 
   return (
     <AppShell title={t("admin.settings.title")}>

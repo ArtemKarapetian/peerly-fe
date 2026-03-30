@@ -1,5 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export function SecurityDangerZoneCard() {
   const { t } = useTranslation();
@@ -29,13 +30,13 @@ export function SecurityDangerZoneCard() {
               {t("widget.securityDanger.deleteAccountDesc")}
             </p>
           </div>
-          <a
-            href="#/offboarding/delete-account"
+          <Link
+            to="/offboarding/delete-account"
             className="flex items-center gap-2 px-4 py-2 border-2 border-destructive text-destructive rounded-[12px] hover:bg-destructive/10 transition-colors text-[14px] font-medium whitespace-nowrap"
           >
             <Trash2 className="w-4 h-4" />
             {t("widget.securityDanger.deleteAccountButton")}
-          </a>
+          </Link>
         </div>
       </div>
     </div>

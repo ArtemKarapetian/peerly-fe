@@ -1,6 +1,7 @@
 import { FileText, CheckCircle, Clock } from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
@@ -97,12 +98,12 @@ export default function AppealsListPage() {
             <p className="text-[14px] text-muted-foreground mb-6">
               {t("student.appeals.noAppealsDesc")}
             </p>
-            <a
-              href="#/courses"
+            <Link
+              to="/courses"
               className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium"
             >
               {t("student.receivedReviews.goToCourses")}
-            </a>
+            </Link>
           </div>
         ) : (
           <>
