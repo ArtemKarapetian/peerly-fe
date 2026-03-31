@@ -8,35 +8,35 @@ export const buttonVariants = cva(
   `inline-flex items-center justify-center gap-2
    font-medium transition-all
    disabled:opacity-50 disabled:cursor-not-allowed
-   focus:outline-none focus:ring-2 focus:ring-offset-2`,
+   focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`,
   {
     variants: {
       variant: {
         primary: `
                 bg-[var(--brand-primary)] text-text-inverse 
                 hover:bg-[var(--brand-primary-hover)] 
-                focus:ring-[var(--brand-primary)]/50
+                focus-visible:ring-[var(--brand-primary)]/50
                 `,
         secondary: `
                 bg-[var(--surface)] text-[var(--text-primary)] border border-[var(--surface-border)] 
                 hover:bg-[var(--surface-hover)] 
-                focus:ring-[var(--brand-primary)]/30
+                focus-visible:ring-[var(--brand-primary)]/30
                 `,
         ghost: `
                 bg-transparent text-[var(--text-primary)] 
                 hover:bg-[var(--surface-hover)] 
-                focus:ring-[var(--brand-primary)]/30
+                focus-visible:ring-[var(--brand-primary)]/30
                 `,
         danger: `
                 bg-[var(--error)] text-text-inverse 
                 hover:bg-[var(--error)]/90 
-                focus:ring-[var(--error)]/50
+                focus-visible:ring-[var(--error)]/50
                 `,
         outline: `
                 bg-transparent text-[var(--brand-primary)] border border-[var(--brand-primary)] 
                 hover:bg-[var(--brand-primary)] 
                 hover:text-text-inverse 
-                focus:ring-[var(--brand-primary)]/50
+                focus-visible:ring-[var(--brand-primary)]/50
                 `,
       },
       size: {

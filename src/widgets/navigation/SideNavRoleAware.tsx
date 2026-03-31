@@ -72,7 +72,17 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const isActive = (hash: string) => currentPath === hash || currentPath.startsWith(hash + "/");
+  const isActive = (hash: string, navItems: NavItem[]) => {
+    if (currentPath === hash) return true;
+    // Don't match parent path if a more specific sibling route matches
+    // e.g. /reviews should NOT match when on /reviews/received
+    const hasMoreSpecificMatch = navItems.some(
+      (item) =>
+        item.hash !== hash && item.hash.startsWith(hash + "/") && currentPath.startsWith(item.hash),
+    );
+    if (hasMoreSpecificMatch) return false;
+    return currentPath.startsWith(hash + "/");
+  };
 
   const getNavItems = (): NavItem[] => {
     switch (currentRole) {
@@ -184,7 +194,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           <nav className="flex-1 py-2 px-2.5 space-y-0.5 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const active = isActive(item.hash);
+              const active = isActive(item.hash, navItems);
               return (
                 <Link
                   key={item.hash}
@@ -264,7 +274,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       <nav className="flex-1 py-2 px-2.5 overflow-y-auto space-y-0.5">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = isActive(item.hash);
+          const active = isActive(item.hash, navItems);
           return (
             <Link
               key={item.hash}

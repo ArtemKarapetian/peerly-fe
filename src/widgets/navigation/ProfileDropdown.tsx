@@ -113,7 +113,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       <div ref={containerRef} className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-10 h-10 rounded-full bg-[--brand-primary-lighter] flex items-center justify-center hover:bg-[--brand-primary-light] transition-colors focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
+          className="w-10 h-10 rounded-full bg-[--brand-primary-lighter] flex items-center justify-center hover:bg-[--brand-primary-light] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary] focus-visible:ring-offset-2"
           aria-label={t("widget.profileDropdown.profileMenu")}
           aria-expanded={isOpen}
         >
@@ -152,7 +152,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
     <div ref={containerRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-[--surface-hover] rounded-[var(--radius-md)] transition-colors focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
+        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-[--surface-hover] rounded-[var(--radius-md)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary] focus-visible:ring-offset-2"
         aria-label={t("widget.profileDropdown.profileMenu")}
         aria-expanded={isOpen}
       >

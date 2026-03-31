@@ -90,7 +90,7 @@ export function NotificationList({
 
   if (notifications.length === 0) {
     return (
-      <div className="bg-card border-2 border-border rounded-[20px] py-16 text-center">
+      <div className="bg-card border border-border rounded-[20px] py-16 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-muted rounded-full mb-4">
           <Bell className="w-8 h-8 text-muted-foreground" />
         </div>
@@ -121,15 +121,16 @@ export function NotificationList({
   }
 
   return (
-    <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden divide-y-2 divide-border">
+    <div className="bg-card border border-border rounded-[20px] overflow-hidden divide-y divide-border">
       {notifications.map((notification) => (
         <div
           key={notification.id}
           onClick={() => onNotificationClick(notification)}
-          className={`p-4 desktop:p-5 cursor-pointer hover:bg-surface-hover transition-colors ${getNotificationBgColor(
-            notification.type,
-            notification.isRead,
-          )}`}
+          className={`p-4 desktop:p-5 cursor-pointer border-l-3 transition-all ${
+            notification.isRead
+              ? "border-l-transparent hover:border-l-brand-primary/40"
+              : "border-l-brand-primary hover:border-l-brand-primary"
+          } hover:opacity-80 ${getNotificationBgColor(notification.type, notification.isRead)}`}
         >
           <div className="flex items-start gap-3 desktop:gap-4">
             <div

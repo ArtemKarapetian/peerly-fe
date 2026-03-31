@@ -61,8 +61,8 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Hero Section - Яркий голубой фон */}
-      <section className="w-full bg-brand-primary-light rounded-bl-[20px] rounded-br-[20px]">
+      {/* Hero Section */}
+      <section className="w-full bg-brand-primary-lighter rounded-bl-[20px] rounded-br-[20px]">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 py-16 tablet:py-20 desktop:py-24">
           <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-16 items-center">
             {/* Text Content - Left */}
@@ -82,14 +82,14 @@ export default function LandingPage() {
                 {isAuthenticated ? (
                   <button
                     onClick={() => void navigate("/dashboard")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
                   >
                     {t("page.landing.openDashboard")}
                   </button>
                 ) : (
                   <button
                     onClick={() => void navigate("/register")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
                   >
                     {t("page.landing.getStarted")}
                   </button>
@@ -252,14 +252,14 @@ export default function LandingPage() {
               {isAuthenticated ? (
                 <button
                   onClick={() => void navigate("/dashboard")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2 text-base h-11"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 text-base h-11"
                 >
                   {t("page.landing.openDashboard")}
                 </button>
               ) : (
                 <button
                   onClick={() => void navigate("/register")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-ring/50 focus:ring-offset-2 text-base h-11"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 text-base h-11"
                 >
                   {t("page.landing.getStarted")}
                 </button>
