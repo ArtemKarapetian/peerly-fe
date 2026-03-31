@@ -57,6 +57,7 @@ export default [
       "**/coverage/**",
       "**/src/pages/_archived/**",
       "**/.storybook/**",
+      "vitest.config.ts",
     ],
   },
 
