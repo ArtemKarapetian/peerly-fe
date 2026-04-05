@@ -50,7 +50,7 @@ export function getFeatureFlags(): FeatureFlags {
   } catch (e) {
     console.error("Failed to load feature flags:", e);
   }
-  return DEFAULT_FLAGS;
+  return { ...DEFAULT_FLAGS };
 }
 
 export function setFeatureFlag(key: keyof FeatureFlags, value: boolean): void {
