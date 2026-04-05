@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Офлайн — Peerly</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: #f8fafc;
+        color: #1f2937;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      .container {
+        text-align: center;
+        max-width: 420px;
+      }
+      .icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        border-radius: 50%;
+        background: #dbeafe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .icon svg {
+        width: 40px;
+        height: 40px;
+        color: #2563eb;
+      }
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+      p {
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      button:hover { background: #1d4ed8; }
+      button:focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+      @media (prefers-color-scheme: dark) {
+        body { background: #0f172a; color: #f1f5f9; }
+        .icon { background: rgba(91, 141, 239, 0.15); }
+        .icon svg { color: #5b8def; }
+        p { color: #94a3b8; }
+        button { background: #5b8def; }
+        button:hover { background: #6b9df0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+      </div>
+      <h1>Нет подключения к интернету</h1>
+      <p>Проверьте соединение и попробуйте снова. Некоторые ранее загруженные страницы могут быть доступны.</p>
+      <button onclick="window.location.reload()">Попробовать снова</button>
+    </div>
+  </body>
+</html>

@@ -62,7 +62,7 @@ const loadAnnouncements = (
 ): Announcement[] => {
   const stored = localStorage.getItem("teacher_announcements");
   if (stored) {
-    const parsed: StoredAnnouncement[] = JSON.parse(stored);
+    const parsed: StoredAnnouncement[] = JSON.parse(stored) as StoredAnnouncement[];
     return parsed.map((a) => ({
       ...a,
       createdAt: new Date(a.createdAt),

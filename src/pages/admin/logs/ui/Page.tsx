@@ -300,7 +300,7 @@ interface StoredAuditLog {
 const getInitialAuditLogs = (): AuditLog[] => {
   const stored = localStorage.getItem("admin_audit_logs");
   if (stored) {
-    const parsed: StoredAuditLog[] = JSON.parse(stored);
+    const parsed: StoredAuditLog[] = JSON.parse(stored) as StoredAuditLog[];
     return parsed.map(
       (log): AuditLog => ({
         id: log.id,

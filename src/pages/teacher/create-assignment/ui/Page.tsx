@@ -46,7 +46,13 @@ const getInitialFormData = (): AssignmentFormData => {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try {
-      const parsed = JSON.parse(stored);
+      const parsed = JSON.parse(stored) as AssignmentFormData & {
+        submissionDeadline: string | null;
+        reviewDeadline: string | null;
+        reassignmentDeadline: string | null;
+        createdAt: string;
+        updatedAt: string;
+      };
       // Convert date strings back to Date objects
       return {
         ...parsed,

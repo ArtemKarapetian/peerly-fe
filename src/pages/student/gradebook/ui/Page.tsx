@@ -17,7 +17,7 @@ export default function GradebookPage() {
   const courses = useMemo(() => {
     const uniqueCourses = Array.from(
       new Set(mockGrades.map((g) => JSON.stringify({ id: g.courseId, name: g.courseName }))),
-    ).map((str) => JSON.parse(str));
+    ).map((str) => JSON.parse(str) as { id: string; name: string });
     return uniqueCourses;
   }, []);
 

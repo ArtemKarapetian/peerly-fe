@@ -38,7 +38,7 @@ const RISKY_THRESHOLDS = {
 
 const getInitialPolicy = (): RetentionPolicy => {
   const stored = localStorage.getItem("admin_retention_policy");
-  return stored ? JSON.parse(stored) : DEFAULT_RETENTION;
+  return stored ? (JSON.parse(stored) as RetentionPolicy) : DEFAULT_RETENTION;
 };
 
 export default function AdminRetentionPage() {
@@ -73,7 +73,10 @@ export default function AdminRetentionPage() {
   };
 
   const logAuditEntry = (action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]") as Record<
+      string,
+      unknown
+    >[];
     logs.unshift({
       id: `audit-${Date.now()}`,
       userId: "retention-system",

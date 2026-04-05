@@ -38,7 +38,8 @@ vi.mock("react-i18next", () => ({
         "auth.accountCreated": "Account created!",
         "auth.canLoginNow": "You can login now",
       };
-      if (key === "auth.minChars" && opts?.count) return `Min ${String(opts.count)} characters`;
+      if (key === "auth.minChars" && opts?.count !== undefined)
+        return `Min ${String(opts.count as number)} characters`;
       return translations[key] ?? key;
     },
   }),

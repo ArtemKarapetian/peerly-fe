@@ -31,7 +31,8 @@
     "comment": "Comment",
     "found": "Found",
     "configure": "Configure",
-    "ok": "OK"
+    "ok": "OK",
+    "skipToContent": "Skip to content"
   },
   "nav": {
     "home": "Home",
@@ -401,7 +402,7 @@
       "unlock": "Unlock",
       "lock": "Lock",
       "remind": "Remind",
-      "remindReviewers": "Remind Reviewers",
+      "remindReviewers": "Remind reviewers",
       "reassignReviewer": "Reassign Reviewer",
       "addReviewer": "Add Reviewer",
       "reviewerReassigned": "Reviewer reassigned",
@@ -419,7 +420,6 @@
       "addBtn": "Add",
       "unlockBtn": "Unlock",
       "lockBtn": "Lock",
-      "remindReviewers": "Remind reviewers",
       "reminderSentFor": "Reminder sent to reviewers for {{id}}",
       "workLabel": "Work",
       "statusLabel": "Status",

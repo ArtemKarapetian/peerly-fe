@@ -120,7 +120,7 @@ function getRules(): AutomationRule[] {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(DEMO_RULES));
       return DEMO_RULES;
     }
-    return JSON.parse(stored);
+    return JSON.parse(stored) as AutomationRule[];
   } catch {
     return DEMO_RULES;
   }

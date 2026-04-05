@@ -10,6 +10,13 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
+      toastOptions={
+        {
+          // Screen readers announce toasts via aria-live polite region
+          role: "status",
+          "aria-live": "polite",
+        } as Record<string, string>
+      }
       style={
         {
           "--normal-bg": "var(--popover)",

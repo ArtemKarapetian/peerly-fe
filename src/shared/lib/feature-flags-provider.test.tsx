@@ -78,7 +78,10 @@ describe("FeatureFlagsProvider", () => {
       result.current.updateFlag("supportChat", true);
     });
 
-    const stored = JSON.parse(localStorage.getItem("peerly_feature_flags")!);
+    const stored = JSON.parse(localStorage.getItem("peerly_feature_flags")!) as Record<
+      string,
+      boolean
+    >;
     expect(stored.supportChat).toBe(true);
   });
 });

@@ -49,11 +49,11 @@ export default function TeacherPeerSessionSettingsPage() {
     const stored = localStorage.getItem(`peer_session_settings_${assignmentId}`);
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
+        const parsed = JSON.parse(stored) as Record<string, unknown>;
         return {
           ...parsed,
-          updatedAt: new Date(parsed.updatedAt),
-        };
+          updatedAt: new Date(parsed.updatedAt as string),
+        } as PeerSessionSettings;
       } catch (e) {
         console.error("Failed to parse settings", e);
       }
@@ -79,19 +79,13 @@ export default function TeacherPeerSessionSettingsPage() {
     const stored = localStorage.getItem(`peer_session_audit_${assignmentId}`);
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
-        return parsed.map(
-          (entry: {
-            action: string;
-            field: string;
-            oldValue: string;
-            newValue: string;
-            timestamp: string;
-          }) => ({
-            ...entry,
-            timestamp: new Date(entry.timestamp),
-          }),
-        );
+        const parsed = JSON.parse(stored) as (Omit<AuditLogEntry, "timestamp"> & {
+          timestamp: string;
+        })[];
+        return parsed.map((entry) => ({
+          ...entry,
+          timestamp: new Date(entry.timestamp),
+        }));
       } catch (e) {
         console.error("Failed to parse audit log", e);
       }

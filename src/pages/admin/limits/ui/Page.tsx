@@ -44,12 +44,12 @@ const DEFAULT_LIMITS: GlobalLimits = {
 
 const getInitialLimits = (): GlobalLimits => {
   const stored = localStorage.getItem("admin_global_limits");
-  return stored ? JSON.parse(stored) : DEFAULT_LIMITS;
+  return stored ? (JSON.parse(stored) as GlobalLimits) : DEFAULT_LIMITS;
 };
 
 const getInitialOverrides = (): TenantOverride[] => {
   const stored = localStorage.getItem("admin_tenant_overrides");
-  return stored ? JSON.parse(stored) : [];
+  return stored ? (JSON.parse(stored) as TenantOverride[]) : [];
 };
 
 export default function AdminLimitsPage() {
@@ -129,7 +129,10 @@ export default function AdminLimitsPage() {
   };
 
   const logAuditEntry = (action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]") as Record<
+      string,
+      unknown
+    >[];
     logs.unshift({
       id: `audit-${Date.now()}`,
       userId: "limits-system",

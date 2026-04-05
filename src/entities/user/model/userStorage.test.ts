@@ -110,7 +110,7 @@ describe("registerUser", () => {
     expect(created.email).toBe("test@example.com");
     expect(created.createdAt).toBeDefined();
 
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]") as { username: string }[];
     expect(stored.length).toBe(1);
     expect(stored[0].username).toBe("testuser");
   });
