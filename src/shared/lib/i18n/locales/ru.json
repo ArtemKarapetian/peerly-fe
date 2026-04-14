@@ -31,7 +31,8 @@
     "comment": "Комментарий",
     "found": "Найдено",
     "configure": "Настроить",
-    "ok": "OK"
+    "ok": "OK",
+    "skipToContent": "Перейти к содержимому"
   },
   "nav": {
     "home": "Главная",
@@ -419,7 +420,6 @@
       "addBtn": "Добавить",
       "unlockBtn": "Разблокировать",
       "lockBtn": "Заблокировать",
-      "remindReviewers": "Напомнить рецензентам",
       "reminderSentFor": "Напоминание отправлено рецензентам для {{id}}",
       "workLabel": "Работа",
       "statusLabel": "Статус",

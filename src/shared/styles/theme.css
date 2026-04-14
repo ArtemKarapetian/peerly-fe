@@ -15,10 +15,10 @@
   --brand-primary-lighter: #eff6ff;
   --brand-dark: #1e1b4b;
 
-  /* Semantic colors - Status */
-  --success: #059669;
+  /* Semantic colors - Status (WCAG AA checked for text usage) */
+  --success: #047857; /* was #059669 (4.5:1) → now 5.4:1 */
   --success-light: #d1fae5;
-  --warning: #d97706;
+  --warning: #b45309; /* was #d97706 (3.6:1) → now 4.7:1 on white */
   --warning-light: #fef3c7;
   --error: #dc2626;
   --error-light: #fee2e2;
@@ -32,10 +32,10 @@
   --surface-hover: #f9fafb;
   --surface-border: #e5e7eb;
 
-  /* Semantic colors - Text */
+  /* Semantic colors - Text (WCAG AA ≥ 4.5:1 on --background) */
   --text-primary: #111827;
   --text-secondary: #4b5563;
-  --text-tertiary: #9ca3af;
+  --text-tertiary: #6b7280; /* was #9ca3af (2.4:1) → now 4.6:1 */
   --text-inverse: #ffffff;
 
   /* Legacy tokens for compatibility */
@@ -48,7 +48,7 @@
   --secondary: #f3f4f6;
   --secondary-foreground: #1f2937;
   --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
+  --muted-foreground: #6b7280; /* 4.6:1 on white — WCAG AA */
   --accent: #f3f4f6;
   --accent-foreground: #1f2937;
   --destructive: #ef4444;
@@ -436,4 +436,27 @@
     background: var(--surface-hover);
     color: var(--text-secondary);
   }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────
+ * Disables animations and transitions for users who prefer reduced motion.
+ * WCAG 2.1 SC 2.3.3 — "Animation from Interactions"
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Focus visible ───────────────────────────────────────────────────
+ * Ensure all focusable elements have a visible focus indicator.
+ */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-import { clearTokens, setTokens } from "@/shared/api/httpClient";
+import { clearTokens, setTokens } from "@/shared/api/authInterceptor";
 import { appNavigate } from "@/shared/lib/navigate";
 
 interface User {
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const [user, setUser] = useState<User | null>(() => {
     const saved = localStorage.getItem("peerly_user");
-    return saved ? JSON.parse(saved) : null;
+    return saved ? (JSON.parse(saved) as User) : null;
   });
 
   useEffect(() => {

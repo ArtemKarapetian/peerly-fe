@@ -32,7 +32,7 @@ export const assignmentRepo = {
       (assignment as DemoAssignment & { archived?: boolean }).archived = archived;
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("demo_assignments_archived") || "{}";
-        const archivedMap = JSON.parse(stored);
+        const archivedMap = JSON.parse(stored) as Record<string, boolean>;
         archivedMap[assignmentId] = archived;
         localStorage.setItem("demo_assignments_archived", JSON.stringify(archivedMap));
       }

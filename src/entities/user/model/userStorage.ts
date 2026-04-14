@@ -45,7 +45,7 @@ const BUILT_IN_USERS: StoredUser[] = [
 export function getAllUsers(): StoredUser[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    const customUsers = stored ? JSON.parse(stored) : [];
+    const customUsers: StoredUser[] = stored ? (JSON.parse(stored) as StoredUser[]) : [];
     return [...BUILT_IN_USERS, ...customUsers];
   } catch (e) {
     console.error("Failed to load users:", e);

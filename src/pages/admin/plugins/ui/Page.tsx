@@ -431,7 +431,10 @@ export default function AdminPluginsPage() {
 
   // Audit logging
   const logAuditEntry = useCallback((action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]") as Record<
+      string,
+      unknown
+    >[];
     logs.unshift({
       id: `audit-${Date.now()}`,
       userId: "plugin-system",

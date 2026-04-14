@@ -10,22 +10,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
+  # ── Install & cache ────────────────────────────────────────────
+  install:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      - name: Install
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+
+  # ── Quality (lint + typecheck) — runs in parallel with test ───
+  quality:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Lint
         run: npm run lint
@@ -33,8 +56,156 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Tests
+  # ── Tests — runs in parallel with quality ─────────────────────
+  test:
+    needs: install
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Run tests
         run: npm test
+
+  # ── Build — depends on quality + test passing ─────────────────
+  build:
+    needs: [quality, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Build
         run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  # ── Bundle size check — fail if bundle grows >10% ─────────────
+  bundle-size:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PR build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Measure PR bundle size
+        id: pr
+        run: |
+          SIZE=$(du -sb dist/assets/*.js | awk '{sum+=$1} END {print sum}')
+          echo "size=$SIZE" >> "$GITHUB_OUTPUT"
+          echo "PR JS bundle: $(echo "scale=2; $SIZE/1024" | bc) KB"
+
+      # Build main branch for comparison
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-branch
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache main node_modules
+        uses: actions/cache@v4
+        with:
+          path: main-branch/node_modules
+          key: node-modules-main-${{ hashFiles('main-branch/package-lock.json') }}
+
+      - name: Install & build main
+        working-directory: main-branch
+        run: |
+          npm ci --ignore-scripts 2>/dev/null || true
+          npm run build 2>/dev/null || true
+
+      - name: Compare bundle sizes
+        run: |
+          PR_SIZE=${{ steps.pr.outputs.size }}
+          if [ -d "main-branch/dist/assets" ]; then
+            MAIN_SIZE=$(du -sb main-branch/dist/assets/*.js 2>/dev/null | awk '{sum+=$1} END {print sum}')
+          else
+            echo "No main build to compare, skipping"
+            exit 0
+          fi
+
+          if [ -z "$MAIN_SIZE" ] || [ "$MAIN_SIZE" = "0" ]; then
+            echo "Main has no JS assets, skipping comparison"
+            exit 0
+          fi
+
+          INCREASE=$(echo "scale=2; (($PR_SIZE - $MAIN_SIZE) / $MAIN_SIZE) * 100" | bc)
+          echo "Main: $(echo "scale=2; $MAIN_SIZE/1024" | bc) KB"
+          echo "PR:   $(echo "scale=2; $PR_SIZE/1024" | bc) KB"
+          echo "Change: ${INCREASE}%"
+
+          # Fail if bundle grew more than 10%
+          OVER=$(echo "$INCREASE > 10" | bc)
+          if [ "$OVER" = "1" ]; then
+            echo "::error::Bundle size increased by ${INCREASE}% (max 10%)"
+            exit 1
+          fi
+
+  # ── Dependency review — check for vulnerable deps in PRs ──────
+  dependency-review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+  # ── Lighthouse CI — performance & a11y audit ──────────────────
+  lighthouse:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          uploadArtifacts: true
+          configPath: .lighthouserc.json

@@ -46,7 +46,7 @@ export const courseRepo = {
       course.status = archived ? "archived" : "active";
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("demo_courses_archived") || "{}";
-        const archivedMap = JSON.parse(stored);
+        const archivedMap = JSON.parse(stored) as Record<string, boolean>;
         archivedMap[courseId] = archived;
         localStorage.setItem("demo_courses_archived", JSON.stringify(archivedMap));
       }

@@ -2,12 +2,12 @@ import { renderHook, act } from "@testing-library/react";
 import { ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { setTokens, clearTokens } from "@/shared/api/httpClient";
+import { setTokens, clearTokens } from "@/shared/api/authInterceptor";
 import { appNavigate } from "@/shared/lib/navigate";
 
 import { AuthProvider, useAuth } from "./auth";
 
-vi.mock("@/shared/api/httpClient", () => ({
+vi.mock("@/shared/api/authInterceptor", () => ({
   setTokens: vi.fn(),
   clearTokens: vi.fn(),
 }));

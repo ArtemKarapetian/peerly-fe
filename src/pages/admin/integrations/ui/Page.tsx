@@ -97,7 +97,7 @@ interface StoredWebhook {
 const getInitialWebhooks = (): Webhook[] => {
   const stored = localStorage.getItem("admin_webhooks");
   if (stored) {
-    const parsed: StoredWebhook[] = JSON.parse(stored);
+    const parsed: StoredWebhook[] = JSON.parse(stored) as StoredWebhook[];
     return parsed.map((w) => ({
       ...w,
       createdAt: new Date(w.createdAt),
@@ -125,7 +125,10 @@ export default function AdminIntegrationsPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const logAuditEntry = useCallback((action: string, resource: string, details: string) => {
-    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]");
+    const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]") as Record<
+      string,
+      unknown
+    >[];
     logs.unshift({
       id: `audit-${Date.now()}`,
       userId: "webhook-system",

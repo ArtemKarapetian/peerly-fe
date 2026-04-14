@@ -44,7 +44,7 @@ export function getFeatureFlags(): FeatureFlags {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored);
+      const parsed = JSON.parse(stored) as Partial<FeatureFlags>;
       return { ...DEFAULT_FLAGS, ...parsed };
     }
   } catch (e) {

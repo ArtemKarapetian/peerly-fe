@@ -127,6 +127,14 @@ export function AppShell({ children, title }: AppShellProps) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
+      {/* Skip to content — keyboard a11y */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-brand-primary focus:text-text-inverse focus:rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        {t("common.skipToContent", "Skip to content")}
+      </a>
+
       {/* Sidebar Navigation - Always rendered for Desktop/Tablet */}
       {isDesktopOrTablet && (
         <SideNav
@@ -159,7 +167,7 @@ export function AppShell({ children, title }: AppShellProps) {
         {isMobile && <TopBar onMenuClick={() => setIsMobileMenuOpen(true)} title={title} />}
 
         {/* Main Content with max-width container */}
-        <main className="flex-1 overflow-y-auto">
+        <main id="main-content" className="flex-1 overflow-y-auto" tabIndex={-1}>
           {/* Global content container: max-width 1200px, responsive gutters */}
           <div className="w-full max-w-[1200px] mx-auto px-6 py-6 tablet:px-6 desktop:px-10 min-h-full">
             {children}

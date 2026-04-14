@@ -20,6 +20,9 @@ void i18n.use(initReactI18next).init({
   },
 });
 
+// Set lang on init and on every change
+document.documentElement.lang = savedLang;
+
 i18n.on("languageChanged", (lng) => {
   localStorage.setItem(STORAGE_KEY, lng);
   document.documentElement.lang = lng;

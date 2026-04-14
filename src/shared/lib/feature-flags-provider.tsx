@@ -49,7 +49,7 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem("peerly_feature_flags");
     if (stored) {
       try {
-        return { ...defaultFlags, ...JSON.parse(stored) };
+        return { ...defaultFlags, ...(JSON.parse(stored) as Partial<FeatureFlags>) };
       } catch {
         return defaultFlags;
       }

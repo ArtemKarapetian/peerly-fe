@@ -8,7 +8,7 @@ import { AssignmentPickerModal } from "@/features/assignment/pick";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { RubricEditor, RubricPreview } from "@/widgets/rubric-editor";
-import type { RubricData, RubricCriterionData } from "@/widgets/rubric-editor/model/types";
+import type { RubricData } from "@/widgets/rubric-editor/model/types";
 
 /**
  * TeacherRubricsPage - Библиотека рубрик
@@ -29,24 +29,16 @@ const getInitialRubrics = (): RubricData[] => {
   const stored = localStorage.getItem(RUBRICS_STORAGE_KEY);
   if (stored) {
     try {
-      const parsed = JSON.parse(stored);
+      const parsed = JSON.parse(stored) as (Omit<RubricData, "createdAt" | "updatedAt"> & {
+        createdAt: string;
+        updatedAt: string;
+      })[];
       // Convert date strings back to Date objects
-      return parsed.map(
-        (r: {
-          id: string;
-          name: string;
-          description: string;
-          taskType: string;
-          criteria: RubricCriterionData[];
-          tags: string[];
-          createdAt: string;
-          updatedAt: string;
-        }) => ({
-          ...r,
-          createdAt: new Date(r.createdAt),
-          updatedAt: new Date(r.updatedAt),
-        }),
-      );
+      return parsed.map((r) => ({
+        ...r,
+        createdAt: new Date(r.createdAt),
+        updatedAt: new Date(r.updatedAt),
+      }));
     } catch (e) {
       console.error("Failed to parse stored rubrics", e);
     }

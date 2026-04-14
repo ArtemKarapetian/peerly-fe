@@ -39,7 +39,7 @@ const getMockRubrics = (): RubricItem[] => {
   const stored = localStorage.getItem("peerly_rubrics_library");
   if (stored) {
     try {
-      const parsed: StoredRubric[] = JSON.parse(stored);
+      const parsed: StoredRubric[] = JSON.parse(stored) as StoredRubric[];
       return parsed.map(
         (r): RubricItem => ({
           id: r.id,

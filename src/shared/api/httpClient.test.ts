@@ -2,14 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import { appNavigate } from "@/shared/lib/navigate";
 
-import {
-  ApiError,
-  getAccessToken,
-  getRefreshToken,
-  setTokens,
-  clearTokens,
-  http,
-} from "./httpClient";
+import { getAccessToken, getRefreshToken, setTokens, clearTokens } from "./authInterceptor";
+import { ApiError, http } from "./httpClient";
 
 vi.mock("@/shared/config/env", () => ({
   env: { apiUrl: "http://api.test" },
@@ -81,15 +75,15 @@ describe("http.get", () => {
       json: () => Promise.resolve({ id: 1 }),
     });
 
-    const data = await http.get("/users");
+    const data = await http.get<{ id: number }>("/users");
 
     expect(global.fetch).toHaveBeenCalledWith(
       "http://api.test/users",
       expect.objectContaining({
         headers: expect.objectContaining({
           Authorization: "Bearer tok123",
-        }),
-      }),
+        }) as Record<string, string>,
+      }) as RequestInit,
     );
     expect(data).toEqual({ id: 1 });
   });
