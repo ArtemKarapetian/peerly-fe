@@ -113,7 +113,13 @@
     "requiredField": "Обязательное поле",
     "emailOrUsername": "Email или логин",
     "firstNamePlaceholder": "Иван",
-    "lastNamePlaceholder": "Петров"
+    "lastNamePlaceholder": "Петров",
+    "role": "Я регистрируюсь как",
+    "roleStudentTitle": "Студент",
+    "roleStudentDesc": "Сдаю задания, пишу рецензии на работы однокурсников и получаю оценки",
+    "roleTeacherTitle": "Преподаватель",
+    "roleTeacherDesc": "Создаю курсы и задания, настраиваю рубрики, распределяю рецензии",
+    "loginFailed": "Не удалось выполнить вход"
   },
   "errors": {
     "authRequired": "Требуется авторизация",

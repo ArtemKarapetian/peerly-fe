@@ -113,7 +113,13 @@
     "requiredField": "Required field",
     "emailOrUsername": "Email or username",
     "firstNamePlaceholder": "John",
-    "lastNamePlaceholder": "Doe"
+    "lastNamePlaceholder": "Doe",
+    "role": "I'm signing up as",
+    "roleStudentTitle": "Student",
+    "roleStudentDesc": "Submit assignments, review classmates' work, receive grades",
+    "roleTeacherTitle": "Teacher",
+    "roleTeacherDesc": "Create courses and assignments, configure rubrics, distribute reviews",
+    "loginFailed": "Login failed"
   },
   "errors": {
     "authRequired": "Authorization Required",

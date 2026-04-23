@@ -1,3 +1,4 @@
+import { GraduationCap, BookOpen, Check } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,9 +9,10 @@ import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
 import { useAuth } from "@/entities/user";
-import type { UserRole } from "@/entities/user/model/role";
 
 import { PublicLayout } from "@/widgets/public-layout";
+
+type RegistrableRole = "Student" | "Teacher";
 
 interface FormErrors {
   firstName?: string;
@@ -32,7 +34,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<UserRole>("Student");
+  const [role, setRole] = useState<RegistrableRole>("Student");
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [touched, setTouched] = useState({
@@ -127,12 +129,11 @@ export default function RegisterPage() {
         email: email.trim().toLowerCase(),
         password,
         userName: displayName(),
-        role: role === "Admin" ? "Teacher" : role,
+        role,
       });
 
       toast.success(t("auth.accountCreated"), { description: t("auth.canLoginNow") });
-      const target =
-        role === "Teacher" ? "/teacher/courses" : role === "Admin" ? "/admin" : "/courses";
+      const target = role === "Teacher" ? "/teacher/courses" : "/courses";
       setTimeout(() => void navigate(target), 500);
     } catch (err) {
       const detail =
@@ -240,26 +241,67 @@ export default function RegisterPage() {
                 error={touched.confirmPassword ? errors.confirmPassword : ""}
               />
 
-              <div className="space-y-1.5">
-                <label className="block text-sm text-foreground">{t("auth.role") || "Role"}</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {(["Student", "Teacher", "Admin"] as const).map((r) => (
-                    <button
-                      type="button"
-                      key={r}
-                      onClick={() => setRole(r)}
-                      disabled={isLoading}
-                      className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
-                        role === r
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border text-muted-foreground hover:border-primary/40"
-                      }`}
-                    >
-                      {t(`roles.${r.toLowerCase()}`)}
-                    </button>
-                  ))}
+              <fieldset className="space-y-2">
+                <legend className="block text-sm text-foreground mb-2">{t("auth.role")}</legend>
+                <div className="grid grid-cols-1 tablet:grid-cols-2 gap-3">
+                  {(
+                    [
+                      {
+                        value: "Student" as const,
+                        title: t("auth.roleStudentTitle"),
+                        desc: t("auth.roleStudentDesc"),
+                        Icon: GraduationCap,
+                      },
+                      {
+                        value: "Teacher" as const,
+                        title: t("auth.roleTeacherTitle"),
+                        desc: t("auth.roleTeacherDesc"),
+                        Icon: BookOpen,
+                      },
+                    ] satisfies ReadonlyArray<{
+                      value: RegistrableRole;
+                      title: string;
+                      desc: string;
+                      Icon: typeof GraduationCap;
+                    }>
+                  ).map(({ value, title, desc, Icon }) => {
+                    const selected = role === value;
+                    return (
+                      <button
+                        type="button"
+                        key={value}
+                        onClick={() => setRole(value)}
+                        disabled={isLoading}
+                        aria-pressed={selected}
+                        className={`relative text-left p-4 rounded-xl border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                          selected
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/40 bg-card"
+                        }`}
+                      >
+                        <div
+                          className={`inline-flex size-10 items-center justify-center rounded-lg mb-3 ${
+                            selected
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          <Icon className="size-5" />
+                        </div>
+                        <div className="font-medium text-foreground">{title}</div>
+                        <div className="text-xs text-muted-foreground mt-1 leading-snug">
+                          {desc}
+                        </div>
+                        {selected && (
+                          <div className="absolute top-3 right-3 inline-flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                            <Check className="size-3" strokeWidth={3} />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
-              </div>
+              </fieldset>
 
               <div className="pt-2">
                 <Button

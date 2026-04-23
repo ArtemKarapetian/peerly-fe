@@ -14,9 +14,13 @@ interface AuthContextType {
   login: (input: {
     email: string;
     password: string;
-    role: Role;
+    /**
+     * Optional. Real backend returns the role in the session; in demo mode
+     * we fall back to the last known role (from a prior session) or "Student".
+     */
+    role?: Role;
     userName?: string;
-  }) => Promise<void>;
+  }) => Promise<Session>;
   register: (input: {
     email: string;
     password: string;
@@ -37,17 +41,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback<AuthContextType["login"]>(
     async ({ email, password, role, userName }) => {
+      const resolvedRole: Role = role ?? getSession()?.role ?? "Student";
+
       if (!env.apiUrl) {
         // Demo mode: bypass BE, build a local session.
         const next: Session = {
           userId: "demo-1",
           userName: userName?.trim() || email.split("@")[0],
           email,
-          role,
+          role: resolvedRole,
         };
         setSession(next);
         setSessionState(next);
-        return;
+        return next;
       }
 
       const res = await authApi.login({ email, password });
@@ -55,10 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         userId: String(res.userId),
         userName: userName?.trim() || email.split("@")[0],
         email,
-        role,
+        role: resolvedRole,
       };
       setSession(next);
       setSessionState(next);
+      return next;
     },
     [],
   );
