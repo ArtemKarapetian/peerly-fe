@@ -16,21 +16,10 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
   TeacherCourseAssignments,
   TeacherCourseParticipants,
-  TeacherCourseAnnouncements,
   TeacherCourseSettings,
 } from "@/widgets/teacher-course-detail";
 
-/**
- * TeacherCourseDetailsPage - Детальный вид курса для преподавателя
- *
- * Вкладки с straight underline indicator:
- * 1. Задания
- * 2. Участники
- * 3. Анонсы
- * 4. Настройки
- */
-
-type TabKey = "assignments" | "participants" | "announcements" | "settings";
+type TabKey = "assignments" | "participants" | "settings";
 
 export default function TeacherCourseDetailsPage() {
   const { courseId: routeCourseId } = useParams<{ courseId: string }>();
@@ -39,7 +28,6 @@ export default function TeacherCourseDetailsPage() {
   const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<TabKey>("assignments");
 
-  // Load course, teacher, and assignments data
   const { data, isLoading, error, refetch } = useAsync(async () => {
     const course = await courseRepo.getById(courseId || "c1");
     const [teacher, courseAssignments] = await Promise.all([
@@ -79,7 +67,6 @@ export default function TeacherCourseDetailsPage() {
   const tabs = [
     { key: "assignments" as TabKey, label: t("teacher.courseDetail.tabs.assignments") },
     { key: "participants" as TabKey, label: t("teacher.courseDetail.tabs.participants") },
-    { key: "announcements" as TabKey, label: t("teacher.courseDetail.tabs.announcements") },
     { key: "settings" as TabKey, label: t("teacher.courseDetail.tabs.settings") },
   ];
 
@@ -167,7 +154,6 @@ export default function TeacherCourseDetailsPage() {
           <div className="p-6">
             {activeTab === "assignments" && <TeacherCourseAssignments courseId={course.id} />}
             {activeTab === "participants" && <TeacherCourseParticipants courseId={course.id} />}
-            {activeTab === "announcements" && <TeacherCourseAnnouncements courseId={course.id} />}
             {activeTab === "settings" && <TeacherCourseSettings course={course} />}
           </div>
         </div>

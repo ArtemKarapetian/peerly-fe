@@ -125,7 +125,7 @@ export default function TeacherCoursesPage() {
                 <div className="w-px h-10 bg-border"></div>
               </div>
               <button
-                onClick={() => void navigate("/teacher/course/create")}
+                onClick={() => void navigate("/teacher/courses/new")}
                 className="flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-[10px] hover:bg-brand-primary-hover active:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ring"
               >
                 <Plus className="w-4 h-4" />
@@ -201,12 +201,12 @@ export default function TeacherCoursesPage() {
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
-                    <col /> {/* Курс — остаток */}
-                    <col className="w-[120px] hidden tablet:table-column" /> {/* Семестр */}
-                    <col className="w-[100px] hidden tablet:table-column" /> {/* Студенты */}
-                    <col className="w-[100px] hidden tablet:table-column" /> {/* Задания */}
-                    <col className="w-[105px]" /> {/* Статус */}
-                    <col className="w-[48px]" /> {/* Chevron */}
+                    <col />
+                    <col className="w-[120px] hidden tablet:table-column" />
+                    <col className="w-[100px] hidden tablet:table-column" />
+                    <col className="w-[100px] hidden tablet:table-column" />
+                    <col className="w-[105px]" />
+                    <col className="w-[48px]" />
                   </colgroup>
                   <thead>
                     <tr className="border-b-2 border-border bg-surface-hover">
@@ -322,7 +322,7 @@ export default function TeacherCoursesPage() {
             </p>
             {!searchQuery && (
               <button
-                onClick={() => void navigate("/teacher/course/create")}
+                onClick={() => void navigate("/teacher/courses/new")}
                 className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-[10px] hover:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-[14px] font-medium"
               >
                 <Plus className="w-4 h-4" />

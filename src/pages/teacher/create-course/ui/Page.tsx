@@ -36,8 +36,7 @@ export default function CreateCoursePage() {
         archived: false,
       });
 
-      // Navigate to the new course
-      void navigate(`/teacher/course/${newCourse.id}`);
+      void navigate(`/teacher/courses/${newCourse.id}`);
     } catch {
       alert(t("teacher.createCourse.errorCreating"));
     }

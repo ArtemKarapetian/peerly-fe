@@ -5,8 +5,8 @@ import { FeatureRoute } from "@/app/routing/FeatureRoute";
 import { NavigateRegistrar } from "@/app/routing/NavigateRegistrar";
 import { ProtectedRoute } from "@/app/routing/ProtectedRoute";
 import { PublicOnlyRoute } from "@/app/routing/PublicOnlyRoute";
+import { RoleRoute } from "@/app/routing/RoleRoute";
 
-// ── Lazy page imports ────────────────────────────────────────────────
 // Admin
 const AdminCoursesPage = lazy(() => import("@/pages/admin/courses/ui/Page"));
 const AdminFlagsPage = lazy(() => import("@/pages/admin/flags/ui/Page"));
@@ -73,6 +73,7 @@ const TeacherAutomationPage = lazy(() => import("@/pages/teacher/automation/ui/P
 const TeacherCourseDetailsPage = lazy(() => import("@/pages/teacher/course-detail/ui/Page"));
 const TeacherCoursesPage = lazy(() => import("@/pages/teacher/courses/ui/Page"));
 const TeacherCreateAssignmentPage = lazy(() => import("@/pages/teacher/create-assignment/ui/Page"));
+const TeacherCreateCoursePage = lazy(() => import("@/pages/teacher/create-course/ui/Page"));
 const TeacherDistributionPage = lazy(() => import("@/pages/teacher/distribution/ui/Page"));
 const TeacherExtensionsPage = lazy(() => import("@/pages/teacher/extensions/ui/Page"));
 const TeacherModerationPage = lazy(() => import("@/pages/teacher/moderation/ui/Page"));
@@ -95,7 +96,6 @@ export function Router() {
     <Suspense fallback={<PageFallback />}>
       <NavigateRegistrar />
       <Routes>
-        {/* ── Public pages ──────────────────────────────── */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/help" element={<HelpPage />} />
         <Route path="/status" element={<StatusPage />} />
@@ -109,13 +109,11 @@ export function Router() {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
         </Route>
 
-        {/* ── Auth pages (redirect if already logged in) ─ */}
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
 
-        {/* ── Protected pages ───────────────────────────── */}
         <Route element={<ProtectedRoute />}>
           {/* Student */}
           <Route path="/dashboard" element={<DashboardPage />} />
@@ -145,73 +143,79 @@ export function Router() {
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/offboarding/delete-account" element={<DeleteAccountPage />} />
 
-          {/* Teacher (static) */}
-          <Route path="/teacher/courses" element={<TeacherCoursesPage />} />
-          <Route path="/teacher/courses/:courseId" element={<TeacherCourseDetailsPage />} />
-          <Route path="/teacher/rubrics" element={<TeacherRubricsPage />} />
-          <Route path="/teacher/assignments" element={<TeacherAssignmentsPage />} />
-          <Route path="/teacher/assignments/new" element={<TeacherCreateAssignmentPage />} />
-          <Route
-            path="/teacher/assignment/:assignmentId"
-            element={<TeacherAssignmentDetailsPage />}
-          />
-          <Route
-            path="/teacher/assignment/:assignmentId/extensions"
-            element={<TeacherAssignmentExtensionsPage />}
-          />
-          <Route
-            path="/teacher/peer-session-settings/:assignmentId"
-            element={<TeacherPeerSessionSettingsPage />}
-          />
-          <Route path="/teacher/distribution" element={<TeacherDistributionPage />} />
-          <Route path="/teacher/moderation" element={<TeacherModerationPage />} />
-          <Route path="/teacher/submissions" element={<TeacherSubmissionsPage />} />
-          <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route path="/teacher/appeals" element={<TeacherAppealsPage />} />
-          </Route>
+          {/* Teacher */}
+          <Route element={<RoleRoute allow={["Teacher"]} />}>
+            {/* Teacher (static) */}
+            <Route path="/teacher/courses" element={<TeacherCoursesPage />} />
+            <Route path="/teacher/courses/new" element={<TeacherCreateCoursePage />} />
+            <Route path="/teacher/courses/:courseId" element={<TeacherCourseDetailsPage />} />
+            <Route path="/teacher/rubrics" element={<TeacherRubricsPage />} />
+            <Route path="/teacher/assignments" element={<TeacherAssignmentsPage />} />
+            <Route path="/teacher/assignments/new" element={<TeacherCreateAssignmentPage />} />
+            <Route
+              path="/teacher/assignment/:assignmentId"
+              element={<TeacherAssignmentDetailsPage />}
+            />
+            <Route
+              path="/teacher/assignment/:assignmentId/extensions"
+              element={<TeacherAssignmentExtensionsPage />}
+            />
+            <Route
+              path="/teacher/peer-session-settings/:assignmentId"
+              element={<TeacherPeerSessionSettingsPage />}
+            />
+            <Route path="/teacher/distribution" element={<TeacherDistributionPage />} />
+            <Route path="/teacher/moderation" element={<TeacherModerationPage />} />
+            <Route path="/teacher/submissions" element={<TeacherSubmissionsPage />} />
+            <Route element={<FeatureRoute flag="enableAppeals" />}>
+              <Route path="/teacher/appeals" element={<TeacherAppealsPage />} />
+            </Route>
 
-          {/* Teacher (feature-flagged) */}
-          <Route element={<FeatureRoute flag="enableAnalytics" />}>
-            <Route path="/teacher/analytics" element={<TeacherAnalyticsPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableAnnouncements" />}>
-            <Route path="/teacher/announcements" element={<TeacherAnnouncementsPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableExtensions" />}>
-            <Route path="/teacher/extensions" element={<TeacherExtensionsPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableAutomation" />}>
-            <Route path="/teacher/automation" element={<TeacherAutomationPage />} />
+            {/* Teacher (feature-flagged) */}
+            <Route element={<FeatureRoute flag="enableAnalytics" />}>
+              <Route path="/teacher/analytics" element={<TeacherAnalyticsPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableAnnouncements" />}>
+              <Route path="/teacher/announcements" element={<TeacherAnnouncementsPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableExtensions" />}>
+              <Route path="/teacher/extensions" element={<TeacherExtensionsPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableAutomation" />}>
+              <Route path="/teacher/automation" element={<TeacherAutomationPage />} />
+            </Route>
           </Route>
 
           {/* Admin */}
-          <Route element={<FeatureRoute flag="enableAdminPanel" />}>
-            <Route path="/admin/overview" element={<AdminOverviewPage />} />
-            <Route path="/admin/courses" element={<AdminCoursesPage />} />
-            <Route path="/admin/users" element={<AdminUsersPage />} />
-            <Route path="/admin/settings" element={<AdminSettingsPage />} />
-            <Route path="/admin/flags" element={<AdminFlagsPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableOrganizations" />}>
-            <Route path="/admin/orgs" element={<AdminOrgsPage />} />
-          </Route>
+          <Route element={<RoleRoute allow={["Admin"]} />}>
+            <Route element={<FeatureRoute flag="enableAdminPanel" />}>
+              <Route path="/admin/overview" element={<AdminOverviewPage />} />
+              <Route path="/admin/courses" element={<AdminCoursesPage />} />
+              <Route path="/admin/users" element={<AdminUsersPage />} />
+              <Route path="/admin/settings" element={<AdminSettingsPage />} />
+              <Route path="/admin/flags" element={<AdminFlagsPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableOrganizations" />}>
+              <Route path="/admin/orgs" element={<AdminOrgsPage />} />
+            </Route>
 
-          {/* Admin (feature-flagged) */}
-          <Route element={<FeatureRoute flag="enablePlugins" />}>
-            <Route path="/admin/plugins" element={<AdminPluginsPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableIntegrations" />}>
-            <Route path="/admin/integrations" element={<AdminIntegrationsPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableRetention" />}>
-            <Route path="/admin/retention" element={<AdminRetentionPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableLimits" />}>
-            <Route path="/admin/limits" element={<AdminLimitsPage />} />
+            {/* Admin (feature-flagged) */}
+            <Route element={<FeatureRoute flag="enablePlugins" />}>
+              <Route path="/admin/plugins" element={<AdminPluginsPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableIntegrations" />}>
+              <Route path="/admin/integrations" element={<AdminIntegrationsPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableRetention" />}>
+              <Route path="/admin/retention" element={<AdminRetentionPage />} />
+            </Route>
+            <Route element={<FeatureRoute flag="enableLimits" />}>
+              <Route path="/admin/limits" element={<AdminLimitsPage />} />
+            </Route>
           </Route>
         </Route>
 
-        {/* ── Legacy redirects ──────────────────────────── */}
+        {/* Легаси? todo: удалить/перепроверить */}
         <Route path="/course/:courseId" element={<LegacyRedirect to="/courses/:courseId" />} />
         <Route path="/task/:taskId" element={<LegacyRedirect to="/courses/1/tasks/:taskId" />} />
         <Route
