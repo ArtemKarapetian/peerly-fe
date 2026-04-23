@@ -1,17 +1,18 @@
 /**
  * Minimal HTTP client built on fetch().
- *
- * Authentication is handled by the gateway via httpOnly cookies, so every
- * request sets `credentials: "include"`. On a 401 the client attempts a
- * silent refresh (also cookie-based) and retries once.
  */
 
 import { API_PREFIX } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
+import { appNavigate } from "@/shared/lib/navigate";
 
 import { handleUnauthorized } from "./authInterceptor";
 
-// ── Error type ────────────────────────────────────────────────────
+export type HttpErrorMode = "inline" | "redirect";
+
+export interface HttpOptions extends RequestInit {
+  onError?: HttpErrorMode;
+}
 
 export class ApiError extends Error {
   constructor(
@@ -23,11 +24,14 @@ export class ApiError extends Error {
   }
 }
 
-// ── Internals ─────────────────────────────────────────────────────
+const REDIRECTABLE_STATUSES: Record<number, string> = {
+  403: "/403",
+  404: "/404",
+  500: "/500",
+};
 
 function buildUrl(path: string): string {
   const origin = env.apiUrl ?? "";
-  // Allow callers to pass either "/api/v1/..." or a bare "/courses/...".
   const full = path.startsWith(API_PREFIX) ? path : `${API_PREFIX}${path}`;
   return `${origin}${full}`;
 }
@@ -51,15 +55,22 @@ async function parseBody(res: Response): Promise<unknown> {
   }
 }
 
-async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+function maybeRedirect(status: number, mode: HttpErrorMode): void {
+  if (mode !== "redirect") return;
+  const target = REDIRECTABLE_STATUSES[status];
+  if (target) appNavigate(target);
+}
+
+async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
+  const { onError = "inline", ...fetchInit } = init;
   const url = buildUrl(path);
-  const hasJsonBody = init.body !== undefined && typeof init.body === "string";
+  const hasJsonBody = fetchInit.body !== undefined && typeof fetchInit.body === "string";
 
   const doFetch = () =>
     fetch(url, {
-      ...init,
+      ...fetchInit,
       credentials: "include",
-      headers: baseHeaders(init.headers, hasJsonBody),
+      headers: baseHeaders(fetchInit.headers, hasJsonBody),
     });
 
   let res = await doFetch();
@@ -75,27 +86,26 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const body = await parseBody(res);
+    maybeRedirect(res.status, onError);
     throw new ApiError(res.status, body, `HTTP ${res.status}: ${path}`);
   }
 
   return (await parseBody(res)) as T;
 }
 
-// ── Public API ────────────────────────────────────────────────────
-
 export const http = {
-  get: <T>(path: string, init?: RequestInit) => request<T>(path, { ...init, method: "GET" }),
-  post: <T>(path: string, data?: unknown, init?: RequestInit) =>
+  get: <T>(path: string, init?: HttpOptions) => request<T>(path, { ...init, method: "GET" }),
+  post: <T>(path: string, data?: unknown, init?: HttpOptions) =>
     request<T>(path, {
       ...init,
       method: "POST",
       body: data !== undefined ? JSON.stringify(data) : undefined,
     }),
-  put: <T>(path: string, data?: unknown, init?: RequestInit) =>
+  put: <T>(path: string, data?: unknown, init?: HttpOptions) =>
     request<T>(path, {
       ...init,
       method: "PUT",
       body: data !== undefined ? JSON.stringify(data) : undefined,
     }),
-  delete: <T>(path: string, init?: RequestInit) => request<T>(path, { ...init, method: "DELETE" }),
+  delete: <T>(path: string, init?: HttpOptions) => request<T>(path, { ...init, method: "DELETE" }),
 };
