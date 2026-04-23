@@ -18,7 +18,10 @@ export type Env = z.infer<typeof envSchema>;
 
 function normalize(url: string | undefined): string | undefined {
   if (!url) return undefined;
-  return url.replace(/\/$/, "");
+  // Strip any trailing slash, and any trailing /api or /api/v1 — the http
+  // client always prepends /api/v1, so callers can set VITE_API_URL to the
+  // gateway origin with or without those suffixes.
+  return url.replace(/\/$/, "").replace(/\/api(\/v\d+)?$/, "");
 }
 
 export const env: Env = envSchema.parse({
