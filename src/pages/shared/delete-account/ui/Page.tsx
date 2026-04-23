@@ -35,7 +35,7 @@ export default function DeleteAccountPage() {
   };
 
   const handleGoToLanding = () => {
-    logout();
+    void logout();
     void navigate("/");
   };
 

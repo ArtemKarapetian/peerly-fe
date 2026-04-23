@@ -9,11 +9,7 @@ import { STORAGE_KEYS } from "@/shared/config/constants";
 
 // ── Key → Value type map ──────────────────────────────────────────
 interface StorageMap {
-  [STORAGE_KEYS.accessToken]: string;
-  [STORAGE_KEYS.refreshToken]: string;
-  [STORAGE_KEYS.auth]: string; // "true" | "false"
-  [STORAGE_KEYS.user]: string; // JSON-serialized User
-  [STORAGE_KEYS.role]: string;
+  [STORAGE_KEYS.session]: string; // JSON-serialized session
   [STORAGE_KEYS.language]: string;
   [STORAGE_KEYS.theme]: string;
   [STORAGE_KEYS.featureFlags]: string; // JSON-serialized FeatureFlags

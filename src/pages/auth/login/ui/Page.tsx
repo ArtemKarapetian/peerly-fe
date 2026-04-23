@@ -3,78 +3,62 @@ import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
+import { ApiError } from "@/shared/api";
 import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
 import { useAuth } from "@/entities/user";
-import { authenticateUser } from "@/entities/user/model/userStorage.ts";
+import type { UserRole } from "@/entities/user/model/role";
 
 import { PublicLayout } from "@/widgets/public-layout";
-
-/**
- * LoginPage - Authentication screen
- *
- * Features:
- * - Single identifier field (email OR username)
- * - Demo credentials support
- * - Realistic error states
- * - Feature-flagged password reset
- */
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login: authLogin } = useAuth();
-  const [identifier, setIdentifier] = useState("");
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole>("Student");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [touched, setTouched] = useState({
-    identifier: false,
-    password: false,
-  });
+  const [touched, setTouched] = useState({ email: false, password: false });
 
   const enablePasswordReset = isFlagEnabled("enablePasswordReset");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    setTouched({ email: true, password: true });
 
-    // Mark all fields as touched
-    setTouched({ identifier: true, password: true });
-
-    // Validate inputs
-    if (!identifier.trim() || !password.trim()) {
-      return;
-    }
+    if (!email.trim() || !password.trim()) return;
 
     setIsLoading(true);
-
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 600));
-
-    // Attempt authentication
-    const user = authenticateUser(identifier, password);
-
-    if (user) {
-      // Success - login and navigate
-      authLogin();
-      void navigate("/courses");
-    } else {
-      // Failed - show error
+    try {
+      await login({
+        email: email.trim().toLowerCase(),
+        password,
+        role: role === "Admin" ? "Teacher" : role,
+      });
+      const target =
+        role === "Teacher" ? "/teacher/courses" : role === "Admin" ? "/admin" : "/courses";
+      void navigate(target);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setError(t("auth.invalidCredentials"));
+      } else {
+        setError(t("auth.loginFailed") || "Login failed");
+      }
+    } finally {
       setIsLoading(false);
-      setError(t("auth.invalidCredentials"));
     }
   };
 
-  // Show field-level errors only when touched
-  const getIdentifierError = () => {
-    if (!touched.identifier) return "";
-    if (!identifier.trim()) return t("auth.requiredField");
+  const getEmailError = () => {
+    if (!touched.email) return "";
+    if (!email.trim()) return t("auth.requiredField");
     return "";
   };
-
   const getPasswordError = () => {
     if (!touched.password) return "";
     if (!password.trim()) return t("auth.requiredField");
@@ -85,9 +69,7 @@ export default function LoginPage() {
     <PublicLayout maxWidth="md" showLoginButton={false}>
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 tablet:py-12">
         <div className="w-full max-w-[440px]">
-          {/* Card */}
           <div className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 space-y-6">
-            {/* Header */}
             <div className="space-y-2">
               <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
                 {t("auth.login")}
@@ -95,14 +77,6 @@ export default function LoginPage() {
               <p className="text-[15px] text-muted-foreground">{t("auth.loginSubtitle")}</p>
             </div>
 
-            {/* Demo credentials hint */}
-            <div className="bg-accent/50 border border-border rounded-lg px-3.5 py-2.5">
-              <p className="text-[13px] text-muted-foreground">
-                <strong className="font-medium">Demo:</strong> {t("auth.demoCredentials")}
-              </p>
-            </div>
-
-            {/* Error banner */}
             {error && (
               <div className="bg-destructive/10 border-2 border-destructive/50 rounded-lg px-4 py-3 flex items-start gap-3">
                 <AlertCircle className="size-5 text-destructive flex-shrink-0 mt-0.5" />
@@ -110,31 +84,28 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Login form */}
             <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
-              {/* Identifier (username or email) */}
               <Input
-                label={t("auth.emailOrUsername")}
-                type="text"
-                value={identifier}
+                label="Email"
+                type="email"
+                value={email}
                 onChange={(e) => {
-                  setIdentifier(e.target.value);
-                  setError(""); // Clear error on change
+                  setEmail(e.target.value);
+                  setError("");
                 }}
-                onBlur={() => setTouched({ ...touched, identifier: true })}
-                placeholder="demo or demo@example.com"
-                autoComplete="username"
+                onBlur={() => setTouched({ ...touched, email: true })}
+                placeholder="you@example.com"
+                autoComplete="email"
                 disabled={isLoading}
-                error={getIdentifierError()}
+                error={getEmailError()}
               />
 
-              {/* Password */}
               <PasswordInput
                 label={t("auth.password")}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setError(""); // Clear error on change
+                  setError("");
                 }}
                 onBlur={() => setTouched({ ...touched, password: true })}
                 placeholder="••••••••"
@@ -143,7 +114,27 @@ export default function LoginPage() {
                 error={getPasswordError()}
               />
 
-              {/* Submit button */}
+              <div className="space-y-1.5">
+                <label className="block text-sm text-foreground">{t("auth.role") || "Role"}</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["Student", "Teacher", "Admin"] as const).map((r) => (
+                    <button
+                      type="button"
+                      key={r}
+                      onClick={() => setRole(r)}
+                      disabled={isLoading}
+                      className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
+                        role === r
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/40"
+                      }`}
+                    >
+                      {t(`roles.${r.toLowerCase()}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="pt-2">
                 <Button
                   type="submit"
@@ -151,16 +142,14 @@ export default function LoginPage() {
                   size="lg"
                   fullWidth
                   isLoading={isLoading}
-                  disabled={!identifier.trim() || !password.trim()}
+                  disabled={!email.trim() || !password.trim()}
                 >
                   {isLoading ? t("auth.loggingIn") : t("auth.signIn")}
                 </Button>
               </div>
             </form>
 
-            {/* Footer links */}
             <div className="space-y-3 pt-2">
-              {/* Forgot password link (feature flag controlled) */}
               {enablePasswordReset && (
                 <div className="text-center">
                   <Link
@@ -172,7 +161,6 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {/* Register link */}
               <div className="text-center border-t border-border pt-4">
                 <p className="text-sm text-muted-foreground mb-2">{t("auth.noAccount")}</p>
                 <Link to="/register" className="text-sm font-medium text-primary hover:underline">

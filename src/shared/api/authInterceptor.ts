@@ -1,44 +1,21 @@
 /**
- * Auth interceptor — token management and silent refresh.
+ * Auth interceptor — silent refresh on 401.
  *
- * Extracted from httpClient so that the HTTP layer stays thin
- * and all auth concerns live in one place.
+ * All tokens live in httpOnly cookies managed by the gateway, so the
+ * client never sees or stores them. We only need to (a) call the refresh
+ * endpoint when a request is rejected and (b) route the user to /login
+ * when the refresh itself fails.
  */
 
-import { STORAGE_KEYS, TOKEN_REFRESH_PATH } from "@/shared/config/constants";
+import { TOKEN_REFRESH_PATH } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
 import { appNavigate } from "@/shared/lib/navigate";
-import { storage } from "@/shared/lib/storage";
 
-// ── Token helpers ──────────────────────────────────────────────────
-
-export function getAccessToken(): string | null {
-  return storage.get(STORAGE_KEYS.accessToken);
-}
-
-export function getRefreshToken(): string | null {
-  return storage.get(STORAGE_KEYS.refreshToken);
-}
-
-export function setTokens(access: string, refresh?: string): void {
-  storage.set(STORAGE_KEYS.accessToken, access);
-  if (refresh) storage.set(STORAGE_KEYS.refreshToken, refresh);
-}
-
-export function clearTokens(): void {
-  storage.remove(STORAGE_KEYS.accessToken);
-  storage.remove(STORAGE_KEYS.refreshToken);
-}
-
-// ── Silent refresh ─────────────────────────────────────────────────
+import { clearSession } from "./session";
 
 let refreshPromise: Promise<boolean> | null = null;
 
-export async function tryRefreshToken(): Promise<boolean> {
-  const refresh = getRefreshToken();
-  if (!refresh) return false;
-
-  // Deduplicate: if a refresh is already in-flight, wait for it
+async function tryRefreshToken(): Promise<boolean> {
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
@@ -46,14 +23,10 @@ export async function tryRefreshToken(): Promise<boolean> {
       const base = env.apiUrl ?? "";
       const res = await fetch(`${base}${TOKEN_REFRESH_PATH}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken: refresh }),
+        credentials: "include",
+        headers: { Accept: "application/json" },
       });
-      if (!res.ok) return false;
-
-      const data = (await res.json()) as { accessToken: string; refreshToken?: string };
-      setTokens(data.accessToken, data.refreshToken);
-      return true;
+      return res.ok;
     } catch {
       return false;
     } finally {
@@ -66,14 +39,13 @@ export async function tryRefreshToken(): Promise<boolean> {
 
 /**
  * Handle a 401 response: attempt refresh, redirect to login on failure.
- * Returns `true` if the token was refreshed (caller should retry).
+ * Returns `true` when the caller should retry the original request.
  */
 export async function handleUnauthorized(): Promise<boolean> {
   const refreshed = await tryRefreshToken();
   if (refreshed) return true;
 
-  clearTokens();
-  storage.remove(STORAGE_KEYS.auth);
+  clearSession();
   appNavigate("/login");
   return false;
 }

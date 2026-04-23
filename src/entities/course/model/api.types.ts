@@ -1,21 +1,13 @@
-/** Backend response types for courses (snake_case) */
+/**
+ * Backend response types for courses (mirror of gateway DTOs).
+ *
+ * Re-exported from the shared API layer — kept here only as a local alias
+ * so the entity's mapper imports don't spread to application code.
+ */
 
-export interface ApiCourse {
-  course_id: string;
-  name: string;
-  code: string;
-  teacher_id: string;
-  org_id?: string;
-  enrollment_count?: number;
-  status: "active" | "archived";
-  created_at: string;
-}
-
-export interface ApiCreateCoursePayload {
-  name: string;
-  code: string;
-  teacher_id: string;
-  semester?: string;
-  description?: string;
-  status?: "active" | "archived";
-}
+export type {
+  CourseInfoDto,
+  CourseStatus,
+  CreateCourseRequestBody,
+  UpdateCourseRequestBody,
+} from "@/shared/api";

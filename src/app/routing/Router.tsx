@@ -127,13 +127,17 @@ export function Router() {
             path="/courses/:courseId/tasks/:taskId/submissions"
             element={<SubmissionsPage />}
           />
-          <Route path="/courses/:courseId/tasks/:taskId/appeal" element={<CreateAppealPage />} />
+          <Route element={<FeatureRoute flag="enableAppeals" />}>
+            <Route path="/courses/:courseId/tasks/:taskId/appeal" element={<CreateAppealPage />} />
+          </Route>
           <Route path="/reviews" element={<ReviewsInboxPage />} />
           <Route path="/reviews/received" element={<ReceivedReviewsPage />} />
           <Route path="/reviews/:reviewId" element={<ReviewPage />} />
           <Route path="/gradebook" element={<GradebookPage />} />
           <Route path="/inbox" element={<InboxPage />} />
-          <Route path="/appeals" element={<AppealsListPage />} />
+          <Route element={<FeatureRoute flag="enableAppeals" />}>
+            <Route path="/appeals" element={<AppealsListPage />} />
+          </Route>
 
           {/* Profile / Settings */}
           <Route path="/profile" element={<ProfilePage />} />
@@ -162,7 +166,9 @@ export function Router() {
           <Route path="/teacher/distribution" element={<TeacherDistributionPage />} />
           <Route path="/teacher/moderation" element={<TeacherModerationPage />} />
           <Route path="/teacher/submissions" element={<TeacherSubmissionsPage />} />
-          <Route path="/teacher/appeals" element={<TeacherAppealsPage />} />
+          <Route element={<FeatureRoute flag="enableAppeals" />}>
+            <Route path="/teacher/appeals" element={<TeacherAppealsPage />} />
+          </Route>
 
           {/* Teacher (feature-flagged) */}
           <Route element={<FeatureRoute flag="enableAnalytics" />}>
@@ -179,12 +185,16 @@ export function Router() {
           </Route>
 
           {/* Admin */}
-          <Route path="/admin/overview" element={<AdminOverviewPage />} />
-          <Route path="/admin/courses" element={<AdminCoursesPage />} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
-          <Route path="/admin/orgs" element={<AdminOrgsPage />} />
-          <Route path="/admin/settings" element={<AdminSettingsPage />} />
-          <Route path="/admin/flags" element={<AdminFlagsPage />} />
+          <Route element={<FeatureRoute flag="enableAdminPanel" />}>
+            <Route path="/admin/overview" element={<AdminOverviewPage />} />
+            <Route path="/admin/courses" element={<AdminCoursesPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/settings" element={<AdminSettingsPage />} />
+            <Route path="/admin/flags" element={<AdminFlagsPage />} />
+          </Route>
+          <Route element={<FeatureRoute flag="enableOrganizations" />}>
+            <Route path="/admin/orgs" element={<AdminOrgsPage />} />
+          </Route>
 
           {/* Admin (feature-flagged) */}
           <Route element={<FeatureRoute flag="enablePlugins" />}>

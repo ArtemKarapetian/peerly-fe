@@ -1,27 +1,27 @@
-import type { ApiCourse, ApiCreateCoursePayload } from "./api.types";
-import type { CreateCourseInput, DemoCourse } from "./types";
+import type { CourseInfoDto, CourseStatus } from "@/shared/api";
 
-export function mapApiCourse(api: ApiCourse): DemoCourse {
-  return {
-    id: api.course_id,
-    name: api.name,
-    title: api.name,
-    code: api.code,
-    teacherId: api.teacher_id,
-    orgId: api.org_id ?? "",
-    enrollmentCount: api.enrollment_count ?? 0,
-    status: api.status,
-    createdAt: new Date(api.created_at),
-  };
+import type { DemoCourse } from "./types";
+
+const ARCHIVED_STATUSES: CourseStatus[] = ["Canceled", "Deleted", "Finished"];
+
+export function isArchivedStatus(status: CourseStatus): boolean {
+  return ARCHIVED_STATUSES.includes(status);
 }
 
-export function mapCourseToPayload(input: CreateCourseInput): ApiCreateCoursePayload {
+export function mapDtoToCourse(dto: CourseInfoDto): DemoCourse {
+  const archived = isArchivedStatus(dto.status);
   return {
-    name: input.title,
-    code: input.code,
-    teacher_id: input.instructorId,
-    semester: input.semester,
-    description: input.description,
-    status: input.archived ? "archived" : "active",
+    id: String(dto.id),
+    name: dto.name,
+    title: dto.name,
+    code: "",
+    teacherId: "",
+    orgId: "",
+    enrollmentCount: dto.studentCount,
+    homeworkCount: dto.homeworkCount,
+    status: archived ? "archived" : "active",
+    backendStatus: dto.status,
+    archived,
+    createdAt: new Date(),
   };
 }

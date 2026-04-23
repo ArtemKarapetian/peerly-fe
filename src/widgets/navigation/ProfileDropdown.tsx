@@ -104,7 +104,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
 
   const handleLogout = () => {
     setIsOpen(false);
-    logout();
+    void logout();
   };
 
   // Collapsed mode - круглая кнопка-аватар

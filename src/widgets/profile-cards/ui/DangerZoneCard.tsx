@@ -8,7 +8,7 @@ export function DangerZoneCard() {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout();
+    void logout();
   };
 
   return (
