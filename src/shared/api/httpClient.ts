@@ -1,13 +1,15 @@
 /**
  * Minimal HTTP client built on fetch().
  *
- * Auth concerns (tokens, refresh, 401 handling) are delegated
- * to authInterceptor so this module stays focused on HTTP semantics.
+ * Authentication is handled by the gateway via httpOnly cookies, so every
+ * request sets `credentials: "include"`. On a 401 the client attempts a
+ * silent refresh (also cookie-based) and retries once.
  */
 
+import { API_PREFIX } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
 
-import { getAccessToken, handleUnauthorized } from "./authInterceptor";
+import { handleUnauthorized } from "./authInterceptor";
 
 // ── Error type ────────────────────────────────────────────────────
 
@@ -23,59 +25,77 @@ export class ApiError extends Error {
 
 // ── Internals ─────────────────────────────────────────────────────
 
-function buildHeaders(token: string | null, extra?: HeadersInit): Record<string, string> {
+function buildUrl(path: string): string {
+  const origin = env.apiUrl ?? "";
+  // Allow callers to pass either "/api/v1/..." or a bare "/courses/...".
+  const full = path.startsWith(API_PREFIX) ? path : `${API_PREFIX}${path}`;
+  return `${origin}${full}`;
+}
+
+function baseHeaders(extra?: HeadersInit, hasJsonBody = false): HeadersInit {
   return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...(extra as Record<string, string>),
+    ...(hasJsonBody ? { "Content-Type": "application/json" } : {}),
+    Accept: "application/json",
+    ...(extra as Record<string, string> | undefined),
   };
 }
 
+async function parseBody(res: Response): Promise<unknown> {
+  if (res.status === 204) return null;
+  const text = await res.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const base = env.apiUrl ?? "";
-  const token = getAccessToken();
+  const url = buildUrl(path);
+  const hasJsonBody = init.body !== undefined && typeof init.body === "string";
 
-  const res = await fetch(`${base}${path}`, {
-    ...init,
-    headers: buildHeaders(token, init.headers),
-  });
+  const doFetch = () =>
+    fetch(url, {
+      ...init,
+      credentials: "include",
+      headers: baseHeaders(init.headers, hasJsonBody),
+    });
 
-  // 401 — attempt silent refresh, then retry once
+  let res = await doFetch();
+
   if (res.status === 401) {
     const refreshed = await handleUnauthorized();
     if (refreshed) {
-      const newToken = getAccessToken();
-      const retry = await fetch(`${base}${path}`, {
-        ...init,
-        headers: buildHeaders(newToken, init.headers),
-      });
-      if (retry.ok) return retry.json() as Promise<T>;
+      res = await doFetch();
+    } else {
+      throw new ApiError(401, null, "Session expired");
     }
-
-    throw new ApiError(401, null, "Session expired");
   }
 
   if (!res.ok) {
-    const body: unknown = await res.json().catch(() => null);
+    const body = await parseBody(res);
     throw new ApiError(res.status, body, `HTTP ${res.status}: ${path}`);
   }
 
-  return res.json() as Promise<T>;
+  return (await parseBody(res)) as T;
 }
 
 // ── Public API ────────────────────────────────────────────────────
 
 export const http = {
-  get: <T>(path: string) => request<T>(path),
-  post: <T>(path: string, data?: unknown) =>
+  get: <T>(path: string, init?: RequestInit) => request<T>(path, { ...init, method: "GET" }),
+  post: <T>(path: string, data?: unknown, init?: RequestInit) =>
     request<T>(path, {
+      ...init,
       method: "POST",
-      body: data ? JSON.stringify(data) : undefined,
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     }),
-  put: <T>(path: string, data?: unknown) =>
+  put: <T>(path: string, data?: unknown, init?: RequestInit) =>
     request<T>(path, {
+      ...init,
       method: "PUT",
-      body: data ? JSON.stringify(data) : undefined,
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     }),
-  delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
+  delete: <T>(path: string, init?: RequestInit) => request<T>(path, { ...init, method: "DELETE" }),
 };

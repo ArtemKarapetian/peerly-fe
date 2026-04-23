@@ -1,66 +1,118 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback } from "react";
 
-import { clearTokens, setTokens } from "@/shared/api/authInterceptor";
+import { clearSession, getSession, setSession, type Role, type Session } from "@/shared/api";
+import { env } from "@/shared/config/env";
 import { appNavigate } from "@/shared/lib/navigate";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface LoginResponse {
-  user?: User;
-  accessToken?: string;
-  refreshToken?: string;
-}
+import { authApi } from "../api/authHttp";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: User | null;
-  login: (data?: LoginResponse) => void;
-  logout: () => void;
+  session: Session | null;
+  /** Kept for backwards compatibility with UI that reads `user`. */
+  user: { id: string; name: string; email: string } | null;
+  login: (input: {
+    email: string;
+    password: string;
+    role: Role;
+    userName?: string;
+  }) => Promise<void>;
+  register: (input: {
+    email: string;
+    password: string;
+    userName: string;
+    role: Role;
+  }) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const Auth = createContext<AuthContextType | undefined>(undefined);
 
+function sessionToUser(s: Session | null) {
+  return s ? { id: s.userId, name: s.userName, email: s.email } : null;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem("peerly_auth") === "true";
-  });
+  const [session, setSessionState] = useState<Session | null>(() => getSession());
 
-  const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem("peerly_user");
-    return saved ? (JSON.parse(saved) as User) : null;
-  });
+  const login = useCallback<AuthContextType["login"]>(
+    async ({ email, password, role, userName }) => {
+      if (!env.apiUrl) {
+        // Demo mode: bypass BE, build a local session.
+        const next: Session = {
+          userId: "demo-1",
+          userName: userName?.trim() || email.split("@")[0],
+          email,
+          role,
+        };
+        setSession(next);
+        setSessionState(next);
+        return;
+      }
 
-  useEffect(() => {
-    localStorage.setItem("peerly_auth", String(isAuthenticated));
-    if (user) {
-      localStorage.setItem("peerly_user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("peerly_user");
+      const res = await authApi.login({ email, password });
+      const next: Session = {
+        userId: String(res.userId),
+        userName: userName?.trim() || email.split("@")[0],
+        email,
+        role,
+      };
+      setSession(next);
+      setSessionState(next);
+    },
+    [],
+  );
+
+  const register = useCallback<AuthContextType["register"]>(
+    async ({ email, password, userName, role }) => {
+      if (!env.apiUrl) {
+        const next: Session = { userId: "demo-1", userName, email, role };
+        setSession(next);
+        setSessionState(next);
+        return;
+      }
+
+      const res = await authApi.register({ email, password, userName, role });
+      const next: Session = {
+        userId: String(res.userId),
+        userName,
+        email,
+        role,
+      };
+      setSession(next);
+      setSessionState(next);
+    },
+    [],
+  );
+
+  const logout = useCallback(async () => {
+    if (env.apiUrl) {
+      try {
+        await authApi.logout();
+      } catch {
+        // If the server session is already gone, the cookies are cleared
+        // anyway — proceed to local cleanup.
+      }
     }
-  }, [isAuthenticated, user]);
-
-  const login = (data?: LoginResponse) => {
-    const defaultUser: User = { id: "student-1", name: "Студент", email: "student@example.com" };
-    setUser(data?.user ?? defaultUser);
-    setIsAuthenticated(true);
-
-    if (data?.accessToken) {
-      setTokens(data.accessToken, data.refreshToken);
-    }
-  };
-
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    clearTokens();
+    clearSession();
+    setSessionState(null);
     appNavigate("/");
-  };
+  }, []);
 
-  return <Auth.Provider value={{ isAuthenticated, user, login, logout }}>{children}</Auth.Provider>;
+  return (
+    <Auth.Provider
+      value={{
+        isAuthenticated: session !== null,
+        session,
+        user: sessionToUser(session),
+        login,
+        register,
+        logout,
+      }}
+    >
+      {children}
+    </Auth.Provider>
+  );
 }
 
 export function useAuth() {

@@ -16,16 +16,15 @@ export const TOAST_DURATION = 4000; // ms
 // ── Pagination ────────────────────────────────────────────────────
 export const DEFAULT_PAGE_SIZE = 20;
 
-// ── Auth ──────────────────────────────────────────────────────────
-export const TOKEN_REFRESH_PATH = "/auth/refresh";
+// ── API ───────────────────────────────────────────────────────────
+export const API_PREFIX = "/api/v1";
+export const TOKEN_REFRESH_PATH = `${API_PREFIX}/auth/refresh`;
 
 // ── localStorage keys ─────────────────────────────────────────────
+// Note: access / refresh tokens are NOT stored client-side — the
+// gateway sets them as httpOnly cookies.
 export const STORAGE_KEYS = {
-  accessToken: "peerly_token",
-  refreshToken: "peerly_refresh_token",
-  auth: "peerly_auth",
-  user: "peerly_user",
-  role: "peerly_role",
+  session: "peerly_session", // JSON: { userId, role, userName }
   language: "peerly_language",
   theme: "peerly_theme",
   featureFlags: "peerly_feature_flags",

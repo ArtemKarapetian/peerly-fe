@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
+import { FLAG_METADATA, type FeatureFlags } from "@/shared/lib/feature-flags";
 import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -131,7 +132,61 @@ const FEATURE_FLAGS: FeatureFlag[] = [
     descriptionKey: "admin.flagsPage.flagDescriptions.announcements",
     category: "ui",
     status: "beta",
+    enabled: false,
+  },
+  {
+    id: "ff-appeals",
+    key: "enableAppeals",
+    nameKey: "admin.flagsPage.flagNames.appeals",
+    descriptionKey: "admin.flagsPage.flagDescriptions.appeals",
+    category: "ui",
+    status: "alpha",
+    enabled: false,
+  },
+  {
+    id: "ff-audit-logs",
+    key: "enableAuditLogs",
+    nameKey: "admin.flagsPage.flagNames.auditLogs",
+    descriptionKey: "admin.flagsPage.flagDescriptions.auditLogs",
+    category: "ui",
+    status: "alpha",
+    enabled: false,
+  },
+  {
+    id: "ff-organizations",
+    key: "enableOrganizations",
+    nameKey: "admin.flagsPage.flagNames.organizations",
+    descriptionKey: "admin.flagsPage.flagDescriptions.organizations",
+    category: "ui",
+    status: "alpha",
+    enabled: false,
+  },
+  {
+    id: "ff-admin-panel",
+    key: "enableAdminPanel",
+    nameKey: "admin.flagsPage.flagNames.adminPanel",
+    descriptionKey: "admin.flagsPage.flagDescriptions.adminPanel",
+    category: "ui",
+    status: "alpha",
     enabled: true,
+  },
+  {
+    id: "ff-profile-edit",
+    key: "enableProfileEdit",
+    nameKey: "admin.flagsPage.flagNames.profileEdit",
+    descriptionKey: "admin.flagsPage.flagDescriptions.profileEdit",
+    category: "ui",
+    status: "alpha",
+    enabled: false,
+  },
+  {
+    id: "ff-password-change",
+    key: "enablePasswordChange",
+    nameKey: "admin.flagsPage.flagNames.passwordChange",
+    descriptionKey: "admin.flagsPage.flagDescriptions.passwordChange",
+    category: "integration",
+    status: "alpha",
+    enabled: false,
   },
   {
     id: "ff1",
@@ -307,6 +362,12 @@ export default function AdminFlagsPage() {
       "enableAnalytics",
       "enableExtensions",
       "enableAnnouncements",
+      "enableAppeals",
+      "enableAuditLogs",
+      "enableOrganizations",
+      "enableAdminPanel",
+      "enableProfileEdit",
+      "enablePasswordChange",
     ];
     flags.forEach((flag) => {
       if (realFlagKeys.includes(flag.key)) {
@@ -582,6 +643,11 @@ export default function AdminFlagsPage() {
                         </h3>
                         {getCategoryBadge(flag.category)}
                         {getStatusBadge(flag.status)}
+                        {FLAG_METADATA[flag.key as keyof FeatureFlags]?.backend === false && (
+                          <span className="inline-flex px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
+                            Demo-only
+                          </span>
+                        )}
                         {hasOverrides && (
                           <span className="inline-flex px-2 py-1 bg-info-light text-brand-primary rounded-[6px] text-[11px] font-medium">
                             {t("admin.flagsPage.overridesCount_other", {
