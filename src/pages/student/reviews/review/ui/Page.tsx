@@ -377,8 +377,8 @@ export default function ReviewPage() {
         <Breadcrumbs
           items={[
             { label: t("page.reviewFill.breadcrumbCourses"), href: "/courses" },
-            { label: courseName, href: `/course/${courseId}` },
-            { label: taskTitle, href: `/task/${taskId}` },
+            { label: courseName, href: `/courses/${courseId}` },
+            { label: taskTitle, href: `/courses/${courseId}/tasks/${taskId}` },
             { label: t("page.reviewFill.breadcrumbReview") },
           ]}
         />

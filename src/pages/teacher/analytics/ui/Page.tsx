@@ -58,17 +58,21 @@ interface GradebookEntry {
 
 export default function TeacherAnalyticsPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
-      courseRepo.getAll(),
-      assignmentRepo.getAll(),
-      workRepo.getAll(),
-      reviewRepo.getAll(),
-      userRepo.getAll(),
-    ]);
-    const users = allUsers.filter((u) => u.role === "Student");
-    return { courses, assignments, submissions, reviews, users };
-  }, []);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
+        courseRepo.getAll(),
+        assignmentRepo.getAll(),
+        workRepo.getAll(),
+        reviewRepo.getAll(),
+        userRepo.getAll(),
+      ]);
+      const users = allUsers.filter((u) => u.role === "Student");
+      return { courses, assignments, submissions, reviews, users };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedAssignment, setSelectedAssignment] = useState<string>("all");

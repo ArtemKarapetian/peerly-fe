@@ -96,14 +96,18 @@ interface Submission {
 
 export default function TeacherSubmissionsPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const [users, assignments, demoSubmissions] = await Promise.all([
-      userRepo.getAll(),
-      assignmentRepo.getAll(),
-      workRepo.getAll(),
-    ]);
-    return { users, assignments, demoSubmissions };
-  }, []);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const [users, assignments, demoSubmissions] = await Promise.all([
+        userRepo.getAll(),
+        assignmentRepo.getAll(),
+        workRepo.getAll(),
+      ]);
+      return { users, assignments, demoSubmissions };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   if (isLoading)
     return (

@@ -46,7 +46,14 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [, setSelectedUser] = useState<UserWithStatus | null>(null);
 
-  const { data: users, isLoading, error, refetch } = useAsync(() => userRepo.getAll(), []);
+  const {
+    data: users,
+    isLoading,
+    error,
+    refetch,
+  } = useAsync(() => userRepo.getAll(), [], {
+    onError: "redirect",
+  });
 
   const usersWithStatus: UserWithStatus[] = (users ?? []).map((user) => ({
     ...user,

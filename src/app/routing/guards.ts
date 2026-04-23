@@ -10,8 +10,6 @@ const PROTECTED_PREFIXES = [
   "/teacher",
   "/admin",
   "/courses", // включает /courses, /courses/:id, /courses/:id/tasks/...
-  "/course", // legacy /course/:id
-  "/task", // legacy /task/:id
   "/reviews",
 ] as const;
 

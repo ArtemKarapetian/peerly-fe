@@ -85,15 +85,6 @@ export const ROUTES = {
   // adminPolicies — archived
   adminRetention: "/admin/retention",
   adminLimits: "/admin/limits",
-
-  /**
-   * Legacy (поддержка старых URL из текущего RouterExtended)
-   * Можно позже убрать и сделать авто-редирект на canonical.
-   */
-  legacyCourse: (courseId: string) => `/course/${courseId}`,
-  legacyTask: (taskId: string) => `/task/${taskId}`,
-  legacyTeacherCourse: (courseId: string) => `/teacher/course/${courseId}`,
-  legacySubmit: (taskId: string) => `/submit/${taskId}`,
 } as const;
 
 export type RoutePatternDef = {
@@ -164,28 +155,6 @@ export const ROUTE_PATTERN_LIST = [
     key: "courseDetails",
     regex: /^\/courses\/([^/]+)$/,
     params: ["courseId"] as const,
-  },
-
-  // Legacy
-  {
-    key: "legacyTeacherCourse",
-    regex: /^\/teacher\/course\/([^/]+)$/,
-    params: ["courseId"] as const,
-  },
-  {
-    key: "legacyCourse",
-    regex: /^\/course\/([^/]+)$/,
-    params: ["courseId"] as const,
-  },
-  {
-    key: "legacyTask",
-    regex: /^\/task\/([^/]+)$/,
-    params: ["taskId"] as const,
-  },
-  {
-    key: "legacySubmit",
-    regex: /^\/submit\/([^/]+)$/,
-    params: ["taskId"] as const,
   },
 ] as const;
 

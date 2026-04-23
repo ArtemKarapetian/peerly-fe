@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { FeatureRoute } from "@/app/routing/FeatureRoute";
 import { NavigateRegistrar } from "@/app/routing/NavigateRegistrar";
@@ -215,13 +215,6 @@ export function Router() {
           </Route>
         </Route>
 
-        {/* Легаси? todo: удалить/перепроверить */}
-        <Route path="/course/:courseId" element={<LegacyRedirect to="/courses/:courseId" />} />
-        <Route path="/task/:taskId" element={<LegacyRedirect to="/courses/1/tasks/:taskId" />} />
-        <Route
-          path="/teacher/course/:courseId"
-          element={<LegacyRedirect to="/teacher/courses/:courseId" />}
-        />
         <Route path="/teacher/dashboard" element={<Navigate to="/teacher/courses" replace />} />
 
         {/* ── Error pages ───────────────────────────────── */}
@@ -235,17 +228,4 @@ export function Router() {
       </Routes>
     </Suspense>
   );
-}
-
-/** Handles legacy URL patterns by substituting route params into the target path. */
-function LegacyRedirect({ to }: { to: string }) {
-  // useParams provides the values matched by React Router (e.g. :courseId)
-  const params = useParams();
-
-  let target = to;
-  for (const [key, value] of Object.entries(params)) {
-    if (value) target = target.replace(`:${key}`, value);
-  }
-
-  return <Navigate to={target} replace />;
 }

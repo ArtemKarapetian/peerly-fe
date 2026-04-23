@@ -1,9 +1,23 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+import { ApiError } from "@/shared/api/httpClient";
 
 import { useAsync } from "./useAsync";
 
+const navigateMock = vi.fn();
+
+vi.mock("@/shared/lib/navigate", () => ({
+  appNavigate: (to: string) => {
+    navigateMock(to);
+  },
+}));
+
 describe("useAsync", () => {
+  beforeEach(() => {
+    navigateMock.mockReset();
+  });
+
   it("starts in loading state with no data and no error", () => {
     const fn = vi.fn(() => new Promise<string>(() => {})); // never resolves
     const { result } = renderHook(() => useAsync(fn));
@@ -86,12 +100,10 @@ describe("useAsync", () => {
 
     const { result } = renderHook(() => useAsync(fn));
 
-    // Trigger a refetch before the first request resolves
     act(() => {
       result.current.refetch();
     });
 
-    // Resolve the second (newer) request first
     act(() => {
       resolveSecond!("second");
     });
@@ -101,11 +113,93 @@ describe("useAsync", () => {
     });
     expect(result.current.data).toBe("second");
 
-    // Now resolve the first (stale) request — it should be ignored
     act(() => {
       resolveFirst!("first");
     });
 
     expect(result.current.data).toBe("second");
+  });
+
+  describe("onError: 'redirect'", () => {
+    it("navigates to /404 on ApiError status 404", async () => {
+      const fn = vi.fn(() => Promise.reject(new ApiError(404, null, "nope")));
+
+      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(navigateMock).toHaveBeenCalledWith("/404");
+      expect(result.current.error).toBeNull();
+    });
+
+    it("navigates to /403 on ApiError status 403", async () => {
+      const fn = vi.fn(() => Promise.reject(new ApiError(403, null, "forbidden")));
+
+      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(navigateMock).toHaveBeenCalledWith("/403");
+    });
+
+    it("navigates to /500 on ApiError status 500", async () => {
+      const fn = vi.fn(() => Promise.reject(new ApiError(500, null, "boom")));
+
+      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(navigateMock).toHaveBeenCalledWith("/500");
+    });
+
+    it("does NOT redirect on non-redirectable ApiError", async () => {
+      const err = new ApiError(422, { errors: ["bad"] }, "unprocessable");
+      const fn = vi.fn(() => Promise.reject(err));
+
+      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(navigateMock).not.toHaveBeenCalled();
+      expect(result.current.error).toBe(err);
+    });
+
+    it("does NOT redirect on non-ApiError rejection", async () => {
+      const err = new Error("network down");
+      const fn = vi.fn(() => Promise.reject(err));
+
+      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(navigateMock).not.toHaveBeenCalled();
+      expect(result.current.error).toBe(err);
+    });
+  });
+
+  describe("onError: 'inline' (default)", () => {
+    it("does NOT redirect on ApiError 404 — exposes via error instead", async () => {
+      const err = new ApiError(404, null, "nope");
+      const fn = vi.fn(() => Promise.reject(err));
+
+      const { result } = renderHook(() => useAsync(fn));
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(navigateMock).not.toHaveBeenCalled();
+      expect(result.current.error).toBe(err);
+    });
   });
 });

@@ -235,7 +235,7 @@ export default function SubmitWorkPage() {
               </button>
               <button
                 onClick={() => {
-                  void navigate(`/task/${taskId}`);
+                  void navigate(`/courses/${courseId}/tasks/${taskId}`);
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card border-2 border-border text-foreground rounded-[12px] hover:border-brand-primary-lighter hover:bg-muted transition-colors text-[15px] font-medium"
               >

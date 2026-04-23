@@ -70,15 +70,19 @@ export default function TeacherDistributionPage() {
     isLoading: baseLoading,
     error: baseError,
     refetch: baseRefetch,
-  } = useAsync(async () => {
-    const [courses, users, submissions, reviews] = await Promise.all([
-      courseRepo.getAll(),
-      userRepo.getAll(),
-      workRepo.getAll(),
-      reviewRepo.getAll(),
-    ]);
-    return { courses, users, submissions, reviews };
-  }, []);
+  } = useAsync(
+    async () => {
+      const [courses, users, submissions, reviews] = await Promise.all([
+        courseRepo.getAll(),
+        userRepo.getAll(),
+        workRepo.getAll(),
+        reviewRepo.getAll(),
+      ]);
+      return { courses, users, submissions, reviews };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedAssignment, setSelectedAssignment] = useState<string>("");

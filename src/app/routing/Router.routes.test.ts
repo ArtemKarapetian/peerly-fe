@@ -29,4 +29,20 @@ describe("Router — structural guards", () => {
   it("imports RoleRoute from routing/", () => {
     expect(source).toMatch(/import { RoleRoute } from "@\/app\/routing\/RoleRoute";/);
   });
+
+  it("does not contain LegacyRedirect helper", () => {
+    expect(source).not.toMatch(/LegacyRedirect/);
+  });
+
+  it("does not register legacy /course/:courseId route", () => {
+    expect(source).not.toMatch(/path="\/course\/:courseId"/);
+  });
+
+  it("does not register legacy /task/:taskId route", () => {
+    expect(source).not.toMatch(/path="\/task\/:taskId"/);
+  });
+
+  it("does not register legacy /teacher/course/:courseId route", () => {
+    expect(source).not.toMatch(/path="\/teacher\/course\/:courseId"/);
+  });
 });

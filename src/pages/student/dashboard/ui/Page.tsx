@@ -108,8 +108,8 @@ export default function DashboardPage() {
             )}
             <DeadlinesList
               items={mockDeadlines}
-              onTaskClick={(taskId) => {
-                void navigate(`/task/${taskId}`);
+              onTaskClick={(courseId, taskId) => {
+                void navigate(`/courses/${courseId}/tasks/${taskId}`);
               }}
             />
           </SectionCard>

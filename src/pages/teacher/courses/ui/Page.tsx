@@ -30,7 +30,14 @@ export default function TeacherCoursesPage() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
+  const {
+    data: courses,
+    isLoading,
+    error,
+    refetch,
+  } = useAsync(() => courseRepo.getAll(), [], {
+    onError: "redirect",
+  });
 
   const allCourseRows: CourseRow[] = (courses ?? []).map((course) => ({
     id: course.id,

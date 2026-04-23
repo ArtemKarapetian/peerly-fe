@@ -61,7 +61,9 @@ export default function AppealsListPage() {
     isLoading,
     error,
     refetch,
-  } = useAsync(() => appealRepo.getByStudent(user?.id || "student-1"), [user?.id]);
+  } = useAsync(() => appealRepo.getByStudent(user?.id || "student-1"), [user?.id], {
+    onError: "redirect",
+  });
 
   if (isLoading)
     return (

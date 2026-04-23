@@ -33,7 +33,7 @@ export const mockNotifications: Notification[] = [
     message: 'До сдачи задания "TypeScript проект" осталось 2 дня',
     time: "2025-01-24T09:15:00",
     isRead: false,
-    link: "#/task/4",
+    link: "#/courses/2/tasks/4",
   },
   {
     id: "3",
@@ -42,7 +42,7 @@ export const mockNotifications: Notification[] = [
     message: 'Преподаватель выставил оценку 92/100 за "TypeScript проект"',
     time: "2025-01-23T16:45:00",
     isRead: false,
-    link: "#/task/4",
+    link: "#/courses/2/tasks/4",
   },
   {
     id: "4",
@@ -60,7 +60,7 @@ export const mockNotifications: Notification[] = [
     message: 'Преподаватель оставил комментарий к заданию "Backend API"',
     time: "2025-01-23T11:30:00",
     isRead: true,
-    link: "#/task/6",
+    link: "#/courses/1/tasks/6",
   },
   {
     id: "6",
@@ -69,7 +69,7 @@ export const mockNotifications: Notification[] = [
     message: 'Последний день сдачи задания "Прототипирование"',
     time: "2025-01-23T08:00:00",
     isRead: false,
-    link: "#/task/3",
+    link: "#/courses/3/tasks/3",
   },
   {
     id: "7",
@@ -87,7 +87,7 @@ export const mockNotifications: Notification[] = [
     message: 'Преподаватель обновил требования к заданию "Графы"',
     time: "2025-01-22T13:10:00",
     isRead: true,
-    link: "#/task/8",
+    link: "#/courses/3/tasks/8",
   },
   {
     id: "9",
@@ -96,7 +96,7 @@ export const mockNotifications: Notification[] = [
     message: 'Преподаватель выставил оценку 85/100 за "Landing Page"',
     time: "2025-01-20T14:30:00",
     isRead: true,
-    link: "#/task/1",
+    link: "#/courses/1/tasks/1",
   },
   {
     id: "10",

@@ -58,15 +58,19 @@ interface Appeal {
 
 export default function TeacherAppealsPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const [users, assignments, submissions, reviews] = await Promise.all([
-      userRepo.getAll(),
-      assignmentRepo.getAll(),
-      workRepo.getAll(),
-      reviewRepo.getAll(),
-    ]);
-    return { users, assignments, submissions, reviews };
-  }, []);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const [users, assignments, submissions, reviews] = await Promise.all([
+        userRepo.getAll(),
+        assignmentRepo.getAll(),
+        workRepo.getAll(),
+        reviewRepo.getAll(),
+      ]);
+      return { users, assignments, submissions, reviews };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   if (isLoading)
     return (

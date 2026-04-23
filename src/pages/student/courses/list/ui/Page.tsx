@@ -18,7 +18,7 @@ export default function CoursesListPage() {
   const navigate = useNavigate();
   const handleCourseClick = useCallback(
     (courseId: string) => {
-      void navigate(`/course/${courseId}`);
+      void navigate(`/courses/${courseId}`);
     },
     [navigate],
   );
