@@ -121,8 +121,12 @@ describe("useAsync", () => {
   });
 
   describe("onError: 'redirect'", () => {
-    it("navigates to /404 on ApiError status 404", async () => {
-      const fn = vi.fn(() => Promise.reject(new ApiError(404, null, "nope")));
+    it.each([
+      [403, "/403"],
+      [404, "/404"],
+      [500, "/500"],
+    ])("ApiError %d → navigates to %s", async (status, target) => {
+      const fn = vi.fn(() => Promise.reject(new ApiError(status, null, "x")));
 
       const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
 
@@ -130,32 +134,8 @@ describe("useAsync", () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(navigateMock).toHaveBeenCalledWith("/404");
+      expect(navigateMock).toHaveBeenCalledWith(target);
       expect(result.current.error).toBeNull();
-    });
-
-    it("navigates to /403 on ApiError status 403", async () => {
-      const fn = vi.fn(() => Promise.reject(new ApiError(403, null, "forbidden")));
-
-      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
-
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      });
-
-      expect(navigateMock).toHaveBeenCalledWith("/403");
-    });
-
-    it("navigates to /500 on ApiError status 500", async () => {
-      const fn = vi.fn(() => Promise.reject(new ApiError(500, null, "boom")));
-
-      const { result } = renderHook(() => useAsync(fn, [], { onError: "redirect" }));
-
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      });
-
-      expect(navigateMock).toHaveBeenCalledWith("/500");
     });
 
     it("does NOT redirect on non-redirectable ApiError", async () => {

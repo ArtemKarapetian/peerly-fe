@@ -44,27 +44,15 @@ describe("httpClient onError behaviour", () => {
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
-  it("redirect mode: navigates to /403 on 403 response and still throws", async () => {
-    mockFetchOnce(403);
+  it.each([
+    [403, "/403"],
+    [404, "/404"],
+    [500, "/500"],
+  ])("redirect mode: %d → navigates to %s and still throws", async (status, target) => {
+    mockFetchOnce(status);
 
-    await expect(http.get("/teacher/secret", { onError: "redirect" })).rejects.toBeInstanceOf(
-      ApiError,
-    );
-    expect(navigateMock).toHaveBeenCalledWith("/403");
-  });
-
-  it("redirect mode: navigates to /404 on 404 response", async () => {
-    mockFetchOnce(404);
-
-    await expect(http.get("/courses/42", { onError: "redirect" })).rejects.toBeInstanceOf(ApiError);
-    expect(navigateMock).toHaveBeenCalledWith("/404");
-  });
-
-  it("redirect mode: navigates to /500 on server error", async () => {
-    mockFetchOnce(500);
-
-    await expect(http.get("/broken", { onError: "redirect" })).rejects.toBeInstanceOf(ApiError);
-    expect(navigateMock).toHaveBeenCalledWith("/500");
+    await expect(http.get("/x", { onError: "redirect" })).rejects.toBeInstanceOf(ApiError);
+    expect(navigateMock).toHaveBeenCalledWith(target);
   });
 
   it("redirect mode: does NOT redirect on other 4xx", async () => {

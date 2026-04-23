@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
+import { redirectForStatus } from "@/shared/api/errorRedirect";
 import { ApiError, type HttpErrorMode } from "@/shared/api/httpClient";
-import { appNavigate } from "@/shared/lib/navigate";
 
 interface AsyncState<T> {
   data: T | null;
@@ -13,12 +13,6 @@ interface AsyncState<T> {
 interface UseAsyncOptions {
   onError?: HttpErrorMode;
 }
-
-const REDIRECT_TARGETS: Record<number, string> = {
-  403: "/403",
-  404: "/404",
-  500: "/500",
-};
 
 export function useAsync<T>(
   fn: () => Promise<T>,
@@ -46,13 +40,9 @@ export function useAsync<T>(
       (err) => {
         if (id !== counter.current) return;
 
-        if (onError === "redirect" && err instanceof ApiError) {
-          const target = REDIRECT_TARGETS[err.status];
-          if (target) {
-            appNavigate(target);
-            setIsLoading(false);
-            return;
-          }
+        if (onError === "redirect" && err instanceof ApiError && redirectForStatus(err.status)) {
+          setIsLoading(false);
+          return;
         }
 
         setError(err instanceof Error ? err : new Error(String(err)));

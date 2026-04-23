@@ -4,9 +4,9 @@
 
 import { API_PREFIX } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
-import { appNavigate } from "@/shared/lib/navigate";
 
 import { handleUnauthorized } from "./authInterceptor";
+import { redirectForStatus } from "./errorRedirect";
 
 export type HttpErrorMode = "inline" | "redirect";
 
@@ -23,12 +23,6 @@ export class ApiError extends Error {
     super(message);
   }
 }
-
-const REDIRECTABLE_STATUSES: Record<number, string> = {
-  403: "/403",
-  404: "/404",
-  500: "/500",
-};
 
 function buildUrl(path: string): string {
   const origin = env.apiUrl ?? "";
@@ -53,12 +47,6 @@ async function parseBody(res: Response): Promise<unknown> {
   } catch {
     return text;
   }
-}
-
-function maybeRedirect(status: number, mode: HttpErrorMode): void {
-  if (mode !== "redirect") return;
-  const target = REDIRECTABLE_STATUSES[status];
-  if (target) appNavigate(target);
 }
 
 async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
@@ -86,7 +74,7 @@ async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
 
   if (!res.ok) {
     const body = await parseBody(res);
-    maybeRedirect(res.status, onError);
+    if (onError === "redirect") redirectForStatus(res.status);
     throw new ApiError(res.status, body, `HTTP ${res.status}: ${path}`);
   }
 
