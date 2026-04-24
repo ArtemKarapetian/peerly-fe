@@ -119,7 +119,13 @@
     "roleStudentDesc": "Submit assignments, review classmates' work, receive grades",
     "roleTeacherTitle": "Teacher",
     "roleTeacherDesc": "Create courses and assignments, configure rubrics, distribute reviews",
-    "loginFailed": "Login failed"
+    "loginFailed": "Login failed",
+    "badRequest": "Invalid data. Please check the entered information.",
+    "accountForbidden": "Access to this account is blocked. Please contact the administrator.",
+    "userNotFound": "No user found with these credentials.",
+    "tooManyAttempts": "Too many login attempts. Please try again later.",
+    "serverError": "Server error. Please try again later.",
+    "networkError": "Could not connect to the server. Check your connection."
   },
   "errors": {
     "authRequired": "Authorization Required",

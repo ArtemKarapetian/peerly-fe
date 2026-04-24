@@ -1,3 +1,4 @@
+import { type TFunction } from "i18next";
 import { AlertCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +12,28 @@ import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 import { useAuth } from "@/entities/user";
 
 import { PublicLayout } from "@/widgets/public-layout";
+
+function getLoginErrorMessage(err: unknown, t: TFunction): string {
+  if (err instanceof ApiError) {
+    switch (err.status) {
+      case 400:
+        return t("auth.badRequest");
+      case 401:
+        return t("auth.invalidCredentials");
+      case 403:
+        return t("auth.accountForbidden");
+      case 404:
+        return t("auth.userNotFound");
+      case 429:
+        return t("auth.tooManyAttempts");
+      default:
+        if (err.status >= 500) return t("auth.serverError");
+        return t("auth.loginFailed");
+    }
+  }
+  if (err instanceof TypeError) return t("auth.networkError");
+  return t("auth.loginFailed");
+}
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -40,11 +63,7 @@ export default function LoginPage() {
       const target = session.role === "Teacher" ? "/teacher/courses" : "/courses";
       void navigate(target);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        setError(t("auth.invalidCredentials"));
-      } else {
-        setError(t("auth.loginFailed") || "Login failed");
-      }
+      setError(getLoginErrorMessage(err, t));
     } finally {
       setIsLoading(false);
     }
