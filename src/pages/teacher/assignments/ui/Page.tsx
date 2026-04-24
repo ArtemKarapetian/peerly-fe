@@ -38,7 +38,7 @@ function TeacherPlaceholderPage({
       <Breadcrumbs items={breadcrumbs} />
 
       <div className="mt-6">
-        <div className="bg-card border-2 border-border rounded-[20px] p-8 text-center max-w-[600px] mx-auto">
+        <div className="bg-card border border-border shadow-sm rounded-[20px] p-8 text-center max-w-[600px] mx-auto">
           <div className="w-16 h-16 bg-info-light rounded-[16px] flex items-center justify-center mx-auto mb-4">
             <Icon className="w-8 h-8 text-brand-primary" />
           </div>

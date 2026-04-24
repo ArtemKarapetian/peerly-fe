@@ -113,7 +113,7 @@ export function StatusCard({
 
   return (
     <div>
-      <div className="bg-surface-hover rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
+      <div className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
         <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-text-primary mb-4">
           {t("entity.assignment.statusAndActions")}
         </h2>

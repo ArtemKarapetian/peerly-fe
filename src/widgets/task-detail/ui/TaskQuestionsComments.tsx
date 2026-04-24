@@ -20,7 +20,7 @@ export function TaskQuestionsComments() {
   ];
 
   return (
-    <div className="bg-muted rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
+    <div className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="size-5 text-foreground" />
         <h2 className="text-[18px] desktop:text-[20px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.72px] text-foreground">

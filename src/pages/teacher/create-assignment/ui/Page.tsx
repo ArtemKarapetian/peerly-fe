@@ -228,7 +228,7 @@ export default function TeacherCreateAssignmentPage({
 
       <div className="mt-6 max-w-[1000px] mx-auto">
         {/* Step Indicator */}
-        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
+        <div className="bg-card border border-border shadow-sm rounded-[20px] p-6 mb-6">
           <div className="flex items-center justify-between">
             {STEPS.map((step, index) => (
               <div key={step.id} className="flex items-center flex-1">
@@ -242,7 +242,7 @@ export default function TeacherCreateAssignmentPage({
                           ? "bg-success text-primary-foreground"
                           : currentStep === step.id
                             ? "bg-brand-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground border-2 border-border"
+                            : "bg-card text-muted-foreground border border-border"
                       }
                     `}
                   >
@@ -274,7 +274,9 @@ export default function TeacherCreateAssignmentPage({
         </div>
 
         {/* Step Content */}
-        <div className="bg-card border-2 border-border rounded-[20px] p-8 mb-6">{renderStep()}</div>
+        <div className="bg-card border border-border shadow-sm rounded-[20px] p-8 mb-6">
+          {renderStep()}
+        </div>
 
         {/* Navigation */}
         {currentStep < lastStepId && (
@@ -282,7 +284,7 @@ export default function TeacherCreateAssignmentPage({
             <button
               onClick={handlePrev}
               disabled={currentStep === 1}
-              className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-3 border border-border text-foreground rounded-[12px] hover:bg-surface-hover hover:border-border-strong transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
               {t("teacher.createAssignment.backBtn")}
@@ -295,7 +297,7 @@ export default function TeacherCreateAssignmentPage({
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors disabled:bg-muted disabled:cursor-not-allowed font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {t("teacher.createAssignment.nextBtn")}
               <ChevronRight className="w-4 h-4" />
