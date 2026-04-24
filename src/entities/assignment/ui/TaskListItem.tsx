@@ -8,13 +8,24 @@ import { TaskStatus } from "./StatusCard";
 
 interface TaskListItemProps {
   title: string;
+  /** ISO date string (e.g. "2026-01-31") or already-formatted string. */
   deadline: string;
   status: TaskStatus;
   onClick?: () => void;
 }
 
+function formatDeadline(deadline: string, locale: string): string {
+  const d = new Date(deadline);
+  if (Number.isNaN(d.getTime())) return deadline;
+  return d.toLocaleDateString(locale === "ru" ? "ru-RU" : "en-US", {
+    day: "numeric",
+    month: "long",
+  });
+}
+
 export function TaskListItem({ title, deadline, status, onClick }: TaskListItemProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const formattedDeadline = `${t("entity.assignment.deadline")}: ${formatDeadline(deadline, i18n.language)}`;
 
   const getStatusInfo = () => {
     switch (status) {
@@ -80,7 +91,7 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
       <div className="flex-1 min-w-[100px] space-y-1">
         <p className="text-[18px] leading-[1.05] tracking-[-0.81px] text-text-primary">{title}</p>
         <p className="text-[16px] leading-[1.1] tracking-[-0.72px] text-text-secondary">
-          {deadline}
+          {formattedDeadline}
         </p>
       </div>
 

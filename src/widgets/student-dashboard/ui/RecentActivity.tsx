@@ -1,6 +1,8 @@
 import { Clock, BookOpen, FileText, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { formatRelativeTime } from "@/shared/lib/formatDate";
+
 export type RecentItemType = "course" | "task";
 
 export interface RecentItem {
@@ -18,7 +20,7 @@ interface RecentActivityProps {
 }
 
 export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-10 text-center px-5">
@@ -73,7 +75,9 @@ export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
                       <span>·</span>
                     </>
                   )}
-                  <span className="shrink-0">{item.timestamp}</span>
+                  <span className="shrink-0">
+                    {formatRelativeTime(item.timestamp, i18n.language)}
+                  </span>
                 </div>
               </div>
 
