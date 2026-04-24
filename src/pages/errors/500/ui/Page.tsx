@@ -27,13 +27,13 @@ export default function Error500Page() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
           <button
-            onClick={() => void navigate("/dashboard")}
+            onClick={() => void navigate("/student/dashboard")}
             className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             {t("errors.toDashboard")}
           </button>
           <button
-            onClick={() => void navigate("/courses")}
+            onClick={() => void navigate("/student/courses")}
             className="px-6 py-2.5 border border-border rounded-lg hover:bg-accent transition-colors font-medium"
           >
             {t("errors.toCourses")}

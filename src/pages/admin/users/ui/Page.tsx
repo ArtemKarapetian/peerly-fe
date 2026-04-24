@@ -8,7 +8,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
-import { organizationRepo } from "@/entities/organization";
 import { userRepo } from "@/entities/user";
 import { DemoUser } from "@/entities/user/model/types.ts";
 
@@ -20,7 +19,7 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * Функции:
  * - Поиск по имени/логину
  * - Фильтры: роль (student/teacher/admin), статус (active/disabled)
- * - Детальный просмотр пользователя с ролями, org, last login, сессиями
+ * - Детальный просмотр пользователя с ролями, last login, сессиями
  * - Действия: изменить роль, отключить/включить, сброс пароля
  * - Логирование всех изменений в Admin Audit Log
  */
@@ -46,7 +45,14 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [, setSelectedUser] = useState<UserWithStatus | null>(null);
 
-  const { data: users, isLoading, error, refetch } = useAsync(() => userRepo.getAll(), []);
+  const {
+    data: users,
+    isLoading,
+    error,
+    refetch,
+  } = useAsync(() => userRepo.getAll(), [], {
+    onError: "redirect",
+  });
 
   const usersWithStatus: UserWithStatus[] = (users ?? []).map((user) => ({
     ...user,
@@ -166,9 +172,6 @@ export default function AdminUsersPage() {
                     {t("admin.usersPage.headerRole")}
                   </th>
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
-                    {t("admin.usersPage.headerOrg")}
-                  </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerLastLogin")}
                   </th>
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
@@ -181,7 +184,6 @@ export default function AdminUsersPage() {
               </thead>
               <tbody>
                 {currentItems.map((user, index) => {
-                  const org = organizationRepo.getAll().find((o) => o.id === user.orgId);
                   return (
                     <tr
                       key={user.id}
@@ -201,9 +203,6 @@ export default function AdminUsersPage() {
                         >
                           {user.role}
                         </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-[14px] text-foreground">{org?.name || "Unknown"}</p>
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-[14px] text-muted-foreground">

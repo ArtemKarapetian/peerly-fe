@@ -100,10 +100,14 @@ const loadAnnouncements = (
 
 export default function TeacherAnnouncementsPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const courses = await courseRepo.getAll();
-    return { courses };
-  }, []);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const courses = await courseRepo.getAll();
+      return { courses };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   if (isLoading)
     return (

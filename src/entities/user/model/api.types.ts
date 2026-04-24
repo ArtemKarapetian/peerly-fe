@@ -4,7 +4,6 @@ export interface ApiStudent {
   student_id: string;
   email: string;
   name: string;
-  org_id?: string;
   avatar?: string;
   created_at: string;
 }
@@ -13,7 +12,6 @@ export interface ApiTeacher {
   teacher_id: string;
   email: string;
   name: string;
-  org_id?: string;
   avatar?: string;
   created_at: string;
 }

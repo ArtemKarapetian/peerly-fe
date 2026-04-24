@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
+import { redirectForStatus } from "@/shared/api/errorRedirect";
+import { ApiError, type HttpErrorMode } from "@/shared/api/httpClient";
+
 interface AsyncState<T> {
   data: T | null;
   isLoading: boolean;
@@ -7,7 +10,16 @@ interface AsyncState<T> {
   refetch: () => void;
 }
 
-export function useAsync<T>(fn: () => Promise<T>, deps: unknown[] = []): AsyncState<T> {
+interface UseAsyncOptions {
+  onError?: HttpErrorMode;
+}
+
+export function useAsync<T>(
+  fn: () => Promise<T>,
+  deps: unknown[] = [],
+  options: UseAsyncOptions = {},
+): AsyncState<T> {
+  const { onError = "inline" } = options;
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -26,10 +38,15 @@ export function useAsync<T>(fn: () => Promise<T>, deps: unknown[] = []): AsyncSt
         }
       },
       (err) => {
-        if (id === counter.current) {
-          setError(err instanceof Error ? err : new Error(String(err)));
+        if (id !== counter.current) return;
+
+        if (onError === "redirect" && err instanceof ApiError && redirectForStatus(err.status)) {
           setIsLoading(false);
+          return;
         }
+
+        setError(err instanceof Error ? err : new Error(String(err)));
+        setIsLoading(false);
       },
     );
   }, deps); // deps are passed dynamically by the caller

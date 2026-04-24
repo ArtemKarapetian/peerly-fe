@@ -19,46 +19,33 @@ export function CourseTabs({
   participantsCount,
 }: CourseTabsProps) {
   const { t } = useTranslation();
+  const tabClass = (active: boolean) =>
+    `relative px-6 py-4 text-[16px] font-medium transition-colors ${
+      active ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
+    }`;
+
   return (
-    <div className="border-b border-border">
-      <div className="flex items-center gap-8 px-5">
+    <div className="border-b-2 border-border">
+      <div className="flex gap-0">
         <button
           onClick={() => onTabChange("assignments")}
-          className={`
-            relative px-1 py-3 text-[15px] leading-[1.3] tracking-[-0.3px]
-            transition-colors
-            ${
-              activeTab === "assignments"
-                ? "text-text-primary font-semibold"
-                : "text-text-tertiary hover:text-text-primary"
-            }
-          `}
+          className={tabClass(activeTab === "assignments")}
         >
           {t("entity.course.assignmentsTab")}
           {assignmentsCount !== undefined && ` (${assignmentsCount})`}
-          {/* Underline для активного таба */}
           {activeTab === "assignments" && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary" />
+            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand-primary" />
           )}
         </button>
 
         <button
           onClick={() => onTabChange("participants")}
-          className={`
-            relative px-1 py-3 text-[15px] leading-[1.3] tracking-[-0.3px]
-            transition-colors
-            ${
-              activeTab === "participants"
-                ? "text-text-primary font-semibold"
-                : "text-text-tertiary hover:text-text-primary"
-            }
-          `}
+          className={tabClass(activeTab === "participants")}
         >
           {t("entity.course.participantsTab")}
           {participantsCount !== undefined && ` (${participantsCount})`}
-          {/* Underline для активного таба */}
           {activeTab === "participants" && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-primary" />
+            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-brand-primary" />
           )}
         </button>
       </div>

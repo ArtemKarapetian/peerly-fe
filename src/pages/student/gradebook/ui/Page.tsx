@@ -46,7 +46,7 @@ export default function GradebookPage() {
 
   const handleRowClick = useCallback(
     (grade: GradeEntry) => {
-      void navigate(`/task/${grade.taskId}`);
+      void navigate(`/student/courses/${grade.courseId}/tasks/${grade.taskId}`);
     },
     [navigate],
   );

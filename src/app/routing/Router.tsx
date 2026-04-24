@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { FeatureRoute } from "@/app/routing/FeatureRoute";
 import { NavigateRegistrar } from "@/app/routing/NavigateRegistrar";
@@ -12,7 +12,6 @@ const AdminCoursesPage = lazy(() => import("@/pages/admin/courses/ui/Page"));
 const AdminFlagsPage = lazy(() => import("@/pages/admin/flags/ui/Page"));
 const AdminIntegrationsPage = lazy(() => import("@/pages/admin/integrations/ui/Page"));
 const AdminLimitsPage = lazy(() => import("@/pages/admin/limits/ui/Page"));
-const AdminOrgsPage = lazy(() => import("@/pages/admin/orgs/ui/Page"));
 const AdminOverviewPage = lazy(() => import("@/pages/admin/overview/ui/Page"));
 const AdminPluginsPage = lazy(() => import("@/pages/admin/plugins/ui/Page"));
 const AdminRetentionPage = lazy(() => import("@/pages/admin/retention/ui/Page"));
@@ -81,6 +80,7 @@ const TeacherPeerSessionSettingsPage = lazy(
   () => import("@/pages/teacher/peer-session-settings/ui/Page"),
 );
 const TeacherRubricsPage = lazy(() => import("@/pages/teacher/rubrics/ui/Page"));
+const TeacherRubricDetailPage = lazy(() => import("@/pages/teacher/rubric-detail/ui/Page"));
 const TeacherSubmissionsPage = lazy(() => import("@/pages/teacher/submissions/ui/Page"));
 
 function PageFallback() {
@@ -116,26 +116,44 @@ export function Router() {
 
         <Route element={<ProtectedRoute />}>
           {/* Student */}
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/courses" element={<CoursesListPage />} />
-          <Route path="/courses/:courseId" element={<CoursePage />} />
-          <Route path="/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
-          <Route path="/courses/:courseId/tasks/:taskId/submit" element={<SubmitWorkPage />} />
+          <Route path="/student/dashboard" element={<DashboardPage />} />
+          <Route path="/student/courses" element={<CoursesListPage />} />
+          <Route path="/student/courses/:courseId" element={<CoursePage />} />
+          <Route path="/student/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
           <Route
-            path="/courses/:courseId/tasks/:taskId/submissions"
+            path="/student/courses/:courseId/tasks/:taskId/submit"
+            element={<SubmitWorkPage />}
+          />
+          <Route
+            path="/student/courses/:courseId/tasks/:taskId/submissions"
             element={<SubmissionsPage />}
           />
           <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route path="/courses/:courseId/tasks/:taskId/appeal" element={<CreateAppealPage />} />
+            <Route
+              path="/student/courses/:courseId/tasks/:taskId/appeal"
+              element={<CreateAppealPage />}
+            />
           </Route>
-          <Route path="/reviews" element={<ReviewsInboxPage />} />
-          <Route path="/reviews/received" element={<ReceivedReviewsPage />} />
-          <Route path="/reviews/:reviewId" element={<ReviewPage />} />
-          <Route path="/gradebook" element={<GradebookPage />} />
-          <Route path="/inbox" element={<InboxPage />} />
+          <Route path="/student/reviews" element={<ReviewsInboxPage />} />
+          <Route path="/student/reviews/received" element={<ReceivedReviewsPage />} />
+          <Route path="/student/reviews/:reviewId" element={<ReviewPage />} />
+          <Route path="/student/gradebook" element={<GradebookPage />} />
+          <Route element={<FeatureRoute flag="enableNotifications" />}>
+            <Route path="/student/inbox" element={<InboxPage />} />
+          </Route>
           <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route path="/appeals" element={<AppealsListPage />} />
+            <Route path="/student/appeals" element={<AppealsListPage />} />
           </Route>
+
+          {/* Legacy student paths → /student/* (transitional redirects) */}
+          <Route path="/dashboard" element={<Navigate to="/student/dashboard" replace />} />
+          <Route path="/courses" element={<Navigate to="/student/courses" replace />} />
+          <Route path="/courses/:courseId/*" element={<Navigate to="/student/courses" replace />} />
+          <Route path="/reviews" element={<Navigate to="/student/reviews" replace />} />
+          <Route path="/reviews/*" element={<Navigate to="/student/reviews" replace />} />
+          <Route path="/gradebook" element={<Navigate to="/student/gradebook" replace />} />
+          <Route path="/inbox" element={<Navigate to="/student/inbox" replace />} />
+          <Route path="/appeals" element={<Navigate to="/student/appeals" replace />} />
 
           {/* Profile / Settings */}
           <Route path="/profile" element={<ProfilePage />} />
@@ -150,6 +168,7 @@ export function Router() {
             <Route path="/teacher/courses/new" element={<TeacherCreateCoursePage />} />
             <Route path="/teacher/courses/:courseId" element={<TeacherCourseDetailsPage />} />
             <Route path="/teacher/rubrics" element={<TeacherRubricsPage />} />
+            <Route path="/teacher/rubrics/:rubricId" element={<TeacherRubricDetailPage />} />
             <Route path="/teacher/assignments" element={<TeacherAssignmentsPage />} />
             <Route path="/teacher/assignments/new" element={<TeacherCreateAssignmentPage />} />
             <Route
@@ -195,9 +214,6 @@ export function Router() {
               <Route path="/admin/settings" element={<AdminSettingsPage />} />
               <Route path="/admin/flags" element={<AdminFlagsPage />} />
             </Route>
-            <Route element={<FeatureRoute flag="enableOrganizations" />}>
-              <Route path="/admin/orgs" element={<AdminOrgsPage />} />
-            </Route>
 
             {/* Admin (feature-flagged) */}
             <Route element={<FeatureRoute flag="enablePlugins" />}>
@@ -215,13 +231,6 @@ export function Router() {
           </Route>
         </Route>
 
-        {/* Легаси? todo: удалить/перепроверить */}
-        <Route path="/course/:courseId" element={<LegacyRedirect to="/courses/:courseId" />} />
-        <Route path="/task/:taskId" element={<LegacyRedirect to="/courses/1/tasks/:taskId" />} />
-        <Route
-          path="/teacher/course/:courseId"
-          element={<LegacyRedirect to="/teacher/courses/:courseId" />}
-        />
         <Route path="/teacher/dashboard" element={<Navigate to="/teacher/courses" replace />} />
 
         {/* ── Error pages ───────────────────────────────── */}
@@ -235,17 +244,4 @@ export function Router() {
       </Routes>
     </Suspense>
   );
-}
-
-/** Handles legacy URL patterns by substituting route params into the target path. */
-function LegacyRedirect({ to }: { to: string }) {
-  // useParams provides the values matched by React Router (e.g. :courseId)
-  const params = useParams();
-
-  let target = to;
-  for (const [key, value] of Object.entries(params)) {
-    if (value) target = target.replace(`:${key}`, value);
-  }
-
-  return <Navigate to={target} replace />;
 }

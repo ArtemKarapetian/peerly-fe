@@ -31,7 +31,14 @@ export default function AdminCoursesPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: courses, isLoading, error, refetch } = useAsync(() => courseRepo.getAll(), []);
+  const {
+    data: courses,
+    isLoading,
+    error,
+    refetch,
+  } = useAsync(() => courseRepo.getAll(), [], {
+    onError: "redirect",
+  });
 
   const allCourses = courses ?? [];
 
@@ -48,7 +55,7 @@ export default function AdminCoursesPage() {
 
   const handleOpenCourse = useCallback(
     (courseId: string) => {
-      void navigate(`/teacher/course/${courseId}`);
+      void navigate(`/teacher/courses/${courseId}`);
     },
     [navigate],
   );

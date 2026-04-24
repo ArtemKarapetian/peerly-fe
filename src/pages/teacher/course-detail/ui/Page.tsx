@@ -28,14 +28,18 @@ export default function TeacherCourseDetailsPage() {
   const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<TabKey>("assignments");
 
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const course = await courseRepo.getById(courseId || "c1");
-    const [teacher, courseAssignments] = await Promise.all([
-      course ? userRepo.getById(course.teacherId) : Promise.resolve(null),
-      course ? assignmentRepo.getByCourse(course.id) : Promise.resolve([]),
-    ]);
-    return { course, teacher, courseAssignments };
-  }, [courseId]);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const course = await courseRepo.getById(courseId || "c1");
+      const [teacher, courseAssignments] = await Promise.all([
+        course ? userRepo.getById(course.teacherId) : Promise.resolve(null),
+        course ? assignmentRepo.getByCourse(course.id) : Promise.resolve([]),
+      ]);
+      return { course, teacher, courseAssignments };
+    },
+    [courseId],
+    { onError: "redirect" },
+  );
 
   if (isLoading)
     return (
@@ -93,9 +97,7 @@ export default function TeacherCourseDetailsPage() {
                   </span>
                 )}
               </div>
-              <p className="text-[15px] text-muted-foreground mb-3">
-                {course.code} • {t("teacher.courseDetail.springTerm")}
-              </p>
+              <p className="text-[15px] text-muted-foreground mb-3">{course.code}</p>
               {teacher && (
                 <p className="text-[14px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.teacherLabel")}{" "}

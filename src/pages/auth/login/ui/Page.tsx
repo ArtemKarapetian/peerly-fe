@@ -1,3 +1,4 @@
+import { type TFunction } from "i18next";
 import { AlertCircle } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,9 +10,30 @@ import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
 import { useAuth } from "@/entities/user";
-import type { UserRole } from "@/entities/user/model/role";
 
 import { PublicLayout } from "@/widgets/public-layout";
+
+function getLoginErrorMessage(err: unknown, t: TFunction): string {
+  if (err instanceof ApiError) {
+    switch (err.status) {
+      case 400:
+        return t("auth.badRequest");
+      case 401:
+        return t("auth.invalidCredentials");
+      case 403:
+        return t("auth.accountForbidden");
+      case 404:
+        return t("auth.userNotFound");
+      case 429:
+        return t("auth.tooManyAttempts");
+      default:
+        if (err.status >= 500) return t("auth.serverError");
+        return t("auth.loginFailed");
+    }
+  }
+  if (err instanceof TypeError) return t("auth.networkError");
+  return t("auth.loginFailed");
+}
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -19,7 +41,6 @@ export default function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<UserRole>("Student");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [touched, setTouched] = useState({ email: false, password: false });
@@ -35,20 +56,14 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      await login({
+      const session = await login({
         email: email.trim().toLowerCase(),
         password,
-        role: role === "Admin" ? "Teacher" : role,
       });
-      const target =
-        role === "Teacher" ? "/teacher/courses" : role === "Admin" ? "/admin" : "/courses";
+      const target = session.role === "Teacher" ? "/teacher/courses" : "/student/courses";
       void navigate(target);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        setError(t("auth.invalidCredentials"));
-      } else {
-        setError(t("auth.loginFailed") || "Login failed");
-      }
+      setError(getLoginErrorMessage(err, t));
     } finally {
       setIsLoading(false);
     }
@@ -113,27 +128,6 @@ export default function LoginPage() {
                 disabled={isLoading}
                 error={getPasswordError()}
               />
-
-              <div className="space-y-1.5">
-                <label className="block text-sm text-foreground">{t("auth.role") || "Role"}</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {(["Student", "Teacher", "Admin"] as const).map((r) => (
-                    <button
-                      type="button"
-                      key={r}
-                      onClick={() => setRole(r)}
-                      disabled={isLoading}
-                      className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
-                        role === r
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border text-muted-foreground hover:border-primary/40"
-                      }`}
-                    >
-                      {t(`roles.${r.toLowerCase()}`)}
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               <div className="pt-2">
                 <Button

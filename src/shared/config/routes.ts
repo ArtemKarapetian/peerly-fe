@@ -25,23 +25,25 @@ export const ROUTES = {
   error500: "/500",
 
   // Student
-  dashboard: "/dashboard",
-  courses: "/courses",
-  course: (courseId: string) => `/courses/${courseId}`,
-  task: (courseId: string, taskId: string) => `/courses/${courseId}/tasks/${taskId}`,
-  submitWork: (courseId: string, taskId: string) => `/courses/${courseId}/tasks/${taskId}/submit`,
+  dashboard: "/student/dashboard",
+  courses: "/student/courses",
+  course: (courseId: string) => `/student/courses/${courseId}`,
+  task: (courseId: string, taskId: string) => `/student/courses/${courseId}/tasks/${taskId}`,
+  submitWork: (courseId: string, taskId: string) =>
+    `/student/courses/${courseId}/tasks/${taskId}/submit`,
   submissions: (courseId: string, taskId: string) =>
-    `/courses/${courseId}/tasks/${taskId}/submissions`,
+    `/student/courses/${courseId}/tasks/${taskId}/submissions`,
   // extensionRequest — archived
-  taskAppeal: (courseId: string, taskId: string) => `/courses/${courseId}/tasks/${taskId}/appeal`,
+  taskAppeal: (courseId: string, taskId: string) =>
+    `/student/courses/${courseId}/tasks/${taskId}/appeal`,
 
-  reviews: "/reviews",
-  receivedReviews: "/reviews/received",
-  review: (reviewId: string) => `/reviews/${reviewId}`,
+  reviews: "/student/reviews",
+  receivedReviews: "/student/reviews/received",
+  review: (reviewId: string) => `/student/reviews/${reviewId}`,
 
-  gradebook: "/gradebook",
-  inbox: "/inbox",
-  appeals: "/appeals",
+  gradebook: "/student/gradebook",
+  inbox: "/student/inbox",
+  appeals: "/student/appeals",
   // extensions (student) — archived
 
   profile: "/profile",
@@ -74,7 +76,6 @@ export const ROUTES = {
   adminOverview: "/admin/overview",
   adminCourses: "/admin/courses",
   adminUsers: "/admin/users",
-  adminOrgs: "/admin/orgs",
   adminFlags: "/admin/flags",
   adminLogs: "/admin/logs",
   adminSettings: "/admin/settings",
@@ -85,15 +86,6 @@ export const ROUTES = {
   // adminPolicies — archived
   adminRetention: "/admin/retention",
   adminLimits: "/admin/limits",
-
-  /**
-   * Legacy (поддержка старых URL из текущего RouterExtended)
-   * Можно позже убрать и сделать авто-редирект на canonical.
-   */
-  legacyCourse: (courseId: string) => `/course/${courseId}`,
-  legacyTask: (taskId: string) => `/task/${taskId}`,
-  legacyTeacherCourse: (courseId: string) => `/teacher/course/${courseId}`,
-  legacySubmit: (taskId: string) => `/submit/${taskId}`,
 } as const;
 
 export type RoutePatternDef = {
@@ -110,30 +102,30 @@ export const ROUTE_PATTERN_LIST = [
   // Student complex
   {
     key: "submitWork",
-    regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)\/submit$/,
+    regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/submit$/,
     params: ["courseId", "taskId"] as const,
   },
   {
     key: "submissions",
-    regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)\/submissions$/,
+    regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/submissions$/,
     params: ["courseId", "taskId"] as const,
   },
   // extensionRequest pattern — archived
   {
     key: "taskAppeal",
-    regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)\/appeal$/,
+    regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/appeal$/,
     params: ["courseId", "taskId"] as const,
   },
   {
     key: "taskDetails",
-    regex: /^\/courses\/([^/]+)\/tasks\/([^/]+)$/,
+    regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)$/,
     params: ["courseId", "taskId"] as const,
   },
 
   // Reviews
   {
     key: "review",
-    regex: /^\/reviews\/([^/]+)$/,
+    regex: /^\/student\/reviews\/([^/]+)$/,
     params: ["reviewId"] as const,
   },
 
@@ -162,30 +154,8 @@ export const ROUTE_PATTERN_LIST = [
   // Student course details
   {
     key: "courseDetails",
-    regex: /^\/courses\/([^/]+)$/,
+    regex: /^\/student\/courses\/([^/]+)$/,
     params: ["courseId"] as const,
-  },
-
-  // Legacy
-  {
-    key: "legacyTeacherCourse",
-    regex: /^\/teacher\/course\/([^/]+)$/,
-    params: ["courseId"] as const,
-  },
-  {
-    key: "legacyCourse",
-    regex: /^\/course\/([^/]+)$/,
-    params: ["courseId"] as const,
-  },
-  {
-    key: "legacyTask",
-    regex: /^\/task\/([^/]+)$/,
-    params: ["taskId"] as const,
-  },
-  {
-    key: "legacySubmit",
-    regex: /^\/submit\/([^/]+)$/,
-    params: ["taskId"] as const,
   },
 ] as const;
 

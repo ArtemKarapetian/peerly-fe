@@ -21,22 +21,27 @@ export default function CoursePage() {
   return (
     <AppShell title={t("page.courseDetail.title")}>
       <Breadcrumbs items={[CRUMBS.courses, { label: t("page.courseDetail.title") }]} />
-      <div className="mb-2">
+
+      <div className="mt-6 space-y-6">
         <CourseHeader
           title={t("page.courseDetail.title")}
           teacher={t("page.courseDetail.teacher")}
         />
+
+        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+          <CourseTabs
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            assignmentsCount={6}
+            participantsCount={24}
+          />
+
+          <div className="p-6">
+            {activeTab === "assignments" && <CourseAssignmentsTab courseId={courseId} />}
+            {activeTab === "participants" && <CourseParticipantsTab />}
+          </div>
+        </div>
       </div>
-
-      <CourseTabs
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        assignmentsCount={6}
-        participantsCount={24}
-      />
-
-      {activeTab === "assignments" && <CourseAssignmentsTab courseId={courseId} />}
-      {activeTab === "participants" && <CourseParticipantsTab />}
     </AppShell>
   );
 }

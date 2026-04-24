@@ -261,7 +261,7 @@ export default function ReviewPage() {
               {t("page.reviewFill.notFoundDesc")}
             </p>
             <button
-              onClick={() => void navigate("/reviews")}
+              onClick={() => void navigate("/student/reviews")}
               className="px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
             >
               {t("page.reviewFill.backToReviews")}
@@ -376,9 +376,9 @@ export default function ReviewPage() {
       <div className="flex items-center justify-between gap-4 mb-4">
         <Breadcrumbs
           items={[
-            { label: t("page.reviewFill.breadcrumbCourses"), href: "/courses" },
-            { label: courseName, href: `/course/${courseId}` },
-            { label: taskTitle, href: `/task/${taskId}` },
+            { label: t("page.reviewFill.breadcrumbCourses"), href: "/student/courses" },
+            { label: courseName, href: `/student/courses/${courseId}` },
+            { label: taskTitle, href: `/student/courses/${courseId}/tasks/${taskId}` },
             { label: t("page.reviewFill.breadcrumbReview") },
           ]}
         />

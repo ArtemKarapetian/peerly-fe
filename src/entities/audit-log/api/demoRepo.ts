@@ -5,9 +5,9 @@ const demoAuditLogs: DemoAuditLog[] = [
     id: "al1",
     userId: "u3",
     action: "UPDATE",
-    resource: "Organization",
+    resource: "FeatureFlags",
     timestamp: new Date("2025-01-24 14:32"),
-    metadata: { orgId: "org1" },
+    metadata: { flag: "enableAnnouncements" },
   },
   {
     id: "al2",

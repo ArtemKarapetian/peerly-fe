@@ -30,7 +30,7 @@ export function TaskHeader({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-muted dark:bg-card rounded-[16px] p-4 desktop:p-8 mb-6 desktop:mb-8">
+    <div className="bg-card border border-border shadow-sm rounded-[20px] p-5 desktop:p-8 mb-6 desktop:mb-8">
       <div className="flex flex-col desktop:flex-row items-start desktop:items-start desktop:justify-between gap-4 mb-4">
         <div className="flex-1">
           <h1 className="text-[28px] desktop:text-[40px] font-['Work_Sans:Regular',sans-serif] tracking-[-1.8px] text-foreground dark:text-foreground leading-[1.05] mb-2">

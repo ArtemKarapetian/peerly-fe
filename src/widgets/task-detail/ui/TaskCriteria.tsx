@@ -42,14 +42,14 @@ export function TaskCriteria() {
   const totalPoints = criteria.reduce((sum, c) => sum + c.points, 0);
 
   return (
-    <div className="bg-muted rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
+    <div className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6 mb-4 desktop:mb-6">
       <h2 className="text-[20px] desktop:text-[24px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.96px] text-foreground mb-4">
         {t("widget.taskCriteria.title")}
       </h2>
 
       <div className="overflow-x-auto rounded-[12px] border border-border">
         <table className="w-full">
-          <thead className="bg-muted">
+          <thead className="bg-surface-hover">
             <tr>
               <th className="text-left p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                 {t("widget.taskCriteria.criterion")}
@@ -79,7 +79,7 @@ export function TaskCriteria() {
                 </td>
               </tr>
             ))}
-            <tr className="border-t-2 border-foreground bg-muted">
+            <tr className="border-t-2 border-foreground bg-surface-hover">
               <td className="p-2 desktop:p-3 text-[14px] desktop:text-[16px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.48px] text-foreground">
                 {t("widget.taskCriteria.total")}
               </td>

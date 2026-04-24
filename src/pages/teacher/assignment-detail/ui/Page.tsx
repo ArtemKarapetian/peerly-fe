@@ -79,7 +79,7 @@ export default function TeacherAssignmentDetailsPage() {
       />
 
       {/* Header */}
-      <div className="mt-6 bg-card border-2 border-border rounded-[20px] p-6">
+      <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
@@ -126,7 +126,7 @@ export default function TeacherAssignmentDetailsPage() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-4 gap-4 pt-4 border-t-2 border-border">
+        <div className="grid grid-cols-4 gap-4 pt-4 border-t border-border">
           <div>
             <p className="text-[13px] text-muted-foreground mb-1">
               {t("teacher.assignmentDetail.studentsInCourse")}
@@ -159,7 +159,7 @@ export default function TeacherAssignmentDetailsPage() {
       </div>
 
       {/* Deadlines */}
-      <div className="mt-6 bg-card border-2 border-border rounded-[20px] p-6">
+      <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-brand-primary" />
           <h2 className="text-[20px] font-medium text-foreground tracking-[-0.5px]">
@@ -188,7 +188,7 @@ export default function TeacherAssignmentDetailsPage() {
       </div>
 
       {/* Settings Summary */}
-      <div className="mt-6 bg-card border-2 border-border rounded-[20px] p-6">
+      <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
         <div className="flex items-center gap-2 mb-4">
           <Settings className="w-5 h-5 text-brand-primary" />
           <h2 className="text-[20px] font-medium text-foreground tracking-[-0.5px]">
@@ -230,7 +230,7 @@ export default function TeacherAssignmentDetailsPage() {
           onClick={() => {
             void navigate(`/teacher/peer-session-settings/${assignmentId}`);
           }}
-          className="p-6 bg-card border-2 border-border rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
+          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
         >
           <Settings className="w-6 h-6 text-brand-primary mb-3" />
           <h3 className="text-[16px] font-medium text-foreground mb-2">
@@ -245,7 +245,7 @@ export default function TeacherAssignmentDetailsPage() {
           onClick={() => {
             void navigate(`/teacher/submissions?assignmentId=${assignmentId}`);
           }}
-          className="p-6 bg-card border-2 border-border rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
+          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
         >
           <FileText className="w-6 h-6 text-brand-primary mb-3" />
           <h3 className="text-[16px] font-medium text-foreground mb-2">
@@ -260,7 +260,7 @@ export default function TeacherAssignmentDetailsPage() {
           onClick={() => {
             void navigate(`/teacher/assignment/${assignmentId}/analytics`);
           }}
-          className="p-6 bg-card border-2 border-border rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
+          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
         >
           <BarChart3 className="w-6 h-6 text-brand-primary mb-3" />
           <h3 className="text-[16px] font-medium text-foreground mb-2">

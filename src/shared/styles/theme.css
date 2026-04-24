@@ -25,12 +25,16 @@
   --info: #2563eb;
   --info-light: #dbeafe;
 
-  /* Semantic colors - Surfaces */
-  --background: #ffffff;
-  --foreground: #1f2937;
+  /* Semantic colors - Surfaces
+     Layered: page bg is a warm off-white slate so cards (#fff) get visible elevation. */
+  --background: #f4f6fa;
+  --foreground: #0f172a;
   --surface: #ffffff;
-  --surface-hover: #f9fafb;
-  --surface-border: #e5e7eb;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef1f6;
+  --surface-hover: #f1f4f9;
+  --surface-border: #d8dde4;
+  --surface-border-strong: #c2c8d2;
 
   /* Semantic colors - Text (WCAG AA ≥ 4.5:1 on --background) */
   --text-primary: #111827;
@@ -40,23 +44,23 @@
 
   /* Legacy tokens for compatibility */
   --card: #ffffff;
-  --card-foreground: #1f2937;
+  --card-foreground: #0f172a;
   --popover: #ffffff;
-  --popover-foreground: #1f2937;
+  --popover-foreground: #0f172a;
   --primary: #21214f;
   --primary-foreground: #ffffff;
-  --secondary: #f3f4f6;
-  --secondary-foreground: #1f2937;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280; /* 4.6:1 on white — WCAG AA */
-  --accent: #f3f4f6;
-  --accent-foreground: #1f2937;
-  --destructive: #ef4444;
+  --secondary: #eef1f6;
+  --secondary-foreground: #0f172a;
+  --muted: #eef1f6;
+  --muted-foreground: #64748b; /* 4.6:1 on cards */
+  --accent: #eef1f6;
+  --accent-foreground: #0f172a;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
+  --border: #d8dde4;
   --input: transparent;
-  --input-background: #f9fafb;
-  --switch-background: #d1d5db;
+  --input-background: #ffffff;
+  --switch-background: #cbd2dc;
   --ring: #2563eb;
 
   /* Typography scale */
@@ -89,10 +93,12 @@
   --radius-xl: 1.25rem; /* 20px */
   --radius: 0.75rem;
 
-  /* Shadows - more subtle */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 2px 8px 0 rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  /* Shadows — refined editorial; pair with hairline borders. */
+  --shadow-xs: 0 1px 1px 0 rgb(15 23 42 / 0.04);
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 1px 1px 0 rgb(15 23 42 / 0.03);
+  --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 20px 25px -8px rgb(15 23 42 / 0.08), 0 8px 10px -6px rgb(15 23 42 / 0.04);
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 0 0 1px rgb(15 23 42 / 0.04);
 
   /* Charts */
   --chart-1: #2563eb;
@@ -118,11 +124,14 @@
 
 .dark {
   /* Semantic colors - Surfaces */
-  --background: #0f172a;
+  --background: #0b1220;
   --foreground: #f1f5f9;
-  --surface: #1e293b;
-  --surface-hover: #334155;
-  --surface-border: #334155;
+  --surface: #131b2c;
+  --surface-raised: #1a2336;
+  --surface-sunken: #0a1020;
+  --surface-hover: #1f2a40;
+  --surface-border: #28344c;
+  --surface-border-strong: #3a4763;
 
   /* Semantic colors - Text */
   --text-primary: #f1f5f9;
@@ -148,23 +157,23 @@
   --brand-dark: #a0c4f5;
 
   /* Legacy tokens */
-  --card: #1e293b;
+  --card: #131b2c;
   --card-foreground: #f1f5f9;
-  --popover: #1e293b;
+  --popover: #1a2336;
   --popover-foreground: #f1f5f9;
   --primary: #f1f5f9;
-  --primary-foreground: #0f172a;
-  --secondary: #334155;
+  --primary-foreground: #0b1220;
+  --secondary: #1f2a40;
   --secondary-foreground: #f1f5f9;
-  --muted: #334155;
+  --muted: #1f2a40;
   --muted-foreground: #94a3b8;
-  --accent: #334155;
+  --accent: #1f2a40;
   --accent-foreground: #f1f5f9;
-  --destructive: #7f1d1d;
-  --destructive-foreground: #fca5a5;
-  --border: #334155;
-  --input: #334155;
-  --input-background: #1e293b;
+  --destructive: #b91c1c;
+  --destructive-foreground: #fecaca;
+  --border: #28344c;
+  --input: #28344c;
+  --input-background: #131b2c;
   --switch-background: #475569;
   --ring: #5b8def;
 
@@ -191,8 +200,11 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
   --color-surface-hover: var(--surface-hover);
   --color-surface-border: var(--surface-border);
+  --color-surface-border-strong: var(--surface-border-strong);
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);

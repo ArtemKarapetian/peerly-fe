@@ -58,17 +58,21 @@ interface GradebookEntry {
 
 export default function TeacherAnalyticsPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
-      courseRepo.getAll(),
-      assignmentRepo.getAll(),
-      workRepo.getAll(),
-      reviewRepo.getAll(),
-      userRepo.getAll(),
-    ]);
-    const users = allUsers.filter((u) => u.role === "Student");
-    return { courses, assignments, submissions, reviews, users };
-  }, []);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
+        courseRepo.getAll(),
+        assignmentRepo.getAll(),
+        workRepo.getAll(),
+        reviewRepo.getAll(),
+        userRepo.getAll(),
+      ]);
+      const users = allUsers.filter((u) => u.role === "Student");
+      return { courses, assignments, submissions, reviews, users };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedAssignment, setSelectedAssignment] = useState<string>("all");
@@ -91,10 +95,51 @@ export default function TeacherAnalyticsPage() {
   // Set default selected course if not set yet
   const effectiveCourse = selectedCourse || courses[0]?.id || "";
 
-  // Generate analytics data
-  const courseAssignments = assignments.filter((a) =>
-    courses.find((c) => c.id === effectiveCourse)?.assignmentIds?.includes(a.id),
-  );
+  // Filter assignments by course (relation lives on assignment.courseId)
+  const courseAssignments = assignments.filter((a) => a.courseId === effectiveCourse);
+
+  // Stable per-assignment demo numbers: derived from assignment.id so screenshots
+  // stay identical between renders. Pre-baked to look coherent across charts.
+  const DEMO_OVERRIDES: Record<
+    string,
+    {
+      flaggedRate: number;
+      avgCommentLength: number;
+      plagiarism: { high: number; medium: number; low: number };
+      linter: { failed: number; warning: number; passed: number };
+    }
+  > = {
+    a1: {
+      flaggedRate: 7.5,
+      avgCommentLength: 142,
+      plagiarism: { high: 1, medium: 2, low: 6 },
+      linter: { failed: 1, warning: 3, passed: 5 },
+    },
+    a2: {
+      flaggedRate: 5.0,
+      avgCommentLength: 168,
+      plagiarism: { high: 0, medium: 1, low: 7 },
+      linter: { failed: 0, warning: 2, passed: 6 },
+    },
+    a3: {
+      flaggedRate: 12.0,
+      avgCommentLength: 118,
+      plagiarism: { high: 1, medium: 1, low: 5 },
+      linter: { failed: 1, warning: 2, passed: 4 },
+    },
+    a4: {
+      flaggedRate: 9.0,
+      avgCommentLength: 134,
+      plagiarism: { high: 0, medium: 1, low: 5 },
+      linter: { failed: 0, warning: 1, passed: 5 },
+    },
+    a5: {
+      flaggedRate: 4.0,
+      avgCommentLength: 196,
+      plagiarism: { high: 0, medium: 0, low: 6 },
+      linter: { failed: 0, warning: 1, passed: 5 },
+    },
+  };
 
   const assignmentAnalytics = courseAssignments.map((assignment) => {
     const assignmentSubmissions = submissions.filter((s) => s.assignmentId === assignment.id);
@@ -107,49 +152,63 @@ export default function TeacherAnalyticsPage() {
     const assignmentReviews = reviews.filter((r) =>
       assignmentSubmissions.some((s) => s.id === r.submissionId),
     );
-    const expectedReviews = completedSubmissions * 3; // 3 reviews per work
-    const completedReviews = assignmentReviews.length;
+    const expectedReviews = completedSubmissions * (assignment.reviewCount ?? 3);
+    const submittedReviews = assignmentReviews.filter((r) => r.status === "submitted").length;
     const reviewCompletionRate =
-      expectedReviews > 0 ? (completedReviews / expectedReviews) * 100 : 0;
+      expectedReviews > 0 ? (submittedReviews / expectedReviews) * 100 : 0;
 
-    // Calculate average scores
-    const allScores = assignmentReviews.flatMap((r) => Object.values(r.scores));
-    const avgScore =
+    // Average score from submitted reviews only
+    const submittedReviewObjects = assignmentReviews.filter((r) => r.status === "submitted");
+    const allScores = submittedReviewObjects.flatMap((r) => Object.values(r.scores));
+    const computedAvg =
       allScores.length > 0
         ? allScores.reduce((sum, score) => sum + score, 0) / allScores.length
         : 0;
 
-    // Calculate average comment length
+    const override = DEMO_OVERRIDES[assignment.id];
     const avgCommentLength =
-      assignmentReviews.length > 0
-        ? assignmentReviews.reduce((sum, r) => sum + r.comment.length, 0) / assignmentReviews.length
-        : 0;
+      override?.avgCommentLength ??
+      (submittedReviewObjects.length > 0
+        ? submittedReviewObjects.reduce((sum, r) => sum + r.comment.length, 0) /
+          submittedReviewObjects.length
+        : 0);
 
-    // Demo flagged rate (5-15%)
-    const flaggedRate = 5 + Math.random() * 10;
-
-    // Demo plagiarism stats
-    const plagiarismHigh = Math.floor(completedSubmissions * (0.05 + Math.random() * 0.1));
-    const plagiarismMedium = Math.floor(completedSubmissions * (0.1 + Math.random() * 0.15));
-    const plagiarismLow = completedSubmissions - plagiarismHigh - plagiarismMedium;
-
-    // Demo linter stats
-    const lintFailed = Math.floor(completedSubmissions * (0.1 + Math.random() * 0.2));
-    const lintWarning = Math.floor(completedSubmissions * (0.2 + Math.random() * 0.3));
-    const lintPassed = completedSubmissions - lintFailed - lintWarning;
+    // Plagiarism / linter buckets — fixed per assignment for screenshot stability.
+    // Fallback for assignments without overrides: spread across submissions.
+    const plagiarism = override?.plagiarism ?? {
+      high: Math.max(0, Math.floor(completedSubmissions * 0.1)),
+      medium: Math.max(0, Math.floor(completedSubmissions * 0.2)),
+      low: Math.max(
+        0,
+        completedSubmissions -
+          Math.floor(completedSubmissions * 0.1) -
+          Math.floor(completedSubmissions * 0.2),
+      ),
+    };
+    const linter = override?.linter ?? {
+      failed: Math.max(0, Math.floor(completedSubmissions * 0.15)),
+      warning: Math.max(0, Math.floor(completedSubmissions * 0.3)),
+      passed: Math.max(
+        0,
+        completedSubmissions -
+          Math.floor(completedSubmissions * 0.15) -
+          Math.floor(completedSubmissions * 0.3),
+      ),
+    };
+    const flaggedRate = override?.flaggedRate ?? 8;
 
     return {
       id: assignment.id,
       title: assignment.title,
       completionRate,
       reviewCompletionRate,
-      avgScore,
+      avgScore: computedAvg,
       avgCommentLength,
       flaggedRate,
       totalSubmissions: completedSubmissions,
-      totalReviews: completedReviews,
-      plagiarism: { high: plagiarismHigh, medium: plagiarismMedium, low: plagiarismLow },
-      linter: { failed: lintFailed, warning: lintWarning, passed: lintPassed },
+      totalReviews: submittedReviews,
+      plagiarism,
+      linter,
     };
   });
 
@@ -230,11 +289,28 @@ export default function TeacherAnalyticsPage() {
     [t("teacher.analytics.reviewsCompleted")]: Math.round(a.reviewCompletionRate),
   }));
 
+  // Score distribution from real submitted reviews (deterministic, screenshot-friendly).
+  // Falls back to a fixed sample so the chart always has something to show.
+  const allCourseScores = courseAssignments
+    .flatMap((a) => submissions.filter((s) => s.assignmentId === a.id))
+    .flatMap((s) => reviews.filter((r) => r.submissionId === s.id && r.status === "submitted"))
+    .flatMap((r) => Object.values(r.scores))
+    .filter((v): v is number => typeof v === "number" && v > 0 && v <= 5);
+
+  const buckets = { "1-2": 0, "2-3": 0, "3-4": 0, "4-5": 0 };
+  for (const v of allCourseScores) {
+    if (v <= 2) buckets["1-2"]++;
+    else if (v <= 3) buckets["2-3"]++;
+    else if (v <= 4) buckets["3-4"]++;
+    else buckets["4-5"]++;
+  }
+  const fallback = { "1-2": 4, "2-3": 9, "3-4": 22, "4-5": 41 };
+  const useFallback = allCourseScores.length === 0;
   const scoreDistributionData = [
-    { name: "1-2", value: Math.floor(Math.random() * 10) + 5, fill: "var(--error)" },
-    { name: "2-3", value: Math.floor(Math.random() * 15) + 10, fill: "var(--warning)" },
-    { name: "3-4", value: Math.floor(Math.random() * 25) + 20, fill: "var(--warning)" },
-    { name: "4-5", value: Math.floor(Math.random() * 30) + 35, fill: "var(--success)" },
+    { name: "1-2", value: useFallback ? fallback["1-2"] : buckets["1-2"], fill: "var(--error)" },
+    { name: "2-3", value: useFallback ? fallback["2-3"] : buckets["2-3"], fill: "var(--warning)" },
+    { name: "3-4", value: useFallback ? fallback["3-4"] : buckets["3-4"], fill: "var(--warning)" },
+    { name: "4-5", value: useFallback ? fallback["4-5"] : buckets["4-5"], fill: "var(--success)" },
   ];
 
   // Export functions

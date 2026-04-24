@@ -1,6 +1,8 @@
 import { Clock, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { formatDateTime } from "@/shared/lib/formatDate";
+
 export type DeadlineStatus =
   | "NOT_STARTED"
   | "DRAFT"
@@ -21,7 +23,7 @@ export interface DeadlineItem {
 
 interface DeadlinesListProps {
   items: DeadlineItem[];
-  onTaskClick: (taskId: string) => void;
+  onTaskClick: (courseId: string, taskId: string) => void;
 }
 
 function getStatusBadge(status: DeadlineStatus): string {
@@ -58,7 +60,7 @@ function getStatusLabel(status: DeadlineStatus, t: (key: string) => string): str
 }
 
 export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (items.length === 0) {
     return (
@@ -85,7 +87,7 @@ export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
         return (
           <button
             key={item.id}
-            onClick={() => onTaskClick(item.taskId)}
+            onClick={() => onTaskClick(item.courseId, item.taskId)}
             className={`w-full text-left py-3.5 pr-5 hover:bg-surface-hover transition-colors duration-150 group ${
               isPrimary ? "pl-[17px] border-l-[3px] border-[--warning]" : "pl-5"
             }`}
@@ -105,7 +107,7 @@ export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
                     }`}
                   >
                     <Clock className="w-3 h-3 shrink-0" />
-                    <span>{item.dueDate}</span>
+                    <span>{formatDateTime(item.dueDate, i18n.language)}</span>
                   </div>
                   <span className={getStatusBadge(item.status)}>
                     {getStatusLabel(item.status, t)}

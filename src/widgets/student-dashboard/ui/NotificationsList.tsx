@@ -1,6 +1,8 @@
 import { Bell, MessageSquare, CheckCircle, AlertCircle, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { formatRelativeTime } from "@/shared/lib/formatDate";
+
 export type NotificationType = "feedback" | "grade" | "reminder" | "info";
 
 export interface Notification {
@@ -50,7 +52,7 @@ export function NotificationsList({
   onNotificationClick,
   onViewAllClick,
 }: NotificationsListProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (items.length === 0) {
     return (
@@ -100,7 +102,9 @@ export function NotificationsList({
                   >
                     {notification.title}
                   </p>
-                  <p className="text-[11px] text-[--text-tertiary] mt-0.5">{notification.time}</p>
+                  <p className="text-[11px] text-[--text-tertiary] mt-0.5">
+                    {formatRelativeTime(notification.time, i18n.language)}
+                  </p>
                 </div>
 
                 {/* Unread dot + chevron */}

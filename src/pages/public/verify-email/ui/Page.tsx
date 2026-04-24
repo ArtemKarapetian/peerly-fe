@@ -103,7 +103,7 @@ export default function VerifyEmailPage() {
                 variant="primary"
                 size="lg"
                 fullWidth
-                onClick={() => void navigate("/courses")}
+                onClick={() => void navigate("/student/courses")}
               >
                 {t("page.verifyEmail.goToApp")}
               </Button>

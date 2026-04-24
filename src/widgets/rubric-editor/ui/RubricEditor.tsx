@@ -24,7 +24,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   const [editedRubric, setEditedRubric] = useState<RubricData>(rubric);
   const [isDirty, setIsDirty] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const [tagsInput, setTagsInput] = useState("");
 
   // Update when rubric prop changes - this pattern is intentional for form reset
 
@@ -99,20 +98,8 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
     setDraggedIndex(null);
   };
 
-  const addTag = () => {
-    const tag = tagsInput.trim();
-    if (tag && !editedRubric.tags.includes(tag)) {
-      updateRubric({ tags: [...editedRubric.tags, tag] });
-      setTagsInput("");
-    }
-  };
-
-  const removeTag = (tag: string) => {
-    updateRubric({ tags: editedRubric.tags.filter((t) => t !== tag) });
-  };
-
   return (
-    <div className="max-w-[900px] mx-auto">
+    <div>
       {/* Save indicator */}
       {isDirty && (
         <div className="mb-4 flex items-center justify-between bg-warning-light border border-warning rounded-[12px] p-3">
@@ -133,101 +120,38 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       )}
 
       {/* Basic Info */}
-      <div className="bg-muted border-2 border-border rounded-[16px] p-6 mb-6">
-        <h3 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
+      <section className="mb-8 space-y-4">
+        <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px]">
           {t("widget.rubricEditor.basicInfo")}
         </h3>
 
-        <div className="space-y-4">
-          {/* Name */}
-          <div>
-            <label className="block text-[13px] font-medium text-foreground mb-2">
-              {t("widget.rubricEditor.rubricName")}
-            </label>
-            <input
-              type="text"
-              value={editedRubric.name}
-              onChange={(e) => updateRubric({ name: e.target.value })}
-              className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-[13px] font-medium text-foreground mb-2">
-              {t("widget.rubricEditor.description")}
-            </label>
-            <textarea
-              value={editedRubric.description}
-              onChange={(e) => updateRubric({ description: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors resize-none"
-            />
-          </div>
-
-          {/* Task Type */}
-          <div>
-            <label className="block text-[13px] font-medium text-foreground mb-2">
-              {t("widget.rubricEditor.taskType")}
-            </label>
-            <select
-              value={editedRubric.taskType}
-              onChange={(e) =>
-                updateRubric({ taskType: e.target.value as "text" | "code" | "project" })
-              }
-              className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
-            >
-              <option value="text">{t("widget.rubricEditor.typeText")}</option>
-              <option value="code">{t("widget.rubricEditor.typeCode")}</option>
-              <option value="project">{t("widget.rubricEditor.typeProject")}</option>
-            </select>
-          </div>
-
-          {/* Tags */}
-          <div>
-            <label className="block text-[13px] font-medium text-foreground mb-2">
-              {t("widget.rubricEditor.tags")}
-            </label>
-            <div className="flex gap-2 mb-2 flex-wrap">
-              {editedRubric.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-info-light text-brand-primary rounded-[8px] text-[13px]"
-                >
-                  {tag}
-                  <button onClick={() => removeTag(tag)} className="hover:text-destructive">
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={tagsInput}
-                onChange={(e) => setTagsInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addTag();
-                  }
-                }}
-                className="flex-1 px-3 py-2 border-2 border-border rounded-[12px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors"
-                placeholder={t("widget.rubricEditor.addTagPlaceholder")}
-              />
-              <button
-                onClick={addTag}
-                className="px-4 py-2 bg-muted border-2 border-border text-foreground rounded-[12px] hover:bg-surface-hover transition-colors text-[14px] font-medium"
-              >
-                {t("widget.rubricEditor.addTag")}
-              </button>
-            </div>
-          </div>
+        <div>
+          <label className="block text-[13px] font-medium text-foreground mb-2">
+            {t("widget.rubricEditor.rubricName")}
+          </label>
+          <input
+            type="text"
+            value={editedRubric.name}
+            onChange={(e) => updateRubric({ name: e.target.value })}
+            className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] outline-none focus:border-brand-primary transition-colors"
+          />
         </div>
-      </div>
+
+        <div>
+          <label className="block text-[13px] font-medium text-foreground mb-2">
+            {t("widget.rubricEditor.description")}
+          </label>
+          <textarea
+            value={editedRubric.description}
+            onChange={(e) => updateRubric({ description: e.target.value })}
+            rows={3}
+            className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] outline-none focus:border-brand-primary transition-colors resize-none"
+          />
+        </div>
+      </section>
 
       {/* Criteria */}
-      <div className="mb-6">
+      <section className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px]">
             {t("widget.rubricEditor.gradingCriteria")}
@@ -250,9 +174,9 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               className={`
-                bg-card border-2 rounded-[16px] p-4 transition-all
+                bg-card border rounded-[14px] p-4 transition-colors
                 ${draggedIndex === index ? "opacity-50" : "opacity-100"}
-                border-border hover:border-brand-primary
+                border-border hover:border-brand-primary/60
               `}
             >
               {/* Header */}
@@ -386,14 +310,14 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Save Button */}
       <div className="flex justify-end">
         <button
           onClick={handleSave}
           disabled={!isDirty}
-          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium disabled:bg-muted disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-4 h-4" />
           {t("widget.rubricEditor.saveChanges")}

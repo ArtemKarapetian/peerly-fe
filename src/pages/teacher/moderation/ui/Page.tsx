@@ -56,15 +56,19 @@ interface FlaggedReview {
 
 export default function TeacherModerationPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const [users, assignments, reviews, submissions] = await Promise.all([
-      userRepo.getAll(),
-      assignmentRepo.getAll(),
-      reviewRepo.getAll(),
-      workRepo.getAll(),
-    ]);
-    return { users, assignments, reviews, submissions };
-  }, []);
+  const { data, isLoading, error, refetch } = useAsync(
+    async () => {
+      const [users, assignments, reviews, submissions] = await Promise.all([
+        userRepo.getAll(),
+        assignmentRepo.getAll(),
+        reviewRepo.getAll(),
+        workRepo.getAll(),
+      ]);
+      return { users, assignments, reviews, submissions };
+    },
+    [],
+    { onError: "redirect" },
+  );
 
   if (isLoading)
     return (

@@ -21,18 +21,18 @@ export function TaskFilters({ activeFilter, onFilterChange }: TaskFiltersProps) 
   ];
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-2">
       {filters.map((filter) => (
         <button
           key={filter.id}
           onClick={() => onFilterChange(filter.id)}
           className={`
-            px-2 py-2 rounded-[8px] text-[16px] leading-[1.1] tracking-[-0.72px]
-            transition-colors
+            inline-flex items-center px-3.5 py-1.5 rounded-full text-[14px] font-medium
+            border transition-colors
             ${
               activeFilter === filter.id
-                ? "bg-accent text-foreground"
-                : "bg-muted text-muted-foreground hover:bg-surface-hover"
+                ? "bg-brand-primary text-primary-foreground border-brand-primary"
+                : "bg-card text-muted-foreground border-border hover:text-foreground hover:border-brand-primary/50"
             }
           `}
         >

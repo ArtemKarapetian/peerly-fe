@@ -35,7 +35,9 @@ export default function TeacherAssignmentExtensionsPage() {
     isLoading,
     error,
     refetch,
-  } = useAsync(() => extensionRepo.getByAssignment(assignmentId), [assignmentId]);
+  } = useAsync(() => extensionRepo.getByAssignment(assignmentId), [assignmentId], {
+    onError: "redirect",
+  });
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingExtension, setEditingExtension] = useState<Extension | null>(null);

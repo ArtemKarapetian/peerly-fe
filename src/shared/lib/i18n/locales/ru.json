@@ -23,7 +23,6 @@
     "confirm": "Подтвердить",
     "active": "Активен",
     "archive": "Архив",
-    "semester": "Семестр",
     "students": "Студенты",
     "assignments": "Задания",
     "course": "Курс",
@@ -46,7 +45,6 @@
     "settings": "Настройки",
     "allCourses": "Все курсы",
     "users": "Пользователи",
-    "organizations": "Организации",
     "pluginCatalog": "Каталог плагинов",
     "integrations": "Интеграции",
     "assignments": "Задания",
@@ -69,6 +67,10 @@
     "admin": "Администратор",
     "demoRole": "Демо: Роль",
     "switchRole": "Переключить роль"
+  },
+  "demoTools": {
+    "shown": "Демо-инструменты включены",
+    "hidden": "Демо-инструменты скрыты"
   },
   "footer": {
     "help": "Помощь",
@@ -113,7 +115,17 @@
     "requiredField": "Обязательное поле",
     "emailOrUsername": "Email или логин",
     "firstNamePlaceholder": "Иван",
-    "lastNamePlaceholder": "Петров"
+    "lastNamePlaceholder": "Петров",
+    "role": "Я регистрируюсь как",
+    "roleStudentTitle": "Студент",
+    "roleTeacherTitle": "Преподаватель",
+    "loginFailed": "Не удалось выполнить вход",
+    "badRequest": "Неверные данные. Проверьте введённую информацию.",
+    "accountForbidden": "Доступ к аккаунту заблокирован. Обратитесь к администратору.",
+    "userNotFound": "Пользователь с такими данными не найден.",
+    "tooManyAttempts": "Слишком много попыток входа. Попробуйте позже.",
+    "serverError": "Ошибка сервера. Попробуйте позже.",
+    "networkError": "Не удалось подключиться к серверу. Проверьте соединение."
   },
   "errors": {
     "authRequired": "Требуется авторизация",
@@ -141,7 +153,7 @@
     },
     "courses": {
       "title": "Курсы",
-      "subtitle": "Ваши учебные курсы на текущий семестр",
+      "subtitle": "Ваши учебные курсы",
       "notFound": "Курсы не найдены",
       "tryChangingSearch": "Попробуйте изменить параметры поиска"
     },
@@ -247,7 +259,6 @@
       "noCoursesSearch": "Курсы не найдены",
       "tryChangingSearch": "Попробуйте изменить поисковый запрос",
       "coursesCount": "курсов",
-      "springTerm": "Весна 2025",
       "openCourse": "Открыть курс {{name}}"
     },
     "submissions": {
@@ -378,7 +389,6 @@
       "assignedReviewers": "Назначенные рецензенты",
       "completed": "Завершено",
       "inProgress": "В процессе",
-      "hidden": "Скрыто",
       "noReviewers": "Нет рецензентов",
       "noDistributionData": "Нет данных о распределении",
       "selectToView": "Выберите курс и задание для просмотра распределения",
@@ -399,8 +409,6 @@
       "notificationSent": "Уведомление отправлено рецензентам",
       "reviewSubmitted": "Рецензия отправлена",
       "reviewSubmittedSuccess": "Рецензия успешно отправлена",
-      "unlock": "Разблокировать",
-      "lock": "Заблокировать",
       "remind": "Напомнить",
       "remindReviewers": "Напомнить рецензентам",
       "reassignReviewer": "Переназначить рецензента",
@@ -414,12 +422,9 @@
       "addReviewerLabel": "Добавить рецензента",
       "actionsLabel": "Действия",
       "authorLabel": "Автор:",
-      "hiddenShort": "Скрыто",
       "reviewersLabel": "Рецензенты:",
       "reassignBtn": "Переназначить",
       "addBtn": "Добавить",
-      "unlockBtn": "Разблокировать",
-      "lockBtn": "Заблокировать",
       "reminderSentFor": "Напоминание отправлено рецензентам для {{id}}",
       "workLabel": "Работа",
       "statusLabel": "Статус",
@@ -642,16 +647,15 @@
     },
     "rubrics": {
       "title": "Библиотека рубрик",
+      "subtitle": "Готовые шаблоны критериев оценивания, переиспользуемые между заданиями",
       "breadcrumb": "Рубрики",
       "myRubrics": "Мои рубрики",
       "create": "Создать",
-      "searchPlaceholder": "Поиск по названию, описанию, тегам...",
-      "allTaskTypes": "Все типы заданий",
-      "typeText": "Текст",
-      "typeCode": "Код",
-      "typeProject": "Проект",
+      "searchPlaceholder": "Поиск по названию или описанию...",
       "notFound": "Рубрики не найдены",
+      "tryDifferentSearch": "Попробуйте изменить поисковый запрос",
       "createFirst": "Создайте первую рубрику",
+      "createFirstHint": "Шаблон критериев, который можно подключать к заданиям",
       "duplicate": "Дублировать",
       "criteriaCount": "критериев",
       "updated": "Обновлено",
@@ -668,7 +672,9 @@
       "newRubricDesc": "Описание рубрики",
       "newCriterionName": "Критерий 1",
       "newCriterionDesc": "Описание критерия",
-      "copySuffix": "(копия)"
+      "copySuffix": "(копия)",
+      "backToLibrary": "К библиотеке",
+      "openRubric": "Открыть"
     },
     "peerSettings": {
       "title": "Настройки peer-сессии",
@@ -745,18 +751,8 @@
       "courseNamePlaceholder": "Например: Веб-разработка",
       "courseCodeLabel": "Код курса *",
       "courseCodePlaceholder": "Например: CS101",
-      "semesterLabel": "Семестр *",
-      "selectSemester": "Выберите семестр",
-      "spring2025": "Весна 2025",
-      "fall2024": "Осень 2024",
-      "summer2024": "Лето 2024",
       "descriptionLabel": "Описание",
       "descriptionPlaceholder": "Краткое описание курса...",
-      "visibilityLabel": "Видимость",
-      "public": "Публичный",
-      "publicDesc": "Курс виден всем студентам",
-      "private": "Приватный",
-      "privateDesc": "Только по приглашению",
       "cancelBtn": "Отмена",
       "createBtn": "Создать курс",
       "errorCreating": "Ошибка создания курса"
@@ -791,8 +787,7 @@
         "participants": "Участников",
         "assignments": "Заданий",
         "teacherLabel": "Преподаватель:"
-      },
-      "springTerm": "Весна 2025"
+      }
     },
     "placeholder": {
       "demoMode": "Демо-режим:",
@@ -868,6 +863,7 @@
         "teacherAnalytics": "Аналитика преподавателя",
         "extensionsMgmt": "Управление продлениями",
         "announcements": "Анонсы",
+        "notifications": "Уведомления",
         "reviewHotkeys": "Горячие клавиши для рецензирования",
         "autosave": "Автосохранение",
         "darkTheme": "Тёмная тема",
@@ -894,6 +890,7 @@
         "teacherAnalytics": "Детальная аналитика и статистика по курсам (Teacher)",
         "extensionsMgmt": "Управление запросами на продление дедлайнов (Teacher)",
         "announcements": "Система анонсов и уведомлений для студентов (Teacher)",
+        "notifications": "Страница «Уведомления» и виджет на дашборде студента",
         "reviewHotkeys": "Быстрые клавиши для навигации и действий в интерфейсе рецензирования",
         "autosave": "Автоматическое сохранение черновиков рецензий каждые 30 секунд",
         "darkTheme": "Тёмная цветовая схема для всего интерфейса",
@@ -1144,20 +1141,12 @@
       "auditUpdated": "Политики хранения обновлены"
     },
     "overviewPage": {
-      "orgLabel": "Организация",
-      "orgActive": "Активна",
       "totalUsers": "Всего пользователей",
       "monthGrowth": "+12% за месяц",
       "activeCourses": "Активных курсов",
       "archivedCount": "{{count}} архивных",
-      "queueJobs": "Задач в очереди",
-      "pendingCount": "{{count}} в ожидании",
       "pluginStatus": "Статус плагинов",
       "allRunning": "Все работают",
-      "queueDetails": "Очереди задач",
-      "running": "Выполняется",
-      "pending": "В ожидании",
-      "errors": "Ошибки",
       "pluginHealth": "Здоровье плагинов",
       "checked": "Проверено:",
       "statusOk": "OK",
@@ -1174,7 +1163,7 @@
       "qlHealthDesc": "Мониторинг и диагностика",
       "goTo": "Перейти",
       "recentEvents": "Последние события",
-      "eventOrgCreated": "Новая организация создана: \"{{name}}\"",
+      "eventNewUsers": "Зарегистрировано новых пользователей: {{count}}",
       "eventPluginUpdated": "Плагин обновлён: \"Plagiarism Checker v2.1\"",
       "eventBackupComplete": "Резервное копирование завершено успешно",
       "timeAgo2h": "2 часа назад",
@@ -1208,7 +1197,6 @@
       "searchFilter": "Поиск: \"{{query}}\"",
       "headerUser": "Пользователь",
       "headerRole": "Роль",
-      "headerOrg": "Организация",
       "headerLastLogin": "Последний вход",
       "headerStatus": "Статус",
       "headerActions": "Действия",
@@ -1217,20 +1205,6 @@
       "manage": "Управление",
       "notFound": "Пользователи не найдены",
       "notFoundHint": "Попробуйте изменить параметры поиска или фильтры"
-    },
-    "orgsPage": {
-      "totalOrgs": "Всего организаций",
-      "totalUsers": "Всего пользователей",
-      "totalCourses": "Всего курсов",
-      "headerOrg": "Организация",
-      "headerPlan": "План",
-      "headerUsers": "Пользователей",
-      "headerCourses": "Курсов",
-      "headerStatus": "Статус",
-      "headerActions": "Действия",
-      "statusActive": "Активна",
-      "detailsTooltip": "Подробнее",
-      "openOrgAlert": "Открыть организацию: {{name}}"
     },
     "logsPage": {
       "title": "Логи и аудит",

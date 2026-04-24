@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -13,12 +13,32 @@ import { CourseFilterBar } from "@/widgets/course-filter-bar";
 
 import { mockCourses } from "../model/mockCourses";
 
+// Keeps page size aligned with .courses-grid column count so completed pages
+// never end with a half-empty row. Breakpoints mirror src/shared/styles/courses.css.
+function useCoursesPageSize(): number {
+  const compute = () => {
+    if (typeof window === "undefined") return 12;
+    if (window.innerWidth >= 1200) return 12; // 4 cols × 3 rows
+    if (window.innerWidth >= 800) return 8; // 2 cols × 4 rows
+    return 6; // 1 col × 6 rows
+  };
+  const [pageSize, setPageSize] = useState(compute);
+
+  useEffect(() => {
+    const onResize = () => setPageSize(compute());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  return pageSize;
+}
+
 export default function CoursesListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const handleCourseClick = useCallback(
     (courseId: string) => {
-      void navigate(`/course/${courseId}`);
+      void navigate(`/student/courses/${courseId}`);
     },
     [navigate],
   );
@@ -44,7 +64,11 @@ function CourseListContent({
   onCourseClick: (id: string) => void;
 }) {
   const { t } = useTranslation();
-  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(courses, 9);
+  const pageSize = useCoursesPageSize();
+  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
+    courses,
+    pageSize,
+  );
 
   return (
     <>
@@ -63,7 +87,6 @@ function CourseListContent({
               title={course.title}
               teacher={course.teacher}
               coverColor={course.coverColor}
-              semester={course.semester}
               deadline={course.deadline}
               progress={course.progress}
               newAssignments={course.newAssignments}

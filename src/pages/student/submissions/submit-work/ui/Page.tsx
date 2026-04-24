@@ -19,7 +19,7 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 /**
  * SubmitWorkPage - Экран отправки работы студентом
  *
- * Route: /courses/:courseId/tasks/:taskId/submit
+ * Route: /student/courses/:courseId/tasks/:taskId/submit
  */
 
 export default function SubmitWorkPage() {
@@ -227,7 +227,7 @@ export default function SubmitWorkPage() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => {
-                  void navigate(`/courses/${courseId}/tasks/${taskId}/submissions`);
+                  void navigate(`/student/courses/${courseId}/tasks/${taskId}/submissions`);
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
               >
@@ -235,7 +235,7 @@ export default function SubmitWorkPage() {
               </button>
               <button
                 onClick={() => {
-                  void navigate(`/task/${taskId}`);
+                  void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card border-2 border-border text-foreground rounded-[12px] hover:border-brand-primary-lighter hover:bg-muted transition-colors text-[15px] font-medium"
               >

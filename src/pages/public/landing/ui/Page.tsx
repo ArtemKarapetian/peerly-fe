@@ -44,7 +44,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <button
-                onClick={() => void navigate("/dashboard")}
+                onClick={() => void navigate("/student/dashboard")}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.openDashboard")}
@@ -81,15 +81,15 @@ export default function LandingPage() {
               <div className="flex flex-col tablet:flex-row items-start tablet:items-center gap-3">
                 {isAuthenticated ? (
                   <button
-                    onClick={() => void navigate("/dashboard")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
+                    onClick={() => void navigate("/student/dashboard")}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   >
                     {t("page.landing.openDashboard")}
                   </button>
                 ) : (
                   <button
                     onClick={() => void navigate("/register")}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   >
                     {t("page.landing.getStarted")}
                   </button>
@@ -251,15 +251,15 @@ export default function LandingPage() {
             <div className="flex flex-col tablet:flex-row items-center justify-center gap-3">
               {isAuthenticated ? (
                 <button
-                  onClick={() => void navigate("/dashboard")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 text-base h-11"
+                  onClick={() => void navigate("/student/dashboard")}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 text-base h-11"
                 >
                   {t("page.landing.openDashboard")}
                 </button>
               ) : (
                 <button
                   onClick={() => void navigate("/register")}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 text-base h-11"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 text-base h-11"
                 >
                   {t("page.landing.getStarted")}
                 </button>
