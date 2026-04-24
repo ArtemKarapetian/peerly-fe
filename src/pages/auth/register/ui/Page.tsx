@@ -1,4 +1,4 @@
-import { GraduationCap, BookOpen, Check } from "lucide-react";
+import { GraduationCap, BookOpen } from "lucide-react";
 import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -243,28 +243,25 @@ export default function RegisterPage() {
 
               <fieldset className="space-y-2">
                 <legend className="block text-sm text-foreground mb-2">{t("auth.role")}</legend>
-                <div className="grid grid-cols-1 tablet:grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   {(
                     [
                       {
                         value: "Student" as const,
                         title: t("auth.roleStudentTitle"),
-                        desc: t("auth.roleStudentDesc"),
                         Icon: GraduationCap,
                       },
                       {
                         value: "Teacher" as const,
                         title: t("auth.roleTeacherTitle"),
-                        desc: t("auth.roleTeacherDesc"),
                         Icon: BookOpen,
                       },
                     ] satisfies ReadonlyArray<{
                       value: RegistrableRole;
                       title: string;
-                      desc: string;
                       Icon: typeof GraduationCap;
                     }>
-                  ).map(({ value, title, desc, Icon }) => {
+                  ).map(({ value, title, Icon }) => {
                     const selected = role === value;
                     return (
                       <button
@@ -273,30 +270,14 @@ export default function RegisterPage() {
                         onClick={() => setRole(value)}
                         disabled={isLoading}
                         aria-pressed={selected}
-                        className={`relative text-left p-4 rounded-xl border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                        className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                           selected
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-primary/40 bg-card"
+                            ? "border-primary bg-primary/5 text-foreground"
+                            : "border-border hover:border-primary/40 bg-card text-muted-foreground"
                         }`}
                       >
-                        <div
-                          className={`inline-flex size-10 items-center justify-center rounded-lg mb-3 ${
-                            selected
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          <Icon className="size-5" />
-                        </div>
-                        <div className="font-medium text-foreground">{title}</div>
-                        <div className="text-xs text-muted-foreground mt-1 leading-snug">
-                          {desc}
-                        </div>
-                        {selected && (
-                          <div className="absolute top-3 right-3 inline-flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                            <Check className="size-3" strokeWidth={3} />
-                          </div>
-                        )}
+                        <Icon className="size-4" />
+                        <span>{title}</span>
                       </button>
                     );
                   })}
