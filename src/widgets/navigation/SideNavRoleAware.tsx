@@ -13,7 +13,6 @@ import {
   Layers,
   BarChart3,
   Settings,
-  Database,
   Plug,
   Zap,
   Shield,
@@ -27,6 +26,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
+import { useDemoToolsVisible } from "@/shared/lib/demo-tools";
 import { isFlagEnabled, type FeatureFlags } from "@/shared/lib/feature-flags";
 
 import { useRole } from "@/entities/user";
@@ -61,6 +61,7 @@ const focusRing =
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
   const { t } = useTranslation();
   const { currentRole } = useRole();
+  const demoToolsVisible = useDemoToolsVisible();
   const isCollapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
   const isMobileDrawer = variant === "mobile-drawer";
   const showToggleButton =
@@ -93,8 +94,18 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: FileCheck, label: t("nav.reviews"), hash: "/reviews" },
           { icon: MessageSquare, label: t("nav.receivedReviews"), hash: "/reviews/received" },
           { icon: BookOpen, label: t("nav.gradebook"), hash: "/gradebook" },
-          { icon: Bell, label: t("nav.notifications"), hash: "/inbox" },
-          { icon: AlertTriangle, label: t("nav.appeals"), hash: "/appeals" },
+          {
+            icon: Bell,
+            label: t("nav.notifications"),
+            hash: "/inbox",
+            flag: "enableNotifications",
+          },
+          {
+            icon: AlertTriangle,
+            label: t("nav.appeals"),
+            hash: "/appeals",
+            flag: "enableAppeals",
+          },
         ];
       case "Teacher":
         return [
@@ -104,7 +115,12 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: Shuffle, label: t("nav.distribution"), hash: "/teacher/distribution" },
           { icon: Archive, label: t("nav.studentSubmissions"), hash: "/teacher/submissions" },
           { icon: Shield, label: t("nav.moderation"), hash: "/teacher/moderation" },
-          { icon: Scale, label: t("nav.appeals"), hash: "/teacher/appeals" },
+          {
+            icon: Scale,
+            label: t("nav.appeals"),
+            hash: "/teacher/appeals",
+            flag: "enableAppeals",
+          },
           {
             icon: Megaphone,
             label: t("nav.announcements"),
@@ -135,7 +151,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: LayoutDashboard, label: t("nav.overview"), hash: "/admin/overview" },
           { icon: Book, label: t("nav.allCourses"), hash: "/admin/courses" },
           { icon: Users, label: t("nav.users"), hash: "/admin/users" },
-          { icon: Database, label: t("nav.organizations"), hash: "/admin/orgs" },
           {
             icon: Plug,
             label: t("nav.pluginCatalog"),
@@ -210,9 +225,11 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           </nav>
 
           {/* Role Switcher */}
-          <div className="border-t border-[--surface-border] pt-2 shrink-0">
-            <RoleSwitcherPopover collapsed={false} />
-          </div>
+          {demoToolsVisible && (
+            <div className="border-t border-[--surface-border] pt-2 shrink-0">
+              <RoleSwitcherPopover collapsed={false} />
+            </div>
+          )}
 
           {/* Profile & Settings */}
           <div className="border-t border-[--surface-border] shrink-0 px-2.5 py-2 space-y-0.5 pb-3">
@@ -294,9 +311,11 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       {/* Footer */}
       <div className="shrink-0">
         {/* Role Switcher */}
-        <div className="border-t border-[--surface-border] pt-2">
-          <RoleSwitcherPopover collapsed={isCollapsed} />
-        </div>
+        {demoToolsVisible && (
+          <div className="border-t border-[--surface-border] pt-2">
+            <RoleSwitcherPopover collapsed={isCollapsed} />
+          </div>
+        )}
 
         {/* Profile & Settings */}
         <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
