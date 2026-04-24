@@ -7,13 +7,14 @@ import {
   XCircle,
   AlertTriangle,
   ArrowRight,
-  Database,
   FileText,
+  Database,
 } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { pluginRepo } from "@/entities/plugin";
@@ -24,16 +25,6 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * AdminOverviewPage - Admin panel dashboard
  */
 
-interface Organization {
-  id: string;
-  name: string;
-  slug: string;
-  plan: "free" | "pro" | "enterprise";
-  userCount: number;
-  courseCount: number;
-  isActive: boolean;
-}
-
 interface PluginHealth {
   id: string;
   name: string;
@@ -41,60 +32,14 @@ interface PluginHealth {
   lastCheck: Date;
 }
 
-interface QueueStats {
-  total: number;
-  running: number;
-  pending: number;
-  failed: number;
-}
-
 export default function AdminOverviewPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const pluginsEnabled = isFlagEnabled("enablePlugins");
 
-  const demoOrgs: Organization[] = [
-    {
-      id: "org1",
-      name: "HSE",
-      slug: "hse",
-      plan: "enterprise",
-      userCount: 1247,
-      courseCount: 89,
-      isActive: true,
-    },
-    {
-      id: "org2",
-      name: "MGUSiT",
-      slug: "mgusit",
-      plan: "pro",
-      userCount: 523,
-      courseCount: 34,
-      isActive: true,
-    },
-    {
-      id: "org3",
-      name: "Demo University",
-      slug: "demo",
-      plan: "free",
-      userCount: 156,
-      courseCount: 12,
-      isActive: true,
-    },
-  ];
-
-  const [selectedOrg, setSelectedOrg] = useState<string>(demoOrgs[0].id);
-  const currentOrg = demoOrgs.find((o) => o.id === selectedOrg) || demoOrgs[0];
-
-  const allPlugins = pluginRepo.getAll();
-  const orgUsers = currentOrg.userCount;
-  const activeCourses = currentOrg.courseCount;
-
-  const queueStats: QueueStats = {
-    total: 247,
-    running: 12,
-    pending: 235,
-    failed: 0,
-  };
+  const allPlugins = pluginsEnabled ? pluginRepo.getAll() : [];
+  const orgUsers = 1247;
+  const activeCourses = 89;
 
   const pluginHealth: PluginHealth[] = allPlugins.map((plugin, index) => ({
     id: plugin.id,
@@ -116,14 +61,18 @@ export default function AdminOverviewPage() {
       color: "bg-info-light",
       iconColor: "text-brand-primary",
     },
-    {
-      titleKey: "admin.overviewPage.qlPlugins",
-      descriptionKey: "admin.overviewPage.qlPluginsDesc",
-      icon: Zap,
-      href: "/admin/plugins",
-      color: "bg-warning-light",
-      iconColor: "text-warning",
-    },
+    ...(pluginsEnabled
+      ? [
+          {
+            titleKey: "admin.overviewPage.qlPlugins",
+            descriptionKey: "admin.overviewPage.qlPluginsDesc",
+            icon: Zap,
+            href: "/admin/plugins",
+            color: "bg-warning-light",
+            iconColor: "text-warning",
+          },
+        ]
+      : []),
     {
       titleKey: "admin.overviewPage.qlLogs",
       descriptionKey: "admin.overviewPage.qlLogsDesc",
@@ -155,58 +104,15 @@ export default function AdminOverviewPage() {
 
       <div className="mt-6">
         <div className="mb-6">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div className="flex-1">
-              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
-                {t("admin.overview.title")}
-              </h1>
-              <p className="text-[16px] text-muted-foreground">{t("admin.overview.subtitle")}</p>
-            </div>
-            <div className="min-w-[280px]">
-              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                {t("admin.overviewPage.orgLabel")}
-              </label>
-              <select
-                value={selectedOrg}
-                onChange={(e) => setSelectedOrg(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors bg-card"
-              >
-                {demoOrgs.map((org) => (
-                  <option key={org.id} value={org.id}>
-                    {org.name} ({org.plan})
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="bg-card border-2 border-border rounded-[12px] p-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-info-light rounded-[8px] flex items-center justify-center">
-                <Database className="w-6 h-6 text-brand-primary" />
-              </div>
-              <div>
-                <h3 className="text-[16px] font-medium text-foreground">{currentOrg.name}</h3>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-[13px] text-muted-foreground">
-                    Slug: <span className="text-foreground font-mono">{currentOrg.slug}</span>
-                  </span>
-                  <span className="inline-flex px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium uppercase">
-                    {currentOrg.plan}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-success" />
-              <span className="text-[13px] text-success font-medium">
-                {t("admin.overviewPage.orgActive")}
-              </span>
-            </div>
-          </div>
+          <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
+            {t("admin.overview.title")}
+          </h1>
+          <p className="text-[16px] text-muted-foreground">{t("admin.overview.subtitle")}</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 ${pluginsEnabled ? "md:grid-cols-3" : ""} gap-4 mb-6`}
+        >
           <div className="bg-card border-2 border-border rounded-[16px] p-6">
             <div className="w-12 h-12 bg-info-light rounded-[12px] flex items-center justify-center mb-4">
               <Users className="w-6 h-6 text-brand-primary" />
@@ -239,127 +145,76 @@ export default function AdminOverviewPage() {
             </p>
           </div>
 
-          <div className="bg-card border-2 border-border rounded-[16px] p-6">
-            <div className="w-12 h-12 bg-warning-light rounded-[12px] flex items-center justify-center mb-4">
-              <Activity className="w-6 h-6 text-warning" />
+          {pluginsEnabled && (
+            <div className="bg-card border-2 border-border rounded-[16px] p-6">
+              <div className="w-12 h-12 bg-success-light rounded-[12px] flex items-center justify-center mb-4">
+                <Zap className="w-6 h-6 text-success" />
+              </div>
+              <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
+                {t("admin.overviewPage.pluginStatus")}
+              </p>
+              <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
+                {healthyPlugins}/{pluginHealth.length}
+              </p>
+              <div className="flex items-center gap-2 mt-2 text-[12px]">
+                {warningPlugins > 0 && <span className="text-warning">{warningPlugins} ⚠️</span>}
+                {errorPlugins > 0 && <span className="text-error">{errorPlugins} ❌</span>}
+                {warningPlugins === 0 && errorPlugins === 0 && (
+                  <span className="text-success">{t("admin.overviewPage.allRunning")}</span>
+                )}
+              </div>
             </div>
-            <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
-              {t("admin.overviewPage.queueJobs")}
-            </p>
-            <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
-              {queueStats.running}
-            </p>
-            <p className="text-[12px] text-muted-foreground mt-2">
-              {t("admin.overviewPage.pendingCount", { count: queueStats.pending })}
-            </p>
-          </div>
-
-          <div className="bg-card border-2 border-border rounded-[16px] p-6">
-            <div className="w-12 h-12 bg-success-light rounded-[12px] flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-success" />
-            </div>
-            <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
-              {t("admin.overviewPage.pluginStatus")}
-            </p>
-            <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
-              {healthyPlugins}/{pluginHealth.length}
-            </p>
-            <div className="flex items-center gap-2 mt-2 text-[12px]">
-              {warningPlugins > 0 && <span className="text-warning">{warningPlugins} ⚠️</span>}
-              {errorPlugins > 0 && <span className="text-error">{errorPlugins} ❌</span>}
-              {warningPlugins === 0 && errorPlugins === 0 && (
-                <span className="text-success">{t("admin.overviewPage.allRunning")}</span>
-              )}
-            </div>
-          </div>
+          )}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div className="bg-card border-2 border-border rounded-[20px] p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Activity className="w-5 h-5 text-warning" />
-              <h2 className="text-[18px] font-medium text-foreground">
-                {t("admin.overviewPage.queueDetails")}
-              </h2>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-muted rounded-[8px]">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-warning rounded-full"></div>
-                  <span className="text-[14px] text-foreground">
-                    {t("admin.overviewPage.running")}
-                  </span>
-                </div>
-                <span className="text-[16px] font-medium text-warning">{queueStats.running}</span>
+        {pluginsEnabled && (
+          <div className="grid grid-cols-1 gap-6 mb-6">
+            <div className="bg-card border-2 border-border rounded-[20px] p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Zap className="w-5 h-5 text-brand-primary" />
+                <h2 className="text-[18px] font-medium text-foreground">
+                  {t("admin.overviewPage.pluginHealth")}
+                </h2>
               </div>
-              <div className="flex items-center justify-between p-3 bg-muted rounded-[8px]">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-brand-primary rounded-full"></div>
-                  <span className="text-[14px] text-foreground">
-                    {t("admin.overviewPage.pending")}
-                  </span>
-                </div>
-                <span className="text-[16px] font-medium text-brand-primary">
-                  {queueStats.pending}
-                </span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-muted rounded-[8px]">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-destructive rounded-full"></div>
-                  <span className="text-[14px] text-foreground">
-                    {t("admin.overviewPage.errors")}
-                  </span>
-                </div>
-                <span className="text-[16px] font-medium text-error">{queueStats.failed}</span>
+              <div className="space-y-3">
+                {pluginHealth.slice(0, 3).map((plugin) => (
+                  <div
+                    key={plugin.id}
+                    className="flex items-center justify-between p-3 bg-muted rounded-[8px]"
+                  >
+                    <div className="flex-1">
+                      <p className="text-[14px] font-medium text-foreground">{plugin.name}</p>
+                      <p className="text-[12px] text-muted-foreground">
+                        {t("admin.overviewPage.checked")}{" "}
+                        {plugin.lastCheck.toLocaleTimeString("ru-RU")}
+                      </p>
+                    </div>
+                    <div>
+                      {plugin.status === "healthy" && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
+                          <CheckCircle className="w-3 h-3" />
+                          {t("admin.overviewPage.statusOk")}
+                        </span>
+                      )}
+                      {plugin.status === "warning" && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
+                          <AlertTriangle className="w-3 h-3" />
+                          {t("admin.overviewPage.statusWarning")}
+                        </span>
+                      )}
+                      {plugin.status === "error" && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
+                          <XCircle className="w-3 h-3" />
+                          {t("admin.overviewPage.statusError")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-
-          <div className="bg-card border-2 border-border rounded-[20px] p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-brand-primary" />
-              <h2 className="text-[18px] font-medium text-foreground">
-                {t("admin.overviewPage.pluginHealth")}
-              </h2>
-            </div>
-            <div className="space-y-3">
-              {pluginHealth.slice(0, 3).map((plugin) => (
-                <div
-                  key={plugin.id}
-                  className="flex items-center justify-between p-3 bg-muted rounded-[8px]"
-                >
-                  <div className="flex-1">
-                    <p className="text-[14px] font-medium text-foreground">{plugin.name}</p>
-                    <p className="text-[12px] text-muted-foreground">
-                      {t("admin.overviewPage.checked")}{" "}
-                      {plugin.lastCheck.toLocaleTimeString("ru-RU")}
-                    </p>
-                  </div>
-                  <div>
-                    {plugin.status === "healthy" && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
-                        <CheckCircle className="w-3 h-3" />
-                        {t("admin.overviewPage.statusOk")}
-                      </span>
-                    )}
-                    {plugin.status === "warning" && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[11px] font-medium">
-                        <AlertTriangle className="w-3 h-3" />
-                        {t("admin.overviewPage.statusWarning")}
-                      </span>
-                    )}
-                    {plugin.status === "error" && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-error-light text-error rounded-[6px] text-[11px] font-medium">
-                        <XCircle className="w-3 h-3" />
-                        {t("admin.overviewPage.statusError")}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        )}
 
         <div>
           <h2 className="text-[20px] font-medium text-foreground mb-4">
@@ -407,26 +262,28 @@ export default function AdminOverviewPage() {
               </div>
               <div className="flex-1">
                 <p className="text-[14px] text-foreground">
-                  {t("admin.overviewPage.eventOrgCreated", { name: currentOrg.name })}
+                  {t("admin.overviewPage.eventNewUsers", { count: 12 })}
                 </p>
                 <p className="text-[12px] text-muted-foreground mt-1">
                   {t("admin.overviewPage.timeAgo2h")}
                 </p>
               </div>
             </div>
-            <div className="flex items-start gap-3 p-3 hover:bg-surface-hover rounded-[8px] transition-colors">
-              <div className="w-8 h-8 bg-warning-light rounded-[8px] flex items-center justify-center flex-shrink-0">
-                <Zap className="w-4 h-4 text-warning" />
+            {pluginsEnabled && (
+              <div className="flex items-start gap-3 p-3 hover:bg-surface-hover rounded-[8px] transition-colors">
+                <div className="w-8 h-8 bg-warning-light rounded-[8px] flex items-center justify-center flex-shrink-0">
+                  <Zap className="w-4 h-4 text-warning" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[14px] text-foreground">
+                    {t("admin.overviewPage.eventPluginUpdated")}
+                  </p>
+                  <p className="text-[12px] text-muted-foreground mt-1">
+                    {t("admin.overviewPage.timeAgo5h")}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-[14px] text-foreground">
-                  {t("admin.overviewPage.eventPluginUpdated")}
-                </p>
-                <p className="text-[12px] text-muted-foreground mt-1">
-                  {t("admin.overviewPage.timeAgo5h")}
-                </p>
-              </div>
-            </div>
+            )}
             <div className="flex items-start gap-3 p-3 hover:bg-surface-hover rounded-[8px] transition-colors">
               <div className="w-8 h-8 bg-info-light rounded-[8px] flex items-center justify-center flex-shrink-0">
                 <Database className="w-4 h-4 text-brand-primary" />

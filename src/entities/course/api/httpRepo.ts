@@ -92,7 +92,6 @@ export const courseHttpRepo = {
       title: input.title,
       code: input.code ?? "",
       teacherId: input.instructorId ?? "",
-      orgId: "",
       enrollmentCount: 0,
       homeworkCount: 0,
       status: "active",

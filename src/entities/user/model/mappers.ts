@@ -7,7 +7,6 @@ export function mapApiStudent(api: ApiStudent): DemoUser {
     email: api.email,
     name: api.name,
     role: "Student",
-    orgId: api.org_id ?? "",
     avatar: api.avatar,
     createdAt: new Date(api.created_at),
   };
@@ -19,7 +18,6 @@ export function mapApiTeacher(api: ApiTeacher): DemoUser {
     email: api.email,
     name: api.name,
     role: "Teacher",
-    orgId: api.org_id ?? "",
     avatar: api.avatar,
     createdAt: new Date(api.created_at),
   };

@@ -74,7 +74,6 @@ export const ROUTES = {
   adminOverview: "/admin/overview",
   adminCourses: "/admin/courses",
   adminUsers: "/admin/users",
-  adminOrgs: "/admin/orgs",
   adminFlags: "/admin/flags",
   adminLogs: "/admin/logs",
   adminSettings: "/admin/settings",

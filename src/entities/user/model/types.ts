@@ -3,7 +3,6 @@ export interface DemoUser {
   email: string;
   name: string;
   role: "Student" | "Teacher" | "Admin";
-  orgId: string;
   avatar?: string;
   createdAt: Date;
 }

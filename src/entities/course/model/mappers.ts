@@ -16,7 +16,6 @@ export function mapDtoToCourse(dto: CourseInfoDto): DemoCourse {
     title: dto.name,
     code: "",
     teacherId: "",
-    orgId: "",
     enrollmentCount: dto.studentCount,
     homeworkCount: dto.homeworkCount,
     status: archived ? "archived" : "active",
