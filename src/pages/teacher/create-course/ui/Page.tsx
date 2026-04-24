@@ -18,9 +18,7 @@ export default function CreateCoursePage() {
   const CRUMBS = getCrumbs();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
-  const [semester, setSemester] = useState("");
   const [description, setDescription] = useState("");
-  const [visibility, setVisibility] = useState<"public" | "private">("public");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +29,6 @@ export default function CreateCoursePage() {
         title: name,
         code,
         instructorId: "teacher-1",
-        semester,
         description,
         archived: false,
       });
@@ -88,24 +85,6 @@ export default function CreateCoursePage() {
               />
             </div>
 
-            {/* Semester */}
-            <div>
-              <label className="block text-sm font-medium text-[--text-primary] mb-2">
-                {t("teacher.createCourse.semesterLabel")}
-              </label>
-              <select
-                value={semester}
-                onChange={(e) => setSemester(e.target.value)}
-                required
-                className="w-full px-4 py-2.5 border border-[--surface-border] rounded-[var(--radius-md)] text-[--text-primary] focus:outline-none focus:ring-2 focus:ring-[--brand-primary]/30 focus:border-[--brand-primary]"
-              >
-                <option value="">{t("teacher.createCourse.selectSemester")}</option>
-                <option value="Весна 2025">{t("teacher.createCourse.spring2025")}</option>
-                <option value="Осень 2024">{t("teacher.createCourse.fall2024")}</option>
-                <option value="Лето 2024">{t("teacher.createCourse.summer2024")}</option>
-              </select>
-            </div>
-
             {/* Description */}
             <div>
               <label className="block text-sm font-medium text-[--text-primary] mb-2">
@@ -118,51 +97,6 @@ export default function CreateCoursePage() {
                 placeholder={t("teacher.createCourse.descriptionPlaceholder")}
                 className="w-full px-4 py-3 border border-[--surface-border] rounded-[var(--radius-md)] text-[--text-primary] focus:outline-none focus:ring-2 focus:ring-[--brand-primary]/30 focus:border-[--brand-primary] resize-none"
               />
-            </div>
-
-            {/* Visibility */}
-            <div>
-              <label className="block text-sm font-medium text-[--text-primary] mb-3">
-                {t("teacher.createCourse.visibilityLabel")}
-              </label>
-              <div className="space-y-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    value="public"
-                    checked={visibility === "public"}
-                    onChange={(e) => setVisibility(e.target.value as "public")}
-                    className="w-4 h-4 text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
-                  />
-                  <div>
-                    <div className="text-sm font-medium text-[--text-primary]">
-                      {t("teacher.createCourse.public")}
-                    </div>
-                    <div className="text-xs text-[--text-secondary]">
-                      {t("teacher.createCourse.publicDesc")}
-                    </div>
-                  </div>
-                </label>
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    value="private"
-                    checked={visibility === "private"}
-                    onChange={(e) => setVisibility(e.target.value as "private")}
-                    className="w-4 h-4 text-[--brand-primary] focus:ring-2 focus:ring-[--brand-primary]/30"
-                  />
-                  <div>
-                    <div className="text-sm font-medium text-[--text-primary]">
-                      {t("teacher.createCourse.private")}
-                    </div>
-                    <div className="text-xs text-[--text-secondary]">
-                      {t("teacher.createCourse.privateDesc")}
-                    </div>
-                  </div>
-                </label>
-              </div>
             </div>
           </div>
 

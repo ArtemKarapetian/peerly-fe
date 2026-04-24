@@ -6,7 +6,6 @@ export interface DemoCourse {
   title: string; // Display title (alias of name for UI compatibility)
   code: string; // Deprecated on BE — left as empty string
   teacherId: string; // Not returned by BE — left empty
-  orgId: string;
   enrollmentCount: number; // From studentCount
   status: "active" | "archived";
   /** Raw backend status (Draft / InProgress / Finished / Canceled / Deleted). */
@@ -21,7 +20,6 @@ export interface CreateCourseInput {
   title: string;
   code?: string; // Unused on BE
   instructorId?: string;
-  semester?: string;
   description?: string;
   archived?: boolean;
 }

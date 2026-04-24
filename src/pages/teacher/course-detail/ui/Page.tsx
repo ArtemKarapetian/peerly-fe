@@ -97,9 +97,7 @@ export default function TeacherCourseDetailsPage() {
                   </span>
                 )}
               </div>
-              <p className="text-[15px] text-muted-foreground mb-3">
-                {course.code} • {t("teacher.courseDetail.springTerm")}
-              </p>
+              <p className="text-[15px] text-muted-foreground mb-3">{course.code}</p>
               {teacher && (
                 <p className="text-[14px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.teacherLabel")}{" "}

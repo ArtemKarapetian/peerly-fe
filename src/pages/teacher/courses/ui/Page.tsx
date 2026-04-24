@@ -19,7 +19,6 @@ interface CourseRow {
   id: string;
   name: string;
   code: string;
-  term: string;
   participantsCount: number;
   activeAssignments: number;
   status: "active" | "archived";
@@ -43,7 +42,6 @@ export default function TeacherCoursesPage() {
     id: course.id,
     name: course.title,
     code: course.code,
-    term: t("teacher.courses.springTerm"),
     participantsCount: course.enrollmentCount,
     activeAssignments: course.assignmentIds?.length || 0,
     status: course.archived ? "archived" : "active",
@@ -209,7 +207,6 @@ export default function TeacherCoursesPage() {
                 <table className="w-full table-fixed">
                   <colgroup>
                     <col />
-                    <col className="w-[120px] hidden tablet:table-column" />
                     <col className="w-[100px] hidden tablet:table-column" />
                     <col className="w-[100px] hidden tablet:table-column" />
                     <col className="w-[105px]" />
@@ -219,9 +216,6 @@ export default function TeacherCoursesPage() {
                     <tr className="border-b-2 border-border bg-surface-hover">
                       <th className="text-left px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px]">
                         {t("common.course")}
-                      </th>
-                      <th className="text-left px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px] hidden tablet:table-cell">
-                        {t("common.semester")}
                       </th>
                       <th className="text-center px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px] hidden tablet:table-cell">
                         {t("common.students")}
@@ -256,11 +250,6 @@ export default function TeacherCoursesPage() {
                             <p className="text-[12px] text-muted-foreground mt-0.5 font-mono">
                               {course.code}
                             </p>
-                          </td>
-
-                          {/* Semester */}
-                          <td className="px-5 py-4 hidden tablet:table-cell">
-                            <p className="text-[13px] text-muted-foreground">{course.term}</p>
                           </td>
 
                           {/* Students */}
