@@ -13,11 +13,11 @@ interface CourseAssignmentsTabProps {
 export function CourseAssignmentsTab({ courseId }: CourseAssignmentsTabProps) {
   const navigate = useNavigate();
   const handleTaskClick = (taskId: string) => {
-    void navigate(`/task/${taskId}`);
+    void navigate(`/courses/${courseId}/tasks/${taskId}`);
   };
 
   return (
-    <div className="bg-muted rounded-[20px] p-5 space-y-3 mt-2">
+    <div className="space-y-3">
       <TaskFilterBar tasks={mockTasks}>
         {(filteredTasks) => (
           <TaskList tasks={filteredTasks} onTaskClick={handleTaskClick} courseId={courseId} />

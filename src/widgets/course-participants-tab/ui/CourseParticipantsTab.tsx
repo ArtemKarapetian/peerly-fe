@@ -18,7 +18,7 @@ export function CourseParticipantsTab() {
   });
 
   return (
-    <div className="bg-muted rounded-[20px] p-5 space-y-3 mt-2">
+    <div className="space-y-3">
       <ParticipantSearch value={searchQuery} onChange={setSearchQuery} />
       <ParticipantsList participants={filteredParticipants} />
     </div>

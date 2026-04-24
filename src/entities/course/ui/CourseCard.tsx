@@ -18,7 +18,6 @@ interface CourseCardProps {
   title: string;
   teacher: string;
   coverColor?: string;
-  semester?: string;
   deadline?: string;
   progress?: number;
   newAssignments?: number;
@@ -36,7 +35,6 @@ export function CourseCard({
   title,
   teacher,
   coverColor = "#b0e9fb",
-  semester,
   deadline,
   progress,
   newAssignments,
@@ -94,13 +92,6 @@ export function CourseCard({
             {newAssignments === 1 ? t("entity.course.newOne") : t("entity.course.newMany")}
           </span>
         ) : null}
-
-        {/* Semester chip — bg-black/12 works on any cover color lightness */}
-        {semester && (
-          <span className="text-[10px] font-medium px-2 py-0.5 bg-black/[0.14] rounded-full text-[--text-primary] leading-none">
-            {semester}
-          </span>
-        )}
       </div>
 
       {/* Card body */}
