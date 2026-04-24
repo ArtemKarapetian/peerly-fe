@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import {
@@ -21,23 +22,31 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 /**
  * TeacherCreateAssignmentPage - Мастер создания задания
  *
- * 6-шаговый визард:
+ * Шаги визарда:
  * 1. Основная информация
  * 2. Дедлайны
  * 3. Рубрика
  * 4. Настройки peer review
- * 5. Плагины и проверки
+ * 5. Плагины и проверки   (только при enablePlugins)
  * 6. Публикация
  */
 
-const STEP_KEYS = [
-  { id: 1, key: "stepBasics" },
-  { id: 2, key: "stepDeadlines" },
-  { id: 3, key: "stepRubric" },
-  { id: 4, key: "stepPeerReview" },
-  { id: 5, key: "stepPlugins" },
-  { id: 6, key: "stepPublish" },
-] as const;
+type StepKey =
+  | "stepBasics"
+  | "stepDeadlines"
+  | "stepRubric"
+  | "stepPeerReview"
+  | "stepPlugins"
+  | "stepPublish";
+
+const ALL_STEP_KEYS: StepKey[] = [
+  "stepBasics",
+  "stepDeadlines",
+  "stepRubric",
+  "stepPeerReview",
+  "stepPlugins",
+  "stepPublish",
+];
 
 const STORAGE_KEY = "peerly_assignment_draft";
 
@@ -110,11 +119,16 @@ export default function TeacherCreateAssignmentPage({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
-  const STEPS = STEP_KEYS.map((s) => ({
-    id: s.id,
-    name: t(`teacher.createAssignment.${s.key}`),
-    shortName: t(`teacher.createAssignment.${s.key}`),
-  }));
+  const pluginsEnabled = isFlagEnabled("enablePlugins");
+  const STEPS = ALL_STEP_KEYS.filter((key) => key !== "stepPlugins" || pluginsEnabled).map(
+    (key, idx) => ({
+      id: idx + 1,
+      key,
+      name: t(`teacher.createAssignment.${key}`),
+      shortName: t(`teacher.createAssignment.${key}`),
+    }),
+  );
+  const lastStepId = STEPS.length;
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<AssignmentFormData>(() => {
     const initial = getInitialFormData();
@@ -169,38 +183,37 @@ export default function TeacherCreateAssignmentPage({
     void navigate(`/teacher/assignment/${assignmentId}`);
   };
 
+  const currentStepKey = STEPS[currentStep - 1]?.key;
+
   const canProceed = () => {
-    switch (currentStep) {
-      case 1:
+    switch (currentStepKey) {
+      case "stepBasics":
         return formData.courseId && formData.title.trim().length > 0;
-      case 2:
+      case "stepDeadlines":
         return formData.submissionDeadline && formData.reviewDeadline;
-      case 3:
-        return true; // Rubric is optional
-      case 4:
+      case "stepPeerReview":
         return formData.reviewsPerSubmission >= 1;
-      case 5:
-        return true; // Plugins are optional
-      case 6:
-        return true;
+      case "stepRubric":
+      case "stepPlugins":
+      case "stepPublish":
       default:
         return true;
     }
   };
 
   const renderStep = () => {
-    switch (currentStep) {
-      case 1:
+    switch (currentStepKey) {
+      case "stepBasics":
         return <StepBasics data={formData} onUpdate={updateFormData} />;
-      case 2:
+      case "stepDeadlines":
         return <StepDeadlines data={formData} onUpdate={updateFormData} />;
-      case 3:
+      case "stepRubric":
         return <StepRubric data={formData} onUpdate={updateFormData} />;
-      case 4:
+      case "stepPeerReview":
         return <StepPeerSession data={formData} onUpdate={updateFormData} />;
-      case 5:
+      case "stepPlugins":
         return <StepPlugins data={formData} onUpdate={updateFormData} />;
-      case 6:
+      case "stepPublish":
         return <StepPublish data={formData} onPublish={handlePublish} />;
       default:
         return null;
@@ -264,7 +277,7 @@ export default function TeacherCreateAssignmentPage({
         <div className="bg-card border-2 border-border rounded-[20px] p-8 mb-6">{renderStep()}</div>
 
         {/* Navigation */}
-        {currentStep < 6 && (
+        {currentStep < lastStepId && (
           <div className="flex items-center justify-between">
             <button
               onClick={handlePrev}

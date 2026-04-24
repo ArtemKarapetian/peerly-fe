@@ -139,13 +139,11 @@ export default function TeacherRubricDetailPage() {
         </div>
 
         {/* Content */}
-        <div className="bg-card border-2 border-border rounded-[20px] p-6 desktop:p-8">
-          {viewMode === "edit" ? (
-            <RubricEditor rubric={rubric} onSave={handleSave} />
-          ) : (
-            <RubricPreview rubric={rubric} />
-          )}
-        </div>
+        {viewMode === "edit" ? (
+          <RubricEditor rubric={rubric} onSave={handleSave} />
+        ) : (
+          <RubricPreview rubric={rubric} />
+        )}
       </div>
     </AppShell>
   );

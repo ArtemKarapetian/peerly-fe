@@ -1,6 +1,7 @@
 import { Check, Calendar, Users, Layers, Shield, Save, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { useAsync } from "@/shared/lib/useAsync";
 
 import { courseRepo } from "@/entities/course";
@@ -21,6 +22,7 @@ interface StepPublishProps {
 
 export function StepPublish({ data, onPublish }: StepPublishProps) {
   const { t } = useTranslation();
+  const pluginsEnabled = isFlagEnabled("enablePlugins");
   const { data: courses } = useAsync(() => courseRepo.getAll(), []);
   const course = (courses ?? []).find((c) => c.id === data.courseId);
 
@@ -268,35 +270,37 @@ export function StepPublish({ data, onPublish }: StepPublishProps) {
         </div>
 
         {/* Plugins */}
-        <div className="bg-card border-2 border-border rounded-[16px] p-5">
-          <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
-              <Shield className="w-5 h-5 text-brand-primary" />
+        {pluginsEnabled && (
+          <div className="bg-card border-2 border-border rounded-[16px] p-5">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-10 h-10 bg-brand-primary-light rounded-[8px] flex items-center justify-center">
+                <Shield className="w-5 h-5 text-brand-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-[16px] font-medium text-foreground mb-1">
+                  {t("feature.assignmentCreate.publish.pluginsLabel")}
+                </h3>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-[16px] font-medium text-foreground mb-1">
-                {t("feature.assignmentCreate.publish.pluginsLabel")}
-              </h3>
-            </div>
-          </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-border">
-            {enabledPlugins.length === 0 ? (
-              <p className="text-[14px] text-muted-foreground">
-                {t("feature.assignmentCreate.publish.noPlugins")}
-              </p>
-            ) : (
-              <ul className="space-y-2">
-                {enabledPlugins.map((plugin, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-success" />
-                    <span className="text-[14px] text-foreground">{plugin}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="ml-13 pl-5 border-l-2 border-border">
+              {enabledPlugins.length === 0 ? (
+                <p className="text-[14px] text-muted-foreground">
+                  {t("feature.assignmentCreate.publish.noPlugins")}
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {enabledPlugins.map((plugin, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-success" />
+                      <span className="text-[14px] text-foreground">{plugin}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Warning */}

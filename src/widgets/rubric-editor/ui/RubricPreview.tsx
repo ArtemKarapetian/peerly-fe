@@ -60,7 +60,7 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
   ).length;
 
   return (
-    <div className="max-w-[900px] mx-auto">
+    <div>
       {/* Info Banner */}
       <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4 mb-6">
         <h3 className="text-[16px] font-medium text-foreground mb-2">
@@ -70,7 +70,7 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
       </div>
 
       {/* Rubric Metadata */}
-      <div className="bg-card border-2 border-border rounded-[16px] p-6 mb-6">
+      <div className="mb-6">
         <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {rubric.name}
         </h2>
@@ -78,7 +78,7 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
       </div>
 
       {/* Stats */}
-      <div className="bg-card border-2 border-border rounded-[16px] p-4 mb-6">
+      <div className="border border-border rounded-[12px] p-4 mb-6">
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
             <p className="text-[24px] font-medium text-foreground">
