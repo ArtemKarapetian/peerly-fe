@@ -71,35 +71,10 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
 
       {/* Rubric Metadata */}
       <div className="bg-card border-2 border-border rounded-[16px] p-6 mb-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
-              {rubric.name}
-            </h2>
-            <p className="text-[15px] text-muted-foreground leading-[1.5]">{rubric.description}</p>
-          </div>
-          <div className="ml-4">
-            <span className="inline-block px-3 py-1 bg-muted text-foreground rounded-[8px] text-[13px] font-medium">
-              {rubric.taskType === "text" && t("widget.rubricEditor.typeText")}
-              {rubric.taskType === "code" && t("widget.rubricEditor.typeCode")}
-              {rubric.taskType === "project" && t("widget.rubricEditor.typeProject")}
-            </span>
-          </div>
-        </div>
-
-        {/* Tags */}
-        {rubric.tags.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            {rubric.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-1 bg-info-light text-brand-primary rounded-[6px] text-[12px]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
+          {rubric.name}
+        </h2>
+        <p className="text-[15px] text-muted-foreground leading-[1.5]">{rubric.description}</p>
       </div>
 
       {/* Stats */}
@@ -148,7 +123,7 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
 
       {/* Weights Info (if any criterion has weight) */}
       {rubric.criteria.some((c) => c.weight) && (
-        <div className="mt-6 bg-muted border-2 border-border rounded-[12px] p-4">
+        <div className="mt-6 border-2 border-border rounded-[12px] p-4">
           <h4 className="text-[14px] font-medium text-foreground mb-3">
             {t("widget.rubricPreview.weightCoefficients")}
           </h4>

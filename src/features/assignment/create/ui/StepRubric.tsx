@@ -21,18 +21,14 @@ interface RubricItem {
   id: string;
   name: string;
   description: string;
-  taskType: string;
   criteriaCount: number;
-  tags: string[];
 }
 
 interface StoredRubric {
   id: string;
   name: string;
   description: string;
-  taskType: string;
   criteria?: unknown[];
-  tags?: string[];
 }
 
 const getMockRubrics = (): RubricItem[] => {
@@ -45,9 +41,7 @@ const getMockRubrics = (): RubricItem[] => {
           id: r.id,
           name: r.name,
           description: r.description,
-          taskType: r.taskType,
           criteriaCount: r.criteria?.length || 0,
-          tags: r.tags || [],
         }),
       );
     } catch (e) {
@@ -61,25 +55,19 @@ const getMockRubrics = (): RubricItem[] => {
       name: "Оценка веб-проекта",
       description:
         "Критерии оценки финального веб-проекта с фокусом на функциональность, дизайн и качество кода",
-      taskType: "project",
       criteriaCount: 4,
-      tags: ["веб-разработка", "frontend"],
     },
     {
       id: "r2",
       name: "Проверка кода (Code Review)",
       description: "Рубрика для оценки качества программного кода",
-      taskType: "code",
       criteriaCount: 3,
-      tags: ["программирование", "code-review"],
     },
     {
       id: "r3",
       name: "Эссе и письменные работы",
       description: "Критерии оценки текстовых работ и аналитических эссе",
-      taskType: "text",
       criteriaCount: 4,
-      tags: ["письменные работы", "эссе"],
     },
   ];
 };
@@ -89,46 +77,18 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const rubrics = getMockRubrics();
 
-  const filteredRubrics = rubrics.filter((rubric) => {
-    // Prefer matching task type
-    return (
+  const filteredRubrics = rubrics.filter(
+    (rubric) =>
       rubric.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      rubric.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      rubric.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  });
-
-  // Sort by task type match first
-  const sortedRubrics = [...filteredRubrics].sort((a, b) => {
-    const aMatches = a.taskType === data.taskType;
-    const bMatches = b.taskType === data.taskType;
-    if (aMatches && !bMatches) return -1;
-    if (!aMatches && bMatches) return 1;
-    return 0;
-  });
+      rubric.description.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   const handleSelectRubric = (rubricId: string, rubricName: string) => {
     onUpdate({ rubricId, rubricName });
   };
 
   const handleCreateNew = () => {
-    // Open rubrics library in new tab/window or navigate
-    window.open("#/teacher/rubrics", "_blank");
-  };
-
-  const getTaskTypeLabel = (type: string) => {
-    switch (type) {
-      case "text":
-        return t("feature.assignmentCreate.rubric.typeText");
-      case "code":
-        return t("feature.assignmentCreate.rubric.typeCode");
-      case "project":
-        return t("feature.assignmentCreate.rubric.typeProject");
-      case "files":
-        return t("feature.assignmentCreate.rubric.typeFiles");
-      default:
-        return type;
-    }
+    window.open("/teacher/rubrics", "_blank");
   };
 
   const selectedRubric = rubrics.find((r) => r.id === data.rubricId);
@@ -157,14 +117,9 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
               </div>
               <p className="text-[15px] text-foreground font-medium mb-1">{selectedRubric.name}</p>
               <p className="text-[13px] text-muted-foreground mb-2">{selectedRubric.description}</p>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-1 bg-card text-foreground rounded-[6px] text-[12px] font-medium">
-                  {getTaskTypeLabel(selectedRubric.taskType)}
-                </span>
-                <span className="text-[13px] text-muted-foreground">
-                  {selectedRubric.criteriaCount} {t("feature.assignmentCreate.rubric.criteria")}
-                </span>
-              </div>
+              <span className="text-[13px] text-muted-foreground">
+                {selectedRubric.criteriaCount} {t("feature.assignmentCreate.rubric.criteria")}
+              </span>
             </div>
             <button
               onClick={() => onUpdate({ rubricId: null, rubricName: undefined })}
@@ -216,16 +171,9 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
       <div>
         <h3 className="text-[14px] font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.rubric.library")}
-          {data.taskType && (
-            <span className="ml-2 text-[13px] font-normal text-muted-foreground">
-              {t("feature.assignmentCreate.rubric.recommendedForType", {
-                type: getTaskTypeLabel(data.taskType),
-              })}
-            </span>
-          )}
         </h3>
 
-        {sortedRubrics.length === 0 ? (
+        {filteredRubrics.length === 0 ? (
           <div className="text-center py-12 bg-muted border border-border rounded-[12px]">
             <Layers className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
             <p className="text-[15px] text-muted-foreground">
@@ -234,9 +182,8 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
           </div>
         ) : (
           <div className="space-y-3 max-h-[400px] overflow-y-auto">
-            {sortedRubrics.map((rubric) => {
+            {filteredRubrics.map((rubric) => {
               const isSelected = data.rubricId === rubric.id;
-              const matchesTaskType = rubric.taskType === data.taskType;
 
               return (
                 <button
@@ -252,37 +199,13 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
                     }
                   `}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="text-[15px] font-medium text-foreground">
-                      {rubric.name}
-                      {matchesTaskType && (
-                        <span className="ml-2 px-2 py-0.5 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
-                          {t("feature.assignmentCreate.rubric.recommended")}
-                        </span>
-                      )}
-                    </h4>
-                  </div>
-
+                  <h4 className="text-[15px] font-medium text-foreground mb-2">{rubric.name}</h4>
                   <p className="text-[13px] text-muted-foreground mb-3 line-clamp-2">
                     {rubric.description}
                   </p>
-
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px] font-medium">
-                      {getTaskTypeLabel(rubric.taskType)}
-                    </span>
-                    <span className="text-[12px] text-muted-foreground">
-                      {rubric.criteriaCount} {t("feature.assignmentCreate.rubric.criteria")}
-                    </span>
-                    {rubric.tags.slice(0, 2).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 bg-brand-primary-light text-brand-primary rounded-[6px] text-[11px]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                  <span className="text-[12px] text-muted-foreground">
+                    {rubric.criteriaCount} {t("feature.assignmentCreate.rubric.criteria")}
+                  </span>
                 </button>
               );
             })}
