@@ -1,6 +1,7 @@
 import { FileText } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -48,12 +49,12 @@ function TeacherPlaceholderPage({
 
           {primaryAction && (
             <div className="mb-6">
-              <a
-                href={primaryAction.href}
+              <Link
+                to={primaryAction.href}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium"
               >
                 {primaryAction.label}
-              </a>
+              </Link>
             </div>
           )}
 
@@ -79,7 +80,7 @@ export default function TeacherAssignmentsPage() {
       breadcrumbs={[{ label: t("teacher.assignments.breadcrumb") }]}
       primaryAction={{
         label: t("teacher.assignments.createAssignment"),
-        href: "#/teacher/assignments/new",
+        href: "/teacher/assignments/new",
       }}
       demoModeLabel={t("teacher.assignments.demoMode")}
       demoModeDesc={t("teacher.assignments.demoModeDesc")}
