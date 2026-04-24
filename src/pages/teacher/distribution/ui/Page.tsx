@@ -1,14 +1,11 @@
 import {
   GitBranch,
   UserPlus,
-  Lock,
-  Unlock,
   Bell,
   X,
   Clock,
   AlertCircle,
   CheckCircle,
-  EyeOff,
   MoreVertical,
 } from "lucide-react";
 import { useState } from "react";
@@ -43,7 +40,6 @@ interface DistributionRow {
   submissionId: string;
   anonymousId: string;
   authorName: string;
-  isAnonymous: boolean;
   assignedReviewers: Array<{
     id: string;
     name: string;
@@ -51,7 +47,6 @@ interface DistributionRow {
   }>;
   overallStatus: "not-started" | "in-progress" | "completed";
   lastActivity: Date;
-  isLocked: boolean;
 }
 
 interface DistributionHistory {
@@ -147,11 +142,9 @@ export default function TeacherDistributionPage() {
         submissionId: submission.id,
         anonymousId: `SUB-${String(idx + 1).padStart(3, "0")}`,
         authorName: author?.name || "Unknown",
-        isAnonymous: Math.random() > 0.5, // Demo: random anonymity
         assignedReviewers,
         overallStatus,
         lastActivity: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-        isLocked: Math.random() > 0.8, // Demo: some are locked
       };
     });
   };
@@ -162,22 +155,22 @@ export default function TeacherDistributionPage() {
     switch (status) {
       case "completed":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
-            <CheckCircle className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium whitespace-nowrap">
+            <CheckCircle className="w-3 h-3 shrink-0" />
             {t("teacher.distribution.completed")}
           </span>
         );
       case "in-progress":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
-            <Clock className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium whitespace-nowrap">
+            <Clock className="w-3 h-3 shrink-0" />
             {t("teacher.distribution.inProgress")}
           </span>
         );
       case "not-started":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium">
-            <AlertCircle className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium whitespace-nowrap">
+            <AlertCircle className="w-3 h-3 shrink-0" />
             {t("teacher.distribution.notStarted")}
           </span>
         );
@@ -218,11 +211,6 @@ export default function TeacherDistributionPage() {
     const dist = distributions.find((d) => d.id === distributionId);
     setSelectedDistribution(dist || null);
     setShowAddReviewerModal(true);
-    setActiveRowAction(null);
-  };
-
-  const handleToggleLock = (distributionId: string) => {
-    alert(`Toggle lock for ${distributionId}`);
     setActiveRowAction(null);
   };
 
@@ -364,26 +352,12 @@ export default function TeacherDistributionPage() {
                         onClick={() => handleRowClick(dist)}
                       >
                         <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[15px] font-medium text-foreground">
-                              {dist.anonymousId}
-                            </span>
-                            {dist.isLocked && <Lock className="w-4 h-4 text-error" />}
-                          </div>
+                          <span className="text-[15px] font-medium text-foreground">
+                            {dist.anonymousId}
+                          </span>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            {dist.isAnonymous ? (
-                              <>
-                                <EyeOff className="w-4 h-4 text-muted-foreground" />
-                                <span className="text-[14px] text-muted-foreground italic">
-                                  {t("teacher.distribution.hidden")}
-                                </span>
-                              </>
-                            ) : (
-                              <span className="text-[14px] text-foreground">{dist.authorName}</span>
-                            )}
-                          </div>
+                          <span className="text-[14px] text-foreground">{dist.authorName}</span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex flex-wrap gap-2">
@@ -444,26 +418,6 @@ export default function TeacherDistributionPage() {
                                   </span>
                                 </button>
                                 <button
-                                  onClick={() => handleToggleLock(dist.id)}
-                                  className="w-full flex items-center gap-2 px-4 py-3 hover:bg-muted text-left transition-colors border-t border-border"
-                                >
-                                  {dist.isLocked ? (
-                                    <>
-                                      <Unlock className="w-4 h-4 text-warning" />
-                                      <span className="text-[14px] text-foreground">
-                                        {t("teacher.distribution.unlock")}
-                                      </span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Lock className="w-4 h-4 text-error" />
-                                      <span className="text-[14px] text-foreground">
-                                        {t("teacher.distribution.lock")}
-                                      </span>
-                                    </>
-                                  )}
-                                </button>
-                                <button
                                   onClick={() => handleNudgeReviewer(dist.id)}
                                   className="w-full flex items-center gap-2 px-4 py-3 hover:bg-muted text-left transition-colors border-t border-border last:rounded-b-[10px]"
                                 >
@@ -505,7 +459,6 @@ export default function TeacherDistributionPage() {
                       <span className="text-[16px] font-medium text-foreground">
                         {dist.anonymousId}
                       </span>
-                      {dist.isLocked && <Lock className="w-4 h-4 text-error" />}
                     </div>
                     {getStatusBadge(dist.overallStatus)}
                   </div>
@@ -515,14 +468,7 @@ export default function TeacherDistributionPage() {
                       <span className="text-muted-foreground">
                         {t("teacher.distribution.authorLabel")}
                       </span>
-                      {dist.isAnonymous ? (
-                        <span className="text-muted-foreground italic flex items-center gap-1">
-                          <EyeOff className="w-3 h-3" />
-                          {t("teacher.distribution.hiddenShort")}
-                        </span>
-                      ) : (
-                        <span className="text-foreground">{dist.authorName}</span>
-                      )}
+                      <span className="text-foreground">{dist.authorName}</span>
                     </div>
 
                     <div>
@@ -587,25 +533,6 @@ export default function TeacherDistributionPage() {
                   {/* Mobile Actions Menu */}
                   {activeRowAction === dist.id && (
                     <div className="mt-3 pt-3 border-t border-border space-y-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleLock(dist.id);
-                        }}
-                        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-muted rounded-[8px] transition-colors text-[13px] text-foreground"
-                      >
-                        {dist.isLocked ? (
-                          <>
-                            <Unlock className="w-4 h-4 text-warning" />
-                            {t("teacher.distribution.unlockBtn")}
-                          </>
-                        ) : (
-                          <>
-                            <Lock className="w-4 h-4 text-error" />
-                            {t("teacher.distribution.lockBtn")}
-                          </>
-                        )}
-                      </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -692,16 +619,7 @@ export default function TeacherDistributionPage() {
                     <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
                       {t("teacher.distribution.authorDrawerLabel")}
                     </p>
-                    {selectedDistribution.isAnonymous ? (
-                      <p className="text-[14px] text-muted-foreground italic flex items-center gap-1">
-                        <EyeOff className="w-3 h-3" />
-                        {t("teacher.distribution.hiddenShort")}
-                      </p>
-                    ) : (
-                      <p className="text-[14px] text-foreground">
-                        {selectedDistribution.authorName}
-                      </p>
-                    )}
+                    <p className="text-[14px] text-foreground">{selectedDistribution.authorName}</p>
                   </div>
                   <div>
                     <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
@@ -759,28 +677,8 @@ export default function TeacherDistributionPage() {
                     {t("teacher.distribution.addBtn")}
                   </button>
                   <button
-                    onClick={() => handleToggleLock(selectedDistribution.id)}
-                    className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-border rounded-[12px] hover:bg-muted transition-colors"
-                  >
-                    {selectedDistribution.isLocked ? (
-                      <>
-                        <Unlock className="w-4 h-4 text-warning" />
-                        <span className="text-[14px] text-foreground">
-                          {t("teacher.distribution.unlockBtn")}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <Lock className="w-4 h-4 text-error" />
-                        <span className="text-[14px] text-foreground">
-                          {t("teacher.distribution.lockBtn")}
-                        </span>
-                      </>
-                    )}
-                  </button>
-                  <button
                     onClick={() => handleNudgeReviewer(selectedDistribution.id)}
-                    className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-border rounded-[12px] hover:bg-muted transition-colors"
+                    className="col-span-2 flex items-center justify-center gap-2 px-4 py-3 border-2 border-border rounded-[12px] hover:bg-muted transition-colors"
                   >
                     <Bell className="w-4 h-4 text-brand-primary" />
                     <span className="text-[14px] text-foreground">
