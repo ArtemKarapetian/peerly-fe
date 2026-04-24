@@ -31,8 +31,8 @@ export interface FeatureFlags {
   enableExtensions: boolean;
   enableAnnouncements: boolean;
   enableAppeals: boolean;
+  enableNotifications: boolean;
   enableAuditLogs: boolean;
-  enableOrganizations: boolean;
   enableAdminPanel: boolean;
   enableProfileEdit: boolean;
   enablePasswordChange: boolean;
@@ -62,8 +62,11 @@ export const FLAG_METADATA: Record<keyof FeatureFlags, FlagMeta> = {
   enableExtensions: { backend: false, description: "Deadline-extension manager (demo)" },
   enableAnnouncements: { backend: false, description: "Course announcements (demo)" },
   enableAppeals: { backend: false, description: "Student appeals inbox (demo)" },
+  enableNotifications: {
+    backend: false,
+    description: "Notifications inbox + dashboard widget (demo)",
+  },
   enableAuditLogs: { backend: false, description: "Admin audit log view (demo)" },
-  enableOrganizations: { backend: false, description: "Organization management (demo)" },
   enableAdminPanel: { backend: false, description: "Admin panel entry point (demo)" },
   enableProfileEdit: { backend: false, description: "Self-service profile edit (demo)" },
   enablePasswordChange: { backend: false, description: "Password change form (demo)" },
@@ -84,8 +87,8 @@ const DEFAULT_FLAGS: FeatureFlags = {
   enableExtensions: false,
   enableAnnouncements: false,
   enableAppeals: false,
+  enableNotifications: false,
   enableAuditLogs: false,
-  enableOrganizations: false,
   enableAdminPanel: true,
   enableProfileEdit: false,
   enablePasswordChange: false,

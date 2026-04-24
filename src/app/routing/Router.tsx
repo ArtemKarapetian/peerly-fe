@@ -12,7 +12,6 @@ const AdminCoursesPage = lazy(() => import("@/pages/admin/courses/ui/Page"));
 const AdminFlagsPage = lazy(() => import("@/pages/admin/flags/ui/Page"));
 const AdminIntegrationsPage = lazy(() => import("@/pages/admin/integrations/ui/Page"));
 const AdminLimitsPage = lazy(() => import("@/pages/admin/limits/ui/Page"));
-const AdminOrgsPage = lazy(() => import("@/pages/admin/orgs/ui/Page"));
 const AdminOverviewPage = lazy(() => import("@/pages/admin/overview/ui/Page"));
 const AdminPluginsPage = lazy(() => import("@/pages/admin/plugins/ui/Page"));
 const AdminRetentionPage = lazy(() => import("@/pages/admin/retention/ui/Page"));
@@ -81,6 +80,7 @@ const TeacherPeerSessionSettingsPage = lazy(
   () => import("@/pages/teacher/peer-session-settings/ui/Page"),
 );
 const TeacherRubricsPage = lazy(() => import("@/pages/teacher/rubrics/ui/Page"));
+const TeacherRubricDetailPage = lazy(() => import("@/pages/teacher/rubric-detail/ui/Page"));
 const TeacherSubmissionsPage = lazy(() => import("@/pages/teacher/submissions/ui/Page"));
 
 function PageFallback() {
@@ -132,7 +132,9 @@ export function Router() {
           <Route path="/reviews/received" element={<ReceivedReviewsPage />} />
           <Route path="/reviews/:reviewId" element={<ReviewPage />} />
           <Route path="/gradebook" element={<GradebookPage />} />
-          <Route path="/inbox" element={<InboxPage />} />
+          <Route element={<FeatureRoute flag="enableNotifications" />}>
+            <Route path="/inbox" element={<InboxPage />} />
+          </Route>
           <Route element={<FeatureRoute flag="enableAppeals" />}>
             <Route path="/appeals" element={<AppealsListPage />} />
           </Route>
@@ -150,6 +152,7 @@ export function Router() {
             <Route path="/teacher/courses/new" element={<TeacherCreateCoursePage />} />
             <Route path="/teacher/courses/:courseId" element={<TeacherCourseDetailsPage />} />
             <Route path="/teacher/rubrics" element={<TeacherRubricsPage />} />
+            <Route path="/teacher/rubrics/:rubricId" element={<TeacherRubricDetailPage />} />
             <Route path="/teacher/assignments" element={<TeacherAssignmentsPage />} />
             <Route path="/teacher/assignments/new" element={<TeacherCreateAssignmentPage />} />
             <Route
@@ -194,9 +197,6 @@ export function Router() {
               <Route path="/admin/users" element={<AdminUsersPage />} />
               <Route path="/admin/settings" element={<AdminSettingsPage />} />
               <Route path="/admin/flags" element={<AdminFlagsPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableOrganizations" />}>
-              <Route path="/admin/orgs" element={<AdminOrgsPage />} />
             </Route>
 
             {/* Admin (feature-flagged) */}
