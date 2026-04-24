@@ -92,10 +92,10 @@ export default function DashboardPage() {
                 <ActionCards
                   data={mockActionData}
                   onReviewsClick={() => {
-                    void navigate("/reviews");
+                    void navigate("/student/reviews");
                   }}
                   onFeedbackClick={() => {
-                    void navigate("/reviews/received");
+                    void navigate("/student/reviews/received");
                   }}
                 />
                 {/* Section break before deadlines */}
@@ -111,7 +111,7 @@ export default function DashboardPage() {
             <DeadlinesList
               items={mockDeadlines}
               onTaskClick={(courseId, taskId) => {
-                void navigate(`/courses/${courseId}/tasks/${taskId}`);
+                void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
               }}
             />
           </SectionCard>
@@ -123,10 +123,10 @@ export default function DashboardPage() {
                 <NotificationsList
                   items={mockNotifications}
                   onNotificationClick={(id) => {
-                    void navigate(`/inbox/${id}`);
+                    void navigate(`/student/inbox/${id}`);
                   }}
                   onViewAllClick={() => {
-                    void navigate("/inbox");
+                    void navigate("/student/inbox");
                   }}
                 />
               </SectionCard>
@@ -142,10 +142,10 @@ export default function DashboardPage() {
                 <NotificationsList
                   items={mockNotifications}
                   onNotificationClick={(id) => {
-                    void navigate(`/inbox/${id}`);
+                    void navigate(`/student/inbox/${id}`);
                   }}
                   onViewAllClick={() => {
-                    void navigate("/inbox");
+                    void navigate("/student/inbox");
                   }}
                 />
               </SectionCard>

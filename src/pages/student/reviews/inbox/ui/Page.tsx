@@ -26,7 +26,7 @@ export default function ReviewsInboxPage() {
 
   const handleReviewClick = (reviewId: string) => {
     setTimeout(() => {
-      void navigate(`/reviews/${reviewId}`);
+      void navigate(`/student/reviews/${reviewId}`);
     }, 0);
   };
 

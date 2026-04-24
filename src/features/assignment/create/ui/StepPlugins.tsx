@@ -44,7 +44,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
-            <div className="w-10 h-10 bg-muted rounded-[8px] flex items-center justify-center">
+            <div className="w-10 h-10 bg-brand-primary-lighter text-brand-primary rounded-[8px] flex items-center justify-center">
               <Shield className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
@@ -99,7 +99,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
-            <div className="w-10 h-10 bg-muted rounded-[8px] flex items-center justify-center">
+            <div className="w-10 h-10 bg-brand-primary-lighter text-brand-primary rounded-[8px] flex items-center justify-center">
               <Code className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
@@ -152,7 +152,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
-            <div className="w-10 h-10 bg-muted rounded-[8px] flex items-center justify-center">
+            <div className="w-10 h-10 bg-brand-primary-lighter text-brand-primary rounded-[8px] flex items-center justify-center">
               <FileCheck className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
@@ -217,7 +217,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
-            <div className="w-10 h-10 bg-muted rounded-[8px] flex items-center justify-center">
+            <div className="w-10 h-10 bg-brand-primary-lighter text-brand-primary rounded-[8px] flex items-center justify-center">
               <UserX className="w-5 h-5 text-brand-primary" />
             </div>
             <div className="flex-1">
@@ -245,7 +245,7 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
             <p className="text-[13px] text-muted-foreground">
               {t("feature.assignmentCreate.plugins.anonymizationDetails")}
             </p>
-            <div className="mt-3 bg-muted rounded-[8px] p-3">
+            <div className="mt-3 border border-border rounded-[8px] p-3">
               <p className="text-[12px] text-foreground mb-1 font-medium">
                 {t("feature.assignmentCreate.plugins.anonymizationReplaced")}
               </p>

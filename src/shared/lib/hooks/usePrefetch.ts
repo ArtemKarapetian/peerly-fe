@@ -10,7 +10,7 @@ import { QUERY_STALE_TIME } from "@/shared/config/constants";
  * Usage:
  * ```tsx
  * const prefetch = usePrefetch(courseKeys.detail(id), () => courseRepo.get(id));
- * <Link onMouseEnter={prefetch} to={`/courses/${id}`}>…</Link>
+ * <Link onMouseEnter={prefetch} to={`/student/courses/${id}`}>…</Link>
  * ```
  */
 export function usePrefetch<T>(queryKey: QueryKey, queryFn: QueryFunction<T>) {

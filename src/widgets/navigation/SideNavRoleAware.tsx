@@ -76,7 +76,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
   const isActive = (hash: string, navItems: NavItem[]) => {
     if (currentPath === hash) return true;
     // Don't match parent path if a more specific sibling route matches
-    // e.g. /reviews should NOT match when on /reviews/received
+    // e.g. /student/reviews should NOT match when on /student/reviews/received
     const hasMoreSpecificMatch = navItems.some(
       (item) =>
         item.hash !== hash && item.hash.startsWith(hash + "/") && currentPath.startsWith(item.hash),
@@ -89,21 +89,25 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
     switch (currentRole) {
       case "Student":
         return [
-          { icon: LayoutDashboard, label: t("nav.home"), hash: "/dashboard" },
-          { icon: Book, label: t("nav.courses"), hash: "/courses" },
-          { icon: FileCheck, label: t("nav.reviews"), hash: "/reviews" },
-          { icon: MessageSquare, label: t("nav.receivedReviews"), hash: "/reviews/received" },
-          { icon: BookOpen, label: t("nav.gradebook"), hash: "/gradebook" },
+          { icon: LayoutDashboard, label: t("nav.home"), hash: "/student/dashboard" },
+          { icon: Book, label: t("nav.courses"), hash: "/student/courses" },
+          { icon: FileCheck, label: t("nav.reviews"), hash: "/student/reviews" },
+          {
+            icon: MessageSquare,
+            label: t("nav.receivedReviews"),
+            hash: "/student/reviews/received",
+          },
+          { icon: BookOpen, label: t("nav.gradebook"), hash: "/student/gradebook" },
           {
             icon: Bell,
             label: t("nav.notifications"),
-            hash: "/inbox",
+            hash: "/student/inbox",
             flag: "enableNotifications",
           },
           {
             icon: AlertTriangle,
             label: t("nav.appeals"),
-            hash: "/appeals",
+            hash: "/student/appeals",
             flag: "enableAppeals",
           },
         ];
@@ -191,7 +195,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           {/* Header */}
           <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
             <Link
-              to="/dashboard"
+              to="/student/dashboard"
               className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
             >
               Peerly
@@ -266,7 +270,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
         {!isCollapsed && (
           <Link
-            to="/dashboard"
+            to="/student/dashboard"
             className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
           >
             Peerly

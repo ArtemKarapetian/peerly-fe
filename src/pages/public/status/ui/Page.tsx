@@ -294,7 +294,7 @@ export default function StatusPage() {
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-brand-primary-lighter text-brand-primary rounded-xl flex items-center justify-center">
                 <Activity className="size-6 text-primary" />
               </div>
               <h1 className="text-[32px] tablet:text-[40px] font-medium text-foreground tracking-[-0.5px]">

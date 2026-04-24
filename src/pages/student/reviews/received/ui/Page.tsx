@@ -35,7 +35,7 @@ export default function ReceivedReviewsPage() {
               {t("student.receivedReviews.willAppear")}
             </p>
             <button
-              onClick={() => void navigate("/courses")}
+              onClick={() => void navigate("/student/courses")}
               className="inline-flex items-center justify-center px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
             >
               {t("student.receivedReviews.goToCourses")}

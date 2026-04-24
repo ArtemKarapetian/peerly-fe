@@ -60,7 +60,7 @@ export default function LoginPage() {
         email: email.trim().toLowerCase(),
         password,
       });
-      const target = session.role === "Teacher" ? "/teacher/courses" : "/courses";
+      const target = session.role === "Teacher" ? "/teacher/courses" : "/student/courses";
       void navigate(target);
     } catch (err) {
       setError(getLoginErrorMessage(err, t));

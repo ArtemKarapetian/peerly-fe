@@ -66,7 +66,7 @@ export function UserInfoCard() {
 
         {/* Avatar and Name */}
         <div className="flex items-start gap-6 mb-6 pb-6 border-b border-border">
-          <div className="w-20 h-20 bg-accent rounded-full flex items-center justify-center shrink-0">
+          <div className="w-20 h-20 bg-brand-primary-lighter text-brand-primary rounded-full flex items-center justify-center shrink-0">
             <User className="w-10 h-10 text-accent-foreground" />
           </div>
           <div className="flex-1">

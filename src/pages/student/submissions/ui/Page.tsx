@@ -18,7 +18,7 @@ import { mockVersions } from "../model/mockVersions";
 /**
  * SubmissionsPage - История версий работы
  *
- * Route: /courses/:courseId/tasks/:taskId/submissions
+ * Route: /student/courses/:courseId/tasks/:taskId/submissions
  *
  * Features:
  * - Timeline of all versions (v1, v2, ...)
@@ -93,7 +93,7 @@ export default function SubmissionsPage() {
       alert(t("student.submissions.maxVersionsReached", { max: maxSubmissions }));
       return;
     }
-    void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
+    void navigate(`/student/courses/${courseId}/tasks/${taskId}/submit`);
   };
 
   // Update versions with selected state for comparison
@@ -130,7 +130,7 @@ export default function SubmissionsPage() {
             </p>
             <button
               onClick={() => {
-                void navigate(`/courses/${courseId}/tasks/${taskId}/submit`);
+                void navigate(`/student/courses/${courseId}/tasks/${taskId}/submit`);
               }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
             >

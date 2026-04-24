@@ -116,28 +116,44 @@ export function Router() {
 
         <Route element={<ProtectedRoute />}>
           {/* Student */}
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/courses" element={<CoursesListPage />} />
-          <Route path="/courses/:courseId" element={<CoursePage />} />
-          <Route path="/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
-          <Route path="/courses/:courseId/tasks/:taskId/submit" element={<SubmitWorkPage />} />
+          <Route path="/student/dashboard" element={<DashboardPage />} />
+          <Route path="/student/courses" element={<CoursesListPage />} />
+          <Route path="/student/courses/:courseId" element={<CoursePage />} />
+          <Route path="/student/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
           <Route
-            path="/courses/:courseId/tasks/:taskId/submissions"
+            path="/student/courses/:courseId/tasks/:taskId/submit"
+            element={<SubmitWorkPage />}
+          />
+          <Route
+            path="/student/courses/:courseId/tasks/:taskId/submissions"
             element={<SubmissionsPage />}
           />
           <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route path="/courses/:courseId/tasks/:taskId/appeal" element={<CreateAppealPage />} />
+            <Route
+              path="/student/courses/:courseId/tasks/:taskId/appeal"
+              element={<CreateAppealPage />}
+            />
           </Route>
-          <Route path="/reviews" element={<ReviewsInboxPage />} />
-          <Route path="/reviews/received" element={<ReceivedReviewsPage />} />
-          <Route path="/reviews/:reviewId" element={<ReviewPage />} />
-          <Route path="/gradebook" element={<GradebookPage />} />
+          <Route path="/student/reviews" element={<ReviewsInboxPage />} />
+          <Route path="/student/reviews/received" element={<ReceivedReviewsPage />} />
+          <Route path="/student/reviews/:reviewId" element={<ReviewPage />} />
+          <Route path="/student/gradebook" element={<GradebookPage />} />
           <Route element={<FeatureRoute flag="enableNotifications" />}>
-            <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/student/inbox" element={<InboxPage />} />
           </Route>
           <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route path="/appeals" element={<AppealsListPage />} />
+            <Route path="/student/appeals" element={<AppealsListPage />} />
           </Route>
+
+          {/* Legacy student paths → /student/* (transitional redirects) */}
+          <Route path="/dashboard" element={<Navigate to="/student/dashboard" replace />} />
+          <Route path="/courses" element={<Navigate to="/student/courses" replace />} />
+          <Route path="/courses/:courseId/*" element={<Navigate to="/student/courses" replace />} />
+          <Route path="/reviews" element={<Navigate to="/student/reviews" replace />} />
+          <Route path="/reviews/*" element={<Navigate to="/student/reviews" replace />} />
+          <Route path="/gradebook" element={<Navigate to="/student/gradebook" replace />} />
+          <Route path="/inbox" element={<Navigate to="/student/inbox" replace />} />
+          <Route path="/appeals" element={<Navigate to="/student/appeals" replace />} />
 
           {/* Profile / Settings */}
           <Route path="/profile" element={<ProfilePage />} />

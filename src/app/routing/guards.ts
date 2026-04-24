@@ -9,15 +9,18 @@ import { ROUTES } from "@/shared/config/routes";
 const PROTECTED_PREFIXES = [
   "/teacher",
   "/admin",
-  "/courses", // включает /courses, /courses/:id, /courses/:id/tasks/...
+  "/student", // все студент-специфичные пути
+  // Legacy redirects (студент-роуты до префикса /student) — оставлены, чтобы
+  // авторизация триггерилась и ProtectedRoute успевал перебросить редиректом.
+  "/courses",
   "/reviews",
+  "/dashboard",
+  "/gradebook",
+  "/inbox",
+  "/appeals",
 ] as const;
 
 const PROTECTED_EXACT = [
-  ROUTES.dashboard,
-  ROUTES.gradebook,
-  ROUTES.inbox,
-  ROUTES.appeals,
   ROUTES.profile,
   ROUTES.settings,
   ROUTES.security,

@@ -133,7 +133,7 @@ export default function RegisterPage() {
       });
 
       toast.success(t("auth.accountCreated"), { description: t("auth.canLoginNow") });
-      const target = role === "Teacher" ? "/teacher/courses" : "/courses";
+      const target = role === "Teacher" ? "/teacher/courses" : "/student/courses";
       setTimeout(() => void navigate(target), 500);
     } catch (err) {
       const detail =

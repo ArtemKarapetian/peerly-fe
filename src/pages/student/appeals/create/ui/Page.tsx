@@ -45,8 +45,8 @@ export default function CreateAppealPage() {
     return (
       <AppShell title={t("feature.appeal.success.title")}>
         <CreateAppealSuccess
-          onGoToAppeals={() => void navigate("/appeals")}
-          onGoToCourse={() => void navigate(`/courses/${resolvedCourseId}`)}
+          onGoToAppeals={() => void navigate("/student/appeals")}
+          onGoToCourse={() => void navigate(`/student/courses/${resolvedCourseId}`)}
         />
       </AppShell>
     );
@@ -56,9 +56,12 @@ export default function CreateAppealPage() {
     <AppShell title={t("feature.appeal.create.title")}>
       <Breadcrumbs
         items={[
-          { label: t("nav.courses"), href: "/courses" },
-          { label: context.courseName, href: `/courses/${resolvedCourseId}` },
-          { label: context.taskName, href: `/courses/${resolvedCourseId}/tasks/${resolvedTaskId}` },
+          { label: t("nav.courses"), href: "/student/courses" },
+          { label: context.courseName, href: `/student/courses/${resolvedCourseId}` },
+          {
+            label: context.taskName,
+            href: `/student/courses/${resolvedCourseId}/tasks/${resolvedTaskId}`,
+          },
           { label: t("nav.appeals") },
         ]}
       />
@@ -68,7 +71,9 @@ export default function CreateAppealPage() {
         courseId={resolvedCourseId}
         taskId={resolvedTaskId}
         context={context}
-        onCancel={() => void navigate(`/courses/${resolvedCourseId}/tasks/${resolvedTaskId}`)}
+        onCancel={() =>
+          void navigate(`/student/courses/${resolvedCourseId}/tasks/${resolvedTaskId}`)
+        }
         onSuccess={() => setShowSuccess(true)}
       />
     </AppShell>

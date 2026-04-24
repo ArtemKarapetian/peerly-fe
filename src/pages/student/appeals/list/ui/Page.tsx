@@ -101,7 +101,7 @@ export default function AppealsListPage() {
               {t("student.appeals.noAppealsDesc")}
             </p>
             <Link
-              to="/courses"
+              to="/student/courses"
               className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-[12px] hover:bg-accent/80 transition-colors text-[15px] font-medium"
             >
               {t("student.receivedReviews.goToCourses")}

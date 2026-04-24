@@ -13,7 +13,7 @@ interface CourseAssignmentsTabProps {
 export function CourseAssignmentsTab({ courseId }: CourseAssignmentsTabProps) {
   const navigate = useNavigate();
   const handleTaskClick = (taskId: string) => {
-    void navigate(`/courses/${courseId}/tasks/${taskId}`);
+    void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
   };
 
   return (
