@@ -1,0 +1,88 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cd-peerly-fe
+  cancel-in-progress: false
+
+env:
+  IMAGE_NAME: peerly-fe
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+        run: |
+          if [ -z "$REGISTRY" ]; then
+            echo "::error::REGISTRY secret is not set"
+            exit 1
+          fi
+          IMAGE="$REGISTRY/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          docker build --build-arg VITE_API_URL=https://api-stage.prly.ru/api -t "$IMAGE" .
+
+      - name: Push image
+        env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          IMAGE="$REGISTRY/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          echo "$REGISTRY_PASSWORD" | docker login "$REGISTRY" -u "$REGISTRY_USERNAME" --password-stdin
+          docker push "$IMAGE"
+
+  deploy-k3s-stage:
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout peerly-manifests
+        uses: actions/checkout@v4
+        with:
+          repository: peerly-team/peerly-manifests
+          token: ${{ secrets.MANIFESTS_PAT }}
+          path: manifests
+
+      - name: Bump frontend-stage image tag
+        run: |
+          cd manifests
+          sed -i "s|^  tag: .*|  tag: ${{ github.sha }}|" values/frontend-stage.yaml
+          git config user.email "ci-bot@peerly.local"
+          git config user.name "peerly-ci-bot"
+          git add values/frontend-stage.yaml
+          if ! git diff --staged --quiet; then
+            git pull --rebase
+            git commit -m "stage(frontend): bump image to ${{ github.sha }}"
+            git push
+          fi
+
+  deploy-k3s-prod:
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout peerly-manifests
+        uses: actions/checkout@v4
+        with:
+          repository: peerly-team/peerly-manifests
+          token: ${{ secrets.MANIFESTS_PAT }}
+          path: manifests
+
+      - name: Bump frontend-prod image tag
+        run: |
+          cd manifests
+          sed -i "s|^  tag: .*|  tag: ${{ github.sha }}|" values/frontend-prod.yaml
+          git config user.email "ci-bot@peerly.local"
+          git config user.name "peerly-ci-bot"
+          git add values/frontend-prod.yaml
+          if ! git diff --staged --quiet; then
+            git pull --rebase
+            git commit -m "prod(frontend): bump image to ${{ github.sha }}"
+            git push
+          fi
