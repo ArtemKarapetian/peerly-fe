@@ -43,22 +43,6 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
         runtimeCaching: [
           {
-            // Cache API responses (stale-while-revalidate)
-            urlPattern: /^https?:\/\/.*\/api\/.*/i,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "api-cache",
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24, // 24 hours
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            // Cache Google Fonts
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: "CacheFirst",
             options: {
@@ -69,6 +53,7 @@ export default defineConfig({
               },
             },
           },
+          // Кэшировать АПИ не нужно))
         ],
         // Offline fallback
         navigateFallback: "/offline.html",
