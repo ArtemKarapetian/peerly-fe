@@ -57,7 +57,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
 
   return (
     <div className="bg-card border-2 border-brand-primary rounded-[20px] p-6 mb-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
         <h3 className="text-[20px] font-medium text-foreground tracking-[-0.5px]">
           {t("feature.comparison.title")}
@@ -67,9 +66,7 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
         </button>
       </div>
 
-      {/* Comparison Grid */}
       <div className="grid grid-cols-1 tablet:grid-cols-2 gap-6">
-        {/* Version 1 */}
         <div>
           <div className="bg-brand-primary-light rounded-[12px] p-4 mb-4">
             <h4 className="text-[18px] font-medium text-foreground mb-1">
@@ -78,7 +75,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             <p className="text-[13px] text-muted-foreground">{version1.timestamp}</p>
           </div>
 
-          {/* Status */}
           <div className="mb-4">
             <div className="text-[13px] text-muted-foreground mb-1">
               {t("feature.comparison.status")}
@@ -88,7 +84,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             </div>
           </div>
 
-          {/* Files */}
           <div className="mb-4">
             <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.files")} ({version1.files.length})
@@ -109,7 +104,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             </div>
           </div>
 
-          {/* Note */}
           <div className="mb-4">
             <div className="text-[13px] text-muted-foreground mb-1">
               {t("feature.comparison.comment")}
@@ -123,7 +117,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             </div>
           </div>
 
-          {/* Checks */}
           <div>
             <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.checks")}
@@ -163,7 +156,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
           </div>
         </div>
 
-        {/* Version 2 */}
         <div>
           <div className="bg-brand-primary-light rounded-[12px] p-4 mb-4">
             <h4 className="text-[18px] font-medium text-foreground mb-1">
@@ -172,7 +164,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             <p className="text-[13px] text-muted-foreground">{version2.timestamp}</p>
           </div>
 
-          {/* Status */}
           <div className="mb-4">
             <div className="text-[13px] text-muted-foreground mb-1">
               {t("feature.comparison.status")}
@@ -187,7 +178,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             </div>
           </div>
 
-          {/* Files */}
           <div className="mb-4">
             <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.files")} ({version2.files.length})
@@ -219,7 +209,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             </div>
           </div>
 
-          {/* Note */}
           <div className="mb-4">
             <div className="text-[13px] text-muted-foreground mb-1">
               {t("feature.comparison.comment")}
@@ -242,7 +231,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
             </div>
           </div>
 
-          {/* Checks */}
           <div>
             <div className="text-[13px] text-muted-foreground mb-2">
               {t("feature.comparison.checks")}
@@ -296,7 +284,6 @@ export function ComparisonView({ version1, version2, onClose }: ComparisonViewPr
         </div>
       </div>
 
-      {/* Legend */}
       <div className="mt-6 pt-4 border-t border-border">
         <p className="text-[13px] text-muted-foreground flex items-center gap-1">
           <span className="text-brand-primary">✓</span>

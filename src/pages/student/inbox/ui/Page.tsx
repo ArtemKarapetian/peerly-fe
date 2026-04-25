@@ -68,7 +68,6 @@ export default function InboxPage() {
         onResetFilter={() => setSelectedFilter("ALL")}
       />
 
-      {/* Info Card */}
       <div className="mt-6 bg-info-light border border-border rounded-[16px] p-5">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center shrink-0">

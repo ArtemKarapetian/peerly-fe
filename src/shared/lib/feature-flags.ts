@@ -1,27 +1,16 @@
-/**
- * Feature Flags System
- *
- * Flags fall into two groups:
- *
- *  1. Flags tagged `backend: true` — the gateway already implements the
- *     endpoints and the flag controls UI polish / optional behaviour.
- *
- *  2. Flags tagged `backend: false` — the feature has no real gateway
- *     endpoint yet. When enabled the UI is shown but runs against the
- *     local demo / in-memory store. Default OFF so the app only shows
- *     wired-up features until an admin opts in explicitly.
- */
+// Фича-флаги. backend:true — фича реальная, флаг рулит только UI-поведением
+// backend:false — UI работает с локальным демо-стором; default OFF, чтобы видны были только дошитые до бекенда фичи
 
 import { STORAGE_KEYS } from "@/shared/config/constants";
 
 export interface FeatureFlags {
-  // ── Backed by the gateway ─────────────────────────────────────
+  // ── Реальные (есть на гейтвее) ────────────────────────────────
   supportChat: boolean;
   twoFactor: boolean;
   enableEmailConfirmation: boolean;
   enablePasswordReset: boolean;
 
-  // ── Demo-only (no gateway implementation) ─────────────────────
+  // ── Демо (нет на гейтвее) ─────────────────────────────────────
   enablePlugins: boolean;
   enableIntegrations: boolean;
   enableRetention: boolean;
@@ -40,7 +29,6 @@ export interface FeatureFlags {
 
 export interface FlagMeta {
   backend: boolean;
-  /** Short human description — shown in the admin UI. */
   description: string;
 }
 

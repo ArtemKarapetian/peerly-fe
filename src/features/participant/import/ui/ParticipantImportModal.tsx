@@ -2,20 +2,6 @@ import { X, Upload, UserPlus, Key, AlertCircle, CheckCircle } from "lucide-react
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-/**
- * ParticipantImportModal - Модальное окно импорта участников
- *
- * Возможности:
- * 1. CSV paste (name, surname, login) с preview
- * 2. Ручное добавление одного пользователя
- * 3. Генерация инвайт-кодов (демо)
- *
- * Валидация:
- * - Дубликаты логина
- * - Отсутствующие поля
- * - Inline-ошибки
- */
-
 interface ParticipantImportModalProps {
   courseId: string;
   onClose: () => void;
@@ -40,16 +26,13 @@ export function ParticipantImportModal({
   const [parsedUsers, setParsedUsers] = useState<ParsedUser[]>([]);
   const [showPreview, setShowPreview] = useState(false);
 
-  // Manual add fields
   const [manualName, setManualName] = useState("");
   const [manualSurname, setManualSurname] = useState("");
   const [manualLogin, setManualLogin] = useState("");
 
-  // Invite codes
   const [inviteCount, setInviteCount] = useState(5);
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
 
-  // Parse CSV text
   const handleParseCSV = () => {
     const lines = csvText.trim().split("\n");
     const users: ParsedUser[] = [];
@@ -70,9 +53,7 @@ export function ParticipantImportModal({
 
       const [name, surname, login] = parts;
 
-      // Validation
       let error: string | undefined;
-
       if (!name || !surname || !login) {
         error = t("feature.participantImport.notAllFieldsFilled");
       } else if (seenLogins.has(login)) {
@@ -92,7 +73,6 @@ export function ParticipantImportModal({
     setShowPreview(true);
   };
 
-  // Add manual user
   const handleAddManual = () => {
     if (!manualName || !manualSurname || !manualLogin) {
       alert(t("feature.participantImport.fillAllFields"));
@@ -111,7 +91,6 @@ export function ParticipantImportModal({
     setManualLogin("");
   };
 
-  // Generate invite codes
   const handleGenerateInvites = () => {
     const codes: string[] = [];
     for (let i = 0; i < inviteCount; i++) {
@@ -121,7 +100,6 @@ export function ParticipantImportModal({
     setGeneratedCodes(codes);
   };
 
-  // Import CSV users
   const handleImportCSV = () => {
     const validUsers = parsedUsers.filter((u) => !u.error);
     if (validUsers.length === 0) {
@@ -138,7 +116,6 @@ export function ParticipantImportModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b-2 border-border">
           <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px]">
             {t("feature.participantImport.title")}
@@ -151,7 +128,6 @@ export function ParticipantImportModal({
           </button>
         </div>
 
-        {/* Mode Tabs */}
         <div className="flex border-b-2 border-border">
           <button
             onClick={() => setMode("csv")}
@@ -194,9 +170,7 @@ export function ParticipantImportModal({
           </button>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          {/* CSV Import Mode */}
           {mode === "csv" && (
             <div>
               <p className="text-[14px] text-muted-foreground mb-4">
@@ -219,7 +193,6 @@ export function ParticipantImportModal({
                 {t("feature.participantImport.parseAndPreview")}
               </button>
 
-              {/* Preview */}
               {showPreview && parsedUsers.length > 0 && (
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-4">
@@ -298,7 +271,6 @@ export function ParticipantImportModal({
             </div>
           )}
 
-          {/* Manual Add Mode */}
           {mode === "manual" && (
             <div>
               <p className="text-[14px] text-muted-foreground mb-4">
@@ -355,7 +327,6 @@ export function ParticipantImportModal({
             </div>
           )}
 
-          {/* Invite Codes Mode */}
           {mode === "invite" && (
             <div>
               <p className="text-[14px] text-muted-foreground mb-4">
@@ -414,7 +385,6 @@ export function ParticipantImportModal({
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-border">
           <button
             onClick={onClose}

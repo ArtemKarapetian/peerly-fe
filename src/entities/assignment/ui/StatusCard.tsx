@@ -128,7 +128,6 @@ export function StatusCard({
           </span>
         </div>
 
-        {/* Deadline */}
         <div className="flex items-center gap-2 mb-4 desktop:mb-6 pb-4 border-b border-border">
           <Clock className="size-5 text-muted-foreground" />
           <div>
@@ -141,7 +140,6 @@ export function StatusCard({
           </div>
         </div>
 
-        {/* Status-specific content */}
         {status === "NOT_STARTED" && (
           <div>
             <h3 className="text-[16px] desktop:text-[18px] font-['Work_Sans:Regular',sans-serif] tracking-[-0.54px] text-text-primary mb-3">
@@ -159,7 +157,6 @@ export function StatusCard({
               <span>{t("entity.assignment.submitWork")}</span>
             </button>
 
-            {/* History link - show if has any work */}
             {hasSubmission && (
               <button
                 onClick={() => {
@@ -222,7 +219,6 @@ export function StatusCard({
 
         {status === "PEER_REVIEW" && (
           <div>
-            {/* Your work being reviewed */}
             <div className="mb-6">
               <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-3">
                 {t("entity.assignment.yourWorkBeingReviewed")}
@@ -254,7 +250,6 @@ export function StatusCard({
               </p>
             </div>
 
-            {/* Reviews you need to do */}
             <div>
               <h3 className="text-[15px] desktop:text-[16px] font-['Work_Sans:Medium',sans-serif] text-text-primary mb-3">
                 {t("entity.assignment.youNeedToReview")}
@@ -415,7 +410,6 @@ export function StatusCard({
         )}
       </div>
 
-      {/* Demo status selector (remove in production) */}
       {onStatusChange && (
         <div className="bg-card border border-border rounded-[12px] p-4">
           <p className="text-[12px] font-['Work_Sans:Medium',sans-serif] text-text-tertiary mb-2">

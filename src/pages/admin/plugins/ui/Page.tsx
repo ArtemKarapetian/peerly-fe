@@ -20,10 +20,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminPluginsPage - Plugin catalog
- */
-
 interface Plugin {
   id: string;
   name: string;
@@ -51,7 +47,6 @@ interface ConfigField {
   };
 }
 
-// Create initial plugins data - called once outside component
 const createInitialPlugins = (): Plugin[] => {
   const now = Date.now();
   return [
@@ -303,7 +298,6 @@ const createInitialPlugins = (): Plugin[] => {
   ];
 };
 
-// Create initial data once
 const INITIAL_PLUGINS = createInitialPlugins();
 
 export default function AdminPluginsPage() {
@@ -320,7 +314,6 @@ export default function AdminPluginsPage() {
   const installedPlugins = plugins.filter((p) => p.installed);
   const availablePlugins = plugins.filter((p) => !p.installed);
 
-  // Handle plugin actions
   const handleInstall = (plugin: Plugin) => {
     setPlugins(
       plugins.map((p) =>
@@ -382,7 +375,6 @@ export default function AdminPluginsPage() {
     void navigate(`/admin/logs?plugin=${plugin.id}`);
   };
 
-  // Configuration modal
   const validateConfig = (config: Record<string, string>, schema: ConfigField[]): boolean => {
     const errors: Record<string, string> = {};
 
@@ -429,7 +421,6 @@ export default function AdminPluginsPage() {
     alert(t("admin.pluginsPage.pluginConfigured", { name: plugin.name }));
   };
 
-  // Audit logging
   const logAuditEntry = useCallback((action: string, resource: string, details: string) => {
     const logs = JSON.parse(localStorage.getItem("admin_audit_logs") || "[]") as Record<
       string,
@@ -486,7 +477,6 @@ export default function AdminPluginsPage() {
       key={plugin.id}
       className="bg-card border-2 border-border rounded-[20px] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all"
     >
-      {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-start gap-3 flex-1">
           <div className="w-12 h-12 bg-info-light rounded-[12px] flex items-center justify-center flex-shrink-0">
@@ -499,7 +489,6 @@ export default function AdminPluginsPage() {
         </div>
       </div>
 
-      {/* Meta Info */}
       <div className="space-y-2 mb-4 pb-4 border-b-2 border-border">
         <div className="flex items-center justify-between text-[13px]">
           <span className="text-muted-foreground">{t("admin.pluginsPage.versionLabel")}</span>
@@ -521,7 +510,6 @@ export default function AdminPluginsPage() {
         )}
       </div>
 
-      {/* Actions */}
       <div className="space-y-2">
         {plugin.installed ? (
           <>
@@ -578,7 +566,6 @@ export default function AdminPluginsPage() {
       <PageHeader title={t("admin.plugins.title")} subtitle={t("admin.plugins.subtitle")} />
 
       <div>
-        {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b-2 border-border">
           <button
             onClick={() => setActiveTab("installed")}
@@ -614,7 +601,6 @@ export default function AdminPluginsPage() {
           </button>
         </div>
 
-        {/* Plugin Grid */}
         {activeTab === "installed" && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {installedPlugins.map(renderPluginCard)}
@@ -627,7 +613,6 @@ export default function AdminPluginsPage() {
           </div>
         )}
 
-        {/* Empty State */}
         {activeTab === "installed" && installedPlugins.length === 0 && (
           <div className="text-center py-16 bg-card border-2 border-border rounded-[20px]">
             <Package className="w-16 h-16 text-text-tertiary mx-auto mb-4" />
@@ -641,7 +626,6 @@ export default function AdminPluginsPage() {
         )}
       </div>
 
-      {/* Configuration Modal */}
       {configModal && (
         <div
           className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4"
@@ -651,7 +635,6 @@ export default function AdminPluginsPage() {
             className="bg-card rounded-[20px] w-full max-w-[600px] max-h-[90vh] overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
             <div className="px-6 py-4 border-b-2 border-border flex items-center justify-between">
               <div>
                 <h2 className="text-[20px] font-medium text-foreground">
@@ -667,7 +650,6 @@ export default function AdminPluginsPage() {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
               <div className="space-y-4">
                 {configModal.plugin.configSchema?.map((field) => (
@@ -773,7 +755,6 @@ export default function AdminPluginsPage() {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="px-6 py-4 border-t-2 border-border flex gap-3">
               <button
                 onClick={() => setConfigModal(null)}

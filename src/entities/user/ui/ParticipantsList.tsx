@@ -70,7 +70,6 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
               group
             "
           >
-            {/* Avatar */}
             <div
               className="
                 w-10 h-10 rounded-full
@@ -83,7 +82,6 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
               {getInitials(participant.firstName, participant.lastName)}
             </div>
 
-            {/* Name and Role */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-[15px] leading-[1.3] tracking-[-0.3px] text-text-primary font-semibold truncate">
@@ -102,13 +100,11 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
               )}
             </div>
 
-            {/* Menu Icon */}
             <div className="shrink-0">
               <MoreVertical className="w-4 h-4 text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           </button>
 
-          {/* Divider - не показываем после последнего элемента */}
           {index < participants.length - 1 && <div className="border-b border-border" />}
         </div>
       ))}

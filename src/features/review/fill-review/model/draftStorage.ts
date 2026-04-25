@@ -1,21 +1,13 @@
-/**
- * Utilities for managing review drafts in localStorage
- */
+// Черновики рецензий в localStorage
 
 import { ReviewDraft } from "@/entities/review/model/types.ts";
 
 import type { CriterionScore } from "@/features/review";
 
-/**
- * Generate a stable key for localStorage
- */
 export function getDraftKey(courseId: string, taskId: string, reviewId: string): string {
   return `review_draft_${courseId}_${taskId}_${reviewId}`;
 }
 
-/**
- * Save draft to localStorage
- */
 export function saveDraftToStorage(
   courseId: string,
   taskId: string,
@@ -38,9 +30,6 @@ export function saveDraftToStorage(
   }
 }
 
-/**
- * Load draft from localStorage
- */
 export function loadDraftFromStorage(
   courseId: string,
   taskId: string,
@@ -57,9 +46,6 @@ export function loadDraftFromStorage(
   }
 }
 
-/**
- * Clear draft from localStorage
- */
 export function clearDraftFromStorage(courseId: string, taskId: string, reviewId: string): void {
   try {
     const key = getDraftKey(courseId, taskId, reviewId);

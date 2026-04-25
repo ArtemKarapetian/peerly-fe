@@ -8,10 +8,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminRetentionPage - Data retention policies
- */
-
 interface RetentionPolicy {
   submissions: number;
   logs: number;

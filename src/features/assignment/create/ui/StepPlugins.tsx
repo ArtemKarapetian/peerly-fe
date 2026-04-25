@@ -40,7 +40,6 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
         </p>
       </div>
 
-      {/* Plagiarism Check */}
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
@@ -95,7 +94,6 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
         )}
       </div>
 
-      {/* Linter */}
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
@@ -148,7 +146,6 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
         )}
       </div>
 
-      {/* Format Check */}
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
@@ -213,7 +210,6 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
         )}
       </div>
 
-      {/* Anonymization */}
       <div className="bg-card border-2 border-border rounded-[16px] p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3 flex-1">
@@ -260,7 +256,6 @@ export function StepPlugins({ data, onUpdate }: StepPluginsProps) {
         )}
       </div>
 
-      {/* Info Box */}
       <div className="bg-info-light border border-info rounded-[12px] p-4">
         <div className="flex items-start gap-2">
           <Settings className="w-5 h-5 text-brand-primary shrink-0 mt-0.5" />

@@ -5,15 +5,6 @@ import { ReviewAssignment } from "@/entities/review/model/types.ts";
 
 import { ReviewCard } from "./ReviewCard.tsx";
 
-/**
- * ReviewList - Список назначенных рецензий с группировкой
- *
- * Features:
- * - Group by course or by deadline
- * - Display count in group headers
- * - Responsive grid layout
- */
-
 export type GroupBy = "course" | "deadline";
 
 interface ReviewListProps {

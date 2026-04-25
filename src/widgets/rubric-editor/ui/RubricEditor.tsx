@@ -4,16 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import type { RubricData, RubricCriterionData } from "../model/types";
 
-/**
- * RubricEditor - Редактор рубрики
- *
- * Features:
- * - Edit name, description, task type
- * - Add/remove/reorder criteria
- * - Configure scoring scale, weight, required flag
- * - Auto-save with debounce
- */
-
 interface RubricEditorProps {
   rubric: RubricData;
   onSave: (rubric: RubricData) => void;
@@ -25,11 +15,8 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  // Update when rubric prop changes - this pattern is intentional for form reset
-
+  // сбрасываем форму при смене рубрики; setTimeout чтобы не каскадить рендер
   useEffect(() => {
-    // When rubric prop changes, reset editedRubric state.
-    // Use functional updater to avoid reading stale state and schedule asynchronously to avoid cascading renders.
     const t = setTimeout(() => {
       setEditedRubric(rubric);
       setIsDirty(false);
@@ -75,7 +62,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
     }
   };
 
-  // Drag and drop for reordering
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
   };
@@ -100,7 +86,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
   return (
     <div>
-      {/* Save indicator */}
       {isDirty && (
         <div className="mb-4 flex items-center justify-between bg-warning-light border border-warning rounded-[12px] p-3">
           <div className="flex items-center gap-2">
@@ -119,7 +104,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         </div>
       )}
 
-      {/* Basic Info */}
       <section className="mb-8 space-y-4">
         <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px]">
           {t("widget.rubricEditor.basicInfo")}
@@ -150,7 +134,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         </div>
       </section>
 
-      {/* Criteria */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px]">
@@ -179,7 +162,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                 border-border hover:border-brand-primary/60
               `}
             >
-              {/* Header */}
               <div className="flex items-start gap-3 mb-4">
                 <button
                   className="mt-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
@@ -189,7 +171,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                 </button>
 
                 <div className="flex-1 space-y-3">
-                  {/* Name */}
                   <input
                     type="text"
                     value={criterion.name}
@@ -198,7 +179,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     placeholder={t("widget.rubricEditor.criterionNamePlaceholder")}
                   />
 
-                  {/* Description */}
                   <textarea
                     value={criterion.description}
                     onChange={(e) => updateCriterion(index, { description: e.target.value })}
@@ -207,9 +187,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     placeholder={t("widget.rubricEditor.criterionDescPlaceholder")}
                   />
 
-                  {/* Settings Row */}
                   <div className="grid grid-cols-2 gap-3">
-                    {/* Max Score */}
                     <div>
                       <label className="block text-[12px] text-muted-foreground mb-1">
                         {t("widget.rubricEditor.maxPoints")}
@@ -226,7 +204,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                       />
                     </div>
 
-                    {/* Weight */}
                     <div>
                       <label className="block text-[12px] text-muted-foreground mb-1">
                         {t("widget.rubricEditor.weight")}
@@ -247,7 +224,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     </div>
                   </div>
 
-                  {/* Toggles */}
                   <div className="flex items-center gap-6">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -312,7 +288,6 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         </div>
       </section>
 
-      {/* Save Button */}
       <div className="flex justify-end">
         <button
           onClick={handleSave}

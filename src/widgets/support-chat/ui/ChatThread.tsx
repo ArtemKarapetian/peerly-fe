@@ -82,7 +82,6 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
 
   return (
     <>
-      {/* Header */}
       <div className={`${padding} border-b border-border flex items-center gap-3`}>
         {headerAction}
         <div className="flex-1">
@@ -102,7 +101,6 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
         </div>
       </div>
 
-      {/* Messages */}
       <div className={`flex-1 overflow-y-auto ${padding} ${messageSpacing}`}>
         {Object.entries(groupedMessages).map(([date, msgs]) => (
           <div key={date}>
@@ -149,7 +147,6 @@ export function ChatThread({ messages, onSendMessage, headerAction, compact }: C
         ))}
       </div>
 
-      {/* Composer */}
       <form onSubmit={handleSubmit} className={`${padding} border-t border-border`}>
         <div className={`flex ${compact ? "gap-2" : "gap-3"}`}>
           <input

@@ -33,7 +33,6 @@ export function DevErrorPanel() {
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
         <div className="bg-card border border-border rounded-lg shadow-lg overflow-hidden w-64">
-          {/* Header */}
           <div className="bg-muted px-4 py-2 flex items-center justify-between border-b border-border">
             <div className="flex items-center gap-2">
               <Bug className="w-4 h-4 text-muted-foreground" />
@@ -47,7 +46,6 @@ export function DevErrorPanel() {
             </button>
           </div>
 
-          {/* Error links */}
           <div className="p-2 space-y-1">
             {errorLinks.map((error) => (
               <button

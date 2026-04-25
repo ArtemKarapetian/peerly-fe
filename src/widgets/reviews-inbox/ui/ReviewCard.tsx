@@ -71,7 +71,6 @@ export function ReviewCard({
       onClick={onClick}
       className="bg-card border-2 border-border hover:border-brand-primary-light rounded-[16px] p-4 transition-all cursor-pointer group"
     >
-      {/* Header: Course + Status */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
           <p className="text-[13px] text-muted-foreground mb-1">{courseName}</p>
@@ -87,14 +86,12 @@ export function ReviewCard({
         </div>
       </div>
 
-      {/* Student */}
       <div className="mb-3">
         <p className="text-[14px] text-muted-foreground">
           {t("widget.reviewCard.student")} <span className="font-medium">{studentName}</span>
         </p>
       </div>
 
-      {/* Deadline */}
       <div className="flex items-center gap-2 mb-4">
         <Clock className={`w-4 h-4 ${isDeadlineSoon ? "text-warning" : "text-muted-foreground"}`} />
         <p
@@ -104,7 +101,6 @@ export function ReviewCard({
         </p>
       </div>
 
-      {/* CTA Arrow */}
       <div className="flex items-center justify-end">
         <div className="inline-flex items-center gap-1 text-[13px] text-brand-primary group-hover:text-brand-primary-hover transition-colors">
           <span>{getCtaLabel(status, t)}</span>

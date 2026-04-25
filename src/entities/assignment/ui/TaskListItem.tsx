@@ -88,7 +88,6 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
         group
       "
     >
-      {/* Left: Title and Deadline */}
       <div className="flex-1 min-w-[100px] space-y-1">
         <p className="text-[16px] font-medium leading-[1.3] tracking-[-0.3px] text-foreground group-hover:text-brand-primary transition-colors">
           {title}
@@ -96,7 +95,6 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
         <p className="text-[13px] leading-[1.3] text-muted-foreground">{formattedDeadline}</p>
       </div>
 
-      {/* Right: Status Pill */}
       <div className="flex items-center gap-2 shrink-0">
         <span
           className={`${statusInfo.color} ${statusInfo.textColor} inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-medium whitespace-nowrap`}

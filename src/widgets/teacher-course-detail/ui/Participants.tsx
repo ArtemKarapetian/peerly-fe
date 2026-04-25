@@ -4,15 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { ParticipantImportModal } from "@/features/participant/import";
 
-/**
- * TeacherCourseParticipants - Вкладка "Участники"
- *
- * - Список участников с поиском и фильтрами
- * - Фильтр по роли (student/teacher assistant)
- * - Фильтр по статусу (active/invited)
- * - Кнопка "Импорт" для добавления участников
- */
-
 interface Participant {
   id: string;
   name: string;
@@ -119,9 +110,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
 
   return (
     <div>
-      {/* Toolbar */}
       <div className="flex items-center gap-4 mb-6">
-        {/* Search */}
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
@@ -133,7 +122,6 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           />
         </div>
 
-        {/* Role Filter */}
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value as "all" | "student" | "assistant")}
@@ -144,7 +132,6 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           <option value="assistant">{t("widget.participants.assistantsRole")}</option>
         </select>
 
-        {/* Status Filter */}
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "invited")}
@@ -155,7 +142,6 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
           <option value="invited">{t("widget.participants.invitedStatus")}</option>
         </select>
 
-        {/* Import Button */}
         <button
           onClick={() => setIsImportModalOpen(true)}
           className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors"
@@ -165,7 +151,6 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         </button>
       </div>
 
-      {/* Participants List */}
       <div className="space-y-0">
         {filteredParticipants.map((participant, index) => (
           <div
@@ -175,13 +160,11 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
             }`}
           >
             <div className="flex items-center justify-between">
-              {/* Left: Name + Email */}
               <div className="flex-1 min-w-0 mr-4">
                 <p className="text-[15px] font-medium text-foreground mb-0.5">{participant.name}</p>
                 <p className="text-[14px] text-muted-foreground">{participant.email}</p>
               </div>
 
-              {/* Right: Role, Status, Date */}
               <div className="flex items-center gap-3">
                 {getRoleBadge(participant.role)}
                 {getStatusBadge(participant.status)}
@@ -201,7 +184,6 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         )}
       </div>
 
-      {/* Stats */}
       <div className="mt-4 flex items-center gap-6 text-[14px] text-muted-foreground">
         <span>
           {t("widget.participants.total")}{" "}
@@ -221,7 +203,6 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         </span>
       </div>
 
-      {/* Import Modal */}
       {isImportModalOpen && (
         <ParticipantImportModal courseId={courseId} onClose={() => setIsImportModalOpen(false)} />
       )}

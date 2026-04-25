@@ -16,12 +16,6 @@ import type { ValidationCheck } from "@/features/submission/submit-work/ui/Valid
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * SubmitWorkPage - Экран отправки работы студентом
- *
- * Route: /student/courses/:courseId/tasks/:taskId/submit
- */
-
 export default function SubmitWorkPage() {
   const { courseId = "", taskId = "" } = useParams();
   const navigate = useNavigate();
@@ -37,7 +31,7 @@ export default function SubmitWorkPage() {
   const [comment, setComment] = useState("");
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>([]);
 
-  // Mock data - will be replaced with API
+  // TODO заменить на данные из API, когда появятся task/submission репо
   const courseName = t("student.submissions.mockCourseName");
   const taskTitle = t("student.submissions.mockTaskTitle");
 
@@ -49,11 +43,9 @@ export default function SubmitWorkPage() {
     latePolicy: t("page.submitWork.latePolicy"),
   };
 
-  // File formats based on task type
   const acceptedFormats = [".zip", ".pdf", ".jpg", ".png"];
-  const maxFileSize = 10; // MB
+  const maxFileSize = 10; // МБ
 
-  // Handle file selection
   const handleFileSelected = (file: File) => {
     const newFile: UploadedFile = {
       id: Date.now().toString(),
@@ -69,7 +61,7 @@ export default function SubmitWorkPage() {
 
     setUploadedFile(newFile);
 
-    // Start validation checks after upload
+    // имитация прогона проверок после загрузки — статусы меняем по таймерам, чтобы было визуально
     setTimeout(() => {
       setValidationChecks([
         {
@@ -98,7 +90,6 @@ export default function SubmitWorkPage() {
         },
       ]);
 
-      // Simulate checks running
       setTimeout(() => {
         setValidationChecks((prev) =>
           prev.map((check, i) => (i === 0 ? { ...check, status: "running" } : check)),
@@ -153,20 +144,17 @@ export default function SubmitWorkPage() {
     }, 100);
   };
 
-  // Handle file replace
   const handleReplace = () => {
     setUploadedFile(null);
     setValidationChecks([]);
     setUploadError("");
   };
 
-  // Handle file download
   const handleDownload = () => {
     console.log("Download file:", uploadedFile?.name);
     alert(t("page.submitWork.downloadFile", { name: uploadedFile?.name }));
   };
 
-  // Handle file delete
   const handleDelete = () => {
     if (confirm(t("page.submitWork.deleteFileConfirm"))) {
       setUploadedFile(null);
@@ -175,7 +163,6 @@ export default function SubmitWorkPage() {
     }
   };
 
-  // Handle save draft
   const handleSaveDraft = () => {
     setIsSaving(true);
     setTimeout(() => {
@@ -184,7 +171,6 @@ export default function SubmitWorkPage() {
     }, 1000);
   };
 
-  // Handle submit
   const handleSubmit = () => {
     if (taskRules.isDeadlinePassed) {
       const confirmSubmit = confirm(t("page.submitWork.deadlineConfirm"));
@@ -198,7 +184,6 @@ export default function SubmitWorkPage() {
     }, 1500);
   };
 
-  // Success state - show after work
   if (isSuccess) {
     return (
       <AppShell title={t("page.submitWork.title")}>
@@ -250,7 +235,6 @@ export default function SubmitWorkPage() {
 
   return (
     <AppShell title={t("page.submitWork.title")}>
-      {/* Breadcrumbs */}
       <Breadcrumbs
         items={[
           CRUMBS.courses,
@@ -260,7 +244,6 @@ export default function SubmitWorkPage() {
         ]}
       />
 
-      {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("page.submitWork.pageTitle")}
@@ -268,11 +251,8 @@ export default function SubmitWorkPage() {
         <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
       </div>
 
-      {/* 2-column layout: Form + Status Rail */}
       <div className="task-layout">
-        {/* Left column: Form */}
         <div className="space-y-6">
-          {/* Upload area */}
           <section className="bg-muted rounded-[20px] p-6">
             <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
               {t("page.submitWork.uploadFiles")}
@@ -292,7 +272,6 @@ export default function SubmitWorkPage() {
             />
           </section>
 
-          {/* Current draft/work preview */}
           {uploadedFile && (
             <section className="bg-muted rounded-[20px] p-6">
               <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
@@ -308,7 +287,6 @@ export default function SubmitWorkPage() {
             </section>
           )}
 
-          {/* Comment to teacher */}
           <section className="bg-muted rounded-[20px] p-6">
             <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
               {t("page.submitWork.commentToTeacher")}
@@ -324,7 +302,6 @@ export default function SubmitWorkPage() {
             />
           </section>
 
-          {/* CTAs */}
           <section className="bg-card rounded-[20px] p-6 border-2 border-border">
             <div className="flex flex-col tablet:flex-row gap-3">
               <button
@@ -349,7 +326,6 @@ export default function SubmitWorkPage() {
               </button>
             </div>
 
-            {/* Inline hints */}
             {!uploadedFile && (
               <p className="text-[13px] text-muted-foreground mt-3 text-center">
                 {t("page.submitWork.uploadFileHint")}
@@ -368,10 +344,8 @@ export default function SubmitWorkPage() {
           </section>
         </div>
 
-        {/* Right rail: Status & Help */}
         <div className="space-y-6 hide-below-desktop">
           <div className="task-sidebar-sticky space-y-6">
-            {/* Task rules placeholder */}
             <section className="bg-muted rounded-[20px] p-6">
               <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
                 {t("page.submitWork.taskRules")}
@@ -379,7 +353,6 @@ export default function SubmitWorkPage() {
               <TaskRulesCard rules={taskRules} />
             </section>
 
-            {/* Validation checks placeholder */}
             <section className="bg-muted rounded-[20px] p-6">
               <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
                 {t("page.submitWork.validationChecks")}

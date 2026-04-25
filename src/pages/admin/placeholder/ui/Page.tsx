@@ -5,10 +5,6 @@ import { Breadcrumbs, BreadcrumbItem } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminPlaceholderPage - Template for admin pages
- */
-
 interface AdminPlaceholderPageProps {
   title: string;
   description: string;

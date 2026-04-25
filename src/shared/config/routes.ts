@@ -1,14 +1,8 @@
-/**
- * Единственный источник правды по URL-ам приложения.
- * - Все статические пути и "билдеры" (path builders) живут здесь.
- * - Все regex-паттерны для вытаскивания params — тоже здесь.
- */
+// Единственный источник URL-ов: статические пути, билдеры и регексы для extract params
 
 export const ROUTES = {
-  // Base
   landing: "/",
 
-  // Auth / Public
   login: "/login",
   register: "/register",
   resetPassword: "/reset-password",
@@ -16,15 +10,12 @@ export const ROUTES = {
   help: "/help",
   status: "/status",
   terms: "/terms",
-  // supportChat — archived
 
-  // Errors
   error401: "/401",
   error403: "/403",
   error404: "/404",
   error500: "/500",
 
-  // Student
   dashboard: "/student/dashboard",
   courses: "/student/courses",
   course: (courseId: string) => `/student/courses/${courseId}`,
@@ -33,7 +24,6 @@ export const ROUTES = {
     `/student/courses/${courseId}/tasks/${taskId}/submit`,
   submissions: (courseId: string, taskId: string) =>
     `/student/courses/${courseId}/tasks/${taskId}/submissions`,
-  // extensionRequest — archived
   taskAppeal: (courseId: string, taskId: string) =>
     `/student/courses/${courseId}/tasks/${taskId}/appeal`,
 
@@ -44,15 +34,13 @@ export const ROUTES = {
   gradebook: "/student/gradebook",
   inbox: "/student/inbox",
   appeals: "/student/appeals",
-  // extensions (student) — archived
 
   profile: "/profile",
   settings: "/settings",
   security: "/security",
   deleteAccount: "/offboarding/delete-account",
 
-  // Teacher
-  teacherDashboard: "/teacher/dashboard", // archived — redirects to teacherCourses
+  teacherDashboard: "/teacher/dashboard",
   teacherCourses: "/teacher/courses",
   teacherCourse: (courseId: string) => `/teacher/courses/${courseId}`,
   teacherRubrics: "/teacher/rubrics",
@@ -72,18 +60,14 @@ export const ROUTES = {
   teacherExtensions: "/teacher/extensions",
   teacherAutomation: "/teacher/automation",
 
-  // Admin
   adminOverview: "/admin/overview",
   adminCourses: "/admin/courses",
   adminUsers: "/admin/users",
   adminFlags: "/admin/flags",
   adminLogs: "/admin/logs",
   adminSettings: "/admin/settings",
-  // adminHealth — archived
-  // adminQueues — archived
   adminIntegrations: "/admin/integrations",
   adminPlugins: "/admin/plugins",
-  // adminPolicies — archived
   adminRetention: "/admin/retention",
   adminLimits: "/admin/limits",
 } as const;
@@ -94,12 +78,8 @@ export type RoutePatternDef = {
   params: readonly string[];
 };
 
-/**
- * ВАЖНО: порядок важен (сначала более специфичные, потом более общие).
- * Эти паттерны используются parseHash.ts для извлечения params.
- */
+// Порядок важен: сначала более специфичные, потом общие — иначе общий съест частный
 export const ROUTE_PATTERN_LIST = [
-  // Student complex
   {
     key: "submitWork",
     regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/submit$/,
@@ -110,7 +90,6 @@ export const ROUTE_PATTERN_LIST = [
     regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/submissions$/,
     params: ["courseId", "taskId"] as const,
   },
-  // extensionRequest pattern — archived
   {
     key: "taskAppeal",
     regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/appeal$/,
@@ -121,15 +100,11 @@ export const ROUTE_PATTERN_LIST = [
     regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)$/,
     params: ["courseId", "taskId"] as const,
   },
-
-  // Reviews
   {
     key: "review",
     regex: /^\/student\/reviews\/([^/]+)$/,
     params: ["reviewId"] as const,
   },
-
-  // Teacher
   {
     key: "teacherAssignmentExtensions",
     regex: /^\/teacher\/assignment\/([^/]+)\/extensions$/,
@@ -150,8 +125,6 @@ export const ROUTE_PATTERN_LIST = [
     regex: /^\/teacher\/courses\/([^/]+)$/,
     params: ["courseId"] as const,
   },
-
-  // Student course details
   {
     key: "courseDetails",
     regex: /^\/student\/courses\/([^/]+)$/,

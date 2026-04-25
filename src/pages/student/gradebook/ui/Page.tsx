@@ -70,7 +70,7 @@ export default function GradebookPage() {
       />
 
       <div className="max-w-[1400px] mx-auto px-4 tablet:px-6 desktop:px-8 py-6 desktop:py-8">
-        {/* Mobile Stats */}
+        {/* статистика отдельным блоком только на мобиле */}
         <div className="desktop:hidden mb-6 grid grid-cols-2 gap-4">
           <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="text-[13px] text-muted-foreground mb-1">
@@ -95,7 +95,6 @@ export default function GradebookPage() {
           onRowClick={handleRowClick}
         />
 
-        {/* Info Card */}
         <div className="mt-6 bg-info-light border-2 border-brand-primary-lighter rounded-[16px] p-5">
           <div className="flex items-start gap-3">
             <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center shrink-0">

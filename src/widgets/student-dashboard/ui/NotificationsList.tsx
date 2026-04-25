@@ -83,7 +83,6 @@ export function NotificationsList({
               className="w-full text-left px-5 py-3.5 hover:bg-surface-hover active:bg-accent transition-colors duration-150 group"
             >
               <div className="flex items-start gap-3">
-                {/* Icon */}
                 <div
                   className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center shrink-0 mt-0.5"
                   style={{ backgroundColor: accent + "15" }}
@@ -91,7 +90,6 @@ export function NotificationsList({
                   <Icon className="w-4 h-4" style={{ color: accent }} />
                 </div>
 
-                {/* Content */}
                 <div className="flex-1 min-w-0">
                   <p
                     className={`text-[13px] leading-[1.4] tracking-[-0.2px] ${
@@ -107,7 +105,6 @@ export function NotificationsList({
                   </p>
                 </div>
 
-                {/* Unread dot + chevron */}
                 <div className="flex items-center gap-1.5 shrink-0 mt-1">
                   {!notification.isRead && (
                     <span className="w-2 h-2 bg-[--brand-primary] rounded-full" />

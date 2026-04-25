@@ -49,7 +49,6 @@ export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
             className="w-full text-left px-5 py-3.5 hover:bg-surface-hover transition-colors duration-150 group"
           >
             <div className="flex items-center gap-3">
-              {/* Icon */}
               {item.type === "course" && item.coverColor ? (
                 <div
                   className="w-9 h-9 rounded-[var(--radius-sm)] flex items-center justify-center shrink-0"
@@ -63,7 +62,6 @@ export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
                 </div>
               )}
 
-              {/* Content */}
               <div className="flex-1 min-w-0">
                 <p className="text-[14px] font-semibold text-[--text-primary] tracking-[-0.2px] truncate leading-snug">
                   {item.title}
@@ -81,7 +79,6 @@ export function RecentActivity({ items, onItemClick }: RecentActivityProps) {
                 </div>
               </div>
 
-              {/* Chevron */}
               <ChevronRight className="w-4 h-4 text-[--text-tertiary] opacity-25 group-hover:opacity-60 transition-opacity duration-150 shrink-0" />
             </div>
           </button>

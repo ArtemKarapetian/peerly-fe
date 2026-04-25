@@ -4,20 +4,9 @@ import { Link } from "react-router-dom";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
-/**
- * TermsPage - Terms of Service & Privacy Policy
- *
- * Clean structured page with:
- * - Table of contents
- * - Terms of use
- * - Privacy policy
- * - Contact information
- */
-
 export default function TermsPage() {
   const { t } = useTranslation();
 
-  // Scroll to section
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -29,7 +18,6 @@ export default function TermsPage() {
     <PublicLayout maxWidth="lg">
       <div className="py-8 tablet:py-12 desktop:py-16 px-4">
         <div className="max-w-[900px] mx-auto">
-          {/* Header */}
           <div className="mb-8 tablet:mb-12">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center">
@@ -42,7 +30,6 @@ export default function TermsPage() {
             <p className="text-[15px] text-muted-foreground">{t("page.terms.lastUpdated")}</p>
           </div>
 
-          {/* Table of Contents */}
           <div className="bg-accent/50 border-2 border-border rounded-xl p-6 mb-8">
             <h2 className="text-[18px] font-medium text-foreground mb-4">{t("page.terms.toc")}</h2>
             <nav className="space-y-2">
@@ -67,7 +54,6 @@ export default function TermsPage() {
             </nav>
           </div>
 
-          {/* Terms of Use */}
           <section
             id="terms-of-use"
             className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 mb-6 scroll-mt-4"
@@ -80,7 +66,6 @@ export default function TermsPage() {
             </div>
 
             <div className="space-y-6">
-              {/* Section 1 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.terms1Title")}
@@ -90,7 +75,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 2 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.terms2Title")}
@@ -107,7 +91,6 @@ export default function TermsPage() {
                 </ul>
               </div>
 
-              {/* Section 3 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.terms3Title")}
@@ -117,7 +100,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 4 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.terms4Title")}
@@ -127,7 +109,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 5 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.terms5Title")}
@@ -137,7 +118,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 6 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.terms6Title")}
@@ -149,7 +129,6 @@ export default function TermsPage() {
             </div>
           </section>
 
-          {/* Privacy Policy */}
           <section
             id="privacy-policy"
             className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 mb-6 scroll-mt-4"
@@ -162,7 +141,6 @@ export default function TermsPage() {
             </div>
 
             <div className="space-y-6">
-              {/* Section 1 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.privacy1Title")}
@@ -178,7 +156,6 @@ export default function TermsPage() {
                 </ul>
               </div>
 
-              {/* Section 2 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.privacy2Title")}
@@ -195,7 +172,6 @@ export default function TermsPage() {
                 </ul>
               </div>
 
-              {/* Section 3 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.privacy3Title")}
@@ -205,7 +181,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 4 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.privacy4Title")}
@@ -215,7 +190,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 5 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.privacy5Title")}
@@ -225,7 +199,6 @@ export default function TermsPage() {
                 </p>
               </div>
 
-              {/* Section 6 */}
               <div>
                 <h3 className="text-[20px] font-medium text-foreground mb-3">
                   {t("page.terms.privacy6Title")}
@@ -244,7 +217,6 @@ export default function TermsPage() {
             </div>
           </section>
 
-          {/* Contact */}
           <section
             id="contact"
             className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 scroll-mt-4"

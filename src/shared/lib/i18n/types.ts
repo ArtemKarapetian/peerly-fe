@@ -1,14 +1,5 @@
-/**
- * Type-safe i18n helpers.
- *
- * We export the full key union for opt-in type safety when calling t().
- * We DON'T augment the i18next module globally because many places
- * (admin pages, dynamic feature flags) build keys dynamically.
- *
- * Usage for strict typing:
- *   const key: TranslationKey = "common.save";
- *   t(key);
- */
+// Опциональный union ключей для строгой типизации t() — не augment'им i18next глобально,
+// потому что много мест собирают ключи динамически
 
 import type ru from "./locales/ru.json";
 

@@ -48,7 +48,6 @@ export function WorkPreviewCard({
 
   return (
     <div className="bg-card border-2 border-border rounded-[16px] p-4 desktop:p-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
         <h3 className="text-[18px] desktop:text-[20px] font-medium text-foreground tracking-[-0.5px]">
           {t("feature.workPreview.title")}
@@ -64,7 +63,6 @@ export function WorkPreviewCard({
         )}
       </div>
 
-      {/* Files */}
       <div className="mb-4">
         <h4 className="text-[14px] font-medium text-foreground mb-2">
           {t("feature.workPreview.files")} ({files.length})
@@ -92,7 +90,6 @@ export function WorkPreviewCard({
         </div>
       </div>
 
-      {/* Validation Checks */}
       {checksSummary && (
         <div>
           <h4 className="text-[14px] font-medium text-foreground mb-2">
@@ -126,7 +123,6 @@ export function WorkPreviewCard({
               )}
             </div>
 
-            {/* Detailed checks */}
             <div className="mt-3 space-y-2">
               {validationChecks.map((check) => (
                 <div key={check.id} className="flex items-start gap-2 text-[13px]">

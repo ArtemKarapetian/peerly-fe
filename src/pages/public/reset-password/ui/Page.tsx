@@ -8,14 +8,6 @@ import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
-/**
- * ResetPasswordPage - Password reset flow
- *
- * Step 1: Enter login
- * Step 2: Enter new password + confirm
- * Step 3: Success message
- */
-
 interface FormErrors {
   login?: string;
   newPassword?: string;
@@ -39,7 +31,6 @@ export default function ResetPasswordPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Валидация поля
   const validateField = (field: keyof FormErrors, value: string) => {
     const newErrors = { ...errors };
 
@@ -60,7 +51,7 @@ export default function ResetPasswordPage() {
         delete newErrors.newPassword;
       }
 
-      // Проверяем совпадение, если уже введён confirmPassword
+      // если уже ввели confirm — проверяем сразу, чтобы убрать stale-ошибку
       if (confirmPassword && value !== confirmPassword) {
         newErrors.confirmPassword = t("page.resetPassword.passwordsMismatch");
       } else if (confirmPassword && value === confirmPassword) {
@@ -81,7 +72,6 @@ export default function ResetPasswordPage() {
     setErrors(newErrors);
   };
 
-  // Обработка потери фокуса
   const handleBlur = (field: keyof FormErrors) => {
     setTouched({ ...touched, [field]: true });
 
@@ -94,7 +84,6 @@ export default function ResetPasswordPage() {
     }
   };
 
-  // Шаг 1: Продолжить с логином
   const handleContinue = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -106,15 +95,13 @@ export default function ResetPasswordPage() {
     }
 
     setIsLoading(true);
-    // Имитация проверки пользователя
+    // демо-задержка вместо реального запроса проверки логина
     await new Promise((resolve) => setTimeout(resolve, 500));
     setIsLoading(false);
 
-    // Переход к шагу 2
     setStep("password");
   };
 
-  // Шаг 2: Сохранить новый пароль
   const handleResetPassword = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -132,27 +119,23 @@ export default function ResetPasswordPage() {
     }
 
     setIsLoading(true);
-    // Имитация сохранения пароля
+    // демо-задержка вместо реального API смены пароля
     await new Promise((resolve) => setTimeout(resolve, 800));
     setIsLoading(false);
 
-    // Переход к успеху
     setStep("success");
   };
 
-  // Шаг 3: Успех
   if (step === "success") {
     return (
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
-              {/* Success Icon */}
               <div className="w-16 h-16 bg-success-light rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-8 h-8 text-success" />
               </div>
 
-              {/* Success Message */}
               <div className="space-y-2">
                 <h1 className="text-2xl font-semibold text-foreground">
                   {t("page.resetPassword.passwordUpdated")}
@@ -162,7 +145,6 @@ export default function ResetPasswordPage() {
                 </p>
               </div>
 
-              {/* Back to Login Button */}
               <Button variant="outline" className="w-full" onClick={() => void navigate("/login")}>
                 {t("page.resetPassword.backToLogin")}
               </Button>
@@ -173,14 +155,12 @@ export default function ResetPasswordPage() {
     );
   }
 
-  // Шаг 1: Ввод логина
   if (step === "login") {
     return (
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6">
-              {/* Header */}
               <div className="space-y-1">
                 <h1 className="text-2xl font-semibold text-foreground">
                   {t("page.resetPassword.title")}
@@ -188,9 +168,7 @@ export default function ResetPasswordPage() {
                 <p className="text-sm text-muted-foreground">{t("page.resetPassword.subtitle")}</p>
               </div>
 
-              {/* Form */}
               <form onSubmit={(e) => void handleContinue(e)} className="space-y-4">
-                {/* Login Field */}
                 <Input
                   label={t("page.resetPassword.loginLabel")}
                   value={login}
@@ -208,7 +186,6 @@ export default function ResetPasswordPage() {
                   autoFocus
                 />
 
-                {/* Submit Button */}
                 <Button
                   type="submit"
                   variant="primary"
@@ -221,7 +198,6 @@ export default function ResetPasswordPage() {
                 </Button>
               </form>
 
-              {/* Back to Login Link */}
               <div className="text-center">
                 <Link to="/login" className="text-sm text-primary hover:underline">
                   {t("page.resetPassword.backToLogin")}
@@ -234,13 +210,11 @@ export default function ResetPasswordPage() {
     );
   }
 
-  // Шаг 2: Ввод нового пароля
   return (
     <PublicLayout maxWidth="md" showLoginButton={false}>
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
         <div className="w-full max-w-[420px]">
           <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6">
-            {/* Header */}
             <div className="space-y-1">
               <h1 className="text-2xl font-semibold text-foreground">
                 {t("page.resetPassword.newPasswordTitle")}
@@ -250,9 +224,7 @@ export default function ResetPasswordPage() {
               </p>
             </div>
 
-            {/* Form */}
             <form onSubmit={(e) => void handleResetPassword(e)} className="space-y-4">
-              {/* New Password Field */}
               <PasswordInput
                 label={t("page.resetPassword.newPasswordLabel")}
                 value={newPassword}
@@ -270,7 +242,6 @@ export default function ResetPasswordPage() {
                 autoFocus
               />
 
-              {/* Confirm Password Field */}
               <PasswordInput
                 label={t("page.resetPassword.confirmPasswordLabel")}
                 value={confirmPassword}
@@ -287,7 +258,6 @@ export default function ResetPasswordPage() {
                 autoComplete="new-password"
               />
 
-              {/* Password Requirements */}
               <div className="bg-muted/50 border border-border rounded-lg p-3">
                 <p className="text-xs text-muted-foreground mb-2 font-medium">
                   {t("page.resetPassword.passwordRequirements")}
@@ -314,7 +284,6 @@ export default function ResetPasswordPage() {
                 </ul>
               </div>
 
-              {/* Submit Button */}
               <Button
                 type="submit"
                 variant="primary"
@@ -334,7 +303,6 @@ export default function ResetPasswordPage() {
               </Button>
             </form>
 
-            {/* Back Link */}
             <div className="text-center">
               <button
                 type="button"

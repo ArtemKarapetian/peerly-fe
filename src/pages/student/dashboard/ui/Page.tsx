@@ -49,7 +49,6 @@ export default function DashboardPage() {
     <AppShell title={t("student.dashboard.title")}>
       <PageHeader title={t("student.dashboard.title")} subtitle={todayLabel} />
 
-      {/* Overview strip — 4 cols on tablet+, 2x2 on mobile */}
       <div className="grid grid-cols-2 gap-2 tablet:grid-cols-4 mb-5">
         <StatCard
           label={t("student.dashboard.activeCourses")}
@@ -81,12 +80,10 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Two-column layout */}
       <div className="task-layout">
-        {/* Left: single main focus block */}
         <div className="space-y-4">
           <SectionCard title={t("student.dashboard.toDo")} noPadding>
-            {/* Action items pinned at top when present */}
+            {/* экшены закреплены сверху, если есть */}
             {hasActions && (
               <>
                 <ActionCards
@@ -98,7 +95,6 @@ export default function DashboardPage() {
                     void navigate("/student/reviews/received");
                   }}
                 />
-                {/* Section break before deadlines */}
                 {mockDeadlines.length > 0 && (
                   <div className="px-5 py-2 bg-[--surface-hover] border-y border-[--surface-border]">
                     <span className="text-[10px] font-semibold text-[--text-tertiary] uppercase tracking-[0.5px]">
@@ -116,7 +112,7 @@ export default function DashboardPage() {
             />
           </SectionCard>
 
-          {/* Mobile: notifications inline */}
+          {/* на мобильном уведомления идут инлайном, на десктопе — в правой колонке */}
           {notificationsEnabled && (
             <div className="hide-on-desktop">
               <SectionCard title={t("student.dashboard.notifications")} noPadding>
@@ -134,7 +130,6 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Right sidebar — desktop only, secondary info */}
         {notificationsEnabled && (
           <div className="hide-below-desktop">
             <div className="task-sidebar-sticky">

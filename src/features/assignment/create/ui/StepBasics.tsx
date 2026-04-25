@@ -65,7 +65,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         </p>
       </div>
 
-      {/* Course Selection */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.courseLabel")}{" "}
@@ -85,7 +84,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         </select>
       </div>
 
-      {/* Title */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.titleLabel")}{" "}
@@ -100,7 +98,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         />
       </div>
 
-      {/* Description */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.descriptionLabel")}
@@ -117,7 +114,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         </p>
       </div>
 
-      {/* Task Type */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.basics.taskTypeLabel")}{" "}
@@ -168,7 +164,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         </div>
       </div>
 
-      {/* Attachments */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.basics.attachmentsLabel")}
@@ -177,7 +172,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
           {t("feature.assignmentCreate.basics.attachmentsHint")}
         </p>
 
-        {/* Upload Button */}
         <label className="inline-flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-surface-hover transition-colors cursor-pointer">
           <Upload className="w-4 h-4" />
           <span className="text-[14px] font-medium">
@@ -186,7 +180,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
           <input type="file" multiple onChange={handleFileUpload} className="hidden" />
         </label>
 
-        {/* Attachments List */}
         {data.attachments.length > 0 && (
           <div className="mt-4 space-y-2">
             {data.attachments.map((file) => (
@@ -213,7 +206,6 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         )}
       </div>
 
-      {/* Help Text */}
       <div className="bg-info-light border border-info rounded-[12px] p-4">
         <p className="text-[13px] text-foreground">
           <strong>{t("feature.assignmentCreate.basics.tip")}</strong>{" "}

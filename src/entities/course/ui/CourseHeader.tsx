@@ -13,10 +13,8 @@ export function CourseHeader({ title, teacher, coverColor = "#f2b2d6" }: CourseH
 
   return (
     <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
-      {/* Cover */}
       <div className="w-full h-[100px]" style={{ backgroundColor: coverColor }} />
 
-      {/* Text Content */}
       <div className="px-6 pb-6 pt-4 space-y-2">
         <h1 className="text-[32px] font-medium leading-[1.05] tracking-[-0.5px] text-foreground">
           {title}

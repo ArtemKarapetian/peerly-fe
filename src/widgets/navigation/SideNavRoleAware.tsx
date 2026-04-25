@@ -192,7 +192,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.08)" }}
       >
         <div className="flex flex-col h-full">
-          {/* Header */}
           <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
             <Link
               to="/student/dashboard"
@@ -209,7 +208,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             </button>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 py-2 px-2.5 space-y-0.5 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -228,14 +226,12 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             })}
           </nav>
 
-          {/* Role Switcher */}
           {demoToolsVisible && (
             <div className="border-t border-[--surface-border] pt-2 shrink-0">
               <RoleSwitcherPopover collapsed={false} />
             </div>
           )}
 
-          {/* Profile & Settings */}
           <div className="border-t border-[--surface-border] shrink-0 px-2.5 py-2 space-y-0.5 pb-3">
             <Link
               to="/profile"
@@ -266,7 +262,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         isCollapsed ? "w-[72px]" : "w-[240px]"
       }`}
     >
-      {/* Header */}
       <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
         {!isCollapsed && (
           <Link
@@ -291,7 +286,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         )}
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 py-2 px-2.5 overflow-y-auto space-y-0.5">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -312,16 +306,13 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         })}
       </nav>
 
-      {/* Footer */}
       <div className="shrink-0">
-        {/* Role Switcher */}
         {demoToolsVisible && (
           <div className="border-t border-[--surface-border] pt-2">
             <RoleSwitcherPopover collapsed={isCollapsed} />
           </div>
         )}
 
-        {/* Profile & Settings */}
         <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
           <Link
             to="/profile"
