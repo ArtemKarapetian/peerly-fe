@@ -15,7 +15,6 @@ export function AboutCard() {
       </div>
 
       <div className="space-y-4">
-        {/* Security Link */}
         <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.security")}</span>
           <Link
@@ -27,13 +26,11 @@ export function AboutCard() {
           </Link>
         </div>
 
-        {/* App Version */}
         <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.appVersion")}</span>
           <span className="text-[15px] font-medium text-foreground">v1.0.0</span>
         </div>
 
-        {/* Status Page Link */}
         <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">
             {t("widget.about.systemStatus")}
@@ -47,7 +44,6 @@ export function AboutCard() {
           </Link>
         </div>
 
-        {/* Terms Link */}
         <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.termsOfUse")}</span>
           <Link
@@ -59,7 +55,6 @@ export function AboutCard() {
           </Link>
         </div>
 
-        {/* Privacy Policy Link */}
         <div className="flex items-center justify-between py-3">
           <span className="text-[15px] text-muted-foreground">
             {t("widget.about.privacyPolicy")}

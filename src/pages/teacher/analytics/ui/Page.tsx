@@ -39,16 +39,6 @@ import { workRepo } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * TeacherAnalyticsPage - Отчёты и аналитика
- *
- * Секции:
- * - Аналитика заданий: завершённость, завершённость рецензий, распределение оценок
- * - Индикаторы качества: средняя длина комментария, процент помеченных рецензий
- * - Сводка по плагинам (плагиат/линтер) по заданиям
- * - Таблица журнала оценок по курсам с экспортом в CSV/PDF
- */
-
 interface GradebookEntry {
   studentId: string;
   studentName: string;
@@ -92,14 +82,12 @@ export default function TeacherAnalyticsPage() {
 
   const { courses, assignments, submissions, reviews, users } = data!;
 
-  // Set default selected course if not set yet
   const effectiveCourse = selectedCourse || courses[0]?.id || "";
 
-  // Filter assignments by course (relation lives on assignment.courseId)
   const courseAssignments = assignments.filter((a) => a.courseId === effectiveCourse);
 
-  // Stable per-assignment demo numbers: derived from assignment.id so screenshots
-  // stay identical between renders. Pre-baked to look coherent across charts.
+  // фиксированные демо-числа на каждое задание — чтобы графики не «прыгали» между рендерами
+  // и скриншоты в работе совпадали с тем, что видно в приложении
   const DEMO_OVERRIDES: Record<
     string,
     {
@@ -157,7 +145,7 @@ export default function TeacherAnalyticsPage() {
     const reviewCompletionRate =
       expectedReviews > 0 ? (submittedReviews / expectedReviews) * 100 : 0;
 
-    // Average score from submitted reviews only
+    // средний балл считаем только по отправленным рецензиям, чтобы черновики не искажали статистику
     const submittedReviewObjects = assignmentReviews.filter((r) => r.status === "submitted");
     const allScores = submittedReviewObjects.flatMap((r) => Object.values(r.scores));
     const computedAvg =
@@ -173,8 +161,7 @@ export default function TeacherAnalyticsPage() {
           submittedReviewObjects.length
         : 0);
 
-    // Plagiarism / linter buckets — fixed per assignment for screenshot stability.
-    // Fallback for assignments without overrides: spread across submissions.
+    // если нет фикс-оверрайда — раскидываем сабмишены по бакетам пропорционально, чтобы график не был пустым
     const plagiarism = override?.plagiarism ?? {
       high: Math.max(0, Math.floor(completedSubmissions * 0.1)),
       medium: Math.max(0, Math.floor(completedSubmissions * 0.2)),
@@ -212,7 +199,6 @@ export default function TeacherAnalyticsPage() {
     };
   });
 
-  // Overall course analytics
   const overallAnalytics = {
     totalAssignments: courseAssignments.length,
     avgCompletionRate:
@@ -241,7 +227,6 @@ export default function TeacherAnalyticsPage() {
         : 0,
   };
 
-  // Gradebook data
   const generateGradebook = (): GradebookEntry[] => {
     return users.map((student) => {
       const scores: Record<string, number | null> = {};
@@ -262,10 +247,10 @@ export default function TeacherAnalyticsPage() {
             totalScore += avgScore;
             gradedAssignments++;
           } else {
-            scores[assignment.id] = null; // Submitted but not reviewed yet
+            scores[assignment.id] = null; // сдано, но ещё не проверено
           }
         } else {
-          scores[assignment.id] = null; // Not submitted
+          scores[assignment.id] = null; // не сдано
         }
       });
 
@@ -282,15 +267,14 @@ export default function TeacherAnalyticsPage() {
 
   const gradebook = generateGradebook();
 
-  // Chart data
   const completionChartData = assignmentAnalytics.map((a) => ({
     name: a.title.length > 20 ? a.title.substring(0, 20) + "..." : a.title,
     [t("teacher.analytics.submissionsSubmitted")]: Math.round(a.completionRate),
     [t("teacher.analytics.reviewsCompleted")]: Math.round(a.reviewCompletionRate),
   }));
 
-  // Score distribution from real submitted reviews (deterministic, screenshot-friendly).
-  // Falls back to a fixed sample so the chart always has something to show.
+  // распределение оценок по реальным отправленным рецензиям; если их нет — фиксированный sample,
+  // чтобы график всегда что-то показывал
   const allCourseScores = courseAssignments
     .flatMap((a) => submissions.filter((s) => s.assignmentId === a.id))
     .flatMap((s) => reviews.filter((r) => r.submissionId === s.id && r.status === "submitted"))
@@ -313,11 +297,9 @@ export default function TeacherAnalyticsPage() {
     { name: "4-5", value: useFallback ? fallback["4-5"] : buckets["4-5"], fill: "var(--success)" },
   ];
 
-  // Export functions
   const handleExportCSV = () => {
     const course = courses.find((c) => c.id === effectiveCourse);
 
-    // Build CSV content
     const headers = [
       t("teacher.analytics.csvStudentHeader"),
       ...courseAssignments.map((a) => a.title),
@@ -334,7 +316,6 @@ export default function TeacherAnalyticsPage() {
       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
     ].join("\n");
 
-    // Create and download file
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -358,7 +339,6 @@ export default function TeacherAnalyticsPage() {
       <PageHeader title={t("teacher.analytics.title")} subtitle={t("teacher.analytics.subtitle")} />
 
       <div>
-        {/* Course Selector */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -397,7 +377,6 @@ export default function TeacherAnalyticsPage() {
           </div>
         </div>
 
-        {/* Overall Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -443,9 +422,7 @@ export default function TeacherAnalyticsPage() {
           </div>
         </div>
 
-        {/* Assignment Analytics Charts */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Completion Rates */}
           <div className="bg-card border-2 border-border rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-5 h-5 text-brand-primary" />
@@ -491,7 +468,6 @@ export default function TeacherAnalyticsPage() {
             )}
           </div>
 
-          {/* Score Distribution */}
           <div className="bg-card border-2 border-border rounded-[20px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-brand-primary" />
@@ -520,7 +496,6 @@ export default function TeacherAnalyticsPage() {
           </div>
         </div>
 
-        {/* Quality Indicators */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-brand-primary" />
@@ -574,7 +549,6 @@ export default function TeacherAnalyticsPage() {
           </div>
         </div>
 
-        {/* Plugin Reports Summary */}
         {selectedAnalytics ? (
           <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
@@ -584,7 +558,6 @@ export default function TeacherAnalyticsPage() {
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Plagiarism Summary */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Shield className="w-4 h-4 text-muted-foreground" />
@@ -629,7 +602,6 @@ export default function TeacherAnalyticsPage() {
                 </div>
               </div>
 
-              {/* Linter Summary */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Code className="w-4 h-4 text-muted-foreground" />
@@ -713,7 +685,6 @@ export default function TeacherAnalyticsPage() {
           </div>
         )}
 
-        {/* Gradebook */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -740,7 +711,6 @@ export default function TeacherAnalyticsPage() {
             </div>
           </div>
 
-          {/* Gradebook Table */}
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>

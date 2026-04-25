@@ -15,20 +15,6 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 import { mockVersions } from "../model/mockVersions";
 
-/**
- * SubmissionsPage - История версий работы
- *
- * Route: /student/courses/:courseId/tasks/:taskId/submissions
- *
- * Features:
- * - Timeline of all versions (v1, v2, ...)
- * - Each version shows: timestamp, status, files, note, checks
- * - Actions: Download, View Reports, Make Current, Create New Version
- * - Comparison mode: select 2 versions to compare side-by-side
- * - Empty state if no submissions
- * - Handle work limits
- */
-
 export default function SubmissionsPage() {
   const { courseId = "", taskId = "" } = useParams();
   const navigate = useNavigate();
@@ -37,29 +23,27 @@ export default function SubmissionsPage() {
   const [comparisonMode, setComparisonMode] = useState(false);
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
-  // Mock data - will be replaced with API
+  // TODO заменить на данные из API, когда появится submissionRepo
   const courseName = t("student.submissions.mockCourseName");
   const taskTitle = t("student.submissions.mockTaskTitle");
-  const allowResubmissions = true; // If false, hide "Create new version"
-  const maxSubmissions = 3; // 0 = unlimited
+  const allowResubmissions = true;
+  const maxSubmissions = 3; // 0 = без лимита
 
   const [versions] = useState<Version[]>(mockVersions);
 
-  // Handle version selection for comparison
   const handleToggleSelect = (versionId: string) => {
     setSelectedVersions((prev) => {
       if (prev.includes(versionId)) {
         return prev.filter((id) => id !== versionId);
       }
       if (prev.length >= 2) {
-        // Max 2 versions for comparison
+        // в сравнении максимум две версии — выкидываем самую старую и добавляем новую
         return [prev[1], versionId];
       }
       return [...prev, versionId];
     });
   };
 
-  // Get selected version objects
   const getSelectedVersionsObjects = (): [Version, Version] | null => {
     if (selectedVersions.length !== 2) return null;
     const v1 = versions.find((v) => v.id === selectedVersions[0]);
@@ -69,7 +53,6 @@ export default function SubmissionsPage() {
 
   const selectedVersionsObjects = getSelectedVersionsObjects();
 
-  // Actions
   const handleDownload = (versionId: string) => {
     console.log("Download version:", versionId);
     alert(`${t("student.submissions.downloadingVersion")} ${versionId}`);
@@ -88,7 +71,6 @@ export default function SubmissionsPage() {
   };
 
   const handleCreateNewVersion = () => {
-    // Check if max submissions reached
     if (maxSubmissions > 0 && versions.length >= maxSubmissions) {
       alert(t("student.submissions.maxVersionsReached", { max: maxSubmissions }));
       return;
@@ -96,13 +78,11 @@ export default function SubmissionsPage() {
     void navigate(`/student/courses/${courseId}/tasks/${taskId}/submit`);
   };
 
-  // Update versions with selected state for comparison
   const versionsWithSelection = versions.map((v) => ({
     ...v,
     selected: selectedVersions.includes(v.id),
   }));
 
-  // Empty state
   if (versions.length === 0) {
     return (
       <AppShell title={t("student.submissions.title")}>
@@ -153,7 +133,6 @@ export default function SubmissionsPage() {
         ]}
       />
 
-      {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("student.submissions.title")}
@@ -161,7 +140,6 @@ export default function SubmissionsPage() {
         <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
       </div>
 
-      {/* Comparison Mode Toggle */}
       <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
         <button
           onClick={() => {
@@ -194,7 +172,6 @@ export default function SubmissionsPage() {
         )}
       </div>
 
-      {/* Comparison View (if 2 versions selected) */}
       {comparisonMode && selectedVersionsObjects && (
         <ComparisonView
           version1={selectedVersionsObjects[0]}
@@ -205,7 +182,6 @@ export default function SubmissionsPage() {
         />
       )}
 
-      {/* Version Timeline */}
       <VersionTimeline
         versions={versionsWithSelection}
         allowResubmissions={allowResubmissions}

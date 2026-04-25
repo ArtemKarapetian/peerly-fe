@@ -1,13 +1,4 @@
-/**
- * Breadcrumbs - Навигационные хлебные крошки
- *
- * Использование:
- * <Breadcrumbs items={[
- *   { label: 'Курсы', href: ROUTES.courses },
- *   { label: 'Математика', href: ROUTES.course('math-1') },
- *   { label: 'Задание 1' }  // без href = текущая страница
- * ]} />
- */
+// Хлебные крошки; элемент без href трактуется как текущая страница
 
 import { ChevronRight } from "lucide-react";
 import { useCallback } from "react";
@@ -24,7 +15,6 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   const navigate = useNavigate();
-  // Hooks must be called before any early returns
   const handleClick = useCallback(
     (href: string) => {
       void navigate(href.startsWith("#") ? href.slice(1) : href);

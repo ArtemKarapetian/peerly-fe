@@ -13,14 +13,14 @@ import { CourseFilterBar } from "@/widgets/course-filter-bar";
 
 import { mockCourses } from "../model/mockCourses";
 
-// Keeps page size aligned with .courses-grid column count so completed pages
-// never end with a half-empty row. Breakpoints mirror src/shared/styles/courses.css.
+// размер страницы подгоняем под число колонок .courses-grid, чтобы не было
+// «обрезанной» нижней строки; брейкпоинты повторяют src/shared/styles/courses.css
 function useCoursesPageSize(): number {
   const compute = () => {
     if (typeof window === "undefined") return 12;
-    if (window.innerWidth >= 1200) return 12; // 4 cols × 3 rows
-    if (window.innerWidth >= 800) return 8; // 2 cols × 4 rows
-    return 6; // 1 col × 6 rows
+    if (window.innerWidth >= 1200) return 12; // 4 × 3
+    if (window.innerWidth >= 800) return 8; // 2 × 4
+    return 6; // 1 × 6
   };
   const [pageSize, setPageSize] = useState(compute);
 

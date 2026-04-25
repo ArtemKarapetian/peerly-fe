@@ -44,7 +44,6 @@ export function GradebookHeader({
     <>
       <PageHeader title={t("student.gradebook.title")} subtitle={t("student.gradebook.subtitle")} />
 
-      {/* Desktop stats strip */}
       <div className="hidden desktop:flex items-center gap-6 bg-muted rounded-[16px] px-6 py-4 mb-6">
         <div className="flex items-center gap-3">
           <TrendingUp className="w-5 h-5 text-brand-primary" />
@@ -66,14 +65,12 @@ export function GradebookHeader({
         </div>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <div className="flex items-center gap-2 text-[14px] text-muted-foreground">
           <Filter className="w-4 h-4" />
           <span className="hidden tablet:inline">{t("common.filters")}:</span>
         </div>
 
-        {/* Course Filter */}
         <div className="relative">
           <button
             onClick={() => {
@@ -125,7 +122,6 @@ export function GradebookHeader({
           )}
         </div>
 
-        {/* Status Filter */}
         <div className="relative">
           <button
             onClick={() => {

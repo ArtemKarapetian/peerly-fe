@@ -4,8 +4,8 @@ export interface StudentCourse {
   teacher: string;
   coverColor: string;
   status?: "active" | "completed";
-  deadline?: string; // ISO date string for nearest deadline
-  progress?: number; // 0-100
+  deadline?: string; // ISO ближайший дедлайн
+  progress?: number; // 0..100
   newAssignments?: number;
 }
 

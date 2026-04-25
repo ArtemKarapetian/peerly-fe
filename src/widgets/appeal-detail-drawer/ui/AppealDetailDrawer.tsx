@@ -13,10 +13,8 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
 
   return (
     <>
-      {/* Overlay */}
       <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
 
-      {/* Drawer */}
       <div className="fixed right-0 top-0 bottom-0 w-full max-w-[600px] bg-card z-50 overflow-y-auto shadow-2xl">
         <div className="sticky top-0 bg-card border-b-2 border-border z-10">
           <div className="flex items-center justify-between p-6">
@@ -33,7 +31,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
         </div>
 
         <div className="p-6">
-          {/* Status Badge */}
           <div className="mb-6">
             <span
               className={`inline-block px-4 py-2 rounded-[8px] text-[13px] font-medium uppercase tracking-wide border ${getStatusColor(appeal.status)}`}
@@ -42,7 +39,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </span>
           </div>
 
-          {/* Course & Task Info */}
           <div className="bg-muted rounded-[12px] p-4 mb-6">
             <div className="space-y-2">
               <div>
@@ -60,7 +56,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </div>
           </div>
 
-          {/* Score Info */}
           {appeal.currentScore !== undefined && (
             <div className="bg-muted rounded-[12px] p-4 mb-6">
               <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-2">
@@ -87,7 +82,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </div>
           )}
 
-          {/* Appeal Details */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               <FileText className="w-5 h-5 text-muted-foreground" />
@@ -100,7 +94,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </p>
           </div>
 
-          {/* Message */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               <MessageSquare className="w-5 h-5 text-muted-foreground" />
@@ -113,7 +106,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </div>
           </div>
 
-          {/* Attachment */}
           {appeal.attachmentName && (
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
@@ -131,7 +123,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </div>
           )}
 
-          {/* Timeline */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-5 h-5 text-muted-foreground" />
@@ -179,7 +170,6 @@ export function AppealDetailDrawer({ appeal, onClose }: AppealDetailDrawerProps)
             </div>
           </div>
 
-          {/* Teacher Response */}
           {appeal.teacherResponse ? (
             <div className="bg-accent/10 border-2 border-accent rounded-[12px] p-5">
               <div className="flex items-center gap-2 mb-3">

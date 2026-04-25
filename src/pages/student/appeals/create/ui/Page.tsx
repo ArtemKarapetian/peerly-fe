@@ -14,12 +14,6 @@ import {
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * CreateAppealPage - Student Appeal (Regrade/Review Request)
- *
- * Allows students to request a regrade or appeal a review decision
- */
-
 export default function CreateAppealPage() {
   const { courseId, taskId } = useParams();
   const navigate = useNavigate();

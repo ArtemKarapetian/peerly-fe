@@ -10,10 +10,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminFlagsPage - Feature flags & platform settings
- */
-
 interface FeatureFlag {
   id: string;
   key: string;
@@ -310,7 +306,6 @@ export default function AdminFlagsPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const { updateFlag: updateRealFlag } = useFeatureFlags();
 
-  // Available tenants
   const availableTenants = [
     { id: "org1", name: "HSE" },
     { id: "org2", name: "MGUSiT" },
@@ -345,10 +340,9 @@ export default function AdminFlagsPage() {
   };
 
   const handleSave = () => {
-    // Save to localStorage for demo flags
+    // demo-флаги храним в localStorage, реальные синкаем через провайдер
     localStorage.setItem("admin_feature_flags", JSON.stringify(flags));
 
-    // Sync real feature flags with FeatureFlagsContext
     const realFlagKeys: string[] = [
       "supportChat",
       "twoFactor",
@@ -398,7 +392,6 @@ export default function AdminFlagsPage() {
     localStorage.setItem("admin_audit_logs", JSON.stringify(logs));
   };
 
-  // Filter flags
   const filteredFlags = flags.filter((flag) => {
     const translatedName = t(flag.nameKey).toLowerCase();
     const translatedDesc = t(flag.descriptionKey).toLowerCase();
@@ -483,7 +476,6 @@ export default function AdminFlagsPage() {
       <PageHeader title={t("admin.flags.title")} subtitle={t("admin.flags.subtitle")} />
 
       <div>
-        {/* Success Message */}
         {showSuccess && (
           <div className="bg-success-light border-2 border-success rounded-[16px] p-4 mb-6">
             <div className="flex items-center gap-3">
@@ -497,7 +489,6 @@ export default function AdminFlagsPage() {
           </div>
         )}
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <p className="text-[12px] text-muted-foreground uppercase tracking-wide mb-1">
@@ -525,10 +516,8 @@ export default function AdminFlagsPage() {
           </div>
         </div>
 
-        {/* Search and Filters */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.flagsPage.searchLabel")}
@@ -545,7 +534,6 @@ export default function AdminFlagsPage() {
               </div>
             </div>
 
-            {/* Category Filter */}
             <div className="w-full md:w-[200px]">
               <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.flagsPage.categoryLabel")}
@@ -569,7 +557,6 @@ export default function AdminFlagsPage() {
               </select>
             </div>
 
-            {/* Status Filter */}
             <div className="w-full md:w-[200px]">
               <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.flagsPage.statusLabel")}
@@ -587,7 +574,6 @@ export default function AdminFlagsPage() {
             </div>
           </div>
 
-          {/* Active filters */}
           {(searchQuery || filterCategory !== "all" || filterStatus !== "all") && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
               <span className="text-[13px] text-muted-foreground">
@@ -621,7 +607,6 @@ export default function AdminFlagsPage() {
           )}
         </div>
 
-        {/* Flags List */}
         <div className="space-y-3 mb-6">
           {filteredFlags.map((flag) => {
             const isExpanded = expandedFlag === flag.id;
@@ -633,7 +618,6 @@ export default function AdminFlagsPage() {
                 key={flag.id}
                 className="bg-card border-2 border-border rounded-[16px] overflow-hidden"
               >
-                {/* Main Row */}
                 <div className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
@@ -662,7 +646,6 @@ export default function AdminFlagsPage() {
                       <p className="text-[12px] text-muted-foreground font-mono">Key: {flag.key}</p>
                     </div>
 
-                    {/* Toggle */}
                     <div className="flex items-center gap-3">
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -674,7 +657,6 @@ export default function AdminFlagsPage() {
                         <div className="w-14 h-8 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-card after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-success"></div>
                       </label>
 
-                      {/* Expand Button */}
                       <button
                         onClick={() => setExpandedFlag(isExpanded ? null : flag.id)}
                         className="p-2 hover:bg-muted rounded-[8px] transition-colors"
@@ -687,7 +669,7 @@ export default function AdminFlagsPage() {
                   </div>
                 </div>
 
-                {/* Tenant Overrides */}
+                {/* пер-tenant оверрайды (показываются только при раскрытии) */}
                 {isExpanded && (
                   <div className="px-6 pb-6 pt-0 border-t-2 border-border">
                     <div className="pt-4">
@@ -749,7 +731,6 @@ export default function AdminFlagsPage() {
           })}
         </div>
 
-        {/* Empty State */}
         {filteredFlags.length === 0 && (
           <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
             <Flag className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
@@ -762,7 +743,6 @@ export default function AdminFlagsPage() {
           </div>
         )}
 
-        {/* Info Box */}
         <div className="bg-warning-light border-2 border-warning rounded-[16px] p-4 mb-6">
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
@@ -777,7 +757,6 @@ export default function AdminFlagsPage() {
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3">
           <button
             onClick={handleSave}

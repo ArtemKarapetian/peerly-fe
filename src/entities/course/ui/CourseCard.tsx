@@ -1,18 +1,7 @@
 import { AlertCircle, BookOpen, CheckCircle2, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * CourseCard — карточка курса (студент).
- *
- * Структура body:
- *   - title (min 2 строки)
- *   - teacher row
- *   - progress bar (для активных и завершённых, цвет разный)
- *   - footer (mt-auto): deadline | "Завершён" | пусто
- *
- * flex-col на кнопке + flex-1 на body → footer всегда прижат к низу.
- */
-
+// Карточка курса в списке студента; footer прижат к низу через mt-auto
 interface CourseCardProps {
   id: string;
   title: string;
@@ -79,12 +68,10 @@ export function CourseCard({
         ${isUrgent ? "border-[--error]/40" : "border-[--surface-border]"}
       `}
     >
-      {/* Accent strip */}
       <div
         className="relative h-[52px] flex items-end px-3 pb-2 shrink-0"
         style={{ backgroundColor: coverColor }}
       >
-        {/* New assignments badge — visible only on active cards */}
         {!isCompleted && newAssignments && newAssignments > 0 ? (
           <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-card/90 backdrop-blur-sm rounded-full text-[11px] font-semibold text-[--brand-primary] shadow-sm">
             <BookOpen className="w-3 h-3" />
@@ -94,14 +81,11 @@ export function CourseCard({
         ) : null}
       </div>
 
-      {/* Card body */}
       <div className="px-4 pt-3 pb-3 flex flex-col flex-1 gap-2">
-        {/* Title */}
         <h3 className="text-[14px] leading-[1.35] tracking-[-0.2px] text-[--text-primary] font-semibold line-clamp-2 min-h-[2.7em]">
           {title}
         </h3>
 
-        {/* Teacher */}
         <div className="flex items-center gap-2">
           <div
             className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold text-[--text-primary]"
@@ -112,7 +96,6 @@ export function CourseCard({
           <p className="text-[12px] text-[--text-secondary] truncate">{teacher}</p>
         </div>
 
-        {/* Progress bar — shown for both active and completed, color differs */}
         {typeof progress === "number" && (
           <div className="space-y-1">
             <div className="h-1.5 bg-[--surface-border] rounded-full overflow-hidden">
@@ -133,16 +116,13 @@ export function CourseCard({
           </div>
         )}
 
-        {/* Footer — always at the bottom, aligned across all cards in a row */}
         <div className="mt-auto">
           {isCompleted ? (
-            /* Completed: green badge with checkmark */
             <div className="flex items-center gap-1.5 pt-1 text-[--success]">
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
               <span className="text-[12px] font-medium">{t("entity.course.completed")}</span>
             </div>
           ) : deadlineInfo ? (
-            /* Active with deadline */
             <div
               className={`flex items-center gap-1.5 pt-1 ${
                 deadlineInfo.urgent ? "text-[--error]" : "text-[--text-tertiary]"

@@ -1,20 +1,12 @@
 import { FileText, Download, Trash2, RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * FilePreviewCard - Превью загруженного файла с действиями
- *
- * Features:
- * - File info (name, size, upload time)
- * - Actions: Replace, Download, Delete
- */
-
 export interface UploadedFile {
   id: string;
   name: string;
-  size: number; // bytes
-  uploadedAt: string; // e.g., "10:30, 25 января"
-  url?: string; // for download
+  size: number;
+  uploadedAt: string;
+  url?: string;
 }
 
 interface FilePreviewCardProps {
@@ -34,18 +26,14 @@ export function FilePreviewCard({
 }: FilePreviewCardProps) {
   const { t } = useTranslation();
 
-  // Format file size
   const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
   };
 
-  // Get file icon based on extension
   const getFileIcon = () => {
     const ext = file.name.split(".").pop()?.toLowerCase();
-
-    // Different colors for different file types
     const colors: Record<string, string> = {
       pdf: "bg-error-light",
       zip: "bg-warning-light",
@@ -63,14 +51,12 @@ export function FilePreviewCard({
   return (
     <div className="bg-card border-2 border-border rounded-[12px] p-4">
       <div className="flex items-start gap-4">
-        {/* File icon */}
         <div
           className={`w-12 h-12 ${getFileIcon()} rounded-[8px] flex items-center justify-center shrink-0`}
         >
           <FileText className="w-6 h-6 text-foreground" />
         </div>
 
-        {/* File info */}
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-medium text-foreground mb-1 truncate">{file.name}</div>
           <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
@@ -83,7 +69,6 @@ export function FilePreviewCard({
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
         <button
           onClick={onReplace}

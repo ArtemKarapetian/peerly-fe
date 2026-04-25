@@ -190,9 +190,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-card border border-border rounded-[20px] max-w-[1200px] w-full my-8">
         <div className="flex gap-0 h-[calc(100vh-4rem)] max-h-[800px]">
-          {/* Left: Form */}
           <div className="flex-1 flex flex-col min-w-0">
-            {/* Header */}
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">
                 {isEditing ? t("feature.createRule.editRule") : t("feature.createRule.createRule")}
@@ -205,7 +203,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               </button>
             </div>
 
-            {/* Steps indicator */}
             <div className="px-6 py-4 border-b border-border">
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4].map((s) => (
@@ -234,9 +231,7 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               </div>
             </div>
 
-            {/* Content */}
             <div className="flex-1 overflow-y-auto p-6">
-              {/* Basic Info (always visible) */}
               <div className="mb-6 space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
@@ -264,7 +259,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 </div>
               </div>
 
-              {/* Step 1: Trigger */}
               {step === 1 && (
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-4">
@@ -292,7 +286,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 </div>
               )}
 
-              {/* Step 2: Conditions */}
               {step === 2 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -372,7 +365,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 </div>
               )}
 
-              {/* Step 3: Actions */}
               {step === 3 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -423,7 +415,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                             </button>
                           </div>
 
-                          {/* Action-specific parameters */}
                           {action.type === "apply_penalty" && (
                             <div>
                               <label className="block text-sm font-medium text-foreground mb-2">
@@ -471,7 +462,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
                 </div>
               )}
 
-              {/* Step 4: Scope */}
               {step === 4 && (
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-4">
@@ -555,7 +545,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
               )}
             </div>
 
-            {/* Footer Actions */}
             <div className="px-6 py-4 border-t border-border flex items-center justify-between">
               <button
                 onClick={() => setStep(Math.max(1, step - 1))}
@@ -589,7 +578,6 @@ export function CreateRuleModal({ existingRule, onClose }: CreateRuleModalProps)
             </div>
           </div>
 
-          {/* Right: Summary & Test */}
           <div className="w-[400px] border-l border-border flex flex-col bg-muted/30">
             <div className="p-6 border-b border-border">
               <h3 className="font-semibold text-foreground mb-1">

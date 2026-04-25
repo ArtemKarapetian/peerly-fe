@@ -1,14 +1,4 @@
-/**
- * Two-phase file upload via the gateway's storage endpoints.
- *
- * 1. GET  /storage/uploadUrl           → { url, storageId }
- * 2. PUT  <url>                        → raw file body
- * 3. POST /homeworks/{id}/file         or
- *         /submissions/{id}/file       → registers the uploaded file
- *                                        with { storageId, fileName, fileSize }
- *
- * Download is a single call that resolves to a signed URL.
- */
+// Двухфазный аплоад: signed PUT в storage, потом регистрация файла под homework/submission
 
 import {
   http,
@@ -51,10 +41,6 @@ async function registerUploadedFile(
 }
 
 export const storageApi = {
-  /**
-   * End-to-end upload: obtains a signed URL, PUTs the binary, and then
-   * registers the file under the target homework or submission.
-   */
   upload: async (file: File, target: AttachTarget): Promise<{ fileId: string }> => {
     const { url, storageId } = await requestUploadUrl();
     await putBinary(url, file);

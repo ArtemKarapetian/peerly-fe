@@ -26,15 +26,6 @@ import { workRepo } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * TeacherAppealsPage - Апелляции (инбокс)
- *
- * Список апелляций с:
- * - Статус (new/in review/resolved)
- * - Детальный просмотр: сообщение студента + задание + действия преподавателя
- * - Действия: одобрить/отклонить/скорректировать оценку (demo)
- */
-
 type AppealStatus = "new" | "in_review" | "resolved";
 
 interface Appeal {
@@ -101,7 +92,7 @@ function AppealsContent({
   const { t } = useTranslation();
   const { users, assignments, submissions, reviews } = data;
 
-  // Generate demo appeals
+  // собираем апелляции из реальных рецензий — берём первые 8 и проставляем статусы по индексу
   const generateAppeals = (): Appeal[] => {
     const appeals: Appeal[] = [];
     const appealMessages = [
@@ -167,7 +158,7 @@ function AppealsContent({
     });
 
     return appeals.sort((a, b) => {
-      // Sort: new first, then in_review, then resolved
+      // сортировка: сперва новые, потом in_review, потом resolved; внутри статуса — свежие сверху
       const statusOrder = { new: 0, in_review: 1, resolved: 2 };
       if (statusOrder[a.status] !== statusOrder[b.status]) {
         return statusOrder[a.status] - statusOrder[b.status];
@@ -180,7 +171,6 @@ function AppealsContent({
   const [selectedAppeal, setSelectedAppeal] = useState<Appeal | null>(null);
   const [filterStatus, setFilterStatus] = useState<AppealStatus | "all">("all");
 
-  // For teacher response
   const [responseText, setResponseText] = useState("");
   const [adjustedScore, setAdjustedScore] = useState<number | null>(null);
 
@@ -357,7 +347,6 @@ function AppealsContent({
       <PageHeader title={t("teacher.appeals.title")} subtitle={t("teacher.appeals.subtitle")} />
 
       <div>
-        {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -388,7 +377,6 @@ function AppealsContent({
           </div>
         </div>
 
-        {/* Filters */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="w-5 h-5 text-muted-foreground" />
@@ -441,7 +429,6 @@ function AppealsContent({
           </div>
         </div>
 
-        {/* Appeals List */}
         <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
           {filteredAppeals.length > 0 ? (
             <div className="divide-y divide-border">
@@ -518,7 +505,6 @@ function AppealsContent({
         </div>
       </div>
 
-      {/* Appeal Detail Drawer */}
       {selectedAppeal && (
         <div
           className="fixed inset-0 bg-black/30 z-50 flex items-center justify-end"
@@ -528,7 +514,6 @@ function AppealsContent({
             className="bg-card h-full w-full md:w-[700px] shadow-2xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Drawer Header */}
             <div className="sticky top-0 bg-card border-b-2 border-border px-6 py-4 flex items-center justify-between z-10">
               <div>
                 <h2 className="text-[20px] font-medium text-foreground">
@@ -546,15 +531,12 @@ function AppealsContent({
               </button>
             </div>
 
-            {/* Drawer Content */}
             <div className="p-6 space-y-6">
-              {/* Status */}
               <div className="flex items-center gap-3">
                 {getStatusBadge(selectedAppeal.status)}
                 {selectedAppeal.resolution && getResolutionBadge(selectedAppeal.resolution)}
               </div>
 
-              {/* Assignment Info */}
               <div className="bg-muted border-2 border-border rounded-[12px] p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <FileText className="w-4 h-4 text-muted-foreground" />
@@ -610,7 +592,6 @@ function AppealsContent({
                 </div>
               </div>
 
-              {/* Student Message */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <MessageSquare className="w-4 h-4 text-muted-foreground" />
@@ -625,7 +606,6 @@ function AppealsContent({
                 </div>
               </div>
 
-              {/* Teacher Response (if resolved) */}
               {selectedAppeal.status === "resolved" && selectedAppeal.teacherResponse && (
                 <div>
                   <div className="flex items-center gap-2 mb-3">
@@ -648,14 +628,12 @@ function AppealsContent({
                 </div>
               )}
 
-              {/* Actions (if not resolved) */}
               {selectedAppeal.status !== "resolved" && (
                 <div>
                   <h3 className="text-[15px] font-medium text-foreground mb-3">
                     {t("teacher.appeals.actionsTitle")}
                   </h3>
 
-                  {/* Response textarea */}
                   <div className="mb-4">
                     <label className="block text-[13px] font-medium text-muted-foreground mb-2">
                       {t("teacher.appeals.commentOptional")}
@@ -668,9 +646,7 @@ function AppealsContent({
                     />
                   </div>
 
-                  {/* Action buttons */}
                   <div className="space-y-3">
-                    {/* Approve */}
                     <button
                       onClick={handleApprove}
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-success text-primary-foreground rounded-[12px] hover:bg-success transition-colors"
@@ -683,7 +659,6 @@ function AppealsContent({
                       </span>
                     </button>
 
-                    {/* Adjust Score */}
                     <div className="flex gap-2">
                       <input
                         type="number"
@@ -706,7 +681,6 @@ function AppealsContent({
                       </button>
                     </div>
 
-                    {/* Deny */}
                     <button
                       onClick={handleDeny}
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-error text-error rounded-[12px] hover:bg-error-light transition-colors"

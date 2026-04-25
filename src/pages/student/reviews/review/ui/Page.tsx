@@ -37,14 +37,13 @@ export default function ReviewPage() {
   const { getReview } = useReviewStore();
   const review = getReview(reviewId);
 
-  // Extract review data (use defaults if review is null)
   const courseName = review?.courseName ?? "";
   const taskTitle = review?.taskTitle ?? "";
   const courseId = review?.courseId ?? "";
   const taskId = review?.taskId ?? "";
 
-  // State - ALL hooks must be called unconditionally
-  // Load draft (if any) synchronously during initial render via lazy initializers
+  // драфт читаем синхронно в инициализаторах useState, чтобы не было «прыжка» формы
+  // после первого рендера; все хуки вызываем безусловно (early-return на review === null ниже)
   const getDraft = () => {
     if (!review) return null;
     try {
@@ -83,11 +82,9 @@ export default function ReviewPage() {
 
   const saveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Handle score change
   const handleScoreChange = useCallback((criterionId: string, newScore: CriterionScore) => {
     setScores((prev) => prev.map((s) => (s.criterionId === criterionId ? newScore : s)));
 
-    // Clear error for this criterion
     setErrors((prev) => {
       if (prev[criterionId]) {
         const newErrors = { ...prev };
@@ -98,17 +95,16 @@ export default function ReviewPage() {
     });
   }, []);
 
-  // If draft was restored on initial render, hide the restoration toast after a short delay
+  // если восстановили драфт — прячем тост через 4 секунды
   useEffect(() => {
     if (draft) {
       const t = setTimeout(() => setShowDraftToast(false), 4000);
       return () => clearTimeout(t);
     }
     return;
-    // draft is derived from review/course/task ids at render time
   }, [draft]);
 
-  // Auto-save to localStorage (debounced)
+  // дебаунс-автосохранение в localStorage
   const debouncedSave = useMemo(
     () =>
       debounce(() => {
@@ -118,7 +114,8 @@ export default function ReviewPage() {
         const success = saveDraftToStorage(courseId, taskId, reviewId, scores, overallComment);
 
         if (success) {
-          // Use a simple counter to track saves instead of timestamp
+          // используем счётчик вместо реального времени, чтобы у индикатора всегда было
+          // «новое» значение даже при двух сохранениях в одну миллисекунду
           setLastSavedTimestamp((prev) => (prev ?? 0) + 1);
           setSaveStatus("saved");
         } else {
@@ -130,7 +127,7 @@ export default function ReviewPage() {
     [courseId, taskId, reviewId, scores, overallComment, isSubmitted, review],
   );
 
-  // Trigger auto-save on changes: schedule setSaveStatus and debouncedSave asynchronously to avoid cascading renders
+  // на любое изменение — статус «unsaved» + дебаунс-сейв; setTimeout 0 разрывает каскад рендеров
   useEffect(() => {
     if (scores.length > 0 && review) {
       const t = setTimeout(() => {
@@ -141,7 +138,7 @@ export default function ReviewPage() {
     }
   }, [scores, overallComment, debouncedSave, review]);
 
-  // Auto-save every 10 seconds
+  // плюс «жёсткий» сейв раз в 10 секунд — страховка на случай зависших дебаунсов
   useEffect(() => {
     if (isSubmitted || !review) return;
 
@@ -161,7 +158,8 @@ export default function ReviewPage() {
     };
   }, [courseId, taskId, reviewId, scores, overallComment, isSubmitted, review]);
 
-  // Keyboard shortcuts
+  // хоткеи: 1..5 — балл, 0 — сброс, ↑/↓ — переход между критериями;
+  // если фокус в textarea/input, требуем Alt, чтобы не ломать обычный ввод
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isSubmitted || !review) return;
@@ -169,18 +167,14 @@ export default function ReviewPage() {
       const target = e.target as HTMLElement;
       const isTyping = target.tagName === "TEXTAREA" || target.tagName === "INPUT";
 
-      // If typing in input/textarea, require Alt key
       if (isTyping && !e.altKey) return;
 
-      // Number keys 1-5: set score
       if (e.key >= "1" && e.key <= "5") {
         e.preventDefault();
         const score = parseInt(e.key, 10);
 
-        // Find criterion to score
         let criterionId = focusedCriterionId;
         if (!criterionId) {
-          // Use first criterion in view
           const firstCriterion = document.querySelector("[data-criterion-id]");
           criterionId = firstCriterion?.getAttribute("data-criterion-id") || null;
         }
@@ -193,7 +187,6 @@ export default function ReviewPage() {
         }
       }
 
-      // 0: Clear score
       if (e.key === "0") {
         e.preventDefault();
         let criterionId = focusedCriterionId;
@@ -210,7 +203,6 @@ export default function ReviewPage() {
         }
       }
 
-      // Arrow keys: Navigate between criteria
       if (e.key === "ArrowUp" || e.key === "ArrowDown") {
         e.preventDefault();
         const allCriteriaElements = Array.from(document.querySelectorAll("[data-criterion-id]"));
@@ -245,10 +237,8 @@ export default function ReviewPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [scores, focusedCriterionId, isSubmitted, handleScoreChange, review]);
 
-  // Calculate progress
   const filledCriteria = scores.filter((s) => s.score !== null).length;
 
-  // If review not found, show error
   if (!review) {
     return (
       <AppShell title={t("page.reviewFill.notFoundTitle")}>
@@ -272,7 +262,6 @@ export default function ReviewPage() {
     );
   }
 
-  // Validation
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -305,7 +294,6 @@ export default function ReviewPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Can submit?
   const canSubmit = () => {
     const allRequiredFilled = requiredCriteria.every((criterion) => {
       const score = scores.find((s) => s.criterionId === criterion.id);
@@ -316,7 +304,6 @@ export default function ReviewPage() {
     return allRequiredFilled && commentValid && !isSubmitted;
   };
 
-  // Submit review
   const handleSubmit = () => {
     if (!validate()) {
       const firstErrorElement = document.querySelector("[data-error]");
@@ -334,14 +321,13 @@ export default function ReviewPage() {
     setIsSubmitted(true);
     setShowSuccessToast(true);
 
-    // Clear draft after successful submit
+    // драфт удаляем только после успешной отправки, чтобы при ошибке его не потерять
     clearDraftFromStorage(courseId, taskId, reviewId);
 
     setTimeout(() => setShowSuccessToast(false), 5000);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Reset draft
   const handleResetDraft = () => {
     setShowResetModal(true);
   };
@@ -349,7 +335,6 @@ export default function ReviewPage() {
   const confirmResetDraft = () => {
     clearDraftFromStorage(courseId, taskId, reviewId);
 
-    // Reset to default state
     const initialScores: CriterionScore[] = allCriteria.map((criterion) => ({
       criterionId: criterion.id,
       score: null,
@@ -362,7 +347,6 @@ export default function ReviewPage() {
     setShowResetModal(false);
   };
 
-  // Handlers
   const handleDownloadFile = (fileId: string) => {
     alert(t("page.reviewFill.downloadFile", { fileId }));
   };
@@ -399,7 +383,6 @@ export default function ReviewPage() {
         </div>
       </div>
 
-      {/* Save Error Banner */}
       {showSaveError && (
         <div className="bg-error-light border-2 border-error rounded-[16px] p-4 mb-6 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-error shrink-0 mt-0.5" />
@@ -412,7 +395,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Draft Restored Toast */}
       {showDraftToast && (
         <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4 mb-6 flex items-start gap-3">
           <CheckCircle className="w-5 h-5 text-brand-primary shrink-0 mt-0.5" />
@@ -425,7 +407,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Success Banner */}
       {isSubmitted && (
         <div className="bg-success-light border-2 border-success rounded-[16px] p-4 mb-6 flex items-start gap-3">
           <CheckCircle className="w-5 h-5 text-success shrink-0 mt-0.5" />
@@ -438,7 +419,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Main Content */}
       <div className="desktop:grid desktop:grid-cols-[1fr_360px] desktop:gap-6 desktop:items-start">
         <div className="space-y-6">
           <WorkPreviewCard
@@ -504,7 +484,7 @@ export default function ReviewPage() {
             </div>
           </div>
 
-          {/* Mobile/Tablet Actions */}
+          {/* кнопка отправки на мобильном — десктоп использует sticky-сайдбар справа */}
           {!isSubmitted && (
             <div className="desktop:hidden bg-muted border-2 border-border rounded-[16px] p-4">
               <button
@@ -519,7 +499,6 @@ export default function ReviewPage() {
           )}
         </div>
 
-        {/* Right Column */}
         <div className="hidden desktop:block desktop:sticky desktop:top-6 space-y-4">
           <ReviewProgress
             filledCriteria={filledCriteria}
@@ -544,7 +523,6 @@ export default function ReviewPage() {
         </div>
       </div>
 
-      {/* Mobile Progress */}
       <div className="desktop:hidden mt-6">
         <ReviewProgress
           filledCriteria={filledCriteria}
@@ -555,7 +533,6 @@ export default function ReviewPage() {
         />
       </div>
 
-      {/* Confirm Submit Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-card rounded-[20px] p-6 max-w-md w-full">
@@ -583,7 +560,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Reset Draft Confirmation Modal */}
       {showResetModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-card rounded-[20px] p-6 max-w-md w-full">
@@ -611,7 +587,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Success Toast */}
       {showSuccessToast && (
         <div className="fixed top-20 right-4 bg-success text-primary-foreground rounded-[12px] px-4 py-3 shadow-lg z-50 flex items-center gap-2 animate-slide-in">
           <CheckCircle className="w-5 h-5" />

@@ -9,28 +9,16 @@ import { Input } from "@/shared/ui/input.tsx";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
-/**
- * VerifyEmailPage - Email verification UI flow
- *
- * Three states:
- * 1. "pending" - Check your email
- * 2. "verified" - Success
- * 3. "expired" - Invalid/expired link
- *
- * Demo-switchable via URL params or manual state change
- */
-
 type VerificationState = "pending" | "verified" | "expired";
 
 export default function VerifyEmailPage() {
-  // Check URL param for initial state (e.g., ?state=verified)
+  // позволяет открывать конкретное состояние через ?state=verified — для демо/QA
   const getInitialState = (): VerificationState => {
     const urlParams = new URLSearchParams(window.location.search);
     const stateParam = urlParams.get("state") as VerificationState;
     return ["pending", "verified", "expired"].includes(stateParam) ? stateParam : "pending";
   };
 
-  // Get email from localStorage or use default
   const getInitialEmail = (): string => {
     const storedEmail = localStorage.getItem("pendingVerificationEmail");
     return storedEmail || "ivan.petrov@university.edu";
@@ -45,10 +33,9 @@ export default function VerifyEmailPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [lastSentTime, setLastSentTime] = useState<string | null>(null);
 
-  // Resend email handler
   const handleResendEmail = async () => {
     setIsLoading(true);
-    // Simulate API call
+    // демо-задержка вместо реального POST /verify/resend
     await new Promise((resolve) => setTimeout(resolve, 800));
     setIsLoading(false);
     toast.success(t("page.verifyEmail.emailSent"), {
@@ -57,7 +44,6 @@ export default function VerifyEmailPage() {
     setLastSentTime(new Date().toLocaleTimeString());
   };
 
-  // Change email handler
   const handleChangeEmail = async () => {
     if (!newEmail.trim() || !newEmail.includes("@")) {
       return;
@@ -76,19 +62,16 @@ export default function VerifyEmailPage() {
     localStorage.setItem("pendingVerificationEmail", newEmail);
   };
 
-  // State 2: Verified Success
   if (state === "verified") {
     return (
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
-              {/* Success Icon */}
               <div className="w-16 h-16 bg-success-light rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-8 h-8 text-success" />
               </div>
 
-              {/* Success Message */}
               <div className="space-y-2">
                 <h1 className="text-2xl font-semibold text-foreground">
                   {t("page.verifyEmail.emailVerified")}
@@ -98,7 +81,6 @@ export default function VerifyEmailPage() {
                 </p>
               </div>
 
-              {/* Action Button */}
               <Button
                 variant="primary"
                 size="lg"
@@ -108,7 +90,7 @@ export default function VerifyEmailPage() {
                 {t("page.verifyEmail.goToApp")}
               </Button>
 
-              {/* Demo State Switcher */}
+              {/* демо-переключатель состояний */}
               <div className="pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground mb-2">
                   {t("page.verifyEmail.demoSwitchState")}
@@ -135,19 +117,16 @@ export default function VerifyEmailPage() {
     );
   }
 
-  // State 3: Expired Link
   if (state === "expired") {
     return (
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
-              {/* Error Icon */}
               <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
                 <AlertCircle className="w-8 h-8 text-destructive" />
               </div>
 
-              {/* Error Message */}
               <div className="space-y-2">
                 <h1 className="text-2xl font-semibold text-foreground">
                   {t("page.verifyEmail.linkExpired")}
@@ -157,7 +136,6 @@ export default function VerifyEmailPage() {
                 </p>
               </div>
 
-              {/* Action Button */}
               <Button
                 variant="primary"
                 size="lg"
@@ -170,7 +148,6 @@ export default function VerifyEmailPage() {
                 {t("page.verifyEmail.sendNewLink")}
               </Button>
 
-              {/* Back to Login */}
               <div className="text-center">
                 <Link
                   to="/login"
@@ -180,7 +157,7 @@ export default function VerifyEmailPage() {
                 </Link>
               </div>
 
-              {/* Demo State Switcher */}
+              {/* демо-переключатель состояний */}
               <div className="pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground mb-2">
                   {t("page.verifyEmail.demoSwitchState")}
@@ -207,19 +184,16 @@ export default function VerifyEmailPage() {
     );
   }
 
-  // State 1: Pending - Check Your Email (Default)
   return (
     <>
       <PublicLayout maxWidth="md" showLoginButton={false}>
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 desktop:py-12">
           <div className="w-full max-w-[420px]">
             <div className="bg-card border border-border rounded-xl p-6 tablet:p-8 space-y-6 text-center">
-              {/* Email Icon */}
               <div className="w-16 h-16 bg-info-light rounded-full flex items-center justify-center mx-auto">
                 <Mail className="w-8 h-8 text-info" />
               </div>
 
-              {/* Message */}
               <div className="space-y-2">
                 <h1 className="text-2xl font-semibold text-foreground">
                   {t("page.verifyEmail.title")}
@@ -243,7 +217,6 @@ export default function VerifyEmailPage() {
                 </div>
               </div>
 
-              {/* Resend Button */}
               <Button
                 variant="outline"
                 size="lg"
@@ -255,7 +228,6 @@ export default function VerifyEmailPage() {
                 {isLoading ? t("page.verifyEmail.sending") : t("page.verifyEmail.resendEmail")}
               </Button>
 
-              {/* Change Email Link */}
               <div className="text-center">
                 <button
                   onClick={() => setShowEmailModal(true)}
@@ -265,12 +237,11 @@ export default function VerifyEmailPage() {
                 </button>
               </div>
 
-              {/* Help Text */}
               <div className="pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground">{t("page.verifyEmail.checkSpam")}</p>
               </div>
 
-              {/* Demo State Switcher */}
+              {/* демо-переключатель состояний */}
               <div className="pt-4 border-t border-border">
                 <p className="text-xs text-muted-foreground mb-2">
                   {t("page.verifyEmail.demoSwitchState")}
@@ -295,11 +266,9 @@ export default function VerifyEmailPage() {
         </div>
       </PublicLayout>
 
-      {/* Change Email Modal */}
       {showEmailModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-card border border-border rounded-xl p-6 w-full max-w-[400px] shadow-lg">
-            {/* Modal Header */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-foreground">
                 {t("page.verifyEmail.changeEmail")}
@@ -315,7 +284,6 @@ export default function VerifyEmailPage() {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">{t("page.verifyEmail.enterNewEmail")}</p>
 
@@ -328,7 +296,6 @@ export default function VerifyEmailPage() {
                 autoFocus
               />
 
-              {/* Modal Actions */}
               <div className="flex gap-2 pt-2">
                 <Button
                   variant="outline"

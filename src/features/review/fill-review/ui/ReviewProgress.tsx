@@ -33,12 +33,10 @@ export function ReviewProgress({
 
   return (
     <div className="bg-card border-2 border-border rounded-[16px] p-4 desktop:p-5">
-      {/* Header */}
       <h3 className="text-[16px] desktop:text-[18px] font-medium text-foreground tracking-[-0.5px] mb-4">
         {t("feature.reviewProgress.title")}
       </h3>
 
-      {/* Progress Bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[13px] text-muted-foreground">
@@ -58,7 +56,6 @@ export function ReviewProgress({
         </div>
       </div>
 
-      {/* Overall Comment Progress */}
       {minOverallCommentLength > 0 && (
         <div className="mb-4">
           <div className="flex items-center gap-2 mb-1">
@@ -78,7 +75,6 @@ export function ReviewProgress({
         </div>
       )}
 
-      {/* Checklist */}
       <div className="mb-4 pt-4 border-t border-border">
         <div className="space-y-2">
           <div className="flex items-start gap-2">
@@ -111,7 +107,6 @@ export function ReviewProgress({
         </div>
       </div>
 
-      {/* Tips */}
       {tips.length > 0 && (
         <div className="pt-4 border-t border-border">
           <div className="flex items-center gap-2 mb-2">

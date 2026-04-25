@@ -23,15 +23,6 @@ import { courseRepo } from "@/entities/course";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * TeacherAnnouncementsPage - Шаблоны уведомлений/анонсов
- *
- * Функции:
- * - Создание шаблонов объявлений
- * - Публикация объявления в курсе (demo)
- * - Отображение в Student course page на вкладке "Анонсы"
- */
-
 interface Announcement {
   id: string;
   title: string;
@@ -56,7 +47,7 @@ interface StoredAnnouncement {
   isPinned: boolean;
 }
 
-// Load announcements from localStorage or use defaults
+// объявления храним в localStorage между перезагрузками; при первом запуске — два дефолтных
 const loadAnnouncements = (
   courses: Awaited<ReturnType<typeof courseRepo.getAll>>,
 ): Announcement[] => {
@@ -70,7 +61,6 @@ const loadAnnouncements = (
     }));
   }
 
-  // Default announcements with fixed dates
   const now = Date.now();
   return [
     {
@@ -139,13 +129,12 @@ function AnnouncementsContent({
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Form state
   const [formTitle, setFormTitle] = useState("");
   const [formContent, setFormContent] = useState("");
   const [formCourseId, setFormCourseId] = useState(courses[0]?.id || "");
   const [formPinned, setFormPinned] = useState(false);
 
-  // Save to localStorage whenever announcements change
+  // зеркалит state в localStorage при каждом изменении
   const saveAnnouncements = (newAnnouncements: Announcement[]) => {
     setAnnouncements(newAnnouncements);
     localStorage.setItem("teacher_announcements", JSON.stringify(newAnnouncements));
@@ -171,7 +160,6 @@ function AnnouncementsContent({
 
     saveAnnouncements([newAnnouncement, ...announcements]);
 
-    // Reset form
     setFormTitle("");
     setFormContent("");
     setFormPinned(false);
@@ -200,7 +188,6 @@ function AnnouncementsContent({
       ),
     );
 
-    // Reset form
     setFormTitle("");
     setFormContent("");
     setFormPinned(false);
@@ -277,7 +264,6 @@ function AnnouncementsContent({
       />
 
       <div>
-        {/* Stats */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-card border-2 border-border rounded-[12px] p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -299,7 +285,6 @@ function AnnouncementsContent({
           </div>
         </div>
 
-        {/* Create/Edit Form */}
         {(isCreating || editingId) && (
           <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
@@ -317,7 +302,6 @@ function AnnouncementsContent({
             </div>
 
             <div className="space-y-4">
-              {/* Title */}
               <div>
                 <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {t("teacher.announcements.titleLabel")}
@@ -331,7 +315,6 @@ function AnnouncementsContent({
                 />
               </div>
 
-              {/* Course */}
               <div>
                 <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {t("teacher.announcements.courseLabel")}
@@ -349,7 +332,6 @@ function AnnouncementsContent({
                 </select>
               </div>
 
-              {/* Content */}
               <div>
                 <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                   {t("teacher.announcements.contentLabel")}
@@ -362,7 +344,6 @@ function AnnouncementsContent({
                 />
               </div>
 
-              {/* Pin option */}
               <div>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
@@ -377,7 +358,6 @@ function AnnouncementsContent({
                 </label>
               </div>
 
-              {/* Actions */}
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={editingId ? handleUpdate : handleCreate}
@@ -401,7 +381,6 @@ function AnnouncementsContent({
           </div>
         )}
 
-        {/* Announcements List */}
         <div className="space-y-4">
           {announcements.length > 0 ? (
             announcements.map((announcement) => (
@@ -456,7 +435,6 @@ function AnnouncementsContent({
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center gap-2 pt-4 border-t-2 border-border">
                   {!announcement.isPublished ? (
                     <button

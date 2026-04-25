@@ -2,19 +2,8 @@ import { Upload, AlertCircle } from "lucide-react";
 import { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 
-/**
- * FileUploadArea - Drag & drop + file picker для загрузки файлов
- *
- * Features:
- * - Drag & drop support
- * - Click to browse
- * - File format + size validation
- * - Progress bar during upload
- * - Error handling
- */
-
 interface FileUploadAreaProps {
-  acceptedFormats: string[]; // e.g., ['.zip', '.pdf']
+  acceptedFormats: string[];
   maxSizeMB: number;
   onFileSelected: (file: File) => void;
   onUploadStart?: () => void;
@@ -44,47 +33,35 @@ export function FileUploadArea({
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Validate file
   const validateFile = (file: File): string | null => {
-    // Check file extension
     const fileName = file.name.toLowerCase();
     const hasValidExtension = acceptedFormats.some((ext) => fileName.endsWith(ext.toLowerCase()));
-
     if (!hasValidExtension) {
       return t("feature.submission.upload.invalidFormat", { formats: acceptedFormats.join(", ") });
     }
-
-    // Check file size
     const fileSizeMB = file.size / (1024 * 1024);
     if (fileSizeMB > maxSizeMB) {
       return t("feature.submission.upload.fileTooLarge", { max: maxSizeMB });
     }
-
     return null;
   };
 
-  // Handle file selection
   const handleFileSelect = (file: File) => {
     const validationError = validateFile(file);
-
     if (validationError) {
       onUploadError?.(validationError);
       return;
     }
-
-    // Clear previous errors
     onUploadError?.("");
 
-    // Start upload simulation
     onUploadStart?.();
     onFileSelected(file);
 
-    // Simulate upload progress
+    // имитация прогресса аплоада
     let progress = 0;
     const interval = setInterval(() => {
       progress += 10;
       onUploadProgress?.(progress);
-
       if (progress >= 100) {
         clearInterval(interval);
         onUploadComplete?.();
@@ -92,7 +69,6 @@ export function FileUploadArea({
     }, 200);
   };
 
-  // Drag & drop handlers
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -125,7 +101,6 @@ export function FileUploadArea({
     }
   };
 
-  // Click to browse
   const handleClick = () => {
     if (!disabled && !isUploading) {
       fileInputRef.current?.click();
@@ -141,7 +116,6 @@ export function FileUploadArea({
 
   return (
     <div className="space-y-3">
-      {/* Upload Area */}
       <div
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -170,7 +144,6 @@ export function FileUploadArea({
         />
 
         {isUploading ? (
-          // Uploading state
           <div className="space-y-3">
             <div className="w-12 h-12 bg-brand-primary-light rounded-full mx-auto flex items-center justify-center animate-pulse">
               <Upload className="w-6 h-6 text-brand-primary" />
@@ -186,7 +159,6 @@ export function FileUploadArea({
             </div>
           </div>
         ) : (
-          // Default state
           <div className="space-y-3">
             <div
               className={`w-12 h-12 ${error ? "bg-error-light" : "bg-brand-primary-light"} rounded-full mx-auto flex items-center justify-center`}
@@ -214,7 +186,6 @@ export function FileUploadArea({
         )}
       </div>
 
-      {/* Format & size info */}
       <div className="flex items-start gap-2 text-[13px] text-muted-foreground">
         <div className="shrink-0">ℹ️</div>
         <div>
@@ -228,7 +199,6 @@ export function FileUploadArea({
         </div>
       </div>
 
-      {/* Error message */}
       {error && (
         <div className="flex items-start gap-2 bg-error-light border border-error rounded-[8px] p-3">
           <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />

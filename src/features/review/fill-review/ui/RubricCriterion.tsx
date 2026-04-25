@@ -13,16 +13,6 @@ interface RubricCriterionProps {
   onFocus?: () => void;
 }
 
-/**
- * RubricCriterion - Критерий рубрики с выбором оценки и комментарием
- *
- * Features:
- * - Score selector (0-5 or custom scale)
- * - Comment field
- * - Validation error display
- * - Required indicator
- */
-
 export function RubricCriterion({
   criterion,
   value,

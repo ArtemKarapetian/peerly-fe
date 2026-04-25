@@ -16,15 +16,6 @@ import { Input } from "@/shared/ui/input.tsx";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
-/**
- * StatusPage - System Status & Incidents
- *
- * Features:
- * - System status indicator (demo toggle)
- * - Incidents list with expand/collapse
- * - Subscribe to updates (demo)
- */
-
 type SystemStatus = "operational" | "degraded" | "outage";
 type IncidentStatus = "investigating" | "monitoring" | "resolved";
 
@@ -43,7 +34,6 @@ interface Incident {
   }[];
 }
 
-// Mock incidents data
 const MOCK_INCIDENTS: Incident[] = [
   {
     id: "inc-001",
@@ -164,7 +154,6 @@ export default function StatusPage() {
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
 
-  // Toggle incident expansion
   const toggleIncident = (id: string) => {
     const newExpanded = new Set(expandedIncidents);
     if (newExpanded.has(id)) {
@@ -175,7 +164,7 @@ export default function StatusPage() {
     setExpandedIncidents(newExpanded);
   };
 
-  // Cycle through status states (for demo)
+  // переключатель состояний для демо — клик по карточке статуса
   const cycleStatus = () => {
     const statuses: SystemStatus[] = ["operational", "degraded", "outage"];
     const currentIndex = statuses.indexOf(systemStatus);
@@ -183,7 +172,6 @@ export default function StatusPage() {
     setSystemStatus(statuses[nextIndex]);
   };
 
-  // Get status config
   const getStatusConfig = useMemo(
     () => (status: SystemStatus) => {
       switch (status) {
@@ -222,7 +210,6 @@ export default function StatusPage() {
     [t],
   );
 
-  // Get incident status config
   const getIncidentStatusConfig = useMemo(
     () => (status: IncidentStatus) => {
       switch (status) {
@@ -252,7 +239,6 @@ export default function StatusPage() {
     [t],
   );
 
-  // Format time
   const formatTime = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleString(undefined, {
@@ -263,12 +249,10 @@ export default function StatusPage() {
     });
   };
 
-  // Validate email
   const isEmailValid = () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  // Handle subscribe
   const handleSubscribe = () => {
     setEmailTouched(true);
 
@@ -276,7 +260,7 @@ export default function StatusPage() {
       return;
     }
 
-    // Demo: just show success toast
+    // в демо вместо реального API шлём только тост — реальной подписки нет
     toast.success(t("page.status.subscribeSuccess"), {
       description: t("page.status.subscribeSuccessDesc", { email }),
     });
@@ -291,7 +275,6 @@ export default function StatusPage() {
     <PublicLayout maxWidth="lg">
       <div className="py-8 tablet:py-12 desktop:py-16 px-4">
         <div className="max-w-[900px] mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 bg-brand-primary-lighter text-brand-primary rounded-xl flex items-center justify-center">
@@ -304,7 +287,6 @@ export default function StatusPage() {
             <p className="text-[15px] text-muted-foreground">{t("page.status.subtitle")}</p>
           </div>
 
-          {/* System Status Card */}
           <div
             className={`${statusConfig.bg} ${statusConfig.border} border-2 rounded-xl p-6 mb-8 cursor-pointer transition-all shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)]`}
             onClick={cycleStatus}
@@ -328,7 +310,6 @@ export default function StatusPage() {
             </div>
           </div>
 
-          {/* Subscribe Section */}
           <div className="bg-card border-2 border-border rounded-xl p-6 mb-8">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 mt-1">
@@ -369,7 +350,6 @@ export default function StatusPage() {
             </div>
           </div>
 
-          {/* Incidents Section */}
           <div className="mb-8">
             <h2 className="text-[24px] font-medium text-foreground mb-4">
               {t("page.status.incidentsTitle")}
@@ -388,7 +368,6 @@ export default function StatusPage() {
                     key={incident.id}
                     className="bg-card border-2 border-border rounded-xl overflow-hidden"
                   >
-                    {/* Incident Header */}
                     <button
                       onClick={() => toggleIncident(incident.id)}
                       className="w-full p-5 flex items-start gap-4 hover:bg-accent/30 transition-colors text-left"
@@ -428,14 +407,12 @@ export default function StatusPage() {
                       </div>
                     </button>
 
-                    {/* Incident Details (Expanded) */}
                     {isExpanded && (
                       <div className="border-t-2 border-border px-5 py-4 bg-accent/20">
                         <p className="text-[15px] text-muted-foreground mb-4">
                           {t(incident.summaryKey)}
                         </p>
 
-                        {/* Updates Timeline */}
                         <div className="space-y-4">
                           <h4 className="text-sm font-medium text-foreground uppercase tracking-wide">
                             {t("page.status.updates")}
@@ -476,7 +453,6 @@ export default function StatusPage() {
             </div>
           </div>
 
-          {/* Footer Note */}
           <div className="bg-accent/50 border border-border rounded-lg px-4 py-3">
             <p className="text-sm text-muted-foreground">
               {t("page.status.footerNote")}{" "}

@@ -8,10 +8,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminLimitsPage - Limits & quotas
- */
-
 interface GlobalLimits {
   maxUploadSizeMB: number;
   maxFilesPerSubmission: number;
@@ -235,7 +231,6 @@ export default function AdminLimitsPage() {
               </div>
             ))}
 
-            {/* Rate Limits */}
             <div className="bg-card border-2 border-border rounded-[16px] p-6">
               <div className="flex items-start gap-4">
                 <div className="text-[32px] flex-shrink-0">⚡</div>
@@ -292,7 +287,6 @@ export default function AdminLimitsPage() {
           </div>
         </div>
 
-        {/* Tenant Overrides */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>

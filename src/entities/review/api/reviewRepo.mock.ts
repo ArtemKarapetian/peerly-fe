@@ -1,14 +1,7 @@
-/**
- * reviewStore - Mock state management for reviews
- *
- * Features:
- * - Store all reviews with status (not_started / draft / submitted)
- * - Update review status and data
- * - Persist in memory (would be replaced with API calls)
- */
+// Демо-стор рецензий в памяти; будет заменён на API-вызовы
+
 import { Review } from "@/entities/review/model/store.ts";
 
-// Mock initial data
 const INITIAL_REVIEWS: Review[] = [
   {
     id: "r1",
@@ -60,46 +53,32 @@ const INITIAL_REVIEWS: Review[] = [
   },
 ];
 
-// In-memory store
 let reviews: Review[] = [...INITIAL_REVIEWS];
 
-// Store interface
 export const useReviewStore = () => {
   return {
-    // Get all reviews
     reviews: reviews,
 
-    // Get review by ID
     getReview: (id: string): Review | undefined => {
       return reviews.find((r) => r.id === id);
     },
 
-    // Update review status
     updateReviewStatus: (id: string, status: "not_started" | "draft" | "submitted") => {
       reviews = reviews.map((r) => (r.id === id ? { ...r, status } : r));
       return Promise.resolve();
     },
 
-    // Save draft
     saveDraft: (
       id: string,
       scores: Record<string, { score: number | null; comment: string }>,
       overallComment: string,
     ) => {
       reviews = reviews.map((r) =>
-        r.id === id
-          ? {
-              ...r,
-              status: "draft" as const,
-              scores,
-              overallComment,
-            }
-          : r,
+        r.id === id ? { ...r, status: "draft" as const, scores, overallComment } : r,
       );
       return Promise.resolve();
     },
 
-    // Submit review
     submitReview: (
       id: string,
       scores: Record<string, { score: number | null; comment: string }>,
@@ -119,12 +98,10 @@ export const useReviewStore = () => {
       return Promise.resolve();
     },
 
-    // Get reviews by task
     getReviewsByTask: (taskId: string): Review[] => {
       return reviews.filter((r) => r.taskId === taskId);
     },
 
-    // Get first not started review for a task
     getFirstNotStartedForTask: (taskId: string): Review | undefined => {
       return reviews.find((r) => r.taskId === taskId && r.status === "not_started");
     },

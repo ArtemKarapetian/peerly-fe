@@ -1,12 +1,4 @@
-/**
- * Shared API DTO types — mirror the gateway contract (Peerly.Gateway v0.4.0).
- *
- * All shapes are camelCase to match ASP.NET Core JSON defaults. IDs are
- * typed as `string` here (serialized as JSON numbers by the backend,
- * but kept as strings on the FE for routing / key stability — convert
- * via Number(...) when assembling URLs is not needed: template literals
- * serialize either form correctly).
- */
+// API DTO с гейтвея Peerly v0.4.0; id храним строками для роутинга и стабильности key
 
 // ── Common ────────────────────────────────────────────────────────
 
@@ -137,7 +129,7 @@ export interface HomeworkInfoDto {
   id: Id;
   name: string;
   status: HomeworkStatus;
-  deadline: string; // ISO8601
+  deadline: string;
   reviewDeadline?: string;
   description?: string;
   checklist?: string;

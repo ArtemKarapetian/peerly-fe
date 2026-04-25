@@ -25,7 +25,6 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
         </h2>
 
         <div className="space-y-6">
-          {/* Step 1: Checkbox */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary">
@@ -49,7 +48,6 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
             </label>
           </div>
 
-          {/* Step 2: Confirm text */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary">
@@ -86,7 +84,6 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
             </div>
           </div>
 
-          {/* Step 3: Password */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary">
@@ -116,7 +113,6 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex flex-col tablet:flex-row gap-3">
         <button
           onClick={() => canDelete && onDelete()}
@@ -138,7 +134,6 @@ export function ConfirmationForm({ onDelete }: ConfirmationFormProps) {
         </Link>
       </div>
 
-      {/* Help section */}
       <div className="p-4 bg-muted/50 rounded-lg border border-border">
         <p className="text-sm text-muted-foreground">
           <strong className="text-foreground">{t("widget.deleteAccount.needHelp")}</strong>{" "}

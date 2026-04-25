@@ -30,14 +30,13 @@ export default function TaskPage() {
   const { user } = useAuth();
   const [taskStatus, setTaskStatus] = useState<TaskStatus>("NOT_STARTED");
 
-  // Load extension data asynchronously
   const { data: extension } = useAsync(
     () => extensionRepo.getForStudent(taskId || "1", user?.id || "1"),
     [taskId, user?.id],
   );
 
   const taskTitle = `${t("widget.gradeTable.assignment")} ${taskId || "1"}`;
-  const courseId = "1"; // Mock course ID
+  const courseId = "1"; // TODO взять реальный courseId из URL/контекста
 
   const getStatusColor = () => {
     switch (taskStatus) {
@@ -96,7 +95,6 @@ export default function TaskPage() {
 
   return (
     <AppShell title={taskTitle}>
-      {/* Breadcrumbs - стандартизированная навигация: Курсы → Название курса → Задание */}
       <Breadcrumbs
         items={[
           CRUMBS.courses,
@@ -105,7 +103,7 @@ export default function TaskPage() {
         ]}
       />
 
-      {/* Extension Banner - Approved/Manual */}
+      {/* продление дедлайна одобрено или выдано вручную */}
       {showExtensionBanner && (
         <div className="bg-success-light border border-success rounded-[12px] p-4 mb-6">
           <div className="flex items-start gap-3">
@@ -139,7 +137,7 @@ export default function TaskPage() {
         </div>
       )}
 
-      {/* Extension Banner - Requested */}
+      {/* запрос продления отправлен и ждёт решения преподавателя */}
       {showRequestedBanner && (
         <div className="bg-warning-light border border-warning rounded-[12px] p-4 mb-6">
           <div className="flex items-start gap-3">
@@ -154,7 +152,6 @@ export default function TaskPage() {
         </div>
       )}
 
-      {/* Page Header - H1 после breadcrumbs */}
       <TaskHeader
         title={taskTitle}
         courseName={t("student.task.mockCourseName")}
@@ -176,33 +173,7 @@ export default function TaskPage() {
         }
       />
 
-      {/* Двухколоночный layout для Desktop с фиксированным right rail */}
-      {/* 
-        RESPONSIVE GRID LAYOUT:
-        
-        Desktop (≥1200px):
-        ┌────────────────────────────────────┬──────────────────┐
-        │ Main Content (1fr)                 │ Right Rail       │
-        │                                    │ 360-420px fixed  │
-        │ • Описание                         │ • Статус (sticky)│
-        │ • Требования                       │ • Комментарии    │
-        │ • Материалы                        │                  │
-        └────────────────────────────────────┴──────────────────┘
-        Gap: 32px between columns
-        
-        Tablet (800-1199px) & Mobile (<800px):
-        ┌──────────────────────────────────────────┐
-        │ Single Column (1fr)                      │
-        │ • Статус                                 │
-        │ • Описание                               │
-        │ • Требования                             │
-        │ • Материалы                              │
-        │ • Комментарии                            │
-        └──────────────────────────────────────────┘
-        Gap: 16px between items
-      */}
-
-      {/* StatusCard на Tablet/Mobile - показываем вверху */}
+      {/* на десктопе StatusCard уйдёт в правый sticky-сайдбар, здесь только мобильная версия */}
       <div className="hide-on-desktop mb-4">
         <StatusCard
           status={taskStatus}
@@ -226,20 +197,17 @@ export default function TaskPage() {
       </div>
 
       <div className="task-layout">
-        {/* Левая колонка: основной контент задания */}
         <div className="w-full min-w-0 flex flex-col task-content-spacing">
           <TaskDescription />
           <TaskRequirements />
           <TaskMaterials />
-          {/* На Tablet/Mobile (<1200px): Комментарии внизу основного контента */}
+          {/* комментарии в основной колонке только на мобильном — на десктопе они в правом сайдбаре */}
           <div className="hide-on-desktop">
             <TaskQuestionsComments />
           </div>
         </div>
 
-        {/* Правая колонка: sidebar со статусом и комментариями (только Desktop) */}
         <div className="w-full min-w-0 flex flex-col task-content-spacing hide-below-desktop">
-          {/* Статус и действия - STICKY на Desktop (≥1200px) */}
           <div className="task-sidebar-sticky">
             <StatusCard
               status={taskStatus}
@@ -261,7 +229,6 @@ export default function TaskPage() {
               </a>
             )}
           </div>
-          {/* Комментарии и вопросы - на Desktop (≥1200px) в sidebar */}
           <TaskQuestionsComments />
         </div>
       </div>

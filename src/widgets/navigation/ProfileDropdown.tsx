@@ -5,21 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/entities/user";
 
-/**
- * ProfileDropdown - Dropdown menu для профиля пользователя
- *
- * Меню:
- * - Профиль
- * - Настройки
- * - Помощь
- * - Статус сервиса
- * - Выйти
- *
- * Режимы:
- * - collapsed: круглая кнопка-аватар с меню
- * - expanded: полная кнопка с текстом и меню
- */
-
+// collapsed = круглая кнопка-аватар, expanded = с именем
 interface ProfileDropdownProps {
   collapsed?: boolean;
   userName?: string;
@@ -33,7 +19,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
   const navigate = useNavigate();
   const displayName = userName || t("widget.profileDropdown.defaultUser");
 
-  // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -50,7 +35,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
     };
   }, [isOpen]);
 
-  // Handle Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isOpen) {
@@ -107,7 +91,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
     void logout();
   };
 
-  // Collapsed mode - круглая кнопка-аватар
   if (collapsed) {
     return (
       <div ref={containerRef} className="relative">
@@ -120,7 +103,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
           <User className="size-5 text-[--brand-primary]" />
         </button>
 
-        {/* Dropdown menu */}
         {isOpen && (
           <div className="absolute left-full ml-2 bottom-0 bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] shadow-lg py-2 z-50 w-[200px]">
             {menuItems.map((item, index) => (
@@ -147,7 +129,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
     );
   }
 
-  // Expanded mode - полная кнопка
   return (
     <div ref={containerRef} className="relative">
       <button
@@ -162,7 +143,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
         <span className="text-sm text-[--text-primary] truncate">{displayName}</span>
       </button>
 
-      {/* Dropdown menu */}
       {isOpen && (
         <div className="absolute left-0 bottom-full mb-2 bg-[--surface] border border-[--surface-border] rounded-[var(--radius-md)] shadow-lg py-2 z-50 w-full min-w-[200px]">
           {menuItems.map((item, index) => (

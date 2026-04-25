@@ -61,7 +61,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
 
   return (
     <div>
-      {/* Info Banner */}
       <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4 mb-6">
         <h3 className="text-[16px] font-medium text-foreground mb-2">
           {t("widget.rubricPreview.previewMode")}
@@ -69,7 +68,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         <p className="text-[14px] text-muted-foreground">{t("widget.rubricPreview.previewDesc")}</p>
       </div>
 
-      {/* Rubric Metadata */}
       <div className="mb-6">
         <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
           {rubric.name}
@@ -77,7 +75,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         <p className="text-[15px] text-muted-foreground leading-[1.5]">{rubric.description}</p>
       </div>
 
-      {/* Stats */}
       <div className="border border-border rounded-[12px] p-4 mb-6">
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
@@ -113,7 +110,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         </div>
       </div>
 
-      {/* Rubric Section (using existing component) */}
       <RubricSection
         section={section}
         scores={scores}
@@ -121,7 +117,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         readonly={false}
       />
 
-      {/* Weights Info (if any criterion has weight) */}
       {rubric.criteria.some((c) => c.weight) && (
         <div className="mt-6 border-2 border-border rounded-[12px] p-4">
           <h4 className="text-[14px] font-medium text-foreground mb-3">
@@ -148,7 +143,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         </div>
       )}
 
-      {/* Reset Button */}
       <div className="mt-6 flex justify-end">
         <button
           onClick={() => setScores([])}

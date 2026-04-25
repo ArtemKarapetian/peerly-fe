@@ -20,10 +20,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminIntegrationsPage - Integration keys & webhooks
- */
-
 interface Webhook {
   id: string;
   name: string;
@@ -317,14 +313,12 @@ export default function AdminIntegrationsPage() {
       />
 
       <div className="space-y-8">
-        {/* External Integrations Section */}
         <div>
           <h2 className="text-[20px] font-medium text-foreground mb-4">
             {t("admin.integrationsPage.externalIntegrations")}
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Moodle Integration */}
             <div className="bg-card border-2 border-border rounded-[20px] p-6 opacity-60">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-3">
@@ -380,7 +374,6 @@ export default function AdminIntegrationsPage() {
               </button>
             </div>
 
-            {/* Office 365 Integration */}
             <div className="bg-card border-2 border-border rounded-[20px] p-6 opacity-60">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-3">
@@ -438,7 +431,6 @@ export default function AdminIntegrationsPage() {
           </div>
         </div>
 
-        {/* Webhooks Section */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[20px] font-medium text-foreground">
@@ -589,7 +581,6 @@ export default function AdminIntegrationsPage() {
           )}
         </div>
 
-        {/* Info Box */}
         <div className="bg-info-light border-2 border-brand-primary rounded-[16px] p-4">
           <div className="flex gap-3">
             <AlertCircle className="w-5 h-5 text-brand-primary flex-shrink-0 mt-0.5" />
@@ -605,7 +596,6 @@ export default function AdminIntegrationsPage() {
         </div>
       </div>
 
-      {/* Create Webhook Modal */}
       {showCreateModal && (
         <div
           className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4"
@@ -752,7 +742,6 @@ export default function AdminIntegrationsPage() {
         </div>
       )}
 
-      {/* Show Secret Modal */}
       {showSecretModal && (
         <div
           className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4"

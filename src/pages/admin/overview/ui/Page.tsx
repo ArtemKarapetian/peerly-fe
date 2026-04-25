@@ -21,10 +21,6 @@ import { pluginRepo } from "@/entities/plugin";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminOverviewPage - Admin panel dashboard
- */
-
 interface PluginHealth {
   id: string;
   name: string;

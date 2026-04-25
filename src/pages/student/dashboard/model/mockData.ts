@@ -5,7 +5,7 @@ import type {
   Notification,
 } from "@/widgets/student-dashboard";
 
-// Deadlines stored as ISO datetimes — formatted/localized by the consumer.
+// dueDate в ISO — форматирование и локализация на стороне виджета
 export const mockDeadlines: DeadlineItem[] = [
   {
     id: "1",
@@ -61,8 +61,8 @@ export const mockActionData: ActionCardData = {
   newFeedback: 1,
 };
 
-// Stable demo "now" for relative-time formatting: 2026-04-24T12:00.
-// Items below are positioned relative to it so the dashboard renders identically every time.
+// фиксированное «сейчас» для демо: 2026-04-24T12:00 — даты ниже привязаны к этой точке,
+// иначе относительное время на дашборде «плавало» бы между запусками
 export const mockRecentItems = [
   {
     id: "1",

@@ -17,7 +17,7 @@ import { CourseSearch } from "@/features/course/search";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/** Teacher name by teacherId (mock) */
+// мок-резолв ФИО преподавателя по id, пока нет users-репо
 function resolveTeacher(teacherId: string): string {
   const map: Record<string, string> = {
     u2: "Иванов И.И.",
@@ -48,7 +48,7 @@ export default function AdminCoursesPage() {
     return course.title.toLowerCase().includes(q) || course.code.toLowerCase().includes(q);
   });
 
-  // Stats over ALL courses (admin sees everything)
+  // у админа в счётчиках учитываются и архивные курсы тоже
   const activeCourses = allCourses.filter((c) => !c.archived && c.status === "active");
   const totalStudents = allCourses.reduce((sum, c) => sum + c.enrollmentCount, 0);
   const uniqueTeachers = new Set(allCourses.map((c) => c.teacherId)).size;
@@ -119,7 +119,6 @@ export default function AdminCoursesPage() {
           />
         </div>
 
-        {/* Search */}
         <div className="mb-4">
           <CourseSearch
             value={searchQuery}
@@ -128,7 +127,6 @@ export default function AdminCoursesPage() {
           />
         </div>
 
-        {/* Table or empty state */}
         {filteredCourses.length > 0 ? (
           <>
             <p className="text-[12px] text-[--text-tertiary] mb-2">
@@ -139,12 +137,12 @@ export default function AdminCoursesPage() {
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed">
                   <colgroup>
-                    <col /> {/* Курс — остаток */}
-                    <col className="w-[160px] hidden tablet:table-column" /> {/* Преподаватель */}
-                    <col className="w-[100px] hidden tablet:table-column" /> {/* Студенты */}
-                    <col className="w-[100px] hidden tablet:table-column" /> {/* Задания */}
-                    <col className="w-[110px]" /> {/* Статус */}
-                    <col className="w-[56px]" /> {/* Chevron */}
+                    <col />
+                    <col className="w-[160px] hidden tablet:table-column" />
+                    <col className="w-[100px] hidden tablet:table-column" />
+                    <col className="w-[100px] hidden tablet:table-column" />
+                    <col className="w-[110px]" />
+                    <col className="w-[56px]" />
                   </colgroup>
                   <thead>
                     <tr className="border-b border-[--surface-border] bg-[--surface-hover]">
@@ -177,7 +175,6 @@ export default function AdminCoursesPage() {
                         tabIndex={0}
                         aria-label={t("admin.coursesPage.openCourseLabel", { title: course.title })}
                       >
-                        {/* Курс */}
                         <td className="px-5 py-3.5">
                           <p className="text-[14px] font-semibold text-[--text-primary] tracking-[-0.2px] leading-snug truncate">
                             {course.title}
@@ -187,28 +184,26 @@ export default function AdminCoursesPage() {
                           </p>
                         </td>
 
-                        {/* Преподаватель — admin-специфичная колонка */}
+                        {/* колонка только для админа */}
                         <td className="px-5 py-3.5 hidden tablet:table-cell">
                           <p className="text-[13px] text-[--text-secondary] truncate">
                             {resolveTeacher(course.teacherId)}
                           </p>
                         </td>
 
-                        {/* Студенты */}
                         <td className="px-5 py-3.5 text-center hidden tablet:table-cell">
                           <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 bg-info-light text-[--brand-primary] rounded-[var(--radius-sm)] text-[13px] font-semibold tabular-nums">
                             {course.enrollmentCount}
                           </span>
                         </td>
 
-                        {/* Задания */}
                         <td className="px-5 py-3.5 text-center hidden tablet:table-cell">
                           <span className="inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 bg-[--success-light] text-[--success] rounded-[var(--radius-sm)] text-[13px] font-semibold tabular-nums">
                             {course.assignmentIds?.length ?? 0}
                           </span>
                         </td>
 
-                        {/* Статус — архивные тоже видны (admin sees all) */}
+                        {/* у админа архивные курсы тоже отображаются */}
                         <td className="px-5 py-3.5">
                           {course.archived || course.status === "archived" ? (
                             <span className="badge badge-neutral">
@@ -221,7 +216,6 @@ export default function AdminCoursesPage() {
                           )}
                         </td>
 
-                        {/* Row-navigation affordance */}
                         <td className="pl-3 pr-4 py-3.5">
                           <ChevronRight
                             aria-hidden="true"

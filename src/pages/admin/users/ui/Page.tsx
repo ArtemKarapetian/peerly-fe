@@ -13,17 +13,6 @@ import { DemoUser } from "@/entities/user/model/types.ts";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminUsersPage - Управление пользователями и ролями
- *
- * Функции:
- * - Поиск по имени/логину
- * - Фильтры: роль (student/teacher/admin), статус (active/disabled)
- * - Детальный просмотр пользователя с ролями, last login, сессиями
- * - Действия: изменить роль, отключить/включить, сброс пароля
- * - Логирование всех изменений в Admin Audit Log
- */
-
 interface UserWithStatus extends DemoUser {
   status: "active" | "disabled";
   lastLogin?: Date;
@@ -120,10 +109,8 @@ export default function AdminUsersPage() {
       <PageHeader title={t("admin.users.title")} subtitle={t("admin.users.subtitle")} />
 
       <div>
-        {/* Search and Filters */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
             <div className="flex-1">
               <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.usersPage.searchLabel")}
@@ -141,7 +128,6 @@ export default function AdminUsersPage() {
             </div>
           </div>
 
-          {/* Active filters */}
           {searchQuery && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
               <span className="text-[13px] text-muted-foreground">
@@ -159,7 +145,6 @@ export default function AdminUsersPage() {
           )}
         </div>
 
-        {/* Users Table */}
         <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -238,7 +223,6 @@ export default function AdminUsersPage() {
           )}
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-6">
             <SimplePagination

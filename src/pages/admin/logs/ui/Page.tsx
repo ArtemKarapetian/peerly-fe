@@ -19,17 +19,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminLogsPage - Логи и аудит
- *
- * Функции:
- * - Searchable logs table с фильтрами (service, level, time)
- * - Audit log stream (user actions, admin changes)
- * - Демо-данные с автообновлением
- */
-
-// ========== TYPES ==========
-
 interface BaseLog {
   id: string;
   timestamp: Date;
@@ -50,8 +39,6 @@ interface AuditLog extends BaseLog {
   details: string;
   ipAddress?: string;
 }
-
-// ========== EXPORT CONFIG ==========
 
 interface LogExportConfig<T extends BaseLog> {
   headers: string[];
@@ -102,8 +89,6 @@ const exportToCsv = <T extends BaseLog>(
   a.click();
   window.URL.revokeObjectURL(url);
 };
-
-// ========== CONSTANTS ==========
 
 const SERVICES = ["api", "worker", "database", "auth", "storage", "plugin"];
 
@@ -228,8 +213,6 @@ const DEMO_SYSTEM_LOGS: SystemLog[] = [
   },
 ];
 
-// ========== REUSABLE COMPONENTS ==========
-
 interface StatCardProps {
   label: string;
   value: number | string;
@@ -271,8 +254,6 @@ const EmptyState = ({ icon: Icon, title, description }: EmptyStateProps) => (
   </div>
 );
 
-// ========== HELPERS ==========
-
 const getUserName = (userId: string): string => {
   const users: Record<string, string> = {
     u1: "Иван Петров",
@@ -296,7 +277,7 @@ interface StoredAuditLog {
   timestamp: string;
 }
 
-// Initialize audit logs from localStorage
+// аудит хранится в localStorage между перезагрузками
 const getInitialAuditLogs = (): AuditLog[] => {
   const stored = localStorage.getItem("admin_audit_logs");
   if (stored) {
@@ -317,8 +298,6 @@ const getInitialAuditLogs = (): AuditLog[] => {
   return [];
 };
 
-// ========== MAIN COMPONENT ==========
-
 export default function AdminLogsPage() {
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
@@ -326,13 +305,12 @@ export default function AdminLogsPage() {
   const [auditLogs] = useState<AuditLog[]>(getInitialAuditLogs);
   const [activeTab, setActiveTab] = useState<"system" | "audit">("system");
 
-  // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [filterService, setFilterService] = useState<string>("all");
   const [filterLevel, setFilterLevel] = useState<string>("all");
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  // Auto-refresh: add new demo logs
+  // раз в 10с подкидываем новый демо-лог, держим максимум 50 записей
   useEffect(() => {
     const getRandomLogMessage = (): string => {
       const messages = [
@@ -378,7 +356,6 @@ export default function AdminLogsPage() {
     );
   };
 
-  // Filtering logic
   const filteredSystemLogs = systemLogs.filter((log) => {
     const matchesSearch =
       searchQuery === "" ||
@@ -440,7 +417,6 @@ export default function AdminLogsPage() {
       />
 
       <div>
-        {/* Header actions */}
         <div className="flex items-center justify-end gap-2 mb-6">
           <div className="flex items-center gap-2 px-3 py-2 bg-muted rounded-[8px] border-2 border-border">
             <RefreshCw className="w-4 h-4 text-muted-foreground" />
@@ -457,7 +433,6 @@ export default function AdminLogsPage() {
           </button>
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab("system")}
@@ -481,7 +456,6 @@ export default function AdminLogsPage() {
           </button>
         </div>
 
-        {/* Stats */}
         {activeTab === "system" && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <StatCard label={t("admin.logsPage.statsTotal")} value={stats.system.total} />
@@ -502,7 +476,6 @@ export default function AdminLogsPage() {
           </div>
         )}
 
-        {/* Search and Filters */}
         <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -579,7 +552,6 @@ export default function AdminLogsPage() {
           )}
         </div>
 
-        {/* System Logs Table */}
         {activeTab === "system" && (
           <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
             {filteredSystemLogs.length > 0 ? (
@@ -642,7 +614,6 @@ export default function AdminLogsPage() {
           </div>
         )}
 
-        {/* Audit Logs Stream */}
         {activeTab === "audit" && (
           <div className="space-y-3">
             {filteredAuditLogs.length > 0 ? (

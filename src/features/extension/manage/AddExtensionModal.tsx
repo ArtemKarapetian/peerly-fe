@@ -104,7 +104,6 @@ export function AddExtensionModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card border border-border rounded-[20px] max-w-[600px] w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-[20px]">
           <h2 className="text-xl font-semibold text-foreground">
             {isEditing
@@ -116,9 +115,7 @@ export function AddExtensionModal({
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Student Picker */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               <div className="flex items-center gap-2 mb-2">
@@ -146,7 +143,6 @@ export function AddExtensionModal({
             )}
           </div>
 
-          {/* Extension Type */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-3">
               {t("feature.addExtension.extensionType")}
@@ -209,7 +205,6 @@ export function AddExtensionModal({
             </div>
           </div>
 
-          {/* Submission Deadline */}
           {(type === "submission" || type === "both") && (
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -227,7 +222,6 @@ export function AddExtensionModal({
             </div>
           )}
 
-          {/* Review Deadline */}
           {(type === "review" || type === "both") && (
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -245,7 +239,6 @@ export function AddExtensionModal({
             </div>
           )}
 
-          {/* Reason */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
               <div className="flex items-center gap-2 mb-2">
@@ -262,7 +255,6 @@ export function AddExtensionModal({
             />
           </div>
 
-          {/* Notify Student Toggle */}
           <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
             <div className="flex items-center gap-3">
               <Bell className="w-5 h-5 text-muted-foreground" />
@@ -286,7 +278,6 @@ export function AddExtensionModal({
             </label>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-4 border-t border-border">
             <button
               type="submit"

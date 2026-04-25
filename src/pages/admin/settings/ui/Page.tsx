@@ -8,15 +8,6 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * AdminSettingsPage - Центр настроек системы
- *
- * Содержит ссылки на разделы:
- * - Фиче-флаги
- * - Лимиты и квоты
- * - Retention (хранение данных)
- */
-
 export default function AdminSettingsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();

@@ -1,12 +1,7 @@
 import { z } from "zod";
 
-/**
- * Runtime-validated environment variables.
- *
- * `apiUrl` should be the gateway origin WITHOUT the /api/v1 prefix
- * (the prefix is applied in the http client). If unset, all entity
- * repos fall back to in-memory demo data.
- */
+// apiUrl — origin гейтвея БЕЗ /api/v1 (префикс добавит http-клиент);
+// если не задан, репозитории откатываются на in-memory демо
 const envSchema = z.object({
   apiUrl: z.string().url().optional(),
   sentryDsn: z.string().url().optional(),
@@ -16,11 +11,9 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
+// убираем хвостовой слеш и /api или /api/v1 — http-клиент всё равно добавит /api/v1
 function normalize(url: string | undefined): string | undefined {
   if (!url) return undefined;
-  // Strip any trailing slash, and any trailing /api or /api/v1 — the http
-  // client always prepends /api/v1, so callers can set VITE_API_URL to the
-  // gateway origin with or without those suffixes.
   return url.replace(/\/$/, "").replace(/\/api(\/v\d+)?$/, "");
 }
 

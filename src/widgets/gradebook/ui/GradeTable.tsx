@@ -50,7 +50,6 @@ export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: G
 
   return (
     <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
-      {/* Desktop Table */}
       <div className="hidden tablet:block overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -125,7 +124,6 @@ export function GradeTable({ grades, statusLabels, statusColors, onRowClick }: G
         </table>
       </div>
 
-      {/* Mobile Cards */}
       <div className="tablet:hidden divide-y-2 divide-border">
         {grades.map((grade) => (
           <div

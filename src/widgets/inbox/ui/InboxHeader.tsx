@@ -33,14 +33,12 @@ export function InboxHeader({
     <>
       <PageHeader title={t("student.inbox.title")} subtitle={subtitleText} />
 
-      {/* Filters + Actions */}
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center gap-2 text-[14px] text-muted-foreground">
           <Filter className="w-4 h-4" />
           <span className="hidden tablet:inline">{t("common.filter")}:</span>
         </div>
 
-        {/* Desktop Tabs */}
         <div className="hidden tablet:flex items-center gap-2">
           {(Object.keys(filterLabels) as FilterType[]).map((filter) => (
             <button
@@ -57,7 +55,6 @@ export function InboxHeader({
           ))}
         </div>
 
-        {/* Mobile Dropdown */}
         <div className="relative tablet:hidden flex-1">
           <button
             onClick={() => setShowFilterDropdown(!showFilterDropdown)}
@@ -89,7 +86,6 @@ export function InboxHeader({
           )}
         </div>
 
-        {/* Mark all as read */}
         {unreadCount > 0 && (
           <>
             <button

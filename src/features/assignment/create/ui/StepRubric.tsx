@@ -104,7 +104,6 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
         </p>
       </div>
 
-      {/* Selected Rubric Display */}
       {selectedRubric && (
         <div className="bg-success-light border-2 border-success rounded-[12px] p-4">
           <div className="flex items-start justify-between">
@@ -131,7 +130,6 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
         </div>
       )}
 
-      {/* Search */}
       <div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -145,7 +143,6 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
         </div>
       </div>
 
-      {/* Create New Button */}
       <button
         type="button"
         onClick={handleCreateNew}
@@ -167,7 +164,6 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
         <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground" />
       </button>
 
-      {/* Rubrics List */}
       <div>
         <h3 className="text-[14px] font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.rubric.library")}
@@ -213,7 +209,6 @@ export function StepRubric({ data, onUpdate }: StepRubricProps) {
         )}
       </div>
 
-      {/* Help Text */}
       <div className="bg-info-light border border-info rounded-[12px] p-4">
         <p className="text-[13px] text-foreground">
           <strong>{t("feature.assignmentCreate.rubric.skipTip")}</strong>{" "}

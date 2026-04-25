@@ -11,33 +11,21 @@ import { useTranslation } from "react-i18next";
 
 import type { ValidationCheck } from "@/entities/work/model/types.ts";
 
-/**
- * VersionCard - Карточка версии работы в истории
- *
- * Displays:
- * - Version number + timestamp
- * - Status (draft/submitted/accepted)
- * - File(s) list
- * - Student note/comment
- * - Validation checks summary
- * - Actions: Download, View Reports, Make Current (if draft), New Version
- */
-
 export type VersionStatus = "draft" | "submitted" | "accepted" | "rejected";
 
 export interface Version {
   id: string;
-  versionNumber: number; // 1, 2, 3...
+  versionNumber: number;
   status: VersionStatus;
-  timestamp: string; // e.g., "25 января 2026, 14:30"
+  timestamp: string;
   files: {
     id: string;
     name: string;
-    size: number; // bytes
+    size: number;
   }[];
-  note?: string; // Student's comment
+  note?: string;
   validationChecks?: ValidationCheck[];
-  selected?: boolean; // For comparison
+  selected?: boolean;
 }
 
 interface VersionCardProps {
@@ -46,9 +34,9 @@ interface VersionCardProps {
   allowResubmissions: boolean;
   onDownload: () => void;
   onViewReports: () => void;
-  onMakeCurrent?: () => void; // Only for drafts
+  onMakeCurrent?: () => void;
   onCreateNewVersion: () => void;
-  onToggleSelect?: () => void; // For comparison
+  onToggleSelect?: () => void;
   comparisonMode?: boolean;
 }
 
@@ -96,14 +84,12 @@ export function VersionCard({
 
   const statusInfo = getStatusInfo();
 
-  // Format file size
   const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
   };
 
-  // Get checks summary
   const getChecksSummary = () => {
     if (!version.validationChecks || version.validationChecks.length === 0) {
       return null;
@@ -126,7 +112,6 @@ export function VersionCard({
           : "border-border hover:border-brand-primary-lighter"
       }`}
     >
-      {/* Header: Version + Status + Select (if comparison) */}
       <div className="flex items-start justify-between gap-3 mb-4 pb-4 border-b border-border">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
@@ -162,7 +147,6 @@ export function VersionCard({
         </div>
       </div>
 
-      {/* Files */}
       <div className="mb-4">
         <h4 className="text-[14px] font-medium text-text-primary mb-2">{t("entity.work.files")}</h4>
         <div className="space-y-2">
@@ -179,7 +163,6 @@ export function VersionCard({
         </div>
       </div>
 
-      {/* Note */}
       {version.note && (
         <div className="mb-4 bg-surface-hover rounded-[12px] p-3">
           <h4 className="text-[13px] font-medium text-text-tertiary mb-1">
@@ -189,7 +172,6 @@ export function VersionCard({
         </div>
       )}
 
-      {/* Validation Checks Summary */}
       {checksSummary && (
         <div className="mb-4">
           <h4 className="text-[14px] font-medium text-text-primary mb-2">
@@ -222,7 +204,6 @@ export function VersionCard({
         </div>
       )}
 
-      {/* Actions */}
       <div className="flex flex-wrap gap-2">
         <button
           onClick={onDownload}

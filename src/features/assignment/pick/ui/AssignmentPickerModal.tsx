@@ -7,16 +7,6 @@ import { useAsync } from "@/shared/lib/useAsync";
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
 
-/**
- * AssignmentPickerModal - Модальное окно выбора задания для привязки рубрики
- *
- * Features:
- * - Список заданий из курсов преподавателя
- * - Поиск по названию
- * - Фильтр по курсу
- * - Привязка рубрики к выбранному заданию
- */
-
 interface AssignmentPickerModalProps {
   rubricId: string;
   rubricName: string;
@@ -98,7 +88,6 @@ export function AssignmentPickerModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-[20px] w-full max-w-[700px] max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b-2 border-border">
           <div>
             <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px]">
@@ -117,9 +106,7 @@ export function AssignmentPickerModal({
           </button>
         </div>
 
-        {/* Filters */}
         <div className="p-6 border-b-2 border-border space-y-3">
-          {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
@@ -131,7 +118,6 @@ export function AssignmentPickerModal({
             />
           </div>
 
-          {/* Course Filter */}
           <select
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
@@ -146,7 +132,6 @@ export function AssignmentPickerModal({
           </select>
         </div>
 
-        {/* Assignments List */}
         <div className="flex-1 overflow-y-auto p-6">
           {filteredAssignments.length === 0 ? (
             <div className="text-center py-12">
@@ -209,7 +194,6 @@ export function AssignmentPickerModal({
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between gap-3 p-6 border-t-2 border-border">
           <p className="text-[13px] text-muted-foreground">
             {selectedAssignmentId

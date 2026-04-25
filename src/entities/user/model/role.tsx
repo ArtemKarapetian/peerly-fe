@@ -1,15 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
-/**
- * Role - Управление ролями пользователя для демо
- *
- * Roles:
- * - Student: студент (по умолчанию)
- * - Teacher: преподаватель
- * - Admin: администратор
- *
- * Сохраняется в localStorage как 'peerly_role'
- */
+// Управление демо-ролью; роль сохраняется в localStorage под ключом peerly_role
 
 export type UserRole = "Student" | "Teacher" | "Admin";
 
@@ -20,7 +11,6 @@ interface RoleContextType {
 
 const Role = createContext<RoleContextType | undefined>(undefined);
 
-// Initialize role from localStorage
 const getInitialRole = (): UserRole => {
   try {
     const savedRole = localStorage.getItem("peerly_role") as UserRole;
@@ -36,15 +26,13 @@ const getInitialRole = (): UserRole => {
 export function RoleProvider({ children }: { children: ReactNode }) {
   const [currentRole, setCurrentRole] = useState<UserRole>(getInitialRole);
 
-  // Save role to localStorage when it changes
   const setRole = (role: UserRole) => {
     try {
       localStorage.setItem("peerly_role", role);
-      setCurrentRole(role);
     } catch (error) {
       console.error("Failed to save role to localStorage:", error);
-      setCurrentRole(role); // Still update state even if localStorage fails
     }
+    setCurrentRole(role);
   };
 
   return <Role.Provider value={{ currentRole, setRole }}>{children}</Role.Provider>;
@@ -58,24 +46,18 @@ export function useRole() {
   return context;
 }
 
-/**
- * Helper: Get role display name (i18n)
- */
 export function getRoleDisplayName(role: UserRole): string {
   const roleKeys: Record<UserRole, string> = {
     Student: "roles.student",
     Teacher: "roles.teacher",
     Admin: "roles.admin",
   };
-  // Lazy import to avoid circular deps in context provider
+  // require, чтобы избежать циклического импорта context-провайдера
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const i18n = require("@/shared/lib/i18n/config") as { default: { t: (key: string) => string } };
   return i18n.default.t(roleKeys[role]);
 }
 
-/**
- * Helper: Get role badge color
- */
 export function getRoleBadgeColor(role: UserRole): string {
   switch (role) {
     case "Student":

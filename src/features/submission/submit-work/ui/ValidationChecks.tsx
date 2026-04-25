@@ -1,18 +1,6 @@
 import { CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * ValidationChecks - Список проверок работы
- *
- * Checks:
- * - Plagiarism detection
- * - Code linting
- * - Format validation
- * - Anonymization check
- *
- * Statuses: Queued, Running, Passed, Failed, Warning
- */
-
 export type CheckStatus = "queued" | "running" | "passed" | "failed" | "warning" | "not-started";
 
 export interface ValidationCheck {
@@ -104,10 +92,8 @@ export function ValidationChecks({ checks }: ValidationChecksProps) {
           }`}
         >
           <div className="flex items-start gap-3">
-            {/* Icon */}
             <div className="shrink-0 mt-0.5">{getStatusIcon(check.status)}</div>
 
-            {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div className="text-[14px] font-medium text-foreground">{check.name}</div>
