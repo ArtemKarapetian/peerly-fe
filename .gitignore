@@ -32,6 +32,9 @@ vite.config.ts.timestamp-*
 # Test coverage
 coverage/
 
+# Vercel
+.vercel
+
 # Misc
 *.local
 .cache/
