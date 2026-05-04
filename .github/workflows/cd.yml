@@ -11,33 +11,30 @@ concurrency:
 
 env:
   IMAGE_NAME: peerly-fe
+  REGISTRY: ghcr.io/artemkarapetian
+
+permissions:
+  contents: read
 
 jobs:
   build-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
       - name: Build image
-        env:
-          REGISTRY: ${{ secrets.REGISTRY }}
         run: |
-          if [ -z "$REGISTRY" ]; then
-            echo "::error::REGISTRY secret is not set"
-            exit 1
-          fi
-          IMAGE="$REGISTRY/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
           docker build --build-arg VITE_API_URL=https://api-stage.prly.ru/api -t "$IMAGE" .
 
       - name: Push image
-        env:
-          REGISTRY: ${{ secrets.REGISTRY }}
-          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        run: |
-          IMAGE="$REGISTRY/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          echo "$REGISTRY_PASSWORD" | docker login "$REGISTRY" -u "$REGISTRY_USERNAME" --password-stdin
-          docker push "$IMAGE"
+        run: docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
   deploy-k3s-stage:
     needs: build-push
