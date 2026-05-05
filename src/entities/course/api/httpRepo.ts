@@ -10,6 +10,7 @@
 import {
   getSession,
   http,
+  paged,
   type CourseInfoDto,
   type CreateCourseRequestBody,
   type CreateCourseResponse,
@@ -31,11 +32,8 @@ function rolePrefix(): "student" | "teacher" | "admin" {
 
 async function listCourses(): Promise<CourseInfoDto[]> {
   const prefix = rolePrefix();
-  if (prefix === "teacher") {
-    const res = await http.get<ListCoursesResponse>("/teacher/courses");
-    return res.courseInfos;
-  }
-  const res = await http.get<ListCoursesResponse>("/student/courses");
+  const path = prefix === "teacher" ? "/teacher/courses" : "/student/courses";
+  const res = await http.get<ListCoursesResponse>(paged(path));
   return res.courseInfos;
 }
 
@@ -62,12 +60,12 @@ export const courseHttpRepo = {
   },
 
   getForTeacher: async (): Promise<DemoCourse[]> => {
-    const res = await http.get<ListCoursesResponse>("/teacher/courses");
+    const res = await http.get<ListCoursesResponse>(paged("/teacher/courses"));
     return res.courseInfos.map(mapDtoToCourse);
   },
 
   getForStudent: async (): Promise<DemoCourse[]> => {
-    const res = await http.get<ListCoursesResponse>("/student/courses");
+    const res = await http.get<ListCoursesResponse>(paged("/student/courses"));
     return res.courseInfos.map(mapDtoToCourse);
   },
 

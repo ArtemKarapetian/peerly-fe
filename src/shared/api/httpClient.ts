@@ -81,6 +81,18 @@ async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
   return (await parseBody(res)) as T;
 }
 
+export interface PageQuery {
+  offset: number;
+  pageSize: number;
+}
+
+export const DEFAULT_PAGE: PageQuery = { offset: 0, pageSize: 100 };
+
+export function paged(path: string, p: PageQuery = DEFAULT_PAGE): string {
+  const sep = path.includes("?") ? "&" : "?";
+  return `${path}${sep}offset=${p.offset}&pageSize=${p.pageSize}`;
+}
+
 export const http = {
   get: <T>(path: string, init?: HttpOptions) => request<T>(path, { ...init, method: "GET" }),
   post: <T>(path: string, data?: unknown, init?: HttpOptions) =>

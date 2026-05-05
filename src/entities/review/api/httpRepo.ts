@@ -2,6 +2,7 @@ import {
   fileFromDto,
   getSession,
   http,
+  paged,
   type CreateSubmittedReviewRequestBody,
   type CreateSubmittedReviewResponse,
   type GetAssignedReviewResponse,
@@ -40,11 +41,13 @@ export const reviewHttpRepo = {
    */
   getAll: async (): Promise<DemoReview[]> => {
     if (getSession()?.role !== "Teacher") return [];
-    const courses = await http.get<ListCoursesResponse>("/teacher/courses");
+    const courses = await http.get<ListCoursesResponse>(paged("/teacher/courses"));
     const homeworkIdsPerCourse = await Promise.all(
       courses.courseInfos.map(async (c) => {
         try {
-          const hws = await http.get<ListHomeworksResponse>(`/teacher/courses/${c.id}/homeworks`);
+          const hws = await http.get<ListHomeworksResponse>(
+            paged(`/teacher/courses/${c.id}/homeworks`),
+          );
           return hws.homeworks.map((h) => String(h.id));
         } catch {
           return [] as string[];
@@ -57,7 +60,7 @@ export const reviewHttpRepo = {
       allHomeworkIds.map(async (hwId) => {
         try {
           const overview = await http.get<ListSubmissionsOverviewResponse>(
-            `/teacher/homeworks/${hwId}/submissions`,
+            paged(`/teacher/homeworks/${hwId}/submissions`),
           );
           const perSubmission = await Promise.all(
             overview.submissions.map(async (s) => {
@@ -84,7 +87,7 @@ export const reviewHttpRepo = {
 
   listAssigned: async (homeworkId: string): Promise<AssignedReviewEntry[]> => {
     const res = await http.get<ListAssignedReviewsResponse>(
-      `/homeworks/${homeworkId}/assigned-reviews`,
+      paged(`/homeworks/${homeworkId}/assigned-reviews`),
     );
     return res.assignedReviews.map((r) => ({
       submissionId: String(r.submittedHomeworkId),

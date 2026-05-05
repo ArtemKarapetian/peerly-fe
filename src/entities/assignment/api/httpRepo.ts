@@ -1,6 +1,7 @@
 import {
   getSession,
   http,
+  paged,
   type CreateHomeworkResponse,
   type GetStudentHomeworkResponse,
   type GetTeacherHomeworkResponse,
@@ -24,7 +25,7 @@ async function fetchCourseHomeworks(courseId: string): Promise<HomeworkInfoDto[]
     prefix === "teacher"
       ? `/teacher/courses/${courseId}/homeworks`
       : `/student/courses/${courseId}/homeworks`;
-  const res = await http.get<ListHomeworksResponse>(path);
+  const res = await http.get<ListHomeworksResponse>(paged(path));
   return res.homeworks;
 }
 
@@ -36,7 +37,7 @@ export const assignmentHttpRepo = {
    */
   getAll: async (): Promise<DemoAssignment[]> => {
     const prefix = rolePrefix();
-    const courses = await http.get<ListCoursesResponse>(`/${prefix}/courses`);
+    const courses = await http.get<ListCoursesResponse>(paged(`/${prefix}/courses`));
     const lists = await Promise.all(
       courses.courseInfos.map(async (c) => {
         try {

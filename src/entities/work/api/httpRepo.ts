@@ -1,6 +1,7 @@
 import {
   getSession,
   http,
+  paged,
   type CreateSubmittedHomeworkRequestBody,
   type CreateSubmittedHomeworkResponse,
   type GetStudentHomeworkResponse,
@@ -22,11 +23,13 @@ export const workHttpRepo = {
    */
   getAll: async (): Promise<DemoSubmission[]> => {
     if (getSession()?.role !== "Teacher") return [];
-    const courses = await http.get<ListCoursesResponse>("/teacher/courses");
+    const courses = await http.get<ListCoursesResponse>(paged("/teacher/courses"));
     const homeworksPerCourse = await Promise.all(
       courses.courseInfos.map(async (c) => {
         try {
-          const res = await http.get<ListHomeworksResponse>(`/teacher/courses/${c.id}/homeworks`);
+          const res = await http.get<ListHomeworksResponse>(
+            paged(`/teacher/courses/${c.id}/homeworks`),
+          );
           return res.homeworks.map((h) => String(h.id));
         } catch {
           return [] as string[];
@@ -38,7 +41,7 @@ export const workHttpRepo = {
       allHomeworkIds.map(async (hwId) => {
         try {
           const res = await http.get<ListSubmissionsOverviewResponse>(
-            `/teacher/homeworks/${hwId}/submissions`,
+            paged(`/teacher/homeworks/${hwId}/submissions`),
           );
           return res.submissions.map((s) => mapOverviewToSubmission(s, { assignmentId: hwId }));
         } catch {
@@ -51,7 +54,7 @@ export const workHttpRepo = {
 
   listForHomework: async (homeworkId: string): Promise<DemoSubmission[]> => {
     const res = await http.get<ListSubmissionsOverviewResponse>(
-      `/teacher/homeworks/${homeworkId}/submissions`,
+      paged(`/teacher/homeworks/${homeworkId}/submissions`),
     );
     return res.submissions.map((s) => mapOverviewToSubmission(s, { assignmentId: homeworkId }));
   },

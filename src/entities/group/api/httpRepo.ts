@@ -1,6 +1,7 @@
 import {
   getSession,
   http,
+  paged,
   type CreateGroupRequestBody,
   type CreateGroupResponse,
   type ListGroupsResponse,
@@ -24,7 +25,7 @@ export const groupHttpRepo = {
       prefix === "teacher"
         ? `/teacher/courses/${courseId}/groups`
         : `/student/courses/${courseId}/groups`;
-    const res = await http.get<ListGroupsResponse>(path);
+    const res = await http.get<ListGroupsResponse>(paged(path));
     return res.groups.map(mapDtoToGroup);
   },
 
