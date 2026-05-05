@@ -35,18 +35,24 @@ export interface RegisterResponseBody {
 
 // ── Courses ───────────────────────────────────────────────────────
 
-export type CourseStatus = "Draft" | "InProgress" | "Finished" | "Canceled" | "Deleted";
+export type CourseStatus = "draft" | "inProgress" | "finished" | "canceled" | "deleted";
 
 export interface CourseInfoDto {
   id: Id;
   name: string;
+  description: string;
   status: CourseStatus;
-  studentCount: number;
-  homeworkCount: number;
 }
 
 export interface ListCoursesResponse {
-  courseInfos: CourseInfoDto[];
+  courses: CourseInfoDto[];
+}
+
+export interface GetCourseResponse {
+  course: CourseInfoDto;
+  studentCount: number;
+  homeworkCount: number;
+  files: FileDto[];
 }
 
 export interface CreateCourseRequestBody {
@@ -60,7 +66,7 @@ export interface CreateCourseResponse {
 
 export interface UpdateCourseRequestBody {
   name: string;
-  description?: string;
+  description: string;
   status: CourseStatus;
 }
 
@@ -118,12 +124,12 @@ export interface ListParticipantsResponse {
 // ── Homeworks ─────────────────────────────────────────────────────
 
 export type HomeworkStatus =
-  | "Draft"
-  | "Published"
-  | "InReview"
-  | "Finished"
-  | "Deleted"
-  | "Confirmed";
+  | "draft"
+  | "published"
+  | "inReview"
+  | "finished"
+  | "deleted"
+  | "confirmed";
 
 export interface HomeworkInfoDto {
   id: Id;
@@ -165,11 +171,15 @@ export interface ListHomeworksResponse {
 
 export interface GetStudentHomeworkResponse {
   homework: HomeworkInfoDto;
-  submittedHomework: SubmittedHomeworkInfoDto | null;
+  submittedHomeworkId: Id | null;
+  files: FileDto[];
 }
 
 export interface GetTeacherHomeworkResponse {
   homework: HomeworkInfoDto;
+  submittedCount: number;
+  totalStudentsCount: number;
+  files: FileDto[];
 }
 
 export interface AssignedReviewInfoDto {
@@ -215,7 +225,7 @@ export interface GenerateDownloadUrlResponse {
 
 // ── Submissions ───────────────────────────────────────────────────
 
-export type SubmissionStatus = "Draft" | "Submitted" | "InReview" | "Reviewed" | "Finished";
+export type SubmissionStatus = "draft" | "submitted" | "inReview" | "reviewed" | "finished";
 
 export interface SubmittedHomeworkInfoDto {
   id: Id;

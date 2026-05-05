@@ -8,19 +8,28 @@
  */
 
 import {
-  getSession,
-  http,
   type CourseInfoDto,
   type CreateCourseRequestBody,
   type CreateCourseResponse,
-  type ListCoursesResponse,
+  type FileDto,
+  type GetCourseResponse,
+  type ListParticipantsResponse,
   type UpdateCourseRequestBody,
+  getSession,
+  http,
+  paged,
 } from "@/shared/api";
 
 import { mapDtoToCourse } from "../model/mappers";
 import type { CreateCourseInput, DemoCourse } from "../model/types";
 
-type SingleCourseResponse = { course: CourseInfoDto };
+type RawListCourses = { courseInfos: CourseInfoDto[] };
+type RawGetCourse = {
+  courseInfo: CourseInfoDto;
+  studentCount: number;
+  homeworkCount: number;
+  files: FileDto[];
+};
 
 function rolePrefix(): "student" | "teacher" | "admin" {
   const role = getSession()?.role;
@@ -30,52 +39,61 @@ function rolePrefix(): "student" | "teacher" | "admin" {
 
 async function listCourses(): Promise<CourseInfoDto[]> {
   const prefix = rolePrefix();
-  if (prefix === "teacher") {
-    const res = await http.get<ListCoursesResponse>("/teacher/courses");
-    return res.courseInfos;
-  }
-  const res = await http.get<ListCoursesResponse>("/student/courses");
-  return res.courseInfos;
+  const path = prefix === "teacher" ? "/teacher/courses" : "/student/courses";
+  const raw = await http.get<RawListCourses>(paged(path));
+  return raw.courseInfos;
 }
 
-async function getOneCourse(id: string): Promise<CourseInfoDto> {
+async function getOneCourse(id: string): Promise<GetCourseResponse> {
   const prefix = rolePrefix();
   const path = prefix === "teacher" ? `/teacher/courses/${id}` : `/student/courses/${id}`;
-  const res = await http.get<SingleCourseResponse>(path);
-  return res.course;
+  const raw = await http.get<RawGetCourse>(path);
+  return {
+    course: raw.courseInfo,
+    studentCount: raw.studentCount,
+    homeworkCount: raw.homeworkCount,
+    files: raw.files,
+  };
 }
 
 export const courseHttpRepo = {
   getAll: async (): Promise<DemoCourse[]> => {
     const list = await listCourses();
-    return list.map(mapDtoToCourse);
+    return list.map((info) => mapDtoToCourse(info));
   },
 
   getById: async (id: string): Promise<DemoCourse | undefined> => {
     try {
-      const dto = await getOneCourse(id);
-      return mapDtoToCourse(dto);
+      const res = await getOneCourse(id);
+      return mapDtoToCourse(res.course, {
+        studentCount: res.studentCount,
+        homeworkCount: res.homeworkCount,
+      });
     } catch {
       return undefined;
     }
   },
 
   getForTeacher: async (): Promise<DemoCourse[]> => {
-    const res = await http.get<ListCoursesResponse>("/teacher/courses");
-    return res.courseInfos.map(mapDtoToCourse);
+    const raw = await http.get<RawListCourses>(paged("/teacher/courses"));
+    return raw.courseInfos.map((info) => mapDtoToCourse(info));
   },
 
   getForStudent: async (): Promise<DemoCourse[]> => {
-    const res = await http.get<ListCoursesResponse>("/student/courses");
-    return res.courseInfos.map(mapDtoToCourse);
+    const raw = await http.get<RawListCourses>(paged("/student/courses"));
+    return raw.courseInfos.map((info) => mapDtoToCourse(info));
   },
+
+  getParticipants: async (courseId: string): Promise<ListParticipantsResponse> =>
+    http.get<ListParticipantsResponse>(`/courses/${courseId}/participants`),
 
   archive: async (courseId: string, archived: boolean): Promise<void> => {
     // BE requires full body on update — fetch current state first.
-    const dto = await getOneCourse(courseId);
+    const res = await getOneCourse(courseId);
     const body: UpdateCourseRequestBody = {
-      name: dto.name,
-      status: archived ? "Canceled" : "InProgress",
+      name: res.course.name,
+      description: res.course.description,
+      status: archived ? "canceled" : "inProgress",
     };
     await http.put<void>(`/courses/${courseId}`, body);
   },
@@ -95,7 +113,7 @@ export const courseHttpRepo = {
       enrollmentCount: 0,
       homeworkCount: 0,
       status: "active",
-      backendStatus: "Draft",
+      backendStatus: "draft",
       archived: false,
       createdAt: new Date(),
     };

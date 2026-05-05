@@ -1,21 +1,27 @@
 import {
-  fileFromDto,
-  getSession,
-  http,
+  type CourseInfoDto,
   type CreateSubmittedReviewRequestBody,
   type CreateSubmittedReviewResponse,
   type GetAssignedReviewResponse,
   type GetSubmittedReviewResponse,
   type GetTeacherSubmittedHomeworkResponse,
+  type HomeworkInfoDto,
   type ListAssignedReviewsResponse,
-  type ListCoursesResponse,
-  type ListHomeworksResponse,
-  type ListSubmissionsOverviewResponse,
+  type SubmittedHomeworkOverviewInfoDto,
   type UpdateSubmittedReviewRequestBody,
+  fileFromDto,
+  getSession,
+  http,
+  paged,
 } from "@/shared/api";
 
 import { mapDtoToReview } from "../model/mappers";
 import type { DemoReview } from "../model/types";
+
+// BE wire shapes — translate to FE-clean shapes inside this module.
+type RawListCourses = { courseInfos: CourseInfoDto[] };
+type RawListHomeworks = { homeworkInfos: HomeworkInfoDto[] };
+type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewInfoDto[] };
 
 export interface AssignedReviewEntry {
   submissionId: string;
@@ -40,12 +46,12 @@ export const reviewHttpRepo = {
    */
   getAll: async (): Promise<DemoReview[]> => {
     if (getSession()?.role !== "Teacher") return [];
-    const courses = await http.get<ListCoursesResponse>("/teacher/courses");
+    const courses = await http.get<RawListCourses>(paged("/teacher/courses"));
     const homeworkIdsPerCourse = await Promise.all(
       courses.courseInfos.map(async (c) => {
         try {
-          const hws = await http.get<ListHomeworksResponse>(`/teacher/courses/${c.id}/homeworks`);
-          return hws.homeworks.map((h) => String(h.id));
+          const hws = await http.get<RawListHomeworks>(paged(`/teacher/courses/${c.id}/homeworks`));
+          return hws.homeworkInfos.map((h) => String(h.id));
         } catch {
           return [] as string[];
         }
@@ -56,11 +62,11 @@ export const reviewHttpRepo = {
     const reviewLists = await Promise.all(
       allHomeworkIds.map(async (hwId) => {
         try {
-          const overview = await http.get<ListSubmissionsOverviewResponse>(
-            `/teacher/homeworks/${hwId}/submissions`,
+          const overview = await http.get<RawListSubmissionsOverview>(
+            paged(`/teacher/homeworks/${hwId}/submissions`),
           );
           const perSubmission = await Promise.all(
-            overview.submissions.map(async (s) => {
+            overview.submittedHomeworks.map(async (s) => {
               try {
                 const det = await http.get<GetTeacherSubmittedHomeworkResponse>(
                   `/teacher/submissions/${s.id}`,
@@ -84,7 +90,7 @@ export const reviewHttpRepo = {
 
   listAssigned: async (homeworkId: string): Promise<AssignedReviewEntry[]> => {
     const res = await http.get<ListAssignedReviewsResponse>(
-      `/homeworks/${homeworkId}/assigned-reviews`,
+      paged(`/homeworks/${homeworkId}/assigned-reviews`),
     );
     return res.assignedReviews.map((r) => ({
       submissionId: String(r.submittedHomeworkId),

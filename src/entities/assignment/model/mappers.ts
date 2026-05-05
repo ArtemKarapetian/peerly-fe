@@ -3,8 +3,8 @@ import type { CreateHomeworkRequestBody, HomeworkInfoDto, HomeworkStatus } from 
 import type { CreateAssignmentInput, DemoAssignment } from "./types";
 
 function uiStatus(raw: HomeworkStatus): DemoAssignment["status"] {
-  if (raw === "Draft") return "draft";
-  if (raw === "Finished" || raw === "Confirmed" || raw === "Deleted") return "closed";
+  if (raw === "draft") return "draft";
+  if (raw === "finished" || raw === "confirmed" || raw === "deleted") return "closed";
   return "published";
 }
 
@@ -25,7 +25,7 @@ export function mapHomeworkToAssignment(
     backendStatus: dto.status,
     checklist: dto.checklist,
     discrepancyThreshold: dto.discrepancyThreshold,
-    archived: dto.status === "Deleted",
+    archived: dto.status === "deleted",
   };
 }
 

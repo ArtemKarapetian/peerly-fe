@@ -1,3 +1,5 @@
+import type { ListParticipantsResponse } from "@/shared/api";
+
 import { CreateCourseInput, DemoCourse } from "../model/types";
 
 const demoCourses: DemoCourse[] = [
@@ -10,7 +12,7 @@ const demoCourses: DemoCourse[] = [
     enrollmentCount: 45,
     homeworkCount: 8,
     status: "active",
-    backendStatus: "InProgress",
+    backendStatus: "inProgress",
     createdAt: new Date("2024-01-10"),
   },
   {
@@ -22,7 +24,7 @@ const demoCourses: DemoCourse[] = [
     enrollmentCount: 38,
     homeworkCount: 6,
     status: "active",
-    backendStatus: "InProgress",
+    backendStatus: "inProgress",
     createdAt: new Date("2024-01-12"),
   },
   {
@@ -34,7 +36,7 @@ const demoCourses: DemoCourse[] = [
     enrollmentCount: 52,
     homeworkCount: 12,
     status: "active",
-    backendStatus: "InProgress",
+    backendStatus: "inProgress",
     createdAt: new Date("2023-09-01"),
   },
 ];
@@ -45,11 +47,16 @@ export const courseRepo = {
     Promise.resolve(demoCourses.find((c) => c.id === id)),
   getForTeacher: (): Promise<DemoCourse[]> => Promise.resolve(demoCourses),
   getForStudent: (): Promise<DemoCourse[]> => Promise.resolve(demoCourses),
+  getParticipants: (_courseId: string): Promise<ListParticipantsResponse> =>
+    Promise.resolve({
+      teachers: [{ id: "u2", userName: "Мария Сидорова" }],
+      students: [],
+    }),
   archive: (courseId: string, archived: boolean): Promise<void> => {
     const course = demoCourses.find((c) => c.id === courseId);
     if (course) {
       course.status = archived ? "archived" : "active";
-      course.backendStatus = archived ? "Canceled" : "InProgress";
+      course.backendStatus = archived ? "canceled" : "inProgress";
       course.archived = archived;
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("demo_courses_archived") || "{}";
@@ -70,7 +77,7 @@ export const courseRepo = {
       enrollmentCount: 0,
       homeworkCount: 0,
       status: input.archived ? "archived" : "active",
-      backendStatus: input.archived ? "Canceled" : "Draft",
+      backendStatus: input.archived ? "canceled" : "draft",
       archived: input.archived ?? false,
       createdAt: new Date(),
     };

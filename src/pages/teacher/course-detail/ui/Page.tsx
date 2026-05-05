@@ -10,7 +10,6 @@ import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
-import { userRepo } from "@/entities/user";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
@@ -31,10 +30,13 @@ export default function TeacherCourseDetailsPage() {
   const { data, isLoading, error, refetch } = useAsync(
     async () => {
       const course = await courseRepo.getById(courseId || "c1");
-      const [teacher, courseAssignments] = await Promise.all([
-        course ? userRepo.getById(course.teacherId) : Promise.resolve(null),
+      const [participants, courseAssignments] = await Promise.all([
+        course
+          ? courseRepo.getParticipants(course.id)
+          : Promise.resolve({ teachers: [], students: [] }),
         course ? assignmentRepo.getByCourse(course.id) : Promise.resolve([]),
       ]);
+      const teacher = participants.teachers[0] ?? null;
       return { course, teacher, courseAssignments };
     },
     [courseId],
@@ -101,7 +103,7 @@ export default function TeacherCourseDetailsPage() {
               {teacher && (
                 <p className="text-[14px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.teacherLabel")}{" "}
-                  <span className="text-foreground font-medium">{teacher.name}</span>
+                  <span className="text-foreground font-medium">{teacher.userName}</span>
                 </p>
               )}
             </div>

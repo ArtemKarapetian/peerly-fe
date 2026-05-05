@@ -3,8 +3,8 @@ import type { SubmittedHomeworkInfoDto, SubmittedHomeworkOverviewInfoDto } from 
 import { fileFromDto, type DemoSubmission } from "./types";
 
 function uiStatusFromOverview(s: SubmittedHomeworkOverviewInfoDto["submissionStatus"]) {
-  if (s === "Draft") return "draft" as const;
-  if (s === "Reviewed" || s === "Finished") return "reviewed" as const;
+  if (s === "draft") return "draft" as const;
+  if (s === "reviewed" || s === "finished") return "reviewed" as const;
   return "submitted" as const;
 }
 
