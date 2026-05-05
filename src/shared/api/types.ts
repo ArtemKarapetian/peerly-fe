@@ -40,13 +40,19 @@ export type CourseStatus = "draft" | "inProgress" | "finished" | "canceled" | "d
 export interface CourseInfoDto {
   id: Id;
   name: string;
+  description: string;
   status: CourseStatus;
-  studentCount: number;
-  homeworkCount: number;
 }
 
 export interface ListCoursesResponse {
-  courseInfos: CourseInfoDto[];
+  courses: CourseInfoDto[];
+}
+
+export interface GetCourseResponse {
+  course: CourseInfoDto;
+  studentCount: number;
+  homeworkCount: number;
+  files: FileDto[];
 }
 
 export interface CreateCourseRequestBody {
@@ -60,7 +66,7 @@ export interface CreateCourseResponse {
 
 export interface UpdateCourseRequestBody {
   name: string;
-  description?: string;
+  description: string;
   status: CourseStatus;
 }
 
@@ -165,11 +171,15 @@ export interface ListHomeworksResponse {
 
 export interface GetStudentHomeworkResponse {
   homework: HomeworkInfoDto;
-  submittedHomework: SubmittedHomeworkInfoDto | null;
+  submittedHomeworkId: Id | null;
+  files: FileDto[];
 }
 
 export interface GetTeacherHomeworkResponse {
   homework: HomeworkInfoDto;
+  submittedCount: number;
+  totalStudentsCount: number;
+  files: FileDto[];
 }
 
 export interface AssignedReviewInfoDto {

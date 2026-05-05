@@ -8,7 +8,10 @@ export function isArchivedStatus(status: CourseStatus): boolean {
   return ARCHIVED_STATUSES.includes(status);
 }
 
-export function mapDtoToCourse(dto: CourseInfoDto): DemoCourse {
+export function mapDtoToCourse(
+  dto: CourseInfoDto,
+  counts: { studentCount: number; homeworkCount: number } = { studentCount: 0, homeworkCount: 0 },
+): DemoCourse {
   const archived = isArchivedStatus(dto.status);
   return {
     id: String(dto.id),
@@ -16,8 +19,8 @@ export function mapDtoToCourse(dto: CourseInfoDto): DemoCourse {
     title: dto.name,
     code: "",
     teacherId: "",
-    enrollmentCount: dto.studentCount,
-    homeworkCount: dto.homeworkCount,
+    enrollmentCount: counts.studentCount,
+    homeworkCount: counts.homeworkCount,
     status: archived ? "archived" : "active",
     backendStatus: dto.status,
     archived,

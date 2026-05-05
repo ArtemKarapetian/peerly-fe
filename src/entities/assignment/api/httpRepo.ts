@@ -1,19 +1,21 @@
 import {
+  type CourseInfoDto,
+  type CreateHomeworkResponse,
+  type HomeworkInfoDto,
+  type PostponeDeadlinesRequestBody,
+  type UpdateDraftHomeworkRequestBody,
   getSession,
   http,
   paged,
-  type CreateHomeworkResponse,
-  type GetStudentHomeworkResponse,
-  type GetTeacherHomeworkResponse,
-  type HomeworkInfoDto,
-  type ListCoursesResponse,
-  type ListHomeworksResponse,
-  type PostponeDeadlinesRequestBody,
-  type UpdateDraftHomeworkRequestBody,
 } from "@/shared/api";
 
 import { mapHomeworkToAssignment, mapInputToCreateBody } from "../model/mappers";
 import type { CreateAssignmentInput, DemoAssignment } from "../model/types";
+
+type RawListCourses = { courseInfos: CourseInfoDto[] };
+type RawListHomeworks = { homeworkInfos: HomeworkInfoDto[] };
+type RawGetTeacherHomework = { homeworkInfo: HomeworkInfoDto };
+type RawGetStudentHomework = { homeworkInfo: HomeworkInfoDto };
 
 function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";
@@ -25,8 +27,8 @@ async function fetchCourseHomeworks(courseId: string): Promise<HomeworkInfoDto[]
     prefix === "teacher"
       ? `/teacher/courses/${courseId}/homeworks`
       : `/student/courses/${courseId}/homeworks`;
-  const res = await http.get<ListHomeworksResponse>(paged(path));
-  return res.homeworks;
+  const raw = await http.get<RawListHomeworks>(paged(path));
+  return raw.homeworkInfos;
 }
 
 export const assignmentHttpRepo = {
@@ -37,9 +39,9 @@ export const assignmentHttpRepo = {
    */
   getAll: async (): Promise<DemoAssignment[]> => {
     const prefix = rolePrefix();
-    const courses = await http.get<ListCoursesResponse>(paged(`/${prefix}/courses`));
+    const raw = await http.get<RawListCourses>(paged(`/${prefix}/courses`));
     const lists = await Promise.all(
-      courses.courseInfos.map(async (c) => {
+      raw.courseInfos.map(async (c) => {
         try {
           const hws = await fetchCourseHomeworks(String(c.id));
           return hws.map((h) => mapHomeworkToAssignment(h, { courseId: String(c.id) }));
@@ -60,11 +62,11 @@ export const assignmentHttpRepo = {
     const prefix = rolePrefix();
     try {
       if (prefix === "teacher") {
-        const res = await http.get<GetTeacherHomeworkResponse>(`/teacher/homeworks/${homeworkId}`);
-        return mapHomeworkToAssignment(res.homework);
+        const raw = await http.get<RawGetTeacherHomework>(`/teacher/homeworks/${homeworkId}`);
+        return mapHomeworkToAssignment(raw.homeworkInfo);
       }
-      const res = await http.get<GetStudentHomeworkResponse>(`/student/homeworks/${homeworkId}`);
-      return mapHomeworkToAssignment(res.homework);
+      const raw = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
+      return mapHomeworkToAssignment(raw.homeworkInfo);
     } catch {
       return undefined;
     }
