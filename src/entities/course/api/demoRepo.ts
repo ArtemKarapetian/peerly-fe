@@ -1,3 +1,5 @@
+import type { ListParticipantsResponse } from "@/shared/api";
+
 import { CreateCourseInput, DemoCourse } from "../model/types";
 
 const demoCourses: DemoCourse[] = [
@@ -45,6 +47,11 @@ export const courseRepo = {
     Promise.resolve(demoCourses.find((c) => c.id === id)),
   getForTeacher: (): Promise<DemoCourse[]> => Promise.resolve(demoCourses),
   getForStudent: (): Promise<DemoCourse[]> => Promise.resolve(demoCourses),
+  getParticipants: (_courseId: string): Promise<ListParticipantsResponse> =>
+    Promise.resolve({
+      teachers: [{ id: "u2", userName: "Мария Сидорова" }],
+      students: [],
+    }),
   archive: (courseId: string, archived: boolean): Promise<void> => {
     const course = demoCourses.find((c) => c.id === courseId);
     if (course) {

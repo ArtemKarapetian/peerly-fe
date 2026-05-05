@@ -14,6 +14,7 @@ import {
   type CreateCourseRequestBody,
   type CreateCourseResponse,
   type ListCoursesResponse,
+  type ListParticipantsResponse,
   type UpdateCourseRequestBody,
 } from "@/shared/api";
 
@@ -69,6 +70,9 @@ export const courseHttpRepo = {
     const res = await http.get<ListCoursesResponse>("/student/courses");
     return res.courseInfos.map(mapDtoToCourse);
   },
+
+  getParticipants: async (courseId: string): Promise<ListParticipantsResponse> =>
+    http.get<ListParticipantsResponse>(`/courses/${courseId}/participants`),
 
   archive: async (courseId: string, archived: boolean): Promise<void> => {
     // BE requires full body on update — fetch current state first.
