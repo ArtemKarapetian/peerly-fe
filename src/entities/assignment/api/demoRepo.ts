@@ -10,7 +10,7 @@ const demoAssignments: DemoAssignment[] = [
     reviewDeadline: new Date("2025-02-22"),
     reviewCount: 3,
     status: "published",
-    backendStatus: "Published",
+    backendStatus: "published",
     rubricId: "r1",
   },
   {
@@ -22,7 +22,7 @@ const demoAssignments: DemoAssignment[] = [
     reviewDeadline: new Date("2025-03-08"),
     reviewCount: 2,
     status: "published",
-    backendStatus: "Published",
+    backendStatus: "published",
     rubricId: "r2",
   },
   {
@@ -34,7 +34,7 @@ const demoAssignments: DemoAssignment[] = [
     reviewDeadline: new Date("2025-03-27"),
     reviewCount: 3,
     status: "published",
-    backendStatus: "Published",
+    backendStatus: "published",
     rubricId: "r1",
   },
   {
@@ -46,7 +46,7 @@ const demoAssignments: DemoAssignment[] = [
     reviewDeadline: new Date("2025-04-12"),
     reviewCount: 2,
     status: "published",
-    backendStatus: "Published",
+    backendStatus: "published",
     rubricId: "r2",
   },
   {
@@ -58,7 +58,7 @@ const demoAssignments: DemoAssignment[] = [
     reviewDeadline: new Date("2025-05-17"),
     reviewCount: 3,
     status: "published",
-    backendStatus: "Published",
+    backendStatus: "published",
     rubricId: "r1",
   },
 ];

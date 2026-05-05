@@ -35,7 +35,7 @@ export interface RegisterResponseBody {
 
 // ── Courses ───────────────────────────────────────────────────────
 
-export type CourseStatus = "Draft" | "InProgress" | "Finished" | "Canceled" | "Deleted";
+export type CourseStatus = "draft" | "inProgress" | "finished" | "canceled" | "deleted";
 
 export interface CourseInfoDto {
   id: Id;
@@ -118,12 +118,12 @@ export interface ListParticipantsResponse {
 // ── Homeworks ─────────────────────────────────────────────────────
 
 export type HomeworkStatus =
-  | "Draft"
-  | "Published"
-  | "InReview"
-  | "Finished"
-  | "Deleted"
-  | "Confirmed";
+  | "draft"
+  | "published"
+  | "inReview"
+  | "finished"
+  | "deleted"
+  | "confirmed";
 
 export interface HomeworkInfoDto {
   id: Id;
@@ -215,7 +215,7 @@ export interface GenerateDownloadUrlResponse {
 
 // ── Submissions ───────────────────────────────────────────────────
 
-export type SubmissionStatus = "Draft" | "Submitted" | "InReview" | "Reviewed" | "Finished";
+export type SubmissionStatus = "draft" | "submitted" | "inReview" | "reviewed" | "finished";
 
 export interface SubmittedHomeworkInfoDto {
   id: Id;

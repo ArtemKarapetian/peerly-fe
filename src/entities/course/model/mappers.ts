@@ -2,7 +2,7 @@ import type { CourseInfoDto, CourseStatus } from "@/shared/api";
 
 import type { DemoCourse } from "./types";
 
-const ARCHIVED_STATUSES: CourseStatus[] = ["Canceled", "Deleted", "Finished"];
+const ARCHIVED_STATUSES: CourseStatus[] = ["canceled", "deleted", "finished"];
 
 export function isArchivedStatus(status: CourseStatus): boolean {
   return ARCHIVED_STATUSES.includes(status);

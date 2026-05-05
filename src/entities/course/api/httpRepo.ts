@@ -77,7 +77,7 @@ export const courseHttpRepo = {
     const dto = await getOneCourse(courseId);
     const body: UpdateCourseRequestBody = {
       name: dto.name,
-      status: archived ? "Canceled" : "InProgress",
+      status: archived ? "canceled" : "inProgress",
     };
     await http.put<void>(`/courses/${courseId}`, body);
   },
@@ -97,7 +97,7 @@ export const courseHttpRepo = {
       enrollmentCount: 0,
       homeworkCount: 0,
       status: "active",
-      backendStatus: "Draft",
+      backendStatus: "draft",
       archived: false,
       createdAt: new Date(),
     };
