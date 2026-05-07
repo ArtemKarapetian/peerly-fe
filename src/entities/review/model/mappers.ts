@@ -1,13 +1,13 @@
 import type {
-  AssignedReviewInfoDto,
-  SubmittedReviewInfoDto,
-  TeacherSubmittedReviewInfoDto,
+  AssignedReviewDto,
+  SubmittedReviewDto,
+  TeacherSubmittedReviewDto,
 } from "@/shared/api";
 
 import type { DemoReview, ReviewAssignment } from "./types";
 
 export function mapDtoToReview(
-  dto: SubmittedReviewInfoDto | TeacherSubmittedReviewInfoDto,
+  dto: SubmittedReviewDto | TeacherSubmittedReviewDto,
   context: { submissionId?: string; reviewerId?: string } = {},
 ): DemoReview {
   const reviewerId =
@@ -23,7 +23,7 @@ export function mapDtoToReview(
 }
 
 export function mapAssignedToReview(
-  dto: AssignedReviewInfoDto,
+  dto: AssignedReviewDto,
   homework: {
     id: string;
     title: string;

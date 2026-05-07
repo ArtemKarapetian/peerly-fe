@@ -1,4 +1,4 @@
-import type { CreateHomeworkRequestBody, HomeworkInfoDto, HomeworkStatus } from "@/shared/api";
+import type { CreateHomeworkRequestBody, HomeworkDto, HomeworkStatus } from "@/shared/api";
 
 import type { CreateAssignmentInput, DemoAssignment } from "./types";
 
@@ -9,7 +9,7 @@ function uiStatus(raw: HomeworkStatus): DemoAssignment["status"] {
 }
 
 export function mapHomeworkToAssignment(
-  dto: HomeworkInfoDto,
+  dto: HomeworkDto,
   context: { courseId?: string; groupId?: string } = {},
 ): DemoAssignment {
   return {

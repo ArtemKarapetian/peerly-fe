@@ -1,7 +1,7 @@
 import {
-  type CourseInfoDto,
+  type CourseDto,
   type CreateHomeworkResponse,
-  type HomeworkInfoDto,
+  type HomeworkDto,
   type PostponeDeadlinesRequestBody,
   type UpdateDraftHomeworkRequestBody,
   getSession,
@@ -12,16 +12,16 @@ import {
 import { mapHomeworkToAssignment, mapInputToCreateBody } from "../model/mappers";
 import type { CreateAssignmentInput, DemoAssignment } from "../model/types";
 
-type RawListCourses = { courseInfos: CourseInfoDto[] };
-type RawListHomeworks = { homeworkInfos: HomeworkInfoDto[] };
-type RawGetTeacherHomework = { homeworkInfo: HomeworkInfoDto };
-type RawGetStudentHomework = { homeworkInfo: HomeworkInfoDto };
+type RawListCourses = { courseInfos: CourseDto[] };
+type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
+type RawGetTeacherHomework = { homeworkInfo: HomeworkDto };
+type RawGetStudentHomework = { homeworkInfo: HomeworkDto };
 
 function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";
 }
 
-async function fetchCourseHomeworks(courseId: string): Promise<HomeworkInfoDto[]> {
+async function fetchCourseHomeworks(courseId: string): Promise<HomeworkDto[]> {
   const prefix = rolePrefix();
   const path =
     prefix === "teacher"

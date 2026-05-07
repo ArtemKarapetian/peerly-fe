@@ -37,7 +37,7 @@ export interface RegisterResponseBody {
 
 export type CourseStatus = "draft" | "inProgress" | "finished" | "canceled" | "deleted";
 
-export interface CourseInfoDto {
+export interface CourseDto {
   id: Id;
   name: string;
   description: string;
@@ -45,11 +45,11 @@ export interface CourseInfoDto {
 }
 
 export interface ListCoursesResponse {
-  courses: CourseInfoDto[];
+  courses: CourseDto[];
 }
 
 export interface GetCourseResponse {
-  course: CourseInfoDto;
+  course: CourseDto;
   studentCount: number;
   homeworkCount: number;
   files: FileDto[];
@@ -72,7 +72,7 @@ export interface UpdateCourseRequestBody {
 
 // ── Groups ────────────────────────────────────────────────────────
 
-export interface GroupInfoDto {
+export interface GroupDto {
   id: Id;
   name: string;
   courseId: Id;
@@ -101,24 +101,24 @@ export interface AddGroupTeacherRequestBody {
 }
 
 export interface ListGroupsResponse {
-  groups: GroupInfoDto[];
+  groups: GroupDto[];
 }
 
 // ── Participants ──────────────────────────────────────────────────
 
-export interface StudentInfoDto {
+export interface StudentDto {
   id: Id;
   userName: string;
 }
 
-export interface TeacherInfoDto {
+export interface TeacherDto {
   id: Id;
   userName: string;
 }
 
 export interface ListParticipantsResponse {
-  students: StudentInfoDto[];
-  teachers: TeacherInfoDto[];
+  students: StudentDto[];
+  teachers: TeacherDto[];
 }
 
 // ── Homeworks ─────────────────────────────────────────────────────
@@ -131,7 +131,7 @@ export type HomeworkStatus =
   | "deleted"
   | "confirmed";
 
-export interface HomeworkInfoDto {
+export interface HomeworkDto {
   id: Id;
   name: string;
   status: HomeworkStatus;
@@ -166,30 +166,30 @@ export interface PostponeDeadlinesRequestBody {
 }
 
 export interface ListHomeworksResponse {
-  homeworks: HomeworkInfoDto[];
+  homeworks: HomeworkDto[];
 }
 
 export interface GetStudentHomeworkResponse {
-  homework: HomeworkInfoDto;
+  homework: HomeworkDto;
   submittedHomeworkId: Id | null;
   files: FileDto[];
 }
 
 export interface GetTeacherHomeworkResponse {
-  homework: HomeworkInfoDto;
+  homework: HomeworkDto;
   submittedCount: number;
   totalStudentsCount: number;
   files: FileDto[];
 }
 
-export interface AssignedReviewInfoDto {
+export interface AssignedReviewDto {
   submittedHomeworkId: Id;
   studentName: string;
   studentId: Id;
 }
 
 export interface ListAssignedReviewsResponse {
-  assignedReviews: AssignedReviewInfoDto[];
+  assignedReviews: AssignedReviewDto[];
 }
 
 // ── Files / Storage ───────────────────────────────────────────────
@@ -227,13 +227,13 @@ export interface GenerateDownloadUrlResponse {
 
 export type SubmissionStatus = "draft" | "submitted" | "inReview" | "reviewed" | "finished";
 
-export interface SubmittedHomeworkInfoDto {
+export interface SubmittedHomeworkDto {
   id: Id;
   comment: string;
   files: FileDto[];
 }
 
-export interface SubmittedHomeworkOverviewInfoDto {
+export interface SubmittedHomeworkOverviewDto {
   id: Id;
   studentId: Id;
   studentName: string;
@@ -242,13 +242,13 @@ export interface SubmittedHomeworkOverviewInfoDto {
   teacherMark: number | null;
 }
 
-export interface SubmittedReviewInfoDto {
+export interface SubmittedReviewDto {
   id: Id;
   mark: number;
   comment: string;
 }
 
-export interface TeacherSubmittedReviewInfoDto {
+export interface TeacherSubmittedReviewDto {
   id: Id;
   mark: number;
   comment: string;
@@ -263,14 +263,14 @@ export interface SubmissionForReviewDto {
 }
 
 export interface GetSubmittedHomeworkResponse {
-  submittedHomework: SubmittedHomeworkInfoDto;
-  submittedReviews: SubmittedReviewInfoDto[];
+  submittedHomework: SubmittedHomeworkDto;
+  submittedReviews: SubmittedReviewDto[];
   finalMark: number | null;
 }
 
 export interface GetTeacherSubmittedHomeworkResponse {
-  submittedHomework: SubmittedHomeworkInfoDto;
-  submittedReviews: TeacherSubmittedReviewInfoDto[];
+  submittedHomework: SubmittedHomeworkDto;
+  submittedReviews: TeacherSubmittedReviewDto[];
 }
 
 export interface CreateSubmittedHomeworkRequestBody {
@@ -290,13 +290,13 @@ export interface CorrectMarkRequestBody {
 }
 
 export interface ListSubmissionsOverviewResponse {
-  submissions: SubmittedHomeworkOverviewInfoDto[];
+  submissions: SubmittedHomeworkOverviewDto[];
 }
 
 // ── Reviews ───────────────────────────────────────────────────────
 
 export interface GetSubmittedReviewResponse {
-  submittedReview: TeacherSubmittedReviewInfoDto;
+  submittedReview: TeacherSubmittedReviewDto;
 }
 
 export interface GetAssignedReviewResponse {

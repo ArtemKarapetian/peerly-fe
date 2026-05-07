@@ -6,7 +6,7 @@
  */
 
 export type {
-  CourseInfoDto,
+  CourseDto,
   CourseStatus,
   CreateCourseRequestBody,
   UpdateCourseRequestBody,
