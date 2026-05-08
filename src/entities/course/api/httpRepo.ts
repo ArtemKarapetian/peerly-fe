@@ -8,7 +8,7 @@
  */
 
 import {
-  type CourseInfoDto,
+  type CourseDto,
   type CreateCourseRequestBody,
   type CreateCourseResponse,
   type FileDto,
@@ -23,9 +23,9 @@ import {
 import { mapDtoToCourse } from "../model/mappers";
 import type { CreateCourseInput, DemoCourse } from "../model/types";
 
-type RawListCourses = { courseInfos: CourseInfoDto[] };
+type RawListCourses = { courseInfos: CourseDto[] };
 type RawGetCourse = {
-  courseInfo: CourseInfoDto;
+  courseInfo: CourseDto;
   studentCount: number;
   homeworkCount: number;
   files: FileDto[];
@@ -37,7 +37,7 @@ function rolePrefix(): "student" | "teacher" | "admin" {
   return "student";
 }
 
-async function listCourses(): Promise<CourseInfoDto[]> {
+async function listCourses(): Promise<CourseDto[]> {
   const prefix = rolePrefix();
   const path = prefix === "teacher" ? "/teacher/courses" : "/student/courses";
   const raw = await http.get<RawListCourses>(paged(path));

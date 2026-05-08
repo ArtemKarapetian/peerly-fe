@@ -1,8 +1,8 @@
-import type { GroupInfoDto, ListParticipantsResponse } from "@/shared/api";
+import type { GroupDto, ListParticipantsResponse } from "@/shared/api";
 
 import type { DemoGroup, GroupParticipants } from "./types";
 
-export function mapDtoToGroup(dto: GroupInfoDto): DemoGroup {
+export function mapDtoToGroup(dto: GroupDto): DemoGroup {
   return {
     id: String(dto.id),
     name: dto.name,

@@ -1,12 +1,12 @@
 import {
-  type CourseInfoDto,
+  type CourseDto,
   type CreateSubmittedHomeworkRequestBody,
   type CreateSubmittedHomeworkResponse,
   type GetSubmittedHomeworkResponse,
   type GetTeacherSubmittedHomeworkResponse,
-  type HomeworkInfoDto,
+  type HomeworkDto,
   type Id,
-  type SubmittedHomeworkOverviewInfoDto,
+  type SubmittedHomeworkOverviewDto,
   type UpdateSubmittedHomeworkRequestBody,
   getSession,
   http,
@@ -17,9 +17,9 @@ import { mapDtoToSubmission, mapOverviewToSubmission } from "../model/mappers";
 import { fileFromDto, type DemoSubmission } from "../model/types";
 
 // BE wire shapes — translate to FE-clean shapes inside this module.
-type RawListCourses = { courseInfos: CourseInfoDto[] };
-type RawListHomeworks = { homeworkInfos: HomeworkInfoDto[] };
-type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewInfoDto[] };
+type RawListCourses = { courseInfos: CourseDto[] };
+type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
+type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewDto[] };
 type RawGetStudentHomework = { submittedHomeworkId: Id | null };
 
 export const workHttpRepo = {

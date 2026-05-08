@@ -12,7 +12,7 @@ import {
 import { mapDtoToGroup, mapParticipants } from "../model/mappers";
 import type { CreateGroupInput, DemoGroup, GroupParticipants } from "../model/types";
 
-type SingleGroupResponse = { group: import("@/shared/api").GroupInfoDto };
+type SingleGroupResponse = { group: import("@/shared/api").GroupDto };
 
 function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";

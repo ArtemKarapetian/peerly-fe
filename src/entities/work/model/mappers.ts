@@ -1,15 +1,15 @@
-import type { SubmittedHomeworkInfoDto, SubmittedHomeworkOverviewInfoDto } from "@/shared/api";
+import type { SubmittedHomeworkDto, SubmittedHomeworkOverviewDto } from "@/shared/api";
 
 import { fileFromDto, type DemoSubmission } from "./types";
 
-function uiStatusFromOverview(s: SubmittedHomeworkOverviewInfoDto["submissionStatus"]) {
+function uiStatusFromOverview(s: SubmittedHomeworkOverviewDto["submissionStatus"]) {
   if (s === "draft") return "draft" as const;
   if (s === "reviewed" || s === "finished") return "reviewed" as const;
   return "submitted" as const;
 }
 
 export function mapDtoToSubmission(
-  dto: SubmittedHomeworkInfoDto,
+  dto: SubmittedHomeworkDto,
   context: { assignmentId?: string; studentId?: string } = {},
 ): DemoSubmission {
   return {
@@ -24,7 +24,7 @@ export function mapDtoToSubmission(
 }
 
 export function mapOverviewToSubmission(
-  dto: SubmittedHomeworkOverviewInfoDto,
+  dto: SubmittedHomeworkOverviewDto,
   context: { assignmentId?: string } = {},
 ): DemoSubmission {
   return {

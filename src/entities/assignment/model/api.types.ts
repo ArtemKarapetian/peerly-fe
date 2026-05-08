@@ -1,5 +1,5 @@
 export type {
-  HomeworkInfoDto,
+  HomeworkDto,
   HomeworkStatus,
   CreateHomeworkRequestBody,
   UpdateDraftHomeworkRequestBody,

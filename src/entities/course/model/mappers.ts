@@ -1,4 +1,4 @@
-import type { CourseInfoDto, CourseStatus } from "@/shared/api";
+import type { CourseDto, CourseStatus } from "@/shared/api";
 
 import type { DemoCourse } from "./types";
 
@@ -9,7 +9,7 @@ export function isArchivedStatus(status: CourseStatus): boolean {
 }
 
 export function mapDtoToCourse(
-  dto: CourseInfoDto,
+  dto: CourseDto,
   counts: { studentCount: number; homeworkCount: number } = { studentCount: 0, homeworkCount: 0 },
 ): DemoCourse {
   const archived = isArchivedStatus(dto.status);

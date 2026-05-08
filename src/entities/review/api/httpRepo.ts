@@ -1,13 +1,13 @@
 import {
-  type CourseInfoDto,
+  type CourseDto,
   type CreateSubmittedReviewRequestBody,
   type CreateSubmittedReviewResponse,
   type GetAssignedReviewResponse,
   type GetSubmittedReviewResponse,
   type GetTeacherSubmittedHomeworkResponse,
-  type HomeworkInfoDto,
+  type HomeworkDto,
   type ListAssignedReviewsResponse,
-  type SubmittedHomeworkOverviewInfoDto,
+  type SubmittedHomeworkOverviewDto,
   type UpdateSubmittedReviewRequestBody,
   fileFromDto,
   getSession,
@@ -19,9 +19,9 @@ import { mapDtoToReview } from "../model/mappers";
 import type { DemoReview } from "../model/types";
 
 // BE wire shapes — translate to FE-clean shapes inside this module.
-type RawListCourses = { courseInfos: CourseInfoDto[] };
-type RawListHomeworks = { homeworkInfos: HomeworkInfoDto[] };
-type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewInfoDto[] };
+type RawListCourses = { courseInfos: CourseDto[] };
+type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
+type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewDto[] };
 
 export interface AssignedReviewEntry {
   submissionId: string;
