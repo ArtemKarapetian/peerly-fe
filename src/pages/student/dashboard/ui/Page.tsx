@@ -46,9 +46,10 @@ function SectionCard({
 export default function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: courses } = useCourses();
-  const { data: assignments } = useAssignments();
+  const { data: courses, isLoading: coursesLoading } = useCourses();
+  const { data: assignments, isLoading: assignmentsLoading } = useAssignments();
   const [now] = useState(() => Date.now());
+  const isLoading = coursesLoading || assignmentsLoading;
 
   const courseNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -69,7 +70,7 @@ export default function DashboardPage() {
           taskTitle: a.title,
           dueDate: a.dueDate.toISOString(),
           status: "NOT_STARTED" as const,
-          isUrgent: due > now && due - now < 2 * ONE_DAY_MS,
+          isUrgent: due > now && due - now < 7 * ONE_DAY_MS,
         };
       })
       .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
@@ -85,14 +86,14 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 gap-2 mb-5">
         <StatCard
           label={t("student.dashboard.activeCourses")}
-          value={activeCoursesCount}
+          value={isLoading ? "—" : activeCoursesCount}
           icon={<BookOpen className="w-4 h-4" />}
           accent="var(--brand-primary)"
           compact
         />
         <StatCard
-          label={t("student.dashboard.deadlinesToday")}
-          value={urgentCount}
+          label={t("student.dashboard.deadlinesWeek")}
+          value={isLoading ? "—" : urgentCount}
           icon={<Clock className="w-4 h-4" />}
           accent="var(--warning)"
           compact
@@ -102,12 +103,16 @@ export default function DashboardPage() {
       <div className="task-layout">
         <div className="space-y-4">
           <SectionCard title={t("student.dashboard.toDo")} noPadding>
-            <DeadlinesList
-              items={deadlines}
-              onTaskClick={(courseId, taskId) => {
-                void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
-              }}
-            />
+            {isLoading ? (
+              <p className="px-5 py-6 text-[14px] text-text-tertiary">{t("common.loading")}</p>
+            ) : (
+              <DeadlinesList
+                items={deadlines}
+                onTaskClick={(courseId, taskId) => {
+                  void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
+                }}
+              />
+            )}
           </SectionCard>
         </div>
       </div>
