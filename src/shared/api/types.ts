@@ -1,5 +1,3 @@
-// API DTO с гейтвея Peerly v0.4.0; id храним строками для роутинга и стабильности key
-
 // ── Common ────────────────────────────────────────────────────────
 
 export type Id = string;
@@ -11,7 +9,8 @@ export interface PaginationInfoQuery {
 
 // ── Auth ──────────────────────────────────────────────────────────
 
-export type Role = "Student" | "Teacher";
+// TODO BE: Admin enum в auth.proto + админский флоу в gateway.
+export type Role = "Student" | "Teacher" | "Admin";
 
 export interface LoginRequestBody {
   email: string;

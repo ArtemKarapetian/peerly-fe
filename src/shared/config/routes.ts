@@ -24,16 +24,12 @@ export const ROUTES = {
     `/student/courses/${courseId}/tasks/${taskId}/submit`,
   submissions: (courseId: string, taskId: string) =>
     `/student/courses/${courseId}/tasks/${taskId}/submissions`,
-  taskAppeal: (courseId: string, taskId: string) =>
-    `/student/courses/${courseId}/tasks/${taskId}/appeal`,
 
   reviews: "/student/reviews",
   receivedReviews: "/student/reviews/received",
   review: (reviewId: string) => `/student/reviews/${reviewId}`,
 
   gradebook: "/student/gradebook",
-  inbox: "/student/inbox",
-  appeals: "/student/appeals",
 
   profile: "/profile",
   settings: "/settings",
@@ -47,29 +43,15 @@ export const ROUTES = {
   teacherAssignments: "/teacher/assignments",
   teacherCreateAssignment: "/teacher/assignments/new",
   teacherAssignment: (assignmentId: string) => `/teacher/assignment/${assignmentId}`,
-  teacherAssignmentExtensions: (assignmentId: string) =>
-    `/teacher/assignment/${assignmentId}/extensions`,
   teacherPeerSessionSettings: (assignmentId: string) =>
     `/teacher/peer-session-settings/${assignmentId}`,
   teacherDistribution: "/teacher/distribution",
   teacherModeration: "/teacher/moderation",
   teacherSubmissions: "/teacher/submissions",
-  teacherAnalytics: "/teacher/analytics",
-  teacherAppeals: "/teacher/appeals",
-  teacherAnnouncements: "/teacher/announcements",
-  teacherExtensions: "/teacher/extensions",
-  teacherAutomation: "/teacher/automation",
 
   adminOverview: "/admin/overview",
   adminCourses: "/admin/courses",
   adminUsers: "/admin/users",
-  adminFlags: "/admin/flags",
-  adminLogs: "/admin/logs",
-  adminSettings: "/admin/settings",
-  adminIntegrations: "/admin/integrations",
-  adminPlugins: "/admin/plugins",
-  adminRetention: "/admin/retention",
-  adminLimits: "/admin/limits",
 } as const;
 
 export type RoutePatternDef = {
@@ -91,11 +73,6 @@ export const ROUTE_PATTERN_LIST = [
     params: ["courseId", "taskId"] as const,
   },
   {
-    key: "taskAppeal",
-    regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)\/appeal$/,
-    params: ["courseId", "taskId"] as const,
-  },
-  {
     key: "taskDetails",
     regex: /^\/student\/courses\/([^/]+)\/tasks\/([^/]+)$/,
     params: ["courseId", "taskId"] as const,
@@ -104,11 +81,6 @@ export const ROUTE_PATTERN_LIST = [
     key: "review",
     regex: /^\/student\/reviews\/([^/]+)$/,
     params: ["reviewId"] as const,
-  },
-  {
-    key: "teacherAssignmentExtensions",
-    regex: /^\/teacher\/assignment\/([^/]+)\/extensions$/,
-    params: ["assignmentId"] as const,
   },
   {
     key: "teacherAssignment",

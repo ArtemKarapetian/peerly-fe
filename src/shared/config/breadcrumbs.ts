@@ -25,10 +25,6 @@ export const getCrumbs = () =>
     } satisfies BreadcrumbItem,
 
     // Admin
-    adminSettings: {
-      label: i18n.t("nav.settings"),
-      href: ROUTES.adminSettings,
-    } satisfies BreadcrumbItem,
     adminOverview: {
       label: i18n.t("nav.overview"),
       href: ROUTES.adminOverview,

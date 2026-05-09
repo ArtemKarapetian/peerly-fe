@@ -9,13 +9,7 @@ import { RoleRoute } from "@/app/routing/RoleRoute";
 
 // Admin
 const AdminCoursesPage = lazy(() => import("@/pages/admin/courses/ui/Page"));
-const AdminFlagsPage = lazy(() => import("@/pages/admin/flags/ui/Page"));
-const AdminIntegrationsPage = lazy(() => import("@/pages/admin/integrations/ui/Page"));
-const AdminLimitsPage = lazy(() => import("@/pages/admin/limits/ui/Page"));
 const AdminOverviewPage = lazy(() => import("@/pages/admin/overview/ui/Page"));
-const AdminPluginsPage = lazy(() => import("@/pages/admin/plugins/ui/Page"));
-const AdminRetentionPage = lazy(() => import("@/pages/admin/retention/ui/Page"));
-const AdminSettingsPage = lazy(() => import("@/pages/admin/settings/ui/Page"));
 const AdminUsersPage = lazy(() => import("@/pages/admin/users/ui/Page"));
 
 // Auth
@@ -43,13 +37,10 @@ const SecurityPage = lazy(() => import("@/pages/shared/security/ui/Page"));
 const SettingsPage = lazy(() => import("@/pages/shared/settings/ui/Page"));
 
 // Student
-const CreateAppealPage = lazy(() => import("@/pages/student/appeals/create/ui/Page"));
-const AppealsListPage = lazy(() => import("@/pages/student/appeals/list/ui/Page"));
 const CoursePage = lazy(() => import("@/pages/student/courses/detail/ui/Page"));
 const CoursesListPage = lazy(() => import("@/pages/student/courses/list/ui/Page"));
 const DashboardPage = lazy(() => import("@/pages/student/dashboard/ui/Page"));
 const GradebookPage = lazy(() => import("@/pages/student/gradebook/ui/Page"));
-const InboxPage = lazy(() => import("@/pages/student/inbox/ui/Page"));
 const ReviewsInboxPage = lazy(() => import("@/pages/student/reviews/inbox/ui/Page"));
 const ReceivedReviewsPage = lazy(() => import("@/pages/student/reviews/received/ui/Page"));
 const ReviewPage = lazy(() => import("@/pages/student/reviews/review/ui/Page"));
@@ -58,23 +49,15 @@ const SubmissionsPage = lazy(() => import("@/pages/student/submissions/ui/Page")
 const TaskPage = lazy(() => import("@/pages/student/task/detail/ui/Page"));
 
 // Teacher
-const TeacherAnalyticsPage = lazy(() => import("@/pages/teacher/analytics/ui/Page"));
-const TeacherAnnouncementsPage = lazy(() => import("@/pages/teacher/announcements/ui/Page"));
-const TeacherAppealsPage = lazy(() => import("@/pages/teacher/appeals/ui/Page"));
 const TeacherAssignmentDetailsPage = lazy(
   () => import("@/pages/teacher/assignment-detail/ui/Page"),
 );
-const TeacherAssignmentExtensionsPage = lazy(
-  () => import("@/pages/teacher/assignment-extensinsions/ui/Page"),
-);
 const TeacherAssignmentsPage = lazy(() => import("@/pages/teacher/assignments/ui/Page"));
-const TeacherAutomationPage = lazy(() => import("@/pages/teacher/automation/ui/Page"));
 const TeacherCourseDetailsPage = lazy(() => import("@/pages/teacher/course-detail/ui/Page"));
 const TeacherCoursesPage = lazy(() => import("@/pages/teacher/courses/ui/Page"));
 const TeacherCreateAssignmentPage = lazy(() => import("@/pages/teacher/create-assignment/ui/Page"));
 const TeacherCreateCoursePage = lazy(() => import("@/pages/teacher/create-course/ui/Page"));
 const TeacherDistributionPage = lazy(() => import("@/pages/teacher/distribution/ui/Page"));
-const TeacherExtensionsPage = lazy(() => import("@/pages/teacher/extensions/ui/Page"));
 const TeacherModerationPage = lazy(() => import("@/pages/teacher/moderation/ui/Page"));
 const TeacherPeerSessionSettingsPage = lazy(
   () => import("@/pages/teacher/peer-session-settings/ui/Page"),
@@ -128,22 +111,10 @@ export function Router() {
             path="/student/courses/:courseId/tasks/:taskId/submissions"
             element={<SubmissionsPage />}
           />
-          <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route
-              path="/student/courses/:courseId/tasks/:taskId/appeal"
-              element={<CreateAppealPage />}
-            />
-          </Route>
           <Route path="/student/reviews" element={<ReviewsInboxPage />} />
           <Route path="/student/reviews/received" element={<ReceivedReviewsPage />} />
           <Route path="/student/reviews/:reviewId" element={<ReviewPage />} />
           <Route path="/student/gradebook" element={<GradebookPage />} />
-          <Route element={<FeatureRoute flag="enableNotifications" />}>
-            <Route path="/student/inbox" element={<InboxPage />} />
-          </Route>
-          <Route element={<FeatureRoute flag="enableAppeals" />}>
-            <Route path="/student/appeals" element={<AppealsListPage />} />
-          </Route>
 
           {/* Legacy student paths → /student/* (transitional redirects) */}
           <Route path="/dashboard" element={<Navigate to="/student/dashboard" replace />} />
@@ -152,8 +123,6 @@ export function Router() {
           <Route path="/reviews" element={<Navigate to="/student/reviews" replace />} />
           <Route path="/reviews/*" element={<Navigate to="/student/reviews" replace />} />
           <Route path="/gradebook" element={<Navigate to="/student/gradebook" replace />} />
-          <Route path="/inbox" element={<Navigate to="/student/inbox" replace />} />
-          <Route path="/appeals" element={<Navigate to="/student/appeals" replace />} />
 
           {/* Profile / Settings */}
           <Route path="/profile" element={<ProfilePage />} />
@@ -163,7 +132,6 @@ export function Router() {
 
           {/* Teacher */}
           <Route element={<RoleRoute allow={["Teacher"]} />}>
-            {/* Teacher (static) */}
             <Route path="/teacher/courses" element={<TeacherCoursesPage />} />
             <Route path="/teacher/courses/new" element={<TeacherCreateCoursePage />} />
             <Route path="/teacher/courses/:courseId" element={<TeacherCourseDetailsPage />} />
@@ -176,58 +144,19 @@ export function Router() {
               element={<TeacherAssignmentDetailsPage />}
             />
             <Route
-              path="/teacher/assignment/:assignmentId/extensions"
-              element={<TeacherAssignmentExtensionsPage />}
-            />
-            <Route
               path="/teacher/peer-session-settings/:assignmentId"
               element={<TeacherPeerSessionSettingsPage />}
             />
             <Route path="/teacher/distribution" element={<TeacherDistributionPage />} />
             <Route path="/teacher/moderation" element={<TeacherModerationPage />} />
             <Route path="/teacher/submissions" element={<TeacherSubmissionsPage />} />
-            <Route element={<FeatureRoute flag="enableAppeals" />}>
-              <Route path="/teacher/appeals" element={<TeacherAppealsPage />} />
-            </Route>
-
-            {/* Teacher (feature-flagged) */}
-            <Route element={<FeatureRoute flag="enableAnalytics" />}>
-              <Route path="/teacher/analytics" element={<TeacherAnalyticsPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableAnnouncements" />}>
-              <Route path="/teacher/announcements" element={<TeacherAnnouncementsPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableExtensions" />}>
-              <Route path="/teacher/extensions" element={<TeacherExtensionsPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableAutomation" />}>
-              <Route path="/teacher/automation" element={<TeacherAutomationPage />} />
-            </Route>
           </Route>
 
           {/* Admin */}
           <Route element={<RoleRoute allow={["Admin"]} />}>
-            <Route element={<FeatureRoute flag="enableAdminPanel" />}>
-              <Route path="/admin/overview" element={<AdminOverviewPage />} />
-              <Route path="/admin/courses" element={<AdminCoursesPage />} />
-              <Route path="/admin/users" element={<AdminUsersPage />} />
-              <Route path="/admin/settings" element={<AdminSettingsPage />} />
-              <Route path="/admin/flags" element={<AdminFlagsPage />} />
-            </Route>
-
-            {/* Admin (feature-flagged) */}
-            <Route element={<FeatureRoute flag="enablePlugins" />}>
-              <Route path="/admin/plugins" element={<AdminPluginsPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableIntegrations" />}>
-              <Route path="/admin/integrations" element={<AdminIntegrationsPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableRetention" />}>
-              <Route path="/admin/retention" element={<AdminRetentionPage />} />
-            </Route>
-            <Route element={<FeatureRoute flag="enableLimits" />}>
-              <Route path="/admin/limits" element={<AdminLimitsPage />} />
-            </Route>
+            <Route path="/admin/overview" element={<AdminOverviewPage />} />
+            <Route path="/admin/courses" element={<AdminCoursesPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
           </Route>
         </Route>
 

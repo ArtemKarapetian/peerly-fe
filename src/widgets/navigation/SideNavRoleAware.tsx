@@ -1,6 +1,7 @@
 import {
   Book,
   User,
+  Users,
   X,
   ChevronLeft,
   ChevronRight,
@@ -8,26 +9,14 @@ import {
   FileCheck,
   MessageSquare,
   BookOpen,
-  Bell,
-  Users,
   Layers,
-  BarChart3,
   Settings,
-  Plug,
-  Zap,
   Shield,
-  Megaphone,
-  Clock,
   Shuffle,
-  Scale,
   Archive,
-  AlertTriangle,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
-
-import { useDemoToolsVisible } from "@/shared/lib/demo-tools";
-import { isFlagEnabled, type FeatureFlags } from "@/shared/lib/feature-flags";
 
 import { useRole } from "@/entities/user";
 
@@ -51,7 +40,6 @@ interface NavItem {
   icon: React.ElementType;
   label: string;
   hash: string;
-  flag?: keyof FeatureFlags;
 }
 
 /* Shared focus ring for all interactive sidebar elements */
@@ -61,7 +49,7 @@ const focusRing =
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
   const { t } = useTranslation();
   const { currentRole } = useRole();
-  const demoToolsVisible = useDemoToolsVisible();
+  const showRoleSwitcher = import.meta.env.DEV;
   const isCollapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
   const isMobileDrawer = variant === "mobile-drawer";
   const showToggleButton =
@@ -98,18 +86,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             hash: "/student/reviews/received",
           },
           { icon: BookOpen, label: t("nav.gradebook"), hash: "/student/gradebook" },
-          {
-            icon: Bell,
-            label: t("nav.notifications"),
-            hash: "/student/inbox",
-            flag: "enableNotifications",
-          },
-          {
-            icon: AlertTriangle,
-            label: t("nav.appeals"),
-            hash: "/student/appeals",
-            flag: "enableAppeals",
-          },
         ];
       case "Teacher":
         return [
@@ -119,60 +95,19 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: Shuffle, label: t("nav.distribution"), hash: "/teacher/distribution" },
           { icon: Archive, label: t("nav.studentSubmissions"), hash: "/teacher/submissions" },
           { icon: Shield, label: t("nav.moderation"), hash: "/teacher/moderation" },
-          {
-            icon: Scale,
-            label: t("nav.appeals"),
-            hash: "/teacher/appeals",
-            flag: "enableAppeals",
-          },
-          {
-            icon: Megaphone,
-            label: t("nav.announcements"),
-            hash: "/teacher/announcements",
-            flag: "enableAnnouncements",
-          },
-          {
-            icon: Clock,
-            label: t("nav.extensions"),
-            hash: "/teacher/extensions",
-            flag: "enableExtensions",
-          },
-          {
-            icon: BarChart3,
-            label: t("nav.analytics"),
-            hash: "/teacher/analytics",
-            flag: "enableAnalytics",
-          },
-          {
-            icon: Zap,
-            label: t("nav.automation"),
-            hash: "/teacher/automation",
-            flag: "enableAutomation",
-          },
         ];
       case "Admin":
         return [
           { icon: LayoutDashboard, label: t("nav.overview"), hash: "/admin/overview" },
           { icon: Book, label: t("nav.allCourses"), hash: "/admin/courses" },
           { icon: Users, label: t("nav.users"), hash: "/admin/users" },
-          {
-            icon: Plug,
-            label: t("nav.pluginCatalog"),
-            hash: "/admin/plugins",
-            flag: "enablePlugins",
-          },
-          {
-            icon: Zap,
-            label: t("nav.integrations"),
-            hash: "/admin/integrations",
-            flag: "enableIntegrations",
-          },
-          { icon: Settings, label: t("nav.settings"), hash: "/admin/settings" },
         ];
+      default:
+        return [];
     }
   };
 
-  const navItems = getNavItems().filter((item) => !item.flag || isFlagEnabled(item.flag));
+  const navItems = getNavItems();
 
   const navItemClass = (active: boolean) =>
     active
@@ -226,7 +161,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             })}
           </nav>
 
-          {demoToolsVisible && (
+          {showRoleSwitcher && (
             <div className="border-t border-[--surface-border] pt-2 shrink-0">
               <RoleSwitcherPopover collapsed={false} />
             </div>
@@ -307,7 +242,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       </nav>
 
       <div className="shrink-0">
-        {demoToolsVisible && (
+        {showRoleSwitcher && (
           <div className="border-t border-[--surface-border] pt-2">
             <RoleSwitcherPopover collapsed={isCollapsed} />
           </div>
