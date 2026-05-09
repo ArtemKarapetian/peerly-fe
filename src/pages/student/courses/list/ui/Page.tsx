@@ -1,26 +1,42 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { coverColorFor } from "@/shared/lib/coverColor";
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { usePagination } from "@/shared/ui/simple-pagination";
 
-import { CourseCard } from "@/entities/course";
+import { CourseCard, useCourses } from "@/entities/course";
+import type { DemoCourse } from "@/entities/course";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { CourseFilterBar } from "@/widgets/course-filter-bar";
 
-import { mockCourses } from "../model/mockCourses";
+interface CourseListItem {
+  id: string;
+  title: string;
+  teacher: string;
+  coverColor: string;
+  status: "active" | "completed";
+}
 
-// размер страницы подгоняем под число колонок .courses-grid, чтобы не было
-// «обрезанной» нижней строки; брейкпоинты повторяют src/shared/styles/courses.css
+function toListItem(c: DemoCourse): CourseListItem {
+  return {
+    id: c.id,
+    title: c.title,
+    teacher: "",
+    coverColor: coverColorFor(c.id),
+    status: c.status === "archived" ? "completed" : "active",
+  };
+}
+
 function useCoursesPageSize(): number {
   const compute = () => {
     if (typeof window === "undefined") return 12;
-    if (window.innerWidth >= 1200) return 12; // 4 × 3
-    if (window.innerWidth >= 800) return 8; // 2 × 4
-    return 6; // 1 × 6
+    if (window.innerWidth >= 1200) return 12;
+    if (window.innerWidth >= 800) return 8;
+    return 6;
   };
   const [pageSize, setPageSize] = useState(compute);
 
@@ -36,6 +52,10 @@ function useCoursesPageSize(): number {
 export default function CoursesListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { data, isLoading } = useCourses();
+
+  const items = useMemo(() => (data ?? []).map(toListItem), [data]);
+
   const handleCourseClick = useCallback(
     (courseId: string) => {
       void navigate(`/student/courses/${courseId}`);
@@ -47,11 +67,15 @@ export default function CoursesListPage() {
     <AppShell title={t("student.courses.title")}>
       <PageHeader title={t("student.courses.title")} subtitle={t("student.courses.subtitle")} />
 
-      <CourseFilterBar courses={mockCourses}>
-        {(filteredCourses) => (
-          <CourseListContent courses={filteredCourses} onCourseClick={handleCourseClick} />
-        )}
-      </CourseFilterBar>
+      {isLoading ? (
+        <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
+      ) : (
+        <CourseFilterBar courses={items}>
+          {(filteredCourses) => (
+            <CourseListContent courses={filteredCourses} onCourseClick={handleCourseClick} />
+          )}
+        </CourseFilterBar>
+      )}
     </AppShell>
   );
 }
@@ -60,7 +84,7 @@ function CourseListContent({
   courses,
   onCourseClick,
 }: {
-  courses: typeof mockCourses;
+  courses: CourseListItem[];
   onCourseClick: (id: string) => void;
 }) {
   const { t } = useTranslation();
@@ -87,9 +111,6 @@ function CourseListContent({
               title={course.title}
               teacher={course.teacher}
               coverColor={course.coverColor}
-              deadline={course.deadline}
-              progress={course.progress}
-              newAssignments={course.newAssignments}
               status={course.status}
               onClick={() => onCourseClick(course.id)}
             />
