@@ -71,6 +71,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://api-stage.prly.ru",
+        changeOrigin: true,
+        secure: true,
+        cookieDomainRewrite: "localhost",
+      },
+    },
+  },
   build: {
     rollupOptions: {
       output: {

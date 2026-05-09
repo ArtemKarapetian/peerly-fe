@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
-import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import {
@@ -12,7 +11,6 @@ import {
   StepDeadlines,
   StepRubric,
   StepPeerSession,
-  StepPlugins,
   StepPublish,
 } from "@/features/assignment/create";
 import type { AssignmentFormData } from "@/features/assignment/create/model/types";
@@ -27,24 +25,16 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
  * 2. Дедлайны
  * 3. Рубрика
  * 4. Настройки peer review
- * 5. Плагины и проверки   (только при enablePlugins)
- * 6. Публикация
+ * 5. Публикация
  */
 
-type StepKey =
-  | "stepBasics"
-  | "stepDeadlines"
-  | "stepRubric"
-  | "stepPeerReview"
-  | "stepPlugins"
-  | "stepPublish";
+type StepKey = "stepBasics" | "stepDeadlines" | "stepRubric" | "stepPeerReview" | "stepPublish";
 
 const ALL_STEP_KEYS: StepKey[] = [
   "stepBasics",
   "stepDeadlines",
   "stepRubric",
   "stepPeerReview",
-  "stepPlugins",
   "stepPublish",
 ];
 
@@ -119,15 +109,12 @@ export default function TeacherCreateAssignmentPage({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
-  const pluginsEnabled = isFlagEnabled("enablePlugins");
-  const STEPS = ALL_STEP_KEYS.filter((key) => key !== "stepPlugins" || pluginsEnabled).map(
-    (key, idx) => ({
-      id: idx + 1,
-      key,
-      name: t(`teacher.createAssignment.${key}`),
-      shortName: t(`teacher.createAssignment.${key}`),
-    }),
-  );
+  const STEPS = ALL_STEP_KEYS.map((key, idx) => ({
+    id: idx + 1,
+    key,
+    name: t(`teacher.createAssignment.${key}`),
+    shortName: t(`teacher.createAssignment.${key}`),
+  }));
   const lastStepId = STEPS.length;
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<AssignmentFormData>(() => {
@@ -194,7 +181,6 @@ export default function TeacherCreateAssignmentPage({
       case "stepPeerReview":
         return formData.reviewsPerSubmission >= 1;
       case "stepRubric":
-      case "stepPlugins":
       case "stepPublish":
       default:
         return true;
@@ -211,8 +197,6 @@ export default function TeacherCreateAssignmentPage({
         return <StepRubric data={formData} onUpdate={updateFormData} />;
       case "stepPeerReview":
         return <StepPeerSession data={formData} onUpdate={updateFormData} />;
-      case "stepPlugins":
-        return <StepPlugins data={formData} onUpdate={updateFormData} />;
       case "stepPublish":
         return <StepPublish data={formData} onPublish={handlePublish} />;
       default:

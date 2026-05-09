@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { queryClient } from "@/shared/api/queryClient";
 import { FeatureFlagsProvider } from "@/shared/lib/feature-flags-provider";
 
-import { AuthProvider, RoleProvider } from "@/entities/user";
+import { AuthProvider } from "@/entities/user";
 
 import { ThemeProvider } from "./theme";
 
@@ -17,9 +17,7 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <RoleProvider>
-            <FeatureFlagsProvider>{children}</FeatureFlagsProvider>
-          </RoleProvider>
+          <FeatureFlagsProvider>{children}</FeatureFlagsProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

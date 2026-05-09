@@ -2,7 +2,10 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-import { RoleProvider } from "@/entities/user/model/role";
+import type { Session } from "@/shared/api";
+import { STORAGE_KEYS } from "@/shared/config/constants";
+
+import { AuthProvider } from "@/entities/user/model/auth";
 
 import { RoleRoute } from "./RoleRoute";
 
@@ -10,16 +13,26 @@ vi.mock("@/shared/lib/i18n/config", () => ({
   default: { t: (key: string) => key },
 }));
 
+function setSessionRole(role: Session["role"]) {
+  const session: Session = {
+    userId: "1",
+    userName: "Test",
+    email: "test@example.com",
+    role,
+  };
+  localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
+}
+
 function renderAt(initialPath: string, children: React.ReactNode) {
   return render(
-    <RoleProvider>
+    <AuthProvider>
       <MemoryRouter initialEntries={[initialPath]}>
         <Routes>
           {children}
           <Route path="/403" element={<div>forbidden</div>} />
         </Routes>
       </MemoryRouter>
-    </RoleProvider>,
+    </AuthProvider>,
   );
 }
 
@@ -29,7 +42,7 @@ describe("RoleRoute", () => {
   });
 
   it("renders children when current role is in allow list", () => {
-    localStorage.setItem("peerly_role", "Teacher");
+    setSessionRole("Teacher");
 
     renderAt(
       "/teacher/rubrics",
@@ -42,7 +55,7 @@ describe("RoleRoute", () => {
   });
 
   it("redirects to /403 when role is not in allow list", () => {
-    localStorage.setItem("peerly_role", "Student");
+    setSessionRole("Student");
 
     renderAt(
       "/teacher/rubrics",
@@ -56,10 +69,10 @@ describe("RoleRoute", () => {
   });
 
   it("redirects to custom redirectTo when specified", () => {
-    localStorage.setItem("peerly_role", "Student");
+    setSessionRole("Student");
 
     render(
-      <RoleProvider>
+      <AuthProvider>
         <MemoryRouter initialEntries={["/admin/users"]}>
           <Routes>
             <Route element={<RoleRoute allow={["Admin"]} redirectTo="/404" />}>
@@ -68,14 +81,14 @@ describe("RoleRoute", () => {
             <Route path="/404" element={<div>not found</div>} />
           </Routes>
         </MemoryRouter>
-      </RoleProvider>,
+      </AuthProvider>,
     );
 
     expect(screen.getByText("not found")).toBeInTheDocument();
   });
 
   it("supports multiple roles in allow list", () => {
-    localStorage.setItem("peerly_role", "Admin");
+    setSessionRole("Admin");
 
     renderAt(
       "/moderator/panel",

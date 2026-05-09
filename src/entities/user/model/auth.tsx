@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
 
 import { clearSession, getSession, setSession, type Role, type Session } from "@/shared/api";
-import { env } from "@/shared/config/env";
 import { appNavigate } from "@/shared/lib/navigate";
 
 import { authApi } from "../api/authHttp";
@@ -14,10 +13,6 @@ interface AuthContextType {
   login: (input: {
     email: string;
     password: string;
-    /**
-     * Optional. Real backend returns the role in the session; in demo mode
-     * we fall back to the last known role (from a prior session) or "Student".
-     */
     role?: Role;
     userName?: string;
   }) => Promise<Session>;
@@ -28,6 +23,8 @@ interface AuthContextType {
     role: Role;
   }) => Promise<void>;
   logout: () => Promise<void>;
+  /** Dev-only role swap; backend still enforces JWT claims. */
+  switchRoleDev: (role: Role) => void;
 }
 
 const Auth = createContext<AuthContextType | undefined>(undefined);
@@ -42,19 +39,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback<AuthContextType["login"]>(
     async ({ email, password, role, userName }) => {
       const resolvedRole: Role = role ?? getSession()?.role ?? "Student";
-
-      if (!env.apiUrl) {
-        // Demo mode: bypass BE, build a local session.
-        const next: Session = {
-          userId: "demo-1",
-          userName: userName?.trim() || email.split("@")[0],
-          email,
-          role: resolvedRole,
-        };
-        setSession(next);
-        setSessionState(next);
-        return next;
-      }
 
       const res = await authApi.login({ email, password });
       const next: Session = {
@@ -72,13 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback<AuthContextType["register"]>(
     async ({ email, password, userName, role }) => {
-      if (!env.apiUrl) {
-        const next: Session = { userId: "demo-1", userName, email, role };
-        setSession(next);
-        setSessionState(next);
-        return;
-      }
-
       const res = await authApi.register({ email, password, userName, role });
       const next: Session = {
         userId: String(res.userId),
@@ -92,14 +69,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const switchRoleDev = useCallback<AuthContextType["switchRoleDev"]>((role) => {
+    setSessionState((prev) => {
+      const base = prev ?? {
+        userId: "dev-1",
+        userName: "Dev",
+        email: "dev@local",
+        role,
+      };
+      const next: Session = { ...base, role };
+      setSession(next);
+      return next;
+    });
+  }, []);
+
   const logout = useCallback(async () => {
-    if (env.apiUrl) {
-      try {
-        await authApi.logout();
-      } catch {
-        // If the server session is already gone, the cookies are cleared
-        // anyway — proceed to local cleanup.
-      }
+    try {
+      await authApi.logout();
+    } catch {
+      // If the server session is already gone, the cookies are cleared
+      // anyway — proceed to local cleanup.
     }
     clearSession();
     setSessionState(null);
@@ -115,6 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        switchRoleDev,
       }}
     >
       {children}

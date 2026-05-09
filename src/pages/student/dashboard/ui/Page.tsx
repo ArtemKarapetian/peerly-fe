@@ -2,14 +2,13 @@ import { BookOpen, Clock, CheckSquare, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { StatCard } from "@/shared/ui/StatCard";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { DeadlinesList, ActionCards, NotificationsList } from "@/widgets/student-dashboard";
+import { DeadlinesList, ActionCards } from "@/widgets/student-dashboard";
 
-import { mockDeadlines, mockActionData, mockNotifications } from "../model/mockData";
+import { mockDeadlines, mockActionData } from "../model/mockData";
 
 const todayRaw = new Date().toLocaleDateString(undefined, {
   weekday: "long",
@@ -43,7 +42,6 @@ export default function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const hasActions = mockActionData.reviewsPending > 0 || mockActionData.newFeedback > 0;
-  const notificationsEnabled = isFlagEnabled("enableNotifications");
 
   return (
     <AppShell title={t("student.dashboard.title")}>
@@ -111,42 +109,7 @@ export default function DashboardPage() {
               }}
             />
           </SectionCard>
-
-          {/* на мобильном уведомления идут инлайном, на десктопе — в правой колонке */}
-          {notificationsEnabled && (
-            <div className="hide-on-desktop">
-              <SectionCard title={t("student.dashboard.notifications")} noPadding>
-                <NotificationsList
-                  items={mockNotifications}
-                  onNotificationClick={(id) => {
-                    void navigate(`/student/inbox/${id}`);
-                  }}
-                  onViewAllClick={() => {
-                    void navigate("/student/inbox");
-                  }}
-                />
-              </SectionCard>
-            </div>
-          )}
         </div>
-
-        {notificationsEnabled && (
-          <div className="hide-below-desktop">
-            <div className="task-sidebar-sticky">
-              <SectionCard title={t("student.dashboard.notifications")} noPadding>
-                <NotificationsList
-                  items={mockNotifications}
-                  onNotificationClick={(id) => {
-                    void navigate(`/student/inbox/${id}`);
-                  }}
-                  onViewAllClick={() => {
-                    void navigate("/student/inbox");
-                  }}
-                />
-              </SectionCard>
-            </div>
-          </div>
-        )}
       </div>
     </AppShell>
   );
