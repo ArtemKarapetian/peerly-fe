@@ -7,11 +7,13 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { TaskReviewAccordion } from "@/widgets/received-reviews";
 
-import { mockReceivedReviews } from "../model/mockReceivedReviews";
+import { useReceivedReviews } from "../model/queries";
 
 export default function ReceivedReviewsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { data, isLoading } = useReceivedReviews();
+  const tasks = data ?? [];
 
   return (
     <AppShell title={t("student.receivedReviews.title")}>
@@ -21,8 +23,10 @@ export default function ReceivedReviewsPage() {
           subtitle={t("student.receivedReviews.subtitle")}
         />
 
-        {mockReceivedReviews.length > 0 ? (
-          <TaskReviewAccordion tasks={mockReceivedReviews} />
+        {isLoading ? (
+          <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
+        ) : tasks.length > 0 ? (
+          <TaskReviewAccordion tasks={tasks} />
         ) : (
           <div className="bg-muted rounded-[20px] p-8 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary-lighter rounded-full mb-4">

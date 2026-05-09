@@ -4,50 +4,41 @@ import { useNavigate } from "react-router-dom";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 
-import { useReviewStore } from "@/entities/review/api/reviewRepo.mock.ts";
-
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { ReviewCard, ReviewFilters } from "@/widgets/reviews-inbox";
 import type { ReviewFilter } from "@/widgets/reviews-inbox";
 
+import { useAssignedReviewsInbox } from "../model/queries";
+
+const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
 export default function ReviewsInboxPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { reviews } = useReviewStore();
+  const { data, isLoading } = useAssignedReviewsInbox();
+  const reviews = data ?? [];
+
   const [filter, setFilter] = useState<ReviewFilter>("all");
-
-  const filteredReviews = reviews.filter((review) => {
-    if (filter === "all") return true;
-    if (filter === "not_started") return review.status === "not_started";
-    if (filter === "drafts") return review.status === "draft";
-    if (filter === "submitted") return review.status === "submitted";
-    return true;
-  });
-
-  const handleReviewClick = (reviewId: string) => {
-    setTimeout(() => {
-      void navigate(`/student/reviews/${reviewId}`);
-    }, 0);
-  };
-
   const [now] = useState(() => Date.now());
-  const twoDays = 2 * 24 * 60 * 60 * 1000;
 
-  const isDeadlineSoon = useCallback(
-    (deadlineTimestamp: number) => {
-      return deadlineTimestamp - now < twoDays && deadlineTimestamp > now;
-    },
-    [now, twoDays],
-  );
+  const isDeadlineSoon = useCallback((ts: number) => ts > now && ts - now < TWO_DAYS_MS, [now]);
+
+  const filtered = filter === "all" || filter === "not_started" ? reviews : [];
 
   const counts = {
     all: reviews.length,
-    notStarted: reviews.filter((r) => r.status === "not_started").length,
-    drafts: reviews.filter((r) => r.status === "draft").length,
-    submitted: reviews.filter((r) => r.status === "submitted").length,
+    notStarted: reviews.length,
+    drafts: 0,
+    submitted: 0,
   };
 
-  const isEmpty = filteredReviews.length === 0;
+  const handleClick = (id: string) => {
+    setTimeout(() => {
+      void navigate(`/student/reviews/${id}`);
+    }, 0);
+  };
+
+  const isEmpty = filtered.length === 0;
 
   return (
     <AppShell title={t("student.reviews.title")}>
@@ -55,7 +46,9 @@ export default function ReviewsInboxPage() {
 
       <ReviewFilters filter={filter} counts={counts} onFilterChange={setFilter} />
 
-      {isEmpty && (
+      {isLoading && <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>}
+
+      {!isLoading && isEmpty && (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
             <div className="mb-4">
@@ -79,23 +72,19 @@ export default function ReviewsInboxPage() {
         </div>
       )}
 
-      {!isEmpty && (
+      {!isLoading && !isEmpty && (
         <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
-          {filteredReviews.map((review) => (
+          {filtered.map((review) => (
             <ReviewCard
               key={review.id}
               id={review.id}
               courseName={review.courseName}
               taskTitle={review.taskTitle}
-              studentName={
-                review.isAnonymous
-                  ? t("student.reviews.anonymousAuthor")
-                  : t("widget.reviewList.studentLabel")
-              }
+              studentName={t("student.reviews.anonymousAuthor")}
               reviewDeadline={review.reviewDeadline}
               status={review.status}
               isDeadlineSoon={isDeadlineSoon(review.reviewDeadlineTimestamp)}
-              onClick={() => handleReviewClick(review.id)}
+              onClick={() => handleClick(review.id)}
             />
           ))}
         </div>

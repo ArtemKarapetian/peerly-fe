@@ -6,6 +6,14 @@ import { courseRepo } from "..";
 
 import type { CreateCourseInput } from "./types";
 
+export function useCourseParticipants(courseId: string) {
+  return useQuery({
+    queryKey: courseKeys.participants(courseId),
+    queryFn: () => courseRepo.getParticipants(courseId),
+    enabled: !!courseId,
+  });
+}
+
 export function useCourses() {
   return useQuery({
     queryKey: courseKeys.lists(),

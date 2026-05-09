@@ -38,7 +38,7 @@ export default function CoursePage() {
 
           <div className="p-6">
             {activeTab === "assignments" && <CourseAssignmentsTab courseId={courseId} />}
-            {activeTab === "participants" && <CourseParticipantsTab />}
+            {activeTab === "participants" && <CourseParticipantsTab courseId={courseId} />}
           </div>
         </div>
       </div>

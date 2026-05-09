@@ -183,7 +183,10 @@
       "avgScore": "Average Score",
       "gradesReceived": "Grades Received",
       "about": "About Gradebook",
-      "aboutDesc": "Here you can see your grades for all assignments. Some grades may be hidden until the teacher publishes results. Click on a row to go to assignment details."
+      "aboutDesc": "Here you can see your grades for all assignments. Some grades may be hidden until the teacher publishes results. Click on a row to go to assignment details.",
+      "statusPublished": "Published",
+      "statusInReview": "In review",
+      "statusNotSubmitted": "Not submitted"
     },
     "inbox": {
       "title": "Notifications",

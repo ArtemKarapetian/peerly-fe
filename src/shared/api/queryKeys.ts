@@ -13,6 +13,7 @@ export const courseKeys = {
   list: (filters: Record<string, unknown>) => [...courseKeys.lists(), filters] as const,
   details: () => [...courseKeys.all, "detail"] as const,
   detail: (id: string) => [...courseKeys.details(), id] as const,
+  participants: (courseId: string) => [...courseKeys.detail(courseId), "participants"] as const,
 };
 
 export const assignmentKeys = {

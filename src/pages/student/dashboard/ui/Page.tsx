@@ -1,14 +1,19 @@
-import { BookOpen, Clock, CheckSquare, MessageSquare } from "lucide-react";
+import { BookOpen, Clock } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { StatCard } from "@/shared/ui/StatCard";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { DeadlinesList, ActionCards } from "@/widgets/student-dashboard";
+import { useAssignments } from "@/entities/assignment";
+import { useCourses } from "@/entities/course";
 
-import { mockDeadlines, mockActionData } from "../model/mockData";
+import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { DeadlinesList } from "@/widgets/student-dashboard";
+import type { DeadlineItem } from "@/widgets/student-dashboard";
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 const todayRaw = new Date().toLocaleDateString(undefined, {
   weekday: "long",
@@ -41,39 +46,55 @@ function SectionCard({
 export default function DashboardPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const hasActions = mockActionData.reviewsPending > 0 || mockActionData.newFeedback > 0;
+  const { data: courses } = useCourses();
+  const { data: assignments } = useAssignments();
+  const [now] = useState(() => Date.now());
+
+  const courseNameById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const c of courses ?? []) map.set(c.id, c.title);
+    return map;
+  }, [courses]);
+
+  const deadlines: DeadlineItem[] = useMemo(() => {
+    return (assignments ?? [])
+      .filter((a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted")
+      .map((a) => {
+        const due = a.dueDate.getTime();
+        return {
+          id: a.id,
+          courseId: a.courseId,
+          courseName: courseNameById.get(a.courseId) ?? "",
+          taskId: a.id,
+          taskTitle: a.title,
+          dueDate: a.dueDate.toISOString(),
+          status: "NOT_STARTED" as const,
+          isUrgent: due > now && due - now < 2 * ONE_DAY_MS,
+        };
+      })
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+  }, [assignments, courseNameById, now]);
+
+  const urgentCount = deadlines.filter((d) => d.isUrgent).length;
+  const activeCoursesCount = (courses ?? []).filter((c) => c.status === "active").length;
 
   return (
     <AppShell title={t("student.dashboard.title")}>
       <PageHeader title={t("student.dashboard.title")} subtitle={todayLabel} />
 
-      <div className="grid grid-cols-2 gap-2 tablet:grid-cols-4 mb-5">
+      <div className="grid grid-cols-2 gap-2 mb-5">
         <StatCard
           label={t("student.dashboard.activeCourses")}
-          value={3}
+          value={activeCoursesCount}
           icon={<BookOpen className="w-4 h-4" />}
           accent="var(--brand-primary)"
           compact
         />
         <StatCard
           label={t("student.dashboard.deadlinesToday")}
-          value={mockDeadlines.filter((d) => d.isUrgent).length}
+          value={urgentCount}
           icon={<Clock className="w-4 h-4" />}
           accent="var(--warning)"
-          compact
-        />
-        <StatCard
-          label={t("student.dashboard.needToReview")}
-          value={mockActionData.reviewsPending}
-          icon={<CheckSquare className="w-4 h-4" />}
-          accent="var(--chart-4)"
-          compact
-        />
-        <StatCard
-          label={t("student.dashboard.newFeedback")}
-          value={mockActionData.newFeedback}
-          icon={<MessageSquare className="w-4 h-4" />}
-          accent="var(--success)"
           compact
         />
       </div>
@@ -81,29 +102,8 @@ export default function DashboardPage() {
       <div className="task-layout">
         <div className="space-y-4">
           <SectionCard title={t("student.dashboard.toDo")} noPadding>
-            {/* экшены закреплены сверху, если есть */}
-            {hasActions && (
-              <>
-                <ActionCards
-                  data={mockActionData}
-                  onReviewsClick={() => {
-                    void navigate("/student/reviews");
-                  }}
-                  onFeedbackClick={() => {
-                    void navigate("/student/reviews/received");
-                  }}
-                />
-                {mockDeadlines.length > 0 && (
-                  <div className="px-5 py-2 bg-[--surface-hover] border-y border-[--surface-border]">
-                    <span className="text-[10px] font-semibold text-[--text-tertiary] uppercase tracking-[0.5px]">
-                      {t("student.dashboard.upcoming")}
-                    </span>
-                  </div>
-                )}
-              </>
-            )}
             <DeadlinesList
-              items={mockDeadlines}
+              items={deadlines}
               onTaskClick={(courseId, taskId) => {
                 void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
               }}
