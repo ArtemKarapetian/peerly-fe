@@ -1347,9 +1347,8 @@
     "profile": {
       "changesSaved": "Изменения сохранены!",
       "userInfo": "Информация о пользователе",
-      "firstName": "Имя",
-      "lastName": "Фамилия",
-      "username": "Имя пользователя",
+      "name": "Имя",
+      "email": "Email",
       "saveChanges": "Сохранить изменения"
     },
     "courseSearch": {

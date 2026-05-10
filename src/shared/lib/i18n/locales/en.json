@@ -2147,9 +2147,8 @@
     "profile": {
       "changesSaved": "Changes saved!",
       "userInfo": "User Information",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "username": "Username",
+      "name": "Name",
+      "email": "Email",
       "saveChanges": "Save Changes"
     },
     "courseSearch": {
