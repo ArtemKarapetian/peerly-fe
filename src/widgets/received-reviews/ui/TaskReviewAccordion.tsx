@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, AlertCircle, CheckCircle, Clock, FileText } from "lucide-react";
+import { ChevronDown, ChevronUp, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -120,7 +120,7 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                   </h3>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 mb-2">
+                <div className="flex flex-wrap items-center gap-3">
                   <StatusBadge status={task.status} t={t} />
 
                   {task.status === "PUBLISHED" && task.currentScore !== undefined && (
@@ -129,35 +129,13 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                     </span>
                   )}
 
-                  {task.status === "IN_REVIEW" && (
+                  {task.status !== "PUBLISHED" && (
                     <span className="text-[13px] text-muted-foreground">
                       {t("widget.taskReviewAccordion.reviewing")} {task.reviewsReceived}/
                       {task.reviewsRequired}
                     </span>
                   )}
-
-                  {task.status === "PENDING" && (
-                    <span className="text-[13px] text-muted-foreground">
-                      {t("widget.taskReviewAccordion.awaitingReview")}
-                    </span>
-                  )}
                 </div>
-
-                <div className="flex items-center gap-2 text-[14px] text-muted-foreground">
-                  <FileText className="w-4 h-4" />
-                  <span>
-                    {task.reviewsReceived > 0
-                      ? `${task.reviewsReceived} ${task.reviewsReceived === 1 ? t("widget.taskReviewAccordion.reviewOne") : t("widget.taskReviewAccordion.reviewFew")}`
-                      : t("widget.taskReviewAccordion.noReviews")}
-                  </span>
-                </div>
-
-                {task.status === "IN_REVIEW" && (
-                  <div className="mt-3 flex items-start gap-2 text-[13px] text-muted-foreground bg-muted rounded-[8px] p-3">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <span>{t("widget.taskReviewAccordion.resultAfterReview")}</span>
-                  </div>
-                )}
               </div>
 
               <button className="p-2 hover:bg-surface-hover rounded-[8px] transition-colors shrink-0">
