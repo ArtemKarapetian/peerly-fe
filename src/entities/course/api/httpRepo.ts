@@ -108,6 +108,7 @@ export const courseHttpRepo = {
       id: String(res.courseId),
       name: input.title,
       title: input.title,
+      description: input.description ?? "",
       code: input.code ?? "",
       teacherId: input.instructorId ?? "",
       enrollmentCount: 0,

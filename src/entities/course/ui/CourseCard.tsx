@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 interface CourseCardProps {
   id: string;
   title: string;
-  teacher: string;
+  teacher?: string;
   coverColor?: string;
   deadline?: string;
   progress?: number;
@@ -86,15 +86,17 @@ export function CourseCard({
           {title}
         </h3>
 
-        <div className="flex items-center gap-2">
-          <div
-            className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold text-[--text-primary]"
-            style={{ backgroundColor: coverColor }}
-          >
-            {getInitials(teacher)}
+        {teacher ? (
+          <div className="flex items-center gap-2">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold text-[--text-primary]"
+              style={{ backgroundColor: coverColor }}
+            >
+              {getInitials(teacher)}
+            </div>
+            <p className="text-[12px] text-[--text-secondary] truncate">{teacher}</p>
           </div>
-          <p className="text-[12px] text-[--text-secondary] truncate">{teacher}</p>
-        </div>
+        ) : null}
 
         {typeof progress === "number" && (
           <div className="space-y-1">

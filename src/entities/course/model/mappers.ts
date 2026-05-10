@@ -17,6 +17,7 @@ export function mapDtoToCourse(
     id: String(dto.id),
     name: dto.name,
     title: dto.name,
+    description: dto.description ?? "",
     code: "",
     teacherId: "",
     enrollmentCount: counts.studentCount,

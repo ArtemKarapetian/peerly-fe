@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { TaskStatus } from "./StatusCard";
+import type { TaskStatus } from "./types";
 
 /**
  * TaskListItem - Строка задания в списке
