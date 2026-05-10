@@ -220,6 +220,7 @@
       "viewSubmission": "View my submission",
       "deadline": "Deadline",
       "reviewDeadline": "Review deadline",
+      "reviewers": "Reviewers",
       "notFound": "Assignment not found",
       "noDescription": "No description provided"
     },
