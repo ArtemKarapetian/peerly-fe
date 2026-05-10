@@ -1,16 +1,10 @@
-/**
- * CourseHeader - Заголовок курса с обложкой, названием и преподавателем
- */
-
 interface CourseHeaderProps {
   title: string;
-  teacher: string;
   coverColor?: string;
+  description?: string;
 }
 
-export function CourseHeader({ title, teacher, coverColor = "#f2b2d6" }: CourseHeaderProps) {
-  const initial = teacher.trim().charAt(0).toUpperCase() || "?";
-
+export function CourseHeader({ title, coverColor = "#f2b2d6", description }: CourseHeaderProps) {
   return (
     <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
       <div className="w-full h-[100px]" style={{ backgroundColor: coverColor }} />
@@ -19,12 +13,9 @@ export function CourseHeader({ title, teacher, coverColor = "#f2b2d6" }: CourseH
         <h1 className="text-[32px] font-medium leading-[1.05] tracking-[-0.5px] text-foreground">
           {title}
         </h1>
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-brand-primary-lighter text-brand-primary flex items-center justify-center text-[12px] font-semibold">
-            {initial}
-          </div>
-          <span className="text-[15px] text-muted-foreground">{teacher}</span>
-        </div>
+        {description ? (
+          <p className="text-[15px] text-muted-foreground leading-[1.5]">{description}</p>
+        ) : null}
       </div>
     </div>
   );

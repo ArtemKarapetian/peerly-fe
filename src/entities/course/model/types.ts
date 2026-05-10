@@ -4,6 +4,7 @@ export interface DemoCourse {
   id: string;
   name: string;
   title: string; // Display title (alias of name for UI compatibility)
+  description: string;
   code: string; // Deprecated on BE — left as empty string
   teacherId: string; // Not returned by BE — left empty
   enrollmentCount: number; // From studentCount

@@ -214,11 +214,14 @@
       "overdue": "Просрочено",
       "requestExtension": "Запросить продление дедлайна",
       "requestExtensionShort": "Запросить продление",
-      "mockCourseName": "Веб-программирование",
-      "mockTeacher": "Преподаватель",
-      "mockDeadline": "31 января 2026",
-      "mockDeadlineFull": "31 января 2026, 23:59",
-      "mockType": "Индивидуальное с взаимопроверкой"
+      "description": "Описание задания",
+      "checklist": "Что важно",
+      "submitWork": "Сдать работу",
+      "viewSubmission": "Посмотреть мою работу",
+      "deadline": "Дедлайн",
+      "reviewDeadline": "Срок рецензирования",
+      "notFound": "Задание не найдено",
+      "noDescription": "Описание не указано"
     },
     "submissions": {
       "title": "История версий",

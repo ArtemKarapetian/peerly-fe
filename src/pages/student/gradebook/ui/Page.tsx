@@ -2,11 +2,16 @@ import { useMemo, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { usePagination } from "@/shared/ui/simple-pagination";
+
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { GradebookHeader, GradeTable } from "@/widgets/gradebook";
 import type { GradeEntry } from "@/widgets/gradebook";
 
 import { useGradebookEntries } from "../model/queries";
+
+const PAGE_SIZE = 15;
 
 const STATUS_LABEL_KEYS: Record<string, string> = {
   PUBLISHED: "student.gradebook.statusPublished",
@@ -72,6 +77,11 @@ export default function GradebookPage() {
     [t],
   );
 
+  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
+    filteredGrades,
+    PAGE_SIZE,
+  );
+
   return (
     <AppShell>
       <GradebookHeader
@@ -88,35 +98,25 @@ export default function GradebookPage() {
         }}
       />
 
-      <div className="max-w-[1400px] mx-auto px-4 tablet:px-6 desktop:px-8 py-6 desktop:py-8">
-        <div className="desktop:hidden mb-6 grid grid-cols-2 gap-4">
-          <div className="bg-card border-2 border-border rounded-[12px] p-4">
-            <div className="text-[13px] text-muted-foreground mb-1">
-              {t("student.gradebook.avgScore")}
-            </div>
-            <div className="text-[24px] font-semibold text-foreground">{stats.avgPercentage}%</div>
-          </div>
-          <div className="bg-card border-2 border-border rounded-[12px] p-4">
-            <div className="text-[13px] text-muted-foreground mb-1">
-              {t("student.gradebook.gradesReceived")}
-            </div>
-            <div className="text-[24px] font-semibold text-foreground">
-              {stats.published} / {stats.total}
-            </div>
-          </div>
-        </div>
+      {isLoading ? (
+        <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
+      ) : (
+        <GradeTable
+          grades={currentItems}
+          statusLabels={statusLabels}
+          statusColors={STATUS_COLORS}
+          onRowClick={handleRowClick}
+        />
+      )}
 
-        {isLoading ? (
-          <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
-        ) : (
-          <GradeTable
-            grades={filteredGrades}
-            statusLabels={statusLabels}
-            statusColors={STATUS_COLORS}
-            onRowClick={handleRowClick}
-          />
-        )}
-      </div>
+      {totalPages > 1 && (
+        <AdvancedPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          className="mt-6"
+        />
+      )}
     </AppShell>
   );
 }

@@ -1,131 +1,111 @@
-import { useState } from "react";
+import { Calendar, History, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
+import { formatDateTime } from "@/shared/lib/formatDate";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import type { TaskStatus } from "@/entities/assignment";
-import { StatusCard } from "@/entities/assignment";
+import { useAssignment } from "@/entities/assignment";
+import { useCourse } from "@/entities/course";
+import { useMySubmission } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import {
-  TaskHeader,
-  TaskDescription,
-  TaskRequirements,
-  TaskMaterials,
-  TaskQuestionsComments,
-} from "@/widgets/task-detail";
 
 export default function TaskPage() {
-  const { taskId: taskIdParam } = useParams();
-  const taskId = taskIdParam ?? "1";
-  const { t } = useTranslation();
+  const { courseId = "", taskId = "" } = useParams();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const CRUMBS = getCrumbs();
-  const [taskStatus, setTaskStatus] = useState<TaskStatus>("NOT_STARTED");
 
-  const taskTitle = `${t("widget.gradeTable.assignment")} ${taskId || "1"}`;
-  const courseId = "1"; // TODO взять реальный courseId из URL/контекста
+  const { data: hw, isLoading: hwLoading } = useAssignment(taskId);
+  const { data: course } = useCourse(courseId);
+  const { data: submission } = useMySubmission(taskId);
 
-  const getStatusColor = () => {
-    switch (taskStatus) {
-      case "NOT_STARTED":
-        return "bg-muted";
-      case "SUBMITTED":
-        return "bg-brand-primary-lighter";
-      case "PEER_REVIEW":
-        return "bg-info-light";
-      case "TEACHER_REVIEW":
-        return "bg-brand-primary-lighter";
-      case "GRADING":
-        return "bg-brand-primary-lighter";
-      case "GRADED":
-        return "bg-success-light";
-      case "OVERDUE":
-        return "bg-error-light";
-    }
-  };
+  const courseName = course?.title ?? "";
+  const title = hw?.title ?? "";
+  const description = hw?.description ?? "";
+  const checklist = hw?.checklist ?? "";
 
-  const getStatusLabel = () => {
-    switch (taskStatus) {
-      case "NOT_STARTED":
-        return t("student.task.notStarted");
-      case "SUBMITTED":
-        return t("student.task.workSubmitted");
-      case "PEER_REVIEW":
-        return t("student.task.peerReview");
-      case "TEACHER_REVIEW":
-        return t("student.task.teacherReview");
-      case "GRADING":
-        return t("student.task.grading");
-      case "GRADED":
-        return t("student.task.graded");
-      case "OVERDUE":
-        return t("student.task.overdue");
-    }
-  };
+  if (!hwLoading && !hw) {
+    return (
+      <AppShell title={t("student.task.notFound")}>
+        <Breadcrumbs items={[CRUMBS.courses, { label: t("student.task.notFound") }]} />
+        <p className="mt-6 text-[14px] text-text-tertiary">{t("student.task.notFound")}</p>
+      </AppShell>
+    );
+  }
 
   return (
-    <AppShell title={taskTitle}>
+    <AppShell title={title}>
       <Breadcrumbs
         items={[
           CRUMBS.courses,
-          { label: t("student.task.mockCourseName"), href: ROUTES.course(courseId) },
-          { label: taskTitle },
+          { label: courseName, href: ROUTES.course(courseId) },
+          { label: title },
         ]}
       />
 
-      <TaskHeader
-        title={taskTitle}
-        courseName={t("student.task.mockCourseName")}
-        teacher={t("student.task.mockTeacher")}
-        deadline={t("student.task.mockDeadline")}
-        points={100}
-        type={t("student.task.mockType")}
-        status={getStatusLabel()}
-        statusColor={getStatusColor()}
-      />
-
-      {/* на десктопе StatusCard уйдёт в правый sticky-сайдбар, здесь только мобильная версия */}
-      <div className="hide-on-desktop mb-4">
-        <StatusCard
-          status={taskStatus}
-          deadline={t("student.task.mockDeadlineFull")}
-          courseId={courseId}
-          taskId={taskId || "1"}
-          hasSubmission={false}
-          isDraft={false}
-          allowResubmissions={true}
-          onStatusChange={setTaskStatus}
-        />
+      <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-5 desktop:p-8 mb-6">
+        <h1 className="text-[28px] desktop:text-[36px] font-medium tracking-[-0.5px] text-foreground leading-[1.1] mb-2">
+          {title || t("common.loading")}
+        </h1>
+        <p className="text-[14px] desktop:text-[16px] text-muted-foreground mb-4">{courseName}</p>
+        {hw?.dueDate ? (
+          <div className="flex items-center gap-2 text-[14px] text-muted-foreground">
+            <Calendar className="size-4" />
+            <span>
+              {t("student.task.deadline")}:{" "}
+              {formatDateTime(hw.dueDate.toISOString(), i18n.language)}
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <div className="task-layout">
-        <div className="w-full min-w-0 flex flex-col task-content-spacing">
-          <TaskDescription />
-          <TaskRequirements />
-          <TaskMaterials />
-          {/* комментарии в основной колонке только на мобильном — на десктопе они в правом сайдбаре */}
-          <div className="hide-on-desktop">
-            <TaskQuestionsComments />
-          </div>
+        <div className="w-full min-w-0 flex flex-col gap-4">
+          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+            <h2 className="text-[20px] font-medium tracking-[-0.3px] text-foreground mb-3">
+              {t("student.task.description")}
+            </h2>
+            <p className="text-[14px] desktop:text-[15px] text-muted-foreground leading-[1.6] whitespace-pre-wrap">
+              {description || t("student.task.noDescription")}
+            </p>
+          </section>
+
+          {checklist ? (
+            <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+              <h2 className="text-[20px] font-medium tracking-[-0.3px] text-foreground mb-3">
+                {t("student.task.checklist")}
+              </h2>
+              <p className="text-[14px] desktop:text-[15px] text-muted-foreground leading-[1.6] whitespace-pre-wrap">
+                {checklist}
+              </p>
+            </section>
+          ) : null}
         </div>
 
-        <div className="w-full min-w-0 flex flex-col task-content-spacing hide-below-desktop">
-          <div className="task-sidebar-sticky">
-            <StatusCard
-              status={taskStatus}
-              deadline={t("student.task.mockDeadlineFull")}
-              courseId={courseId}
-              taskId={taskId || "1"}
-              hasSubmission={false}
-              isDraft={false}
-              allowResubmissions={true}
-              onStatusChange={setTaskStatus}
-            />
+        <div className="w-full min-w-0 flex flex-col gap-3 hide-below-desktop">
+          <div className="task-sidebar-sticky bg-card border border-border shadow-sm rounded-[16px] p-5 space-y-3">
+            {!submission ? (
+              <button
+                onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
+              >
+                <Upload className="size-4" />
+                {t("student.task.submitWork")}
+              </button>
+            ) : (
+              <button
+                onClick={() => void navigate(ROUTES.submissions(courseId, taskId))}
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-[12px] text-[15px] font-medium transition-colors"
+              >
+                <History className="size-4" />
+                {t("student.task.viewSubmission")}
+              </button>
+            )}
           </div>
-          <TaskQuestionsComments />
         </div>
       </div>
     </AppShell>

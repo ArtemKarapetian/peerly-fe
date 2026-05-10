@@ -214,11 +214,14 @@
       "overdue": "Overdue",
       "requestExtension": "Request deadline extension",
       "requestExtensionShort": "Request Extension",
-      "mockCourseName": "Web Programming",
-      "mockTeacher": "Teacher",
-      "mockDeadline": "January 31, 2026",
-      "mockDeadlineFull": "January 31, 2026, 23:59",
-      "mockType": "Individual with peer review"
+      "description": "Description",
+      "checklist": "Checklist",
+      "submitWork": "Submit work",
+      "viewSubmission": "View my submission",
+      "deadline": "Deadline",
+      "reviewDeadline": "Review deadline",
+      "notFound": "Assignment not found",
+      "noDescription": "No description provided"
     },
     "submissions": {
       "title": "Version History",

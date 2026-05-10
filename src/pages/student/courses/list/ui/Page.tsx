@@ -25,7 +25,7 @@ function toListItem(c: DemoCourse): CourseListItem {
   return {
     id: c.id,
     title: c.title,
-    teacher: "",
+    teacher: "", // BE doesn't return teacher on CourseDto; intentionally hidden
     coverColor: coverColorFor(c.id),
     status: c.status === "archived" ? "completed" : "active",
   };
