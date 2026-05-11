@@ -7,14 +7,15 @@ import imgTeacher from "@/shared/assets/7177166acba64f35340faa0b6f56005880826629
 import imgSettings from "@/shared/assets/8a7431ce52feae07a5df11170b187a4a3d8ac9c2.png";
 import imgPlatform from "@/shared/assets/eb9aaf49f5066472e938555cd5aa00e6418c7a26.png";
 
-import { useAuth } from "@/entities/user";
+import { defaultRouteForRole, useAuth } from "@/entities/user";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
 export default function LandingPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, session } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dashboardHref = defaultRouteForRole(session?.role);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,7 +36,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <button
-                onClick={() => void navigate("/student/dashboard")}
+                onClick={() => void navigate(dashboardHref)}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.openDashboard")}
@@ -67,7 +68,7 @@ export default function LandingPage() {
               <div className="flex flex-col tablet:flex-row items-start tablet:items-center gap-3">
                 {isAuthenticated ? (
                   <button
-                    onClick={() => void navigate("/student/dashboard")}
+                    onClick={() => void navigate(dashboardHref)}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   >
                     {t("page.landing.openDashboard")}
@@ -224,7 +225,7 @@ export default function LandingPage() {
             <div className="flex flex-col tablet:flex-row items-center justify-center gap-3">
               {isAuthenticated ? (
                 <button
-                  onClick={() => void navigate("/student/dashboard")}
+                  onClick={() => void navigate(dashboardHref)}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 text-base h-11"
                 >
                   {t("page.landing.openDashboard")}

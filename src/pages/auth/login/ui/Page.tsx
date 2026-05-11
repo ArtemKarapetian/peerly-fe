@@ -9,7 +9,7 @@ import { isFlagEnabled } from "@/shared/lib/feature-flags";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
-import { useAuth } from "@/entities/user";
+import { defaultRouteForRole, useAuth } from "@/entities/user";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
@@ -60,8 +60,7 @@ export default function LoginPage() {
         email: email.trim().toLowerCase(),
         password,
       });
-      const target = session.role === "Teacher" ? "/teacher/courses" : "/student/courses";
-      void navigate(target);
+      void navigate(defaultRouteForRole(session.role));
     } catch (err) {
       setError(getLoginErrorMessage(err, t));
     } finally {
