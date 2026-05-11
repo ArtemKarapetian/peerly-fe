@@ -10,18 +10,8 @@ interface AuthContextType {
   session: Session | null;
   /** Kept for backwards compatibility with UI that reads `user`. */
   user: { id: string; name: string; email: string } | null;
-  login: (input: {
-    email: string;
-    password: string;
-    role?: Role;
-    userName?: string;
-  }) => Promise<Session>;
-  register: (input: {
-    email: string;
-    password: string;
-    userName: string;
-    role: Role;
-  }) => Promise<void>;
+  login: (input: { email: string; password: string }) => Promise<Session>;
+  register: (input: { email: string; password: string; name: string; role: Role }) => Promise<void>;
   logout: () => Promise<void>;
   /** Dev-only role swap; backend still enforces JWT claims. */
   switchRoleDev: (role: Role) => void;
@@ -36,30 +26,25 @@ function sessionToUser(s: Session | null) {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSessionState] = useState<Session | null>(() => getSession());
 
-  const login = useCallback<AuthContextType["login"]>(
-    async ({ email, password, role, userName }) => {
-      const resolvedRole: Role = role ?? getSession()?.role ?? "Student";
-
-      const res = await authApi.login({ email, password });
-      const next: Session = {
-        userId: String(res.userId),
-        userName: userName?.trim() || email.split("@")[0],
-        email,
-        role: resolvedRole,
-      };
-      setSession(next);
-      setSessionState(next);
-      return next;
-    },
-    [],
-  );
+  const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
+    const res = await authApi.login({ email, password });
+    const next: Session = {
+      userId: String(res.userId),
+      userName: email.split("@")[0],
+      email,
+      role: res.role,
+    };
+    setSession(next);
+    setSessionState(next);
+    return next;
+  }, []);
 
   const register = useCallback<AuthContextType["register"]>(
-    async ({ email, password, userName, role }) => {
-      const res = await authApi.register({ email, password, userName, role });
+    async ({ email, password, name, role }) => {
+      const res = await authApi.register({ email, password, name, role });
       const next: Session = {
         userId: String(res.userId),
-        userName,
+        userName: name,
         email,
         role,
       };

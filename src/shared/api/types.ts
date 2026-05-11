@@ -19,12 +19,13 @@ export interface LoginRequestBody {
 
 export interface LoginResponseBody {
   userId: Id;
+  role: Role;
 }
 
 export interface RegisterRequestBody {
   email: string;
   password: string;
-  userName: string;
+  name: string;
   role: Role;
 }
 
