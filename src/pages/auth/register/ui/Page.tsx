@@ -8,7 +8,7 @@ import { ApiError } from "@/shared/api";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
-import { useAuth } from "@/entities/user";
+import { defaultRouteForRole, useAuth } from "@/entities/user";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
@@ -133,8 +133,7 @@ export default function RegisterPage() {
       });
 
       toast.success(t("auth.accountCreated"), { description: t("auth.canLoginNow") });
-      const target = role === "Teacher" ? "/teacher/courses" : "/student/courses";
-      setTimeout(() => void navigate(target), 500);
+      setTimeout(() => void navigate(defaultRouteForRole(role)), 500);
     } catch (err) {
       const detail =
         err instanceof ApiError ? (err.body as { detail?: string } | null)?.detail : undefined;

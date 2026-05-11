@@ -1,13 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-import { useAuth } from "@/entities/user";
+import { defaultRouteForRole, useAuth } from "@/entities/user";
 
-/** Redirects authenticated users away from login/register pages. */
 export function PublicOnlyRoute() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, session } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to="/student/dashboard" replace />;
+    return <Navigate to={defaultRouteForRole(session?.role)} replace />;
   }
 
   return <Outlet />;
