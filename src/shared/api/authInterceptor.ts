@@ -2,13 +2,14 @@
 
 import { TOKEN_REFRESH_PATH } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
-import { appNavigate } from "@/shared/lib/navigate";
 
 import { clearSession } from "./session";
 
 let refreshPromise: Promise<boolean> | null = null;
+let refreshFailed = false;
 
 async function tryRefreshToken(): Promise<boolean> {
+  if (refreshFailed) return false;
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
@@ -30,12 +31,19 @@ async function tryRefreshToken(): Promise<boolean> {
   return refreshPromise;
 }
 
-// true → можно повторить исходный запрос; false → перекинули на /login
+let loggingOut = false;
+function forceLogout(): void {
+  if (loggingOut) return;
+  loggingOut = true;
+  clearSession();
+  window.location.replace("/login");
+}
+
 export async function handleUnauthorized(): Promise<boolean> {
   const refreshed = await tryRefreshToken();
   if (refreshed) return true;
 
-  clearSession();
-  appNavigate("/login");
+  refreshFailed = true;
+  forceLogout();
   return false;
 }
