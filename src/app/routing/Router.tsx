@@ -99,30 +99,35 @@ export function Router() {
 
         <Route element={<ProtectedRoute />}>
           {/* Student */}
-          <Route path="/student/dashboard" element={<DashboardPage />} />
-          <Route path="/student/courses" element={<CoursesListPage />} />
-          <Route path="/student/courses/:courseId" element={<CoursePage />} />
-          <Route path="/student/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
-          <Route
-            path="/student/courses/:courseId/tasks/:taskId/submit"
-            element={<SubmitWorkPage />}
-          />
-          <Route
-            path="/student/courses/:courseId/tasks/:taskId/submissions"
-            element={<SubmissionsPage />}
-          />
-          <Route path="/student/reviews" element={<ReviewsInboxPage />} />
-          <Route path="/student/reviews/received" element={<ReceivedReviewsPage />} />
-          <Route path="/student/reviews/:reviewId" element={<ReviewPage />} />
-          <Route path="/student/gradebook" element={<GradebookPage />} />
+          <Route element={<RoleRoute allow={["Student"]} />}>
+            <Route path="/student/dashboard" element={<DashboardPage />} />
+            <Route path="/student/courses" element={<CoursesListPage />} />
+            <Route path="/student/courses/:courseId" element={<CoursePage />} />
+            <Route path="/student/courses/:courseId/tasks/:taskId" element={<TaskPage />} />
+            <Route
+              path="/student/courses/:courseId/tasks/:taskId/submit"
+              element={<SubmitWorkPage />}
+            />
+            <Route
+              path="/student/courses/:courseId/tasks/:taskId/submissions"
+              element={<SubmissionsPage />}
+            />
+            <Route path="/student/reviews" element={<ReviewsInboxPage />} />
+            <Route path="/student/reviews/received" element={<ReceivedReviewsPage />} />
+            <Route path="/student/reviews/:reviewId" element={<ReviewPage />} />
+            <Route path="/student/gradebook" element={<GradebookPage />} />
 
-          {/* Legacy student paths → /student/* (transitional redirects) */}
-          <Route path="/dashboard" element={<Navigate to="/student/dashboard" replace />} />
-          <Route path="/courses" element={<Navigate to="/student/courses" replace />} />
-          <Route path="/courses/:courseId/*" element={<Navigate to="/student/courses" replace />} />
-          <Route path="/reviews" element={<Navigate to="/student/reviews" replace />} />
-          <Route path="/reviews/*" element={<Navigate to="/student/reviews" replace />} />
-          <Route path="/gradebook" element={<Navigate to="/student/gradebook" replace />} />
+            {/* Legacy student paths → /student/* (transitional redirects) */}
+            <Route path="/dashboard" element={<Navigate to="/student/dashboard" replace />} />
+            <Route path="/courses" element={<Navigate to="/student/courses" replace />} />
+            <Route
+              path="/courses/:courseId/*"
+              element={<Navigate to="/student/courses" replace />}
+            />
+            <Route path="/reviews" element={<Navigate to="/student/reviews" replace />} />
+            <Route path="/reviews/*" element={<Navigate to="/student/reviews" replace />} />
+            <Route path="/gradebook" element={<Navigate to="/student/gradebook" replace />} />
+          </Route>
 
           {/* Profile / Settings */}
           <Route path="/profile" element={<ProfilePage />} />

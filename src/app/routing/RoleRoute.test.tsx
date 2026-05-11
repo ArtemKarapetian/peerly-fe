@@ -54,17 +54,23 @@ describe("RoleRoute", () => {
     expect(screen.getByText("rubrics page")).toBeInTheDocument();
   });
 
-  it("redirects to /403 when role is not in allow list", () => {
+  it("redirects to current role's home when role is not in allow list", () => {
     setSessionRole("Student");
 
-    renderAt(
-      "/teacher/rubrics",
-      <Route element={<RoleRoute allow={["Teacher"]} />}>
-        <Route path="/teacher/rubrics" element={<div>rubrics page</div>} />
-      </Route>,
+    render(
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/teacher/rubrics"]}>
+          <Routes>
+            <Route element={<RoleRoute allow={["Teacher"]} />}>
+              <Route path="/teacher/rubrics" element={<div>rubrics page</div>} />
+            </Route>
+            <Route path="/student/dashboard" element={<div>student home</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>,
     );
 
-    expect(screen.getByText("forbidden")).toBeInTheDocument();
+    expect(screen.getByText("student home")).toBeInTheDocument();
     expect(screen.queryByText("rubrics page")).not.toBeInTheDocument();
   });
 
