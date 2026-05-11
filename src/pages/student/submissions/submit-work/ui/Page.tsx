@@ -1,237 +1,150 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Download, FileText, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { FilePreviewCard } from "@/features/submission/submit-work/ui/FilePreviewCard";
-import type { UploadedFile } from "@/features/submission/submit-work/ui/FilePreviewCard";
+import { useAssignment } from "@/entities/assignment";
+import { useCourse } from "@/entities/course";
+import { storageApi } from "@/entities/storage";
+import { useMySubmission, workRepo } from "@/entities/work";
+
 import { FileUploadArea } from "@/features/submission/submit-work/ui/FileUploadArea";
 import { TaskRulesCard } from "@/features/submission/submit-work/ui/TaskRulesCard";
 import type { TaskRules } from "@/features/submission/submit-work/ui/TaskRulesCard";
-import { ValidationChecks } from "@/features/submission/submit-work/ui/ValidationChecks";
-import type { ValidationCheck } from "@/features/submission/submit-work/ui/ValidationChecks";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+
+function formatFileSize(bytes: number, t: (k: string) => string): string {
+  if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
+}
+
+function formatDeadline(d: Date | undefined, locale: string): string {
+  if (!d) return "—";
+  return d.toLocaleString(locale, {
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 export default function SubmitWorkPage() {
   const { courseId = "", taskId = "" } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const CRUMBS = getCrumbs();
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
-  const [uploadError, setUploadError] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [comment, setComment] = useState("");
-  const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>([]);
+  const queryClient = useQueryClient();
 
-  // TODO заменить на данные из API, когда появятся task/submission репо
-  const courseName = t("student.submissions.mockCourseName");
-  const taskTitle = t("student.submissions.mockTaskTitle");
+  const { data: course } = useCourse(courseId);
+  const { data: hw } = useAssignment(taskId);
+  const { data: submission, isLoading: subLoading } = useMySubmission(taskId);
+
+  const [comment, setComment] = useState("");
+  const [uploadError, setUploadError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [syncedId, setSyncedId] = useState<string | null>(null);
+  const [now] = useState(() => Date.now());
+
+  // Sync the comment field once when the server's submission first loads
+  // (or its id changes). Guarded so it doesn't clobber user edits.
+  if (submission && submission.id !== syncedId) {
+    setSyncedId(submission.id);
+    setComment(submission.content);
+  }
+
+  const refreshSubmission = () =>
+    queryClient.invalidateQueries({ queryKey: ["submissions", "mine", taskId] });
+
+  // Lazily create the submission on first action that needs an id.
+  const ensureSubmission = async (): Promise<string> => {
+    if (submission?.id) return submission.id;
+    const { submissionId } = await workRepo.create(taskId, comment);
+    await refreshSubmission();
+    return submissionId;
+  };
+
+  const uploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const submissionId = await ensureSubmission();
+      await storageApi.upload(file, { kind: "submission", submissionId });
+    },
+    onSuccess: () => refreshSubmission(),
+    onError: () => setActionError(t("page.submitWork.uploadError")),
+  });
+
+  const deleteFileMutation = useMutation({
+    mutationFn: async (fileId: string) => {
+      if (!submission?.id) return;
+      await storageApi.deleteSubmissionFile(submission.id, fileId);
+    },
+    onSuccess: () => refreshSubmission(),
+    onError: () => setActionError(t("page.submitWork.deleteFileError")),
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      if (submission?.id) {
+        await workRepo.update(submission.id, comment);
+      } else {
+        await workRepo.create(taskId, comment);
+      }
+    },
+    onSuccess: async () => {
+      await refreshSubmission();
+      alert(t("page.submitWork.draftSaved"));
+    },
+    onError: () => setActionError(t("page.submitWork.saveError")),
+  });
+
+  const courseName = course?.title ?? "";
+  const taskTitle = hw?.title ?? "";
+  const dueDate = hw?.dueDate;
+  const isDeadlinePassed = dueDate ? dueDate.getTime() < now : false;
 
   const taskRules: TaskRules = {
-    deadline: t("student.task.mockDeadlineFull"),
-    isDeadlinePassed: false,
-    allowedResubmissions: 2,
-    currentVersion: 0,
+    deadline: formatDeadline(dueDate, i18n.language),
+    isDeadlinePassed,
     latePolicy: t("page.submitWork.latePolicy"),
   };
 
-  const acceptedFormats = [".zip", ".pdf", ".jpg", ".png"];
-  const maxFileSize = 10; // МБ
+  const acceptedFormats = [".zip", ".pdf", ".jpg", ".jpeg", ".png", ".doc", ".docx", ".txt"];
+  const maxFileSize = 10;
+
+  const isBusy = uploadMutation.isPending || deleteFileMutation.isPending || saveMutation.isPending;
+  const files = submission?.files ?? [];
 
   const handleFileSelected = (file: File) => {
-    const newFile: UploadedFile = {
-      id: Date.now().toString(),
-      name: file.name,
-      size: file.size,
-      uploadedAt: new Date().toLocaleString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-        day: "numeric",
-        month: "long",
-      }),
-    };
-
-    setUploadedFile(newFile);
-
-    // имитация прогона проверок после загрузки — статусы меняем по таймерам, чтобы было визуально
-    setTimeout(() => {
-      setValidationChecks([
-        {
-          id: "1",
-          name: t("page.submitWork.plagiarismCheck"),
-          description: t("page.submitWork.plagiarismCheckDesc"),
-          status: "queued",
-        },
-        {
-          id: "2",
-          name: t("page.submitWork.codeLinting"),
-          description: t("page.submitWork.codeLintingDesc"),
-          status: "not-started",
-        },
-        {
-          id: "3",
-          name: t("page.submitWork.fileFormat"),
-          description: t("page.submitWork.fileFormatDesc"),
-          status: "not-started",
-        },
-        {
-          id: "4",
-          name: t("page.submitWork.anonymization"),
-          description: t("page.submitWork.anonymizationDesc"),
-          status: "not-started",
-        },
-      ]);
-
-      setTimeout(() => {
-        setValidationChecks((prev) =>
-          prev.map((check, i) => (i === 0 ? { ...check, status: "running" } : check)),
-        );
-      }, 500);
-
-      setTimeout(() => {
-        setValidationChecks((prev) =>
-          prev.map((check, i) =>
-            i === 0
-              ? { ...check, status: "passed", message: t("page.submitWork.noMatchesFound") }
-              : i === 1
-                ? { ...check, status: "running" }
-                : check,
-          ),
-        );
-      }, 2000);
-
-      setTimeout(() => {
-        setValidationChecks((prev) =>
-          prev.map((check, i) =>
-            i === 1
-              ? { ...check, status: "warning", message: t("page.submitWork.styleWarnings") }
-              : i === 2
-                ? { ...check, status: "running" }
-                : check,
-          ),
-        );
-      }, 3500);
-
-      setTimeout(() => {
-        setValidationChecks((prev) =>
-          prev.map((check, i) =>
-            i === 2
-              ? { ...check, status: "passed", message: t("page.submitWork.allFilesOk") }
-              : i === 3
-                ? { ...check, status: "running" }
-                : check,
-          ),
-        );
-      }, 5000);
-
-      setTimeout(() => {
-        setValidationChecks((prev) =>
-          prev.map((check, i) =>
-            i === 3
-              ? { ...check, status: "passed", message: t("page.submitWork.noPersonalData") }
-              : check,
-          ),
-        );
-      }, 6000);
-    }, 100);
+    setActionError("");
+    uploadMutation.mutate(file);
   };
 
-  const handleReplace = () => {
-    setUploadedFile(null);
-    setValidationChecks([]);
-    setUploadError("");
+  const handleDeleteFile = (fileId: string) => {
+    if (!confirm(t("page.submitWork.deleteFileConfirm"))) return;
+    setActionError("");
+    deleteFileMutation.mutate(fileId);
   };
 
-  const handleDownload = () => {
-    console.log("Download file:", uploadedFile?.name);
-    alert(t("page.submitWork.downloadFile", { name: uploadedFile?.name }));
-  };
-
-  const handleDelete = () => {
-    if (confirm(t("page.submitWork.deleteFileConfirm"))) {
-      setUploadedFile(null);
-      setValidationChecks([]);
-      setUploadError("");
+  const handleDownloadFile = async (fileId: string) => {
+    try {
+      const url = await storageApi.getDownloadUrl(fileId);
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch {
+      setActionError(t("page.submitWork.downloadError"));
     }
   };
 
-  const handleSaveDraft = () => {
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-      alert(t("page.submitWork.draftSaved"));
-    }, 1000);
+  const handleSave = () => {
+    if (isDeadlinePassed && !confirm(t("page.submitWork.deadlineConfirm"))) return;
+    setActionError("");
+    saveMutation.mutate();
   };
-
-  const handleSubmit = () => {
-    if (taskRules.isDeadlinePassed) {
-      const confirmSubmit = confirm(t("page.submitWork.deadlineConfirm"));
-      if (!confirmSubmit) return;
-    }
-
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
-  };
-
-  if (isSuccess) {
-    return (
-      <AppShell title={t("page.submitWork.title")}>
-        <Breadcrumbs
-          items={[
-            CRUMBS.courses,
-            { label: courseName, href: ROUTES.course(courseId) },
-            { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-            { label: t("page.submitWork.breadcrumbSubmit") },
-          ]}
-        />
-
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-success-light border-2 border-success rounded-[20px] p-8 max-w-[480px] text-center">
-            <div className="mb-4">
-              <div className="w-16 h-16 bg-success-light rounded-full mx-auto flex items-center justify-center">
-                <span className="text-[32px]">✓</span>
-              </div>
-            </div>
-            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
-              {t("page.submitWork.successTitle")}
-            </h2>
-            <p className="text-[16px] text-muted-foreground leading-[1.5] mb-6">
-              {t("page.submitWork.successDesc")}
-            </p>
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={() => {
-                  void navigate(`/student/courses/${courseId}/tasks/${taskId}/submissions`);
-                }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
-              >
-                {t("page.submitWork.goToVersionHistory")}
-              </button>
-              <button
-                onClick={() => {
-                  void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
-                }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card border-2 border-border text-foreground rounded-[12px] hover:border-brand-primary-lighter hover:bg-muted transition-colors text-[15px] font-medium"
-              >
-                {t("page.submitWork.backToTask")}
-              </button>
-            </div>
-          </div>
-        </div>
-      </AppShell>
-    );
-  }
 
   return (
     <AppShell title={t("page.submitWork.title")}>
@@ -261,29 +174,52 @@ export default function SubmitWorkPage() {
               acceptedFormats={acceptedFormats}
               maxSizeMB={maxFileSize}
               onFileSelected={handleFileSelected}
-              onUploadStart={() => setIsUploading(true)}
-              onUploadProgress={(progress) => setUploadProgress(progress)}
-              onUploadComplete={() => setIsUploading(false)}
-              onUploadError={(error) => setUploadError(error)}
-              isUploading={isUploading}
-              uploadProgress={uploadProgress}
+              onUploadError={(err) => setUploadError(err)}
+              isUploading={uploadMutation.isPending || subLoading}
               error={uploadError}
-              disabled={isSubmitting}
+              disabled={isBusy}
             />
           </section>
 
-          {uploadedFile && (
+          {files.length > 0 && (
             <section className="bg-muted rounded-[20px] p-6">
               <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
                 {t("page.submitWork.uploadedFiles")}
               </h2>
-              <FilePreviewCard
-                file={uploadedFile}
-                onReplace={handleReplace}
-                onDownload={handleDownload}
-                onDelete={handleDelete}
-                disabled={isSubmitting}
-              />
+              <ul className="space-y-2">
+                {files.map((file) => (
+                  <li
+                    key={file.id}
+                    className="flex items-center gap-3 bg-card border border-border rounded-[12px] px-3 py-2"
+                  >
+                    <FileText className="size-5 text-brand-primary shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-medium text-foreground truncate">
+                        {file.name}
+                      </div>
+                      <div className="text-[12px] text-muted-foreground">
+                        {formatFileSize(file.size, t)}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => void handleDownloadFile(file.id)}
+                      disabled={isBusy}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-surface-hover rounded-[8px] text-[13px] font-medium transition-colors disabled:opacity-50"
+                    >
+                      <Download className="size-4" />
+                      {t("common.download")}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteFile(file.id)}
+                      disabled={isBusy}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-error-light hover:bg-error-light text-destructive rounded-[8px] text-[13px] font-medium transition-colors disabled:opacity-50"
+                    >
+                      <Trash2 className="size-4" />
+                      {t("common.delete")}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
 
@@ -299,44 +235,34 @@ export default function SubmitWorkPage() {
               placeholder={t("page.submitWork.commentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              disabled={isBusy}
             />
           </section>
 
           <section className="bg-card rounded-[20px] p-6 border-2 border-border">
             <div className="flex flex-col tablet:flex-row gap-3">
               <button
-                onClick={handleSaveDraft}
-                disabled={!uploadedFile || isSaving || isSubmitting}
+                onClick={() => void navigate(ROUTES.submissions(courseId, taskId))}
+                disabled={isBusy}
                 className="flex-1 px-6 py-3 bg-card border-2 border-border text-foreground rounded-[12px] text-[16px] font-medium hover:border-brand-primary-lighter hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isSaving ? t("page.submitWork.saving") : t("page.submitWork.saveDraft")}
+                {t("page.submitWork.goToMySubmission")}
               </button>
               <button
-                onClick={handleSubmit}
-                disabled={!uploadedFile || isSaving || isSubmitting}
+                onClick={handleSave}
+                disabled={isBusy}
                 className="flex-1 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] text-[16px] font-medium hover:bg-brand-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isSubmitting
-                  ? t("page.submitWork.submitting")
-                  : taskRules.currentVersion > 0
-                    ? t("page.submitWork.submitWorkVersioned", {
-                        version: taskRules.currentVersion + 1,
-                      })
-                    : t("page.submitWork.submitWork")}
+                {saveMutation.isPending
+                  ? t("page.submitWork.saving")
+                  : t("page.submitWork.saveDraft")}
               </button>
             </div>
 
-            {!uploadedFile && (
-              <p className="text-[13px] text-muted-foreground mt-3 text-center">
-                {t("page.submitWork.uploadFileHint")}
-              </p>
+            {actionError && (
+              <p className="text-[13px] text-destructive mt-3 text-center">{actionError}</p>
             )}
-            {taskRules.currentVersion > 0 && uploadedFile && (
-              <p className="text-[13px] text-brand-primary mt-3 text-center">
-                {t("page.submitWork.newVersionHint", { version: taskRules.currentVersion + 1 })}
-              </p>
-            )}
-            {taskRules.isDeadlinePassed && (
+            {isDeadlinePassed && (
               <p className="text-[13px] text-error mt-3 text-center font-medium">
                 ⚠️ {t("page.submitWork.deadlinePassedHint")}
               </p>
@@ -351,13 +277,6 @@ export default function SubmitWorkPage() {
                 {t("page.submitWork.taskRules")}
               </h2>
               <TaskRulesCard rules={taskRules} />
-            </section>
-
-            <section className="bg-muted rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
-                {t("page.submitWork.validationChecks")}
-              </h2>
-              <ValidationChecks checks={validationChecks} />
             </section>
           </div>
         </div>
