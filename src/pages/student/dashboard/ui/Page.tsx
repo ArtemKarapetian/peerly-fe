@@ -100,22 +100,18 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="task-layout">
-        <div className="space-y-4">
-          <SectionCard title={t("student.dashboard.toDo")} noPadding>
-            {isLoading ? (
-              <p className="px-5 py-6 text-[14px] text-text-tertiary">{t("common.loading")}</p>
-            ) : (
-              <DeadlinesList
-                items={deadlines}
-                onTaskClick={(courseId, taskId) => {
-                  void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
-                }}
-              />
-            )}
-          </SectionCard>
-        </div>
-      </div>
+      <SectionCard title={t("student.dashboard.toDo")} noPadding>
+        {isLoading ? (
+          <p className="px-5 py-6 text-[14px] text-text-tertiary">{t("common.loading")}</p>
+        ) : (
+          <DeadlinesList
+            items={deadlines}
+            onTaskClick={(courseId, taskId) => {
+              void navigate(`/student/courses/${courseId}/tasks/${taskId}`);
+            }}
+          />
+        )}
+      </SectionCard>
     </AppShell>
   );
 }

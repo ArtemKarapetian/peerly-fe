@@ -55,13 +55,14 @@ export default function SubmitWorkPage() {
 
   if (submission && submission.id !== syncedId) {
     setSyncedId(submission.id);
-    setComment(submission.content.trim() === "" ? "" : submission.content);
+    const incoming = submission.content.trim();
+    setComment(incoming === "" || incoming === "—" ? "" : submission.content);
   }
 
   const refreshSubmission = () =>
     queryClient.invalidateQueries({ queryKey: ["submissions", "mine", taskId] });
 
-  const commentForBe = (text: string) => (text.trim() === "" ? " " : text);
+  const commentForBe = (text: string) => (text.trim() === "" ? "—" : text);
 
   const ensureSubmission = async (): Promise<string> => {
     if (submission?.id) return submission.id;

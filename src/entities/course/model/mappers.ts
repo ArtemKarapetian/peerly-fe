@@ -1,11 +1,15 @@
-import type { CourseDto, CourseStatus } from "@/shared/api";
+import type { CourseDto, CourseStatus, CourseTeacherDto } from "@/shared/api";
 
-import type { DemoCourse } from "./types";
+import type { CourseTeacher, DemoCourse } from "./types";
 
 const ARCHIVED_STATUSES: CourseStatus[] = ["canceled", "deleted", "finished"];
 
 export function isArchivedStatus(status: CourseStatus): boolean {
   return ARCHIVED_STATUSES.includes(status);
+}
+
+export function mapDtoToTeacher(t: CourseTeacherDto): CourseTeacher {
+  return { id: String(t.teacherId), name: t.name, email: t.email };
 }
 
 export function mapDtoToCourse(
@@ -19,7 +23,7 @@ export function mapDtoToCourse(
     title: dto.name,
     description: dto.description ?? "",
     code: "",
-    teacherId: "",
+    teachers: (dto.teachers ?? []).map(mapDtoToTeacher),
     enrollmentCount: counts.studentCount,
     homeworkCount: counts.homeworkCount,
     status: archived ? "archived" : "active",
