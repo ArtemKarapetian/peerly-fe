@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { getSession } from "@/shared/api";
+
 export function useProfileForm() {
   const [isEditing, setIsEditing] = useState(false);
+  const session = getSession();
   const [formData, setFormData] = useState({
-    firstName: "Иван",
-    lastName: "Петров",
-    username: "ivan.petrov",
+    name: session?.userName ?? "",
+    email: session?.email ?? "",
   });
   const [showSuccess, setShowSuccess] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

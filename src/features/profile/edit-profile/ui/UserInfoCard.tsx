@@ -71,7 +71,7 @@ export function UserInfoCard() {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               <h3 className="text-[24px] font-medium text-foreground tracking-[-0.5px]">
-                {formData.firstName} {formData.lastName}
+                {formData.name || t("widget.profileDropdown.defaultUser")}
               </h3>
               <span
                 className={`inline-flex px-3 py-1 rounded-[8px] text-[13px] font-medium ${getRoleBadgeColor(currentRole)}`}
@@ -79,60 +79,37 @@ export function UserInfoCard() {
                 {getRoleLabelKey(currentRole) ? t(getRoleLabelKey(currentRole)) : currentRole}
               </span>
             </div>
-            <p className="text-[15px] text-muted-foreground">@{formData.username}</p>
+            <p className="text-[15px] text-muted-foreground">{formData.email}</p>
           </div>
         </div>
 
         <div className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                {t("feature.profile.firstName")}
-              </label>
-              <input
-                type="text"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                disabled={!isEditing}
-                className={`w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground transition-colors ${
-                  isEditing
-                    ? "bg-card focus:border-accent focus:outline-none"
-                    : "bg-muted text-muted-foreground cursor-not-allowed"
-                }`}
-              />
-            </div>
-            <div>
-              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                {t("feature.profile.lastName")}
-              </label>
-              <input
-                type="text"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                disabled={!isEditing}
-                className={`w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground transition-colors ${
-                  isEditing
-                    ? "bg-card focus:border-accent focus:outline-none"
-                    : "bg-muted text-muted-foreground cursor-not-allowed"
-                }`}
-              />
-            </div>
-          </div>
-
           <div>
             <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              {t("feature.profile.username")}
+              {t("feature.profile.name")}
             </label>
             <input
               type="text"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               disabled={!isEditing}
               className={`w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground transition-colors ${
                 isEditing
                   ? "bg-card focus:border-accent focus:outline-none"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
+            />
+          </div>
+
+          <div>
+            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+              {t("feature.profile.email")}
+            </label>
+            <input
+              type="email"
+              value={formData.email}
+              disabled
+              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-muted text-muted-foreground cursor-not-allowed"
             />
           </div>
         </div>

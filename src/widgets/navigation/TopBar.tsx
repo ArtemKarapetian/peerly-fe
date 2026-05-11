@@ -23,7 +23,7 @@ export function TopBar({ onMenuClick, title = "Peerly" }: TopBarProps) {
         <h1 className="text-lg font-medium text-[--text-primary]">{title}</h1>
       </div>
       <div className="flex items-center">
-        <ProfileDropdown userName={t("roles.student")} />
+        <ProfileDropdown />
       </div>
     </div>
   );
