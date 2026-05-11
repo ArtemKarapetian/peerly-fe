@@ -87,6 +87,16 @@ export const workHttpRepo = {
     }
   },
 
+  /** One request to /student/homeworks/{id}, returns just the submission id if any. */
+  getMineSubmissionId: async (homeworkId: string): Promise<string | null> => {
+    try {
+      const res = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
+      return res.submittedHomeworkId ? String(res.submittedHomeworkId) : null;
+    } catch {
+      return null;
+    }
+  },
+
   getById: async (submissionId: string): Promise<DemoSubmission | null> => {
     try {
       if (getSession()?.role === "Teacher") {

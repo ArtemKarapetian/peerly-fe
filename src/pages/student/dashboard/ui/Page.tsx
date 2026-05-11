@@ -69,8 +69,8 @@ export default function DashboardPage() {
 
   const submissionQueries = useQueries({
     queries: visibleAssignments.map((a) => ({
-      queryKey: ["submissions", "mine", a.id] as const,
-      queryFn: () => workRepo.getMineForHomework(a.id),
+      queryKey: ["submissions", "mine-id", a.id] as const,
+      queryFn: () => workRepo.getMineSubmissionId(a.id),
     })),
   });
 
