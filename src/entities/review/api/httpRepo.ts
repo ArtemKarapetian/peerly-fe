@@ -34,8 +34,8 @@ export interface SubmissionToReview {
   id: string;
   comment: string;
   files: { id: string; name: string; size: number }[];
-  studentId: string;
-  studentName: string;
+  checklist: string;
+  submittedReviewId: string | null;
 }
 
 export const reviewHttpRepo = {
@@ -103,11 +103,13 @@ export const reviewHttpRepo = {
   getAssignedSubmission: async (submissionId: string): Promise<SubmissionToReview> => {
     const res = await http.get<GetAssignedReviewResponse>(`/submissions/${submissionId}/reviews`);
     return {
-      id: String(res.submission.id),
+      id: String(res.submission.submittedHomeworkId),
       comment: res.submission.comment,
       files: res.submission.files.map(fileFromDto),
-      studentId: String(res.studentId),
-      studentName: res.studentName,
+      checklist: res.submission.checklist,
+      submittedReviewId: res.submission.submittedReviewId
+        ? String(res.submission.submittedReviewId)
+        : null,
     };
   },
 

@@ -2626,7 +2626,14 @@
       "requiredField": "Обязательное поле",
       "commentRequired": "Комментарий обязателен",
       "minChars": "Минимум {{count}} символов",
-      "downloadFile": "Скачивание файла {{fileId}}"
+      "downloadFile": "Скачивание файла {{fileId}}",
+      "workTitle": "Работа на проверку",
+      "studentComment": "Комментарий автора",
+      "noStudentComment": "Автор не оставил комментарий",
+      "files": "Файлы",
+      "progressTitle": "Прогресс",
+      "progressCriteria": "Критериев заполнено",
+      "progressComment": "Длина комментария"
     },
     "submitWork": {
       "title": "Отправка работы",

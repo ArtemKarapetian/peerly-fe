@@ -257,9 +257,11 @@ export interface TeacherSubmittedReviewDto {
 }
 
 export interface SubmissionForReviewDto {
-  id: Id;
+  submittedHomeworkId: Id;
   comment: string;
   files: FileDto[];
+  checklist: string;
+  submittedReviewId?: Id;
 }
 
 export interface GetSubmittedHomeworkResponse {
@@ -301,8 +303,6 @@ export interface GetSubmittedReviewResponse {
 
 export interface GetAssignedReviewResponse {
   submission: SubmissionForReviewDto;
-  studentId: Id;
-  studentName: string;
 }
 
 export interface CreateSubmittedReviewRequestBody {

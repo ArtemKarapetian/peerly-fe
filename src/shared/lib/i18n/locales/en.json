@@ -2004,7 +2004,14 @@
       "requiredField": "Required field",
       "commentRequired": "Comment is required",
       "minChars": "Minimum {{count}} characters",
-      "downloadFile": "Downloading file {{fileId}}"
+      "downloadFile": "Downloading file {{fileId}}",
+      "workTitle": "Work under review",
+      "studentComment": "Author's note",
+      "noStudentComment": "Author did not leave a comment",
+      "files": "Files",
+      "progressTitle": "Progress",
+      "progressCriteria": "Criteria filled",
+      "progressComment": "Comment length"
     },
     "submitWork": {
       "title": "Submit Work",
