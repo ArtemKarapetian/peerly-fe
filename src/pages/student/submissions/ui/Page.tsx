@@ -1,105 +1,95 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Download, Edit, FileText, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { type GetSubmittedHomeworkResponse, http } from "@/shared/api";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { VersionTimeline } from "@/entities/work";
-import type { Version } from "@/entities/work";
-
-import { ComparisonView } from "@/features/submission/compare";
+import { useAssignment } from "@/entities/assignment";
+import { useCourse } from "@/entities/course";
+import { storageApi } from "@/entities/storage";
+import { useMySubmission } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-import { mockVersions } from "../model/mockVersions";
+function formatFileSize(bytes: number, t: (k: string) => string): string {
+  if (bytes < 1024) return `${bytes} ${t("entity.work.bytes")}`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${t("entity.work.kb")}`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
+}
+
+async function downloadFile(fileId: string, errorMsg: string) {
+  try {
+    const url = await storageApi.getDownloadUrl(fileId);
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch {
+    alert(errorMsg);
+  }
+}
 
 export default function SubmissionsPage() {
   const { courseId = "", taskId = "" } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
-  const [comparisonMode, setComparisonMode] = useState(false);
-  const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
-  // TODO заменить на данные из API, когда появится submissionRepo
-  const courseName = t("student.submissions.mockCourseName");
-  const taskTitle = t("student.submissions.mockTaskTitle");
-  const allowResubmissions = true;
-  const maxSubmissions = 3; // 0 = без лимита
+  const { data: course } = useCourse(courseId);
+  const { data: hw } = useAssignment(taskId);
+  const { data: submission, isLoading, isError } = useMySubmission(taskId);
 
-  const [versions] = useState<Version[]>(mockVersions);
+  // Reviews + finalMark are only available via the per-submission endpoint.
+  const submissionDetail = useQuery({
+    queryKey: ["submissions", submission?.id, "detail"],
+    enabled: !!submission?.id,
+    queryFn: () => http.get<GetSubmittedHomeworkResponse>(`/submissions/${submission!.id}`),
+  });
 
-  const handleToggleSelect = (versionId: string) => {
-    setSelectedVersions((prev) => {
-      if (prev.includes(versionId)) {
-        return prev.filter((id) => id !== versionId);
-      }
-      if (prev.length >= 2) {
-        // в сравнении максимум две версии — выкидываем самую старую и добавляем новую
-        return [prev[1], versionId];
-      }
-      return [...prev, versionId];
-    });
-  };
+  const courseName = course?.title ?? "";
+  const taskTitle = hw?.title ?? "";
+  const reviews = submissionDetail.data?.submittedReviews ?? [];
+  const finalMark = submissionDetail.data?.finalMark ?? null;
 
-  const getSelectedVersionsObjects = (): [Version, Version] | null => {
-    if (selectedVersions.length !== 2) return null;
-    const v1 = versions.find((v) => v.id === selectedVersions[0]);
-    const v2 = versions.find((v) => v.id === selectedVersions[1]);
-    return v1 && v2 ? [v1, v2] : null;
-  };
+  const breadcrumbs = [
+    CRUMBS.courses,
+    { label: courseName, href: ROUTES.course(courseId) },
+    { label: taskTitle, href: ROUTES.task(courseId, taskId) },
+    { label: t("student.submissions.breadcrumb") },
+  ];
 
-  const selectedVersionsObjects = getSelectedVersionsObjects();
-
-  const handleDownload = (versionId: string) => {
-    console.log("Download version:", versionId);
-    alert(`${t("student.submissions.downloadingVersion")} ${versionId}`);
-  };
-
-  const handleViewReports = (versionId: string) => {
-    console.log("View reports for version:", versionId);
-    alert(`${t("student.submissions.viewingReports")} ${versionId}`);
-  };
-
-  const handleMakeCurrent = (versionId: string) => {
-    console.log("Make version current:", versionId);
-    if (confirm(t("student.submissions.makeCurrentVersion"))) {
-      alert(`${t("student.submissions.versionNowCurrent", { id: versionId })}`);
-    }
-  };
-
-  const handleCreateNewVersion = () => {
-    if (maxSubmissions > 0 && versions.length >= maxSubmissions) {
-      alert(t("student.submissions.maxVersionsReached", { max: maxSubmissions }));
-      return;
-    }
-    void navigate(`/student/courses/${courseId}/tasks/${taskId}/submit`);
-  };
-
-  const versionsWithSelection = versions.map((v) => ({
-    ...v,
-    selected: selectedVersions.includes(v.id),
-  }));
-
-  if (versions.length === 0) {
+  if (isLoading) {
     return (
       <AppShell title={t("student.submissions.title")}>
-        <Breadcrumbs
-          items={[
-            CRUMBS.courses,
-            { label: courseName, href: ROUTES.course(courseId) },
-            { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-            { label: t("student.submissions.breadcrumbVersions") },
-          ]}
-        />
+        <Breadcrumbs items={breadcrumbs} />
+        <div className="flex min-h-[300px] items-center justify-center text-muted-foreground">
+          {t("common.loading")}
+        </div>
+      </AppShell>
+    );
+  }
 
+  if (isError) {
+    return (
+      <AppShell title={t("student.submissions.title")}>
+        <Breadcrumbs items={breadcrumbs} />
+        <div className="flex min-h-[300px] items-center justify-center text-destructive">
+          {t("student.submissions.loadError")}
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (!submission) {
+    return (
+      <AppShell title={t("student.submissions.title")}>
+        <Breadcrumbs items={breadcrumbs} />
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
             <div className="mb-4">
               <div className="w-16 h-16 bg-brand-primary-lighter rounded-full mx-auto flex items-center justify-center">
-                <span className="text-[32px]">📝</span>
+                <Upload className="size-7 text-brand-primary" />
               </div>
             </div>
             <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
@@ -109,9 +99,7 @@ export default function SubmissionsPage() {
               {t("student.submissions.noSubmissionsDesc")}
             </p>
             <button
-              onClick={() => {
-                void navigate(`/student/courses/${courseId}/tasks/${taskId}/submit`);
-              }}
+              onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
               className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
             >
               {t("student.submissions.submitWork")}
@@ -124,74 +112,123 @@ export default function SubmissionsPage() {
 
   return (
     <AppShell title={t("student.submissions.title")}>
-      <Breadcrumbs
-        items={[
-          CRUMBS.courses,
-          { label: courseName, href: ROUTES.course(courseId) },
-          { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-          { label: t("student.submissions.breadcrumbVersions") },
-        ]}
-      />
+      <Breadcrumbs items={breadcrumbs} />
 
-      <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
-          {t("student.submissions.title")}
-        </h1>
-        <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
-      </div>
-
-      <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-1">
+            {t("student.submissions.title")}
+          </h1>
+          <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
+        </div>
         <button
-          onClick={() => {
-            setComparisonMode(!comparisonMode);
-            setSelectedVersions([]);
-          }}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-[12px] text-[14px] font-medium transition-colors ${
-            comparisonMode
-              ? "bg-brand-primary text-primary-foreground hover:bg-brand-primary-hover"
-              : "bg-brand-primary-lighter text-foreground hover:bg-brand-primary-lighter"
-          }`}
+          onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-[12px] text-[14px] font-medium transition-colors"
         >
-          {comparisonMode
-            ? t("student.submissions.cancelCompare")
-            : t("student.submissions.compareVersions")}
+          <Edit className="size-4" />
+          {t("student.submissions.editWork")}
         </button>
-
-        {comparisonMode && (
-          <p className="text-[13px] text-muted-foreground">
-            {t("student.submissions.selectTwoVersions")} ({selectedVersions.length}/2)
-          </p>
-        )}
-
-        {!allowResubmissions && (
-          <div className="bg-warning-light border border-warning rounded-[12px] px-4 py-2 flex-1 max-w-md">
-            <p className="text-[13px] text-foreground">
-              {t("student.submissions.singleSubmission")}
-            </p>
-          </div>
-        )}
       </div>
 
-      {comparisonMode && selectedVersionsObjects && (
-        <ComparisonView
-          version1={selectedVersionsObjects[0]}
-          version2={selectedVersionsObjects[1]}
-          onClose={() => {
-            setSelectedVersions([]);
-          }}
-        />
-      )}
+      <div className="grid gap-4 desktop:grid-cols-3">
+        <div className="desktop:col-span-2 space-y-4">
+          <section className="bg-card border border-border rounded-[16px] p-6">
+            <h2 className="text-[16px] font-medium text-foreground mb-3">
+              {t("student.submissions.commentTitle")}
+            </h2>
+            {submission.content ? (
+              <p className="text-[15px] text-foreground whitespace-pre-wrap leading-[1.5]">
+                {submission.content}
+              </p>
+            ) : (
+              <p className="text-[14px] text-muted-foreground italic">
+                {t("student.submissions.noComment")}
+              </p>
+            )}
+          </section>
 
-      <VersionTimeline
-        versions={versionsWithSelection}
-        allowResubmissions={allowResubmissions}
-        onDownload={handleDownload}
-        onViewReports={handleViewReports}
-        onMakeCurrent={handleMakeCurrent}
-        onCreateNewVersion={handleCreateNewVersion}
-        onToggleSelect={comparisonMode ? handleToggleSelect : undefined}
-        comparisonMode={comparisonMode}
-      />
+          <section className="bg-card border border-border rounded-[16px] p-6">
+            <h2 className="text-[16px] font-medium text-foreground mb-3">
+              {t("student.submissions.filesTitle")}
+            </h2>
+            {submission.files.length === 0 ? (
+              <p className="text-[14px] text-muted-foreground italic">
+                {t("student.submissions.noFiles")}
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {submission.files.map((file) => (
+                  <li
+                    key={file.id}
+                    className="flex items-center gap-3 px-3 py-2 rounded-[10px] bg-muted"
+                  >
+                    <FileText className="size-5 text-brand-primary shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-medium text-foreground truncate">
+                        {file.name}
+                      </div>
+                      <div className="text-[12px] text-muted-foreground">
+                        {formatFileSize(file.size, t)}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() =>
+                        void downloadFile(file.id, t("student.submissions.downloadError"))
+                      }
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-card border border-border hover:bg-surface-hover rounded-[8px] text-[13px] font-medium transition-colors"
+                    >
+                      <Download className="size-4" />
+                      {t("common.download")}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="bg-card border border-border rounded-[16px] p-6">
+            <h2 className="text-[16px] font-medium text-foreground mb-3">
+              {t("student.submissions.reviewsTitle")}
+            </h2>
+            {reviews.length === 0 ? (
+              <p className="text-[14px] text-muted-foreground italic">
+                {t("student.submissions.noReviews")}
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {reviews.map((r) => (
+                  <li key={r.id} className="rounded-[10px] bg-muted p-4">
+                    <div className="mb-2 text-[13px] font-medium text-brand-primary">
+                      {t("student.submissions.reviewMark")}: {r.mark} / 5
+                    </div>
+                    <p className="text-[14px] text-foreground whitespace-pre-wrap leading-[1.5]">
+                      {r.comment}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+
+        <aside className="desktop:col-span-1">
+          <div className="bg-card border border-border rounded-[16px] p-6">
+            <h2 className="text-[14px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
+              {t("student.submissions.finalMarkTitle")}
+            </h2>
+            {finalMark != null ? (
+              <div className="text-[40px] font-medium text-foreground leading-none">
+                {finalMark}
+                <span className="text-[20px] text-muted-foreground">/5</span>
+              </div>
+            ) : (
+              <p className="text-[14px] text-muted-foreground italic">
+                {t("student.submissions.noFinalMark")}
+              </p>
+            )}
+          </div>
+        </aside>
+      </div>
     </AppShell>
   );
 }

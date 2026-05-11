@@ -6,12 +6,8 @@ interface FileUploadAreaProps {
   acceptedFormats: string[];
   maxSizeMB: number;
   onFileSelected: (file: File) => void;
-  onUploadStart?: () => void;
-  onUploadProgress?: (progress: number) => void;
-  onUploadComplete?: () => void;
   onUploadError?: (error: string) => void;
   isUploading?: boolean;
-  uploadProgress?: number;
   error?: string;
   disabled?: boolean;
 }
@@ -20,12 +16,8 @@ export function FileUploadArea({
   acceptedFormats,
   maxSizeMB,
   onFileSelected,
-  onUploadStart,
-  onUploadProgress,
-  onUploadComplete,
   onUploadError,
   isUploading = false,
-  uploadProgress = 0,
   error = "",
   disabled = false,
 }: FileUploadAreaProps) {
@@ -53,20 +45,7 @@ export function FileUploadArea({
       return;
     }
     onUploadError?.("");
-
-    onUploadStart?.();
     onFileSelected(file);
-
-    // имитация прогресса аплоада
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      onUploadProgress?.(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        onUploadComplete?.();
-      }
-    }, 200);
   };
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
@@ -149,14 +128,8 @@ export function FileUploadArea({
               <Upload className="w-6 h-6 text-brand-primary" />
             </div>
             <p className="text-[15px] text-foreground font-medium">
-              {t("feature.submission.upload.uploading")} {uploadProgress}%
+              {t("feature.submission.upload.uploading")}
             </p>
-            <div className="max-w-[300px] mx-auto bg-border rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-brand-primary h-full transition-all duration-300"
-                style={{ width: `${uploadProgress}%` }}
-              />
-            </div>
           </div>
         ) : (
           <div className="space-y-3">
