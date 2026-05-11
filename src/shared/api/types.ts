@@ -19,7 +19,6 @@ export interface LoginRequestBody {
 
 export interface LoginResponseBody {
   userId: Id;
-  role: Role;
 }
 
 export interface RegisterRequestBody {

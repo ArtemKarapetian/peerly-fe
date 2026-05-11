@@ -39,6 +39,8 @@ export const authApi = {
 
   refresh: () => http.post<void>("/auth/refresh"),
 
+  getMyRole: () => http.get<{ role: Role }>("/me/role"),
+
   confirmEmail: (params: { token: string; userId: string }) =>
     http.get<void>(
       `/auth/confirm-email?token=${encodeURIComponent(params.token)}&userId=${params.userId}`,
