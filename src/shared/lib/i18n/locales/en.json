@@ -247,9 +247,7 @@
       "title": "Appeals",
       "subtitle": "List of all your grade appeal requests",
       "noAppeals": "You have no appeals",
-      "noAppealsDesc": "If you disagree with a grade, you can file an appeal from the assignment page",
-      "mockTaskName": "Assignment 1: Introduction to peer review",
-      "mockDeadline": "January 25, 2026, 23:59"
+      "noAppealsDesc": "If you disagree with a grade, you can file an appeal from the assignment page"
     }
   },
   "teacher": {
@@ -617,11 +615,7 @@
       "publishedAlert": "Announcement published! Students will see it on the announcements tab.",
       "noAnnouncements": "No announcements",
       "createFirstDesc": "Create the first announcement for students",
-      "createAnnouncement": "Create announcement",
-      "mockTitle1": "Welcome to the course",
-      "mockContent1": "Welcome to the course! This semester we will study web development fundamentals. Please review the course syllabus and assignment schedule.",
-      "mockTitle2": "First assignment deadline",
-      "mockContent2": "Reminder: the first assignment deadline is March 15 at 23:59. Make sure you have uploaded all required files."
+      "createAnnouncement": "Create announcement"
     },
     "automation": {
       "title": "Automation Rules",
@@ -714,6 +708,8 @@
       "teacherName": "Teacher"
     },
     "assignmentDetail": {
+      "title": "Assignment",
+      "notFound": "Assignment not found",
       "published": "Published",
       "draft": "Draft",
       "editBtn": "Edit",
@@ -739,11 +735,7 @@
       "analyticsTitle": "Analytics",
       "analyticsDesc": "Submission and grading statistics",
       "publishedSuccess": "Assignment published successfully!",
-      "publishedSuccessDesc": "Students of {{courseName}} can now see this assignment and start working.",
-      "mockTitle": "New Assignment",
-      "mockDesc": "Assignment description will be here",
-      "mockCourseName": "Web Development",
-      "mockRubricName": "Web Project Assessment"
+      "publishedSuccessDesc": "Students of {{courseName}} can now see this assignment and start working."
     },
     "assignments": {
       "title": "Assignment Builder",
@@ -1384,28 +1376,16 @@
       "intro": "Introduction (10-15% of volume)",
       "mainPart": "Main body with analysis (70-80%)",
       "conclusion": "Conclusion and findings (10-15%)",
-      "bibliography": "Bibliography",
-      "mockParagraph1": "Write an analytical essay on the topic \"Impact of digital technologies on modern education\". The work must analyze at least three aspects of education digitalization, provide practical examples, and draw substantiated conclusions.",
-      "mockParagraph2": "The work must include an introduction, main body with argumentation, and conclusion. Academic sources with proper citation formatting are required."
+      "bibliography": "Bibliography"
     },
     "taskComments": {
       "title": "Comments and Questions",
       "teacher": "Teacher",
       "you": "You",
-      "placeholder": "Ask the teacher a question...",
-      "mockComment1": "Pay attention to the responsiveness requirement - it's an important grading criterion.",
-      "mockDate1": "January 15, 14:30",
-      "mockComment2": "Can we use ready-made UI kits or do we need to create components from scratch?",
-      "mockDate2": "January 16, 10:15"
+      "placeholder": "Ask the teacher a question..."
     },
     "taskMaterials": {
-      "title": "Materials",
-      "mockFile1Name": "Guidelines.pdf",
-      "mockFile1Size": "2.3 MB",
-      "mockFile2Name": "Prototype Examples.fig",
-      "mockFile2Size": "1.8 MB",
-      "mockFile3Name": "Requirements Checklist.docx",
-      "mockFile3Size": "124 KB"
+      "title": "Materials"
     },
     "taskRequirements": {
       "title": "Requirements",
@@ -1437,11 +1417,7 @@
       "teacher": "Teacher",
       "student": "Student",
       "placeholder": "Ask the teacher a question...",
-      "send": "Send",
-      "mockComment1": "Pay attention to the grading criteria",
-      "mockDate1": "January 18, 15:30",
-      "mockComment2": "Can we use additional sources?",
-      "mockDate2": "January 17, 10:20"
+      "send": "Send"
     },
     "rubricEditor": {
       "unsavedChanges": "There are unsaved changes",

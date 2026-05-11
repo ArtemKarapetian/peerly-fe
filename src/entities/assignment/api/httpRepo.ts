@@ -1,6 +1,7 @@
 import {
   type CourseDto,
   type CreateHomeworkResponse,
+  type FileDto,
   type HomeworkDto,
   type PostponeDeadlinesRequestBody,
   type UpdateDraftHomeworkRequestBody,
@@ -10,11 +11,20 @@ import {
 } from "@/shared/api";
 
 import { mapHomeworkToAssignment, mapInputToCreateBody } from "../model/mappers";
-import type { CreateAssignmentInput, DemoAssignment } from "../model/types";
+import type {
+  CreateAssignmentInput,
+  DemoAssignment,
+  TeacherAssignmentDetail,
+} from "../model/types";
 
 type RawListCourses = { courseInfos: CourseDto[] };
 type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
-type RawGetTeacherHomework = { homeworkInfo: HomeworkDto };
+type RawGetTeacherHomework = {
+  homeworkInfo: HomeworkDto;
+  submittedCount: number;
+  totalStudentsCount: number;
+  files: FileDto[];
+};
 type RawGetStudentHomework = { homeworkInfo: HomeworkDto };
 
 function rolePrefix(): "student" | "teacher" {
@@ -67,6 +77,19 @@ export const assignmentHttpRepo = {
       }
       const raw = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
       return mapHomeworkToAssignment(raw.homeworkInfo);
+    } catch {
+      return undefined;
+    }
+  },
+
+  getTeacherDetail: async (homeworkId: string): Promise<TeacherAssignmentDetail | undefined> => {
+    try {
+      const raw = await http.get<RawGetTeacherHomework>(`/teacher/homeworks/${homeworkId}`);
+      return {
+        assignment: mapHomeworkToAssignment(raw.homeworkInfo),
+        submittedCount: raw.submittedCount,
+        totalStudentsCount: raw.totalStudentsCount,
+      };
     } catch {
       return undefined;
     }

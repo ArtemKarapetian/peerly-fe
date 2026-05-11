@@ -1,5 +1,4 @@
 import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -7,101 +6,100 @@ import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
+import { useTeacherAssignmentDetail } from "@/entities/assignment";
+import { useCourse } from "@/entities/course";
+
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-/**
- * TeacherAssignmentDetailsPage - Детальная страница задания (преподаватель)
- *
- * Отображает созданное задание с его статусом и управляющими кнопками
- */
+function formatDate(date: Date, locale: string) {
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
 
 export default function TeacherAssignmentDetailsPage() {
-  const { assignmentId: routeAssignmentId } = useParams<{ assignmentId: string }>();
-  const assignmentId = routeAssignmentId ?? "a1";
+  const { assignmentId = "" } = useParams<{ assignmentId: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const CRUMBS = getCrumbs();
-  // In a real app, we'd load assignment data from storage/API
-  // For now, using mock data with fixed dates
 
-  const assignment = {
-    id: assignmentId,
-    title: t("teacher.assignmentDetail.mockTitle") || "New Assignment",
-    description: t("teacher.assignmentDetail.mockDesc") || "Assignment description",
-    status: "published" as "draft" | "published",
-    courseName: t("teacher.assignmentDetail.mockCourseName") || "Web Development",
-    courseCode: "CS301",
-    taskType: "project",
-    submissionDeadline: new Date("2024-02-21"),
-    reviewDeadline: new Date("2024-02-28"),
-    studentsCount: 45,
-    submissionsCount: 0,
-    reviewsCount: 0,
-    rubricName: t("teacher.assignmentDetail.mockRubricName") || "Web Project Assessment",
-    reviewsPerSubmission: 3,
-  };
+  const { data: detail, isLoading } = useTeacherAssignmentDetail(assignmentId);
+  const courseId = detail?.assignment.courseId ?? "";
+  const { data: course } = useCourse(courseId);
 
-  const getStatusBadge = (status: "draft" | "published") => {
-    if (status === "published") {
-      return (
-        <span className="inline-flex items-center gap-2 px-3 py-2 bg-success-light text-success rounded-[8px] text-[14px] font-medium">
-          <div className="w-2 h-2 bg-success rounded-full"></div>
-          {t("teacher.assignmentDetail.published")}
-        </span>
-      );
-    }
+  if (isLoading) {
     return (
-      <span className="inline-flex items-center gap-2 px-3 py-2 bg-muted text-muted-foreground rounded-[8px] text-[14px] font-medium">
-        <div className="w-2 h-2 bg-muted-foreground rounded-full"></div>
-        {t("teacher.assignmentDetail.draft")}
-      </span>
+      <AppShell title={t("teacher.assignmentDetail.title")}>
+        <Breadcrumbs items={[CRUMBS.teacherCourses, { label: t("common.loading") }]} />
+        <p className="mt-6 text-[14px] text-text-tertiary">{t("common.loading")}</p>
+      </AppShell>
     );
-  };
+  }
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("ru-RU", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  };
+  if (!detail) {
+    return (
+      <AppShell title={t("teacher.assignmentDetail.title")}>
+        <Breadcrumbs items={[CRUMBS.teacherCourses, { label: t("common.notFound") }]} />
+        <p className="mt-6 text-[14px] text-text-tertiary">
+          {t("teacher.assignmentDetail.notFound")}
+        </p>
+      </AppShell>
+    );
+  }
+
+  const { assignment, submittedCount, totalStudentsCount } = detail;
+  const courseName = course?.title ?? "";
+  const reviewsCount = submittedCount * assignment.reviewCount;
+  const isPublished = assignment.backendStatus !== "draft";
 
   return (
     <AppShell title={assignment.title}>
       <Breadcrumbs
         items={[
           CRUMBS.teacherCourses,
-          { label: assignment.courseName, href: ROUTES.teacherCourse(assignment.courseCode) },
+          { label: courseName, href: ROUTES.teacherCourse(courseId) },
           { label: assignment.title },
         ]}
       />
 
-      {/* Header */}
       <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-3">
-              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
+        <div className="flex items-start justify-between mb-4 gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <h1 className="text-[28px] desktop:text-[32px] font-medium text-foreground tracking-[-0.5px]">
                 {assignment.title}
               </h1>
-              {getStatusBadge(assignment.status)}
+              <span
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-[13px] font-medium ${
+                  isPublished ? "bg-success-light text-success" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    isPublished ? "bg-success" : "bg-muted-foreground"
+                  }`}
+                />
+                {isPublished
+                  ? t("teacher.assignmentDetail.published")
+                  : t("teacher.assignmentDetail.draft")}
+              </span>
             </div>
-            <p className="text-[15px] text-muted-foreground mb-3">
-              {assignment.courseName} ({assignment.courseCode})
-            </p>
-            {assignment.description && (
+            {courseName ? (
+              <p className="text-[15px] text-muted-foreground mb-3">{courseName}</p>
+            ) : null}
+            {assignment.description ? (
               <p className="text-[15px] text-foreground leading-[1.6] max-w-[800px]">
                 {assignment.description}
               </p>
-            )}
+            ) : null}
           </div>
-          <div className="flex items-center gap-2 ml-4">
+          <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => {
-                void navigate(`/teacher/assignments/new?edit=${assignmentId}`);
-              }}
+              onClick={() => void navigate(`/teacher/assignments/new?edit=${assignmentId}`)}
               className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors"
             >
               <Edit className="w-4 h-4" />
@@ -125,40 +123,34 @@ export default function TeacherAssignmentDetailsPage() {
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-4 gap-4 pt-4 border-t border-border">
+        <div className="grid grid-cols-2 tablet:grid-cols-4 gap-4 pt-4 border-t border-border">
           <div>
             <p className="text-[13px] text-muted-foreground mb-1">
               {t("teacher.assignmentDetail.studentsInCourse")}
             </p>
-            <p className="text-[24px] font-medium text-foreground">{assignment.studentsCount}</p>
+            <p className="text-[24px] font-medium text-foreground">{totalStudentsCount}</p>
           </div>
           <div>
             <p className="text-[13px] text-muted-foreground mb-1">
               {t("teacher.assignmentDetail.submissionsCount")}
             </p>
-            <p className="text-[24px] font-medium text-brand-primary">
-              {assignment.submissionsCount}
-            </p>
+            <p className="text-[24px] font-medium text-brand-primary">{submittedCount}</p>
           </div>
           <div>
             <p className="text-[13px] text-muted-foreground mb-1">
-              {t("teacher.assignmentDetail.reviewsReady")}
+              {t("teacher.assignmentDetail.reviewsPerSubmission")}
             </p>
-            <p className="text-[24px] font-medium text-success">{assignment.reviewsCount}</p>
+            <p className="text-[24px] font-medium text-foreground">{assignment.reviewCount}</p>
           </div>
           <div>
             <p className="text-[13px] text-muted-foreground mb-1">
               {t("teacher.assignmentDetail.totalReviews")}
             </p>
-            <p className="text-[24px] font-medium text-foreground">
-              {assignment.submissionsCount * assignment.reviewsPerSubmission}
-            </p>
+            <p className="text-[24px] font-medium text-foreground">{reviewsCount}</p>
           </div>
         </div>
       </div>
 
-      {/* Deadlines */}
       <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-brand-primary" />
@@ -167,70 +159,32 @@ export default function TeacherAssignmentDetailsPage() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-6">
           <div>
             <p className="text-[13px] text-muted-foreground mb-2">
               {t("teacher.assignmentDetail.submissionDeadline")}
             </p>
             <p className="text-[16px] text-foreground font-medium">
-              {formatDate(assignment.submissionDeadline)}
+              {formatDate(assignment.dueDate, i18n.language)}
             </p>
           </div>
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.assignmentDetail.reviewDeadline")}
-            </p>
-            <p className="text-[16px] text-foreground font-medium">
-              {formatDate(assignment.reviewDeadline)}
-            </p>
-          </div>
+          {assignment.reviewDeadline ? (
+            <div>
+              <p className="text-[13px] text-muted-foreground mb-2">
+                {t("teacher.assignmentDetail.reviewDeadline")}
+              </p>
+              <p className="text-[16px] text-foreground font-medium">
+                {formatDate(assignment.reviewDeadline, i18n.language)}
+              </p>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      {/* Settings Summary */}
-      <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Settings className="w-5 h-5 text-brand-primary" />
-          <h2 className="text-[20px] font-medium text-foreground tracking-[-0.5px]">
-            {t("teacher.assignmentDetail.peerReviewSettings")}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-3 gap-6">
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.assignmentDetail.reviewsPerSubmission")}
-            </p>
-            <p className="text-[16px] text-foreground font-medium">
-              {assignment.reviewsPerSubmission}
-            </p>
-          </div>
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.assignmentDetail.gradingRubric")}
-            </p>
-            <p className="text-[16px] text-foreground font-medium">
-              {assignment.rubricName || t("teacher.assignmentDetail.notSpecified")}
-            </p>
-          </div>
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.assignmentDetail.distributionMode")}
-            </p>
-            <p className="text-[16px] text-foreground font-medium">
-              {t("teacher.assignmentDetail.random")}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Cards */}
-      <div className="mt-6 grid grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-1 tablet:grid-cols-3 gap-4">
         <button
-          onClick={() => {
-            void navigate(`/teacher/peer-session-settings/${assignmentId}`);
-          }}
-          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
+          onClick={() => void navigate(`/teacher/peer-session-settings/${assignmentId}`)}
+          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
         >
           <Settings className="w-6 h-6 text-brand-primary mb-3" />
           <h3 className="text-[16px] font-medium text-foreground mb-2">
@@ -242,10 +196,8 @@ export default function TeacherAssignmentDetailsPage() {
         </button>
 
         <button
-          onClick={() => {
-            void navigate(`/teacher/submissions?assignmentId=${assignmentId}`);
-          }}
-          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
+          onClick={() => void navigate(`/teacher/submissions?assignmentId=${assignmentId}`)}
+          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
         >
           <FileText className="w-6 h-6 text-brand-primary mb-3" />
           <h3 className="text-[16px] font-medium text-foreground mb-2">
@@ -257,10 +209,8 @@ export default function TeacherAssignmentDetailsPage() {
         </button>
 
         <button
-          onClick={() => {
-            void navigate(`/teacher/assignment/${assignmentId}/analytics`);
-          }}
-          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left group"
+          onClick={() => void navigate(`/teacher/assignment/${assignmentId}/analytics`)}
+          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
         >
           <BarChart3 className="w-6 h-6 text-brand-primary mb-3" />
           <h3 className="text-[16px] font-medium text-foreground mb-2">
@@ -272,17 +222,14 @@ export default function TeacherAssignmentDetailsPage() {
         </button>
       </div>
 
-      {/* Success Message for Published Assignments */}
-      {assignment.status === "published" && assignment.submissionsCount === 0 && (
+      {isPublished && submittedCount === 0 && courseName ? (
         <div className="mt-6 bg-success-light border border-success rounded-[16px] p-4">
           <p className="text-[14px] text-foreground">
             {t("teacher.assignmentDetail.publishedSuccess")}{" "}
-            {t("teacher.assignmentDetail.publishedSuccessDesc", {
-              courseName: assignment.courseName,
-            })}
+            {t("teacher.assignmentDetail.publishedSuccessDesc", { courseName })}
           </p>
         </div>
-      )}
+      ) : null}
     </AppShell>
   );
 }
