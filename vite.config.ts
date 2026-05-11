@@ -41,6 +41,9 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,woff2}"],
         globIgnores: ["**/bundle-stats.html"],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
