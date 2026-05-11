@@ -1,3 +1,4 @@
+import { useQueries } from "@tanstack/react-query";
 import { BookOpen, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,6 +9,7 @@ import { StatCard } from "@/shared/ui/StatCard";
 
 import { useAssignments } from "@/entities/assignment";
 import { useCourses } from "@/entities/course";
+import { workRepo } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { DeadlinesList } from "@/widgets/student-dashboard";
@@ -57,9 +59,31 @@ export default function DashboardPage() {
     return map;
   }, [courses]);
 
+  const visibleAssignments = useMemo(
+    () =>
+      (assignments ?? []).filter(
+        (a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted",
+      ),
+    [assignments],
+  );
+
+  const submissionQueries = useQueries({
+    queries: visibleAssignments.map((a) => ({
+      queryKey: ["submissions", "mine-id", a.id] as const,
+      queryFn: () => workRepo.getMineSubmissionId(a.id),
+    })),
+  });
+
+  const hasSubmissionById = useMemo(() => {
+    const map = new Map<string, boolean>();
+    visibleAssignments.forEach((a, idx) => {
+      map.set(a.id, !!submissionQueries[idx]?.data);
+    });
+    return map;
+  }, [visibleAssignments, submissionQueries]);
+
   const deadlines: DeadlineItem[] = useMemo(() => {
-    return (assignments ?? [])
-      .filter((a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted")
+    return visibleAssignments
       .map((a) => {
         const due = a.dueDate.getTime();
         return {
@@ -69,12 +93,12 @@ export default function DashboardPage() {
           taskId: a.id,
           taskTitle: a.title,
           dueDate: a.dueDate.toISOString(),
-          status: "NOT_STARTED" as const,
+          status: hasSubmissionById.get(a.id) ? ("SUBMITTED" as const) : ("NOT_STARTED" as const),
           isUrgent: due > now && due - now < 7 * ONE_DAY_MS,
         };
       })
       .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
-  }, [assignments, courseNameById, now]);
+  }, [visibleAssignments, courseNameById, hasSubmissionById, now]);
 
   const urgentCount = deadlines.filter((d) => d.isUrgent).length;
   const activeCoursesCount = (courses ?? []).filter((c) => c.status === "active").length;
