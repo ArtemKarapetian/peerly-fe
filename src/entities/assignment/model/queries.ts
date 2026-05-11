@@ -26,3 +26,11 @@ export function useAssignment(homeworkId: string) {
     enabled: !!homeworkId,
   });
 }
+
+export function useTeacherAssignmentDetail(homeworkId: string) {
+  return useQuery({
+    queryKey: [...assignmentKeys.detail(homeworkId), "teacher-detail"],
+    queryFn: () => assignmentRepo.getTeacherDetail(homeworkId),
+    enabled: !!homeworkId,
+  });
+}

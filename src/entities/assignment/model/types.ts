@@ -18,6 +18,12 @@ export interface DemoAssignment {
   rubricId?: string;
 }
 
+export interface TeacherAssignmentDetail {
+  assignment: DemoAssignment;
+  submittedCount: number;
+  totalStudentsCount: number;
+}
+
 export interface CreateAssignmentInput {
   title: string;
   description?: string;
