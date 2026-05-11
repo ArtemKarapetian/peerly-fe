@@ -8,6 +8,16 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
     <title>Peerly</title>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+        });
+      }
+      if (typeof caches !== "undefined") {
+        caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+      }
+    </script>
   </head>
 
   <body>

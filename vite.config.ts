@@ -4,67 +4,11 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    VitePWA({
-      registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "apple-touch-icon.svg"],
-      manifest: {
-        name: "Peerly — Peer Review Platform",
-        short_name: "Peerly",
-        description: "Платформа взаимного оценивания для вузов",
-        theme_color: "#2563eb",
-        background_color: "#ffffff",
-        display: "standalone",
-        start_url: "/",
-        scope: "/",
-        icons: [
-          {
-            src: "pwa-192x192.svg",
-            sizes: "192x192",
-            type: "image/svg+xml",
-          },
-          {
-            src: "pwa-512x512.svg",
-            sizes: "512x512",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
-        ],
-      },
-      workbox: {
-        globPatterns: ["**/*.{css,html,svg,woff2}"],
-        globIgnores: ["**/bundle-stats.html"],
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
-        cleanupOutdatedCaches: true,
-        skipWaiting: true,
-        clientsClaim: true,
-        runtimeCaching: [
-          {
-            urlPattern: /\/assets\/.+\.js$/,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "app-js",
-              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-cache",
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-            },
-          },
-        ],
-        navigateFallback: "/offline.html",
-        navigateFallbackDenylist: [/^\/api\//],
-      },
-    }),
     visualizer({
       filename: "dist/bundle-stats.html",
       gzipSize: true,
@@ -90,9 +34,17 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-query": ["@tanstack/react-query"],
+          vendor: [
+            "react",
+            "react-dom",
+            "react-router-dom",
+            "@tanstack/react-query",
+            "i18next",
+            "react-i18next",
+          ],
           "vendor-ui": [
+            "@mui/material",
+            "@mui/icons-material",
             "@radix-ui/react-dialog",
             "@radix-ui/react-dropdown-menu",
             "@radix-ui/react-select",
@@ -100,10 +52,7 @@ export default defineConfig({
             "@radix-ui/react-tooltip",
             "@radix-ui/react-popover",
           ],
-          "vendor-mui": ["@mui/material", "@mui/icons-material"],
-          "vendor-charts": ["recharts"],
-          "vendor-i18n": ["i18next", "react-i18next"],
-          "vendor-sentry": ["@sentry/react"],
+          "vendor-extras": ["recharts", "@sentry/react"],
         },
       },
     },
