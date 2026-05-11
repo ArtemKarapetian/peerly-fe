@@ -45,6 +45,7 @@ export default function CoursePage() {
             title={title}
             coverColor={coverColorFor(courseId)}
             description={description}
+            teachers={course?.teachers}
           />
         )}
 

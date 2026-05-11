@@ -17,15 +17,6 @@ import { CourseSearch } from "@/features/course/search";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-// мок-резолв ФИО преподавателя по id, пока нет users-репо
-function resolveTeacher(teacherId: string): string {
-  const map: Record<string, string> = {
-    u2: "Иванов И.И.",
-    "teacher-1": "Петров П.П.",
-  };
-  return map[teacherId] ?? teacherId;
-}
-
 export default function AdminCoursesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -51,7 +42,7 @@ export default function AdminCoursesPage() {
   // у админа в счётчиках учитываются и архивные курсы тоже
   const activeCourses = allCourses.filter((c) => !c.archived && c.status === "active");
   const totalStudents = allCourses.reduce((sum, c) => sum + c.enrollmentCount, 0);
-  const uniqueTeachers = new Set(allCourses.map((c) => c.teacherId)).size;
+  const uniqueTeachers = new Set(allCourses.flatMap((c) => c.teachers.map((t) => t.id))).size;
 
   const handleOpenCourse = useCallback(
     (courseId: string) => {
@@ -187,7 +178,7 @@ export default function AdminCoursesPage() {
                         {/* колонка только для админа */}
                         <td className="px-5 py-3.5 hidden tablet:table-cell">
                           <p className="text-[13px] text-[--text-secondary] truncate">
-                            {resolveTeacher(course.teacherId)}
+                            {course.teachers.map((t) => t.name).join(", ") || "—"}
                           </p>
                         </td>
 

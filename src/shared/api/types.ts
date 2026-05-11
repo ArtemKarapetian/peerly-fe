@@ -36,11 +36,18 @@ export interface RegisterResponseBody {
 
 export type CourseStatus = "draft" | "inProgress" | "finished" | "canceled" | "deleted";
 
+export interface CourseTeacherDto {
+  teacherId: Id;
+  email: string;
+  name: string;
+}
+
 export interface CourseDto {
   id: Id;
   name: string;
   description: string;
   status: CourseStatus;
+  teachers: CourseTeacherDto[];
 }
 
 export interface ListCoursesResponse {
