@@ -62,6 +62,12 @@ export default defineConfig({
           },
         ],
         navigateFallback: "/offline.html",
+        navigateFallbackAllowlist: [
+          /^\/$/,
+          /^\/(login|register|reset-password|verify-email|help|status|terms)(\/|$)/,
+          /^\/(student|teacher|admin|profile|settings|security|offboarding)(\/|$)/,
+          /^\/(401|403|404|500)$/,
+        ],
         navigateFallbackDenylist: [/^\/api\//],
       },
     }),

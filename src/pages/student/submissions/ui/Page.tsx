@@ -21,10 +21,10 @@ function formatFileSize(bytes: number, t: (k: string) => string): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} ${t("entity.work.mb")}`;
 }
 
-async function downloadFile(fileId: string, errorMsg: string) {
+async function downloadFile(fileId: string, fileName: string, errorMsg: string) {
   try {
     const url = await storageApi.getDownloadUrl(fileId);
-    window.open(url, "_blank", "noopener,noreferrer");
+    storageApi.triggerDownload(url, fileName);
   } catch {
     alert(errorMsg);
   }
@@ -173,7 +173,11 @@ export default function SubmissionsPage() {
                     </div>
                     <button
                       onClick={() =>
-                        void downloadFile(file.id, t("student.submissions.downloadError"))
+                        void downloadFile(
+                          file.id,
+                          file.name,
+                          t("student.submissions.downloadError"),
+                        )
                       }
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-card border border-border hover:bg-surface-hover rounded-[8px] text-[13px] font-medium transition-colors"
                     >

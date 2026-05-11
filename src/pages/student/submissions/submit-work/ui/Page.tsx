@@ -132,10 +132,10 @@ export default function SubmitWorkPage() {
     deleteFileMutation.mutate(fileId);
   };
 
-  const handleDownloadFile = async (fileId: string) => {
+  const handleDownloadFile = async (fileId: string, fileName: string) => {
     try {
       const url = await storageApi.getDownloadUrl(fileId);
-      window.open(url, "_blank", "noopener,noreferrer");
+      storageApi.triggerDownload(url, fileName);
     } catch {
       setActionError(t("page.submitWork.downloadError"));
     }
@@ -210,7 +210,7 @@ export default function SubmitWorkPage() {
                       </div>
                     </div>
                     <button
-                      onClick={() => void handleDownloadFile(file.id)}
+                      onClick={() => void handleDownloadFile(file.id, file.name)}
                       disabled={isBusy}
                       title={t("common.download")}
                       className="inline-flex items-center justify-center size-8 bg-card border border-border hover:bg-surface-hover rounded-[8px] transition-colors disabled:opacity-50"
