@@ -12,6 +12,7 @@ export type HttpErrorMode = "inline" | "redirect";
 
 export interface HttpOptions extends RequestInit {
   onError?: HttpErrorMode;
+  skipAuthRefresh?: boolean;
 }
 
 export class ApiError extends Error {
@@ -50,7 +51,7 @@ async function parseBody(res: Response): Promise<unknown> {
 }
 
 async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
-  const { onError = "inline", ...fetchInit } = init;
+  const { onError = "inline", skipAuthRefresh = false, ...fetchInit } = init;
   const url = buildUrl(path);
   const hasJsonBody = fetchInit.body !== undefined && typeof fetchInit.body === "string";
 
@@ -63,7 +64,7 @@ async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
 
   let res = await doFetch();
 
-  if (res.status === 401) {
+  if (res.status === 401 && !skipAuthRefresh) {
     const refreshed = await handleUnauthorized();
     if (refreshed) {
       res = await doFetch();

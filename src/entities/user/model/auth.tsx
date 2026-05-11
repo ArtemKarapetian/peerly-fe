@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 
 import { clearSession, getSession, setSession, type Role, type Session } from "@/shared/api";
 import { appNavigate } from "@/shared/lib/navigate";
@@ -25,6 +25,24 @@ function sessionToUser(s: Session | null) {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSessionState] = useState<Session | null>(() => getSession());
+
+  // Cookie alive but session lost (cleared storage, fresh tab) → rehydrate role from BE.
+  useEffect(() => {
+    if (session) return;
+    let cancelled = false;
+    void authApi
+      .getMyRole()
+      .then(({ role }) => {
+        if (cancelled) return;
+        const next: Session = { userId: "", userName: "", email: "", role };
+        setSession(next);
+        setSessionState(next);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [session]);
 
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
