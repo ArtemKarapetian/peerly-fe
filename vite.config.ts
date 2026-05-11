@@ -37,28 +37,30 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Cache static assets (JS, CSS, fonts, SVGs)
-        globPatterns: ["**/*.{js,css,html,svg,woff2}"],
+        globPatterns: ["**/*.{css,html,svg,woff2}"],
         globIgnores: ["**/bundle-stats.html"],
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
         runtimeCaching: [
           {
+            urlPattern: /\/assets\/.+\.js$/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "app-js",
+              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
+          {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: "CacheFirst",
             options: {
               cacheName: "google-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
             },
           },
-          // Кэшировать АПИ не нужно))
         ],
-        // Offline fallback
         navigateFallback: "/offline.html",
         navigateFallbackDenylist: [/^\/api\//],
       },
