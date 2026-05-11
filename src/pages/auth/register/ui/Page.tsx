@@ -128,7 +128,7 @@ export default function RegisterPage() {
       await register({
         email: email.trim().toLowerCase(),
         password,
-        userName: displayName(),
+        name: displayName(),
         role,
       });
 

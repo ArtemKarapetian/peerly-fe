@@ -16,7 +16,7 @@ export interface LoginInput {
 export interface RegisterInput {
   email: string;
   password: string;
-  userName: string;
+  name: string;
   role: Role;
 }
 
@@ -31,7 +31,7 @@ export const authApi = {
     http.post<RegisterResponseBody>("/auth/register", {
       email: input.email,
       password: input.password,
-      userName: input.userName,
+      name: input.name,
       role: input.role,
     }),
 
