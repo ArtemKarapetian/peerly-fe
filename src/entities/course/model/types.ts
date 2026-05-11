@@ -1,18 +1,23 @@
 import type { CourseStatus } from "@/shared/api";
 
+export interface CourseTeacher {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface DemoCourse {
   id: string;
   name: string;
-  title: string; // Display title (alias of name for UI compatibility)
+  title: string;
   description: string;
-  code: string; // Deprecated on BE — left as empty string
-  teacherId: string; // Not returned by BE — left empty
-  enrollmentCount: number; // From studentCount
+  code: string;
+  teachers: CourseTeacher[];
+  enrollmentCount: number;
   status: "active" | "archived";
-  /** Raw backend status (Draft / InProgress / Finished / Canceled / Deleted). */
   backendStatus: CourseStatus;
   homeworkCount: number;
-  archived?: boolean; // Legacy boolean alias
+  archived?: boolean;
   assignmentIds?: string[];
   createdAt: Date;
 }
