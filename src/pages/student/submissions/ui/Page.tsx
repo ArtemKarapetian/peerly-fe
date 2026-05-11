@@ -136,7 +136,7 @@ export default function SubmissionsPage() {
             <h2 className="text-[16px] font-medium text-foreground mb-3">
               {t("student.submissions.commentTitle")}
             </h2>
-            {submission.content ? (
+            {submission.content.trim() ? (
               <p className="text-[15px] text-foreground whitespace-pre-wrap leading-[1.5]">
                 {submission.content}
               </p>

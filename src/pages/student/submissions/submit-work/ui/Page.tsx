@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Download, FileText, Trash2 } from "lucide-react";
+import { ArrowLeft, Download, FileText, Save, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
@@ -52,20 +53,19 @@ export default function SubmitWorkPage() {
   const [syncedId, setSyncedId] = useState<string | null>(null);
   const [now] = useState(() => Date.now());
 
-  // Sync the comment field once when the server's submission first loads
-  // (or its id changes). Guarded so it doesn't clobber user edits.
   if (submission && submission.id !== syncedId) {
     setSyncedId(submission.id);
-    setComment(submission.content);
+    setComment(submission.content.trim() === "" ? "" : submission.content);
   }
 
   const refreshSubmission = () =>
     queryClient.invalidateQueries({ queryKey: ["submissions", "mine", taskId] });
 
-  // Lazily create the submission on first action that needs an id.
+  const commentForBe = (text: string) => (text.trim() === "" ? " " : text);
+
   const ensureSubmission = async (): Promise<string> => {
     if (submission?.id) return submission.id;
-    const { submissionId } = await workRepo.create(taskId, comment);
+    const { submissionId } = await workRepo.create(taskId, commentForBe(comment));
     await refreshSubmission();
     return submissionId;
   };
@@ -91,14 +91,14 @@ export default function SubmitWorkPage() {
   const saveMutation = useMutation({
     mutationFn: async () => {
       if (submission?.id) {
-        await workRepo.update(submission.id, comment);
+        await workRepo.update(submission.id, commentForBe(comment));
       } else {
-        await workRepo.create(taskId, comment);
+        await workRepo.create(taskId, commentForBe(comment));
       }
     },
     onSuccess: async () => {
       await refreshSubmission();
-      alert(t("page.submitWork.draftSaved"));
+      toast.success(t("page.submitWork.draftSaved"));
     },
     onError: () => setActionError(t("page.submitWork.saveError")),
   });
@@ -157,17 +157,24 @@ export default function SubmitWorkPage() {
         ]}
       />
 
-      <div className="mb-6">
-        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
-          {t("page.submitWork.pageTitle")}
-        </h1>
-        <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
+      <div className="mb-6 mt-4 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-[28px] desktop:text-[32px] font-medium text-foreground tracking-[-0.5px] mb-1">
+            {t("page.submitWork.pageTitle")}
+          </h1>
+          <p className="text-[15px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
+        </div>
+        {isDeadlinePassed && (
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[10px] bg-error-light border border-error text-destructive text-[13px] font-medium">
+            ⚠ {t("page.submitWork.deadlinePassedHint")}
+          </div>
+        )}
       </div>
 
       <div className="task-layout">
-        <div className="space-y-6">
-          <section className="bg-muted rounded-[20px] p-6">
-            <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
+        <div className="space-y-4">
+          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+            <h2 className="text-[15px] font-medium text-foreground mb-3">
               {t("page.submitWork.uploadFiles")}
             </h2>
             <FileUploadArea
@@ -182,15 +189,15 @@ export default function SubmitWorkPage() {
           </section>
 
           {files.length > 0 && (
-            <section className="bg-muted rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
+            <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+              <h2 className="text-[15px] font-medium text-foreground mb-3">
                 {t("page.submitWork.uploadedFiles")}
               </h2>
               <ul className="space-y-2">
                 {files.map((file) => (
                   <li
                     key={file.id}
-                    className="flex items-center gap-3 bg-card border border-border rounded-[12px] px-3 py-2"
+                    className="flex items-center gap-3 bg-muted rounded-[10px] px-3 py-2"
                   >
                     <FileText className="size-5 text-brand-primary shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -204,18 +211,18 @@ export default function SubmitWorkPage() {
                     <button
                       onClick={() => void handleDownloadFile(file.id)}
                       disabled={isBusy}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-surface-hover rounded-[8px] text-[13px] font-medium transition-colors disabled:opacity-50"
+                      title={t("common.download")}
+                      className="inline-flex items-center justify-center size-8 bg-card border border-border hover:bg-surface-hover rounded-[8px] transition-colors disabled:opacity-50"
                     >
                       <Download className="size-4" />
-                      {t("common.download")}
                     </button>
                     <button
                       onClick={() => handleDeleteFile(file.id)}
                       disabled={isBusy}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-error-light hover:bg-error-light text-destructive rounded-[8px] text-[13px] font-medium transition-colors disabled:opacity-50"
+                      title={t("common.delete")}
+                      className="inline-flex items-center justify-center size-8 bg-error-light text-destructive hover:bg-error-light rounded-[8px] transition-colors disabled:opacity-50"
                     >
                       <Trash2 className="size-4" />
-                      {t("common.delete")}
                     </button>
                   </li>
                 ))}
@@ -223,15 +230,15 @@ export default function SubmitWorkPage() {
             </section>
           )}
 
-          <section className="bg-muted rounded-[20px] p-6">
-            <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
+          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+            <h2 className="text-[15px] font-medium text-foreground mb-3">
               {t("page.submitWork.commentToTeacher")}
-              <span className="text-muted-foreground font-normal ml-2">
+              <span className="text-muted-foreground font-normal ml-2 text-[13px]">
                 {t("page.submitWork.commentOptional")}
               </span>
             </h2>
             <textarea
-              className="w-full min-h-[120px] px-4 py-3 bg-card border-2 border-border rounded-[12px] text-[15px] text-foreground placeholder:text-muted-foreground focus:border-brand-primary-light focus:outline-none resize-none transition-colors"
+              className="w-full min-h-[120px] px-3 py-2 bg-card border-2 border-border rounded-[10px] text-[14px] text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none resize-none transition-colors"
               placeholder={t("page.submitWork.commentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -239,41 +246,37 @@ export default function SubmitWorkPage() {
             />
           </section>
 
-          <section className="bg-card rounded-[20px] p-6 border-2 border-border">
+          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
             <div className="flex flex-col tablet:flex-row gap-3">
               <button
                 onClick={() => void navigate(ROUTES.submissions(courseId, taskId))}
                 disabled={isBusy}
-                className="flex-1 px-6 py-3 bg-card border-2 border-border text-foreground rounded-[12px] text-[16px] font-medium hover:border-brand-primary-lighter hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-card border border-border text-foreground rounded-[12px] text-[15px] font-medium hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
+                <ArrowLeft className="size-4" />
                 {t("page.submitWork.goToMySubmission")}
               </button>
               <button
                 onClick={handleSave}
                 disabled={isBusy}
-                className="flex-1 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] text-[16px] font-medium hover:bg-brand-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
+                <Save className="size-4" />
                 {saveMutation.isPending
                   ? t("page.submitWork.saving")
                   : t("page.submitWork.saveDraft")}
               </button>
             </div>
-
             {actionError && (
               <p className="text-[13px] text-destructive mt-3 text-center">{actionError}</p>
-            )}
-            {isDeadlinePassed && (
-              <p className="text-[13px] text-error mt-3 text-center font-medium">
-                ⚠️ {t("page.submitWork.deadlinePassedHint")}
-              </p>
             )}
           </section>
         </div>
 
-        <div className="space-y-6 hide-below-desktop">
-          <div className="task-sidebar-sticky space-y-6">
-            <section className="bg-muted rounded-[20px] p-6">
-              <h2 className="text-[18px] font-medium text-foreground mb-4 tracking-[-0.5px]">
+        <div className="hide-below-desktop">
+          <div className="task-sidebar-sticky">
+            <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+              <h2 className="text-[14px] font-medium text-muted-foreground uppercase tracking-wider mb-4">
                 {t("page.submitWork.taskRules")}
               </h2>
               <TaskRulesCard rules={taskRules} />
