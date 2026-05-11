@@ -5,5 +5,5 @@ export type {
   CriterionScore,
   ReviewDraft,
 } from "./model/types";
-export { useReviewStore } from "./api/reviewRepo.mock";
 export { reviewHttpRepo as reviewRepo } from "./api/httpRepo";
+export { useAssignedSubmission, useSubmittedReview, useSubmitReview } from "./model/queries";
