@@ -28,11 +28,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
+    const { role } = await authApi.getMyRole();
     const next: Session = {
       userId: String(res.userId),
       userName: email.split("@")[0],
       email,
-      role: res.role,
+      role,
     };
     setSession(next);
     setSessionState(next);
