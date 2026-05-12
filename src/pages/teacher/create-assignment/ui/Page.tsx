@@ -1,10 +1,12 @@
 import { ChevronLeft, ChevronRight, Check } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { assignmentRepo } from "@/entities/assignment";
 
 import {
   StepBasics,
@@ -13,20 +15,10 @@ import {
   StepPeerSession,
   StepPublish,
 } from "@/features/assignment/create";
-import type { AssignmentFormData } from "@/features/assignment/create/model/types";
+import type { AssignmentFormData, RubricOption } from "@/features/assignment/create/model/types";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-
-/**
- * TeacherCreateAssignmentPage - Мастер создания задания
- *
- * Шаги визарда:
- * 1. Основная информация
- * 2. Дедлайны
- * 3. Рубрика
- * 4. Настройки peer review
- * 5. Публикация
- */
+import { useRubrics } from "@/widgets/rubric-editor";
 
 type StepKey = "stepBasics" | "stepDeadlines" | "stepRubric" | "stepPeerReview" | "stepPublish";
 
@@ -41,25 +33,22 @@ const ALL_STEP_KEYS: StepKey[] = [
 const STORAGE_KEY = "peerly_assignment_draft";
 
 const getInitialFormData = (): AssignmentFormData => {
-  // Try to load draft from localStorage
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try {
-      const parsed = JSON.parse(stored) as AssignmentFormData & {
+      const parsed = JSON.parse(stored) as Omit<
+        AssignmentFormData,
+        "submissionDeadline" | "reviewDeadline" | "createdAt" | "updatedAt"
+      > & {
         submissionDeadline: string | null;
         reviewDeadline: string | null;
-        reassignmentDeadline: string | null;
         createdAt: string;
         updatedAt: string;
       };
-      // Convert date strings back to Date objects
       return {
         ...parsed,
         submissionDeadline: parsed.submissionDeadline ? new Date(parsed.submissionDeadline) : null,
         reviewDeadline: parsed.reviewDeadline ? new Date(parsed.reviewDeadline) : null,
-        reassignmentDeadline: parsed.reassignmentDeadline
-          ? new Date(parsed.reassignmentDeadline)
-          : null,
         createdAt: new Date(parsed.createdAt),
         updatedAt: new Date(parsed.updatedAt),
       };
@@ -68,31 +57,14 @@ const getInitialFormData = (): AssignmentFormData => {
     }
   }
 
-  // Default values
   return {
     courseId: "",
     title: "",
     description: "",
-    taskType: "project",
-    attachments: [],
     submissionDeadline: null,
     reviewDeadline: null,
-    latePolicy: "soft",
-    latePenalty: 10,
-    timezone: "Europe/Moscow",
     rubricId: null,
     reviewsPerSubmission: 3,
-    distributionMode: "random",
-    anonymityMode: "full",
-    allowReassignment: true,
-    reassignmentDeadline: null,
-    enablePlagiarismCheck: true,
-    plagiarismThreshold: 15,
-    enableLinter: false,
-    linterConfig: "",
-    enableFormatCheck: true,
-    formatRules: ["pdf", "docx", "zip"],
-    enableAnonymization: true,
     status: "draft",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -109,6 +81,21 @@ export default function TeacherCreateAssignmentPage({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
+  const rubrics = useRubrics();
+  const rubricOptions: RubricOption[] = useMemo(
+    () =>
+      rubrics.map((r) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description,
+        criteria: r.criteria.map((c) => ({
+          name: c.name,
+          description: c.description,
+          maxScore: c.maxScore,
+        })),
+      })),
+    [rubrics],
+  );
   const STEPS = ALL_STEP_KEYS.map((key, idx) => ({
     id: idx + 1,
     key,
@@ -117,6 +104,8 @@ export default function TeacherCreateAssignmentPage({
   }));
   const lastStepId = STEPS.length;
   const [currentStep, setCurrentStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<AssignmentFormData>(() => {
     const initial = getInitialFormData();
     if (courseId) {
@@ -125,7 +114,6 @@ export default function TeacherCreateAssignmentPage({
     return initial;
   });
 
-  // Save draft to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
@@ -152,22 +140,51 @@ export default function TeacherCreateAssignmentPage({
     }
   };
 
-  const handlePublish = (asDraft: boolean) => {
-    const finalData = {
-      ...formData,
-      status: asDraft ? "draft" : "published",
-      updatedAt: new Date(),
-    };
+  const buildChecklist = (): string => {
+    if (!formData.rubricId) return "";
+    const rubric = rubrics.find((r) => r.id === formData.rubricId);
+    if (!rubric) return "";
+    return rubric.criteria
+      .map((c) => {
+        const head = `${c.name} (${c.maxScore})`;
+        return c.description ? `${head}: ${c.description}` : head;
+      })
+      .join("\n");
+  };
 
-    // Save to localStorage or backend
-    console.log("Publishing assignment:", finalData);
-
-    // Clear draft
-    localStorage.removeItem(STORAGE_KEY);
-
-    // Navigate to assignment details (mock for now)
-    const assignmentId = `a${Date.now()}`;
-    void navigate(`/teacher/assignment/${assignmentId}`);
+  const handlePublish = async (asDraft: boolean) => {
+    if (!formData.courseId || !formData.submissionDeadline || !formData.reviewDeadline) {
+      setSubmitError(t("feature.assignmentCreate.publish.errorMissingFields"));
+      return;
+    }
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const { homeworkId } = await assignmentRepo.createForCourse(formData.courseId, {
+        title: formData.title,
+        description: formData.description || undefined,
+        checklist: buildChecklist() || undefined,
+        dueDate: formData.submissionDeadline,
+        reviewDeadline: formData.reviewDeadline,
+        reviewCount: formData.reviewsPerSubmission,
+      });
+      if (!asDraft) {
+        try {
+          await assignmentRepo.publish(homeworkId);
+        } catch (e) {
+          console.error("Failed to publish homework", e);
+        }
+      }
+      localStorage.removeItem(STORAGE_KEY);
+      void navigate(`/teacher/assignment/${homeworkId}`);
+    } catch (e) {
+      console.error("Failed to create assignment", e);
+      setSubmitError(
+        e instanceof Error ? e.message : t("feature.assignmentCreate.publish.errorGeneric"),
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const currentStepKey = STEPS[currentStep - 1]?.key;
@@ -194,11 +211,18 @@ export default function TeacherCreateAssignmentPage({
       case "stepDeadlines":
         return <StepDeadlines data={formData} onUpdate={updateFormData} />;
       case "stepRubric":
-        return <StepRubric data={formData} onUpdate={updateFormData} />;
+        return <StepRubric data={formData} onUpdate={updateFormData} rubrics={rubricOptions} />;
       case "stepPeerReview":
         return <StepPeerSession data={formData} onUpdate={updateFormData} />;
       case "stepPublish":
-        return <StepPublish data={formData} onPublish={handlePublish} />;
+        return (
+          <StepPublish
+            data={formData}
+            onPublish={(asDraft) => void handlePublish(asDraft)}
+            submitting={submitting}
+            errorMessage={submitError}
+          />
+        );
       default:
         return null;
     }

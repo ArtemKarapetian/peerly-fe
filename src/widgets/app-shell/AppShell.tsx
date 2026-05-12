@@ -120,9 +120,6 @@ export function AppShell({ children, title }: AppShellProps) {
                   <Link to="/help" className="hover:text-foreground transition-colors">
                     {t("footer.help")}
                   </Link>
-                  <Link to="/status" className="hover:text-foreground transition-colors">
-                    {t("footer.status")}
-                  </Link>
                   <Link to="/terms" className="hover:text-foreground transition-colors">
                     {t("footer.terms")}
                   </Link>

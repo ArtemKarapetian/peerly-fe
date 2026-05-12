@@ -99,12 +99,6 @@ export function PublicLayout({
                   {t("widget.publicLayout.help")}
                 </Link>
                 <Link
-                  to="/status"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("widget.publicLayout.status")}
-                </Link>
-                <Link
                   to="/terms"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >

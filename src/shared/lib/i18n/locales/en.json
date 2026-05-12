@@ -31,6 +31,7 @@
     "found": "Found",
     "configure": "Configure",
     "ok": "OK",
+    "notFound": "Not found",
     "skipToContent": "Skip to content"
   },
   "nav": {
@@ -74,7 +75,6 @@
   },
   "footer": {
     "help": "Help",
-    "status": "Status",
     "terms": "Terms"
   },
   "auth": {
@@ -744,9 +744,7 @@
       "title": "Assignment Builder",
       "description": "Create assignments with peer review parameter configuration.",
       "breadcrumb": "Assignments",
-      "createAssignment": "Create Assignment",
-      "demoMode": "Demo mode:",
-      "demoModeDesc": "This page will contain management features for teachers."
+      "createAssignment": "Create Assignment"
     },
     "createCourse": {
       "title": "Create Course",
@@ -1504,7 +1502,6 @@
     "publicLayout": {
       "signIn": "Sign In",
       "help": "Help",
-      "status": "Status",
       "terms": "Terms"
     },
     "topBar": {
@@ -1514,7 +1511,6 @@
       "profile": "Profile",
       "settings": "Settings",
       "help": "Help",
-      "serviceStatus": "Service Status",
       "logout": "Log Out",
       "profileMenu": "Profile menu",
       "defaultUser": "User"
@@ -1585,8 +1581,6 @@
       "security": "Security",
       "passwordAnd2FA": "Password & 2FA",
       "appVersion": "App Version",
-      "systemStatus": "System Status",
-      "checkStatus": "Check Status",
       "termsOfUse": "Terms of Use",
       "read": "Read",
       "privacyPolicy": "Privacy Policy"
@@ -1795,8 +1789,7 @@
       "roleAdminSubtitle": "Transparency",
       "roleAdminDesc": "The administrator can monitor system health and metrics.",
       "ctaTitle": "Peerly will help optimize teacher workload and improve the quality of education.",
-      "footerHelp": "Help",
-      "footerStatus": "Status"
+      "footerHelp": "Help"
     },
     "help": {
       "title": "Help & Support",
@@ -1902,53 +1895,6 @@
       "contactReference": "Reference",
       "contactHelpCenter": "Help Center",
       "contactResponseTime": "We aim to respond to all inquiries within 2-3 business days."
-    },
-    "status": {
-      "title": "Service Status",
-      "subtitle": "Current state of Peerly systems and incident history",
-      "operational": "All Systems Operational",
-      "degraded": "Partial Outage",
-      "outage": "Service Issues",
-      "operationalDesc": "All services are operating normally",
-      "degradedDesc": "Some features may be slower than usual",
-      "outageDesc": "We are working on restoring the service",
-      "clickToToggle": "Click to toggle status (demo)",
-      "updatedAt": "Updated:",
-      "subscribeTitle": "Subscribe to Updates",
-      "subscribeDesc": "Receive notifications about service status and planned maintenance",
-      "invalidEmail": "Invalid email",
-      "subscribe": "Subscribe",
-      "demoNote": "Demo: notifications are not sent",
-      "subscribeSuccess": "Subscribed",
-      "subscribeSuccessDesc": "Notifications will be sent to {{email}}",
-      "incidentsTitle": "Incident History",
-      "incidentsSubtitle": "Last 5 incidents and updates",
-      "investigating": "Investigating",
-      "monitoring": "Monitoring",
-      "resolved": "Resolved",
-      "updates": "Updates",
-      "footerNote": "For service status inquiries:",
-      "incident1Title": "All systems operating normally",
-      "incident1Summary": "Peerly systems are operating in normal mode.",
-      "incident1Update1": "All services are running stably. No issues detected.",
-      "incident2Title": "Temporary file upload slowdown",
-      "incident2Summary": "Users experienced delays when uploading large submission files.",
-      "incident2Update1": "Issue resolved. We increased file storage server throughput. All uploads are working normally.",
-      "incident2Update2": "We applied a temporary fix and are monitoring the system. Upload speed has improved.",
-      "incident2Update3": "We received reports of slow file uploads and began investigating.",
-      "incident3Title": "Authentication issues",
-      "incident3Summary": "Some users could not sign in due to authentication server issues.",
-      "incident3Update1": "Authentication service fully restored. All users can sign in.",
-      "incident3Update2": "We restarted the authentication service. Most users can sign in, continuing to monitor.",
-      "incident3Update3": "We are investigating sign-in issues reported by users.",
-      "incident4Title": "Scheduled maintenance",
-      "incident4Summary": "Scheduled database update with brief service interruption.",
-      "incident4Update1": "Maintenance completed successfully. All systems are operating normally.",
-      "incident4Update2": "Scheduled maintenance has started. Service will be unavailable until 04:00 UTC.",
-      "incident5Title": "Grade export errors",
-      "incident5Summary": "Teachers received errors when attempting to export gradebook to CSV format.",
-      "incident5Update1": "Export module bug fixed. Grade export function is working correctly.",
-      "incident5Update2": "We received reports of export errors and began investigating."
     },
     "reviewFill": {
       "notFoundTitle": "Review Not Found",
@@ -2194,15 +2140,9 @@
         "createNew": "Create new rubric",
         "createNewHint": "Opens in a new tab, then come back here",
         "library": "Rubric library",
-        "recommended": "Recommended",
-        "recommendedForType": "(recommended for type \"{{type}}\" listed first)",
-        "noRubrics": "No rubrics found. Create a new rubric.",
-        "typeText": "Text",
-        "typeCode": "Code",
-        "typeProject": "Project",
-        "typeFiles": "Files",
+        "noRubrics": "No rubrics yet. Create one — it will show up here and in the library.",
         "skipTip": "Can be skipped:",
-        "skipTipText": "You can skip selecting a rubric now and add one later. However, having a rubric helps students understand the grading criteria."
+        "skipTipText": "The rubric becomes the assignment checklist and is editable only while the assignment is a draft. Once published, the checklist is frozen."
       },
       "peerSession": {
         "title": "Peer review settings",
@@ -2269,48 +2209,23 @@
         "courseNotSelected": "Not selected",
         "titleLabel": "Title",
         "notSpecified": "Not specified",
-        "taskTypeLabel": "Assignment type",
         "descriptionLabel": "Description",
-        "attachmentsLabel": "Attached files",
-        "fileOne": "file",
-        "fileMany": "files",
         "deadlines": "Deadlines",
         "submissionDeadline": "Submission deadline",
         "reviewDeadline": "Review deadline",
-        "latePolicyLabel": "Late policy",
-        "latePolicySoft": "Soft ({{penalty}}% penalty per day)",
-        "latePolicyHard": "Hard (no late submissions accepted)",
         "rubricLabel": "Grading rubric",
         "rubricNotSelected": "Not selected",
         "peerReviewLabel": "Peer Review",
         "reviewsPerSubmission": "Reviews per submission",
-        "distributionLabel": "Distribution",
-        "distributionRandom": "Random",
-        "distributionSkillBased": "Skill-based",
-        "distributionManual": "Manual",
-        "anonymityLabel": "Anonymity",
-        "anonymityFull": "Full",
-        "anonymityPartial": "Partial",
-        "anonymityNone": "No anonymity",
-        "reassignmentLabel": "Reassignment",
-        "reassignmentAllowed": "Allowed",
-        "reassignmentForbidden": "Forbidden",
-        "pluginsLabel": "Plugins and checks",
-        "pluginPlagiarism": "Plagiarism (threshold {{threshold}}%)",
-        "pluginLinter": "Code linting",
-        "pluginFormatCheck": "Format check",
-        "pluginAnonymization": "Anonymization",
-        "noPlugins": "Automated checks disabled",
         "warningText": "After publishing, the assignment will be visible to students. You can edit settings, but some changes (e.g., deadlines) may affect work already in progress.",
         "warningAttention": "Please note:",
         "saveDraft": "Save draft",
         "publishAssignment": "Publish assignment",
+        "publishing": "Publishing...",
         "draftsInfo": "Drafts are saved automatically and are only visible to you.",
         "publishedInfo": "Published assignments are immediately visible to course students.",
-        "typeText": "Text",
-        "typeCode": "Code",
-        "typeProject": "Project",
-        "typeFiles": "Files"
+        "errorMissingFields": "Pick a course and both deadlines before publishing",
+        "errorGeneric": "Could not create the assignment. Please try again."
       }
     },
     "participantImport": {

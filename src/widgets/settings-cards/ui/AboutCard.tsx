@@ -32,19 +32,6 @@ export function AboutCard() {
         </div>
 
         <div className="flex items-center justify-between py-3 border-b border-border">
-          <span className="text-[15px] text-muted-foreground">
-            {t("widget.about.systemStatus")}
-          </span>
-          <Link
-            to="/status"
-            className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
-          >
-            {t("widget.about.checkStatus")}
-            <ExternalLink className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-between py-3 border-b border-border">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.termsOfUse")}</span>
           <Link
             to="/terms"

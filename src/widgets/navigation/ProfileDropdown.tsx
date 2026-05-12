@@ -1,4 +1,4 @@
-import { User, Settings, HelpCircle, Activity, LogOut } from "lucide-react";
+import { User, Settings, HelpCircle, LogOut } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -75,14 +75,6 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       label: t("widget.profileDropdown.help"),
       onClick: () => {
         void navigate("/help");
-        setIsOpen(false);
-      },
-    },
-    {
-      icon: Activity,
-      label: t("widget.profileDropdown.serviceStatus"),
-      onClick: () => {
-        void navigate("/status");
         setIsOpen(false);
       },
     },

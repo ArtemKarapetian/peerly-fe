@@ -26,7 +26,6 @@ const Error500Page = lazy(() => import("@/pages/errors/500/ui/Page"));
 const HelpPage = lazy(() => import("@/pages/public/help/ui/Page"));
 const LandingPage = lazy(() => import("@/pages/public/landing/ui/Page"));
 const ResetPasswordPage = lazy(() => import("@/pages/public/reset-password/ui/Page"));
-const StatusPage = lazy(() => import("@/pages/public/status/ui/Page"));
 const TermsPage = lazy(() => import("@/pages/public/terms/ui/Page"));
 const VerifyEmailPage = lazy(() => import("@/pages/public/verify-email/ui/Page"));
 
@@ -81,7 +80,6 @@ export function Router() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/help" element={<HelpPage />} />
-        <Route path="/status" element={<StatusPage />} />
         <Route path="/terms" element={<TermsPage />} />
 
         {/* Feature-flagged public */}
