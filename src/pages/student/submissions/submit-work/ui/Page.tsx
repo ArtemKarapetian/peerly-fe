@@ -55,8 +55,8 @@ export default function SubmitWorkPage() {
 
   if (submission && submission.id !== syncedId) {
     setSyncedId(submission.id);
-    const incoming = submission.content.trim();
-    setComment(incoming === "" || incoming === "—" ? "" : submission.content);
+    const incoming = (submission.content ?? "").trim();
+    setComment(incoming === "" || incoming === "—" ? "" : (submission.content ?? ""));
   }
 
   const refreshSubmission = () =>
@@ -73,8 +73,21 @@ export default function SubmitWorkPage() {
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
+      const existedBefore = !!submission?.id;
       const submissionId = await ensureSubmission();
-      await storageApi.upload(file, { kind: "submission", submissionId });
+      try {
+        await storageApi.upload(file, { kind: "submission", submissionId });
+      } catch (err) {
+        if (!existedBefore) {
+          try {
+            await workRepo.delete(submissionId);
+          } catch {
+            // noop
+          }
+          await refreshSubmission();
+        }
+        throw err;
+      }
     },
     onSuccess: () => refreshSubmission(),
     onError: () => setActionError(t("page.submitWork.uploadError")),

@@ -45,20 +45,30 @@ export function useAssignedReviewsInbox() {
         visible.map(async (a) => {
           const assigned = await reviewRepo.listAssigned(a.id).catch(() => []);
           const { label, ts } = formatDeadline(a.reviewDeadline);
-          return assigned.map(
-            (r) =>
-              ({
-                id: r.submissionId,
-                taskTitle: a.title,
-                courseName: courseNameById.get(a.courseId) ?? "",
-                courseId: a.courseId,
-                taskId: a.id,
-                reviewDeadline: label,
-                reviewDeadlineTimestamp: ts,
-                status: "not_started",
-                isAnonymous: true,
-              }) satisfies InboxReview,
+
+          const enriched = await Promise.all(
+            assigned.map(async (r) => {
+              const sub = await reviewRepo.getAssignedSubmission(r.submissionId).catch(() => null);
+              return { r, alreadyReviewed: !!sub?.submittedReviewId };
+            }),
           );
+
+          return enriched
+            .filter(({ alreadyReviewed }) => !alreadyReviewed)
+            .map(
+              ({ r }) =>
+                ({
+                  id: r.submissionId,
+                  taskTitle: a.title,
+                  courseName: courseNameById.get(a.courseId) ?? "",
+                  courseId: a.courseId,
+                  taskId: a.id,
+                  reviewDeadline: label,
+                  reviewDeadlineTimestamp: ts,
+                  status: "not_started",
+                  isAnonymous: true,
+                }) satisfies InboxReview,
+            );
         }),
       );
 
