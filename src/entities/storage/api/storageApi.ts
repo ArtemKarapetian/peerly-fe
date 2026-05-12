@@ -57,6 +57,17 @@ export const storageApi = {
     return res.url;
   },
 
+  triggerDownload: (url: string, fileName?: string): void => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.rel = "noopener noreferrer";
+    if (fileName) a.download = fileName;
+    else a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  },
+
   deleteHomeworkFile: async (homeworkId: string, fileId: string): Promise<void> => {
     await http.delete<void>(`/homeworks/${homeworkId}/file/${fileId}`);
   },
