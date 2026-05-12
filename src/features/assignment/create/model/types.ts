@@ -7,6 +7,7 @@ export interface AssignmentFormData {
   rubricId: string | null;
   rubricName?: string;
   reviewsPerSubmission: number;
+  discrepancyThreshold: number;
   status: "draft" | "published";
   createdAt: Date;
   updatedAt: Date;

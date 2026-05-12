@@ -52,7 +52,7 @@ export default function TeacherCourseDetailsPage() {
   if (error)
     return (
       <AppShell title={t("teacher.courseDetail.error")}>
-        <ErrorBanner message={error.message} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={refetch} />
       </AppShell>
     );
 

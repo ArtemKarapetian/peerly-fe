@@ -104,7 +104,7 @@ export default function TeacherDistributionPage() {
   if (baseError)
     return (
       <AppShell title={t("teacher.distribution.title")}>
-        <ErrorBanner message={baseError.message} onRetry={baseRefetch} />
+        <ErrorBanner error={baseError} onRetry={baseRefetch} />
       </AppShell>
     );
 

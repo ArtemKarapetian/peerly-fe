@@ -272,8 +272,8 @@
       "openCourse": "Open course {{name}}"
     },
     "submissions": {
-      "title": "View Submissions",
-      "subtitle": "Manage student submissions and check plagiarism",
+      "title": "Student Submissions",
+      "subtitle": "Manage student submissions",
       "allAssignments": "All Assignments",
       "allStatuses": "All Statuses",
       "submitted": "Submitted",
@@ -2152,26 +2152,10 @@
         "reviewFew": "reviews",
         "reviewMany": "reviews",
         "reviewsHint": "Each submission will receive {{count}} {{form}}. Recommended: 3-5 for a balance of quality and workload.",
-        "distributionLabel": "Review distribution mode",
-        "distributionRandom": "Random distribution",
-        "distributionRandomDesc": "Submissions are distributed randomly among students. Fast and fair.",
-        "distributionSkillBased": "Skill-based",
-        "distributionSkillBasedDesc": "The system matches reviewers with similar skill levels. Requires prior data.",
-        "distributionManual": "Manual",
-        "distributionManualDesc": "You assign submissions to students manually. Maximum control.",
-        "anonymityLabel": "Anonymity level",
-        "anonymityFull": "Full anonymity",
-        "anonymityFullDesc": "Students cannot see the author or reviewer. Recommended for objectivity.",
-        "anonymityPartial": "Partial anonymity",
-        "anonymityPartialDesc": "The author is hidden, but the reviewer is visible. Useful for learning to review.",
-        "anonymityNone": "No anonymity",
-        "anonymityNoneDesc": "Everyone can see each other. Suitable for small group work.",
-        "allowReassignment": "Allow review reassignment",
-        "reassignmentHint": "Students can request a different submission to review if the current one is too difficult or there is a conflict of interest.",
-        "reassignmentDeadlineLabel": "Reassignment request deadline",
-        "reassignmentDeadlineHint": "After this time, reassignment will be unavailable",
+        "discrepancyLabel": "Score discrepancy threshold (%)",
+        "discrepancyHint": "If reviewer scores on one submission diverge by more than {{value}}%, the submission is re-reviewed. A reasonable value is 20–40%.",
         "tip": "Tip:",
-        "tipText": "For courses with many students (30+), random distribution with full anonymity and k=3-5 reviews is recommended."
+        "tipText": "For courses with many students (30+), k=3-5 reviews and a 30% discrepancy threshold usually work well."
       },
       "plugins": {
         "title": "Plugins and checks",
@@ -2547,7 +2531,8 @@
   },
   "shared": {
     "errorBanner": {
-      "retry": "Retry"
+      "retry": "Retry",
+      "fallback": "Something went wrong. Please try again."
     },
     "saveStatus": {
       "unsaved": "Unsaved changes",

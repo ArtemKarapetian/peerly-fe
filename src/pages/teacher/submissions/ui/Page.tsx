@@ -118,7 +118,7 @@ export default function TeacherSubmissionsPage() {
   if (error)
     return (
       <AppShell title={t("teacher.submissions.title")}>
-        <ErrorBanner message={error.message} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={refetch} />
       </AppShell>
     );
 
