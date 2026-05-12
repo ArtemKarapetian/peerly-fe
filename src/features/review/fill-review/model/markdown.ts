@@ -13,12 +13,13 @@ export function serializeReview(input: SerializedReview, criteria: RubricCriteri
   for (const criterion of criteria) {
     const score = input.scores.find((s) => s.criterionId === criterion.id);
     if (!score || score.score === null) continue;
-    const body = score.comment.trim();
+    const body = (score.comment ?? "").trim();
     blocks.push(`## ${criterion.title}\n**Оценка:** ${score.score}${body ? `\n\n${body}` : ""}`);
   }
 
-  if (input.overallComment.trim()) {
-    blocks.push(`## ${OVERALL_HEADER}\n\n${input.overallComment.trim()}`);
+  const overall = (input.overallComment ?? "").trim();
+  if (overall) {
+    blocks.push(`## ${OVERALL_HEADER}\n\n${overall}`);
   }
 
   return blocks.join("\n\n");

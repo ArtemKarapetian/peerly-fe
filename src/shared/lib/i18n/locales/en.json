@@ -138,7 +138,10 @@
     "serverErrorDesc": "Something went wrong on our end. We're already working on fixing the issue. Please try refreshing the page later.",
     "toDashboard": "To Dashboard",
     "toCourses": "To Courses",
-    "toHome": "To Home"
+    "toHome": "To Home",
+    "unexpected": "Something went wrong",
+    "unexpectedDescription": "An unexpected error occurred. Please try refreshing the page.",
+    "reload": "Reload page"
   },
   "student": {
     "dashboard": {
