@@ -72,7 +72,7 @@ export default function AdminCoursesPage() {
   if (error)
     return (
       <AppShell title={t("admin.courses.title")}>
-        <ErrorBanner message={error.message} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={refetch} />
       </AppShell>
     );
 

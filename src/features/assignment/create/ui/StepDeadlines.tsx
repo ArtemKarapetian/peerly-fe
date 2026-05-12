@@ -108,9 +108,11 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
 
       <div className="flex items-start gap-3 bg-warning-light border border-warning rounded-[12px] p-4">
         <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
-        <div className="text-[13px] text-foreground">
-          <p className="font-medium mb-1">{t("feature.assignmentCreate.deadlines.warningTitle")}</p>
-          <p className="text-muted-foreground">
+        <div>
+          <p className="text-[14px] font-medium text-foreground mb-1">
+            {t("feature.assignmentCreate.deadlines.warningTitle")}
+          </p>
+          <p className="text-[13px] text-muted-foreground">
             {t("feature.assignmentCreate.deadlines.warningText")}
           </p>
         </div>

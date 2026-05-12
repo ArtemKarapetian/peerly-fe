@@ -69,7 +69,7 @@ export default function AdminUsersPage() {
   if (error)
     return (
       <AppShell title={t("admin.users.title")}>
-        <ErrorBanner message={error.message} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={refetch} />
       </AppShell>
     );
 

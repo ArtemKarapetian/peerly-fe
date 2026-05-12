@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { humanizeApiError } from "@/shared/api";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
@@ -47,6 +48,7 @@ const getInitialFormData = (): AssignmentFormData => {
       };
       return {
         ...parsed,
+        discrepancyThreshold: parsed.discrepancyThreshold ?? 30,
         submissionDeadline: parsed.submissionDeadline ? new Date(parsed.submissionDeadline) : null,
         reviewDeadline: parsed.reviewDeadline ? new Date(parsed.reviewDeadline) : null,
         createdAt: new Date(parsed.createdAt),
@@ -65,6 +67,7 @@ const getInitialFormData = (): AssignmentFormData => {
     reviewDeadline: null,
     rubricId: null,
     reviewsPerSubmission: 3,
+    discrepancyThreshold: 30,
     status: "draft",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -167,6 +170,7 @@ export default function TeacherCreateAssignmentPage({
         dueDate: formData.submissionDeadline,
         reviewDeadline: formData.reviewDeadline,
         reviewCount: formData.reviewsPerSubmission,
+        discrepancyThreshold: formData.discrepancyThreshold,
       });
       if (!asDraft) {
         try {
@@ -179,9 +183,7 @@ export default function TeacherCreateAssignmentPage({
       void navigate(`/teacher/assignment/${homeworkId}`);
     } catch (e) {
       console.error("Failed to create assignment", e);
-      setSubmitError(
-        e instanceof Error ? e.message : t("feature.assignmentCreate.publish.errorGeneric"),
-      );
+      setSubmitError(humanizeApiError(e, t("feature.assignmentCreate.publish.errorGeneric")));
     } finally {
       setSubmitting(false);
     }

@@ -85,7 +85,7 @@ export default function TeacherCoursesPage() {
   if (error)
     return (
       <AppShell title={t("teacher.courses.management")}>
-        <ErrorBanner message={error.message} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={refetch} />
       </AppShell>
     );
 
