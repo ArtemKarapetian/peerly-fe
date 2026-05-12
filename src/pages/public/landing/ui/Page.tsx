@@ -253,12 +253,6 @@ export default function LandingPage() {
               >
                 {t("page.landing.footerHelp")}
               </Link>
-              <Link
-                to="/status"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t("page.landing.footerStatus")}
-              </Link>
             </nav>
 
             <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Peerly</p>

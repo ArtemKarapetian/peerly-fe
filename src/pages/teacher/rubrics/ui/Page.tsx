@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
+import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import { setRubrics, useRubrics } from "@/widgets/rubric-editor/model/store";
 import type { RubricData } from "@/widgets/rubric-editor/model/types";
+
+const PAGE_SIZE = 12;
 
 export default function TeacherRubricsPage() {
   const { t } = useTranslation();
@@ -20,6 +23,11 @@ export default function TeacherRubricsPage() {
     const q = searchQuery.toLowerCase();
     return rubric.name.toLowerCase().includes(q) || rubric.description.toLowerCase().includes(q);
   });
+
+  const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
+    filteredRubrics,
+    PAGE_SIZE,
+  );
 
   const handleCreateNew = () => {
     const newRubric: RubricData = {
@@ -113,7 +121,7 @@ export default function TeacherRubricsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
-          {filteredRubrics.map((rubric) => (
+          {currentItems.map((rubric) => (
             <div
               key={rubric.id}
               onClick={() => void navigate(`/teacher/rubrics/${rubric.id}`)}
@@ -151,6 +159,16 @@ export default function TeacherRubricsPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {filteredRubrics.length > 0 && (
+        <div className="mt-6">
+          <SimplePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </AppShell>

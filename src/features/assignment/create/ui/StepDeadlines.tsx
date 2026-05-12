@@ -3,52 +3,33 @@ import { useTranslation } from "react-i18next";
 
 import type { AssignmentFormData } from "../model/types";
 
-/**
- * StepDeadlines - Шаг 2: Дедлайны
- *
- * - Дедлайн сдачи работы
- * - Дедлайн рецензирования
- * - Политика опозданий (мягкая/жесткая)
- * - Часовой пояс
- */
-
 interface StepDeadlinesProps {
   data: AssignmentFormData;
   onUpdate: (updates: Partial<AssignmentFormData>) => void;
 }
 
+function formatDateForInput(date: Date | null): string {
+  if (!date) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   const { t } = useTranslation();
 
-  const formatDateForInput = (date: Date | null) => {
-    if (!date) return "";
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  const handleDateChange = (field: "submissionDeadline" | "reviewDeadline", value: string) => {
+    onUpdate({ [field]: value ? new Date(value) : null });
   };
 
-  const handleDateChange = (
-    field: "submissionDeadline" | "reviewDeadline" | "reassignmentDeadline",
-    value: string,
-  ) => {
-    onUpdate({
-      [field]: value ? new Date(value) : null,
-    });
-  };
-
-  // Calculate time between deadlines
-  const getTimeDifference = () => {
+  const timeDiff = (() => {
     if (!data.submissionDeadline || !data.reviewDeadline) return null;
     const diff = data.reviewDeadline.getTime() - data.submissionDeadline.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    return { days, hours, total: diff };
-  };
-
-  const timeDiff = getTimeDifference();
+    return {
+      days: Math.floor(diff / 86_400_000),
+      hours: Math.floor((diff % 86_400_000) / 3_600_000),
+      total: diff,
+    };
+  })();
 
   return (
     <div className="space-y-6">
@@ -61,7 +42,6 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         </p>
       </div>
 
-      {/* Submission Deadline */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}{" "}
@@ -81,7 +61,6 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         </p>
       </div>
 
-      {/* Review Deadline */}
       <div>
         <label className="block text-[14px] font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}{" "}
@@ -102,17 +81,13 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         </p>
       </div>
 
-      {/* Time Difference Display */}
       {timeDiff && (
         <div
-          className={`
-            flex items-start gap-3 p-4 rounded-[12px] border
-            ${
-              timeDiff.total < 2 * 24 * 60 * 60 * 1000
-                ? "bg-warning-light border-warning"
-                : "bg-success-light border-success"
-            }
-          `}
+          className={`flex items-start gap-3 p-4 rounded-[12px] border ${
+            timeDiff.total < 2 * 86_400_000
+              ? "bg-warning-light border-warning"
+              : "bg-success-light border-success"
+          }`}
         >
           <Clock className="w-5 h-5 text-foreground mt-0.5" />
           <div>
@@ -122,7 +97,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
                 `${timeDiff.days} ${t("feature.assignmentCreate.deadlines.days")} `}
               {timeDiff.hours} {t("feature.assignmentCreate.deadlines.hours")}
             </p>
-            {timeDiff.total < 2 * 24 * 60 * 60 * 1000 && (
+            {timeDiff.total < 2 * 86_400_000 && (
               <p className="text-[13px] text-warning">
                 {t("feature.assignmentCreate.deadlines.reviewTimeWarning")}
               </p>
@@ -131,115 +106,6 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         </div>
       )}
 
-      {/* Late Policy */}
-      <div>
-        <label className="block text-[14px] font-medium text-foreground mb-3">
-          {t("feature.assignmentCreate.deadlines.latePolicyLabel")}
-        </label>
-        <div className="grid grid-cols-1 desktop:grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => onUpdate({ latePolicy: "soft" })}
-            className={`
-              p-4 border-2 rounded-[12px] text-left transition-all
-              ${
-                data.latePolicy === "soft"
-                  ? "border-brand-primary bg-brand-primary-light"
-                  : "border-border hover:border-brand-primary bg-card"
-              }
-            `}
-          >
-            <div className="text-[15px] font-medium text-foreground mb-1">
-              {t("feature.assignmentCreate.deadlines.latePolicySoft")}
-            </div>
-            <div className="text-[13px] text-muted-foreground">
-              {t("feature.assignmentCreate.deadlines.latePolicySoftDesc")}
-            </div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onUpdate({ latePolicy: "hard" })}
-            className={`
-              p-4 border-2 rounded-[12px] text-left transition-all
-              ${
-                data.latePolicy === "hard"
-                  ? "border-brand-primary bg-brand-primary-light"
-                  : "border-border hover:border-brand-primary bg-card"
-              }
-            `}
-          >
-            <div className="text-[15px] font-medium text-foreground mb-1">
-              {t("feature.assignmentCreate.deadlines.latePolicyHard")}
-            </div>
-            <div className="text-[13px] text-muted-foreground">
-              {t("feature.assignmentCreate.deadlines.latePolicyHardDesc")}
-            </div>
-          </button>
-        </div>
-      </div>
-
-      {/* Late Penalty (if soft policy) */}
-      {data.latePolicy === "soft" && (
-        <div>
-          <label className="block text-[14px] font-medium text-foreground mb-2">
-            {t("feature.assignmentCreate.deadlines.latePenaltyLabel")}
-          </label>
-          <div className="flex items-center gap-4">
-            <input
-              type="range"
-              min="0"
-              max="50"
-              step="5"
-              value={data.latePenalty}
-              onChange={(e) => onUpdate({ latePenalty: parseInt(e.target.value) })}
-              className="flex-1"
-            />
-            <span className="text-[18px] font-medium text-foreground w-16 text-right">
-              {data.latePenalty}%
-            </span>
-          </div>
-          <p className="text-[13px] text-muted-foreground mt-2">
-            {t("feature.assignmentCreate.deadlines.latePenaltyExample", {
-              penalty: data.latePenalty,
-              max: 100 - data.latePenalty * 2,
-            })}
-          </p>
-        </div>
-      )}
-
-      {/* Timezone */}
-      <div>
-        <label className="block text-[14px] font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.deadlines.timezoneLabel")}
-        </label>
-        <select
-          value={data.timezone}
-          onChange={(e) => onUpdate({ timezone: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
-        >
-          <option value="Europe/Moscow">
-            {t("feature.assignmentCreate.deadlines.timezoneMoscow")}
-          </option>
-          <option value="Europe/London">
-            {t("feature.assignmentCreate.deadlines.timezoneLondon")}
-          </option>
-          <option value="America/New_York">
-            {t("feature.assignmentCreate.deadlines.timezoneNewYork")}
-          </option>
-          <option value="Asia/Tokyo">
-            {t("feature.assignmentCreate.deadlines.timezoneTokyo")}
-          </option>
-          <option value="Australia/Sydney">
-            {t("feature.assignmentCreate.deadlines.timezoneSydney")}
-          </option>
-        </select>
-        <p className="text-[13px] text-muted-foreground mt-1">
-          {t("feature.assignmentCreate.deadlines.timezoneHint")}
-        </p>
-      </div>
-
-      {/* Warning */}
       <div className="flex items-start gap-3 bg-warning-light border border-warning rounded-[12px] p-4">
         <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
         <div className="text-[13px] text-foreground">
