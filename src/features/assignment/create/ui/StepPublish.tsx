@@ -133,11 +133,19 @@ export function StepPublish({ data, onPublish, submitting, errorMessage }: StepP
             </h3>
           </div>
 
-          <div className="ml-13 pl-5 border-l-2 border-border">
-            <p className="text-[12px] text-muted-foreground mb-1">
-              {t("feature.assignmentCreate.publish.reviewsPerSubmission")}
-            </p>
-            <p className="text-[14px] text-foreground">{data.reviewsPerSubmission}</p>
+          <div className="ml-13 pl-5 border-l-2 border-border space-y-3">
+            <div>
+              <p className="text-[12px] text-muted-foreground mb-1">
+                {t("feature.assignmentCreate.publish.reviewsPerSubmission")}
+              </p>
+              <p className="text-[14px] text-foreground">{data.reviewsPerSubmission}</p>
+            </div>
+            <div>
+              <p className="text-[12px] text-muted-foreground mb-1">
+                {t("feature.assignmentCreate.publish.discrepancyThreshold")}
+              </p>
+              <p className="text-[14px] text-foreground">{data.discrepancyThreshold}%</p>
+            </div>
           </div>
         </div>
       </div>

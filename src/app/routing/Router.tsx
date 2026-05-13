@@ -52,15 +52,13 @@ const TeacherAssignmentDetailsPage = lazy(
   () => import("@/pages/teacher/assignment-detail/ui/Page"),
 );
 const TeacherAssignmentsPage = lazy(() => import("@/pages/teacher/assignments/ui/Page"));
+const TeacherAnalyticsPage = lazy(() => import("@/pages/teacher/analytics/ui/Page"));
 const TeacherCourseDetailsPage = lazy(() => import("@/pages/teacher/course-detail/ui/Page"));
 const TeacherCoursesPage = lazy(() => import("@/pages/teacher/courses/ui/Page"));
 const TeacherCreateAssignmentPage = lazy(() => import("@/pages/teacher/create-assignment/ui/Page"));
 const TeacherCreateCoursePage = lazy(() => import("@/pages/teacher/create-course/ui/Page"));
 const TeacherDistributionPage = lazy(() => import("@/pages/teacher/distribution/ui/Page"));
 const TeacherModerationPage = lazy(() => import("@/pages/teacher/moderation/ui/Page"));
-const TeacherPeerSessionSettingsPage = lazy(
-  () => import("@/pages/teacher/peer-session-settings/ui/Page"),
-);
 const TeacherRubricsPage = lazy(() => import("@/pages/teacher/rubrics/ui/Page"));
 const TeacherRubricDetailPage = lazy(() => import("@/pages/teacher/rubric-detail/ui/Page"));
 const TeacherSubmissionsPage = lazy(() => import("@/pages/teacher/submissions/ui/Page"));
@@ -146,10 +144,7 @@ export function Router() {
               path="/teacher/assignment/:assignmentId"
               element={<TeacherAssignmentDetailsPage />}
             />
-            <Route
-              path="/teacher/peer-session-settings/:assignmentId"
-              element={<TeacherPeerSessionSettingsPage />}
-            />
+            <Route path="/teacher/analytics" element={<TeacherAnalyticsPage />} />
             <Route path="/teacher/distribution" element={<TeacherDistributionPage />} />
             <Route path="/teacher/moderation" element={<TeacherModerationPage />} />
             <Route path="/teacher/submissions" element={<TeacherSubmissionsPage />} />

@@ -1,4 +1,4 @@
-import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
+import { Edit, Trash2, Calendar, BarChart3, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -181,20 +181,7 @@ export default function TeacherAssignmentDetailsPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 tablet:grid-cols-3 gap-4">
-        <button
-          onClick={() => void navigate(`/teacher/peer-session-settings/${assignmentId}`)}
-          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
-        >
-          <Settings className="w-6 h-6 text-brand-primary mb-3" />
-          <h3 className="text-[16px] font-medium text-foreground mb-2">
-            {t("teacher.assignmentDetail.peerSessionSettings")}
-          </h3>
-          <p className="text-[13px] text-muted-foreground">
-            {t("teacher.assignmentDetail.peerSessionSettingsDesc")}
-          </p>
-        </button>
-
+      <div className="mt-6 grid grid-cols-1 tablet:grid-cols-2 gap-4">
         <button
           onClick={() => void navigate(`/teacher/submissions?assignmentId=${assignmentId}`)}
           className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
@@ -209,7 +196,7 @@ export default function TeacherAssignmentDetailsPage() {
         </button>
 
         <button
-          onClick={() => void navigate(`/teacher/assignment/${assignmentId}/analytics`)}
+          onClick={() => void navigate(`/teacher/analytics?assignmentId=${assignmentId}`)}
           className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
         >
           <BarChart3 className="w-6 h-6 text-brand-primary mb-3" />
