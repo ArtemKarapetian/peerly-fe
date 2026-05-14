@@ -34,6 +34,7 @@ export function SimplePagination({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!canGoPrevious}
         className="gap-1"
+        aria-label={t("shared.pagination.previous")}
       >
         <ChevronLeft className="size-4" />
         {t("shared.pagination.previous")}
@@ -54,6 +55,7 @@ export function SimplePagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!canGoNext}
         className="gap-1"
+        aria-label={t("shared.pagination.next")}
       >
         {t("shared.pagination.next")}
         <ChevronRight className="size-4" />
@@ -62,7 +64,6 @@ export function SimplePagination({
   );
 }
 
-// Hook for pagination logic
 export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
   const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -72,7 +73,6 @@ export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
   const currentItems = items.slice(startIndex, endIndex);
 
   React.useEffect(() => {
-    // Reset to page 1 if items change
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(1);
     }

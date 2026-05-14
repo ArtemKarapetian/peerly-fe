@@ -22,11 +22,14 @@ export default defineConfig({
         "src/test/**",
         "src/main.tsx",
         "src/**/*.d.ts",
+        "src/imports/**",
+        "src/shared/ui/{skeleton,sonner,utils}.{ts,tsx}",
       ],
       thresholds: {
-        // Overall project threshold — realistic for large UI-heavy codebase.
-        // Key business logic (mappers, utils, auth, repos) is at 80%+.
-        statements: 5,
+        statements: 30,
+        branches: 50,
+        functions: 40,
+        lines: 30,
       },
     },
   },

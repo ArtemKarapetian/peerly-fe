@@ -32,6 +32,17 @@ vite.config.ts.timestamp-*
 # Test coverage
 coverage/
 
+# Playwright
+/playwright-report
+/test-results
+/playwright/.cache
+/.playwright
+
+# Cypress
+/cypress/videos
+/cypress/screenshots
+/cypress/downloads
+
 # Vercel
 .vercel
 
