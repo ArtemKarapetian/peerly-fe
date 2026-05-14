@@ -12,9 +12,16 @@ interface StepPublishProps {
   onPublish: (asDraft: boolean) => void;
   submitting?: boolean;
   errorMessage?: string | null;
+  mode?: "create" | "edit";
 }
 
-export function StepPublish({ data, onPublish, submitting, errorMessage }: StepPublishProps) {
+export function StepPublish({
+  data,
+  onPublish,
+  submitting,
+  errorMessage,
+  mode = "create",
+}: StepPublishProps) {
   const { t } = useTranslation();
   const { data: courses } = useAsync(() => courseRepo.getAll(), []);
   const course = (courses ?? []).find((c) => c.id === data.courseId);
@@ -171,7 +178,9 @@ export function StepPublish({ data, onPublish, submitting, errorMessage }: StepP
           className="flex-1 flex items-center justify-center gap-2 px-6 py-4 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-5 h-5" />
-          {t("feature.assignmentCreate.publish.saveDraft")}
+          {mode === "edit"
+            ? t("feature.assignmentCreate.publish.saveDraftEdit")
+            : t("feature.assignmentCreate.publish.saveDraft")}
         </button>
         <button
           onClick={() => onPublish(false)}

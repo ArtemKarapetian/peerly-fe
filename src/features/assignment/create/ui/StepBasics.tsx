@@ -9,9 +9,10 @@ import type { AssignmentFormData } from "../model/types";
 interface StepBasicsProps {
   data: AssignmentFormData;
   onUpdate: (updates: Partial<AssignmentFormData>) => void;
+  lockCourse?: boolean;
 }
 
-export function StepBasics({ data, onUpdate }: StepBasicsProps) {
+export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
   const { t } = useTranslation();
   const { data: courses } = useAsync(() => courseRepo.getAll(), []);
 
@@ -34,7 +35,8 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
         <select
           value={data.courseId}
           onChange={(e) => onUpdate({ courseId: e.target.value })}
-          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card"
+          disabled={lockCourse}
+          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors bg-card disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <option value="">{t("feature.assignmentCreate.basics.coursePlaceholder")}</option>
           {(courses ?? []).map((course) => (
@@ -43,6 +45,11 @@ export function StepBasics({ data, onUpdate }: StepBasicsProps) {
             </option>
           ))}
         </select>
+        {lockCourse && (
+          <p className="text-[12px] text-muted-foreground mt-1">
+            {t("feature.assignmentCreate.basics.courseLockedHint")}
+          </p>
+        )}
       </div>
 
       <div>

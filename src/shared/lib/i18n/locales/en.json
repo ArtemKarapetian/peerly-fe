@@ -594,6 +594,7 @@
       "editBtn": "Edit",
       "deleteBtn": "Delete",
       "deleteConfirm": "Delete this assignment?",
+      "deleteError": "Could not delete the assignment. Please try again.",
       "studentsInCourse": "Students in Course",
       "submissionsCount": "Submissions",
       "reviewsReady": "Reviews Ready",
@@ -644,6 +645,12 @@
       "backBtn": "Back",
       "nextBtn": "Next",
       "stepOf": "Step {{current}} of {{total}}"
+    },
+    "editAssignment": {
+      "title": "Edit Assignment",
+      "notFound": "Assignment not found.",
+      "publishedHint": "This assignment is already published — its content can no longer be edited. You can only change deadlines from the assignment page.",
+      "backToAssignment": "Back to assignment"
     },
     "courseDetail": {
       "loadingCourse": "Loading course...",
@@ -1956,6 +1963,7 @@
         "subtitle": "Specify the basic assignment parameters",
         "courseLabel": "Course",
         "coursePlaceholder": "Select a course...",
+        "courseLockedHint": "An assignment can't be moved to a different course once created.",
         "titleLabel": "Assignment title",
         "titlePlaceholder": "Create a landing page",
         "descriptionLabel": "Assignment description",
@@ -2079,6 +2087,7 @@
         "warningText": "After publishing, the assignment will be visible to students. You can edit settings, but some changes (e.g., deadlines) may affect work already in progress.",
         "warningAttention": "Please note:",
         "saveDraft": "Save draft",
+        "saveDraftEdit": "Save changes",
         "publishAssignment": "Publish assignment",
         "publishing": "Publishing...",
         "draftsInfo": "Drafts are saved automatically and are only visible to you.",
