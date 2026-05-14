@@ -1,20 +1,23 @@
-import { ChevronLeft, ChevronRight, Check } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { humanizeApiError } from "@/shared/api";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { assignmentRepo } from "@/entities/assignment";
 
 import {
   StepBasics,
   StepDeadlines,
-  StepRubric,
   StepPeerSession,
   StepPublish,
+  StepRubric,
 } from "@/features/assignment/create";
 import type { AssignmentFormData, RubricOption } from "@/features/assignment/create/model/types";
 
@@ -33,32 +36,7 @@ const ALL_STEP_KEYS: StepKey[] = [
 
 const STORAGE_KEY = "peerly_assignment_draft";
 
-const getInitialFormData = (): AssignmentFormData => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored) as Omit<
-        AssignmentFormData,
-        "submissionDeadline" | "reviewDeadline" | "createdAt" | "updatedAt"
-      > & {
-        submissionDeadline: string | null;
-        reviewDeadline: string | null;
-        createdAt: string;
-        updatedAt: string;
-      };
-      return {
-        ...parsed,
-        discrepancyThreshold: parsed.discrepancyThreshold ?? 30,
-        submissionDeadline: parsed.submissionDeadline ? new Date(parsed.submissionDeadline) : null,
-        reviewDeadline: parsed.reviewDeadline ? new Date(parsed.reviewDeadline) : null,
-        createdAt: new Date(parsed.createdAt),
-        updatedAt: new Date(parsed.updatedAt),
-      };
-    } catch (e) {
-      console.error("Failed to parse assignment draft", e);
-    }
-  }
-
+function blankFormData(): AssignmentFormData {
   return {
     courseId: "",
     title: "",
@@ -72,7 +50,34 @@ const getInitialFormData = (): AssignmentFormData => {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-};
+}
+
+function loadDraftFromStorage(): AssignmentFormData | null {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (!stored) return null;
+  try {
+    const parsed = JSON.parse(stored) as Omit<
+      AssignmentFormData,
+      "submissionDeadline" | "reviewDeadline" | "createdAt" | "updatedAt"
+    > & {
+      submissionDeadline: string | null;
+      reviewDeadline: string | null;
+      createdAt: string;
+      updatedAt: string;
+    };
+    return {
+      ...parsed,
+      discrepancyThreshold: parsed.discrepancyThreshold ?? 30,
+      submissionDeadline: parsed.submissionDeadline ? new Date(parsed.submissionDeadline) : null,
+      reviewDeadline: parsed.reviewDeadline ? new Date(parsed.reviewDeadline) : null,
+      createdAt: new Date(parsed.createdAt),
+      updatedAt: new Date(parsed.updatedAt),
+    };
+  } catch (e) {
+    console.error("Failed to parse assignment draft", e);
+    return null;
+  }
+}
 
 interface TeacherCreateAssignmentPageProps {
   courseId?: string;
@@ -81,6 +86,126 @@ interface TeacherCreateAssignmentPageProps {
 export default function TeacherCreateAssignmentPage({
   courseId,
 }: TeacherCreateAssignmentPageProps) {
+  const [params] = useSearchParams();
+  const editId = params.get("edit");
+
+  if (editId) {
+    return <EditDraftAssignment editId={editId} />;
+  }
+  return <CreateAssignment initialCourseId={courseId} />;
+}
+
+function CreateAssignment({ initialCourseId }: { initialCourseId?: string }) {
+  const { t } = useTranslation();
+  const initial = useMemo(() => {
+    const fromStorage = loadDraftFromStorage();
+    const base = fromStorage ?? blankFormData();
+    if (initialCourseId) base.courseId = initialCourseId;
+    return base;
+  }, [initialCourseId]);
+
+  return (
+    <WizardShell
+      mode="create"
+      initialData={initial}
+      title={t("teacher.createAssignment.title")}
+      onSaved={() => localStorage.removeItem(STORAGE_KEY)}
+      persistDraftToStorage
+    />
+  );
+}
+
+function EditDraftAssignment({ editId }: { editId: string }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { data, isLoading, error, refetch } = useAsync(
+    () => assignmentRepo.getById(editId),
+    [editId],
+  );
+
+  if (isLoading) {
+    return (
+      <AppShell title={t("teacher.editAssignment.title")}>
+        <PageSkeleton />
+      </AppShell>
+    );
+  }
+  if (error) {
+    return (
+      <AppShell title={t("teacher.editAssignment.title")}>
+        <ErrorBanner error={error} onRetry={refetch} />
+      </AppShell>
+    );
+  }
+  if (!data) {
+    return (
+      <AppShell title={t("teacher.editAssignment.title")}>
+        <ErrorBanner message={t("teacher.editAssignment.notFound")} />
+      </AppShell>
+    );
+  }
+  if (data.backendStatus !== "draft") {
+    return (
+      <AppShell title={t("teacher.editAssignment.title")}>
+        <div className="mt-6 bg-warning-light border border-warning rounded-[16px] p-6 text-center">
+          <p className="text-[15px] text-foreground mb-4">
+            {t("teacher.editAssignment.publishedHint")}
+          </p>
+          <button
+            onClick={() => void navigate(`/teacher/assignment/${editId}`)}
+            className="px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
+          >
+            {t("teacher.editAssignment.backToAssignment")}
+          </button>
+        </div>
+      </AppShell>
+    );
+  }
+
+  const initial: AssignmentFormData = {
+    courseId: data.courseId,
+    title: data.title,
+    description: data.description,
+    submissionDeadline: data.dueDate,
+    reviewDeadline: data.reviewDeadline ?? null,
+    rubricId: null,
+    reviewsPerSubmission: data.reviewCount || 3,
+    discrepancyThreshold: data.discrepancyThreshold || 30,
+    status: "draft",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  return (
+    <WizardShell
+      mode="edit"
+      editId={editId}
+      initialData={initial}
+      title={t("teacher.editAssignment.title")}
+      lockCourse
+    />
+  );
+}
+
+interface WizardShellProps {
+  mode: "create" | "edit";
+  initialData: AssignmentFormData;
+  title: string;
+  editId?: string;
+  lockCourse?: boolean;
+  persistDraftToStorage?: boolean;
+  onSaved?: () => void;
+}
+
+function WizardShell({
+  mode,
+  initialData,
+  title,
+  editId,
+  lockCourse,
+  persistDraftToStorage,
+  onSaved,
+}: WizardShellProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
@@ -109,17 +234,12 @@ export default function TeacherCreateAssignmentPage({
   const [currentStep, setCurrentStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<AssignmentFormData>(() => {
-    const initial = getInitialFormData();
-    if (courseId) {
-      initial.courseId = courseId;
-    }
-    return initial;
-  });
+  const [formData, setFormData] = useState<AssignmentFormData>(initialData);
 
   useEffect(() => {
+    if (!persistDraftToStorage) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-  }, [formData]);
+  }, [formData, persistDraftToStorage]);
 
   const updateFormData = (updates: Partial<AssignmentFormData>) => {
     setFormData((prev) => ({
@@ -155,7 +275,7 @@ export default function TeacherCreateAssignmentPage({
       .join("\n");
   };
 
-  const handlePublish = async (asDraft: boolean) => {
+  const handleSubmit = async (asDraft: boolean) => {
     if (!formData.courseId || !formData.submissionDeadline || !formData.reviewDeadline) {
       setSubmitError(t("feature.assignmentCreate.publish.errorMissingFields"));
       return;
@@ -163,7 +283,7 @@ export default function TeacherCreateAssignmentPage({
     setSubmitError(null);
     setSubmitting(true);
     try {
-      const { homeworkId } = await assignmentRepo.createForCourse(formData.courseId, {
+      const input = {
         title: formData.title,
         description: formData.description || undefined,
         checklist: buildChecklist() || undefined,
@@ -171,18 +291,24 @@ export default function TeacherCreateAssignmentPage({
         reviewDeadline: formData.reviewDeadline,
         reviewCount: formData.reviewsPerSubmission,
         discrepancyThreshold: formData.discrepancyThreshold,
-      });
-      if (!asDraft) {
-        try {
-          await assignmentRepo.publish(homeworkId);
-        } catch (e) {
-          console.error("Failed to publish homework", e);
-        }
+      };
+
+      let homeworkId: string;
+      if (mode === "edit" && editId) {
+        await assignmentRepo.updateDraft(editId, input);
+        homeworkId = editId;
+      } else {
+        const created = await assignmentRepo.createForCourse(formData.courseId, input);
+        homeworkId = created.homeworkId;
       }
-      localStorage.removeItem(STORAGE_KEY);
+
+      if (!asDraft) {
+        await assignmentRepo.publish(homeworkId);
+      }
+      onSaved?.();
       void navigate(`/teacher/assignment/${homeworkId}`);
     } catch (e) {
-      console.error("Failed to create assignment", e);
+      console.error("Failed to save assignment", e);
       setSubmitError(humanizeApiError(e, t("feature.assignmentCreate.publish.errorGeneric")));
     } finally {
       setSubmitting(false);
@@ -209,7 +335,7 @@ export default function TeacherCreateAssignmentPage({
   const renderStep = () => {
     switch (currentStepKey) {
       case "stepBasics":
-        return <StepBasics data={formData} onUpdate={updateFormData} />;
+        return <StepBasics data={formData} onUpdate={updateFormData} lockCourse={lockCourse} />;
       case "stepDeadlines":
         return <StepDeadlines data={formData} onUpdate={updateFormData} />;
       case "stepRubric":
@@ -220,9 +346,10 @@ export default function TeacherCreateAssignmentPage({
         return (
           <StepPublish
             data={formData}
-            onPublish={(asDraft) => void handlePublish(asDraft)}
+            onPublish={(asDraft) => void handleSubmit(asDraft)}
             submitting={submitting}
             errorMessage={submitError}
+            mode={mode}
           />
         );
       default:
@@ -231,19 +358,15 @@ export default function TeacherCreateAssignmentPage({
   };
 
   return (
-    <AppShell title={t("teacher.createAssignment.title")}>
-      <Breadcrumbs
-        items={[CRUMBS.teacherCourses, { label: t("teacher.createAssignment.title") }]}
-      />
+    <AppShell title={title}>
+      <Breadcrumbs items={[CRUMBS.teacherCourses, { label: title }]} />
 
       <div className="mt-6 max-w-[1000px] mx-auto">
-        {/* Step Indicator */}
         <div className="bg-card border border-border shadow-sm rounded-[20px] p-6 mb-6">
           <div className="flex items-center justify-between">
             {STEPS.map((step, index) => (
               <div key={step.id} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
-                  {/* Step Circle */}
                   <div
                     className={`
                       w-10 h-10 rounded-full flex items-center justify-center text-[14px] font-medium transition-all
@@ -258,7 +381,6 @@ export default function TeacherCreateAssignmentPage({
                   >
                     {currentStep > step.id ? <Check className="w-5 h-5" /> : step.id}
                   </div>
-                  {/* Step Label */}
                   <span
                     className={`
                       mt-2 text-[12px] desktop:text-[13px] text-center
@@ -269,7 +391,6 @@ export default function TeacherCreateAssignmentPage({
                   </span>
                 </div>
 
-                {/* Connector Line */}
                 {index < STEPS.length - 1 && (
                   <div
                     className={`
@@ -283,12 +404,10 @@ export default function TeacherCreateAssignmentPage({
           </div>
         </div>
 
-        {/* Step Content */}
         <div className="bg-card border border-border shadow-sm rounded-[20px] p-8 mb-6">
           {renderStep()}
         </div>
 
-        {/* Navigation */}
         {currentStep < lastStepId && (
           <div className="flex items-center justify-between">
             <button

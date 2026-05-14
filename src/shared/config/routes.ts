@@ -43,8 +43,6 @@ export const ROUTES = {
   teacherAssignments: "/teacher/assignments",
   teacherCreateAssignment: "/teacher/assignments/new",
   teacherAssignment: (assignmentId: string) => `/teacher/assignment/${assignmentId}`,
-  teacherPeerSessionSettings: (assignmentId: string) =>
-    `/teacher/peer-session-settings/${assignmentId}`,
   teacherDistribution: "/teacher/distribution",
   teacherModeration: "/teacher/moderation",
   teacherSubmissions: "/teacher/submissions",
@@ -85,11 +83,6 @@ export const ROUTE_PATTERN_LIST = [
   {
     key: "teacherAssignment",
     regex: /^\/teacher\/assignment\/([^/]+)$/,
-    params: ["assignmentId"] as const,
-  },
-  {
-    key: "teacherPeerSessionSettings",
-    regex: /^\/teacher\/peer-session-settings\/([^/]+)$/,
     params: ["assignmentId"] as const,
   },
   {

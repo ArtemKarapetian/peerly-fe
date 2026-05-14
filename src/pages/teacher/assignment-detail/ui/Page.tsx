@@ -1,12 +1,14 @@
-import { Edit, Trash2, Calendar, BarChart3, Settings, FileText } from "lucide-react";
+import { Edit, Trash2, Calendar, BarChart3, FileText } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { humanizeApiError } from "@/shared/api";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { useTeacherAssignmentDetail } from "@/entities/assignment";
+import { assignmentRepo, useTeacherAssignmentDetail } from "@/entities/assignment";
 import { useCourse } from "@/entities/course";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -30,6 +32,23 @@ export default function TeacherAssignmentDetailsPage() {
   const { data: detail, isLoading } = useTeacherAssignmentDetail(assignmentId);
   const courseId = detail?.assignment.courseId ?? "";
   const { data: course } = useCourse(courseId);
+
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    if (!confirm(t("teacher.assignmentDetail.deleteConfirm"))) return;
+    setDeleteError(null);
+    setDeleting(true);
+    try {
+      await assignmentRepo.delete(assignmentId);
+      void navigate("/teacher/assignments");
+    } catch (e) {
+      console.error("Failed to delete assignment", e);
+      setDeleteError(humanizeApiError(e, t("teacher.assignmentDetail.deleteError")));
+      setDeleting(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -98,22 +117,21 @@ export default function TeacherAssignmentDetailsPage() {
             ) : null}
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            {!isPublished && (
+              <button
+                onClick={() => void navigate(`/teacher/assignments/new?edit=${assignmentId}`)}
+                className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors"
+              >
+                <Edit className="w-4 h-4" />
+                <span className="text-[14px] font-medium">
+                  {t("teacher.assignmentDetail.editBtn")}
+                </span>
+              </button>
+            )}
             <button
-              onClick={() => void navigate(`/teacher/assignments/new?edit=${assignmentId}`)}
-              className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-[12px] hover:bg-muted transition-colors"
-            >
-              <Edit className="w-4 h-4" />
-              <span className="text-[14px] font-medium">
-                {t("teacher.assignmentDetail.editBtn")}
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                if (confirm(t("teacher.assignmentDetail.deleteConfirm"))) {
-                  void navigate("/teacher/assignments");
-                }
-              }}
-              className="flex items-center gap-2 px-4 py-3 border-2 border-border text-error rounded-[12px] hover:border-error hover:bg-error-light transition-colors"
+              onClick={() => void handleDelete()}
+              disabled={deleting}
+              className="flex items-center gap-2 px-4 py-3 border-2 border-border text-error rounded-[12px] hover:border-error hover:bg-error-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Trash2 className="w-4 h-4" />
               <span className="text-[14px] font-medium">
@@ -151,6 +169,12 @@ export default function TeacherAssignmentDetailsPage() {
         </div>
       </div>
 
+      {deleteError && (
+        <div className="mt-4 bg-destructive-light border border-destructive rounded-[12px] p-4">
+          <p className="text-[13px] text-foreground">{deleteError}</p>
+        </div>
+      )}
+
       <div className="mt-6 bg-card border border-border shadow-sm rounded-[20px] p-6">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-brand-primary" />
@@ -181,20 +205,7 @@ export default function TeacherAssignmentDetailsPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 tablet:grid-cols-3 gap-4">
-        <button
-          onClick={() => void navigate(`/teacher/peer-session-settings/${assignmentId}`)}
-          className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
-        >
-          <Settings className="w-6 h-6 text-brand-primary mb-3" />
-          <h3 className="text-[16px] font-medium text-foreground mb-2">
-            {t("teacher.assignmentDetail.peerSessionSettings")}
-          </h3>
-          <p className="text-[13px] text-muted-foreground">
-            {t("teacher.assignmentDetail.peerSessionSettingsDesc")}
-          </p>
-        </button>
-
+      <div className="mt-6 grid grid-cols-1 tablet:grid-cols-2 gap-4">
         <button
           onClick={() => void navigate(`/teacher/submissions?assignmentId=${assignmentId}`)}
           className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
@@ -209,7 +220,7 @@ export default function TeacherAssignmentDetailsPage() {
         </button>
 
         <button
-          onClick={() => void navigate(`/teacher/assignment/${assignmentId}/analytics`)}
+          onClick={() => void navigate(`/teacher/analytics?assignmentId=${assignmentId}`)}
           className="p-6 bg-card border border-border shadow-sm rounded-[16px] hover:border-brand-primary hover:bg-info-light transition-all text-left"
         >
           <BarChart3 className="w-6 h-6 text-brand-primary mb-3" />

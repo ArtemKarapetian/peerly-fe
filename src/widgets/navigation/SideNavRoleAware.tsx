@@ -14,6 +14,7 @@ import {
   Shield,
   Shuffle,
   Archive,
+  BarChart3,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
@@ -94,6 +95,7 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
           { icon: Layers, label: t("nav.rubrics"), hash: "/teacher/rubrics" },
           { icon: Shuffle, label: t("nav.distribution"), hash: "/teacher/distribution" },
           { icon: Archive, label: t("nav.studentSubmissions"), hash: "/teacher/submissions" },
+          { icon: BarChart3, label: t("nav.analytics"), hash: "/teacher/analytics" },
           { icon: Shield, label: t("nav.moderation"), hash: "/teacher/moderation" },
         ];
       case "Admin":
