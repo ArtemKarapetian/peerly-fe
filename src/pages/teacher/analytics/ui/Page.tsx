@@ -30,7 +30,6 @@ import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
 import { reviewRepo } from "@/entities/review";
-import { userRepo } from "@/entities/user";
 import { workRepo } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -57,15 +56,13 @@ export default function TeacherAnalyticsPage() {
   const { t } = useTranslation();
   const { data, isLoading, error, refetch } = useAsync(
     async () => {
-      const [courses, assignments, submissions, reviews, allUsers] = await Promise.all([
+      const [courses, assignments, submissions, reviews] = await Promise.all([
         courseRepo.getAll(),
         assignmentRepo.getAll(),
         workRepo.getAll(),
         reviewRepo.getAll(),
-        userRepo.getAll(),
       ]);
-      const users = allUsers.filter((u) => u.role === "Student");
-      return { courses, assignments, submissions, reviews, users };
+      return { courses, assignments, submissions, reviews };
     },
     [],
     { onError: "redirect" },
@@ -92,12 +89,11 @@ interface ContentData {
   assignments: Awaited<ReturnType<typeof assignmentRepo.getAll>>;
   submissions: Awaited<ReturnType<typeof workRepo.getAll>>;
   reviews: Awaited<ReturnType<typeof reviewRepo.getAll>>;
-  users: Awaited<ReturnType<typeof userRepo.getAll>>;
 }
 
 function AnalyticsContent({ data }: { data: ContentData }) {
   const { t } = useTranslation();
-  const { courses, assignments, submissions, reviews, users } = data;
+  const { courses, assignments, submissions, reviews } = data;
   const [params] = useSearchParams();
 
   const preAssignment = params.get("assignmentId") ?? "all";
@@ -110,6 +106,15 @@ function AnalyticsContent({ data }: { data: ContentData }) {
     return courses[0]?.id ?? "";
   });
 
+  const { data: participants } = useAsync(
+    () =>
+      selectedCourse
+        ? courseRepo.getParticipants(selectedCourse).then((r) => r.students)
+        : Promise.resolve([]),
+    [selectedCourse],
+  );
+  const users = participants ?? [];
+
   const courseAssignments = useMemo(
     () => assignments.filter((a) => a.courseId === selectedCourse),
     [assignments, selectedCourse],
@@ -117,7 +122,9 @@ function AnalyticsContent({ data }: { data: ContentData }) {
 
   const assignmentMetrics: AssignmentMetrics[] = courseAssignments.map((assignment) => {
     const assignmentSubmissions = submissions.filter((s) => s.assignmentId === assignment.id);
-    const completed = assignmentSubmissions.filter((s) => s.status === "submitted");
+    const completed = assignmentSubmissions.filter(
+      (s) => s.status === "submitted" || s.status === "reviewed",
+    );
     const submissionRate = users.length > 0 ? (completed.length / users.length) * 100 : 0;
 
     const submittedReviews = reviews.filter(
@@ -172,7 +179,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
       const submission = submissions.find(
         (s) => s.assignmentId === assignment.id && s.studentId === student.id,
       );
-      if (!submission || submission.status !== "submitted") {
+      if (!submission || (submission.status !== "submitted" && submission.status !== "reviewed")) {
         scores[assignment.id] = null;
         continue;
       }
@@ -189,7 +196,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
     }
     return {
       studentId: student.id,
-      studentName: student.name,
+      studentName: student.userName,
       scores,
       finalScore: earned.length > 0 ? Math.round(mean(earned) * 10) / 10 : null,
     };

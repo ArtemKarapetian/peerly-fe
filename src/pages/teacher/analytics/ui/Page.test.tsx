@@ -4,20 +4,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import TeacherAnalyticsPage from "./Page";
 
-const { courseRepoMock, assignmentRepoMock, workRepoMock, reviewRepoMock, userRepoMock } =
-  vi.hoisted(() => ({
-    courseRepoMock: { getAll: vi.fn() },
-    assignmentRepoMock: { getAll: vi.fn() },
-    workRepoMock: { getAll: vi.fn() },
-    reviewRepoMock: { getAll: vi.fn() },
-    userRepoMock: { getAll: vi.fn() },
-  }));
+const { courseRepoMock, assignmentRepoMock, workRepoMock, reviewRepoMock } = vi.hoisted(() => ({
+  courseRepoMock: { getAll: vi.fn(), getParticipants: vi.fn() },
+  assignmentRepoMock: { getAll: vi.fn() },
+  workRepoMock: { getAll: vi.fn() },
+  reviewRepoMock: { getAll: vi.fn() },
+}));
 
 vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
 vi.mock("@/entities/assignment", () => ({ assignmentRepo: assignmentRepoMock }));
 vi.mock("@/entities/work", () => ({ workRepo: workRepoMock }));
 vi.mock("@/entities/review", () => ({ reviewRepo: reviewRepoMock }));
-vi.mock("@/entities/user", () => ({ userRepo: userRepoMock }));
 
 vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -119,12 +116,14 @@ function setupData() {
       status: "submitted",
     },
   ]);
-  userRepoMock.getAll.mockResolvedValue([
-    { id: "u-1", name: "Alice", email: "a@x", role: "Student", createdAt: new Date() },
-    { id: "u-2", name: "Bob", email: "b@x", role: "Student", createdAt: new Date() },
-    { id: "u-3", name: "Carol", email: "c@x", role: "Student", createdAt: new Date() },
-    { id: "u-4", name: "Prof", email: "p@x", role: "Teacher", createdAt: new Date() },
-  ]);
+  courseRepoMock.getParticipants.mockResolvedValue({
+    students: [
+      { id: "u-1", userName: "Alice" },
+      { id: "u-2", userName: "Bob" },
+      { id: "u-3", userName: "Carol" },
+    ],
+    teachers: [{ id: "u-4", userName: "Prof" }],
+  });
 }
 
 function renderPage() {
@@ -138,10 +137,10 @@ function renderPage() {
 beforeEach(() => {
   [
     courseRepoMock.getAll,
+    courseRepoMock.getParticipants,
     assignmentRepoMock.getAll,
     workRepoMock.getAll,
     reviewRepoMock.getAll,
-    userRepoMock.getAll,
   ].forEach((m) => m.mockReset());
 });
 
@@ -151,10 +150,9 @@ describe("TeacherAnalyticsPage", () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText(/teacher\.analytics\.studentsCount/)).toBeInTheDocument();
+      expect(screen.getByText("3")).toBeInTheDocument();
     });
     expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("3")).toBeInTheDocument();
   });
 
   it("renders one row per assignment in the per-assignment table", async () => {
@@ -181,10 +179,9 @@ describe("TeacherAnalyticsPage", () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getAllByText("Assignment 1").length).toBeGreaterThanOrEqual(1);
+      const exportBtn = screen.getByRole("button", { name: /teacher\.analytics\.exportCSV/ });
+      expect(exportBtn).not.toBeDisabled();
     });
-    const exportBtn = screen.getByRole("button", { name: /teacher\.analytics\.exportCSV/ });
-    expect(exportBtn).not.toBeDisabled();
   });
 
   it("disables CSV export and shows empty state when there are no assignments", async () => {
@@ -207,9 +204,10 @@ describe("TeacherAnalyticsPage", () => {
     assignmentRepoMock.getAll.mockResolvedValue([]);
     workRepoMock.getAll.mockResolvedValue([]);
     reviewRepoMock.getAll.mockResolvedValue([]);
-    userRepoMock.getAll.mockResolvedValue([
-      { id: "u-1", name: "Alice", email: "a@x", role: "Student", createdAt: new Date() },
-    ]);
+    courseRepoMock.getParticipants.mockResolvedValue({
+      students: [{ id: "u-1", userName: "Alice" }],
+      teachers: [],
+    });
     renderPage();
 
     await waitFor(() => {
