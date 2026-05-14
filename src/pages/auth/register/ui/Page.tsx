@@ -18,7 +18,6 @@ interface FormErrors {
   firstName?: string;
   lastName?: string;
   email?: string;
-  username?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -31,7 +30,6 @@ export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<RegistrableRole>("Student");
@@ -41,7 +39,6 @@ export default function RegisterPage() {
     firstName: false,
     lastName: false,
     email: false,
-    username: false,
     password: false,
     confirmPassword: false,
   });
@@ -50,18 +47,21 @@ export default function RegisterPage() {
     const newErrors = { ...errors };
 
     switch (field) {
+      case "firstName":
+        if (!value.trim()) newErrors.firstName = t("auth.enterFirstName");
+        else delete newErrors.firstName;
+        break;
+
+      case "lastName":
+        if (!value.trim()) newErrors.lastName = t("auth.enterLastName");
+        else delete newErrors.lastName;
+        break;
+
       case "email":
         if (!value.trim()) newErrors.email = t("auth.enterEmail");
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
           newErrors.email = t("auth.invalidEmail");
         else delete newErrors.email;
-        break;
-
-      case "username":
-        if (!value.trim()) newErrors.username = t("auth.enterUsername");
-        else if (value.length < 3) newErrors.username = t("auth.minChars", { count: 3 });
-        else if (!/^[a-zA-Z0-9._-]+$/.test(value)) newErrors.username = t("auth.usernameChars");
-        else delete newErrors.username;
         break;
 
       case "password":
@@ -86,39 +86,35 @@ export default function RegisterPage() {
 
   const handleBlur = (field: keyof FormErrors) => {
     setTouched({ ...touched, [field]: true });
-    const map = { firstName, lastName, email, username, password, confirmPassword };
+    const map = { firstName, lastName, email, password, confirmPassword };
     validateField(field, map[field]);
   };
 
   const isFormValid = () =>
+    firstName.trim() !== "" &&
+    lastName.trim() !== "" &&
     email.trim() !== "" &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
-    username.trim() !== "" &&
-    username.length >= 3 &&
-    /^[a-zA-Z0-9._-]+$/.test(username) &&
     password !== "" &&
     password.length >= 8 &&
     confirmPassword !== "" &&
     password === confirmPassword &&
     Object.keys(errors).length === 0;
 
-  const displayName = () => {
-    const full = `${firstName.trim()} ${lastName.trim()}`.trim();
-    return full || username.trim();
-  };
+  const displayName = () => `${firstName.trim()} ${lastName.trim()}`.trim();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setTouched({
-      firstName: false,
-      lastName: false,
+      firstName: true,
+      lastName: true,
       email: true,
-      username: true,
       password: true,
       confirmPassword: true,
     });
+    validateField("firstName", firstName);
+    validateField("lastName", lastName);
     validateField("email", email);
-    validateField("username", username);
     validateField("password", password);
     validateField("confirmPassword", confirmPassword);
     if (!isFormValid()) return;
@@ -160,19 +156,29 @@ export default function RegisterPage() {
                   label={t("auth.firstName")}
                   type="text"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    if (touched.firstName) validateField("firstName", e.target.value);
+                  }}
+                  onBlur={() => handleBlur("firstName")}
                   placeholder={t("auth.firstNamePlaceholder")}
                   autoComplete="given-name"
                   disabled={isLoading}
+                  error={touched.firstName ? errors.firstName : ""}
                 />
                 <Input
                   label={t("auth.lastName")}
                   type="text"
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                    if (touched.lastName) validateField("lastName", e.target.value);
+                  }}
+                  onBlur={() => handleBlur("lastName")}
                   placeholder={t("auth.lastNamePlaceholder")}
                   autoComplete="family-name"
                   disabled={isLoading}
+                  error={touched.lastName ? errors.lastName : ""}
                 />
               </div>
 
@@ -189,24 +195,6 @@ export default function RegisterPage() {
                 autoComplete="email"
                 disabled={isLoading}
                 error={touched.email ? errors.email : ""}
-              />
-
-              <Input
-                label={t("auth.username")}
-                type="text"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  if (touched.username) validateField("username", e.target.value);
-                }}
-                onBlur={() => handleBlur("username")}
-                placeholder="ivan.petrov"
-                autoComplete="username"
-                disabled={isLoading}
-                error={touched.username ? errors.username : ""}
-                helperText={
-                  !touched.username && !errors.username ? t("auth.minChars", { count: 3 }) : ""
-                }
               />
 
               <PasswordInput
