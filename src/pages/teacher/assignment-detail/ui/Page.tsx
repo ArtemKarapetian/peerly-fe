@@ -42,7 +42,7 @@ export default function TeacherAssignmentDetailsPage() {
     setDeleting(true);
     try {
       await assignmentRepo.delete(assignmentId);
-      void navigate("/teacher/assignments");
+      void navigate(courseId ? `/teacher/courses/${courseId}` : "/teacher/courses");
     } catch (e) {
       console.error("Failed to delete assignment", e);
       setDeleteError(humanizeApiError(e, t("teacher.assignmentDetail.deleteError")));

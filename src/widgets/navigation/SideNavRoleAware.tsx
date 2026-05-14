@@ -11,7 +11,6 @@ import {
   BookOpen,
   Layers,
   Settings,
-  Shield,
   Shuffle,
   Archive,
   BarChart3,
@@ -91,12 +90,11 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       case "Teacher":
         return [
           { icon: Book, label: t("nav.courses"), hash: "/teacher/courses" },
-          { icon: FileCheck, label: t("nav.assignments"), hash: "/teacher/assignments" },
+          { icon: FileCheck, label: t("nav.createAssignment"), hash: "/teacher/assignments/new" },
           { icon: Layers, label: t("nav.rubrics"), hash: "/teacher/rubrics" },
           { icon: Shuffle, label: t("nav.distribution"), hash: "/teacher/distribution" },
           { icon: Archive, label: t("nav.studentSubmissions"), hash: "/teacher/submissions" },
           { icon: BarChart3, label: t("nav.analytics"), hash: "/teacher/analytics" },
-          { icon: Shield, label: t("nav.moderation"), hash: "/teacher/moderation" },
         ];
       case "Admin":
         return [
