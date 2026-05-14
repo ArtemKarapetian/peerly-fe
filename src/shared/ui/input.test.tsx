@@ -50,22 +50,17 @@ describe("PasswordInput", () => {
     expect(input).not.toBeNull();
   });
 
-  it("toggles to text type when show button is clicked", () => {
+  it("toggles to text type when the show-password button is clicked", () => {
     render(<PasswordInput />);
-    const toggleButton = document.querySelector('button[tabindex="-1"]');
-    expect(toggleButton).not.toBeNull();
-    fireEvent.click(toggleButton!);
-    const input = document.querySelector('input[type="text"]');
-    expect(input).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /show password/i }));
+    expect(document.querySelector('input[type="text"]')).not.toBeNull();
   });
 
-  it("toggles back to password type on second click", () => {
+  it("toggles back to password type on the second click", () => {
     render(<PasswordInput />);
-    const toggleButton = document.querySelector('button[tabindex="-1"]');
-    fireEvent.click(toggleButton!);
-    fireEvent.click(toggleButton!);
-    const input = document.querySelector('input[type="password"]');
-    expect(input).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /show password/i }));
+    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
+    expect(document.querySelector('input[type="password"]')).not.toBeNull();
   });
 
   it("shows error message", () => {
