@@ -16,9 +16,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "gen:entity": "node scripts/generate.mjs entity",
-    "gen:feature": "node scripts/generate.mjs feature"
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
