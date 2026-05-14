@@ -40,11 +40,9 @@ export const ROUTES = {
   teacherCourses: "/teacher/courses",
   teacherCourse: (courseId: string) => `/teacher/courses/${courseId}`,
   teacherRubrics: "/teacher/rubrics",
-  teacherAssignments: "/teacher/assignments",
   teacherCreateAssignment: "/teacher/assignments/new",
   teacherAssignment: (assignmentId: string) => `/teacher/assignment/${assignmentId}`,
   teacherDistribution: "/teacher/distribution",
-  teacherModeration: "/teacher/moderation",
   teacherSubmissions: "/teacher/submissions",
 
   adminOverview: "/admin/overview",

@@ -22,27 +22,36 @@ export interface RegisterInput {
 
 export const authApi = {
   login: (input: LoginInput) =>
-    http.post<LoginResponseBody>("/auth/login", {
-      email: input.email,
-      password: input.password,
-    }),
+    http.post<LoginResponseBody>(
+      "/auth/login",
+      {
+        email: input.email,
+        password: input.password,
+      },
+      { skipAuthRefresh: true },
+    ),
 
   register: (input: RegisterInput) =>
-    http.post<RegisterResponseBody>("/auth/register", {
-      email: input.email,
-      password: input.password,
-      name: input.name,
-      role: input.role,
-    }),
+    http.post<RegisterResponseBody>(
+      "/auth/register",
+      {
+        email: input.email,
+        password: input.password,
+        name: input.name,
+        role: input.role,
+      },
+      { skipAuthRefresh: true },
+    ),
 
-  logout: () => http.post<void>("/auth/logout"),
+  logout: () => http.post<void>("/auth/logout", undefined, { skipAuthRefresh: true }),
 
-  refresh: () => http.post<void>("/auth/refresh"),
+  refresh: () => http.post<void>("/auth/refresh", undefined, { skipAuthRefresh: true }),
 
   getMyRole: () => http.get<{ role: Role }>("/me/role"),
 
   confirmEmail: (params: { token: string; userId: string }) =>
     http.get<void>(
       `/auth/confirm-email?token=${encodeURIComponent(params.token)}&userId=${params.userId}`,
+      { skipAuthRefresh: true },
     ),
 };

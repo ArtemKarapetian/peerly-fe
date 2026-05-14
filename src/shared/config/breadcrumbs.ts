@@ -19,10 +19,6 @@ export const getCrumbs = () =>
       label: i18n.t("nav.courses"),
       href: ROUTES.teacherCourses,
     } satisfies BreadcrumbItem,
-    teacherAssignments: {
-      label: i18n.t("nav.assignments"),
-      href: ROUTES.teacherAssignments,
-    } satisfies BreadcrumbItem,
 
     // Admin
     adminOverview: {

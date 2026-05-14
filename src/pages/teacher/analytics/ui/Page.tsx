@@ -1,9 +1,9 @@
 import {
+  Activity,
+  AlertTriangle,
   BarChart3,
-  CheckCircle,
   Download,
   FileText,
-  MessageSquare,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -15,8 +15,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Pie,
-  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -42,6 +40,17 @@ interface GradebookEntry {
   studentName: string;
   scores: Record<string, number | null>;
   finalScore: number | null;
+}
+
+interface AssignmentMetrics {
+  id: string;
+  title: string;
+  shortTitle: string;
+  submissionRate: number;
+  reviewCompletionRate: number;
+  avgScore: number;
+  avgDiscrepancy: number;
+  hasDiscrepancyData: boolean;
 }
 
 export default function TeacherAnalyticsPage() {
@@ -106,57 +115,59 @@ function AnalyticsContent({ data }: { data: ContentData }) {
     [assignments, selectedCourse],
   );
 
-  const initialAssignmentForCourse = courseAssignments.some((a) => a.id === preAssignment)
-    ? preAssignment
-    : "all";
-  const [selectedAssignment, setSelectedAssignment] = useState<string>(initialAssignmentForCourse);
-
-  const assignmentAnalytics = courseAssignments.map((assignment) => {
+  const assignmentMetrics: AssignmentMetrics[] = courseAssignments.map((assignment) => {
     const assignmentSubmissions = submissions.filter((s) => s.assignmentId === assignment.id);
     const completed = assignmentSubmissions.filter((s) => s.status === "submitted");
-    const completionRate = users.length > 0 ? (completed.length / users.length) * 100 : 0;
+    const submissionRate = users.length > 0 ? (completed.length / users.length) * 100 : 0;
 
-    const assignmentReviews = reviews.filter((r) =>
-      assignmentSubmissions.some((s) => s.id === r.submissionId),
+    const submittedReviews = reviews.filter(
+      (r) => r.status === "submitted" && assignmentSubmissions.some((s) => s.id === r.submissionId),
     );
     const expectedReviews = completed.length * (assignment.reviewCount || 0);
-    const submittedReviews = assignmentReviews.filter((r) => r.status === "submitted");
     const reviewCompletionRate =
       expectedReviews > 0 ? (submittedReviews.length / expectedReviews) * 100 : 0;
 
-    const scores = submittedReviews.flatMap((r) => Object.values(r.scores));
-    const avgScore = scores.length > 0 ? scores.reduce((s, v) => s + v, 0) / scores.length : 0;
-    const avgCommentLength =
-      submittedReviews.length > 0
-        ? submittedReviews.reduce((s, r) => s + r.comment.length, 0) / submittedReviews.length
-        : 0;
+    const scoreVals = submittedReviews.flatMap((r) => Object.values(r.scores));
+    const avgScore = scoreVals.length > 0 ? mean(scoreVals) : 0;
+
+    // Average per-submission discrepancy: max(scores per submission) − min(scores per submission)
+    const discrepancies: number[] = [];
+    for (const submission of completed) {
+      const subReviewScores = submittedReviews
+        .filter((r) => r.submissionId === submission.id)
+        .map((r) => mean(Object.values(r.scores)))
+        .filter((v) => Number.isFinite(v) && v > 0);
+      if (subReviewScores.length >= 2) {
+        discrepancies.push(Math.max(...subReviewScores) - Math.min(...subReviewScores));
+      }
+    }
+    const avgDiscrepancy = discrepancies.length > 0 ? mean(discrepancies) : 0;
 
     return {
       id: assignment.id,
       title: assignment.title,
-      completionRate,
+      shortTitle: truncate(assignment.title, 20),
+      submissionRate,
       reviewCompletionRate,
       avgScore,
-      avgCommentLength,
-      submissionsCount: completed.length,
-      reviewsCount: submittedReviews.length,
+      avgDiscrepancy,
+      hasDiscrepancyData: discrepancies.length > 0,
     };
   });
 
   const overall = {
     totalAssignments: courseAssignments.length,
-    avgCompletionRate: average(assignmentAnalytics.map((a) => a.completionRate)),
-    avgReviewCompletionRate: average(assignmentAnalytics.map((a) => a.reviewCompletionRate)),
-    avgScore: average(assignmentAnalytics.map((a) => a.avgScore).filter((v) => v > 0)),
-    avgCommentLength: average(
-      assignmentAnalytics.map((a) => a.avgCommentLength).filter((v) => v > 0),
+    avgSubmissionRate: mean(assignmentMetrics.map((a) => a.submissionRate)),
+    avgReviewCompletionRate: mean(assignmentMetrics.map((a) => a.reviewCompletionRate)),
+    avgScore: mean(assignmentMetrics.map((a) => a.avgScore).filter((v) => v > 0)),
+    avgDiscrepancy: mean(
+      assignmentMetrics.filter((a) => a.hasDiscrepancyData).map((a) => a.avgDiscrepancy),
     ),
   };
 
   const gradebook: GradebookEntry[] = users.map((student) => {
     const scores: Record<string, number | null> = {};
     const earned: number[] = [];
-
     for (const assignment of courseAssignments) {
       const submission = submissions.find(
         (s) => s.assignmentId === assignment.id && s.studentId === student.id,
@@ -172,8 +183,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
         scores[assignment.id] = null;
         continue;
       }
-      const avg = subReviews.reduce((s, v) => s + v, 0) / subReviews.length;
-      const rounded = Math.round(avg * 10) / 10;
+      const rounded = Math.round(mean(subReviews) * 10) / 10;
       scores[assignment.id] = rounded;
       earned.push(rounded);
     }
@@ -181,36 +191,22 @@ function AnalyticsContent({ data }: { data: ContentData }) {
       studentId: student.id,
       studentName: student.name,
       scores,
-      finalScore: earned.length > 0 ? Math.round(average(earned) * 10) / 10 : null,
+      finalScore: earned.length > 0 ? Math.round(mean(earned) * 10) / 10 : null,
     };
   });
 
-  const completionChartData = assignmentAnalytics.map((a) => ({
-    name: a.title.length > 20 ? a.title.substring(0, 20) + "…" : a.title,
-    [t("teacher.analytics.submissionsSubmitted")]: Math.round(a.completionRate),
+  const activityChartData = assignmentMetrics.map((a) => ({
+    name: a.shortTitle,
+    [t("teacher.analytics.submissionsSubmitted")]: Math.round(a.submissionRate),
     [t("teacher.analytics.reviewsCompleted")]: Math.round(a.reviewCompletionRate),
   }));
 
-  const allCourseScores = courseAssignments
-    .flatMap((a) => submissions.filter((s) => s.assignmentId === a.id))
-    .flatMap((s) => reviews.filter((r) => r.submissionId === s.id && r.status === "submitted"))
-    .flatMap((r) => Object.values(r.scores))
-    .filter((v): v is number => typeof v === "number" && v > 0 && v <= 5);
-
-  const buckets = { "1-2": 0, "2-3": 0, "3-4": 0, "4-5": 0 };
-  for (const v of allCourseScores) {
-    if (v <= 2) buckets["1-2"]++;
-    else if (v <= 3) buckets["2-3"]++;
-    else if (v <= 4) buckets["3-4"]++;
-    else buckets["4-5"]++;
-  }
-  const scoreDistributionData = [
-    { name: "1–2", value: buckets["1-2"], fill: "var(--destructive)" },
-    { name: "2–3", value: buckets["2-3"], fill: "var(--warning)" },
-    { name: "3–4", value: buckets["3-4"], fill: "var(--warning)" },
-    { name: "4–5", value: buckets["4-5"], fill: "var(--success)" },
-  ];
-  const hasDistribution = allCourseScores.length > 0;
+  const discrepancyChartData = assignmentMetrics
+    .filter((a) => a.hasDiscrepancyData)
+    .map((a) => ({
+      name: a.shortTitle,
+      [t("teacher.analytics.discrepancyShort")]: Math.round(a.avgDiscrepancy * 10) / 10,
+    }));
 
   const handleExportCSV = () => {
     const course = courses.find((c) => c.id === selectedCourse);
@@ -230,9 +226,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
     const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `gradebook_${course?.title ?? "course"}_${
-      new Date().toISOString().split("T")[0]
-    }.csv`;
+    link.download = `gradebook_${course?.title ?? "course"}_${new Date().toISOString().split("T")[0]}.csv`;
     link.click();
     URL.revokeObjectURL(link.href);
   };
@@ -243,89 +237,69 @@ function AnalyticsContent({ data }: { data: ContentData }) {
       <PageHeader title={t("teacher.analytics.title")} subtitle={t("teacher.analytics.subtitle")} />
 
       <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              {t("teacher.analytics.courseLabel")}
-            </label>
-            <select
-              value={selectedCourse}
-              onChange={(e) => {
-                setSelectedCourse(e.target.value);
-                setSelectedAssignment("all");
-              }}
-              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
-            >
-              {courses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex-1">
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              {t("teacher.analytics.assignmentLabel")}
-            </label>
-            <select
-              value={selectedAssignment}
-              onChange={(e) => setSelectedAssignment(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
-            >
-              <option value="all">{t("teacher.analytics.allAssignments")}</option>
-              {courseAssignments.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+          {t("teacher.analytics.courseLabel")}
+        </label>
+        <select
+          value={selectedCourse}
+          onChange={(e) => setSelectedCourse(e.target.value)}
+          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
+        >
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.title}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <MetricCard
           icon={<FileText className="w-4 h-4 text-brand-primary" />}
           label={t("teacher.analytics.assignmentsCount")}
           value={String(overall.totalAssignments)}
         />
         <MetricCard
-          icon={<CheckCircle className="w-4 h-4 text-success" />}
-          label={t("teacher.analytics.submissionRate")}
-          value={`${Math.round(overall.avgCompletionRate)}%`}
-        />
-        <MetricCard
-          icon={<TrendingUp className="w-4 h-4 text-brand-primary" />}
-          label={t("teacher.analytics.avgScore")}
-          value={overall.avgScore > 0 ? `${overall.avgScore.toFixed(1)}/5` : "—"}
-        />
-        <MetricCard
           icon={<Users className="w-4 h-4 text-brand-primary" />}
           label={t("teacher.analytics.studentsCount")}
           value={String(users.length)}
         />
+        <MetricCard
+          icon={<TrendingUp className="w-4 h-4 text-brand-primary" />}
+          label={t("teacher.analytics.avgScore")}
+          value={overall.avgScore > 0 ? `${overall.avgScore.toFixed(2)}/5` : "—"}
+        />
+        <MetricCard
+          icon={<AlertTriangle className="w-4 h-4 text-warning" />}
+          label={t("teacher.analytics.avgDiscrepancy")}
+          value={overall.avgDiscrepancy > 0 ? `±${overall.avgDiscrepancy.toFixed(2)}` : "—"}
+          hint={t("teacher.analytics.discrepancyHint")}
+        />
+        <MetricCard
+          icon={<Activity className="w-4 h-4 text-success" />}
+          label={t("teacher.analytics.activityLabel")}
+          value={`${Math.round(overall.avgSubmissionRate)}% / ${Math.round(overall.avgReviewCompletionRate)}%`}
+          hint={t("teacher.analytics.activityHint")}
+        />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-card border-2 border-border rounded-[20px] p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart3 className="w-5 h-5 text-brand-primary" />
-            <h2 className="text-[18px] font-medium text-foreground">
-              {t("teacher.analytics.completionByAssignment")}
-            </h2>
-          </div>
-          {completionChartData.length > 0 ? (
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+        <ChartCard
+          icon={<BarChart3 className="w-5 h-5 text-brand-primary" />}
+          title={t("teacher.analytics.activityByAssignment")}
+        >
+          {activityChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={completionChartData}>
+              <BarChart data={activityChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis
                   dataKey="name"
                   tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
-                  angle={-45}
+                  angle={-30}
                   textAnchor="end"
-                  height={80}
+                  height={70}
                 />
-                <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+                <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} domain={[0, 100]} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "var(--card)",
@@ -336,102 +310,113 @@ function AnalyticsContent({ data }: { data: ContentData }) {
                 <Bar
                   dataKey={t("teacher.analytics.submissionsSubmitted")}
                   fill="var(--brand-primary)"
-                  radius={[8, 8, 0, 0]}
+                  radius={[6, 6, 0, 0]}
                 />
                 <Bar
                   dataKey={t("teacher.analytics.reviewsCompleted")}
                   fill="var(--success)"
-                  radius={[8, 8, 0, 0]}
+                  radius={[6, 6, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              {t("teacher.analytics.noDataToDisplay")}
-            </div>
+            <EmptyChart label={t("teacher.analytics.noDataToDisplay")} />
           )}
-        </div>
+        </ChartCard>
 
-        <div className="bg-card border-2 border-border rounded-[20px] p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-brand-primary" />
-            <h2 className="text-[18px] font-medium text-foreground">
-              {t("teacher.analytics.scoreDistribution")}
-            </h2>
-          </div>
-          {hasDistribution ? (
+        <ChartCard
+          icon={<AlertTriangle className="w-5 h-5 text-warning" />}
+          title={t("teacher.analytics.discrepancyByAssignment")}
+        >
+          {discrepancyChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={scoreDistributionData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
-                  outerRadius={100}
-                  dataKey="value"
+              <BarChart data={discrepancyChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+                  angle={-30}
+                  textAnchor="end"
+                  height={70}
+                />
+                <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "var(--card)",
+                    border: "2px solid var(--border)",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Bar
+                  dataKey={t("teacher.analytics.discrepancyShort")}
+                  fill="var(--warning)"
+                  radius={[6, 6, 0, 0]}
                 >
-                  {scoreDistributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  {discrepancyChartData.map((_, i) => (
+                    <Cell key={i} fill="var(--warning)" />
                   ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              {t("teacher.analytics.noDataToDisplay")}
-            </div>
+            <EmptyChart label={t("teacher.analytics.noDiscrepancyData")} />
           )}
-        </div>
+        </ChartCard>
       </div>
 
       <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <MessageSquare className="w-5 h-5 text-brand-primary" />
-          <h2 className="text-[18px] font-medium text-foreground">
-            {t("teacher.analytics.reviewQualityIndicators")}
-          </h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.analytics.avgCommentLength")}
-            </p>
-            <p className="text-[28px] font-medium text-foreground">
-              {overall.avgCommentLength > 0 ? Math.round(overall.avgCommentLength) : "—"}
-            </p>
-            <p className="text-[12px] text-muted-foreground">{t("teacher.analytics.characters")}</p>
+        <h2 className="text-[18px] font-medium text-foreground mb-4">
+          {t("teacher.analytics.perAssignment")}
+        </h2>
+        {assignmentMetrics.length === 0 ? (
+          <p className="text-[14px] text-muted-foreground text-center py-6">
+            {t("teacher.analytics.noAssignmentsYet")}
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-[14px]">
+              <thead>
+                <tr className="text-left text-[12px] text-muted-foreground uppercase tracking-wide border-b-2 border-border">
+                  <th className="p-3">{t("teacher.analytics.assignmentLabel")}</th>
+                  <th className="p-3 text-right">{t("teacher.analytics.submissionRate")}</th>
+                  <th className="p-3 text-right">{t("teacher.analytics.reviewCompletion")}</th>
+                  <th className="p-3 text-right">{t("teacher.analytics.avgScore")}</th>
+                  <th className="p-3 text-right">{t("teacher.analytics.avgDiscrepancy")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {assignmentMetrics.map((m, i) => (
+                  <tr
+                    key={m.id}
+                    className={`border-b border-border ${i % 2 === 0 ? "bg-card" : "bg-muted"}`}
+                  >
+                    <td className="p-3 text-foreground">{m.title}</td>
+                    <td className="p-3 text-right text-foreground">
+                      {Math.round(m.submissionRate)}%
+                    </td>
+                    <td className="p-3 text-right text-foreground">
+                      {Math.round(m.reviewCompletionRate)}%
+                    </td>
+                    <td className="p-3 text-right text-foreground">
+                      {m.avgScore > 0 ? m.avgScore.toFixed(2) : "—"}
+                    </td>
+                    <td className="p-3 text-right text-foreground">
+                      {m.hasDiscrepancyData ? `±${m.avgDiscrepancy.toFixed(2)}` : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.analytics.reviewCompletion")}
-            </p>
-            <p className="text-[28px] font-medium text-success">
-              {Math.round(overall.avgReviewCompletionRate)}%
-            </p>
-            <p className="text-[12px] text-muted-foreground">{t("teacher.analytics.ofExpected")}</p>
-          </div>
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-2">
-              {t("teacher.analytics.averageScoreLabel")}
-            </p>
-            <p className="text-[28px] font-medium text-brand-primary">
-              {overall.avgScore > 0 ? overall.avgScore.toFixed(2) : "—"}
-            </p>
-            <p className="text-[12px] text-muted-foreground">{t("teacher.analytics.outOf")}</p>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="bg-card border-2 border-border rounded-[20px] p-6">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-          <div className="flex items-center gap-2">
+          <h2 className="text-[18px] font-medium text-foreground flex items-center gap-2">
             <FileText className="w-5 h-5 text-brand-primary" />
-            <h2 className="text-[18px] font-medium text-foreground">
-              {t("teacher.analytics.gradebook")}
-            </h2>
-          </div>
+            {t("teacher.analytics.gradebook")}
+          </h2>
           <button
             onClick={handleExportCSV}
             disabled={gradebook.length === 0 || courseAssignments.length === 0}
@@ -445,9 +430,6 @@ function AnalyticsContent({ data }: { data: ContentData }) {
         {gradebook.length === 0 || courseAssignments.length === 0 ? (
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <h3 className="text-[18px] font-medium text-foreground mb-2">
-              {t("teacher.analytics.noGradebookData")}
-            </h3>
             <p className="text-[14px] text-muted-foreground">
               {t("teacher.analytics.selectCourseWithData")}
             </p>
@@ -466,9 +448,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
                       className="text-center p-3 text-[13px] font-medium text-muted-foreground uppercase tracking-wide min-w-[100px]"
                       title={assignment.title}
                     >
-                      {assignment.title.length > 15
-                        ? assignment.title.substring(0, 15) + "…"
-                        : assignment.title}
+                      {truncate(assignment.title, 15)}
                     </th>
                   ))}
                   <th className="text-center p-3 text-[13px] font-medium text-muted-foreground uppercase tracking-wide bg-muted min-w-[100px]">
@@ -515,22 +495,52 @@ function AnalyticsContent({ data }: { data: ContentData }) {
   );
 }
 
+function ChartCard({
+  icon,
+  title,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-card border-2 border-border rounded-[20px] p-6">
+      <div className="flex items-center gap-2 mb-4">
+        {icon}
+        <h2 className="text-[18px] font-medium text-foreground">{title}</h2>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function EmptyChart({ label }: { label: string }) {
+  return (
+    <div className="h-[300px] flex items-center justify-center text-[14px] text-muted-foreground text-center px-6">
+      {label}
+    </div>
+  );
+}
+
 function MetricCard({
   icon,
   label,
   value,
+  hint,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  hint?: string;
 }) {
   return (
-    <div className="bg-card border-2 border-border rounded-[12px] p-4">
+    <div className="bg-card border-2 border-border rounded-[12px] p-4" title={hint}>
       <div className="flex items-center gap-2 mb-2">
         {icon}
         <span className="text-[12px] text-muted-foreground uppercase tracking-wide">{label}</span>
       </div>
-      <p className="text-[24px] font-medium text-foreground">{value}</p>
+      <p className="text-[22px] font-medium text-foreground">{value}</p>
     </div>
   );
 }
@@ -567,7 +577,11 @@ function FinalScoreBadge({ value }: { value: number }) {
   );
 }
 
-function average(values: number[]): number {
+function mean(values: number[]): number {
   if (values.length === 0) return 0;
   return values.reduce((s, v) => s + v, 0) / values.length;
+}
+
+function truncate(s: string, n: number): string {
+  return s.length > n ? s.substring(0, n) + "…" : s;
 }

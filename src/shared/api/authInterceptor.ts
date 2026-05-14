@@ -32,7 +32,7 @@ async function tryRefreshToken(): Promise<boolean> {
 }
 
 let loggingOut = false;
-function forceLogout(): void {
+export function forceLogout(): void {
   if (loggingOut) return;
   loggingOut = true;
   clearSession();

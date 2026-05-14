@@ -5,7 +5,7 @@
 import { API_PREFIX } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
 
-import { handleUnauthorized } from "./authInterceptor";
+import { forceLogout, handleUnauthorized } from "./authInterceptor";
 import { redirectForStatus } from "./errorRedirect";
 
 export type HttpErrorMode = "inline" | "redirect";
@@ -66,9 +66,12 @@ async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
 
   if (res.status === 401 && !skipAuthRefresh) {
     const refreshed = await handleUnauthorized();
-    if (refreshed) {
-      res = await doFetch();
-    } else {
+    if (!refreshed) {
+      throw new ApiError(401, null, "Session expired");
+    }
+    res = await doFetch();
+    if (res.status === 401) {
+      forceLogout();
       throw new ApiError(401, null, "Session expired");
     }
   }
