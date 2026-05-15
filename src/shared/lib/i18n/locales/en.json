@@ -1771,8 +1771,7 @@
       "downloadError": "Could not download file",
       "uploadError": "Could not upload file",
       "saveError": "Could not save submission",
-      "deleteFileError": "Could not delete file",
-      "latePolicy": "10% penalty per day late (max 3 days)"
+      "deleteFileError": "Could not delete file"
     },
     "courseDetail": {
       "title": "Course Name",
@@ -1800,8 +1799,7 @@
         "resubmissions": "Resubmissions",
         "remaining": "Remaining:",
         "noneRemaining": "None remaining",
-        "currentVersion": "Current version:",
-        "latePolicy": "Late Policy"
+        "currentVersion": "Current version:"
       }
     },
     "appeal": {
@@ -1919,13 +1917,6 @@
         "days": "d.",
         "hours": "h.",
         "reviewTimeWarning": "It is recommended to allow at least 2-3 days for quality reviews",
-        "latePolicyLabel": "Late policy",
-        "latePolicySoft": "Soft",
-        "latePolicySoftDesc": "Submissions accepted with a penalty for each late day",
-        "latePolicyHard": "Hard",
-        "latePolicyHardDesc": "No submissions accepted after the deadline",
-        "latePenaltyLabel": "Late penalty (% per day)",
-        "latePenaltyExample": "Example: with a {{penalty}}% penalty, work submitted 2 days late will receive a maximum of {{max}}% of the grade",
         "timezoneLabel": "Timezone",
         "timezoneMoscow": "Moscow (UTC+3)",
         "timezoneLondon": "London (UTC+0)",

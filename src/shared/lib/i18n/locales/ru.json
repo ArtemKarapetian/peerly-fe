@@ -1081,8 +1081,7 @@
         "resubmissions": "Пересдачи",
         "remaining": "Осталось:",
         "noneRemaining": "Не осталось",
-        "currentVersion": "Текущая версия:",
-        "latePolicy": "Политика опозданий"
+        "currentVersion": "Текущая версия:"
       }
     },
     "appeal": {
@@ -1200,13 +1199,6 @@
         "days": "дн.",
         "hours": "ч.",
         "reviewTimeWarning": "Рекомендуется оставить минимум 2-3 дня для качественного рецензирования",
-        "latePolicyLabel": "Политика опозданий",
-        "latePolicySoft": "Мягкая (Soft)",
-        "latePolicySoftDesc": "Работы принимаются с штрафом за каждый день опоздания",
-        "latePolicyHard": "Жесткая (Hard)",
-        "latePolicyHardDesc": "Работы после дедлайна не принимаются",
-        "latePenaltyLabel": "Штраф за опоздание (% в день)",
-        "latePenaltyExample": "Пример: при штрафе {{penalty}}% работа, сданная на 2 дня позже, получит максимум {{max}}% от оценки",
         "timezoneLabel": "Часовой пояс",
         "timezoneMoscow": "Москва (UTC+3)",
         "timezoneLondon": "Лондон (UTC+0)",
@@ -2350,8 +2342,7 @@
       "downloadError": "Не удалось скачать файл",
       "uploadError": "Не удалось загрузить файл",
       "saveError": "Не удалось сохранить работу",
-      "deleteFileError": "Не удалось удалить файл",
-      "latePolicy": "Штраф 10% за каждый день опоздания (макс. 3 дня)"
+      "deleteFileError": "Не удалось удалить файл"
     },
     "courseDetail": {
       "title": "Название курса",

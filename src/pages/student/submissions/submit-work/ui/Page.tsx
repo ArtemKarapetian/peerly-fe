@@ -125,7 +125,6 @@ export default function SubmitWorkPage() {
   const taskRules: TaskRules = {
     deadline: formatDeadline(dueDate, i18n.language),
     isDeadlinePassed,
-    latePolicy: t("page.submitWork.latePolicy"),
   };
 
   const acceptedFormats = [".zip", ".pdf", ".jpg", ".jpeg", ".png", ".doc", ".docx", ".txt"];
