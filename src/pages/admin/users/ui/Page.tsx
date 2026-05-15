@@ -1,4 +1,4 @@
-import { Users, Search, X, CheckCircle, XCircle } from "lucide-react";
+import { Users, Search, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,30 +9,12 @@ import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { userRepo } from "@/entities/user";
-import { DemoUser } from "@/entities/user/model/types.ts";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-
-interface UserWithStatus extends DemoUser {
-  status: "active" | "disabled";
-  lastLogin?: Date;
-  sessions?: UserSession[];
-}
-
-interface UserSession {
-  id: string;
-  device: string;
-  browser: string;
-  ip: string;
-  location: string;
-  lastActive: Date;
-  isCurrent: boolean;
-}
 
 export default function AdminUsersPage() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [, setSelectedUser] = useState<UserWithStatus | null>(null);
 
   const {
     data: users,
@@ -43,13 +25,7 @@ export default function AdminUsersPage() {
     onError: "redirect",
   });
 
-  const usersWithStatus: UserWithStatus[] = (users ?? []).map((user) => ({
-    ...user,
-    status: "active" as const,
-    lastLogin: new Date(),
-  }));
-
-  const filteredUsers = usersWithStatus.filter(
+  const filteredUsers = (users ?? []).filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -83,24 +59,6 @@ export default function AdminUsersPage() {
         return "bg-success-light text-success";
       default:
         return "bg-muted text-muted-foreground";
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    if (status === "active") {
-      return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[11px] font-medium">
-          <CheckCircle className="w-3 h-3" />
-          {t("admin.usersPage.statusActive")}
-        </span>
-      );
-    } else {
-      return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[11px] font-medium">
-          <XCircle className="w-3 h-3" />
-          {t("admin.usersPage.statusInactive")}
-        </span>
-      );
     }
   };
 
@@ -156,15 +114,6 @@ export default function AdminUsersPage() {
                   <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerRole")}
                   </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
-                    {t("admin.usersPage.headerLastLogin")}
-                  </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
-                    {t("admin.usersPage.headerStatus")}
-                  </th>
-                  <th className="text-right px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
-                    {t("admin.usersPage.headerActions")}
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -188,20 +137,6 @@ export default function AdminUsersPage() {
                         >
                           {user.role}
                         </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-[14px] text-muted-foreground">
-                          {user.lastLogin?.toLocaleString("ru-RU")}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4">{getStatusBadge(user.status)}</td>
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => setSelectedUser(user)}
-                          className="inline-flex items-center gap-1 px-3 py-2 bg-brand-primary text-primary-foreground rounded-[8px] hover:bg-brand-primary-hover transition-colors text-[13px]"
-                        >
-                          {t("admin.usersPage.manage")}
-                        </button>
                       </td>
                     </tr>
                   );
