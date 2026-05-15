@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -123,5 +123,71 @@ describe("RegisterPage", () => {
 
     const signInLink = screen.getByText("Sign In");
     expect(signInLink.closest("a")).toHaveAttribute("href", "/login");
+  });
+
+  it("clears first-name error after typing a valid value", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<RegisterPage />);
+
+    const firstNameInput = screen.getByPlaceholderText("Ivan");
+    await user.click(firstNameInput);
+    await user.tab();
+    await waitFor(() => {
+      expect(screen.getByText("Enter first name")).toBeInTheDocument();
+    });
+
+    await user.type(firstNameInput, "Ivan");
+    await waitFor(() => {
+      expect(screen.queryByText("Enter first name")).not.toBeInTheDocument();
+    });
+  });
+
+  it("clears last-name error after typing a valid value", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<RegisterPage />);
+
+    const lastNameInput = screen.getByPlaceholderText("Petrov");
+    await user.click(lastNameInput);
+    await user.tab();
+    await waitFor(() => {
+      expect(screen.getByText("Enter last name")).toBeInTheDocument();
+    });
+
+    await user.type(lastNameInput, "Petrov");
+    await waitFor(() => {
+      expect(screen.queryByText("Enter last name")).not.toBeInTheDocument();
+    });
+  });
+
+  it("enables submit button only when all required fields are valid", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<RegisterPage />);
+
+    const submitButton = screen.getByRole("button", { name: /Create Account/i });
+    expect(submitButton).toBeDisabled();
+
+    await user.type(screen.getByPlaceholderText("Ivan"), "Ivan");
+    await user.type(screen.getByPlaceholderText("Petrov"), "Petrov");
+    await user.type(screen.getByPlaceholderText("ivan.petrov@university.edu"), "ivan@example.com");
+    const passwordInputs = screen.getAllByPlaceholderText("••••••••");
+    await user.type(passwordInputs[0], "password123");
+    await user.type(passwordInputs[1], "password123");
+
+    await waitFor(() => {
+      expect(submitButton).not.toBeDisabled();
+    });
+  });
+
+  it("invokes submit handler on empty form without navigating away", async () => {
+    renderWithProviders(<RegisterPage />);
+
+    const submitButton = screen.getByRole("button", { name: /Create Account/i });
+    const form = submitButton.closest("form")!;
+    fireEvent.submit(form);
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+    });
+    expect(screen.getByRole("heading", { name: /Create Account/i })).toBeInTheDocument();
   });
 });
