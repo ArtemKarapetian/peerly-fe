@@ -1,10 +1,9 @@
-import { Clock, AlertTriangle } from "lucide-react";
+import { Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export interface TaskRules {
   deadline: string;
   isDeadlinePassed: boolean;
-  latePolicy?: string;
 }
 
 interface TaskRulesCardProps {
@@ -36,20 +35,6 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
           </div>
         </div>
       </div>
-
-      {rules.latePolicy && (
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-warning-light rounded-[8px] flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5 text-foreground" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-[13px] text-muted-foreground mb-0.5">
-              {t("feature.submission.rules.latePolicy")}
-            </div>
-            <div className="text-[13px] text-foreground leading-[1.5]">{rules.latePolicy}</div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
