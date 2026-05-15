@@ -8,7 +8,6 @@ import { PublicOnlyRoute } from "@/app/routing/PublicOnlyRoute";
 import { RoleRoute } from "@/app/routing/RoleRoute";
 
 // Admin
-const AdminCoursesPage = lazy(() => import("@/pages/admin/courses/ui/Page"));
 const AdminOverviewPage = lazy(() => import("@/pages/admin/overview/ui/Page"));
 const AdminUsersPage = lazy(() => import("@/pages/admin/users/ui/Page"));
 
@@ -153,7 +152,6 @@ export function Router() {
           {/* Admin */}
           <Route element={<RoleRoute allow={["Admin"]} />}>
             <Route path="/admin/overview" element={<AdminOverviewPage />} />
-            <Route path="/admin/courses" element={<AdminCoursesPage />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
           </Route>
         </Route>

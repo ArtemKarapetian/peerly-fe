@@ -44,7 +44,6 @@
     "appeals": "Appeals",
     "profile": "Profile",
     "settings": "Settings",
-    "allCourses": "All Courses",
     "users": "Users",
     "pluginCatalog": "Plugin Catalog",
     "integrations": "Integrations",
@@ -957,32 +956,12 @@
       "auditUpdated": "Retention policies updated"
     },
     "overviewPage": {
+      "totalStudents": "Total Students",
+      "activeCourses": "Active Courses",
       "quickLinks": "Quick Links",
       "qlUsers": "Users",
       "qlUsersDesc": "Manage users and roles",
-      "qlCourses": "Courses",
-      "qlCoursesDesc": "Browse and manage courses",
       "goTo": "Go to"
-    },
-    "coursesPage": {
-      "totalCourses": "Total Courses",
-      "activeCourses": "Active",
-      "enrolledStudents": "Enrolled Students",
-      "teachers": "Teachers",
-      "searchPlaceholder": "Search by course name or code...",
-      "coursesCount": "Courses: {{count}}",
-      "headerCourse": "Course",
-      "headerTeacher": "Teacher",
-      "headerStudents": "Students",
-      "headerAssignments": "Assignments",
-      "headerStatus": "Status",
-      "statusArchived": "Archived",
-      "statusActive": "Active",
-      "openCourseLabel": "Open course {{title}}",
-      "notFound": "No courses found",
-      "notFoundWithSearch": "Try changing your search query",
-      "notFoundEmpty": "No courses in the system yet",
-      "teacherDefault": "Teacher"
     },
     "usersPage": {
       "searchLabel": "Search",
