@@ -44,7 +44,6 @@
     "appeals": "Апелляции",
     "profile": "Профиль",
     "settings": "Настройки",
-    "allCourses": "Все курсы",
     "users": "Пользователи",
     "pluginCatalog": "Каталог плагинов",
     "integrations": "Интеграции",
@@ -957,32 +956,12 @@
       "auditUpdated": "Политики хранения обновлены"
     },
     "overviewPage": {
+      "totalStudents": "Всего студентов",
+      "activeCourses": "Активных курсов",
       "quickLinks": "Быстрые переходы",
       "qlUsers": "Пользователи",
       "qlUsersDesc": "Управление пользователями и ролями",
-      "qlCourses": "Курсы",
-      "qlCoursesDesc": "Просмотр и управление курсами",
       "goTo": "Перейти"
-    },
-    "coursesPage": {
-      "totalCourses": "Всего курсов",
-      "activeCourses": "Активных",
-      "enrolledStudents": "Студентов записано",
-      "teachers": "Преподавателей",
-      "searchPlaceholder": "Поиск по названию или коду курса...",
-      "coursesCount": "Курсов: {{count}}",
-      "headerCourse": "Курс",
-      "headerTeacher": "Преподаватель",
-      "headerStudents": "Студенты",
-      "headerAssignments": "Задания",
-      "headerStatus": "Статус",
-      "statusArchived": "Архив",
-      "statusActive": "Активен",
-      "openCourseLabel": "Открыть курс {{title}}",
-      "notFound": "Курсы не найдены",
-      "notFoundWithSearch": "Попробуйте изменить поисковый запрос",
-      "notFoundEmpty": "В системе пока нет курсов",
-      "teacherDefault": "Преподаватель"
     },
     "usersPage": {
       "searchLabel": "Поиск",

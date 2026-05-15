@@ -46,7 +46,6 @@ export const ROUTES = {
   teacherSubmissions: "/teacher/submissions",
 
   adminOverview: "/admin/overview",
-  adminCourses: "/admin/courses",
   adminUsers: "/admin/users",
 } as const;
 

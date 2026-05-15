@@ -15,7 +15,7 @@ vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
 }));
 
 describe("AdminOverviewPage", () => {
-  it("renders the two quick-link cards", () => {
+  it("renders the users quick-link card", () => {
     render(
       <MemoryRouter>
         <AdminOverviewPage />
@@ -23,6 +23,5 @@ describe("AdminOverviewPage", () => {
     );
 
     expect(screen.getByText("admin.overviewPage.qlUsers")).toBeInTheDocument();
-    expect(screen.getByText("admin.overviewPage.qlCourses")).toBeInTheDocument();
   });
 });

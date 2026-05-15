@@ -99,7 +99,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       case "Admin":
         return [
           { icon: LayoutDashboard, label: t("nav.overview"), hash: "/admin/overview" },
-          { icon: Book, label: t("nav.allCourses"), hash: "/admin/courses" },
           { icon: Users, label: t("nav.users"), hash: "/admin/users" },
         ];
       default:

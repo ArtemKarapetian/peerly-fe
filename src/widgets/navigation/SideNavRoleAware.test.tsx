@@ -55,7 +55,6 @@ describe("SideNav role-aware links", () => {
   it("renders admin links for Admin role", () => {
     renderNav("Admin");
     expect(screen.queryByText(/nav\.overview/)).toBeInTheDocument();
-    expect(screen.queryByText(/nav\.allCourses/)).toBeInTheDocument();
     expect(screen.queryByText(/nav\.users/)).toBeInTheDocument();
     expect(screen.queryByText(/nav\.rubrics/)).not.toBeInTheDocument();
     expect(screen.queryByText(/nav\.gradebook/)).not.toBeInTheDocument();
