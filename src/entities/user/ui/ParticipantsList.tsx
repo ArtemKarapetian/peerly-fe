@@ -1,25 +1,18 @@
-import { MoreVertical } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-/**
- * ParticipantsList - Список участников курса
- */
 
 export interface Participant {
   id: string;
   firstName: string;
   lastName: string;
   role: "student" | "teacher" | "assistant";
-  status: "active" | "inactive";
   avatarColor?: string;
 }
 
 interface ParticipantsListProps {
   participants: Participant[];
-  onParticipantClick?: (id: string) => void;
 }
 
-export function ParticipantsList({ participants, onParticipantClick }: ParticipantsListProps) {
+export function ParticipantsList({ participants }: ParticipantsListProps) {
   const { t } = useTranslation();
 
   const getRoleLabel = (role: Participant["role"]) => {
@@ -60,14 +53,10 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
     <div className="space-y-0">
       {participants.map((participant, index) => (
         <div key={participant.id}>
-          <button
-            onClick={() => onParticipantClick?.(participant.id)}
+          <div
             className="
               w-full flex items-center gap-4 px-5 py-4
               text-left
-              transition-all
-              hover:bg-card hover:shadow-sm hover:rounded-[12px]
-              group
             "
           >
             <div
@@ -93,17 +82,8 @@ export function ParticipantsList({ participants, onParticipantClick }: Participa
                   {getRoleLabel(participant.role)}
                 </span>
               </div>
-              {participant.status === "inactive" && (
-                <p className="text-[13px] leading-[1.4] text-text-tertiary">
-                  {t("entity.user.inactive")}
-                </p>
-              )}
             </div>
-
-            <div className="shrink-0">
-              <MoreVertical className="w-4 h-4 text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-          </button>
+          </div>
 
           {index < participants.length - 1 && <div className="border-b border-border" />}
         </div>

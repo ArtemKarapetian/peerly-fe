@@ -33,7 +33,6 @@ export function CourseParticipantsTab({ courseId }: CourseParticipantsTabProps) 
         firstName,
         lastName,
         role: "teacher" as const,
-        status: "active" as const,
         avatarColor: coverColorFor(String(u.id)),
       };
     }),
@@ -44,7 +43,6 @@ export function CourseParticipantsTab({ courseId }: CourseParticipantsTabProps) 
         firstName,
         lastName,
         role: "student" as const,
-        status: "active" as const,
         avatarColor: coverColorFor(String(u.id)),
       };
     }),

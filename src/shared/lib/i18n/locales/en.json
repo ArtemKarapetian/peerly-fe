@@ -970,12 +970,6 @@
       "searchFilter": "Search: \"{{query}}\"",
       "headerUser": "User",
       "headerRole": "Role",
-      "headerLastLogin": "Last Login",
-      "headerStatus": "Status",
-      "headerActions": "Actions",
-      "statusActive": "Active",
-      "statusInactive": "Inactive",
-      "manage": "Manage",
       "notFound": "No users found",
       "notFoundHint": "Try changing your search or filter parameters"
     },
@@ -2262,8 +2256,7 @@
       "roleStudent": "Student",
       "roleTeacher": "Teacher",
       "roleAssistant": "Assistant",
-      "participantsNotFound": "No participants found",
-      "inactive": "Inactive"
+      "participantsNotFound": "No participants found"
     },
     "work": {
       "statusDraft": "Draft",

@@ -970,12 +970,6 @@
       "searchFilter": "Поиск: \"{{query}}\"",
       "headerUser": "Пользователь",
       "headerRole": "Роль",
-      "headerLastLogin": "Последний вход",
-      "headerStatus": "Статус",
-      "headerActions": "Действия",
-      "statusActive": "Активен",
-      "statusInactive": "Неактивен",
-      "manage": "Управление",
       "notFound": "Пользователи не найдены",
       "notFoundHint": "Попробуйте изменить параметры поиска или фильтры"
     },
@@ -1544,8 +1538,7 @@
       "roleStudent": "Студент",
       "roleTeacher": "Преподаватель",
       "roleAssistant": "Ассистент",
-      "participantsNotFound": "Участники не найдены",
-      "inactive": "Неактивен"
+      "participantsNotFound": "Участники не найдены"
     },
     "work": {
       "statusDraft": "Черновик",
