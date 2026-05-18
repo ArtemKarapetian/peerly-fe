@@ -150,7 +150,7 @@ export default function TeacherRubricsPage() {
               <div className="flex items-center justify-between text-[12px] text-muted-foreground border-t border-border pt-3">
                 <span className="inline-flex items-center gap-1">
                   <span className="font-medium text-foreground">{rubric.criteria.length}</span>
-                  {t("teacher.rubrics.criteriaCount")}
+                  {t("teacher.rubrics.criteriaCount", { count: rubric.criteria.length })}
                 </span>
                 <span className="inline-flex items-center gap-1 text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                   {t("teacher.rubrics.openRubric")}

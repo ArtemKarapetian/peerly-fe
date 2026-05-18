@@ -12,7 +12,15 @@ export function mapDtoToGroup(dto: GroupDto): DemoGroup {
 
 export function mapParticipants(dto: ListParticipantsResponse): GroupParticipants {
   return {
-    students: dto.students.map((s) => ({ id: String(s.id), userName: s.userName })),
-    teachers: dto.teachers.map((s) => ({ id: String(s.id), userName: s.userName })),
+    students: dto.students.map((s) => ({
+      id: String(s.studentId),
+      name: s.name,
+      email: s.email,
+    })),
+    teachers: dto.teachers.map((t) => ({
+      id: String(t.teacherId),
+      name: t.name,
+      email: t.email,
+    })),
   };
 }

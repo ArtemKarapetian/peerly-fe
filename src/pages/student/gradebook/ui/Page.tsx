@@ -16,13 +16,15 @@ const PAGE_SIZE = 15;
 const STATUS_LABEL_KEYS: Record<string, string> = {
   PUBLISHED: "student.gradebook.statusPublished",
   IN_REVIEW: "student.gradebook.statusInReview",
-  NOT_SUBMITTED: "student.gradebook.statusNotSubmitted",
+  NOT_STARTED: "student.gradebook.statusNotStarted",
+  OVERDUE: "student.gradebook.statusOverdue",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   PUBLISHED: "bg-success-light text-success",
   IN_REVIEW: "bg-warning-light text-warning",
-  NOT_SUBMITTED: "bg-error-light text-error",
+  NOT_STARTED: "bg-muted text-muted-foreground",
+  OVERDUE: "bg-error-light text-error",
 };
 
 export default function GradebookPage() {

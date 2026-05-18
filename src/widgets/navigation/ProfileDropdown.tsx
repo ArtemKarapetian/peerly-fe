@@ -19,7 +19,9 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
   const { logout } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const displayName = userName || getSession()?.userName || t("widget.profileDropdown.defaultUser");
+  const session = getSession();
+  const displayName =
+    userName || session?.userName || session?.email || t("widget.profileDropdown.defaultUser");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

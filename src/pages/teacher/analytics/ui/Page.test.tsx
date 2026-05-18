@@ -118,11 +118,11 @@ function setupData() {
   ]);
   courseRepoMock.getParticipants.mockResolvedValue({
     students: [
-      { id: "u-1", userName: "Alice" },
-      { id: "u-2", userName: "Bob" },
-      { id: "u-3", userName: "Carol" },
+      { studentId: "u-1", email: "a@x", name: "Alice" },
+      { studentId: "u-2", email: "b@x", name: "Bob" },
+      { studentId: "u-3", email: "c@x", name: "Carol" },
     ],
-    teachers: [{ id: "u-4", userName: "Prof" }],
+    teachers: [{ teacherId: "u-4", email: "p@x", name: "Prof" }],
   });
 }
 
@@ -205,7 +205,7 @@ describe("TeacherAnalyticsPage", () => {
     workRepoMock.getAll.mockResolvedValue([]);
     reviewRepoMock.getAll.mockResolvedValue([]);
     courseRepoMock.getParticipants.mockResolvedValue({
-      students: [{ id: "u-1", userName: "Alice" }],
+      students: [{ studentId: "u-1", email: "a@x", name: "Alice" }],
       teachers: [],
     });
     renderPage();

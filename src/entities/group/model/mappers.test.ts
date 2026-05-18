@@ -27,13 +27,13 @@ describe("mapDtoToGroup", () => {
 describe("mapParticipants", () => {
   it("maps students and teachers separately and coerces ids", () => {
     const dto: ListParticipantsResponse = {
-      students: [{ id: 1 as unknown as string, userName: "Alice" }],
-      teachers: [{ id: "t-1", userName: "Maria" }],
+      students: [{ studentId: 1 as unknown as string, email: "a@x", name: "Alice" }],
+      teachers: [{ teacherId: "t-1", email: "m@x", name: "Maria" }],
     };
     const result = mapParticipants(dto);
 
-    expect(result.students).toEqual([{ id: "1", userName: "Alice" }]);
-    expect(result.teachers).toEqual([{ id: "t-1", userName: "Maria" }]);
+    expect(result.students).toEqual([{ id: "1", name: "Alice", email: "a@x" }]);
+    expect(result.teachers).toEqual([{ id: "t-1", name: "Maria", email: "m@x" }]);
   });
 
   it("returns empty arrays for empty input", () => {

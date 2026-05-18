@@ -1,4 +1,4 @@
-import { FileText, Shield, Mail } from "lucide-react";
+import { FileText, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -38,12 +38,6 @@ export default function TermsPage() {
                 className="block text-[15px] text-primary hover:underline text-left"
               >
                 → {t("page.terms.tocTerms")}
-              </button>
-              <button
-                onClick={() => scrollToSection("privacy-policy")}
-                className="block text-[15px] text-primary hover:underline text-left"
-              >
-                → {t("page.terms.tocPrivacy")}
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
@@ -125,94 +119,6 @@ export default function TermsPage() {
                 <p className="text-[15px] text-muted-foreground leading-relaxed">
                   {t("page.terms.terms6Text")}
                 </p>
-              </div>
-            </div>
-          </section>
-
-          <section
-            id="privacy-policy"
-            className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 mb-6 scroll-mt-4"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <Shield className="size-6 text-primary" />
-              <h2 className="text-[28px] font-medium text-foreground">
-                {t("page.terms.privacyTitle")}
-              </h2>
-            </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  {t("page.terms.privacy1Title")}
-                </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  {t("page.terms.privacy1Text")}
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>{t("page.terms.privacy1Item1")}</li>
-                  <li>{t("page.terms.privacy1Item2")}</li>
-                  <li>{t("page.terms.privacy1Item3")}</li>
-                  <li>{t("page.terms.privacy1Item4")}</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  {t("page.terms.privacy2Title")}
-                </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  {t("page.terms.privacy2Text")}
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>{t("page.terms.privacy2Item1")}</li>
-                  <li>{t("page.terms.privacy2Item2")}</li>
-                  <li>{t("page.terms.privacy2Item3")}</li>
-                  <li>{t("page.terms.privacy2Item4")}</li>
-                  <li>{t("page.terms.privacy2Item5")}</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  {t("page.terms.privacy3Title")}
-                </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  {t("page.terms.privacy3Text")}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  {t("page.terms.privacy4Title")}
-                </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  {t("page.terms.privacy4Text")}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  {t("page.terms.privacy5Title")}
-                </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
-                  {t("page.terms.privacy5Text")}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
-                  {t("page.terms.privacy6Title")}
-                </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
-                  {t("page.terms.privacy6Text")}
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
-                  <li>{t("page.terms.privacy6Item1")}</li>
-                  <li>{t("page.terms.privacy6Item2")}</li>
-                  <li>{t("page.terms.privacy6Item3")}</li>
-                  <li>{t("page.terms.privacy6Item4")}</li>
-                  <li>{t("page.terms.privacy6Item5")}</li>
-                </ul>
               </div>
             </div>
           </section>

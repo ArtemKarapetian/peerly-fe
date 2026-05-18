@@ -21,7 +21,7 @@ export function AboutCard() {
             to="/security"
             className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
           >
-            {t("widget.about.passwordAnd2FA")}
+            {t("widget.about.password")}
             <ExternalLink className="w-4 h-4" />
           </Link>
         </div>
@@ -31,23 +31,10 @@ export function AboutCard() {
           <span className="text-[15px] font-medium text-foreground">v1.0.0</span>
         </div>
 
-        <div className="flex items-center justify-between py-3 border-b border-border">
+        <div className="flex items-center justify-between py-3">
           <span className="text-[15px] text-muted-foreground">{t("widget.about.termsOfUse")}</span>
           <Link
             to="/terms"
-            className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
-          >
-            {t("widget.about.read")}
-            <ExternalLink className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-between py-3">
-          <span className="text-[15px] text-muted-foreground">
-            {t("widget.about.privacyPolicy")}
-          </span>
-          <Link
-            to="/privacy"
             className="inline-flex items-center gap-2 text-[14px] text-accent-foreground hover:opacity-80 transition-opacity"
           >
             {t("widget.about.read")}

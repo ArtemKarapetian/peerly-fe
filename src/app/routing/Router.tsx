@@ -29,7 +29,6 @@ const TermsPage = lazy(() => import("@/pages/public/terms/ui/Page"));
 const VerifyEmailPage = lazy(() => import("@/pages/public/verify-email/ui/Page"));
 
 // Shared (authenticated)
-const DeleteAccountPage = lazy(() => import("@/pages/shared/delete-account/ui/Page"));
 const ProfilePage = lazy(() => import("@/pages/shared/profile/ui/Page"));
 const SecurityPage = lazy(() => import("@/pages/shared/security/ui/Page"));
 const SettingsPage = lazy(() => import("@/pages/shared/settings/ui/Page"));
@@ -126,7 +125,6 @@ export function Router() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/security" element={<SecurityPage />} />
-          <Route path="/offboarding/delete-account" element={<DeleteAccountPage />} />
 
           {/* Teacher */}
           <Route element={<RoleRoute allow={["Teacher"]} />}>

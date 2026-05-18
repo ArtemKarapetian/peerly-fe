@@ -16,12 +16,6 @@ function clamp(value: number, min: number, max: number): number {
 export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
   const { t } = useTranslation();
 
-  const getReviewForm = (count: number) => {
-    if (count === 1) return t("feature.assignmentCreate.peerSession.reviewOne");
-    if (count < 5) return t("feature.assignmentCreate.peerSession.reviewFew");
-    return t("feature.assignmentCreate.peerSession.reviewMany");
-  };
-
   return (
     <div className="space-y-6">
       <div>
@@ -65,7 +59,6 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
         <p className="text-[13px] text-muted-foreground mt-2">
           {t("feature.assignmentCreate.peerSession.reviewsHint", {
             count: data.reviewsPerSubmission,
-            form: getReviewForm(data.reviewsPerSubmission),
           })}
         </p>
       </div>

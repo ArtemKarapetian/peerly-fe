@@ -20,12 +20,6 @@ function getStatusInfo(status: string, t: (key: string) => string) {
         color: "bg-muted",
         textColor: "text-muted-foreground",
       };
-    case "draft":
-      return {
-        label: t("widget.reviewCard.draft"),
-        color: "bg-warning-light",
-        textColor: "text-foreground",
-      };
     case "submitted":
       return {
         label: t("widget.reviewCard.submitted"),
@@ -45,8 +39,6 @@ function getCtaLabel(status: string, t: (key: string) => string) {
   switch (status) {
     case "not_started":
       return t("widget.reviewCard.ctaStart");
-    case "draft":
-      return t("widget.reviewCard.ctaContinue");
     case "submitted":
       return t("widget.reviewCard.ctaView");
     default:

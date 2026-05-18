@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { UserInfoCard } from "./UserInfoCard";
@@ -29,18 +28,20 @@ describe("UserInfoCard", () => {
     expect(screen.getByDisplayValue("alice@x.com")).toBeInTheDocument();
   });
 
-  it("renders the edit button by default", () => {
+  it("renders inputs as disabled (no editing)", () => {
     render(<UserInfoCard />);
-    expect(screen.getByRole("button", { name: /common\.edit/ })).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Alice")).toBeDisabled();
+    expect(screen.getByDisplayValue("alice@x.com")).toBeDisabled();
   });
 
-  it("enters edit mode when clicking the edit button", async () => {
-    const user = userEvent.setup();
+  it("does not render an edit button", () => {
     render(<UserInfoCard />);
-    await user.click(screen.getByRole("button", { name: /common\.edit/ }));
-    expect(
-      screen.getByRole("button", { name: /feature\.profile\.saveChanges/ }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /common\.cancel/ })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /common\.edit/ })).not.toBeInTheDocument();
+  });
+
+  it("falls back to email when userName is empty", () => {
+    getSessionMock.mockReturnValueOnce({ userName: "", email: "bob@x.com" });
+    render(<UserInfoCard />);
+    expect(screen.getAllByText("bob@x.com").length).toBeGreaterThan(0);
   });
 });

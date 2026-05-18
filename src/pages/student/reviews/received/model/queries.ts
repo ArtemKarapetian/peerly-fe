@@ -8,11 +8,8 @@ import { workRepo } from "@/entities/work";
 
 export interface ReceivedReview {
   reviewId: string;
-  reviewerName: string | null;
-  isAnonymous: boolean;
-  submittedAt: string;
-  overallComment: string;
-  criteria: { name: string; score: number; maxScore: number; comment?: string }[];
+  mark: number;
+  comment: string;
 }
 
 export interface TaskSubmissionReviews {
@@ -23,13 +20,9 @@ export interface TaskSubmissionReviews {
   status: "PUBLISHED" | "IN_REVIEW" | "PENDING";
   reviewsReceived: number;
   reviewsRequired: number;
-  currentScore?: number;
-  maxScore?: number;
-  allowAppeal: boolean;
+  finalMark: number | null;
   reviews: ReceivedReview[];
 }
-
-const MARK_MAX = 10;
 
 export function useReceivedReviews() {
   return useQuery({
@@ -55,38 +48,24 @@ export function useReceivedReviews() {
 
           const reviews: ReceivedReview[] = detail.submittedReviews.map((r) => ({
             reviewId: String(r.id),
-            reviewerName: null,
-            isAnonymous: true,
-            submittedAt: "",
-            overallComment: r.comment,
-            criteria: [
-              {
-                name: "",
-                score: r.mark,
-                maxScore: MARK_MAX,
-              },
-            ],
+            mark: r.mark,
+            comment: r.comment,
           }));
 
           const status: TaskSubmissionReviews["status"] =
             detail.finalMark != null ? "PUBLISHED" : reviews.length > 0 ? "IN_REVIEW" : "PENDING";
 
-          const result: TaskSubmissionReviews = {
+          return {
             taskId: a.id,
             taskTitle: a.title,
             courseId: a.courseId,
             courseName: courseNameById.get(a.courseId) ?? "",
             status,
             reviewsReceived: reviews.length,
-            reviewsRequired: a.reviewCount || reviews.length,
-            allowAppeal: false,
+            reviewsRequired: a.reviewCount,
+            finalMark: detail.finalMark,
             reviews,
           };
-          if (detail.finalMark != null) {
-            result.currentScore = detail.finalMark;
-            result.maxScore = MARK_MAX;
-          }
-          return result;
         }),
       );
 

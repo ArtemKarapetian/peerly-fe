@@ -78,7 +78,7 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
           className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors resize-none"
         />
         <p className="text-[13px] text-muted-foreground mt-1">
-          {data.description.length} {t("feature.assignmentCreate.basics.characters")}
+          {t("feature.assignmentCreate.basics.characters", { count: data.description.length })}
         </p>
       </div>
 

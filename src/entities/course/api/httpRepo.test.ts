@@ -127,37 +127,11 @@ describe("courseHttpRepo", () => {
     expect(out.archived).toBe(false);
   });
 
-  it("archive fetches and PUTs a full body with canceled/inProgress", async () => {
-    currentSession = {
-      userId: "t-1",
-      userName: "t",
-      email: "t@x",
-      role: "Teacher",
-    };
-    httpMock.get.mockResolvedValue({
-      courseInfo: {
-        id: "c-9",
-        name: "Algebra",
-        description: "desc",
-        status: "inProgress",
-        teachers: [],
-      },
-      studentCount: 0,
-      homeworkCount: 0,
-      files: [],
-    });
-    httpMock.put.mockResolvedValue(undefined);
-
-    await courseHttpRepo.archive("c-9", true);
+  it("update PUTs /courses/:id with name and description", async () => {
+    httpMock.put.mockResolvedValueOnce(undefined);
+    await courseHttpRepo.update("c-9", { name: "Algebra", description: "desc" });
     expect(httpMock.put.mock.calls[0][0]).toBe("/courses/c-9");
-    expect(httpMock.put.mock.calls[0][1]).toEqual({
-      name: "Algebra",
-      description: "desc",
-      status: "canceled",
-    });
-
-    await courseHttpRepo.archive("c-9", false);
-    expect(httpMock.put.mock.calls[1][1]).toMatchObject({ status: "inProgress" });
+    expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "Algebra", description: "desc" });
   });
 
   it("delete DELETEs /courses/:id", async () => {

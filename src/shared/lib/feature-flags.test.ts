@@ -20,64 +20,58 @@ describe("feature-flags", () => {
     vi.restoreAllMocks();
   });
 
-  it("FLAG_METADATA declares the expected flag keys with backend + description", () => {
-    const keys = Object.keys(FLAG_METADATA);
-    expect(keys).toContain("supportChat");
-    expect(keys).toContain("twoFactor");
-    expect(keys).toContain("enableEmailConfirmation");
-    expect(keys).toContain("enablePasswordReset");
+  it("ships metadata for every declared flag", () => {
+    const flagKeys = Object.keys(getFeatureFlags());
+    const metaKeys = Object.keys(FLAG_METADATA);
+    expect(metaKeys.sort()).toEqual(flagKeys.sort());
     for (const meta of Object.values(FLAG_METADATA)) {
-      expect(typeof meta.backend).toBe("boolean");
-      expect(typeof meta.description).toBe("string");
-      expect(meta.description.length).toBeGreaterThan(0);
+      expect(meta.description).toMatch(/\S/);
     }
   });
 
-  it("getFeatureFlags returns all defaults (false) when nothing stored", () => {
+  it("defaults every flag to false when nothing is stored", () => {
     const flags = getFeatureFlags();
-    expect(flags.supportChat).toBe(false);
-    expect(flags.twoFactor).toBe(false);
-    expect(flags.enableEmailConfirmation).toBe(false);
-    expect(flags.enablePasswordReset).toBe(false);
+    for (const value of Object.values(flags)) {
+      expect(value).toBe(false);
+    }
   });
 
-  it("setFeatureFlag toggles a single flag and persists it", () => {
-    setFeatureFlag("twoFactor", true);
-    expect(isFlagEnabled("twoFactor")).toBe(true);
+  it("persists a single flag flip across reads", () => {
+    setFeatureFlag("enableEmailConfirmation", true);
+    expect(isFlagEnabled("enableEmailConfirmation")).toBe(true);
     expect(isFlagEnabled("supportChat")).toBe(false);
   });
 
-  it("isFlagEnabled reads back persisted value", () => {
+  it("resetFeatureFlags brings every flag back to false", () => {
     setFeatureFlag("supportChat", true);
-    expect(isFlagEnabled("supportChat")).toBe(true);
-  });
-
-  it("resetFeatureFlags restores all defaults", () => {
-    setFeatureFlag("supportChat", true);
-    setFeatureFlag("twoFactor", true);
+    setFeatureFlag("enableEmailConfirmation", true);
     resetFeatureFlags();
-    expect(isFlagEnabled("supportChat")).toBe(false);
-    expect(isFlagEnabled("twoFactor")).toBe(false);
-  });
-
-  it("setAllFlags merges overrides into existing flags", () => {
-    setFeatureFlag("supportChat", true);
-    setAllFlags({ twoFactor: true });
-    expect(isFlagEnabled("supportChat")).toBe(true);
-    expect(isFlagEnabled("twoFactor")).toBe(true);
-  });
-
-  it("getFeatureFlags merges partial stored payloads with defaults", () => {
-    localStorage.setItem(STORAGE_KEYS.featureFlags, JSON.stringify({ twoFactor: true }));
     const flags = getFeatureFlags();
-    expect(flags.twoFactor).toBe(true);
-    expect(flags.supportChat).toBe(false);
+    for (const value of Object.values(flags)) {
+      expect(value).toBe(false);
+    }
   });
 
-  it("getFeatureFlags returns defaults when stored JSON is corrupt", () => {
+  it("setAllFlags merges overrides without dropping previously-flipped flags", () => {
+    setFeatureFlag("supportChat", true);
+    setAllFlags({ enableEmailConfirmation: true });
+    expect(isFlagEnabled("supportChat")).toBe(true);
+    expect(isFlagEnabled("enableEmailConfirmation")).toBe(true);
+    expect(isFlagEnabled("enablePasswordReset")).toBe(false);
+  });
+
+  it("backfills missing keys from a partial stored payload", () => {
+    localStorage.setItem(STORAGE_KEYS.featureFlags, JSON.stringify({ enablePasswordReset: true }));
+    const flags = getFeatureFlags();
+    expect(flags.enablePasswordReset).toBe(true);
+    expect(flags.supportChat).toBe(false);
+    expect(flags.enableEmailConfirmation).toBe(false);
+  });
+
+  it("falls back to defaults instead of throwing on corrupt JSON", () => {
     localStorage.setItem(STORAGE_KEYS.featureFlags, "{broken");
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const flags = getFeatureFlags();
-    expect(flags.supportChat).toBe(false);
+    expect(() => getFeatureFlags()).not.toThrow();
+    expect(isFlagEnabled("supportChat")).toBe(false);
   });
 });

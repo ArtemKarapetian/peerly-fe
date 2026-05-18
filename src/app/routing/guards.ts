@@ -15,12 +15,7 @@ const PROTECTED_PREFIXES = [
   "/appeals",
 ] as const;
 
-const PROTECTED_EXACT = [
-  ROUTES.profile,
-  ROUTES.settings,
-  ROUTES.security,
-  ROUTES.deleteAccount,
-] as const;
+const PROTECTED_EXACT = [ROUTES.profile, ROUTES.settings, ROUTES.security] as const;
 
 export function isAuthPage(pathname: string): boolean {
   return pathname === ROUTES.login || pathname === ROUTES.register;

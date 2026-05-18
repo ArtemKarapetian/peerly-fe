@@ -173,11 +173,12 @@ function AnalyticsContent({ data }: { data: ContentData }) {
   };
 
   const gradebook: GradebookEntry[] = users.map((student) => {
+    const studentId = String(student.studentId);
     const scores: Record<string, number | null> = {};
     const earned: number[] = [];
     for (const assignment of courseAssignments) {
       const submission = submissions.find(
-        (s) => s.assignmentId === assignment.id && s.studentId === student.id,
+        (s) => s.assignmentId === assignment.id && s.studentId === studentId,
       );
       if (!submission || (submission.status !== "submitted" && submission.status !== "reviewed")) {
         scores[assignment.id] = null;
@@ -195,8 +196,8 @@ function AnalyticsContent({ data }: { data: ContentData }) {
       earned.push(rounded);
     }
     return {
-      studentId: student.id,
-      studentName: student.userName,
+      studentId,
+      studentName: student.name,
       scores,
       finalScore: earned.length > 0 ? Math.round(mean(earned) * 10) / 10 : null,
     };
@@ -230,7 +231,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
     const csv = [headers, ...rows]
       .map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
       .join("\n");
-    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `gradebook_${course?.title ?? "course"}_${new Date().toISOString().split("T")[0]}.csv`;

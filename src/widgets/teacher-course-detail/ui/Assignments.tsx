@@ -109,7 +109,8 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
               </span>
               <span className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                {assignment.reviewCount} {t("widget.assignments.reviews")}
+                {assignment.reviewCount}{" "}
+                {t("widget.assignments.reviews", { count: assignment.reviewCount })}
               </span>
             </div>
           </button>

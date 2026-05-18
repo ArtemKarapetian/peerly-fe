@@ -9,14 +9,32 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
     <title>Peerly</title>
     <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.getRegistrations().then((regs) => {
-          regs.forEach((r) => r.unregister());
-        });
-      }
-      if (typeof caches !== "undefined") {
-        caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
-      }
+      (function () {
+        var RELOADED = "peerly_sw_evicted";
+        var clearCaches = function () {
+          if (typeof caches !== "undefined") {
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            });
+          }
+          return Promise.resolve();
+        };
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            if (regs.length === 0) return clearCaches();
+            return Promise.all(regs.map(function (r) { return r.unregister(); }))
+              .then(clearCaches)
+              .then(function () {
+                if (!sessionStorage.getItem(RELOADED)) {
+                  sessionStorage.setItem(RELOADED, "1");
+                  location.reload();
+                }
+              });
+          });
+        } else {
+          clearCaches();
+        }
+      })();
     </script>
   </head>
 

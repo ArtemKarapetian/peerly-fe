@@ -22,7 +22,6 @@ export function mapDtoToCourse(
     name: dto.name,
     title: dto.name,
     description: dto.description ?? "",
-    code: "",
     teachers: (dto.teachers ?? []).map(mapDtoToTeacher),
     enrollmentCount: counts.studentCount,
     homeworkCount: counts.homeworkCount,

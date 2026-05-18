@@ -7,6 +7,6 @@ export {
   useCourses,
   useCourse,
   useCreateCourse,
-  useArchiveCourse,
+  useUpdateCourse,
   useCourseParticipants,
 } from "./model/queries";

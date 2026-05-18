@@ -91,7 +91,7 @@ export default function TeacherRubricDetailPage() {
               <div className="flex items-center gap-4 mt-3 text-[13px] text-muted-foreground">
                 <span>
                   <span className="font-medium text-foreground">{rubric.criteria.length}</span>{" "}
-                  {t("teacher.rubrics.criteriaCount")}
+                  {t("teacher.rubrics.criteriaCount", { count: rubric.criteria.length })}
                 </span>
                 <span>·</span>
                 <span>

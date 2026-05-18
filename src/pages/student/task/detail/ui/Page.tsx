@@ -74,13 +74,23 @@ export default function TaskPage() {
 
           <div className="w-full min-w-0 hide-below-desktop">
             <div className="task-sidebar-sticky">
-              <TaskSidebar courseId={courseId} taskId={taskId} hasSubmission={hasSubmission} />
+              <TaskSidebar
+                courseId={courseId}
+                taskId={taskId}
+                hasSubmission={hasSubmission}
+                isDeadlinePassed={isOverdue}
+              />
             </div>
           </div>
         </div>
 
         <div className="hide-on-desktop mt-4">
-          <TaskSidebar courseId={courseId} taskId={taskId} hasSubmission={hasSubmission} />
+          <TaskSidebar
+            courseId={courseId}
+            taskId={taskId}
+            hasSubmission={hasSubmission}
+            isDeadlinePassed={isOverdue}
+          />
         </div>
       </div>
     </AppShell>

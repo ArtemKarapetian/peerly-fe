@@ -2,29 +2,24 @@ import { STORAGE_KEYS } from "@/shared/config/constants";
 
 export interface FeatureFlags {
   supportChat: boolean;
-  twoFactor: boolean;
   enableEmailConfirmation: boolean;
   enablePasswordReset: boolean;
 }
 
 export interface FlagMeta {
-  backend: boolean;
   description: string;
 }
 
 export const FLAG_METADATA: Record<keyof FeatureFlags, FlagMeta> = {
-  supportChat: { backend: true, description: "Support-chat launcher in the footer" },
-  twoFactor: { backend: true, description: "Two-factor authentication flow" },
+  supportChat: { description: "Support-chat launcher in the footer" },
   enableEmailConfirmation: {
-    backend: true,
     description: "Require email confirmation after registration",
   },
-  enablePasswordReset: { backend: true, description: "Password-reset entry point on login" },
+  enablePasswordReset: { description: "Password-reset entry point on login" },
 };
 
 const DEFAULT_FLAGS: FeatureFlags = {
   supportChat: false,
-  twoFactor: false,
   enableEmailConfirmation: false,
   enablePasswordReset: false,
 };

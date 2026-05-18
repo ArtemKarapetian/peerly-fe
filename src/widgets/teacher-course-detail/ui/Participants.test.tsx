@@ -52,10 +52,10 @@ describe("TeacherCourseParticipants", () => {
   it("renders teacher then student rows and shows correct counts", async () => {
     courseRepoMock.getParticipants.mockResolvedValueOnce({
       students: [
-        { id: 1, userName: "Alice" },
-        { id: 2, userName: "Bob" },
+        { studentId: 1, email: "alice@x", name: "Alice" },
+        { studentId: 2, email: "bob@x", name: "Bob" },
       ],
-      teachers: [{ id: 9, userName: "Prof X" }],
+      teachers: [{ teacherId: 9, email: "p@x", name: "Prof X" }],
     });
     render(<TeacherCourseParticipants courseId="c-1" />);
 
@@ -76,8 +76,8 @@ describe("TeacherCourseParticipants", () => {
   it("filters by role via the select", async () => {
     const user = userEvent.setup();
     courseRepoMock.getParticipants.mockResolvedValueOnce({
-      students: [{ id: 1, userName: "Alice" }],
-      teachers: [{ id: 9, userName: "Prof X" }],
+      students: [{ studentId: 1, email: "alice@x", name: "Alice" }],
+      teachers: [{ teacherId: 9, email: "p@x", name: "Prof X" }],
     });
     render(<TeacherCourseParticipants courseId="c-1" />);
 
@@ -94,8 +94,8 @@ describe("TeacherCourseParticipants", () => {
     const user = userEvent.setup();
     courseRepoMock.getParticipants.mockResolvedValueOnce({
       students: [
-        { id: 1, userName: "Alice" },
-        { id: 2, userName: "Bob" },
+        { studentId: 1, email: "alice@x", name: "Alice" },
+        { studentId: 2, email: "bob@x", name: "Bob" },
       ],
       teachers: [],
     });
@@ -113,7 +113,7 @@ describe("TeacherCourseParticipants", () => {
   it("shows notFound state when search excludes everyone", async () => {
     const user = userEvent.setup();
     courseRepoMock.getParticipants.mockResolvedValueOnce({
-      students: [{ id: 1, userName: "Alice" }],
+      students: [{ studentId: 1, email: "alice@x", name: "Alice" }],
       teachers: [],
     });
     render(<TeacherCourseParticipants courseId="c-1" />);

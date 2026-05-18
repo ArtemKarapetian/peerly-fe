@@ -81,7 +81,7 @@ export function GradebookHeader({
           >
             <span>
               {selectedCourse === "all"
-                ? `${t("common.all")} ${t("nav.courses").toLowerCase()}`
+                ? t("student.gradebook.allCourses")
                 : courses.find((c) => c.id === selectedCourse)?.name}
             </span>
             <ChevronDown className="w-4 h-4 text-muted-foreground" />
@@ -100,7 +100,7 @@ export function GradebookHeader({
                     : "text-foreground"
                 }`}
               >
-                {t("common.all")} {t("nav.courses").toLowerCase()}
+                {t("student.gradebook.allCourses")}
               </button>
               {courses.map((course) => (
                 <button
@@ -132,7 +132,7 @@ export function GradebookHeader({
           >
             <span>
               {selectedStatus === "all"
-                ? `${t("common.all")} ${t("common.status").toLowerCase()}`
+                ? t("student.gradebook.allStatuses")
                 : statusLabels[selectedStatus]}
             </span>
             <ChevronDown className="w-4 h-4 text-muted-foreground" />
@@ -151,7 +151,7 @@ export function GradebookHeader({
                     : "text-foreground"
                 }`}
               >
-                {t("common.all")} {t("common.status").toLowerCase()}
+                {t("student.gradebook.allStatuses")}
               </button>
               {Object.entries(statusLabels).map(([key, label]) => (
                 <button

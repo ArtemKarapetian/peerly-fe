@@ -66,7 +66,7 @@ export default function AdminOverviewPage() {
               <BookOpen className="w-6 h-6 text-success" />
             </div>
             <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
-              {t("admin.overviewPage.activeCourses")}
+              {t("admin.overviewPage.activeCourses", { count: activeCourses })}
             </p>
             <p className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
               {activeCourses.toLocaleString()}

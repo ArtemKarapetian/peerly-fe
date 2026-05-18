@@ -82,44 +82,45 @@ export default function TeacherCourseDetailsPage() {
 
       <div className="mt-6">
         {/* Header */}
-        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
+        <div className="bg-card border-2 border-border rounded-[20px] p-4 tablet:p-6 mb-6">
+          <div className="flex flex-col tablet:flex-row tablet:items-start tablet:justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-2">
+                <h1 className="text-[clamp(20px,4.5vw,32px)] font-medium text-foreground tracking-[-0.5px] leading-tight [overflow-wrap:anywhere] [text-wrap:balance]">
                   {course.name}
                 </h1>
                 {course.status === "active" ? (
-                  <span className="px-3 py-1 bg-success-light text-success rounded-[8px] text-[13px] font-medium">
+                  <span className="px-3 py-1 bg-success-light text-success rounded-[8px] text-[13px] font-medium whitespace-nowrap shrink-0">
                     {t("teacher.courseDetail.status.active")}
                   </span>
                 ) : (
-                  <span className="px-3 py-1 bg-muted text-muted-foreground rounded-[8px] text-[13px] font-medium">
+                  <span className="px-3 py-1 bg-muted text-muted-foreground rounded-[8px] text-[13px] font-medium whitespace-nowrap shrink-0">
                     {t("teacher.courseDetail.status.archived")}
                   </span>
                 )}
               </div>
-              <p className="text-[15px] text-muted-foreground mb-3">{course.code}</p>
               {teacher && (
                 <p className="text-[14px] text-muted-foreground">
                   {t("teacher.courseDetail.meta.teacherLabel")}{" "}
-                  <span className="text-foreground font-medium">{teacher.userName}</span>
+                  <span className="text-foreground font-medium">{teacher.name}</span>
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-4 text-center">
-              <div>
-                <p className="text-[24px] font-medium text-foreground">{course.enrollmentCount}</p>
-                <p className="text-[13px] text-muted-foreground">
+            <div className="flex items-center gap-4 text-center shrink-0 self-start">
+              <div className="min-w-[72px]">
+                <p className="text-[24px] font-medium text-foreground tabular-nums leading-none mb-1">
+                  {course.enrollmentCount}
+                </p>
+                <p className="text-[13px] text-muted-foreground whitespace-nowrap">
                   {t("teacher.courseDetail.meta.participants")}
                 </p>
               </div>
-              <div className="w-px h-12 bg-border"></div>
-              <div>
-                <p className="text-[24px] font-medium text-foreground">
+              <div className="w-px h-12 bg-border" />
+              <div className="min-w-[72px]">
+                <p className="text-[24px] font-medium text-foreground tabular-nums leading-none mb-1">
                   {courseAssignments.filter((a) => a.status === "published").length}
                 </p>
-                <p className="text-[13px] text-muted-foreground">
+                <p className="text-[13px] text-muted-foreground whitespace-nowrap">
                   {t("teacher.courseDetail.meta.assignments")}
                 </p>
               </div>

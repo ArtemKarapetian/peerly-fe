@@ -72,8 +72,7 @@ export interface CreateCourseResponse {
 
 export interface UpdateCourseRequestBody {
   name: string;
-  description: string;
-  status: CourseStatus;
+  description?: string;
 }
 
 // ── Groups ────────────────────────────────────────────────────────
@@ -113,13 +112,15 @@ export interface ListGroupsResponse {
 // ── Participants ──────────────────────────────────────────────────
 
 export interface StudentDto {
-  id: Id;
-  userName: string;
+  studentId: Id;
+  email: string;
+  name: string;
 }
 
 export interface TeacherDto {
-  id: Id;
-  userName: string;
+  teacherId: Id;
+  email: string;
+  name: string;
 }
 
 export interface ListParticipantsResponse {

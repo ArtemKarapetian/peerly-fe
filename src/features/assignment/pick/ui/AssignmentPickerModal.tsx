@@ -126,7 +126,7 @@ export function AssignmentPickerModal({
             <option value="all">{t("feature.assignmentPicker.allCourses")}</option>
             {courses.map((course) => (
               <option key={course.id} value={course.id}>
-                {course.name} ({course.code})
+                {course.name}
               </option>
             ))}
           </select>

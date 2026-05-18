@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Download, FileText, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, Clock, Download, FileText, Save, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
@@ -53,11 +53,23 @@ export default function SubmitWorkPage() {
   const [syncedId, setSyncedId] = useState<string | null>(null);
   const [now] = useState(() => Date.now());
 
+  const courseName = course?.title ?? "";
+  const taskTitle = hw?.title ?? "";
+  const dueDate = hw?.dueDate;
+  const isDeadlinePassed = dueDate ? dueDate.getTime() < now : false;
+
   if (submission && submission.id !== syncedId) {
     setSyncedId(submission.id);
     const incoming = (submission.content ?? "").trim();
     setComment(incoming === "" || incoming === "—" ? "" : (submission.content ?? ""));
   }
+
+  const breadcrumbs = [
+    CRUMBS.courses,
+    { label: courseName, href: ROUTES.course(courseId) },
+    { label: taskTitle, href: ROUTES.task(courseId, taskId) },
+    { label: t("page.submitWork.breadcrumbSubmit") },
+  ];
 
   const refreshSubmission = () =>
     queryClient.invalidateQueries({ queryKey: ["submissions", "mine", taskId] });
@@ -117,11 +129,6 @@ export default function SubmitWorkPage() {
     onError: () => setActionError(t("page.submitWork.saveError")),
   });
 
-  const courseName = course?.title ?? "";
-  const taskTitle = hw?.title ?? "";
-  const dueDate = hw?.dueDate;
-  const isDeadlinePassed = dueDate ? dueDate.getTime() < now : false;
-
   const taskRules: TaskRules = {
     deadline: formatDeadline(dueDate, i18n.language),
     isDeadlinePassed,
@@ -132,6 +139,36 @@ export default function SubmitWorkPage() {
 
   const isBusy = uploadMutation.isPending || deleteFileMutation.isPending || saveMutation.isPending;
   const files = submission?.files ?? [];
+
+  if (isDeadlinePassed) {
+    return (
+      <AppShell title={t("page.submitWork.title")}>
+        <Breadcrumbs items={breadcrumbs} />
+        <div className="flex items-center justify-center min-h-[400px] mt-6">
+          <div className="bg-error-light border border-error rounded-[20px] p-8 max-w-[480px] text-center">
+            <div className="mb-4">
+              <div className="w-16 h-16 bg-card rounded-full mx-auto flex items-center justify-center">
+                <Clock className="size-7 text-destructive" />
+              </div>
+            </div>
+            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
+              {t("page.submitWork.deadlinePassedTitle")}
+            </h2>
+            <p className="text-[16px] text-foreground leading-[1.5] mb-6">
+              {t("page.submitWork.deadlinePassedDesc")}
+            </p>
+            <Link
+              to={ROUTES.task(courseId, taskId)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-card border border-border hover:bg-surface-hover text-foreground rounded-[12px] transition-colors text-[15px] font-medium"
+            >
+              <ArrowLeft className="size-4" />
+              {t("page.submitWork.backToTask")}
+            </Link>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
 
   const handleFileSelected = (file: File) => {
     setActionError("");
@@ -154,21 +191,13 @@ export default function SubmitWorkPage() {
   };
 
   const handleSave = () => {
-    if (isDeadlinePassed && !confirm(t("page.submitWork.deadlineConfirm"))) return;
     setActionError("");
     saveMutation.mutate();
   };
 
   return (
     <AppShell title={t("page.submitWork.title")}>
-      <Breadcrumbs
-        items={[
-          CRUMBS.courses,
-          { label: courseName, href: ROUTES.course(courseId) },
-          { label: taskTitle, href: ROUTES.task(courseId, taskId) },
-          { label: t("page.submitWork.breadcrumbSubmit") },
-        ]}
-      />
+      <Breadcrumbs items={breadcrumbs} />
 
       <div className="mb-6 mt-4 flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -177,11 +206,6 @@ export default function SubmitWorkPage() {
           </h1>
           <p className="text-[15px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
         </div>
-        {isDeadlinePassed && (
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[10px] bg-error-light border border-error text-destructive text-[13px] font-medium">
-            ⚠ {t("page.submitWork.deadlinePassedHint")}
-          </div>
-        )}
       </div>
 
       <div className="task-layout">

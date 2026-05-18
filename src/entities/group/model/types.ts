@@ -11,7 +11,8 @@ export interface CreateGroupInput {
 
 export interface Participant {
   id: string;
-  userName: string;
+  name: string;
+  email: string;
 }
 
 export interface GroupParticipants {

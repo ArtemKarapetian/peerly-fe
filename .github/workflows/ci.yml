@@ -256,9 +256,12 @@ jobs:
       - name: Measure PR bundle size
         id: pr
         run: |
-          SIZE=$(du -sb dist/assets/*.js | awk '{sum+=$1} END {print sum}')
-          echo "size=$SIZE" >> "$GITHUB_OUTPUT"
-          echo "PR JS bundle: $(echo "scale=2; $SIZE/1024" | bc) KB"
+          EAGER=$(find dist/assets -maxdepth 1 -type f \( -name "index-*.js" -o -name "vendor*.js" \) -printf "%s\n" | awk '{sum+=$1} END {print sum+0}')
+          LAZY=$(find dist/assets -maxdepth 1 -type f -name "*.js" ! -name "index-*.js" ! -name "vendor*.js" -printf "%s\n" | awk '{sum+=$1} END {print sum+0}')
+          echo "eager=$EAGER" >> "$GITHUB_OUTPUT"
+          echo "lazy=$LAZY"   >> "$GITHUB_OUTPUT"
+          echo "PR eager JS: $(echo "scale=2; $EAGER/1024" | bc) KB"
+          echo "PR lazy JS:  $(echo "scale=2; $LAZY/1024" | bc) KB"
 
       - uses: actions/checkout@v4
         with:
@@ -283,27 +286,38 @@ jobs:
 
       - name: Compare bundle sizes
         run: |
-          PR_SIZE=${{ steps.pr.outputs.size }}
-          if [ -d "main-branch/dist/assets" ]; then
-            MAIN_SIZE=$(du -sb main-branch/dist/assets/*.js 2>/dev/null | awk '{sum+=$1} END {print sum}')
-          else
+          PR_EAGER=${{ steps.pr.outputs.eager }}
+          PR_LAZY=${{ steps.pr.outputs.lazy }}
+
+          if [ ! -d "main-branch/dist/assets" ]; then
             echo "No main build to compare, skipping"
             exit 0
           fi
 
-          if [ -z "$MAIN_SIZE" ] || [ "$MAIN_SIZE" = "0" ]; then
-            echo "Main has no JS assets, skipping comparison"
+          MAIN_EAGER=$(find main-branch/dist/assets -maxdepth 1 -type f \( -name "index-*.js" -o -name "vendor*.js" \) -printf "%s\n" 2>/dev/null | awk '{sum+=$1} END {print sum+0}')
+          MAIN_LAZY=$(find main-branch/dist/assets -maxdepth 1 -type f -name "*.js" ! -name "index-*.js" ! -name "vendor*.js" -printf "%s\n" 2>/dev/null | awk '{sum+=$1} END {print sum+0}')
+
+          if [ "$MAIN_EAGER" = "0" ]; then
+            echo "Main has no eager JS, skipping comparison"
             exit 0
           fi
 
-          INCREASE=$(echo "scale=2; (($PR_SIZE - $MAIN_SIZE) / $MAIN_SIZE) * 100" | bc)
-          echo "Main: $(echo "scale=2; $MAIN_SIZE/1024" | bc) KB"
-          echo "PR:   $(echo "scale=2; $PR_SIZE/1024" | bc) KB"
-          echo "Change: ${INCREASE}%"
+          fmt_kb() { echo "scale=2; $1/1024" | bc; }
+          pct() { echo "scale=2; (($1 - $2) / $2) * 100" | bc; }
 
-          OVER=$(echo "$INCREASE > 10" | bc)
-          if [ "$OVER" = "1" ]; then
-            echo "::error::Bundle size increased by ${INCREASE}% (max 10%)"
+          EAGER_DELTA=$(pct "$PR_EAGER" "$MAIN_EAGER")
+          echo "Eager (initial load):  $(fmt_kb $MAIN_EAGER) KB → $(fmt_kb $PR_EAGER) KB (${EAGER_DELTA}%)"
+
+          if [ "$MAIN_LAZY" -gt "0" ]; then
+            LAZY_DELTA=$(pct "$PR_LAZY" "$MAIN_LAZY")
+            echo "Lazy  (on-demand):     $(fmt_kb $MAIN_LAZY) KB → $(fmt_kb $PR_LAZY) KB (${LAZY_DELTA}%)"
+          else
+            echo "Lazy  (on-demand):     n/a → $(fmt_kb $PR_LAZY) KB"
+          fi
+
+          EAGER_OVER=$(echo "$EAGER_DELTA > 10" | bc)
+          if [ "$EAGER_OVER" = "1" ]; then
+            echo "::error::Eager bundle grew by ${EAGER_DELTA}% (max 10%) — investigate before merging"
             exit 1
           fi
 

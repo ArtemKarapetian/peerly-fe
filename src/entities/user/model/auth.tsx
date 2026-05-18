@@ -29,9 +29,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
     const { role } = await authApi.getMyRole();
+    const userName = await authApi.lookupMyName(email, role).catch(() => "");
     const next: Session = {
       userId: String(res.userId),
-      userName: email.split("@")[0],
+      userName,
       email,
       role,
     };
@@ -73,8 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await authApi.logout();
     } catch {
-      // If the server session is already gone, the cookies are cleared
-      // anyway — proceed to local cleanup.
+      // noop
     }
     clearSession();
     setSessionState(null);
