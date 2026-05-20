@@ -21,7 +21,6 @@ export interface DemoAssignment {
 export interface TeacherAssignmentDetail {
   assignment: DemoAssignment;
   submittedCount: number;
-  totalStudentsCount: number;
 }
 
 export interface CreateAssignmentInput {

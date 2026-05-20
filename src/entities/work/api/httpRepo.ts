@@ -18,7 +18,7 @@ import { fileFromDto, type DemoSubmission } from "../model/types";
 
 // BE wire shapes — translate to FE-clean shapes inside this module.
 type RawListCourses = { courseInfos: CourseDto[] };
-type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
+type RawListTeacherHomeworks = { teacherHomeworkInfos: HomeworkDto[] };
 type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewDto[] };
 type RawGetStudentHomework = { submittedHomeworkId: Id | null };
 
@@ -33,8 +33,10 @@ export const workHttpRepo = {
     const homeworksPerCourse = await Promise.all(
       courses.courseInfos.map(async (c) => {
         try {
-          const res = await http.get<RawListHomeworks>(paged(`/teacher/courses/${c.id}/homeworks`));
-          return res.homeworkInfos.map((h) => String(h.id));
+          const res = await http.get<RawListTeacherHomeworks>(
+            paged(`/teacher/courses/${c.id}/homeworks`),
+          );
+          return res.teacherHomeworkInfos.map((h) => String(h.id));
         } catch {
           return [] as string[];
         }

@@ -1,9 +1,12 @@
-import { User } from "lucide-react";
+import { Check, Pencil, User, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
-import { getSession } from "@/shared/api";
+import { humanizeApiError } from "@/shared/api";
+import { Button } from "@/shared/ui/button.tsx";
 
-import { useRole } from "@/entities/user";
+import { useAuth, useRole } from "@/entities/user";
 
 const getRoleBadgeColor = (role: string) => {
   switch (role) {
@@ -34,9 +37,43 @@ const getRoleLabelKey = (role: string) => {
 export function UserInfoCard() {
   const { t } = useTranslation();
   const { currentRole } = useRole();
-  const session = getSession();
+  const { session, refreshMe, updateMyName } = useAuth();
   const name = session?.userName ?? "";
   const email = session?.email ?? "";
+
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(name);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    void refreshMe();
+  }, [refreshMe]);
+
+  useEffect(() => {
+    if (!editing) setDraft(name);
+  }, [name, editing]);
+
+  const trimmed = draft.trim();
+  const canSave = trimmed.length > 0 && trimmed !== name && !saving;
+
+  const handleSave = async () => {
+    if (!canSave) return;
+    setSaving(true);
+    try {
+      await updateMyName(trimmed);
+      toast.success(t("feature.profile.nameUpdated"));
+      setEditing(false);
+    } catch (err) {
+      toast.error(humanizeApiError(err, t("feature.profile.updateFailed")));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setDraft(name);
+    setEditing(false);
+  };
 
   return (
     <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
@@ -68,12 +105,53 @@ export function UserInfoCard() {
           <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
             {t("feature.profile.name")}
           </label>
-          <input
-            type="text"
-            value={name}
-            disabled
-            className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-muted text-muted-foreground cursor-not-allowed"
-          />
+          {editing ? (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                autoFocus
+                className="flex-1 px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
+              />
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => void handleSave()}
+                disabled={!canSave}
+                isLoading={saving}
+                aria-label={t("common.save")}
+              >
+                <Check className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={handleCancel}
+                disabled={saving}
+                aria-label={t("common.cancel")}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={name}
+                disabled
+                className="flex-1 px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-muted text-muted-foreground cursor-not-allowed"
+              />
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => setEditing(true)}
+                aria-label={t("common.edit")}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
 
         <div>

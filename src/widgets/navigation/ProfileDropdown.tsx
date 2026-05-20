@@ -3,8 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { getSession } from "@/shared/api";
-
 import { useAuth } from "@/entities/user";
 
 // collapsed = круглая кнопка-аватар, expanded = с именем
@@ -16,10 +14,9 @@ interface ProfileDropdownProps {
 export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { logout } = useAuth();
+  const { logout, session } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const session = getSession();
   const displayName =
     userName || session?.userName || session?.email || t("widget.profileDropdown.defaultUser");
 

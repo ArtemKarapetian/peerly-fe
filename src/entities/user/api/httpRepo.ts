@@ -4,8 +4,27 @@ import type { ApiStudent, ApiTeacher, ApiUpdateProfilePayload } from "../model/a
 import { mapApiStudent, mapApiTeacher } from "../model/mappers";
 import type { DemoUser } from "../model/types";
 
+interface UserSearchInfo {
+  id: number | string;
+  email: string;
+  name: string;
+}
+
 export const userHttpRepo = {
   getAll: (): Promise<DemoUser[]> => Promise.resolve([]), // No bulk endpoint — keep empty
+
+  searchStudents: async (
+    query: string,
+    limit = 100,
+  ): Promise<{ id: string; name: string; email: string }[]> => {
+    const params = new URLSearchParams({
+      "filter.query": query,
+      "filter.roles": "Student",
+      limit: String(limit),
+    });
+    const res = await http.get<{ users: UserSearchInfo[] }>(`/users?${params.toString()}`);
+    return res.users.map((u) => ({ id: String(u.id), name: u.name, email: u.email }));
+  },
 
   getById: (id: string): Promise<DemoUser | undefined> => {
     // Try student first, fall back to teacher

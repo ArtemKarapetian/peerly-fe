@@ -43,7 +43,7 @@ describe("assignmentHttpRepo", () => {
       email: "s@test.com",
       role: "Student",
     };
-    httpMock.get.mockResolvedValueOnce({ homeworkInfos: [] });
+    httpMock.get.mockResolvedValueOnce({ studentHomeworkInfos: [] });
 
     await assignmentHttpRepo.getByCourse("course-7");
 
@@ -59,7 +59,7 @@ describe("assignmentHttpRepo", () => {
       role: "Teacher",
     };
     httpMock.get.mockResolvedValueOnce({
-      homeworkInfos: [
+      teacherHomeworkInfos: [
         {
           id: "hw-1",
           name: "HW1",
@@ -89,16 +89,15 @@ describe("assignmentHttpRepo", () => {
     expect(out).toBeUndefined();
   });
 
-  it("getTeacherDetail returns the assignment plus counts", async () => {
+  it("getTeacherDetail returns the assignment plus submittedCount", async () => {
     httpMock.get.mockResolvedValueOnce({
-      homeworkInfo: {
+      teacherHomeworkInfo: {
         id: "hw-2",
         name: "HW2",
         status: "published",
         deadline: "2026-02-02T00:00:00Z",
       },
       submittedCount: 7,
-      totalStudentsCount: 10,
       files: [],
     });
 
@@ -106,7 +105,6 @@ describe("assignmentHttpRepo", () => {
 
     expect(httpMock.get.mock.calls[0][0]).toBe("/teacher/homeworks/hw-2");
     expect(out?.submittedCount).toBe(7);
-    expect(out?.totalStudentsCount).toBe(10);
     expect(out?.assignment.id).toBe("hw-2");
   });
 

@@ -408,21 +408,21 @@ function WizardShell({
           {renderStep()}
         </div>
 
-        {currentStep < lastStepId && (
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handlePrev}
-              disabled={currentStep === 1}
-              className="flex items-center gap-2 px-4 py-3 border border-border text-foreground rounded-[12px] hover:bg-surface-hover hover:border-border-strong transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              {t("teacher.createAssignment.backBtn")}
-            </button>
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handlePrev}
+            disabled={currentStep === 1 || submitting}
+            className="flex items-center gap-2 px-4 py-3 border border-border text-foreground rounded-[12px] hover:bg-surface-hover hover:border-border-strong transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            {t("teacher.createAssignment.backBtn")}
+          </button>
 
-            <div className="text-[14px] text-muted-foreground">
-              {t("teacher.createAssignment.stepOf", { current: currentStep, total: STEPS.length })}
-            </div>
+          <div className="text-[14px] text-muted-foreground">
+            {t("teacher.createAssignment.stepOf", { current: currentStep, total: STEPS.length })}
+          </div>
 
+          {currentStep < lastStepId ? (
             <button
               onClick={handleNext}
               disabled={!canProceed()}
@@ -431,8 +431,13 @@ function WizardShell({
               {t("teacher.createAssignment.nextBtn")}
               <ChevronRight className="w-4 h-4" />
             </button>
-          </div>
-        )}
+          ) : (
+            <div aria-hidden className="invisible flex items-center gap-2 px-6 py-3">
+              <span>{t("teacher.createAssignment.nextBtn")}</span>
+              <ChevronRight className="w-4 h-4" />
+            </div>
+          )}
+        </div>
       </div>
     </AppShell>
   );

@@ -20,14 +20,15 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     [navigate],
   );
 
-  if (items.length <= 1) {
+  const visibleItems = items.filter((item) => item.label.trim().length > 0);
+  if (visibleItems.length <= 1) {
     return null;
   }
 
   return (
     <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-4 min-w-0 max-w-full">
-      {items.map((item, index) => {
-        const isLast = index === items.length - 1;
+      {visibleItems.map((item, index) => {
+        const isLast = index === visibleItems.length - 1;
         return (
           <div
             key={index}

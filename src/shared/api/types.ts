@@ -185,7 +185,6 @@ export interface GetStudentHomeworkResponse {
 export interface GetTeacherHomeworkResponse {
   homework: HomeworkDto;
   submittedCount: number;
-  totalStudentsCount: number;
   files: FileDto[];
 }
 

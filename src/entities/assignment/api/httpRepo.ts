@@ -18,27 +18,30 @@ import type {
 } from "../model/types";
 
 type RawListCourses = { courseInfos: CourseDto[] };
-type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
+type RawListStudentHomeworks = { studentHomeworkInfos: HomeworkDto[] };
+type RawListTeacherHomeworks = { teacherHomeworkInfos: HomeworkDto[] };
 type RawGetTeacherHomework = {
-  homeworkInfo: HomeworkDto;
+  teacherHomeworkInfo: HomeworkDto;
   submittedCount: number;
-  totalStudentsCount: number;
   files: FileDto[];
 };
-type RawGetStudentHomework = { homeworkInfo: HomeworkDto };
+type RawGetStudentHomework = { studentHomeworkInfo: HomeworkDto };
 
 function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";
 }
 
 async function fetchCourseHomeworks(courseId: string): Promise<HomeworkDto[]> {
-  const prefix = rolePrefix();
-  const path =
-    prefix === "teacher"
-      ? `/teacher/courses/${courseId}/homeworks`
-      : `/student/courses/${courseId}/homeworks`;
-  const raw = await http.get<RawListHomeworks>(paged(path));
-  return raw.homeworkInfos;
+  if (rolePrefix() === "teacher") {
+    const raw = await http.get<RawListTeacherHomeworks>(
+      paged(`/teacher/courses/${courseId}/homeworks`),
+    );
+    return raw.teacherHomeworkInfos;
+  }
+  const raw = await http.get<RawListStudentHomeworks>(
+    paged(`/student/courses/${courseId}/homeworks`),
+  );
+  return raw.studentHomeworkInfos;
 }
 
 export const assignmentHttpRepo = {
@@ -73,10 +76,10 @@ export const assignmentHttpRepo = {
     try {
       if (prefix === "teacher") {
         const raw = await http.get<RawGetTeacherHomework>(`/teacher/homeworks/${homeworkId}`);
-        return mapHomeworkToAssignment(raw.homeworkInfo);
+        return mapHomeworkToAssignment(raw.teacherHomeworkInfo);
       }
       const raw = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
-      return mapHomeworkToAssignment(raw.homeworkInfo);
+      return mapHomeworkToAssignment(raw.studentHomeworkInfo);
     } catch {
       return undefined;
     }
@@ -86,9 +89,8 @@ export const assignmentHttpRepo = {
     try {
       const raw = await http.get<RawGetTeacherHomework>(`/teacher/homeworks/${homeworkId}`);
       return {
-        assignment: mapHomeworkToAssignment(raw.homeworkInfo),
+        assignment: mapHomeworkToAssignment(raw.teacherHomeworkInfo),
         submittedCount: raw.submittedCount,
-        totalStudentsCount: raw.totalStudentsCount,
       };
     } catch {
       return undefined;
