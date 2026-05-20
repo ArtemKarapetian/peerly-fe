@@ -4,11 +4,11 @@ import { act, ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  useArchiveCourse,
   useCourse,
   useCourseParticipants,
   useCourses,
   useCreateCourse,
+  useUpdateCourse,
 } from "./queries";
 
 const { repoMock } = vi.hoisted(() => ({
@@ -17,7 +17,7 @@ const { repoMock } = vi.hoisted(() => ({
     getById: vi.fn(),
     getParticipants: vi.fn(),
     create: vi.fn(),
-    archive: vi.fn(),
+    update: vi.fn(),
   },
 }));
 
@@ -75,14 +75,14 @@ describe("course queries", () => {
     expect(repoMock.create).toHaveBeenCalledWith({ title: "New" });
   });
 
-  it("useArchiveCourse triggers repo.archive with the right args", async () => {
-    repoMock.archive.mockResolvedValueOnce(undefined);
-    const { result } = renderHook(() => useArchiveCourse(), { wrapper: wrapper() });
+  it("useUpdateCourse triggers repo.update with name + description", async () => {
+    repoMock.update.mockResolvedValueOnce(undefined);
+    const { result } = renderHook(() => useUpdateCourse("c-5"), { wrapper: wrapper() });
 
     await act(async () => {
-      await result.current.mutateAsync({ courseId: "c-5", archived: true });
+      await result.current.mutateAsync({ name: "New", description: "Desc" });
     });
 
-    expect(repoMock.archive).toHaveBeenCalledWith("c-5", true);
+    expect(repoMock.update).toHaveBeenCalledWith("c-5", { name: "New", description: "Desc" });
   });
 });

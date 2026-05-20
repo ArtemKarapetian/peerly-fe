@@ -12,7 +12,8 @@ export interface InboxReview {
   taskId: string;
   reviewDeadline: string;
   reviewDeadlineTimestamp: number;
-  status: "not_started";
+  status: "not_started" | "submitted";
+  submittedReviewId: string | null;
   isAnonymous: boolean;
 }
 
@@ -33,10 +34,10 @@ export function useAssignedReviewsInbox() {
   return useQuery({
     queryKey: ["assigned-reviews", "me"],
     queryFn: async (): Promise<InboxReview[]> => {
-      const courses = await courseRepo.getForStudent();
+      const courses = await courseRepo.getForStudent().catch(() => []);
       const courseNameById = new Map(courses.map((c) => [c.id, c.title]));
 
-      const assignments = await assignmentRepo.getAll();
+      const assignments = await assignmentRepo.getAll().catch(() => []);
       const visible = assignments.filter(
         (a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted",
       );
@@ -49,26 +50,25 @@ export function useAssignedReviewsInbox() {
           const enriched = await Promise.all(
             assigned.map(async (r) => {
               const sub = await reviewRepo.getAssignedSubmission(r.submissionId).catch(() => null);
-              return { r, alreadyReviewed: !!sub?.submittedReviewId };
+              return { r, submittedReviewId: sub?.submittedReviewId ?? null };
             }),
           );
 
-          return enriched
-            .filter(({ alreadyReviewed }) => !alreadyReviewed)
-            .map(
-              ({ r }) =>
-                ({
-                  id: r.submissionId,
-                  taskTitle: a.title,
-                  courseName: courseNameById.get(a.courseId) ?? "",
-                  courseId: a.courseId,
-                  taskId: a.id,
-                  reviewDeadline: label,
-                  reviewDeadlineTimestamp: ts,
-                  status: "not_started",
-                  isAnonymous: true,
-                }) satisfies InboxReview,
-            );
+          return enriched.map(
+            ({ r, submittedReviewId }) =>
+              ({
+                id: r.submissionId,
+                taskTitle: a.title,
+                courseName: courseNameById.get(a.courseId) ?? "",
+                courseId: a.courseId,
+                taskId: a.id,
+                reviewDeadline: label,
+                reviewDeadlineTimestamp: ts,
+                status: submittedReviewId ? "submitted" : "not_started",
+                submittedReviewId,
+                isAnonymous: true,
+              }) satisfies InboxReview,
+          );
         }),
       );
 

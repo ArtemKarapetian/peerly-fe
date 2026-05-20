@@ -1,34 +1,24 @@
-import { ChevronDown, ChevronUp, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { ChevronDown, ChevronUp, CheckCircle, Clock } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-interface ReviewCriterion {
-  name: string;
-  score: number;
-  maxScore: number;
-  comment?: string;
-}
+const MARK_MAX = 5;
 
 interface Review {
   reviewId: string;
-  reviewerName: string | null;
-  isAnonymous: boolean;
-  submittedAt: string;
-  overallComment: string;
-  criteria: ReviewCriterion[];
+  mark: number;
+  comment: string;
 }
 
 interface TaskSubmission {
   taskId: string;
   courseName: string;
   taskTitle: string;
-  status: "PUBLISHED" | "IN_REVIEW" | "PENDING" | "REVIEWED";
-  currentScore?: number;
-  maxScore?: number;
+  status: "PUBLISHED" | "IN_REVIEW" | "PENDING";
+  finalMark: number | null;
   reviewsReceived: number;
   reviewsRequired: number;
   reviews: Review[];
-  allowAppeal?: boolean;
 }
 
 interface TaskReviewAccordionProps {
@@ -64,14 +54,11 @@ function StatusBadge({
           {t("widget.taskReviewAccordion.pending")}
         </span>
       );
-    default:
-      return null;
   }
 }
 
 export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
   const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
-  const [expandedReviews, setExpandedReviews] = useState<Set<string>>(new Set());
   const { t } = useTranslation();
 
   const toggleTask = (taskId: string) => {
@@ -86,18 +73,6 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
     });
   };
 
-  const toggleReview = (reviewId: string) => {
-    setExpandedReviews((prev) => {
-      const next = new Set(prev);
-      if (next.has(reviewId)) {
-        next.delete(reviewId);
-      } else {
-        next.add(reviewId);
-      }
-      return next;
-    });
-  };
-
   return (
     <div className="space-y-4">
       {tasks.map((task) => (
@@ -105,7 +80,6 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
           key={task.taskId}
           className="bg-card border-2 border-border rounded-[16px] overflow-hidden"
         >
-          {/* Task Header */}
           <div
             className="p-4 desktop:p-5 cursor-pointer hover:bg-muted transition-colors"
             onClick={() => toggleTask(task.taskId)}
@@ -123,18 +97,16 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                 <div className="flex flex-wrap items-center gap-3">
                   <StatusBadge status={task.status} t={t} />
 
-                  {task.status === "PUBLISHED" && task.currentScore !== undefined && (
+                  {task.status === "PUBLISHED" && task.finalMark !== null && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary-light text-foreground rounded-[8px] text-[13px] font-medium">
-                      {t("widget.taskReviewAccordion.score")} {task.currentScore}/{task.maxScore}
+                      {t("widget.taskReviewAccordion.finalMark")} {task.finalMark}/{MARK_MAX}
                     </span>
                   )}
 
-                  {task.status !== "PUBLISHED" && (
-                    <span className="text-[13px] text-muted-foreground">
-                      {t("widget.taskReviewAccordion.reviewing")} {task.reviewsReceived}/
-                      {task.reviewsRequired}
-                    </span>
-                  )}
+                  <span className="text-[13px] text-muted-foreground">
+                    {t("widget.taskReviewAccordion.reviewing")} {task.reviewsReceived}/
+                    {task.reviewsRequired}
+                  </span>
                 </div>
               </div>
 
@@ -148,100 +120,30 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
             </div>
           </div>
 
-          {/* Expanded Content - Reviews */}
           {expandedTasks.has(task.taskId) && task.reviews.length > 0 && (
             <div className="border-t-2 border-border bg-muted p-4 desktop:p-5">
-              <div className="space-y-4">
+              <ul className="space-y-3">
                 {task.reviews.map((review) => (
-                  <div
+                  <li
                     key={review.reviewId}
-                    className="bg-card border-2 border-border rounded-[12px] overflow-hidden"
+                    className="bg-card border border-border rounded-[12px] p-4"
                   >
-                    <div
-                      className="p-4 cursor-pointer hover:bg-muted transition-colors"
-                      onClick={() => toggleReview(review.reviewId)}
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-1">
-                            <span className="text-[14px] font-medium text-foreground">
-                              {review.isAnonymous
-                                ? t("widget.taskReviewAccordion.anonymousReviewer")
-                                : review.reviewerName}
-                            </span>
-                            <span className="text-[12px] text-muted-foreground">
-                              {review.submittedAt}
-                            </span>
-                          </div>
-                          <p className="text-[14px] text-muted-foreground line-clamp-2">
-                            {review.overallComment}
-                          </p>
-                        </div>
-
-                        <button className="p-1 hover:bg-surface-hover rounded-[8px] transition-colors shrink-0">
-                          {expandedReviews.has(review.reviewId) ? (
-                            <ChevronUp className="w-4 h-4 text-muted-foreground" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                          )}
-                        </button>
-                      </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[14px] font-medium text-foreground">
+                        {t("widget.taskReviewAccordion.anonymousReviewer")}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-brand-primary-lighter text-foreground rounded-[6px] text-[13px] font-medium">
+                        {t("widget.taskReviewAccordion.reviewMark")} {review.mark}/{MARK_MAX}
+                      </span>
                     </div>
-
-                    {expandedReviews.has(review.reviewId) && (
-                      <div className="border-t-2 border-border p-4 space-y-4">
-                        <div>
-                          <h4 className="text-[14px] font-medium text-foreground mb-3">
-                            {t("widget.taskReviewAccordion.scoresByCriteria")}
-                          </h4>
-                          <div className="space-y-3">
-                            {review.criteria.map((criterion, idx) => (
-                              <div key={idx} className="bg-muted rounded-[8px] p-3">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="text-[14px] text-foreground font-medium">
-                                    {criterion.name}
-                                  </span>
-                                  <span className="text-[14px] font-medium text-brand-primary">
-                                    {criterion.score}/{criterion.maxScore}
-                                  </span>
-                                </div>
-                                {criterion.comment && (
-                                  <p className="text-[13px] text-muted-foreground leading-[1.5]">
-                                    {criterion.comment}
-                                  </p>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="text-[14px] font-medium text-foreground mb-2">
-                            {t("widget.taskReviewAccordion.overallComment")}
-                          </h4>
-                          <p className="text-[14px] text-muted-foreground leading-[1.6] bg-muted rounded-[8px] p-3">
-                            {review.overallComment}
-                          </p>
-                        </div>
-                      </div>
+                    {review.comment && (
+                      <p className="text-[14px] text-foreground leading-[1.5] whitespace-pre-wrap">
+                        {review.comment}
+                      </p>
                     )}
-                  </div>
+                  </li>
                 ))}
-              </div>
-
-              {task.allowAppeal && task.status === "PUBLISHED" && (
-                <div className="mt-4 pt-4 border-t-2 border-border">
-                  <button
-                    onClick={() => {
-                      alert(t("widget.taskReviewAccordion.requestReviewAlert"));
-                    }}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-card border-2 border-brand-primary-light hover:bg-muted hover:border-brand-primary text-foreground rounded-[12px] text-[14px] font-medium transition-colors"
-                  >
-                    <AlertCircle className="w-4 h-4" />
-                    {t("widget.taskReviewAccordion.requestReview")}
-                  </button>
-                </div>
-              )}
+              </ul>
             </div>
           )}
 

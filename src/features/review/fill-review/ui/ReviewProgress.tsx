@@ -1,15 +1,6 @@
 import { CheckCircle, AlertCircle, Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * ReviewProgress - Индикатор прогресса рецензии и подсказки
- *
- * Displays:
- * - Progress: filled criteria count
- * - Validation tips
- * - Constraints (min comment length, etc.)
- */
-
 interface ReviewProgressProps {
   filledCriteria: number;
   totalCriteria: number;
@@ -70,7 +61,7 @@ export function ReviewProgress({
           </div>
           <p className={`text-[13px] ${isCommentValid ? "text-success" : "text-muted-foreground"}`}>
             {overallCommentLength} / {minOverallCommentLength}{" "}
-            {t("feature.reviewProgress.characters")}
+            {t("feature.reviewProgress.characters", { count: overallCommentLength })}
           </p>
         </div>
       )}

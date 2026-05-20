@@ -4,12 +4,7 @@ import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import {
-  ChangePasswordCard,
-  TwoFactorCard,
-  ActiveSessionsCard,
-  SecurityDangerZoneCard,
-} from "@/widgets/security-cards";
+import { ChangePasswordCard } from "@/widgets/security-cards";
 
 export default function SecurityPage() {
   const { t } = useTranslation();
@@ -26,9 +21,6 @@ export default function SecurityPage() {
         <p className="text-[16px] text-muted-foreground mb-8">{t("page.security.subtitle")}</p>
 
         <ChangePasswordCard />
-        <TwoFactorCard />
-        <ActiveSessionsCard />
-        <SecurityDangerZoneCard />
       </div>
     </AppShell>
   );

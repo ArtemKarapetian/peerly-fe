@@ -96,7 +96,8 @@ export function ReviewForm({
           <p
             className={`text-[12px] mt-2 ${overallValid ? "text-success" : "text-muted-foreground"}`}
           >
-            {overallComment.length} / {MIN_OVERALL_COMMENT_LENGTH} {t("page.reviewFill.characters")}
+            {overallComment.length} / {MIN_OVERALL_COMMENT_LENGTH}{" "}
+            {t("page.reviewFill.characters", { count: overallComment.length })}
           </p>
         </div>
 

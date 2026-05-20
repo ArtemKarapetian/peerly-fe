@@ -20,14 +20,20 @@ export function useGradebookEntries() {
         (a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted",
       );
 
-      const entries = await Promise.all(
-        visible.map(async (a) => {
+      const now = Date.now();
+
+      return Promise.all(
+        visible.map(async (a): Promise<GradebookEntry> => {
           const submission = await workRepo.getMineForHomework(a.id).catch(() => null);
-          const status = !submission
-            ? "NOT_SUBMITTED"
-            : submission.finalMark != null
+          const isPastDeadline = a.dueDate.getTime() < now;
+
+          const status = submission
+            ? submission.finalMark != null
               ? "PUBLISHED"
-              : "IN_REVIEW";
+              : "IN_REVIEW"
+            : isPastDeadline
+              ? "OVERDUE"
+              : "NOT_STARTED";
 
           return {
             id: a.id,
@@ -44,8 +50,6 @@ export function useGradebookEntries() {
           } satisfies GradebookEntry;
         }),
       );
-
-      return entries;
     },
   });
 }

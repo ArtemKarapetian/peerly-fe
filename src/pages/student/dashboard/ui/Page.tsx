@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import { BookOpen, Clock } from "lucide-react";
+import { BookOpen, ChevronRight, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import { useCourses } from "@/entities/course";
 import { workRepo } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { useAssignedReviewsInbox } from "@/widgets/reviews-inbox";
 import { DeadlinesList } from "@/widgets/student-dashboard";
 import type { DeadlineItem } from "@/widgets/student-dashboard";
 
@@ -50,6 +51,7 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { data: courses, isLoading: coursesLoading } = useCourses();
   const { data: assignments, isLoading: assignmentsLoading } = useAssignments();
+  const { data: reviewsInbox, isLoading: reviewsLoading } = useAssignedReviewsInbox();
   const [now] = useState(() => Date.now());
   const isLoading = coursesLoading || assignmentsLoading;
 
@@ -62,9 +64,14 @@ export default function DashboardPage() {
   const visibleAssignments = useMemo(
     () =>
       (assignments ?? []).filter(
-        (a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted",
+        (a) =>
+          a.backendStatus !== "draft" &&
+          a.backendStatus !== "deleted" &&
+          a.backendStatus !== "finished" &&
+          a.backendStatus !== "confirmed" &&
+          a.dueDate.getTime() > now,
       ),
-    [assignments],
+    [assignments, now],
   );
 
   const submissionQueries = useQueries({
@@ -97,8 +104,19 @@ export default function DashboardPage() {
           isUrgent: due > now && due - now < 7 * ONE_DAY_MS,
         };
       })
-      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+      .sort((a, b) => {
+        const aSubmitted = a.status === "SUBMITTED" ? 1 : 0;
+        const bSubmitted = b.status === "SUBMITTED" ? 1 : 0;
+        if (aSubmitted !== bSubmitted) return aSubmitted - bSubmitted;
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      });
   }, [visibleAssignments, courseNameById, hasSubmissionById, now]);
+
+  const reviewsToDo = useMemo(() => {
+    return (reviewsInbox ?? [])
+      .filter((r) => r.status === "not_started" && r.reviewDeadlineTimestamp > now)
+      .sort((a, b) => a.reviewDeadlineTimestamp - b.reviewDeadlineTimestamp);
+  }, [reviewsInbox, now]);
 
   const urgentCount = deadlines.filter((d) => d.isUrgent).length;
   const activeCoursesCount = (courses ?? []).filter((c) => c.status === "active").length;
@@ -109,14 +127,14 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-2 gap-2 mb-5">
         <StatCard
-          label={t("student.dashboard.activeCourses")}
+          label={t("student.dashboard.activeCourses", { count: activeCoursesCount })}
           value={isLoading ? "—" : activeCoursesCount}
           icon={<BookOpen className="w-4 h-4" />}
           accent="var(--brand-primary)"
           compact
         />
         <StatCard
-          label={t("student.dashboard.deadlinesWeek")}
+          label={t("student.dashboard.deadlinesWeek", { count: urgentCount })}
           value={isLoading ? "—" : urgentCount}
           icon={<Clock className="w-4 h-4" />}
           accent="var(--warning)"
@@ -136,6 +154,61 @@ export default function DashboardPage() {
           />
         )}
       </SectionCard>
+
+      <div className="mt-5">
+        <SectionCard title={t("student.dashboard.toReview")} noPadding>
+          {reviewsLoading ? (
+            <p className="px-5 py-6 text-[14px] text-text-tertiary">{t("common.loading")}</p>
+          ) : reviewsToDo.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center px-5">
+              <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
+                <Clock className="w-5 h-5 text-[--text-tertiary]" />
+              </div>
+              <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">
+                {t("student.dashboard.noReviews")}
+              </p>
+              <p className="text-[13px] text-[--text-secondary]">
+                {t("student.dashboard.noReviewsDesc")}
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-[--surface-border]">
+              {reviewsToDo.map((review) => {
+                const isSoon = review.reviewDeadlineTimestamp - now < 2 * ONE_DAY_MS;
+                return (
+                  <button
+                    key={review.id}
+                    onClick={() => void navigate(`/student/reviews/${review.id}`)}
+                    className={`w-full text-left py-3.5 pr-5 hover:bg-surface-hover transition-colors duration-150 group ${
+                      isSoon ? "pl-[17px] border-l-[3px] border-[--warning]" : "pl-5"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] text-[--text-tertiary] mb-0.5">
+                          {review.courseName}
+                        </p>
+                        <p className="text-[14px] font-semibold text-[--text-primary] truncate leading-snug mb-2">
+                          {review.taskTitle}
+                        </p>
+                        <div
+                          className={`flex items-center gap-1 text-[12px] font-medium ${
+                            isSoon ? "text-[--warning]" : "text-[--text-tertiary]"
+                          }`}
+                        >
+                          <Clock className="w-3 h-3 shrink-0" />
+                          <span>{review.reviewDeadline}</span>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[--text-tertiary] opacity-25 group-hover:opacity-60 transition-opacity duration-150 shrink-0" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </SectionCard>
+      </div>
     </AppShell>
   );
 }

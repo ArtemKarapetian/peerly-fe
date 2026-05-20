@@ -13,8 +13,12 @@ interface CourseParticipantsTabProps {
   courseId: string;
 }
 
-function splitName(userName: string): { firstName: string; lastName: string } {
-  const trimmed = userName.trim();
+function splitName(
+  name: string | null | undefined,
+  fallback: string,
+): { firstName: string; lastName: string } {
+  const trimmed = (name ?? "").trim();
+  if (!trimmed) return { firstName: fallback, lastName: "" };
   const idx = trimmed.indexOf(" ");
   if (idx === -1) return { firstName: trimmed, lastName: "" };
   return { firstName: trimmed.slice(0, idx), lastName: trimmed.slice(idx + 1) };
@@ -25,25 +29,30 @@ export function CourseParticipantsTab({ courseId }: CourseParticipantsTabProps) 
   const [searchQuery, setSearchQuery] = useState("");
   const { data, isLoading } = useCourseParticipants(courseId);
 
+  const teacherFallback = t("entity.user.roleTeacher");
+  const studentFallback = t("entity.user.roleStudent");
+
   const participants: Participant[] = [
     ...(data?.teachers ?? []).map((u) => {
-      const { firstName, lastName } = splitName(u.userName);
+      const { firstName, lastName } = splitName(u.name, teacherFallback);
+      const id = String(u.teacherId);
       return {
-        id: String(u.id),
+        id,
         firstName,
         lastName,
         role: "teacher" as const,
-        avatarColor: coverColorFor(String(u.id)),
+        avatarColor: coverColorFor(id),
       };
     }),
     ...(data?.students ?? []).map((u) => {
-      const { firstName, lastName } = splitName(u.userName);
+      const { firstName, lastName } = splitName(u.name, studentFallback);
+      const id = String(u.studentId);
       return {
-        id: String(u.id),
+        id,
         firstName,
         lastName,
         role: "student" as const,
-        avatarColor: coverColorFor(String(u.id)),
+        avatarColor: coverColorFor(id),
       };
     }),
   ];

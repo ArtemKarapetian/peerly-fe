@@ -1,10 +1,11 @@
-import { GraduationCap, BookOpen } from "lucide-react";
-import { useState, FormEvent } from "react";
+import { GraduationCap, BookOpen, AlertCircle } from "lucide-react";
+import { useMemo, useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { ApiError } from "@/shared/api";
+import { humanizeApiError } from "@/shared/api";
+import { checkPasswordStrength } from "@/shared/lib/password";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
@@ -22,8 +23,48 @@ interface FormErrors {
   confirmPassword?: string;
 }
 
-export default function RegisterPage() {
+const STRENGTH_COLORS = [
+  "bg-destructive",
+  "bg-destructive",
+  "bg-warning",
+  "bg-success",
+  "bg-success",
+] as const;
+
+function PasswordStrengthMeter({ score, suggestions }: { score: number; suggestions: string[] }) {
   const { t } = useTranslation();
+  const labelKeys = [
+    "auth.strength.veryWeak",
+    "auth.strength.weak",
+    "auth.strength.fair",
+    "auth.strength.good",
+    "auth.strength.strong",
+  ];
+  return (
+    <div className="space-y-1" aria-live="polite">
+      <div className="flex gap-1">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className={`h-1 flex-1 rounded-full ${score > i ? STRENGTH_COLORS[score] : "bg-muted"}`}
+          />
+        ))}
+      </div>
+      <p className="text-[12px] text-muted-foreground">{t(labelKeys[score])}</p>
+      {suggestions.length > 0 && (
+        <ul className="text-[12px] text-muted-foreground list-disc pl-4 space-y-0.5">
+          {suggestions.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export default function RegisterPage() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith("ru") ? "ru" : "en";
   const navigate = useNavigate();
   const { register } = useAuth();
 
@@ -34,6 +75,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<RegistrableRole>("Student");
   const [errors, setErrors] = useState<FormErrors>({});
+  const [submitError, setSubmitError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [touched, setTouched] = useState({
     firstName: false,
@@ -42,6 +84,11 @@ export default function RegisterPage() {
     password: false,
     confirmPassword: false,
   });
+
+  const passwordStrength = useMemo(() => {
+    if (!password) return null;
+    return checkPasswordStrength(password, [firstName, lastName, email].filter(Boolean), lang);
+  }, [password, firstName, lastName, email, lang]);
 
   const validateField = (field: keyof FormErrors, value: string) => {
     const newErrors = { ...errors };
@@ -64,15 +111,24 @@ export default function RegisterPage() {
         else delete newErrors.email;
         break;
 
-      case "password":
+      case "password": {
         if (!value) newErrors.password = t("auth.enterPassword");
-        else if (value.length < 8) newErrors.password = t("auth.minChars", { count: 8 });
-        else delete newErrors.password;
+        else {
+          const result = checkPasswordStrength(
+            value,
+            [firstName, lastName, email].filter(Boolean),
+            lang,
+          );
+          if (!result.isStrongEnough) {
+            newErrors.password = result.warning || t("auth.passwordTooWeak");
+          } else delete newErrors.password;
+        }
 
         if (confirmPassword && value !== confirmPassword)
           newErrors.confirmPassword = t("auth.passwordsDontMatch");
         else if (confirmPassword && value === confirmPassword) delete newErrors.confirmPassword;
         break;
+      }
 
       case "confirmPassword":
         if (!value) newErrors.confirmPassword = t("auth.repeatPassword");
@@ -96,7 +152,7 @@ export default function RegisterPage() {
     email.trim() !== "" &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
     password !== "" &&
-    password.length >= 8 &&
+    (passwordStrength?.isStrongEnough ?? false) &&
     confirmPassword !== "" &&
     password === confirmPassword &&
     Object.keys(errors).length === 0;
@@ -105,6 +161,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
     setTouched({
       firstName: true,
       lastName: true,
@@ -131,9 +188,7 @@ export default function RegisterPage() {
       toast.success(t("auth.accountCreated"), { description: t("auth.canLoginNow") });
       setTimeout(() => void navigate(defaultRouteForRole(role)), 500);
     } catch (err) {
-      const detail =
-        err instanceof ApiError ? (err.body as { detail?: string } | null)?.detail : undefined;
-      toast.error(t("auth.registrationError"), { description: detail ?? t("auth.tryAgain") });
+      setSubmitError(humanizeApiError(err, t("auth.registrationError")));
       setIsLoading(false);
     }
   };
@@ -150,6 +205,18 @@ export default function RegisterPage() {
               <p className="text-[15px] text-muted-foreground">{t("auth.registerSubtitle")}</p>
             </div>
 
+            {submitError && (
+              <div
+                role="alert"
+                className="bg-destructive/10 border-2 border-destructive/50 rounded-lg px-4 py-3 flex items-start gap-3"
+              >
+                <AlertCircle className="size-5 text-destructive flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-destructive font-medium whitespace-pre-line">
+                  {submitError}
+                </p>
+              </div>
+            )}
+
             <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
               <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
                 <Input
@@ -158,6 +225,7 @@ export default function RegisterPage() {
                   value={firstName}
                   onChange={(e) => {
                     setFirstName(e.target.value);
+                    setSubmitError("");
                     if (touched.firstName) validateField("firstName", e.target.value);
                   }}
                   onBlur={() => handleBlur("firstName")}
@@ -172,6 +240,7 @@ export default function RegisterPage() {
                   value={lastName}
                   onChange={(e) => {
                     setLastName(e.target.value);
+                    setSubmitError("");
                     if (touched.lastName) validateField("lastName", e.target.value);
                   }}
                   onBlur={() => handleBlur("lastName")}
@@ -188,6 +257,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  setSubmitError("");
                   if (touched.email) validateField("email", e.target.value);
                 }}
                 onBlur={() => handleBlur("email")}
@@ -197,28 +267,36 @@ export default function RegisterPage() {
                 error={touched.email ? errors.email : ""}
               />
 
-              <PasswordInput
-                label={t("auth.password")}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (touched.password) validateField("password", e.target.value);
-                }}
-                onBlur={() => handleBlur("password")}
-                placeholder="••••••••"
-                autoComplete="new-password"
-                disabled={isLoading}
-                error={touched.password ? errors.password : ""}
-                helperText={
-                  !touched.password && !errors.password ? t("auth.minChars", { count: 8 }) : ""
-                }
-              />
+              <div className="space-y-1.5">
+                <PasswordInput
+                  label={t("auth.password")}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setSubmitError("");
+                    if (touched.password) validateField("password", e.target.value);
+                  }}
+                  onBlur={() => handleBlur("password")}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  error={touched.password ? errors.password : ""}
+                  helperText={!touched.password && !errors.password ? t("auth.passwordHint") : ""}
+                />
+                {password && (
+                  <PasswordStrengthMeter
+                    score={passwordStrength?.score ?? 0}
+                    suggestions={passwordStrength?.suggestions ?? []}
+                  />
+                )}
+              </div>
 
               <PasswordInput
                 label={t("auth.confirmPassword")}
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
+                  setSubmitError("");
                   if (touched.confirmPassword) validateField("confirmPassword", e.target.value);
                 }}
                 onBlur={() => handleBlur("confirmPassword")}

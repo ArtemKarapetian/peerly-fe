@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+import type { UpdateCourseRequestBody } from "@/shared/api";
 import { courseKeys } from "@/shared/api/queryKeys";
 
 import { courseRepo } from "..";
@@ -40,14 +41,14 @@ export function useCreateCourse() {
   });
 }
 
-export function useArchiveCourse() {
+export function useUpdateCourse(courseId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ courseId, archived }: { courseId: string; archived: boolean }) =>
-      courseRepo.archive(courseId, archived),
+    mutationFn: (body: UpdateCourseRequestBody) => courseRepo.update(courseId, body),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: courseKeys.all });
+      void queryClient.invalidateQueries({ queryKey: courseKeys.detail(courseId) });
+      void queryClient.invalidateQueries({ queryKey: courseKeys.lists() });
     },
   });
 }

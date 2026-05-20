@@ -5,10 +5,10 @@ export interface DemoReview {
   scores: Record<string, number>;
   comment: string;
   submittedAt?: Date;
-  status: "pending" | "draft" | "submitted";
+  status: "pending" | "submitted";
 }
 
-export type ReviewStatus = "not_started" | "draft" | "submitted";
+export type ReviewStatus = "not_started" | "submitted";
 
 export interface ReviewAssignment {
   id: string;
@@ -16,20 +16,15 @@ export interface ReviewAssignment {
   courseName: string;
   courseId: string;
   taskId: string;
-  reviewDeadline: string; // e.g., "31 января 2026, 23:59"
-  reviewDeadlineTimestamp: number; // For sorting/filtering
+  reviewDeadline: string;
+  reviewDeadlineTimestamp: number;
   status: ReviewStatus;
-  isAnonymous: boolean; // Author is hidden
-  workSubmittedAt?: string; // When the work was submitted
+  isAnonymous: boolean;
+  workSubmittedAt?: string;
 }
 
 export interface CriterionScore {
   criterionId: string;
   score: number | null;
   comment: string;
-}
-export interface ReviewDraft {
-  scores: CriterionScore[];
-  overallComment: string;
-  lastSaved: number;
 }

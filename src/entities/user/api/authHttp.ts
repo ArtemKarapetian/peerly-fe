@@ -49,6 +49,19 @@ export const authApi = {
 
   getMyRole: () => http.get<{ role: Role }>("/me/role"),
 
+  lookupMyName: async (email: string, role: Role): Promise<string> => {
+    const params = new URLSearchParams({
+      "filter.query": email,
+      "filter.roles": role,
+      limit: "5",
+    });
+    const res = await http.get<{ users: { id: number; email: string; name: string }[] }>(
+      `/users?${params.toString()}`,
+    );
+    const match = res.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+    return match?.name ?? "";
+  },
+
   confirmEmail: (params: { token: string; userId: string }) =>
     http.get<void>(
       `/auth/confirm-email?token=${encodeURIComponent(params.token)}&userId=${params.userId}`,

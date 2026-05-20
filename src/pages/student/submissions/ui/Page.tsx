@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Download, Edit, FileText, Upload } from "lucide-react";
+import { Clock, Download, Edit, FileText, Upload } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -39,6 +40,8 @@ export default function SubmissionsPage() {
   const { data: course } = useCourse(courseId);
   const { data: hw } = useAssignment(taskId);
   const { data: submission, isLoading, isError } = useMySubmission(taskId);
+  const [now] = useState(() => Date.now());
+  const isDeadlinePassed = hw?.dueDate ? hw.dueDate.getTime() < now : false;
 
   // Reviews + finalMark are only available via the per-submission endpoint.
   const submissionDetail = useQuery({
@@ -88,22 +91,34 @@ export default function SubmissionsPage() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
             <div className="mb-4">
-              <div className="w-16 h-16 bg-brand-primary-lighter rounded-full mx-auto flex items-center justify-center">
-                <Upload className="size-7 text-brand-primary" />
+              <div
+                className={`w-16 h-16 ${isDeadlinePassed ? "bg-error-light" : "bg-brand-primary-lighter"} rounded-full mx-auto flex items-center justify-center`}
+              >
+                {isDeadlinePassed ? (
+                  <Clock className="size-7 text-destructive" />
+                ) : (
+                  <Upload className="size-7 text-brand-primary" />
+                )}
               </div>
             </div>
             <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
-              {t("student.submissions.noSubmissions")}
+              {isDeadlinePassed
+                ? t("student.submissions.deadlinePassedTitle")
+                : t("student.submissions.noSubmissions")}
             </h2>
             <p className="text-[16px] text-muted-foreground leading-[1.5] mb-6">
-              {t("student.submissions.noSubmissionsDesc")}
+              {isDeadlinePassed
+                ? t("student.submissions.deadlinePassedDesc")
+                : t("student.submissions.noSubmissionsDesc")}
             </p>
-            <button
-              onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
-            >
-              {t("student.submissions.submitWork")}
-            </button>
+            {!isDeadlinePassed && (
+              <button
+                onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
+              >
+                {t("student.submissions.submitWork")}
+              </button>
+            )}
           </div>
         </div>
       </AppShell>
@@ -121,13 +136,15 @@ export default function SubmissionsPage() {
           </h1>
           <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
         </div>
-        <button
-          onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-[12px] text-[14px] font-medium transition-colors"
-        >
-          <Edit className="size-4" />
-          {t("student.submissions.editWork")}
-        </button>
+        {!isDeadlinePassed && (
+          <button
+            onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-[12px] text-[14px] font-medium transition-colors"
+          >
+            <Edit className="size-4" />
+            {t("student.submissions.editWork")}
+          </button>
+        )}
       </div>
 
       <div className="grid gap-4 desktop:grid-cols-3">

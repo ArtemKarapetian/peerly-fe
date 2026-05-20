@@ -75,6 +75,26 @@ describe("authApi", () => {
     expect(res.role).toBe("Student");
   });
 
+  it("lookupMyName searches /users by email and returns the matching name", async () => {
+    httpMock.get.mockResolvedValueOnce({
+      users: [
+        { id: 1, email: "other@x", name: "Other" },
+        { id: 2, email: "me@x", name: "Me" },
+      ],
+    });
+    const name = await authApi.lookupMyName("me@x", "Student");
+    expect(httpMock.get.mock.calls[0][0]).toContain("/users?");
+    expect(httpMock.get.mock.calls[0][0]).toContain("filter.query=me%40x");
+    expect(httpMock.get.mock.calls[0][0]).toContain("filter.roles=Student");
+    expect(name).toBe("Me");
+  });
+
+  it("lookupMyName returns empty string when no user matches the email", async () => {
+    httpMock.get.mockResolvedValueOnce({ users: [{ id: 1, email: "other@x", name: "Other" }] });
+    const name = await authApi.lookupMyName("me@x", "Teacher");
+    expect(name).toBe("");
+  });
+
   it("confirmEmail URL-encodes the token and forwards userId", async () => {
     httpMock.get.mockResolvedValueOnce(undefined);
     await authApi.confirmEmail({ token: "abc def&xyz", userId: "u-1" });

@@ -267,7 +267,7 @@ function SubmissionsContent({ data }: { data: ContentData }) {
                       </p>
                     )}
                     <p className="text-[12px] text-muted-foreground">
-                      {row.sub.files.length} {t("teacher.submissions.filesLabel")}
+                      {t("teacher.submissions.filesLabel", { count: row.sub.files.length })}
                     </p>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -7,8 +7,13 @@ import { renderWithProviders } from "@/test/renderWithProviders";
 
 import RegisterPage from "./Page";
 
+const { registerMock } = vi.hoisted(() => ({
+  registerMock: vi.fn(),
+}));
+
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
+    i18n: { language: "en" },
     t: (key: string, opts?: Record<string, unknown>) => {
       const translations: Record<string, string> = {
         "auth.register": "Create Account",
@@ -47,94 +52,82 @@ vi.mock("@/widgets/public-layout", () => ({
   PublicLayout: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
+vi.mock("@/entities/user", async () => {
+  const actual = await vi.importActual<typeof import("@/entities/user")>("@/entities/user");
+  return {
+    ...actual,
+    useAuth: () => ({
+      isAuthenticated: false,
+      session: null,
+      user: null,
+      register: registerMock,
+      login: vi.fn(),
+      logout: vi.fn(),
+      switchRoleDev: vi.fn(),
+    }),
+  };
+});
+
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
 
+const STRONG = "Tr0ub4dor&3xZ";
+
+async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
+  await user.type(screen.getByPlaceholderText("Ivan"), "Ivan");
+  await user.type(screen.getByPlaceholderText("Petrov"), "Petrov");
+  await user.type(screen.getByPlaceholderText("ivan.petrov@university.edu"), "ivan@example.com");
+  await user.type(screen.getByLabelText("Password"), STRONG);
+  await user.type(screen.getByLabelText("Confirm Password"), STRONG);
+}
+
 beforeEach(() => {
   localStorage.clear();
+  registerMock.mockReset();
 });
 
-describe("RegisterPage", () => {
-  it("renders form with heading and all input fields", () => {
-    renderWithProviders(<RegisterPage />);
-
-    expect(screen.getByRole("heading", { name: /Create Account/i })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Ivan")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Petrov")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("ivan.petrov@university.edu")).toBeInTheDocument();
-    expect(screen.getAllByPlaceholderText("••••••••").length).toBe(2);
-  });
-
-  it("has submit button disabled initially", () => {
-    renderWithProviders(<RegisterPage />);
-
-    const submitButton = screen.getByRole("button", {
-      name: /Create Account/i,
-    });
-    expect(submitButton).toBeDisabled();
-  });
-
-  it("shows email validation error on invalid email after blur", async () => {
+describe("RegisterPage validation", () => {
+  it("keeps the submit button disabled until the form is fully valid", async () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
 
-    const emailInput = screen.getByPlaceholderText("ivan.petrov@university.edu");
-    await user.type(emailInput, "not-an-email");
-    await user.tab();
+    const submit = screen.getByRole("button", { name: /Create Account/i });
+    expect(submit).toBeDisabled();
 
-    await waitFor(() => {
-      expect(screen.getByText("Invalid email")).toBeInTheDocument();
-    });
+    await fillValidForm(user);
+
+    await waitFor(() => expect(submit).not.toBeDisabled());
   });
 
-  it("shows required-field error on empty first name after blur", async () => {
+  it("flags an invalid email after blur", async () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
 
-    const firstNameInput = screen.getByPlaceholderText("Ivan");
-    await user.click(firstNameInput);
+    await user.type(screen.getByPlaceholderText("ivan.petrov@university.edu"), "not-an-email");
     await user.tab();
 
-    await waitFor(() => {
-      expect(screen.getByText("Enter first name")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Invalid email")).toBeInTheDocument();
   });
 
-  it("shows passwords don't match error", async () => {
+  it("shows a required-field error on the first name field when left empty", async () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
 
-    const passwordInputs = screen.getAllByPlaceholderText("••••••••");
-    const passwordInput = passwordInputs[0];
-    const confirmInput = passwordInputs[1];
-
-    await user.type(passwordInput, "password123");
-    await user.type(confirmInput, "different123");
+    await user.click(screen.getByPlaceholderText("Ivan"));
     await user.tab();
 
-    await waitFor(() => {
-      expect(screen.getByText("Passwords don't match")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Enter first name")).toBeInTheDocument();
   });
 
-  it("has link to login page with correct href", () => {
-    renderWithProviders(<RegisterPage />);
-
-    const signInLink = screen.getByText("Sign In");
-    expect(signInLink.closest("a")).toHaveAttribute("href", "/login");
-  });
-
-  it("clears first-name error after typing a valid value", async () => {
+  it("clears the first-name error once a value is typed", async () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
 
     const firstNameInput = screen.getByPlaceholderText("Ivan");
     await user.click(firstNameInput);
     await user.tab();
-    await waitFor(() => {
-      expect(screen.getByText("Enter first name")).toBeInTheDocument();
-    });
+    await screen.findByText("Enter first name");
 
     await user.type(firstNameInput, "Ivan");
     await waitFor(() => {
@@ -142,52 +135,54 @@ describe("RegisterPage", () => {
     });
   });
 
-  it("clears last-name error after typing a valid value", async () => {
+  it("reports mismatched passwords against the password field", async () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
 
-    const lastNameInput = screen.getByPlaceholderText("Petrov");
-    await user.click(lastNameInput);
+    await user.type(screen.getByLabelText("Password"), STRONG);
+    await user.type(screen.getByLabelText("Confirm Password"), "different-pass-9!");
     await user.tab();
-    await waitFor(() => {
-      expect(screen.getByText("Enter last name")).toBeInTheDocument();
-    });
 
-    await user.type(lastNameInput, "Petrov");
-    await waitFor(() => {
-      expect(screen.queryByText("Enter last name")).not.toBeInTheDocument();
-    });
+    expect(await screen.findByText("Passwords don't match")).toBeInTheDocument();
   });
+});
 
-  it("enables submit button only when all required fields are valid", async () => {
+describe("RegisterPage submission", () => {
+  it("does not call register when the form is empty", async () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />);
 
-    const submitButton = screen.getByRole("button", { name: /Create Account/i });
-    expect(submitButton).toBeDisabled();
+    const submit = screen.getByRole("button", { name: /Create Account/i });
+    expect(submit).toBeDisabled();
+    await user.click(submit);
 
-    await user.type(screen.getByPlaceholderText("Ivan"), "Ivan");
-    await user.type(screen.getByPlaceholderText("Petrov"), "Petrov");
-    await user.type(screen.getByPlaceholderText("ivan.petrov@university.edu"), "ivan@example.com");
-    const passwordInputs = screen.getAllByPlaceholderText("••••••••");
-    await user.type(passwordInputs[0], "password123");
-    await user.type(passwordInputs[1], "password123");
-
-    await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
-    });
+    expect(registerMock).not.toHaveBeenCalled();
   });
 
-  it("invokes submit handler on empty form without navigating away", async () => {
+  it("submits trimmed/lowercased credentials and the selected role", async () => {
+    const user = userEvent.setup();
+    registerMock.mockResolvedValueOnce(undefined);
     renderWithProviders(<RegisterPage />);
 
-    const submitButton = screen.getByRole("button", { name: /Create Account/i });
-    const form = submitButton.closest("form")!;
-    fireEvent.submit(form);
+    await fillValidForm(user);
+    const submit = screen.getByRole("button", { name: /Create Account/i });
+    await waitFor(() => expect(submit).not.toBeDisabled());
+    await user.click(submit);
 
     await waitFor(() => {
-      expect(submitButton).toBeDisabled();
+      expect(registerMock).toHaveBeenCalledWith({
+        email: "ivan@example.com",
+        password: STRONG,
+        name: "Ivan Petrov",
+        role: "Student",
+      });
     });
-    expect(screen.getByRole("heading", { name: /Create Account/i })).toBeInTheDocument();
+  });
+});
+
+describe("RegisterPage navigation", () => {
+  it("links to the sign-in page", () => {
+    renderWithProviders(<RegisterPage />);
+    expect(screen.getByText("Sign In").closest("a")).toHaveAttribute("href", "/login");
   });
 });

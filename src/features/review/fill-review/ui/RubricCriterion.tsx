@@ -33,7 +33,6 @@ export function RubricCriterion({
     onChange({ ...value, comment });
   };
 
-  // Generate score options (0 to maxScore)
   const scoreOptions = Array.from({ length: criterion.maxScore + 1 }, (_, i) => i);
 
   return (
@@ -128,7 +127,7 @@ export function RubricCriterion({
             }`}
           >
             {value.comment.length} / {criterion.minCommentLength}{" "}
-            {t("feature.rubricCriterion.characters")}
+            {t("feature.rubricCriterion.characters", { count: value.comment.length })}
           </p>
         )}
       </div>

@@ -36,13 +36,13 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
   const participants: ParticipantRow[] = useMemo(() => {
     if (!data) return [];
     const students: ParticipantRow[] = data.students.map((s) => ({
-      id: String(s.id),
-      name: s.userName,
+      id: String(s.studentId),
+      name: s.name,
       role: "student",
     }));
-    const teachers: ParticipantRow[] = data.teachers.map((t) => ({
-      id: String(t.id),
-      name: t.userName,
+    const teachers: ParticipantRow[] = data.teachers.map((teacher) => ({
+      id: String(teacher.teacherId),
+      name: teacher.name,
       role: "teacher",
     }));
     return [...teachers, ...students];

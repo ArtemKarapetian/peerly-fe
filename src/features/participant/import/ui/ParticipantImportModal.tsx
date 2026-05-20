@@ -202,12 +202,13 @@ export function ParticipantImportModal({
                     <div className="flex items-center gap-4 text-[13px]">
                       <span className="text-success flex items-center gap-1">
                         <CheckCircle className="w-4 h-4" />
-                        {validCount} {t("feature.participantImport.valid")}
+                        {validCount} {t("feature.participantImport.valid", { count: validCount })}
                       </span>
                       {errorCount > 0 && (
                         <span className="text-destructive flex items-center gap-1">
                           <AlertCircle className="w-4 h-4" />
-                          {errorCount} {t("feature.participantImport.errors")}
+                          {errorCount}{" "}
+                          {t("feature.participantImport.errors", { count: errorCount })}
                         </span>
                       )}
                     </div>

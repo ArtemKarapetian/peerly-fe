@@ -87,14 +87,7 @@ export const courseHttpRepo = {
   getParticipants: async (courseId: string): Promise<ListParticipantsResponse> =>
     http.get<ListParticipantsResponse>(`/courses/${courseId}/participants`),
 
-  archive: async (courseId: string, archived: boolean): Promise<void> => {
-    // BE requires full body on update — fetch current state first.
-    const res = await getOneCourse(courseId);
-    const body: UpdateCourseRequestBody = {
-      name: res.course.name,
-      description: res.course.description,
-      status: archived ? "canceled" : "inProgress",
-    };
+  update: async (courseId: string, body: UpdateCourseRequestBody): Promise<void> => {
     await http.put<void>(`/courses/${courseId}`, body);
   },
 
@@ -109,7 +102,6 @@ export const courseHttpRepo = {
       name: input.title,
       title: input.title,
       description: input.description ?? "",
-      code: input.code ?? "",
       teachers: [],
       enrollmentCount: 0,
       homeworkCount: 0,

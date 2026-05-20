@@ -34,7 +34,6 @@ export const ROUTES = {
   profile: "/profile",
   settings: "/settings",
   security: "/security",
-  deleteAccount: "/offboarding/delete-account",
 
   teacherDashboard: "/teacher/dashboard",
   teacherCourses: "/teacher/courses",

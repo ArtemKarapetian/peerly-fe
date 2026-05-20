@@ -1,7 +1,6 @@
 import { AlertCircle, BookOpen, CheckCircle2, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-// Карточка курса в списке студента; footer прижат к низу через mt-auto
 interface CourseCardProps {
   id: string;
   title: string;
@@ -44,7 +43,7 @@ export function CourseCard({
     if (diffDays <= 3)
       return { label: t("entity.course.inDays", { count: diffDays }), urgent: true };
     if (diffDays <= 7)
-      return { label: t("entity.course.inDaysMany", { count: diffDays }), urgent: false };
+      return { label: t("entity.course.inDays", { count: diffDays }), urgent: false };
     return {
       label: date.toLocaleDateString("ru-RU", { day: "numeric", month: "short" }),
       urgent: false,

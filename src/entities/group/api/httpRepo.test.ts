@@ -70,12 +70,12 @@ describe("groupHttpRepo", () => {
 
   it("getParticipants maps the participants response", async () => {
     httpMock.get.mockResolvedValueOnce({
-      students: [{ id: "s-1", userName: "S" }],
+      students: [{ studentId: "s-1", email: "s@x", name: "S" }],
       teachers: [],
     });
     const out = await groupHttpRepo.getParticipants("g-3");
     expect(httpMock.get.mock.calls[0][0]).toBe("/groups/g-3/participants");
-    expect(out.students).toEqual([{ id: "s-1", userName: "S" }]);
+    expect(out.students).toEqual([{ id: "s-1", name: "S", email: "s@x" }]);
   });
 
   it("create POSTs name+courseId and returns the new id", async () => {

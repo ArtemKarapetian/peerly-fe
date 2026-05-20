@@ -10,22 +10,14 @@ const tasks = [
     courseName: "Algebra",
     taskTitle: "Linear Equations",
     status: "PUBLISHED" as const,
-    currentScore: 9,
-    maxScore: 10,
+    finalMark: 4,
     reviewsReceived: 3,
     reviewsRequired: 3,
-    allowAppeal: true,
     reviews: [
       {
         reviewId: "r-1",
-        reviewerName: "Alice",
-        isAnonymous: false,
-        submittedAt: "2026-01-05",
-        overallComment: "Good work overall.",
-        criteria: [
-          { name: "Clarity", score: 4, maxScore: 5, comment: "clear" },
-          { name: "Depth", score: 5, maxScore: 5 },
-        ],
+        mark: 4,
+        comment: "Good work overall.",
       },
     ],
   },
@@ -34,6 +26,7 @@ const tasks = [
     courseName: "Geometry",
     taskTitle: "Triangles",
     status: "IN_REVIEW" as const,
+    finalMark: null,
     reviewsReceived: 1,
     reviewsRequired: 3,
     reviews: [],
@@ -49,11 +42,11 @@ describe("TaskReviewAccordion", () => {
     expect(screen.getByText(/widget\.taskReviewAccordion\.inReview/)).toBeInTheDocument();
   });
 
-  it("expands a task to reveal reviews when clicked", async () => {
+  it("expands a published task to reveal anonymous reviews with marks and comments", async () => {
     const user = userEvent.setup();
     render(<TaskReviewAccordion tasks={tasks} />);
     await user.click(screen.getByText("Linear Equations"));
-    expect(screen.getByText("Alice")).toBeInTheDocument();
+    expect(screen.getByText(/widget\.taskReviewAccordion\.anonymousReviewer/)).toBeInTheDocument();
     expect(screen.getByText(/Good work overall/)).toBeInTheDocument();
   });
 

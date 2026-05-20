@@ -61,7 +61,7 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
               <p className="text-[15px] text-foreground font-medium mb-1">{selected.name}</p>
               <p className="text-[13px] text-muted-foreground mb-2">{selected.description}</p>
               <span className="text-[13px] text-muted-foreground">
-                {selected.criteria.length} {t("feature.assignmentCreate.rubric.criteria")}
+                {t("feature.assignmentCreate.rubric.criteria", { count: selected.criteria.length })}
               </span>
             </div>
             <button
@@ -140,7 +140,9 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
                     {rubric.description}
                   </p>
                   <span className="text-[12px] text-muted-foreground">
-                    {rubric.criteria.length} {t("feature.assignmentCreate.rubric.criteria")}
+                    {t("feature.assignmentCreate.rubric.criteria", {
+                      count: rubric.criteria.length,
+                    })}
                   </span>
                 </button>
               );

@@ -23,7 +23,6 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
 
   const twoDays = 2 * 24 * 60 * 60 * 1000;
 
-  // Group reviews
   const groupedReviews =
     groupBy === "course" ? groupByCourse(reviews) : groupByDeadline(reviews, t);
 
@@ -38,10 +37,7 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
                 {group.title}
               </h2>
               <span className="text-[14px] text-muted-foreground">
-                {group.reviews.length}{" "}
-                {group.reviews.length === 1
-                  ? t("widget.reviewList.reviewOne")
-                  : t("widget.reviewList.reviewFew")}
+                {t("widget.reviewList.review", { count: group.reviews.length })}
               </span>
             </div>
           </div>
@@ -75,7 +71,6 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
   );
 }
 
-// Helper: Group by course
 function groupByCourse(reviews: ReviewAssignment[]) {
   const grouped = new Map<string, ReviewAssignment[]>();
 
@@ -94,7 +89,6 @@ function groupByCourse(reviews: ReviewAssignment[]) {
   }));
 }
 
-// Helper: Group by deadline
 function groupByDeadline(reviews: ReviewAssignment[], t: (key: string) => string) {
   const now = Date.now();
   const today = new Date();

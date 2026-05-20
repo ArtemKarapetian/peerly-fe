@@ -11,7 +11,6 @@ export interface DemoCourse {
   name: string;
   title: string;
   description: string;
-  code: string;
   teachers: CourseTeacher[];
   enrollmentCount: number;
   status: "active" | "archived";
@@ -24,8 +23,5 @@ export interface DemoCourse {
 
 export interface CreateCourseInput {
   title: string;
-  code?: string; // Unused on BE
-  instructorId?: string;
   description?: string;
-  archived?: boolean;
 }

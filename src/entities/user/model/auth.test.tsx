@@ -13,6 +13,7 @@ const { authApiMock, navigateMock } = vi.hoisted(() => ({
     logout: vi.fn(),
     refresh: vi.fn(),
     getMyRole: vi.fn(),
+    lookupMyName: vi.fn(),
     confirmEmail: vi.fn(),
   },
   navigateMock: vi.fn(),
@@ -62,6 +63,7 @@ function readStored(): Record<string, string> {
 
 beforeEach(() => {
   Object.values(authApiMock).forEach((fn) => fn.mockReset());
+  authApiMock.lookupMyName.mockResolvedValue("");
   navigateMock.mockReset();
   localStorage.clear();
   captured.value = null;
@@ -90,7 +92,36 @@ describe("AuthProvider", () => {
 
     const stored = readStored();
     expect(stored).toMatchObject({ userId: "u-1", role: "Teacher", email: "alice@test.com" });
-    expect(stored.userName).toBe("alice");
+  });
+
+  it("login looks up the user's name from /users and stores it", async () => {
+    authApiMock.login.mockResolvedValueOnce({ userId: "u-1" });
+    authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });
+    authApiMock.lookupMyName.mockResolvedValueOnce("Alice Wonderland");
+
+    renderProvider();
+
+    await act(async () => {
+      await captured.value!.login({ email: "alice@test.com", password: "pw" });
+    });
+
+    expect(authApiMock.lookupMyName).toHaveBeenCalledWith("alice@test.com", "Student");
+    expect(screen.getByTestId("name")).toHaveTextContent("Alice Wonderland");
+    expect(readStored().userName).toBe("Alice Wonderland");
+  });
+
+  it("login falls back to empty userName when the lookup fails", async () => {
+    authApiMock.login.mockResolvedValueOnce({ userId: "u-1" });
+    authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });
+    authApiMock.lookupMyName.mockRejectedValueOnce(new Error("network"));
+
+    renderProvider();
+
+    await act(async () => {
+      await captured.value!.login({ email: "alice@test.com", password: "pw" });
+    });
+
+    expect(readStored().userName).toBe("");
   });
 
   it("register stores session derived from input", async () => {

@@ -1,4 +1,4 @@
-import { BookOpen, ChevronRight, ClipboardList, Plus, Users } from "lucide-react";
+import { BookOpen, ChevronRight, Plus } from "lucide-react";
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -18,9 +18,6 @@ import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 interface CourseRow {
   id: string;
   name: string;
-  code: string;
-  participantsCount: number;
-  activeAssignments: number;
   status: "active" | "archived";
 }
 
@@ -41,24 +38,18 @@ export default function TeacherCoursesPage() {
   const allCourseRows: CourseRow[] = (courses ?? []).map((course) => ({
     id: course.id,
     name: course.title,
-    code: course.code,
-    participantsCount: course.enrollmentCount,
-    activeAssignments: course.assignmentIds?.length || 0,
     status: course.archived ? "archived" : "active",
   }));
 
   const filteredCourses = allCourseRows.filter((course) => {
     if (course.status === "archived") return false;
     if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      return course.name.toLowerCase().includes(q) || course.code.toLowerCase().includes(q);
+      return course.name.toLowerCase().includes(searchQuery.toLowerCase());
     }
     return true;
   });
 
   const activeCourses = allCourseRows.filter((c) => c.status === "active");
-  const totalStudents = activeCourses.reduce((sum, c) => sum + c.participantsCount, 0);
-  const totalAssignments = activeCourses.reduce((sum, c) => sum + c.activeAssignments, 0);
 
   const handleOpenCourse = useCallback(
     (courseId: string) => {
@@ -102,33 +93,14 @@ export default function TeacherCoursesPage() {
                 {t("teacher.courses.title")}
               </h1>
               <p className="text-[15px] text-muted-foreground">
-                {activeCourses.length > 0
-                  ? `${activeCourses.length} ${t("teacher.courses.activeCourses")}, ${allCourseRows.length - activeCourses.length > 0 ? `${allCourseRows.length - activeCourses.length} ${t("teacher.courses.inArchive")}` : t("teacher.courses.allActive")}`
-                  : t("teacher.courses.createFirst")}
+                {activeCourses.length === 0
+                  ? t("teacher.courses.createFirst")
+                  : allCourseRows.length === activeCourses.length
+                    ? t("teacher.courses.coursesCount", { count: activeCourses.length })
+                    : `${activeCourses.length} ${t("teacher.courses.activeCourses", { count: activeCourses.length })}, ${allCourseRows.length - activeCourses.length} ${t("teacher.courses.inArchive")}`}
               </p>
             </div>
-            <div className="flex items-center gap-5 shrink-0">
-              {/* Inline stats — mirroring course detail page counters */}
-              <div className="hidden tablet:flex items-center gap-5">
-                <div className="text-center">
-                  <p className="text-[24px] font-medium text-foreground tabular-nums leading-none mb-1">
-                    {totalStudents}
-                  </p>
-                  <p className="text-[13px] text-muted-foreground">
-                    {t("teacher.courses.studentsLabel")}
-                  </p>
-                </div>
-                <div className="w-px h-10 bg-border"></div>
-                <div className="text-center">
-                  <p className="text-[24px] font-medium text-foreground tabular-nums leading-none mb-1">
-                    {totalAssignments}
-                  </p>
-                  <p className="text-[13px] text-muted-foreground">
-                    {t("teacher.courses.assignmentsLabel")}
-                  </p>
-                </div>
-                <div className="w-px h-10 bg-border"></div>
-              </div>
+            <div className="shrink-0">
               <button
                 onClick={() => void navigate("/teacher/courses/new")}
                 className="flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-[10px] hover:bg-brand-primary-hover active:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-[14px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -136,49 +108,6 @@ export default function TeacherCoursesPage() {
                 <Plus className="w-4 h-4" />
                 {t("teacher.courses.createCourse")}
               </button>
-            </div>
-          </div>
-
-          {/* Mobile stats strip — visible below tablet */}
-          <div className="flex tablet:hidden gap-3 mt-4 pt-4 border-t-2 border-border">
-            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-brand-primary-lighter rounded-[10px]">
-              <div className="w-7 h-7 bg-brand-primary/10 rounded-[6px] flex items-center justify-center shrink-0">
-                <BookOpen className="w-3.5 h-3.5 text-brand-primary" />
-              </div>
-              <div>
-                <p className="text-[15px] font-semibold text-foreground leading-none">
-                  {activeCourses.length}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {t("teacher.courses.coursesCount")}
-                </p>
-              </div>
-            </div>
-            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-success-light rounded-[10px]">
-              <div className="w-7 h-7 bg-success/10 rounded-[6px] flex items-center justify-center shrink-0">
-                <Users className="w-3.5 h-3.5 text-success" />
-              </div>
-              <div>
-                <p className="text-[15px] font-semibold text-foreground leading-none">
-                  {totalStudents}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {t("teacher.courses.studentsLabel")}
-                </p>
-              </div>
-            </div>
-            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-warning-light rounded-[10px]">
-              <div className="w-7 h-7 bg-warning/10 rounded-[6px] flex items-center justify-center shrink-0">
-                <ClipboardList className="w-3.5 h-3.5 text-warning" />
-              </div>
-              <div>
-                <p className="text-[15px] font-semibold text-foreground leading-none">
-                  {totalAssignments}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {t("teacher.courses.assignmentsLabel")}
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -194,7 +123,7 @@ export default function TeacherCoursesPage() {
           </div>
           {filteredCourses.length > 0 && (
             <p className="text-[12px] text-muted-foreground tabular-nums shrink-0 hidden tablet:block">
-              {filteredCourses.length} {t("teacher.courses.coursesCount")}
+              {t("teacher.courses.coursesCount", { count: filteredCourses.length })}
             </p>
           )}
         </div>
@@ -207,8 +136,6 @@ export default function TeacherCoursesPage() {
                 <table className="w-full table-fixed">
                   <colgroup>
                     <col />
-                    <col className="w-[100px] hidden tablet:table-column" />
-                    <col className="w-[100px] hidden tablet:table-column" />
                     <col className="w-[105px]" />
                     <col className="w-[48px]" />
                   </colgroup>
@@ -216,12 +143,6 @@ export default function TeacherCoursesPage() {
                     <tr className="border-b-2 border-border bg-surface-hover">
                       <th className="text-left px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px]">
                         {t("common.course")}
-                      </th>
-                      <th className="text-center px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px] hidden tablet:table-cell">
-                        {t("common.students")}
-                      </th>
-                      <th className="text-center px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px] hidden tablet:table-cell">
-                        {t("common.assignments")}
                       </th>
                       <th className="text-left px-5 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.5px]">
                         {t("common.status")}
@@ -242,28 +163,10 @@ export default function TeacherCoursesPage() {
                           tabIndex={0}
                           aria-label={t("teacher.courses.openCourse", { name: course.name })}
                         >
-                          {/* Course name + code */}
                           <td className="px-5 py-4">
                             <p className="text-[14px] font-semibold text-foreground tracking-[-0.2px] leading-snug">
                               {course.name}
                             </p>
-                            <p className="text-[12px] text-muted-foreground mt-0.5 font-mono">
-                              {course.code}
-                            </p>
-                          </td>
-
-                          {/* Students */}
-                          <td className="px-5 py-4 text-center hidden tablet:table-cell">
-                            <span className="inline-flex items-center justify-center min-w-[32px] px-2.5 py-1 bg-info-light text-brand-primary rounded-[8px] text-[13px] font-semibold tabular-nums">
-                              {course.participantsCount}
-                            </span>
-                          </td>
-
-                          {/* Assignments */}
-                          <td className="px-5 py-4 text-center hidden tablet:table-cell">
-                            <span className="inline-flex items-center justify-center min-w-[32px] px-2.5 py-1 bg-success-light text-success rounded-[8px] text-[13px] font-semibold tabular-nums">
-                              {course.activeAssignments}
-                            </span>
                           </td>
 
                           {/* Status */}

@@ -1,0 +1,68 @@
+name: Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+    branches: [main]
+
+concurrency:
+  group: preview-peerly-fe-pr-${{ github.event.number }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: peerly-fe
+  REGISTRY: ghcr.io/artemkarapetian
+  PREVIEW_HOST: app-pr-${{ github.event.number }}.prly.ru
+
+permissions:
+  contents: read
+  pull-requests: write
+  packages: write
+
+jobs:
+  build-push:
+    if: contains(github.event.pull_request.labels.*.name, 'preview')
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build & push preview image
+        id: build
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          SHORT_SHA="${HEAD_SHA:0:7}"
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.number }}-${SHORT_SHA}"
+          docker build --build-arg VITE_API_URL=https://api-stage.prly.ru/api -t "$IMAGE" .
+          docker push "$IMAGE"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+  comment:
+    needs: build-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find existing preview comment
+        id: find
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.number }}
+          comment-author: github-actions[bot]
+          body-includes: <!-- preview-fe -->
+
+      - name: Upsert preview URL comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find.outputs.comment-id }}
+          issue-number: ${{ github.event.number }}
+          edit-mode: replace
+          body: |
+            <!-- preview-fe -->
+            🌐 **Preview deployed:** https://${{ env.PREVIEW_HOST }}
+
+            Wired to stage API at `https://api-stage.prly.ru/api`.
+            Image: `${{ needs.build-push.outputs.image }}`
