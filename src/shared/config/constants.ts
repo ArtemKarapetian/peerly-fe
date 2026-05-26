@@ -20,4 +20,5 @@ export const STORAGE_KEYS = {
   theme: "peerly_theme",
   featureFlags: "peerly_feature_flags",
   demoToolsVisible: "peerly_demo_tools_visible",
+  pendingVerificationEmail: "peerly_pending_verification_email",
 } as const;

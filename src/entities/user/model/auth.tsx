@@ -11,8 +11,18 @@ interface AuthContextType {
   /** Kept for backwards compatibility with UI that reads `user`. */
   user: { id: string; name: string; email: string } | null;
   login: (input: { email: string; password: string }) => Promise<Session>;
-  register: (input: { email: string; password: string; name: string; role: Role }) => Promise<void>;
+  register: (input: {
+    email: string;
+    password: string;
+    name: string;
+    role: Role;
+  }) => Promise<{ userId: string }>;
+  confirmEmail: (input: { token: string; userId: string }) => Promise<Session>;
   logout: () => Promise<void>;
+  /** Re-fetch profile from /me and merge into session. */
+  refreshMe: () => Promise<void>;
+  /** Update name via PUT /me, then refresh session. */
+  updateMyName: (name: string) => Promise<void>;
   /** Dev-only role swap; backend still enforces JWT claims. */
   switchRoleDev: (role: Role) => void;
 }
@@ -29,11 +39,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
     const { role } = await authApi.getMyRole();
-    const userName = await authApi.lookupMyName(email, role).catch(() => "");
+    const me = await authApi.getMe(role).catch(() => null);
     const next: Session = {
-      userId: String(res.userId),
-      userName,
-      email,
+      userId: me?.userId || String(res.userId),
+      userName: me?.name ?? "",
+      email: me?.email || email,
       role,
     };
     setSession(next);
@@ -44,17 +54,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback<AuthContextType["register"]>(
     async ({ email, password, name, role }) => {
       const res = await authApi.register({ email, password, name, role });
-      const next: Session = {
-        userId: String(res.userId),
-        userName: name,
-        email,
-        role,
-      };
-      setSession(next);
-      setSessionState(next);
+      return { userId: String(res.userId) };
     },
     [],
   );
+
+  const confirmEmail = useCallback<AuthContextType["confirmEmail"]>(async ({ token, userId }) => {
+    const res = await authApi.confirmEmail({ token, userId });
+    const { role } = await authApi.getMyRole();
+    const me = await authApi.getMe(role).catch(() => null);
+    const next: Session = {
+      userId: me?.userId || String(res.userId),
+      userName: me?.name ?? "",
+      email: me?.email ?? "",
+      role,
+    };
+    setSession(next);
+    setSessionState(next);
+    return next;
+  }, []);
 
   const switchRoleDev = useCallback<AuthContextType["switchRoleDev"]>((role) => {
     setSessionState((prev) => {
@@ -68,6 +86,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(next);
       return next;
     });
+  }, []);
+
+  const refreshMe = useCallback<AuthContextType["refreshMe"]>(async () => {
+    const current = getSession();
+    if (!current) return;
+    const me = await authApi.getMe(current.role).catch(() => null);
+    if (!me) return;
+    const next: Session = {
+      userId: me.userId || current.userId,
+      userName: me.name,
+      email: me.email || current.email,
+      role: current.role,
+    };
+    setSession(next);
+    setSessionState(next);
+  }, []);
+
+  const updateMyName = useCallback<AuthContextType["updateMyName"]>(async (name) => {
+    const current = getSession();
+    if (!current) throw new Error("Not authenticated");
+    await authApi.updateMyName(current.role, name);
+    const next: Session = { ...current, userName: name };
+    setSession(next);
+    setSessionState(next);
   }, []);
 
   const logout = useCallback(async () => {
@@ -89,7 +131,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: sessionToUser(session),
         login,
         register,
+        confirmEmail,
         logout,
+        refreshMe,
+        updateMyName,
         switchRoleDev,
       }}
     >

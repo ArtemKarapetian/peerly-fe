@@ -7,9 +7,19 @@ import { renderWithProviders } from "@/test/renderWithProviders";
 
 import RegisterPage from "./Page";
 
-const { registerMock } = vi.hoisted(() => ({
+const { registerMock, navigateMock, toastMock } = vi.hoisted(() => ({
   registerMock: vi.fn(),
+  navigateMock: vi.fn(),
+  toastMock: { success: vi.fn(), error: vi.fn() },
 }));
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -69,7 +79,7 @@ vi.mock("@/entities/user", async () => {
 });
 
 vi.mock("sonner", () => ({
-  toast: { success: vi.fn(), error: vi.fn() },
+  toast: toastMock,
 }));
 
 const STRONG = "Tr0ub4dor&3xZ";
@@ -85,6 +95,9 @@ async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
 beforeEach(() => {
   localStorage.clear();
   registerMock.mockReset();
+  navigateMock.mockReset();
+  toastMock.success.mockReset();
+  toastMock.error.mockReset();
 });
 
 describe("RegisterPage validation", () => {
@@ -161,7 +174,7 @@ describe("RegisterPage submission", () => {
 
   it("submits trimmed/lowercased credentials and the selected role", async () => {
     const user = userEvent.setup();
-    registerMock.mockResolvedValueOnce(undefined);
+    registerMock.mockResolvedValueOnce({ userId: "u-1" });
     renderWithProviders(<RegisterPage />);
 
     await fillValidForm(user);
@@ -177,6 +190,40 @@ describe("RegisterPage submission", () => {
         role: "Student",
       });
     });
+  });
+
+  it("after a successful register stores the pending email and navigates to /verify-email", async () => {
+    const user = userEvent.setup();
+    registerMock.mockResolvedValueOnce({ userId: "u-1" });
+    renderWithProviders(<RegisterPage />);
+
+    await fillValidForm(user);
+    const submit = screen.getByRole("button", { name: /Create Account/i });
+    await waitFor(() => expect(submit).not.toBeDisabled());
+    await user.click(submit);
+
+    await waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith("/verify-email");
+    });
+    expect(localStorage.getItem("peerly_pending_verification_email")).toBe("ivan@example.com");
+    expect(toastMock.success).toHaveBeenCalled();
+  });
+
+  it("does not navigate or store anything when register throws", async () => {
+    const user = userEvent.setup();
+    registerMock.mockRejectedValueOnce(new Error("Email taken"));
+    renderWithProviders(<RegisterPage />);
+
+    await fillValidForm(user);
+    const submit = screen.getByRole("button", { name: /Create Account/i });
+    await waitFor(() => expect(submit).not.toBeDisabled());
+    await user.click(submit);
+
+    await waitFor(() => {
+      expect(registerMock).toHaveBeenCalled();
+    });
+    expect(navigateMock).not.toHaveBeenCalled();
+    expect(localStorage.getItem("peerly_pending_verification_email")).toBeNull();
   });
 });
 

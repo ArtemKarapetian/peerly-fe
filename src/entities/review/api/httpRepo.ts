@@ -20,7 +20,7 @@ import type { DemoReview } from "../model/types";
 
 // BE wire shapes — translate to FE-clean shapes inside this module.
 type RawListCourses = { courseInfos: CourseDto[] };
-type RawListHomeworks = { homeworkInfos: HomeworkDto[] };
+type RawListTeacherHomeworks = { teacherHomeworkInfos: HomeworkDto[] };
 type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewDto[] };
 
 export interface AssignedReviewEntry {
@@ -50,8 +50,10 @@ export const reviewHttpRepo = {
     const homeworkIdsPerCourse = await Promise.all(
       courses.courseInfos.map(async (c) => {
         try {
-          const hws = await http.get<RawListHomeworks>(paged(`/teacher/courses/${c.id}/homeworks`));
-          return hws.homeworkInfos.map((h) => String(h.id));
+          const hws = await http.get<RawListTeacherHomeworks>(
+            paged(`/teacher/courses/${c.id}/homeworks`),
+          );
+          return hws.teacherHomeworkInfos.map((h) => String(h.id));
         } catch {
           return [] as string[];
         }

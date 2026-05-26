@@ -13,7 +13,8 @@ const { authApiMock, navigateMock } = vi.hoisted(() => ({
     logout: vi.fn(),
     refresh: vi.fn(),
     getMyRole: vi.fn(),
-    lookupMyName: vi.fn(),
+    getMe: vi.fn(),
+    updateMyName: vi.fn(),
     confirmEmail: vi.fn(),
   },
   navigateMock: vi.fn(),
@@ -63,7 +64,7 @@ function readStored(): Record<string, string> {
 
 beforeEach(() => {
   Object.values(authApiMock).forEach((fn) => fn.mockReset());
-  authApiMock.lookupMyName.mockResolvedValue("");
+  authApiMock.getMe.mockResolvedValue({ userId: "", email: "", name: "" });
   navigateMock.mockReset();
   localStorage.clear();
   captured.value = null;
@@ -94,10 +95,14 @@ describe("AuthProvider", () => {
     expect(stored).toMatchObject({ userId: "u-1", role: "Teacher", email: "alice@test.com" });
   });
 
-  it("login looks up the user's name from /users and stores it", async () => {
+  it("login hydrates session from /me and stores the name", async () => {
     authApiMock.login.mockResolvedValueOnce({ userId: "u-1" });
     authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });
-    authApiMock.lookupMyName.mockResolvedValueOnce("Alice Wonderland");
+    authApiMock.getMe.mockResolvedValueOnce({
+      userId: "u-1",
+      email: "alice@test.com",
+      name: "Alice Wonderland",
+    });
 
     renderProvider();
 
@@ -105,15 +110,15 @@ describe("AuthProvider", () => {
       await captured.value!.login({ email: "alice@test.com", password: "pw" });
     });
 
-    expect(authApiMock.lookupMyName).toHaveBeenCalledWith("alice@test.com", "Student");
+    expect(authApiMock.getMe).toHaveBeenCalledWith("Student");
     expect(screen.getByTestId("name")).toHaveTextContent("Alice Wonderland");
     expect(readStored().userName).toBe("Alice Wonderland");
   });
 
-  it("login falls back to empty userName when the lookup fails", async () => {
+  it("login falls back to empty userName when /me fails", async () => {
     authApiMock.login.mockResolvedValueOnce({ userId: "u-1" });
     authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });
-    authApiMock.lookupMyName.mockRejectedValueOnce(new Error("network"));
+    authApiMock.getMe.mockRejectedValueOnce(new Error("network"));
 
     renderProvider();
 
@@ -124,7 +129,7 @@ describe("AuthProvider", () => {
     expect(readStored().userName).toBe("");
   });
 
-  it("register stores session derived from input", async () => {
+  it("register does not log the user in — BE requires email confirmation first", async () => {
     authApiMock.register.mockResolvedValueOnce({ userId: "u-2" });
 
     renderProvider();
@@ -138,9 +143,33 @@ describe("AuthProvider", () => {
       });
     });
 
-    expect(screen.getByTestId("name")).toHaveTextContent("Bob");
+    expect(screen.getByTestId("auth")).toHaveTextContent("no");
+    expect(localStorage.getItem(STORAGE_KEYS.session)).toBeNull();
+  });
+
+  it("confirmEmail stores a session hydrated from /me after BE accepts the token", async () => {
+    authApiMock.confirmEmail.mockResolvedValueOnce({ userId: "u-7" });
+    authApiMock.getMyRole.mockResolvedValueOnce({ role: "Teacher" });
+    authApiMock.getMe.mockResolvedValueOnce({
+      userId: "u-7",
+      email: "bob@x",
+      name: "Bob Teacher",
+    });
+
+    renderProvider();
+
+    await act(async () => {
+      await captured.value!.confirmEmail({ token: "tok", userId: "u-7" });
+    });
+
+    expect(screen.getByTestId("auth")).toHaveTextContent("yes");
     const stored = readStored();
-    expect(stored).toMatchObject({ userId: "u-2", userName: "Bob", role: "Student" });
+    expect(stored).toMatchObject({
+      userId: "u-7",
+      role: "Teacher",
+      userName: "Bob Teacher",
+      email: "bob@x",
+    });
   });
 
   it("switchRoleDev creates a dev session when none exists and updates role", () => {
@@ -157,17 +186,13 @@ describe("AuthProvider", () => {
   });
 
   it("switchRoleDev preserves session userId on an existing session", async () => {
-    authApiMock.register.mockResolvedValueOnce({ userId: "u-9" });
+    authApiMock.login.mockResolvedValueOnce({ userId: "u-9" });
+    authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });
 
     renderProvider();
 
     await act(async () => {
-      await captured.value!.register({
-        email: "x@x",
-        password: "pw",
-        name: "X",
-        role: "Student",
-      });
+      await captured.value!.login({ email: "x@x", password: "pw" });
     });
 
     act(() => {

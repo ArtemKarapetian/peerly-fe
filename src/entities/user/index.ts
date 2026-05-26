@@ -4,5 +4,6 @@ export { useRole } from "./model/role";
 export type { UserRole } from "./model/role";
 export { defaultRouteForRole } from "./model/defaultRoute";
 export { userHttpRepo as userRepo } from "./api/httpRepo";
+export { authApi } from "./api/authHttp";
 export { ParticipantsList } from "./ui/ParticipantsList";
 export type { Participant } from "./ui/ParticipantsList";

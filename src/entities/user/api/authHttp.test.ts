@@ -25,6 +25,7 @@ vi.mock("@/shared/api", async () => {
 beforeEach(() => {
   httpMock.get.mockReset();
   httpMock.post.mockReset();
+  httpMock.put.mockReset();
 });
 
 describe("authApi", () => {
@@ -75,33 +76,55 @@ describe("authApi", () => {
     expect(res.role).toBe("Student");
   });
 
-  it("lookupMyName searches /users by email and returns the matching name", async () => {
+  it("getMe Student hits /student/me and unwraps studentInfo", async () => {
     httpMock.get.mockResolvedValueOnce({
-      users: [
-        { id: 1, email: "other@x", name: "Other" },
-        { id: 2, email: "me@x", name: "Me" },
-      ],
+      studentInfo: { studentId: 42, email: "a@x", name: "Alice" },
     });
-    const name = await authApi.lookupMyName("me@x", "Student");
-    expect(httpMock.get.mock.calls[0][0]).toContain("/users?");
-    expect(httpMock.get.mock.calls[0][0]).toContain("filter.query=me%40x");
-    expect(httpMock.get.mock.calls[0][0]).toContain("filter.roles=Student");
-    expect(name).toBe("Me");
+    const me = await authApi.getMe("Student");
+    expect(httpMock.get.mock.calls[0][0]).toBe("/student/me");
+    expect(me).toEqual({ userId: "42", email: "a@x", name: "Alice" });
   });
 
-  it("lookupMyName returns empty string when no user matches the email", async () => {
-    httpMock.get.mockResolvedValueOnce({ users: [{ id: 1, email: "other@x", name: "Other" }] });
-    const name = await authApi.lookupMyName("me@x", "Teacher");
-    expect(name).toBe("");
+  it("getMe Teacher hits /teacher/me and unwraps teacherInfo", async () => {
+    httpMock.get.mockResolvedValueOnce({
+      teacherInfo: { teacherId: 7, email: "t@x", name: "Tom" },
+    });
+    const me = await authApi.getMe("Teacher");
+    expect(httpMock.get.mock.calls[0][0]).toBe("/teacher/me");
+    expect(me).toEqual({ userId: "7", email: "t@x", name: "Tom" });
   });
 
-  it("confirmEmail URL-encodes the token and forwards userId", async () => {
-    httpMock.get.mockResolvedValueOnce(undefined);
-    await authApi.confirmEmail({ token: "abc def&xyz", userId: "u-1" });
+  it("updateMyName Student PUTs /student/me", async () => {
+    httpMock.put.mockResolvedValueOnce(undefined);
+    await authApi.updateMyName("Student", "New Name");
+    expect(httpMock.put.mock.calls[0][0]).toBe("/student/me");
+    expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "New Name" });
+  });
+
+  it("updateMyName Teacher PUTs /teacher/me", async () => {
+    httpMock.put.mockResolvedValueOnce(undefined);
+    await authApi.updateMyName("Teacher", "T2");
+    expect(httpMock.put.mock.calls[0][0]).toBe("/teacher/me");
+    expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "T2" });
+  });
+
+  it("confirmEmail URL-encodes the token and returns userId", async () => {
+    httpMock.get.mockResolvedValueOnce({ userId: "u-1" });
+    const res = await authApi.confirmEmail({ token: "abc def&xyz", userId: "u-1" });
 
     expect(httpMock.get.mock.calls[0][0]).toBe(
       "/auth/confirm-email?token=abc%20def%26xyz&userId=u-1",
     );
     expect(httpMock.get.mock.calls[0][1]).toEqual({ skipAuthRefresh: true });
+    expect(res.userId).toBe("u-1");
+  });
+
+  it("resendConfirmationEmail POSTs to /auth/resend-confirmation-email with email body", async () => {
+    httpMock.post.mockResolvedValueOnce(undefined);
+    await authApi.resendConfirmationEmail("a@x");
+
+    expect(httpMock.post.mock.calls[0][0]).toBe("/auth/resend-confirmation-email");
+    expect(httpMock.post.mock.calls[0][1]).toEqual({ email: "a@x" });
+    expect(httpMock.post.mock.calls[0][2]).toEqual({ skipAuthRefresh: true });
   });
 });

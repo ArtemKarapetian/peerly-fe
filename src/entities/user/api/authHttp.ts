@@ -20,6 +20,24 @@ export interface RegisterInput {
   role: Role;
 }
 
+export interface MyProfile {
+  userId: string;
+  email: string;
+  name: string;
+}
+
+interface StudentInfoDto {
+  studentId: number;
+  email: string;
+  name: string;
+}
+
+interface TeacherInfoDto {
+  teacherId: number;
+  email: string;
+  name: string;
+}
+
 export const authApi = {
   login: (input: LoginInput) =>
     http.post<LoginResponseBody>(
@@ -49,22 +67,40 @@ export const authApi = {
 
   getMyRole: () => http.get<{ role: Role }>("/me/role"),
 
-  lookupMyName: async (email: string, role: Role): Promise<string> => {
-    const params = new URLSearchParams({
-      "filter.query": email,
-      "filter.roles": role,
-      limit: "5",
-    });
-    const res = await http.get<{ users: { id: number; email: string; name: string }[] }>(
-      `/users?${params.toString()}`,
-    );
-    const match = res.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    return match?.name ?? "";
+  getMe: async (role: Role): Promise<MyProfile> => {
+    if (role === "Teacher") {
+      const res = await http.get<{ teacherInfo: TeacherInfoDto }>("/teacher/me");
+      return {
+        userId: String(res.teacherInfo.teacherId),
+        email: res.teacherInfo.email,
+        name: res.teacherInfo.name,
+      };
+    }
+    if (role === "Student") {
+      const res = await http.get<{ studentInfo: StudentInfoDto }>("/student/me");
+      return {
+        userId: String(res.studentInfo.studentId),
+        email: res.studentInfo.email,
+        name: res.studentInfo.name,
+      };
+    }
+    return { userId: "", email: "", name: "" };
   },
 
-  confirmEmail: (params: { token: string; userId: string }) =>
-    http.get<void>(
-      `/auth/confirm-email?token=${encodeURIComponent(params.token)}&userId=${params.userId}`,
+  updateMyName: async (role: Role, name: string): Promise<void> => {
+    if (role === "Teacher") {
+      await http.put<void>("/teacher/me", { name });
+    } else if (role === "Student") {
+      await http.put<void>("/student/me", { name });
+    }
+  },
+
+  confirmEmail: (params: { token: string; userId: string }): Promise<{ userId: number | string }> =>
+    http.get<{ userId: number | string }>(
+      `/auth/confirm-email?token=${encodeURIComponent(params.token)}&userId=${encodeURIComponent(params.userId)}`,
       { skipAuthRefresh: true },
     ),
+
+  resendConfirmationEmail: (email: string): Promise<void> =>
+    http.post<void>("/auth/resend-confirmation-email", { email }, { skipAuthRefresh: true }),
 };

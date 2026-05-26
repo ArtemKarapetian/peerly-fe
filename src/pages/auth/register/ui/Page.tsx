@@ -5,11 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
+import { STORAGE_KEYS } from "@/shared/config/constants";
 import { checkPasswordStrength } from "@/shared/lib/password";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
-import { defaultRouteForRole, useAuth } from "@/entities/user";
+import { useAuth } from "@/entities/user";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
@@ -178,15 +179,17 @@ export default function RegisterPage() {
 
     setIsLoading(true);
     try {
+      const trimmedEmail = email.trim().toLowerCase();
       await register({
-        email: email.trim().toLowerCase(),
+        email: trimmedEmail,
         password,
         name: displayName(),
         role,
       });
 
-      toast.success(t("auth.accountCreated"), { description: t("auth.canLoginNow") });
-      setTimeout(() => void navigate(defaultRouteForRole(role)), 500);
+      localStorage.setItem(STORAGE_KEYS.pendingVerificationEmail, trimmedEmail);
+      toast.success(t("auth.accountCreated"), { description: t("auth.checkYourEmail") });
+      void navigate("/verify-email");
     } catch (err) {
       setSubmitError(humanizeApiError(err, t("auth.registrationError")));
       setIsLoading(false);

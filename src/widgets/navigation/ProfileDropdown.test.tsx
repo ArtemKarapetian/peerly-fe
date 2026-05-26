@@ -5,9 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ProfileDropdown } from "./ProfileDropdown";
 
-const { useAuthMock, getSessionMock, logoutMock } = vi.hoisted(() => ({
+const { useAuthMock, logoutMock } = vi.hoisted(() => ({
   useAuthMock: vi.fn(),
-  getSessionMock: vi.fn(),
   logoutMock: vi.fn(),
 }));
 
@@ -15,15 +14,12 @@ vi.mock("@/entities/user", () => ({
   useAuth: useAuthMock,
 }));
 
-vi.mock("@/shared/api", () => ({
-  getSession: getSessionMock,
-}));
-
 beforeEach(() => {
   logoutMock.mockReset();
-  getSessionMock.mockReset();
-  useAuthMock.mockReturnValue({ logout: logoutMock });
-  getSessionMock.mockReturnValue({ userName: "Alice" });
+  useAuthMock.mockReturnValue({
+    logout: logoutMock,
+    session: { userId: "u-1", userName: "Alice", email: "alice@x", role: "Student" },
+  });
 });
 
 function renderDropdown(collapsed = false) {

@@ -70,7 +70,7 @@ export default function TeacherAssignmentDetailsPage() {
     );
   }
 
-  const { assignment, submittedCount, totalStudentsCount } = detail;
+  const { assignment, submittedCount } = detail;
   const courseName = course?.title ?? "";
   const reviewsCount = submittedCount * assignment.reviewCount;
   const isPublished = assignment.backendStatus !== "draft";
@@ -141,13 +141,7 @@ export default function TeacherAssignmentDetailsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 tablet:grid-cols-4 gap-4 pt-4 border-t border-border">
-          <div>
-            <p className="text-[13px] text-muted-foreground mb-1">
-              {t("teacher.assignmentDetail.studentsInCourse")}
-            </p>
-            <p className="text-[24px] font-medium text-foreground">{totalStudentsCount}</p>
-          </div>
+        <div className="grid grid-cols-2 tablet:grid-cols-3 gap-4 pt-4 border-t border-border">
           <div>
             <p className="text-[13px] text-muted-foreground mb-1">
               {t("teacher.assignmentDetail.submissionsCount")}

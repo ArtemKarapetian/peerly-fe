@@ -73,7 +73,6 @@ describe("assignment queries", () => {
     repoMock.getTeacherDetail.mockResolvedValueOnce({
       assignment: { id: "hw-1" },
       submittedCount: 1,
-      totalStudentsCount: 2,
     });
     const { result } = renderHook(() => useTeacherAssignmentDetail("hw-1"), {
       wrapper: wrapper(),

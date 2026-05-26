@@ -1,53 +1,101 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ParticipantImportModal } from "./ParticipantImportModal";
 
+const { groupRepoMock, courseRepoMock, userRepoMock, toastMock } = vi.hoisted(() => ({
+  groupRepoMock: {
+    listForCourse: vi.fn(),
+    addStudent: vi.fn(),
+  },
+  courseRepoMock: {
+    getParticipants: vi.fn(),
+  },
+  userRepoMock: {
+    searchStudents: vi.fn(),
+  },
+  toastMock: { success: vi.fn(), error: vi.fn() },
+}));
+
+vi.mock("@/entities/group", () => ({ groupRepo: groupRepoMock }));
+vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
+vi.mock("@/entities/user", () => ({ userRepo: userRepoMock }));
+vi.mock("sonner", () => ({ toast: toastMock }));
+
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string, opts?: Record<string, unknown>) =>
+      opts && "count" in opts ? `${key}:${String(opts.count)}` : key,
+    i18n: { language: "en" },
+  }),
+}));
+
+vi.mock("@/shared/lib/useDebouncedValue", () => ({
+  useDebouncedValue: (value: unknown) => value,
+}));
+
+beforeEach(() => {
+  groupRepoMock.listForCourse.mockReset();
+  groupRepoMock.addStudent.mockReset();
+  courseRepoMock.getParticipants.mockReset();
+  userRepoMock.searchStudents.mockReset();
+  toastMock.success.mockReset();
+  toastMock.error.mockReset();
+
+  groupRepoMock.listForCourse.mockResolvedValue([{ id: "g-1", name: "Группа A" }]);
+  courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+  userRepoMock.searchStudents.mockResolvedValue([]);
+});
+
 describe("ParticipantImportModal", () => {
-  it("renders title and tabs when open", () => {
+  it("loads groups and current course participants on mount", async () => {
     render(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
-
-    expect(screen.getByText(/feature\.participantImport\.title/)).toBeInTheDocument();
-    expect(screen.getByText(/feature\.participantImport\.csvImport/)).toBeInTheDocument();
-    expect(screen.getByText(/feature\.participantImport\.addManually/)).toBeInTheDocument();
-    expect(screen.getByText(/feature\.participantImport\.inviteCodes/)).toBeInTheDocument();
-  });
-
-  it("calls onClose when the X button is clicked", async () => {
-    const user = userEvent.setup();
-    const onClose = vi.fn();
-    const { container } = render(<ParticipantImportModal courseId="c-1" onClose={onClose} />);
-
-    const buttons = container.querySelectorAll("button");
-    await user.click(buttons[0]);
-
-    expect(onClose).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onClose when the bottom Close button is clicked", async () => {
-    const user = userEvent.setup();
-    const onClose = vi.fn();
-    render(<ParticipantImportModal courseId="c-1" onClose={onClose} />);
-
-    const closeBtn = screen.getByRole("button", {
-      name: /feature\.participantImport\.close/,
+    await waitFor(() => {
+      expect(groupRepoMock.listForCourse).toHaveBeenCalledWith("c-1");
+      expect(courseRepoMock.getParticipants).toHaveBeenCalledWith("c-1");
     });
-    await user.click(closeBtn);
-
-    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("switches between modes when tabs are clicked", async () => {
-    const user = userEvent.setup();
+  it("excludes students already in the course from the candidate list", async () => {
+    courseRepoMock.getParticipants.mockResolvedValueOnce({
+      students: [{ studentId: "u-2", name: "Bob", email: "b@x" }],
+      teachers: [],
+    });
+    userRepoMock.searchStudents.mockResolvedValue([
+      { id: "u-1", name: "Alice", email: "a@x" },
+      { id: "u-2", name: "Bob", email: "b@x" },
+      { id: "u-3", name: "Carol", email: "c@x" },
+    ]);
+
     render(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
 
-    expect(screen.getByText(/feature\.participantImport\.csvHint/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText("Bob")).not.toBeInTheDocument();
+    });
+    expect(screen.getByText("Alice")).toBeInTheDocument();
+    expect(screen.getByText("Carol")).toBeInTheDocument();
+  });
 
-    await user.click(
-      screen.getByRole("button", { name: /feature\.participantImport\.addManually/ }),
-    );
-    expect(screen.getByText(/feature\.participantImport\.addOneManually/)).toBeInTheDocument();
-    expect(screen.queryByText(/feature\.participantImport\.csvHint/)).not.toBeInTheDocument();
+  it("renders a checkbox per candidate and keeps the Add button disabled when nothing selected", async () => {
+    userRepoMock.searchStudents.mockResolvedValue([
+      { id: "u-1", name: "Alice", email: "a@x" },
+      { id: "u-3", name: "Carol", email: "c@x" },
+    ]);
+
+    render(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
+
+    const checkboxes = await screen.findAllByRole("checkbox");
+    expect(checkboxes).toHaveLength(2);
+    expect(screen.getByRole("button", { name: /addBtn:0/ })).toBeDisabled();
+  });
+
+  it("disables the Add button when no group exists in the course", async () => {
+    groupRepoMock.listForCourse.mockResolvedValueOnce([]);
+    render(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/noGroups/)).toBeInTheDocument();
+    });
+    expect(screen.getByRole("button", { name: /addBtn:0/ })).toBeDisabled();
   });
 });

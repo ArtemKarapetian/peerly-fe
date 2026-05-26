@@ -61,4 +61,19 @@ describe("Breadcrumbs", () => {
     fireEvent.click(screen.getByRole("button", { name: "Home" }));
     expect(navigateMock).toHaveBeenCalledWith("/x");
   });
+
+  it("skips items with an empty label so loading data doesn't render blank crumbs", () => {
+    renderWithRouter(
+      <Breadcrumbs
+        items={[
+          { label: "Courses", href: "/teacher/courses" },
+          { label: "", href: "/teacher/courses/3" },
+          { label: "Landing assignment" },
+        ]}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Courses" })).toBeInTheDocument();
+    expect(screen.getByText("Landing assignment")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "" })).toBeNull();
+  });
 });
