@@ -145,21 +145,21 @@ export default function SubmitWorkPage() {
       <AppShell title={t("page.submitWork.title")}>
         <Breadcrumbs items={breadcrumbs} />
         <div className="flex items-center justify-center min-h-[400px] mt-6">
-          <div className="bg-error-light border border-error rounded-[20px] p-8 max-w-[480px] text-center">
+          <div className="bg-error-light border border-error rounded-xl p-8 max-w-[480px] text-center">
             <div className="mb-4">
               <div className="w-16 h-16 bg-card rounded-full mx-auto flex items-center justify-center">
                 <Clock className="size-7 text-destructive" />
               </div>
             </div>
-            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
+            <h2 className="text-2xl font-medium text-foreground mb-3 tracking-[-0.5px]">
               {t("page.submitWork.deadlinePassedTitle")}
             </h2>
-            <p className="text-[16px] text-foreground leading-[1.5] mb-6">
+            <p className="text-base text-foreground leading-[1.5] mb-6">
               {t("page.submitWork.deadlinePassedDesc")}
             </p>
             <Link
               to={ROUTES.task(courseId, taskId)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-card border border-border hover:bg-surface-hover text-foreground rounded-[12px] transition-colors text-[15px] font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-card border border-border hover:bg-surface-hover text-foreground rounded-md transition-colors text-15 font-medium"
             >
               <ArrowLeft className="size-4" />
               {t("page.submitWork.backToTask")}
@@ -201,17 +201,17 @@ export default function SubmitWorkPage() {
 
       <div className="mb-6 mt-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-[28px] desktop:text-[32px] font-medium text-foreground tracking-[-0.5px] mb-1">
+          <h1 className="text-[28px] desktop:text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-1">
             {t("page.submitWork.pageTitle")}
           </h1>
-          <p className="text-[15px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
+          <p className="text-15 text-muted-foreground leading-[1.5]">{taskTitle}</p>
         </div>
       </div>
 
       <div className="task-layout">
         <div className="space-y-4">
-          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
-            <h2 className="text-[15px] font-medium text-foreground mb-3">
+          <section className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+            <h2 className="text-15 font-medium text-foreground mb-3">
               {t("page.submitWork.uploadFiles")}
             </h2>
             <FileUploadArea
@@ -226,22 +226,22 @@ export default function SubmitWorkPage() {
           </section>
 
           {files.length > 0 && (
-            <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
-              <h2 className="text-[15px] font-medium text-foreground mb-3">
+            <section className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+              <h2 className="text-15 font-medium text-foreground mb-3">
                 {t("page.submitWork.uploadedFiles")}
               </h2>
               <ul className="space-y-2">
                 {files.map((file) => (
                   <li
                     key={file.id}
-                    className="flex items-center gap-3 bg-muted rounded-[10px] px-3 py-2"
+                    className="flex items-center gap-3 bg-muted rounded-2md px-3 py-2"
                   >
                     <FileText className="size-5 text-brand-primary shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-medium text-foreground truncate">
+                      <div className="text-sm font-medium text-foreground truncate">
                         {file.name}
                       </div>
-                      <div className="text-[12px] text-muted-foreground">
+                      <div className="text-xs text-muted-foreground">
                         {formatFileSize(file.size, t)}
                       </div>
                     </div>
@@ -249,7 +249,7 @@ export default function SubmitWorkPage() {
                       onClick={() => void handleDownloadFile(file.id, file.name)}
                       disabled={isBusy}
                       title={t("common.download")}
-                      className="inline-flex items-center justify-center size-8 bg-card border border-border hover:bg-surface-hover rounded-[8px] transition-colors disabled:opacity-50"
+                      className="inline-flex items-center justify-center size-8 bg-card border border-border hover:bg-surface-hover rounded-sm transition-colors disabled:opacity-50"
                     >
                       <Download className="size-4" />
                     </button>
@@ -257,7 +257,7 @@ export default function SubmitWorkPage() {
                       onClick={() => handleDeleteFile(file.id)}
                       disabled={isBusy}
                       title={t("common.delete")}
-                      className="inline-flex items-center justify-center size-8 bg-error-light text-destructive hover:bg-error-light rounded-[8px] transition-colors disabled:opacity-50"
+                      className="inline-flex items-center justify-center size-8 bg-error-light text-destructive hover:bg-error-light rounded-sm transition-colors disabled:opacity-50"
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -267,15 +267,15 @@ export default function SubmitWorkPage() {
             </section>
           )}
 
-          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
-            <h2 className="text-[15px] font-medium text-foreground mb-3">
+          <section className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+            <h2 className="text-15 font-medium text-foreground mb-3">
               {t("page.submitWork.commentToTeacher")}
-              <span className="text-muted-foreground font-normal ml-2 text-[13px]">
+              <span className="text-muted-foreground font-normal ml-2 text-13">
                 {t("page.submitWork.commentOptional")}
               </span>
             </h2>
             <textarea
-              className="w-full min-h-[120px] px-3 py-2 bg-card border-2 border-border rounded-[10px] text-[14px] text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none resize-none transition-colors"
+              className="w-full min-h-[120px] px-3 py-2 bg-card border-2 border-border rounded-2md text-sm text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none resize-none transition-colors"
               placeholder={t("page.submitWork.commentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -283,12 +283,12 @@ export default function SubmitWorkPage() {
             />
           </section>
 
-          <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
+          <section className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
             <div className="flex flex-col tablet:flex-row gap-3">
               <button
                 onClick={() => void navigate(ROUTES.submissions(courseId, taskId))}
                 disabled={isBusy}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-card border border-border text-foreground rounded-[12px] text-[15px] font-medium hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-card border border-border text-foreground rounded-md text-15 font-medium hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <ArrowLeft className="size-4" />
                 {t("page.submitWork.goToMySubmission")}
@@ -296,7 +296,7 @@ export default function SubmitWorkPage() {
               <button
                 onClick={handleSave}
                 disabled={isBusy}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-md text-15 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Save className="size-4" />
                 {saveMutation.isPending
@@ -305,15 +305,15 @@ export default function SubmitWorkPage() {
               </button>
             </div>
             {actionError && (
-              <p className="text-[13px] text-destructive mt-3 text-center">{actionError}</p>
+              <p className="text-13 text-destructive mt-3 text-center">{actionError}</p>
             )}
           </section>
         </div>
 
         <div className="hide-below-desktop">
           <div className="task-sidebar-sticky">
-            <section className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
-              <h2 className="text-[14px] font-medium text-muted-foreground uppercase tracking-wider mb-4">
+            <section className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+              <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
                 {t("page.submitWork.taskRules")}
               </h2>
               <TaskRulesCard rules={taskRules} />

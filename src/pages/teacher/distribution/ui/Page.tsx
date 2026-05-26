@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -112,15 +113,15 @@ export default function TeacherDistributionPage() {
         subtitle={t("teacher.distribution.subtitle")}
       />
 
-      <div className="bg-info-light border border-info rounded-[12px] p-4 mb-6 flex items-start gap-3">
+      <div className="bg-info-light border border-info rounded-md p-4 mb-6 flex items-start gap-3">
         <Info className="w-5 h-5 text-info shrink-0 mt-0.5" />
-        <p className="text-[13px] text-foreground">{t("teacher.distribution.readOnlyNotice")}</p>
+        <p className="text-13 text-foreground">{t("teacher.distribution.readOnlyNotice")}</p>
       </div>
 
-      <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
+      <Card className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("teacher.distribution.courseLabel")}
             </label>
             <select
@@ -129,7 +130,7 @@ export default function TeacherDistributionPage() {
                 setSelectedCourse(e.target.value);
                 setSelectedAssignment("");
               }}
-              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
             >
               <option value="">{t("teacher.distribution.selectCourse")}</option>
               {courses.map((c) => (
@@ -141,14 +142,14 @@ export default function TeacherDistributionPage() {
           </div>
 
           <div>
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("teacher.distribution.assignmentLabel")}
             </label>
             <select
               value={selectedAssignment}
               onChange={(e) => setSelectedAssignment(e.target.value)}
               disabled={!effectiveCourse}
-              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none disabled:opacity-50"
+              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none disabled:opacity-50"
             >
               <option value="">{t("teacher.distribution.selectAssignment")}</option>
               {(assignments ?? []).map((a) => (
@@ -159,21 +160,19 @@ export default function TeacherDistributionPage() {
             </select>
           </div>
         </div>
-      </div>
+      </Card>
 
       {!selectedAssignment ? (
-        <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
+        <Card className="p-12 text-center">
           <GitBranch className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-          <p className="text-[15px] text-muted-foreground">
+          <p className="text-15 text-muted-foreground">
             {t("teacher.distribution.pickAssignmentPrompt")}
           </p>
-        </div>
+        </Card>
       ) : distributions.length === 0 ? (
-        <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center">
-          <p className="text-[15px] text-muted-foreground">
-            {t("teacher.distribution.emptyState")}
-          </p>
-        </div>
+        <Card className="p-12 text-center">
+          <p className="text-15 text-muted-foreground">{t("teacher.distribution.emptyState")}</p>
+        </Card>
       ) : (
         <DistributionTable rows={distributions} />
       )}
@@ -184,21 +183,21 @@ export default function TeacherDistributionPage() {
 function DistributionTable({ rows }: { rows: DistributionRow[] }) {
   const { t } = useTranslation();
   return (
-    <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+    <Card className="p-0 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-muted">
             <tr>
-              <th className="text-left p-4 text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
+              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 {t("teacher.distribution.work")}
               </th>
-              <th className="text-left p-4 text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
+              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 {t("teacher.distribution.author")}
               </th>
-              <th className="text-left p-4 text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
+              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 {t("teacher.distribution.assignedReviewers")}
               </th>
-              <th className="text-left p-4 text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
+              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
                 {t("common.status")}
               </th>
             </tr>
@@ -206,17 +205,17 @@ function DistributionTable({ rows }: { rows: DistributionRow[] }) {
           <tbody className="divide-y divide-border">
             {rows.map((row) => (
               <tr key={row.submissionId}>
-                <td className="p-4 text-[14px] text-foreground font-mono">{row.anonymousId}</td>
-                <td className="p-4 text-[14px] text-foreground">{row.authorName}</td>
+                <td className="p-4 text-sm text-foreground font-mono">{row.anonymousId}</td>
+                <td className="p-4 text-sm text-foreground">{row.authorName}</td>
                 <td className="p-4">
                   {row.assignedReviewers.length === 0 ? (
-                    <span className="text-[13px] text-muted-foreground italic">
+                    <span className="text-13 text-muted-foreground italic">
                       {t("teacher.distribution.noReviewers")}
                     </span>
                   ) : (
                     <ul className="space-y-1">
                       {row.assignedReviewers.map((r) => (
-                        <li key={r.id} className="flex items-center gap-2 text-[13px]">
+                        <li key={r.id} className="flex items-center gap-2 text-13">
                           <ReviewerStatusDot status={r.status} />
                           <span className="text-foreground">{r.name}</span>
                           <span className="text-muted-foreground">
@@ -235,7 +234,7 @@ function DistributionTable({ rows }: { rows: DistributionRow[] }) {
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -253,7 +252,7 @@ function OverallStatusBadge({ status }: { status: OverallStatus }) {
   const { t } = useTranslation();
   if (status === "completed") {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
+      <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-2sm text-xs font-medium">
         <CheckCircle className="w-3 h-3" />
         {t("teacher.distribution.completed")}
       </span>
@@ -261,14 +260,14 @@ function OverallStatusBadge({ status }: { status: OverallStatus }) {
   }
   if (status === "in-progress") {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
+      <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-2sm text-xs font-medium">
         <Clock className="w-3 h-3" />
         {t("teacher.distribution.inProgress")}
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium">
+    <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-2sm text-xs font-medium">
       <AlertCircle className="w-3 h-3" />
       {t("teacher.distribution.notStarted")}
     </span>

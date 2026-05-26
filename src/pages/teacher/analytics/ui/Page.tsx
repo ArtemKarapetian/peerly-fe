@@ -22,6 +22,7 @@ import {
 } from "recharts";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -244,14 +245,14 @@ function AnalyticsContent({ data }: { data: ContentData }) {
       <Breadcrumbs items={[{ label: t("teacher.analytics.breadcrumb") }]} />
       <PageHeader title={t("teacher.analytics.title")} subtitle={t("teacher.analytics.subtitle")} />
 
-      <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-        <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+      <Card className="mb-6">
+        <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
           {t("teacher.analytics.courseLabel")}
         </label>
         <select
           value={selectedCourse}
           onChange={(e) => setSelectedCourse(e.target.value)}
-          className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
+          className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
         >
           {courses.map((c) => (
             <option key={c.id} value={c.id}>
@@ -259,7 +260,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
             </option>
           ))}
         </select>
-      </div>
+      </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <MetricCard
@@ -372,19 +373,19 @@ function AnalyticsContent({ data }: { data: ContentData }) {
         </ChartCard>
       </div>
 
-      <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
-        <h2 className="text-[18px] font-medium text-foreground mb-4">
+      <Card className="mb-6">
+        <h2 className="text-lg font-medium text-foreground mb-4">
           {t("teacher.analytics.perAssignment")}
         </h2>
         {assignmentMetrics.length === 0 ? (
-          <p className="text-[14px] text-muted-foreground text-center py-6">
+          <p className="text-sm text-muted-foreground text-center py-6">
             {t("teacher.analytics.noAssignmentsYet")}
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-[14px]">
+            <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-[12px] text-muted-foreground uppercase tracking-wide border-b-2 border-border">
+                <tr className="text-left text-xs text-muted-foreground uppercase tracking-wide border-b-2 border-border">
                   <th className="p-3">{t("teacher.analytics.assignmentLabel")}</th>
                   <th className="p-3 text-right">{t("teacher.analytics.submissionRate")}</th>
                   <th className="p-3 text-right">{t("teacher.analytics.reviewCompletion")}</th>
@@ -417,18 +418,18 @@ function AnalyticsContent({ data }: { data: ContentData }) {
             </table>
           </div>
         )}
-      </div>
+      </Card>
 
-      <div className="bg-card border-2 border-border rounded-[20px] p-6">
+      <Card>
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-          <h2 className="text-[18px] font-medium text-foreground flex items-center gap-2">
+          <h2 className="text-lg font-medium text-foreground flex items-center gap-2">
             <FileText className="w-5 h-5 text-brand-primary" />
             {t("teacher.analytics.gradebook")}
           </h2>
           <button
             onClick={handleExportCSV}
             disabled={gradebook.length === 0 || courseAssignments.length === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
             {t("teacher.analytics.exportCSV")}
@@ -438,7 +439,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
         {gradebook.length === 0 || courseAssignments.length === 0 ? (
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-[14px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {t("teacher.analytics.selectCourseWithData")}
             </p>
           </div>
@@ -447,19 +448,19 @@ function AnalyticsContent({ data }: { data: ContentData }) {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b-2 border-border">
-                  <th className="text-left p-3 text-[13px] font-medium text-muted-foreground uppercase tracking-wide sticky left-0 bg-card">
+                  <th className="text-left p-3 text-13 font-medium text-muted-foreground uppercase tracking-wide sticky left-0 bg-card">
                     {t("teacher.analytics.studentHeader")}
                   </th>
                   {courseAssignments.map((assignment) => (
                     <th
                       key={assignment.id}
-                      className="text-center p-3 text-[13px] font-medium text-muted-foreground uppercase tracking-wide min-w-[100px]"
+                      className="text-center p-3 text-13 font-medium text-muted-foreground uppercase tracking-wide min-w-[100px]"
                       title={assignment.title}
                     >
                       {truncate(assignment.title, 15)}
                     </th>
                   ))}
-                  <th className="text-center p-3 text-[13px] font-medium text-muted-foreground uppercase tracking-wide bg-muted min-w-[100px]">
+                  <th className="text-center p-3 text-13 font-medium text-muted-foreground uppercase tracking-wide bg-muted min-w-[100px]">
                     {t("teacher.analytics.finalGrade")}
                   </th>
                 </tr>
@@ -470,7 +471,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
                     key={entry.studentId}
                     className={`border-b border-border ${index % 2 === 0 ? "bg-card" : "bg-muted"}`}
                   >
-                    <td className="p-3 text-[14px] text-foreground font-medium sticky left-0 bg-inherit">
+                    <td className="p-3 text-sm text-foreground font-medium sticky left-0 bg-inherit">
                       {entry.studentName}
                     </td>
                     {courseAssignments.map((assignment) => {
@@ -480,7 +481,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
                           {score !== null ? (
                             <ScoreBadge value={score} />
                           ) : (
-                            <span className="text-muted-foreground text-[14px]">—</span>
+                            <span className="text-muted-foreground text-sm">—</span>
                           )}
                         </td>
                       );
@@ -489,7 +490,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
                       {entry.finalScore !== null ? (
                         <FinalScoreBadge value={entry.finalScore} />
                       ) : (
-                        <span className="text-muted-foreground text-[14px]">—</span>
+                        <span className="text-muted-foreground text-sm">—</span>
                       )}
                     </td>
                   </tr>
@@ -498,7 +499,7 @@ function AnalyticsContent({ data }: { data: ContentData }) {
             </table>
           </div>
         )}
-      </div>
+      </Card>
     </AppShell>
   );
 }
@@ -513,19 +514,19 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-card border-2 border-border rounded-[20px] p-6">
+    <Card>
       <div className="flex items-center gap-2 mb-4">
         {icon}
-        <h2 className="text-[18px] font-medium text-foreground">{title}</h2>
+        <h2 className="text-lg font-medium text-foreground">{title}</h2>
       </div>
       {children}
-    </div>
+    </Card>
   );
 }
 
 function EmptyChart({ label }: { label: string }) {
   return (
-    <div className="h-[300px] flex items-center justify-center text-[14px] text-muted-foreground text-center px-6">
+    <div className="h-[300px] flex items-center justify-center text-sm text-muted-foreground text-center px-6">
       {label}
     </div>
   );
@@ -543,10 +544,10 @@ function MetricCard({
   hint?: string;
 }) {
   return (
-    <div className="bg-card border-2 border-border rounded-[12px] p-4" title={hint}>
+    <div className="bg-card border-2 border-border rounded-md p-4" title={hint}>
       <div className="flex items-center gap-2 mb-2">
         {icon}
-        <span className="text-[12px] text-muted-foreground uppercase tracking-wide">{label}</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-wide">{label}</span>
       </div>
       <p className="text-[22px] font-medium text-foreground">{value}</p>
     </div>
@@ -562,7 +563,7 @@ function ScoreBadge({ value }: { value: number }) {
         : "bg-destructive-light text-destructive";
   return (
     <span
-      className={`inline-flex items-center justify-center w-12 h-8 rounded-[6px] text-[14px] font-medium ${tone}`}
+      className={`inline-flex items-center justify-center w-12 h-8 rounded-2sm text-sm font-medium ${tone}`}
     >
       {value.toFixed(1)}
     </span>
@@ -578,7 +579,7 @@ function FinalScoreBadge({ value }: { value: number }) {
         : "bg-destructive text-primary-foreground";
   return (
     <span
-      className={`inline-flex items-center justify-center w-14 h-9 rounded-[8px] text-[15px] font-medium ${tone}`}
+      className={`inline-flex items-center justify-center w-14 h-9 rounded-sm text-15 font-medium ${tone}`}
     >
       {value.toFixed(1)}
     </span>

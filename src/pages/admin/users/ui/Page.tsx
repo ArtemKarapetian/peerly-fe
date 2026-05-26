@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { Card } from "@/shared/ui";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
@@ -67,10 +68,10 @@ export default function AdminUsersPage() {
       <PageHeader title={t("admin.users.title")} subtitle={t("admin.users.subtitle")} />
 
       <div>
-        <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
+        <Card className="mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+              <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {t("admin.usersPage.searchLabel")}
               </label>
               <div className="relative">
@@ -80,7 +81,7 @@ export default function AdminUsersPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t("admin.usersPage.searchPlaceholder")}
-                  className="w-full pl-11 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] text-foreground focus:border-brand-primary focus:outline-none transition-colors"
+                  className="w-full pl-11 pr-4 py-3 border-2 border-border rounded-md text-15 text-foreground focus:border-brand-primary focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -88,11 +89,11 @@ export default function AdminUsersPage() {
 
           {searchQuery && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
-              <span className="text-[13px] text-muted-foreground">
+              <span className="text-13 text-muted-foreground">
                 {t("admin.usersPage.filtersLabel")}
               </span>
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-[6px] text-[12px]">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-foreground rounded-2sm text-xs">
                   {t("admin.usersPage.searchFilter", { query: searchQuery })}
                   <button onClick={() => setSearchQuery("")} className="hover:text-error">
                     <X className="w-3 h-3" />
@@ -101,17 +102,17 @@ export default function AdminUsersPage() {
               )}
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+        <Card className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b-2 border-border bg-surface-hover">
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
+                  <th className="text-left px-6 py-4 text-13 font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerUser")}
                   </th>
-                  <th className="text-left px-6 py-4 text-[13px] font-medium text-muted-foreground uppercase tracking-wide">
+                  <th className="text-left px-6 py-4 text-13 font-medium text-muted-foreground uppercase tracking-wide">
                     {t("admin.usersPage.headerRole")}
                   </th>
                 </tr>
@@ -127,13 +128,13 @@ export default function AdminUsersPage() {
                     >
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-[15px] font-medium text-foreground">{user.name}</p>
-                          <p className="text-[13px] text-muted-foreground">{user.email}</p>
+                          <p className="text-15 font-medium text-foreground">{user.name}</p>
+                          <p className="text-13 text-muted-foreground">{user.email}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-flex px-2 py-1 rounded-[6px] text-[11px] font-medium ${getRoleBadgeColor(user.role)}`}
+                          className={`inline-flex px-2 py-1 rounded-2sm text-2xs font-medium ${getRoleBadgeColor(user.role)}`}
                         >
                           {user.role}
                         </span>
@@ -148,15 +149,13 @@ export default function AdminUsersPage() {
           {filteredUsers.length === 0 && (
             <div className="text-center py-12">
               <Users className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-              <h3 className="text-[18px] font-medium text-foreground mb-2">
+              <h3 className="text-lg font-medium text-foreground mb-2">
                 {t("admin.usersPage.notFound")}
               </h3>
-              <p className="text-[14px] text-muted-foreground">
-                {t("admin.usersPage.notFoundHint")}
-              </p>
+              <p className="text-sm text-muted-foreground">{t("admin.usersPage.notFoundHint")}</p>
             </div>
           )}
-        </div>
+        </Card>
 
         {totalPages > 1 && (
           <div className="mt-6">

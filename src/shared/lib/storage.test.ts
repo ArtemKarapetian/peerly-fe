@@ -13,10 +13,14 @@ describe("storage", () => {
     vi.restoreAllMocks();
   });
 
-  it("setJSON + getJSON round-trip an object", () => {
-    const value = { a: 1, b: "two", c: [3, 4] };
-    storage.setJSON(STORAGE_KEYS.featureFlags, value);
-    expect(storage.getJSON<typeof value>(STORAGE_KEYS.featureFlags)).toEqual(value);
+  it("setJSON + getJSON round-trip the typed value for a known key", () => {
+    const value = {
+      supportChat: true,
+      enableEmailConfirmation: false,
+      enablePasswordReset: true,
+    };
+    storage.setJSON(STORAGE_KEYS.demoFlags, value);
+    expect(storage.getJSON(STORAGE_KEYS.demoFlags)).toEqual(value);
   });
 
   it("getJSON returns null when nothing stored", () => {

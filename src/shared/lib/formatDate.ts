@@ -25,16 +25,6 @@ export function formatDateTime(iso: string, lang: string): string {
   });
 }
 
-/** "31 января" / "January 31" */
-export function formatDateShort(iso: string, lang: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString(intlLocale(lang), {
-    day: "numeric",
-    month: "long",
-  });
-}
-
 /** "10 минут назад" / "10 minutes ago" — relative to a fixed demo "now" so screenshots stay stable. */
 export function formatRelativeTime(iso: string, lang: string): string {
   const d = new Date(iso);

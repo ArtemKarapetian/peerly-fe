@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
+import { ROUTES } from "@/shared/config/routes";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { Button } from "@/shared/ui/button.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -83,7 +84,7 @@ export default function CreateCoursePage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => void navigate("/teacher/courses")}
+              onClick={() => void navigate(ROUTES.teacherCourses)}
               disabled={createCourse.isPending}
             >
               <X className="w-4 h-4" />

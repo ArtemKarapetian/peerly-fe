@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button.tsx";
 
 import { useAuth } from "@/entities/user";
@@ -26,7 +27,7 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
     <header className="w-full border-b border-border bg-background">
       <div className="max-w-[1200px] mx-auto px-4 tablet:px-6 desktop:px-8 h-16 flex items-center justify-between">
         <Link
-          to="/"
+          to={ROUTES.landing}
           className="text-xl font-semibold text-primary hover:opacity-80 transition-opacity"
         >
           Peerly
@@ -37,7 +38,7 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
             {isAuthenticated ? (
               <ProfileDropdown />
             ) : (
-              <Button variant="secondary" size="sm" onClick={() => void navigate("/login")}>
+              <Button variant="secondary" size="sm" onClick={() => void navigate(ROUTES.login)}>
                 {t("widget.publicLayout.signIn")}
               </Button>
             )}
@@ -93,13 +94,13 @@ export function PublicLayout({
             <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
               <nav className="flex items-center gap-4">
                 <Link
-                  to="/help"
+                  to={ROUTES.help}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("widget.publicLayout.help")}
                 </Link>
                 <Link
-                  to="/terms"
+                  to={ROUTES.terms}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("widget.publicLayout.terms")}

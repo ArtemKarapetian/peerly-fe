@@ -30,14 +30,14 @@ export function RubricSection({
   onCriterionFocus,
 }: RubricSectionProps) {
   return (
-    <div className="bg-card border-2 border-border rounded-[16px] p-4 desktop:p-6">
+    <div className="bg-card border-2 border-border rounded-lg p-4 desktop:p-6">
       {/* Section Header */}
       <div className="mb-6 pb-4 border-b border-border">
-        <h3 className="text-[18px] desktop:text-[20px] font-medium text-foreground tracking-[-0.5px] mb-1">
+        <h3 className="text-lg desktop:text-xl font-medium text-foreground tracking-[-0.5px] mb-1">
           {section.name}
         </h3>
         {section.description && (
-          <p className="text-[14px] text-muted-foreground leading-[1.5]">{section.description}</p>
+          <p className="text-sm text-muted-foreground leading-[1.5]">{section.description}</p>
         )}
       </div>
 

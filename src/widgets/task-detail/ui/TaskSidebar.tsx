@@ -21,12 +21,12 @@ export function TaskSidebar({
   const navigate = useNavigate();
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-[16px] p-5 space-y-3">
+    <div className="bg-card border border-border shadow-sm rounded-lg p-5 space-y-3">
       {hasSubmission ? (
         <>
           <button
             onClick={() => void navigate(ROUTES.submissions(courseId, taskId))}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-[12px] text-[15px] font-medium transition-colors"
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-md text-15 font-medium transition-colors"
           >
             <History className="size-4" />
             {t("student.task.viewSubmission")}
@@ -34,7 +34,7 @@ export function TaskSidebar({
           {!isDeadlinePassed && (
             <button
               onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-card border border-border hover:bg-surface-hover text-foreground rounded-[12px] text-[15px] font-medium transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-card border border-border hover:bg-surface-hover text-foreground rounded-md text-15 font-medium transition-colors"
             >
               <Edit className="size-4" />
               {t("student.task.editSubmission")}
@@ -42,14 +42,14 @@ export function TaskSidebar({
           )}
         </>
       ) : isDeadlinePassed ? (
-        <div className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-error-light text-destructive rounded-[12px] text-[15px] font-medium">
+        <div className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-error-light text-destructive rounded-md text-15 font-medium">
           <Clock className="size-4" />
           {t("student.task.deadlinePassedSidebar")}
         </div>
       ) : (
         <button
           onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
-          className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] text-[15px] font-medium transition-colors"
+          className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-md text-15 font-medium transition-colors"
         >
           <Upload className="size-4" />
           {t("student.task.submitWork")}

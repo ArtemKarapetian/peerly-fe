@@ -44,7 +44,7 @@ export function ParticipantsList({ participants }: ParticipantsListProps) {
   if (participants.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-[14px] text-text-tertiary">{t("entity.user.participantsNotFound")}</p>
+        <p className="text-sm text-text-tertiary">{t("entity.user.participantsNotFound")}</p>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export function ParticipantsList({ participants }: ParticipantsListProps) {
               className="
                 w-10 h-10 rounded-full
                 flex items-center justify-center
-                text-[14px] font-semibold text-text-inverse
+                text-sm font-semibold text-text-inverse
                 shrink-0
               "
               style={{ backgroundColor: participant.avatarColor || "var(--brand-primary-lighter)" }}
@@ -73,11 +73,11 @@ export function ParticipantsList({ participants }: ParticipantsListProps) {
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-[15px] leading-[1.3] tracking-[-0.3px] text-text-primary font-semibold truncate">
+                <h3 className="text-15 leading-[1.3] tracking-[-0.3px] text-text-primary font-semibold truncate">
                   {participant.firstName} {participant.lastName}
                 </h3>
                 <span
-                  className={`px-2 py-0.5 rounded-[6px] text-[11px] font-medium ${getRoleBadgeColor(participant.role)}`}
+                  className={`px-2 py-0.5 rounded-2sm text-2xs font-medium ${getRoleBadgeColor(participant.role)}`}
                 >
                   {getRoleLabel(participant.role)}
                 </span>

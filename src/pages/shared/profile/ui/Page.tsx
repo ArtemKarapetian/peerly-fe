@@ -15,10 +15,10 @@ export default function ProfilePage() {
       <Breadcrumbs items={[{ label: t("page.profile.title") }]} />
 
       <div className="mt-6 max-w-[800px]">
-        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
+        <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("page.profile.title")}
         </h1>
-        <p className="text-[16px] text-muted-foreground mb-8">{t("page.profile.subtitle")}</p>
+        <p className="text-base text-muted-foreground mb-8">{t("page.profile.subtitle")}</p>
 
         <UserInfoCard />
         <DangerZoneCard />

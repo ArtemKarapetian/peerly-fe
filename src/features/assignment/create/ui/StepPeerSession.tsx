@@ -19,16 +19,16 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
+        <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.peerSession.title")}
         </h2>
-        <p className="text-[15px] text-muted-foreground">
+        <p className="text-15 text-muted-foreground">
           {t("feature.assignmentCreate.peerSession.subtitle")}
         </p>
       </div>
 
       <div>
-        <label className="block text-[14px] font-medium text-foreground mb-3">
+        <label className="block text-sm font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.peerSession.reviewsPerSubmissionLabel")}{" "}
           <span className="text-destructive">*</span>
         </label>
@@ -51,12 +51,12 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
               onChange={(e) =>
                 onUpdate({ reviewsPerSubmission: clamp(parseInt(e.target.value) || 1, 1, 10) })
               }
-              className="w-16 px-3 py-2 border-2 border-border rounded-[8px] text-[15px] font-medium text-center focus:outline-none focus:border-brand-primary"
+              className="w-16 px-3 py-2 border-2 border-border rounded-sm text-15 font-medium text-center focus:outline-none focus:border-brand-primary"
             />
             <Users className="w-5 h-5 text-muted-foreground" />
           </div>
         </div>
-        <p className="text-[13px] text-muted-foreground mt-2">
+        <p className="text-13 text-muted-foreground mt-2">
           {t("feature.assignmentCreate.peerSession.reviewsHint", {
             count: data.reviewsPerSubmission,
           })}
@@ -64,7 +64,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
       </div>
 
       <div>
-        <label className="block text-[14px] font-medium text-foreground mb-3">
+        <label className="block text-sm font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.peerSession.discrepancyLabel")}{" "}
           <span className="text-destructive">*</span>
         </label>
@@ -89,20 +89,20 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
                   discrepancyThreshold: clamp(parseInt(e.target.value) || 30, 1, 100),
                 })
               }
-              className="w-20 px-3 py-2 border-2 border-border rounded-[8px] text-[15px] font-medium text-center focus:outline-none focus:border-brand-primary"
+              className="w-20 px-3 py-2 border-2 border-border rounded-sm text-15 font-medium text-center focus:outline-none focus:border-brand-primary"
             />
             <Scale className="w-5 h-5 text-muted-foreground" />
           </div>
         </div>
-        <p className="text-[13px] text-muted-foreground mt-2">
+        <p className="text-13 text-muted-foreground mt-2">
           {t("feature.assignmentCreate.peerSession.discrepancyHint", {
             value: data.discrepancyThreshold,
           })}
         </p>
       </div>
 
-      <div className="bg-info-light border border-info rounded-[12px] p-4">
-        <p className="text-[13px] text-foreground">
+      <div className="bg-info-light border border-info rounded-md p-4">
+        <p className="text-13 text-foreground">
           <strong>{t("feature.assignmentCreate.peerSession.tip")}</strong>{" "}
           {t("feature.assignmentCreate.peerSession.tipText")}
         </p>

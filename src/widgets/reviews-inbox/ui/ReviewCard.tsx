@@ -61,25 +61,25 @@ export function ReviewCard({
   return (
     <div
       onClick={onClick}
-      className="bg-card border-2 border-border hover:border-brand-primary-light rounded-[16px] p-4 transition-all cursor-pointer group"
+      className="bg-card border-2 border-border hover:border-brand-primary-light rounded-lg p-4 transition-all cursor-pointer group"
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] text-muted-foreground mb-1">{courseName}</p>
-          <h3 className="text-[16px] desktop:text-[18px] font-medium text-foreground tracking-[-0.5px] mb-2">
+          <p className="text-13 text-muted-foreground mb-1">{courseName}</p>
+          <h3 className="text-base desktop:text-lg font-medium text-foreground tracking-[-0.5px] mb-2">
             {taskTitle}
           </h3>
         </div>
 
         <div
-          className={`${statusInfo.color} ${statusInfo.textColor} px-3 py-1.5 rounded-[8px] shrink-0`}
+          className={`${statusInfo.color} ${statusInfo.textColor} px-3 py-1.5 rounded-sm shrink-0`}
         >
-          <span className="text-[12px] font-medium whitespace-nowrap">{statusInfo.label}</span>
+          <span className="text-xs font-medium whitespace-nowrap">{statusInfo.label}</span>
         </div>
       </div>
 
       <div className="mb-3">
-        <p className="text-[14px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t("widget.reviewCard.student")} <span className="font-medium">{studentName}</span>
         </p>
       </div>
@@ -87,14 +87,14 @@ export function ReviewCard({
       <div className="flex items-center gap-2 mb-4">
         <Clock className={`w-4 h-4 ${isDeadlineSoon ? "text-warning" : "text-muted-foreground"}`} />
         <p
-          className={`text-[13px] ${isDeadlineSoon ? "text-warning font-medium" : "text-muted-foreground"}`}
+          className={`text-13 ${isDeadlineSoon ? "text-warning font-medium" : "text-muted-foreground"}`}
         >
           {t("widget.reviewCard.deadline")} {reviewDeadline}
         </p>
       </div>
 
       <div className="flex items-center justify-end">
-        <div className="inline-flex items-center gap-1 text-[13px] text-brand-primary group-hover:text-brand-primary-hover transition-colors">
+        <div className="inline-flex items-center gap-1 text-13 text-brand-primary group-hover:text-brand-primary-hover transition-colors">
           <span>{getCtaLabel(status, t)}</span>
           <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </div>

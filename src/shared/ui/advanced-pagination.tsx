@@ -121,7 +121,7 @@ export function AdvancedPagination({
                 key={page}
                 onClick={() => onPageChange(page)}
                 className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-[8px] text-[14px] font-medium transition-all",
+                  "flex h-8 w-8 items-center justify-center rounded-sm text-sm font-medium transition-all",
                   currentPage === page
                     ? "bg-brand-primary text-text-inverse shadow-[0_2px_4px_color-mix(in_srgb,var(--brand-primary)_30%,transparent)]"
                     : "text-foreground hover:bg-info-light hover:text-brand-primary",

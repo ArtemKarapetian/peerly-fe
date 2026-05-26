@@ -34,16 +34,16 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
+        <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.deadlines.title")}
         </h2>
-        <p className="text-[15px] text-muted-foreground">
+        <p className="text-15 text-muted-foreground">
           {t("feature.assignmentCreate.deadlines.subtitle")}
         </p>
       </div>
 
       <div>
-        <label className="block text-[14px] font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}{" "}
           <span className="text-destructive">*</span>
         </label>
@@ -53,16 +53,16 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             type="datetime-local"
             value={formatDateForInput(data.submissionDeadline)}
             onChange={(e) => handleDateChange("submissionDeadline", e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
+            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
-        <p className="text-[13px] text-muted-foreground mt-1">
+        <p className="text-13 text-muted-foreground mt-1">
           {t("feature.assignmentCreate.deadlines.submissionDeadlineHint")}
         </p>
       </div>
 
       <div>
-        <label className="block text-[14px] font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2">
           {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}{" "}
           <span className="text-destructive">*</span>
         </label>
@@ -73,17 +73,17 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
             value={formatDateForInput(data.reviewDeadline)}
             onChange={(e) => handleDateChange("reviewDeadline", e.target.value)}
             min={formatDateForInput(data.submissionDeadline)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
+            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
-        <p className="text-[13px] text-muted-foreground mt-1">
+        <p className="text-13 text-muted-foreground mt-1">
           {t("feature.assignmentCreate.deadlines.reviewDeadlineHint")}
         </p>
       </div>
 
       {timeDiff && (
         <div
-          className={`flex items-start gap-3 p-4 rounded-[12px] border ${
+          className={`flex items-start gap-3 p-4 rounded-md border ${
             timeDiff.total < 2 * 86_400_000
               ? "bg-warning-light border-warning"
               : "bg-success-light border-success"
@@ -91,14 +91,14 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         >
           <Clock className="w-5 h-5 text-foreground mt-0.5" />
           <div>
-            <p className="text-[14px] font-medium text-foreground mb-1">
+            <p className="text-sm font-medium text-foreground mb-1">
               {t("feature.assignmentCreate.deadlines.timeForReview")}{" "}
               {timeDiff.days > 0 &&
                 `${timeDiff.days} ${t("feature.assignmentCreate.deadlines.days")} `}
               {timeDiff.hours} {t("feature.assignmentCreate.deadlines.hours")}
             </p>
             {timeDiff.total < 2 * 86_400_000 && (
-              <p className="text-[13px] text-warning">
+              <p className="text-13 text-warning">
                 {t("feature.assignmentCreate.deadlines.reviewTimeWarning")}
               </p>
             )}
@@ -106,13 +106,13 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         </div>
       )}
 
-      <div className="flex items-start gap-3 bg-warning-light border border-warning rounded-[12px] p-4">
+      <div className="flex items-start gap-3 bg-warning-light border border-warning rounded-md p-4">
         <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
         <div>
-          <p className="text-[14px] font-medium text-foreground mb-1">
+          <p className="text-sm font-medium text-foreground mb-1">
             {t("feature.assignmentCreate.deadlines.warningTitle")}
           </p>
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-13 text-muted-foreground">
             {t("feature.assignmentCreate.deadlines.warningText")}
           </p>
         </div>

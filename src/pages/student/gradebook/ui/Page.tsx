@@ -101,7 +101,7 @@ export default function GradebookPage() {
       />
 
       {isLoading ? (
-        <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
+        <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
       ) : (
         <GradeTable
           grades={currentItems}

@@ -31,10 +31,3 @@ export const reviewKeys = {
   details: () => [...reviewKeys.all, "detail"] as const,
   detail: (id: string) => [...reviewKeys.details(), id] as const,
 };
-
-export const userKeys = {
-  all: ["users"] as const,
-  me: () => [...userKeys.all, "me"] as const,
-  details: () => [...userKeys.all, "detail"] as const,
-  detail: (id: string) => [...userKeys.details(), id] as const,
-};

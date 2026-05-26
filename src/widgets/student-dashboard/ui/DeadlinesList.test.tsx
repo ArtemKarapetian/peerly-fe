@@ -7,7 +7,6 @@ import { DeadlinesList, type DeadlineItem } from "./DeadlinesList";
 vi.mock("@/shared/lib/formatDate", () => ({
   formatRelativeTime: (iso: string) => iso,
   formatDateTime: (iso: string) => iso,
-  formatDateShort: (iso: string) => iso,
 }));
 
 const items: DeadlineItem[] = [

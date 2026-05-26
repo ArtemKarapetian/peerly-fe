@@ -15,8 +15,8 @@ export function TaskChecklist({ checklist }: TaskChecklistProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-[16px] p-4 desktop:p-6">
-      <h2 className="text-[20px] desktop:text-[24px] tracking-[-0.5px] text-foreground mb-4">
+    <div className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+      <h2 className="text-xl desktop:text-2xl tracking-[-0.5px] text-foreground mb-4">
         {t("student.task.checklist")}
       </h2>
       <div className="space-y-3">
@@ -27,7 +27,7 @@ export function TaskChecklist({ checklist }: TaskChecklistProps) {
                 <Check className="size-3.5 text-foreground" />
               </div>
             </div>
-            <p className="text-[14px] desktop:text-[16px] tracking-[-0.3px] text-muted-foreground leading-[1.5]">
+            <p className="text-sm desktop:text-base tracking-[-0.3px] text-muted-foreground leading-[1.5]">
               {item}
             </p>
           </div>

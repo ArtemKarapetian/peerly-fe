@@ -33,10 +33,10 @@ export function ReviewList({ reviews, groupBy, onReviewClick }: ReviewListProps)
           {/* Group Header */}
           <div className="mb-4 pb-3 border-b border-border">
             <div className="flex items-center justify-between">
-              <h2 className="text-[20px] desktop:text-[24px] font-medium text-foreground tracking-[-0.5px]">
+              <h2 className="text-xl desktop:text-2xl font-medium text-foreground tracking-[-0.5px]">
                 {group.title}
               </h2>
-              <span className="text-[14px] text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 {t("widget.reviewList.review", { count: group.reviews.length })}
               </span>
             </div>

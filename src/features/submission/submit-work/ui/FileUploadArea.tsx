@@ -102,7 +102,7 @@ export function FileUploadArea({
         onDrop={handleDrop}
         onClick={handleClick}
         className={`
-          relative border-2 border-dashed rounded-[16px] p-8 text-center transition-all cursor-pointer
+          relative border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer
           ${
             isDragging
               ? "border-brand-primary bg-brand-primary-light"
@@ -127,7 +127,7 @@ export function FileUploadArea({
             <div className="w-12 h-12 bg-brand-primary-light rounded-full mx-auto flex items-center justify-center animate-pulse">
               <Upload className="w-6 h-6 text-brand-primary" />
             </div>
-            <p className="text-[15px] text-foreground font-medium">
+            <p className="text-15 text-foreground font-medium">
               {t("feature.submission.upload.uploading")}
             </p>
           </div>
@@ -143,12 +143,12 @@ export function FileUploadArea({
               )}
             </div>
             <div>
-              <p className="text-[15px] text-foreground font-medium mb-1">
+              <p className="text-15 text-foreground font-medium mb-1">
                 {isDragging
                   ? t("feature.submission.upload.dropFile")
                   : t("feature.submission.upload.dragFileHere")}
               </p>
-              <p className="text-[13px] text-muted-foreground">
+              <p className="text-13 text-muted-foreground">
                 {t("feature.submission.upload.or")}{" "}
                 <span className="text-brand-primary font-medium">
                   {t("feature.submission.upload.browseFile")}
@@ -159,7 +159,7 @@ export function FileUploadArea({
         )}
       </div>
 
-      <div className="flex items-start gap-2 text-[13px] text-muted-foreground">
+      <div className="flex items-start gap-2 text-13 text-muted-foreground">
         <div className="shrink-0">ℹ️</div>
         <div>
           <p>
@@ -173,9 +173,9 @@ export function FileUploadArea({
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 bg-error-light border border-error rounded-[8px] p-3">
+        <div className="flex items-start gap-2 bg-error-light border border-error rounded-sm p-3">
           <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
-          <p className="text-[13px] text-destructive">{error}</p>
+          <p className="text-13 text-destructive">{error}</p>
         </div>
       )}
     </div>

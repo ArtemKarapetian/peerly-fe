@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { coverColorFor } from "@/shared/lib/coverColor";
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { useAssignmentsByCourse } from "@/entities/assignment";
@@ -39,7 +40,7 @@ export default function CoursePage() {
 
       <div className="mt-6 space-y-6">
         {isLoading ? (
-          <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
+          <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
         ) : (
           <CourseHeader
             title={title}
@@ -49,7 +50,7 @@ export default function CoursePage() {
           />
         )}
 
-        <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+        <Card className="p-0 overflow-hidden">
           <CourseTabs
             activeTab={activeTab}
             onTabChange={setActiveTab}
@@ -61,7 +62,7 @@ export default function CoursePage() {
             {activeTab === "assignments" && <CourseAssignmentsTab courseId={courseId} />}
             {activeTab === "participants" && <CourseParticipantsTab courseId={courseId} />}
           </div>
-        </div>
+        </Card>
       </div>
     </AppShell>
   );

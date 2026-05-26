@@ -3,6 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
+
 import { useAuth } from "@/entities/user";
 
 // collapsed = круглая кнопка-аватар, expanded = с именем
@@ -57,7 +59,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: User,
       label: t("widget.profileDropdown.profile"),
       onClick: () => {
-        void navigate("/profile");
+        void navigate(ROUTES.profile);
         setIsOpen(false);
       },
     },
@@ -65,7 +67,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: Settings,
       label: t("widget.profileDropdown.settings"),
       onClick: () => {
-        void navigate("/settings");
+        void navigate(ROUTES.settings);
         setIsOpen(false);
       },
     },
@@ -73,7 +75,7 @@ export function ProfileDropdown({ collapsed = false, userName }: ProfileDropdown
       icon: HelpCircle,
       label: t("widget.profileDropdown.help"),
       onClick: () => {
-        void navigate("/help");
+        void navigate(ROUTES.help);
         setIsOpen(false);
       },
     },

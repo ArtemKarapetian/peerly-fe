@@ -68,12 +68,10 @@ export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
         <div className="w-10 h-10 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
           <Clock className="w-5 h-5 text-[--text-tertiary]" />
         </div>
-        <p className="text-[14px] font-medium text-[--text-primary] mb-0.5">
+        <p className="text-sm font-medium text-[--text-primary] mb-0.5">
           {t("widget.deadlinesList.noDeadlines")}
         </p>
-        <p className="text-[13px] text-[--text-secondary]">
-          {t("widget.deadlinesList.allCompleted")}
-        </p>
+        <p className="text-13 text-[--text-secondary]">{t("widget.deadlinesList.allCompleted")}</p>
       </div>
     );
   }
@@ -94,15 +92,15 @@ export function DeadlinesList({ items, onTaskClick }: DeadlinesListProps) {
           >
             <div className="flex items-center gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] text-[--text-tertiary] mb-0.5">{item.courseName}</p>
+                <p className="text-2xs text-[--text-tertiary] mb-0.5">{item.courseName}</p>
                 <p
-                  className={`tracking-[-0.2px] truncate leading-snug mb-2 ${isPrimary ? "text-[14px] font-bold text-[--text-primary]" : "text-[14px] font-semibold text-[--text-primary]"}`}
+                  className={`tracking-[-0.2px] truncate leading-snug mb-2 ${isPrimary ? "text-sm font-bold text-[--text-primary]" : "text-sm font-semibold text-[--text-primary]"}`}
                 >
                   {item.taskTitle}
                 </p>
                 <div className="flex items-center gap-2 flex-wrap">
                   <div
-                    className={`flex items-center gap-1 text-[12px] font-medium ${
+                    className={`flex items-center gap-1 text-xs font-medium ${
                       item.isUrgent ? "text-[--error]" : "text-[--text-tertiary]"
                     }`}
                   >

@@ -53,7 +53,7 @@ export function CourseAssignmentsTab({ courseId }: CourseAssignmentsTabProps) {
   };
 
   if (isLoading) {
-    return <p className="text-[14px] text-text-tertiary px-1">{t("common.loading")}</p>;
+    return <p className="text-sm text-text-tertiary px-1">{t("common.loading")}</p>;
   }
 
   return (

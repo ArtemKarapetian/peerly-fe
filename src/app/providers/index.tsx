@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
 import { queryClient } from "@/shared/api/queryClient";
-import { FeatureFlagsProvider } from "@/shared/lib/feature-flags-provider";
+import { DemoFlagsProvider } from "@/shared/lib/demo-flags-provider";
 
 import { AuthProvider } from "@/entities/user";
 
@@ -17,7 +17,7 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <FeatureFlagsProvider>{children}</FeatureFlagsProvider>
+          <DemoFlagsProvider>{children}</DemoFlagsProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

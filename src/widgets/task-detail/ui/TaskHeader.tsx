@@ -51,20 +51,20 @@ export function TaskHeader({
   const reviewColors = reviewDeadline ? colorsFor(urgencyFor(reviewDeadline, now)) : null;
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-[20px] p-5 desktop:p-8 mb-6 desktop:mb-8">
+    <div className="bg-card border border-border shadow-sm rounded-xl p-5 desktop:p-8 mb-6 desktop:mb-8">
       <div className="flex flex-col desktop:flex-row items-start desktop:justify-between gap-4 mb-4">
         <div className="flex-1 min-w-0">
           <h1 className="text-[28px] desktop:text-[40px] tracking-[-1.2px] text-foreground leading-[1.05] mb-2 break-words">
             {title}
           </h1>
           {courseName ? (
-            <p className="text-[14px] desktop:text-[16px] tracking-[-0.3px] text-muted-foreground">
+            <p className="text-sm desktop:text-base tracking-[-0.3px] text-muted-foreground">
               {courseName}
             </p>
           ) : null}
         </div>
-        <div className={`${statusColor} px-4 py-2 rounded-[12px] shrink-0`}>
-          <span className="text-[14px] desktop:text-[16px] tracking-[-0.3px] text-foreground whitespace-nowrap">
+        <div className={`${statusColor} px-4 py-2 rounded-md shrink-0`}>
+          <span className="text-sm desktop:text-base tracking-[-0.3px] text-foreground whitespace-nowrap">
             {statusLabel}
           </span>
         </div>
@@ -74,9 +74,7 @@ export function TaskHeader({
         {deadline && deadlineColors ? (
           <div className="flex items-center gap-2">
             <Calendar className={`size-5 ${deadlineColors.icon}`} />
-            <span
-              className={`text-[14px] desktop:text-[16px] tracking-[-0.3px] ${deadlineColors.text}`}
-            >
+            <span className={`text-sm desktop:text-base tracking-[-0.3px] ${deadlineColors.text}`}>
               {t("student.task.deadline")}: {formatDateTime(deadline.toISOString(), i18n.language)}
             </span>
           </div>
@@ -84,9 +82,7 @@ export function TaskHeader({
         {reviewDeadline && reviewColors ? (
           <div className="flex items-center gap-2">
             <ClipboardCheck className={`size-5 ${reviewColors.icon}`} />
-            <span
-              className={`text-[14px] desktop:text-[16px] tracking-[-0.3px] ${reviewColors.text}`}
-            >
+            <span className={`text-sm desktop:text-base tracking-[-0.3px] ${reviewColors.text}`}>
               {t("student.task.reviewDeadline")}:{" "}
               {formatDateTime(reviewDeadline.toISOString(), i18n.language)}
             </span>
@@ -95,7 +91,7 @@ export function TaskHeader({
         {reviewCount && reviewCount > 0 ? (
           <div className="flex items-center gap-2">
             <Users className="size-5 text-muted-foreground" />
-            <span className="text-[14px] desktop:text-[16px] tracking-[-0.3px] text-muted-foreground">
+            <span className="text-sm desktop:text-base tracking-[-0.3px] text-muted-foreground">
               {t("student.task.reviewers")}: {reviewCount}
             </span>
           </div>

@@ -37,7 +37,7 @@ export function ReviewFilters({ filter, counts, onFilterChange }: ReviewFiltersP
             type="button"
             onClick={() => onFilterChange(value)}
             aria-pressed={isActive}
-            className={`px-4 py-2 rounded-[8px] text-[14px] font-medium transition-colors ${
+            className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${
               isActive
                 ? "bg-brand-primary text-text-inverse"
                 : "bg-muted text-muted-foreground hover:bg-surface-hover"

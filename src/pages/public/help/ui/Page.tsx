@@ -3,7 +3,8 @@ import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { useFeatureFlags } from "@/shared/lib/feature-flags-provider";
+import { ROUTES } from "@/shared/config/routes";
+import { useDemoFlags } from "@/shared/lib/demo-flags-provider";
 
 import { PublicLayout } from "@/widgets/public-layout";
 
@@ -108,7 +109,7 @@ export default function HelpPage() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
-  const { flags } = useFeatureFlags();
+  const { flags } = useDemoFlags();
 
   const faqData = useMemo(
     () =>
@@ -154,7 +155,7 @@ export default function HelpPage() {
     const isOpen = openItems.has(item.id);
 
     return (
-      <div key={item.id} className="border border-border rounded-[12px] overflow-hidden bg-card">
+      <div key={item.id} className="border border-border rounded-md overflow-hidden bg-card">
         <button
           onClick={() => toggleItem(item.id)}
           className="w-full flex items-center justify-between p-4 hover:bg-surface-hover transition-colors text-left"
@@ -191,7 +192,7 @@ export default function HelpPage() {
               placeholder={t("page.help.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-border rounded-[12px] focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+              className="w-full pl-12 pr-4 py-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
         </div>
@@ -224,7 +225,7 @@ export default function HelpPage() {
               <div className="space-y-3 mb-6">{sections.contact.map(renderFAQItem)}</div>
             )}
 
-            <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-8">
+            <div className="bg-brand-primary-lighter rounded-xl p-6 tablet:p-8">
               <h3 className="text-xl font-semibold text-foreground mb-4">
                 {t("page.help.noAnswerFound")}
               </h3>
@@ -233,8 +234,8 @@ export default function HelpPage() {
                 <div className="space-y-4">
                   <p className="text-foreground/80">{t("page.help.chatSupportDesc")}</p>
                   <Link
-                    to="/support/chat"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[12px] transition-colors"
+                    to={ROUTES.supportChat}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-md transition-colors"
                   >
                     <MessageCircle className="size-5" />
                     {t("page.help.openChatSupport")}
@@ -243,7 +244,7 @@ export default function HelpPage() {
               ) : (
                 <div className="space-y-4">
                   <p className="text-foreground/80">{t("page.help.contactInstructorDesc")}</p>
-                  <div className="flex items-start gap-3 p-4 bg-card rounded-[12px]">
+                  <div className="flex items-start gap-3 p-4 bg-card rounded-md">
                     <Mail className="size-5 text-brand-primary shrink-0 mt-0.5" />
                     <div>
                       <div className="font-medium text-foreground mb-1">

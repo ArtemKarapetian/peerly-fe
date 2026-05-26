@@ -2,6 +2,8 @@ import { FileText, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
+
 import { PublicLayout } from "@/widgets/public-layout";
 
 export default function TermsPage() {
@@ -23,25 +25,25 @@ export default function TermsPage() {
               <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center">
                 <FileText className="size-6 text-primary" />
               </div>
-              <h1 className="text-[32px] tablet:text-[40px] font-medium text-foreground tracking-[-0.5px]">
+              <h1 className="text-page-h1 tablet:text-[40px] font-medium text-foreground tracking-[-0.5px]">
                 {t("page.terms.title")}
               </h1>
             </div>
-            <p className="text-[15px] text-muted-foreground">{t("page.terms.lastUpdated")}</p>
+            <p className="text-15 text-muted-foreground">{t("page.terms.lastUpdated")}</p>
           </div>
 
           <div className="bg-accent/50 border-2 border-border rounded-xl p-6 mb-8">
-            <h2 className="text-[18px] font-medium text-foreground mb-4">{t("page.terms.toc")}</h2>
+            <h2 className="text-lg font-medium text-foreground mb-4">{t("page.terms.toc")}</h2>
             <nav className="space-y-2">
               <button
                 onClick={() => scrollToSection("terms-of-use")}
-                className="block text-[15px] text-primary hover:underline text-left"
+                className="block text-15 text-primary hover:underline text-left"
               >
                 → {t("page.terms.tocTerms")}
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
-                className="block text-[15px] text-primary hover:underline text-left"
+                className="block text-15 text-primary hover:underline text-left"
               >
                 → {t("page.terms.tocContact")}
               </button>
@@ -61,22 +63,22 @@ export default function TermsPage() {
 
             <div className="space-y-6">
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {t("page.terms.terms1Title")}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
+                <p className="text-15 text-muted-foreground leading-relaxed">
                   {t("page.terms.terms1Text")}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {t("page.terms.terms2Title")}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed mb-3">
+                <p className="text-15 text-muted-foreground leading-relaxed mb-3">
                   {t("page.terms.terms2Text")}
                 </p>
-                <ul className="list-disc list-inside space-y-2 text-[15px] text-muted-foreground ml-4">
+                <ul className="list-disc list-inside space-y-2 text-15 text-muted-foreground ml-4">
                   <li>{t("page.terms.terms2Item1")}</li>
                   <li>{t("page.terms.terms2Item2")}</li>
                   <li>{t("page.terms.terms2Item3")}</li>
@@ -86,37 +88,37 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {t("page.terms.terms3Title")}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
+                <p className="text-15 text-muted-foreground leading-relaxed">
                   {t("page.terms.terms3Text")}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {t("page.terms.terms4Title")}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
+                <p className="text-15 text-muted-foreground leading-relaxed">
                   {t("page.terms.terms4Text")}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {t("page.terms.terms5Title")}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
+                <p className="text-15 text-muted-foreground leading-relaxed">
                   {t("page.terms.terms5Text")}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-[20px] font-medium text-foreground mb-3">
+                <h3 className="text-xl font-medium text-foreground mb-3">
                   {t("page.terms.terms6Title")}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">
+                <p className="text-15 text-muted-foreground leading-relaxed">
                   {t("page.terms.terms6Text")}
                 </p>
               </div>
@@ -135,46 +137,49 @@ export default function TermsPage() {
             </div>
 
             <div className="space-y-4">
-              <p className="text-[15px] text-muted-foreground leading-relaxed">
+              <p className="text-15 text-muted-foreground leading-relaxed">
                 {t("page.terms.contactText")}
               </p>
 
               <div className="bg-accent/50 border border-border rounded-lg p-4 space-y-3">
                 <div>
-                  <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
+                  <p className="text-13 text-muted-foreground uppercase tracking-wide mb-1">
                     Email
                   </p>
                   <a
                     href="mailto:legal@peerly.edu"
-                    className="text-[15px] text-primary hover:underline font-medium"
+                    className="text-15 text-primary hover:underline font-medium"
                   >
                     legal@peerly.edu
                   </a>
                 </div>
 
                 <div>
-                  <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
+                  <p className="text-13 text-muted-foreground uppercase tracking-wide mb-1">
                     {t("page.terms.contactSupport")}
                   </p>
                   <a
                     href="mailto:support@peerly.edu"
-                    className="text-[15px] text-primary hover:underline font-medium"
+                    className="text-15 text-primary hover:underline font-medium"
                   >
                     support@peerly.edu
                   </a>
                 </div>
 
                 <div>
-                  <p className="text-[13px] text-muted-foreground uppercase tracking-wide mb-1">
+                  <p className="text-13 text-muted-foreground uppercase tracking-wide mb-1">
                     {t("page.terms.contactReference")}
                   </p>
-                  <Link to="/help" className="text-[15px] text-primary hover:underline font-medium">
+                  <Link
+                    to={ROUTES.help}
+                    className="text-15 text-primary hover:underline font-medium"
+                  >
                     {t("page.terms.contactHelpCenter")}
                   </Link>
                 </div>
               </div>
 
-              <p className="text-[13px] text-muted-foreground pt-4 border-t border-border">
+              <p className="text-13 text-muted-foreground pt-4 border-t border-border">
                 {t("page.terms.contactResponseTime")}
               </p>
             </div>

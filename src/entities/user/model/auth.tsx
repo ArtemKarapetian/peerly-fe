@@ -1,14 +1,24 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
 
-import { clearSession, getSession, setSession, type Role, type Session } from "@/shared/api";
+import {
+  ApiError,
+  clearSession,
+  getSession,
+  setSession,
+  type Role,
+  type Session,
+} from "@/shared/api";
+import { ROUTES } from "@/shared/config/routes";
 import { appNavigate } from "@/shared/lib/navigate";
 
 import { authApi } from "../api/authHttp";
 
+export type AuthStatus = "unknown" | "anonymous" | "authenticated";
+
 interface AuthContextType {
+  status: AuthStatus;
   isAuthenticated: boolean;
   session: Session | null;
-  /** Kept for backwards compatibility with UI that reads `user`. */
   user: { id: string; name: string; email: string } | null;
   login: (input: { email: string; password: string }) => Promise<Session>;
   register: (input: {
@@ -19,11 +29,8 @@ interface AuthContextType {
   }) => Promise<{ userId: string }>;
   confirmEmail: (input: { token: string; userId: string }) => Promise<Session>;
   logout: () => Promise<void>;
-  /** Re-fetch profile from /me and merge into session. */
   refreshMe: () => Promise<void>;
-  /** Update name via PUT /me, then refresh session. */
   updateMyName: (name: string) => Promise<void>;
-  /** Dev-only role swap; backend still enforces JWT claims. */
   switchRoleDev: (role: Role) => void;
 }
 
@@ -33,8 +40,47 @@ function sessionToUser(s: Session | null) {
   return s ? { id: s.userId, name: s.userName, email: s.email } : null;
 }
 
+function isFatalAuthError(err: unknown): boolean {
+  return err instanceof ApiError && (err.status === 401 || err.status === 403);
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSessionState] = useState<Session | null>(() => getSession());
+  const initialSession = getSession();
+  const [session, setSessionState] = useState<Session | null>(initialSession);
+  const [status, setStatus] = useState<AuthStatus>(initialSession ? "unknown" : "anonymous");
+
+  useEffect(() => {
+    if (!initialSession) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { role } = await authApi.getMyRole();
+        const me = await authApi.getMe(role).catch(() => null);
+        if (cancelled) return;
+        const next: Session = {
+          userId: me?.userId || initialSession.userId,
+          userName: me?.name ?? initialSession.userName,
+          email: me?.email || initialSession.email,
+          role,
+        };
+        setSession(next);
+        setSessionState(next);
+        setStatus("authenticated");
+      } catch (err) {
+        if (cancelled) return;
+        if (isFatalAuthError(err)) {
+          clearSession();
+          setSessionState(null);
+          setStatus("anonymous");
+        } else {
+          setStatus("authenticated");
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [initialSession]);
 
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
@@ -48,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     setSession(next);
     setSessionState(next);
+    setStatus("authenticated");
     return next;
   }, []);
 
@@ -71,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     setSession(next);
     setSessionState(next);
+    setStatus("authenticated");
     return next;
   }, []);
 
@@ -86,6 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(next);
       return next;
     });
+    setStatus("authenticated");
   }, []);
 
   const refreshMe = useCallback<AuthContextType["refreshMe"]>(async () => {
@@ -120,13 +169,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     clearSession();
     setSessionState(null);
-    appNavigate("/");
+    setStatus("anonymous");
+    appNavigate(ROUTES.landing);
   }, []);
 
   return (
     <Auth.Provider
       value={{
-        isAuthenticated: session !== null,
+        status,
+        isAuthenticated: status === "authenticated",
         session,
         user: sessionToUser(session),
         login,

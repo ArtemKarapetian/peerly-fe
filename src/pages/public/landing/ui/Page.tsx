@@ -6,6 +6,7 @@ import imgHero from "@/shared/assets/1316612187f4274840308d8544bb1f10cdcc9818.pn
 import imgTeacher from "@/shared/assets/7177166acba64f35340faa0b6f56005880826629.png";
 import imgSettings from "@/shared/assets/8a7431ce52feae07a5df11170b187a4a3d8ac9c2.png";
 import imgPlatform from "@/shared/assets/eb9aaf49f5066472e938555cd5aa00e6418c7a26.png";
+import { ROUTES } from "@/shared/config/routes";
 
 import { defaultRouteForRole, useAuth } from "@/entities/user";
 
@@ -27,7 +28,7 @@ export default function LandingPage() {
       <div className="w-full bg-background border-b border-border">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 h-16 flex items-center justify-between">
           <Link
-            to="/"
+            to={ROUTES.landing}
             className="text-xl font-semibold text-primary hover:opacity-80 transition-opacity"
           >
             Peerly
@@ -43,7 +44,7 @@ export default function LandingPage() {
               </button>
             ) : (
               <button
-                onClick={() => void navigate("/register")}
+                onClick={() => void navigate(ROUTES.register)}
                 className="inline-flex items-center justify-center px-5 py-2 bg-[--brand-primary] hover:bg-[--brand-primary-hover] text-primary-foreground text-sm font-medium rounded-[var(--radius-md)] transition-all"
               >
                 {t("page.landing.getStarted")}
@@ -75,7 +76,7 @@ export default function LandingPage() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => void navigate("/register")}
+                    onClick={() => void navigate(ROUTES.register)}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                   >
                     {t("page.landing.getStarted")}
@@ -109,7 +110,7 @@ export default function LandingPage() {
 
       <section className="w-full bg-muted pb-16 tablet:pb-20 desktop:pb-24">
         <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 space-y-8">
-          <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-10 desktop:p-12">
+          <div className="bg-brand-primary-lighter rounded-xl p-6 tablet:p-10 desktop:p-12">
             <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 items-center">
               <div className="order-2 desktop:order-1 flex justify-center">
                 <img
@@ -127,7 +128,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-10 desktop:p-12">
+          <div className="bg-brand-primary-lighter rounded-xl p-6 tablet:p-10 desktop:p-12">
             <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 items-center">
               <div className="space-y-4 tablet:space-y-6">
                 <h3 className="text-3xl tablet:text-4xl font-semibold text-foreground leading-[1.1]">
@@ -145,7 +146,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="bg-brand-primary-lighter rounded-[20px] p-6 tablet:p-10 desktop:p-12">
+          <div className="bg-brand-primary-lighter rounded-xl p-6 tablet:p-10 desktop:p-12">
             <div className="grid grid-cols-1 desktop:grid-cols-2 gap-8 desktop:gap-12 items-center">
               <div className="order-2 desktop:order-1 flex justify-center">
                 <img
@@ -232,7 +233,7 @@ export default function LandingPage() {
                 </button>
               ) : (
                 <button
-                  onClick={() => void navigate("/register")}
+                  onClick={() => void navigate(ROUTES.register)}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground font-medium rounded-[var(--radius-md)] shadow-md hover:shadow-lg transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 text-base h-11"
                 >
                   {t("page.landing.getStarted")}
@@ -248,7 +249,7 @@ export default function LandingPage() {
           <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
             <nav className="flex items-center gap-6">
               <Link
-                to="/help"
+                to={ROUTES.help}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t("page.landing.footerHelp")}

@@ -3,6 +3,7 @@ import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
@@ -145,7 +146,11 @@ export default function ResetPasswordPage() {
                 </p>
               </div>
 
-              <Button variant="outline" className="w-full" onClick={() => void navigate("/login")}>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => void navigate(ROUTES.login)}
+              >
                 {t("page.resetPassword.backToLogin")}
               </Button>
             </div>
@@ -199,7 +204,7 @@ export default function ResetPasswordPage() {
               </form>
 
               <div className="text-center">
-                <Link to="/login" className="text-sm text-primary hover:underline">
+                <Link to={ROUTES.login} className="text-sm text-primary hover:underline">
                   {t("page.resetPassword.backToLogin")}
                 </Link>
               </div>

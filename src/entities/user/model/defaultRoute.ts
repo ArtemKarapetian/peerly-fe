@@ -1,13 +1,14 @@
 import type { Role } from "@/shared/api";
+import { ROUTES } from "@/shared/config/routes";
 
 export function defaultRouteForRole(role: Role | undefined | null): string {
   switch (role) {
     case "Teacher":
-      return "/teacher/courses";
+      return ROUTES.teacherCourses;
     case "Admin":
-      return "/admin/overview";
+      return ROUTES.adminOverview;
     case "Student":
     default:
-      return "/student/dashboard";
+      return ROUTES.dashboard;
   }
 }

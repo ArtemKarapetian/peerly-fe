@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -29,21 +31,21 @@ export default function TeacherRubricDetailPage() {
             { label: t("teacher.rubrics.notFound") },
           ]}
         />
-        <div className="bg-card border-2 border-border rounded-[20px] p-12 text-center mt-6">
-          <h2 className="text-[20px] font-medium text-foreground mb-2">
+        <Card className="p-12 text-center mt-6">
+          <h2 className="text-xl font-medium text-foreground mb-2">
             {t("teacher.rubrics.notFound")}
           </h2>
-          <p className="text-[14px] text-muted-foreground mb-6">
+          <p className="text-sm text-muted-foreground mb-6">
             {t("teacher.rubrics.tryDifferentSearch")}
           </p>
           <button
-            onClick={() => void navigate("/teacher/rubrics")}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
+            onClick={() => void navigate(ROUTES.teacherRubrics)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             {t("teacher.rubrics.backToLibrary")}
           </button>
-        </div>
+        </Card>
       </AppShell>
     );
   }
@@ -57,7 +59,7 @@ export default function TeacherRubricDetailPage() {
   const handleDelete = () => {
     if (confirm(t("teacher.rubrics.deleteConfirm"))) {
       setRubrics(rubrics.filter((r) => r.id !== rubric.id));
-      void navigate("/teacher/rubrics");
+      void navigate(ROUTES.teacherRubrics);
     }
   };
 
@@ -72,12 +74,12 @@ export default function TeacherRubricDetailPage() {
 
       <div className="mt-6 space-y-6">
         {/* Header */}
-        <div className="bg-card border-2 border-border rounded-[20px] p-6">
+        <Card>
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="min-w-0 flex-1">
               <button
-                onClick={() => void navigate("/teacher/rubrics")}
-                className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors mb-3"
+                onClick={() => void navigate(ROUTES.teacherRubrics)}
+                className="inline-flex items-center gap-1.5 text-13 text-muted-foreground hover:text-foreground transition-colors mb-3"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 {t("teacher.rubrics.backToLibrary")}
@@ -85,10 +87,8 @@ export default function TeacherRubricDetailPage() {
               <h1 className="text-[28px] font-medium text-foreground tracking-[-0.5px] mb-1.5">
                 {rubric.name}
               </h1>
-              <p className="text-[15px] text-muted-foreground leading-relaxed">
-                {rubric.description}
-              </p>
-              <div className="flex items-center gap-4 mt-3 text-[13px] text-muted-foreground">
+              <p className="text-15 text-muted-foreground leading-relaxed">{rubric.description}</p>
+              <div className="flex items-center gap-4 mt-3 text-13 text-muted-foreground">
                 <span>
                   <span className="font-medium text-foreground">{rubric.criteria.length}</span>{" "}
                   {t("teacher.rubrics.criteriaCount", { count: rubric.criteria.length })}
@@ -102,10 +102,10 @@ export default function TeacherRubricDetailPage() {
 
             <div className="flex items-center gap-3">
               {/* Mode switcher */}
-              <div className="inline-flex items-center gap-1 rounded-[10px] p-1 border-2 border-border">
+              <div className="inline-flex items-center gap-1 rounded-2md p-1 border-2 border-border">
                 <button
                   onClick={() => setViewMode("edit")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] text-[13px] font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] text-13 font-medium transition-colors ${
                     viewMode === "edit"
                       ? "bg-brand-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -116,7 +116,7 @@ export default function TeacherRubricDetailPage() {
                 </button>
                 <button
                   onClick={() => setViewMode("preview")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] text-[13px] font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[7px] text-13 font-medium transition-colors ${
                     viewMode === "preview"
                       ? "bg-brand-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -129,14 +129,14 @@ export default function TeacherRubricDetailPage() {
 
               <button
                 onClick={handleDelete}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 border-2 border-border text-error rounded-[12px] hover:border-error hover:bg-error-light transition-colors text-[14px] font-medium"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 border-2 border-border text-error rounded-md hover:border-error hover:bg-error-light transition-colors text-sm font-medium"
               >
                 <Trash2 className="w-4 h-4" />
                 {t("teacher.rubrics.deleteBtn")}
               </button>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Content */}
         {viewMode === "edit" ? (

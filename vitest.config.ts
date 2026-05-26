@@ -22,7 +22,6 @@ export default defineConfig({
         "src/test/**",
         "src/main.tsx",
         "src/**/*.d.ts",
-        "src/imports/**",
         "src/shared/ui/{skeleton,sonner,utils}.{ts,tsx}",
       ],
       thresholds: {

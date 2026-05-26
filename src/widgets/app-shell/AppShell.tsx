@@ -2,6 +2,8 @@ import { useState, useEffect, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
+
 import { SideNav } from "../navigation/SideNavRoleAware.tsx";
 import { TopBar } from "../navigation/TopBar.tsx";
 
@@ -117,10 +119,10 @@ export function AppShell({ children, title }: AppShellProps) {
             <div className="w-full max-w-[1200px] mx-auto px-6 py-4 tablet:px-6 desktop:px-10">
               <div className="flex flex-col tablet:flex-row justify-between items-center gap-3 text-sm text-muted-foreground">
                 <nav className="flex items-center gap-4">
-                  <Link to="/help" className="hover:text-foreground transition-colors">
+                  <Link to={ROUTES.help} className="hover:text-foreground transition-colors">
                     {t("footer.help")}
                   </Link>
-                  <Link to="/terms" className="hover:text-foreground transition-colors">
+                  <Link to={ROUTES.terms} className="hover:text-foreground transition-colors">
                     {t("footer.terms")}
                   </Link>
                 </nav>

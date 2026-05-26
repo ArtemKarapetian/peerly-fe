@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -117,7 +118,7 @@ function SubmissionsContent({ data }: { data: ContentData }) {
   const statusBadge = (status: Exclude<StatusFilter, "all">) => {
     if (status === "submitted") {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-[6px] text-[12px] font-medium">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-2sm text-xs font-medium">
           <CheckCircle className="w-3 h-3" />
           {t("teacher.submissions.submitted")}
         </span>
@@ -125,14 +126,14 @@ function SubmissionsContent({ data }: { data: ContentData }) {
     }
     if (status === "late") {
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-[6px] text-[12px] font-medium">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-2sm text-xs font-medium">
           <Clock className="w-3 h-3" />
           {t("teacher.submissions.late")}
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-[6px] text-[12px] font-medium">
+      <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-2sm text-xs font-medium">
         <FileText className="w-3 h-3" />
         {t("teacher.submissions.draft")}
       </span>
@@ -150,21 +151,21 @@ function SubmissionsContent({ data }: { data: ContentData }) {
         subtitle={t("teacher.submissions.subtitle")}
       />
 
-      <div className="bg-card border-2 border-border rounded-[20px] p-6 mb-6">
+      <Card className="mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Filter className="w-5 h-5 text-muted-foreground" />
-          <h2 className="text-[16px] font-medium text-foreground">{t("common.filters")}</h2>
+          <h2 className="text-base font-medium text-foreground">{t("common.filters")}</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("common.assignments")}
             </label>
             <select
               value={filterAssignment}
               onChange={(e) => setFilterAssignment(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
             >
               <option value="all">{t("teacher.submissions.allAssignments")}</option>
               {assignments.map((a) => (
@@ -176,13 +177,13 @@ function SubmissionsContent({ data }: { data: ContentData }) {
           </div>
 
           <div>
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("common.status")}
             </label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
-              className="w-full px-4 py-3 border-2 border-border rounded-[12px] text-[15px] bg-background focus:border-brand-primary focus:outline-none"
+              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
             >
               <option value="all">{t("teacher.submissions.allStatuses")}</option>
               <option value="submitted">{t("teacher.submissions.submitted")}</option>
@@ -192,7 +193,7 @@ function SubmissionsContent({ data }: { data: ContentData }) {
           </div>
 
           <div>
-            <label className="block text-[13px] font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("teacher.submissions.studentSearch")}
             </label>
             <div className="relative">
@@ -202,14 +203,14 @@ function SubmissionsContent({ data }: { data: ContentData }) {
                 value={searchStudent}
                 onChange={(e) => setSearchStudent(e.target.value)}
                 placeholder={t("teacher.submissions.studentNamePlaceholder")}
-                className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:border-brand-primary focus:outline-none"
+                className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:border-brand-primary focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-[14px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("teacher.submissions.foundSubmissions")}{" "}
             <strong className="text-foreground">{filtered.length}</strong>
           </p>
@@ -220,22 +221,20 @@ function SubmissionsContent({ data }: { data: ContentData }) {
                 setFilterStatus("all");
                 setSearchStudent("");
               }}
-              className="flex items-center gap-2 px-3 py-2 text-brand-primary hover:bg-info-light rounded-[8px] text-[14px]"
+              className="flex items-center gap-2 px-3 py-2 text-brand-primary hover:bg-info-light rounded-sm text-sm"
             >
               <X className="w-4 h-4" />
               {t("teacher.submissions.resetFilters")}
             </button>
           )}
         </div>
-      </div>
+      </Card>
 
-      <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+      <Card className="p-0 overflow-hidden">
         {filtered.length === 0 ? (
           <div className="text-center py-16 px-6">
             <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-[15px] text-muted-foreground">
-              {t("teacher.submissions.emptyState")}
-            </p>
+            <p className="text-15 text-muted-foreground">{t("teacher.submissions.emptyState")}</p>
           </div>
         ) : (
           <div className="divide-y divide-border">
@@ -251,13 +250,13 @@ function SubmissionsContent({ data }: { data: ContentData }) {
                       <h3 className="text-[17px] font-medium text-foreground">{row.studentName}</h3>
                       {statusBadge(row.status)}
                     </div>
-                    <p className="text-[13px] text-muted-foreground">
+                    <p className="text-13 text-muted-foreground">
                       {row.assignment?.title ?? t("teacher.submissions.unknownAssignment")}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
                     {row.sub.submittedAt && (
-                      <p className="text-[12px] text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         {row.sub.submittedAt.toLocaleString("ru-RU", {
                           day: "numeric",
                           month: "short",
@@ -266,7 +265,7 @@ function SubmissionsContent({ data }: { data: ContentData }) {
                         })}
                       </p>
                     )}
-                    <p className="text-[12px] text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       {t("teacher.submissions.filesLabel", { count: row.sub.files.length })}
                     </p>
                   </div>
@@ -275,7 +274,7 @@ function SubmissionsContent({ data }: { data: ContentData }) {
             ))}
           </div>
         )}
-      </div>
+      </Card>
 
       {selected && (
         <SubmissionDetail
@@ -313,12 +312,12 @@ function SubmissionDetail({
       >
         <div className="sticky top-0 bg-card border-b border-border p-6 flex items-center justify-between">
           <div className="min-w-0">
-            <h2 className="text-[20px] font-medium text-foreground">{row.studentName}</h2>
-            <p className="text-[13px] text-muted-foreground">
+            <h2 className="text-xl font-medium text-foreground">{row.studentName}</h2>
+            <p className="text-13 text-muted-foreground">
               {row.assignment?.title ?? t("teacher.submissions.unknownAssignment")}
             </p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-[8px] hover:bg-muted">
+          <button onClick={onClose} className="p-2 rounded-sm hover:bg-muted">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -326,35 +325,33 @@ function SubmissionDetail({
         <div className="p-6 space-y-6">
           {row.sub.content?.trim() && (
             <section>
-              <h3 className="text-[14px] font-medium text-foreground mb-2">
+              <h3 className="text-sm font-medium text-foreground mb-2">
                 {t("teacher.submissions.studentComment")}
               </h3>
-              <p className="text-[14px] text-foreground whitespace-pre-line">{row.sub.content}</p>
+              <p className="text-sm text-foreground whitespace-pre-line">{row.sub.content}</p>
             </section>
           )}
 
           <section>
-            <h3 className="text-[14px] font-medium text-foreground mb-2">
+            <h3 className="text-sm font-medium text-foreground mb-2">
               {t("teacher.submissions.files")}
             </h3>
             {row.sub.files.length === 0 ? (
-              <p className="text-[13px] text-muted-foreground">
-                {t("teacher.submissions.noFiles")}
-              </p>
+              <p className="text-13 text-muted-foreground">{t("teacher.submissions.noFiles")}</p>
             ) : (
               <ul className="space-y-2">
                 {row.sub.files.map((f) => (
                   <li
                     key={f.id}
-                    className="flex items-center justify-between gap-3 p-3 border border-border rounded-[10px]"
+                    className="flex items-center justify-between gap-3 p-3 border border-border rounded-2md"
                   >
                     <div className="min-w-0">
-                      <p className="text-[14px] text-foreground truncate">{f.name}</p>
-                      <p className="text-[12px] text-muted-foreground">{formatBytes(f.size)}</p>
+                      <p className="text-sm text-foreground truncate">{f.name}</p>
+                      <p className="text-xs text-muted-foreground">{formatBytes(f.size)}</p>
                     </div>
                     <button
                       onClick={() => void onDownload(f.id, f.name)}
-                      className="inline-flex items-center gap-2 px-3 py-2 text-[13px] text-brand-primary hover:bg-info-light rounded-[8px]"
+                      className="inline-flex items-center gap-2 px-3 py-2 text-13 text-brand-primary hover:bg-info-light rounded-sm"
                     >
                       <Download className="w-4 h-4" />
                       {t("common.download")}
@@ -369,7 +366,7 @@ function SubmissionDetail({
             row.sub.teacherMark != null ||
             row.sub.finalMark != null) && (
             <section>
-              <h3 className="text-[14px] font-medium text-foreground mb-2">
+              <h3 className="text-sm font-medium text-foreground mb-2">
                 {t("teacher.submissions.marks")}
               </h3>
               <div className="grid grid-cols-3 gap-3 text-center">
@@ -393,9 +390,9 @@ function SubmissionDetail({
 
 function MarkCell({ label, value }: { label: string; value: number | null | undefined }) {
   return (
-    <div className="border border-border rounded-[10px] p-3">
-      <p className="text-[11px] text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
-      <p className="text-[18px] font-medium text-foreground">{value ?? "—"}</p>
+    <div className="border border-border rounded-2md p-3">
+      <p className="text-2xs text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
+      <p className="text-lg font-medium text-foreground">{value ?? "—"}</p>
     </div>
   );
 }

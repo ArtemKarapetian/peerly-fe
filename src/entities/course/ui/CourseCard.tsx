@@ -72,7 +72,7 @@ export function CourseCard({
         style={{ backgroundColor: coverColor }}
       >
         {!isCompleted && newAssignments && newAssignments > 0 ? (
-          <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-card/90 backdrop-blur-sm rounded-full text-[11px] font-semibold text-[--brand-primary] shadow-sm">
+          <span className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 bg-card/90 backdrop-blur-sm rounded-full text-2xs font-semibold text-[--brand-primary] shadow-sm">
             <BookOpen className="w-3 h-3" />
             {newAssignments}{" "}
             {newAssignments === 1 ? t("entity.course.newOne") : t("entity.course.newMany")}
@@ -81,7 +81,7 @@ export function CourseCard({
       </div>
 
       <div className="px-4 pt-3 pb-3 flex flex-col flex-1 gap-2">
-        <h3 className="text-[14px] leading-[1.35] tracking-[-0.2px] text-[--text-primary] font-semibold line-clamp-2 min-h-[2.7em]">
+        <h3 className="text-sm leading-[1.35] tracking-[-0.2px] text-[--text-primary] font-semibold line-clamp-2 min-h-[2.7em]">
           {title}
         </h3>
 
@@ -93,7 +93,7 @@ export function CourseCard({
             >
               {getInitials(teacher)}
             </div>
-            <p className="text-[12px] text-[--text-secondary] truncate">{teacher}</p>
+            <p className="text-xs text-[--text-secondary] truncate">{teacher}</p>
           </div>
         ) : null}
 
@@ -109,7 +109,7 @@ export function CourseCard({
                 }
               />
             </div>
-            <p className="text-[11px] text-[--text-tertiary]">
+            <p className="text-2xs text-[--text-tertiary]">
               {isCompleted
                 ? `100% ${t("entity.course.percentComplete")}`
                 : `${progress}% ${t("entity.course.percentComplete")}`}
@@ -121,7 +121,7 @@ export function CourseCard({
           {isCompleted ? (
             <div className="flex items-center gap-1.5 pt-1 text-[--success]">
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[12px] font-medium">{t("entity.course.completed")}</span>
+              <span className="text-xs font-medium">{t("entity.course.completed")}</span>
             </div>
           ) : deadlineInfo ? (
             <div
@@ -134,7 +134,7 @@ export function CourseCard({
               ) : (
                 <Clock className="w-3.5 h-3.5 shrink-0" />
               )}
-              <span className="text-[12px] font-medium">{deadlineInfo.label}</span>
+              <span className="text-xs font-medium">{deadlineInfo.label}</span>
             </div>
           ) : null}
         </div>
