@@ -147,13 +147,13 @@ function EditDraftAssignment({ editId }: { editId: string }) {
   if (data.backendStatus !== "draft") {
     return (
       <AppShell title={t("teacher.editAssignment.title")}>
-        <div className="mt-6 bg-warning-light border border-warning rounded-[16px] p-6 text-center">
-          <p className="text-[15px] text-foreground mb-4">
+        <div className="mt-6 bg-warning-light border border-warning rounded-lg p-6 text-center">
+          <p className="text-15 text-foreground mb-4">
             {t("teacher.editAssignment.publishedHint")}
           </p>
           <button
             onClick={() => void navigate(`/teacher/assignment/${editId}`)}
-            className="px-4 py-2 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
+            className="px-4 py-2 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
           >
             {t("teacher.editAssignment.backToAssignment")}
           </button>
@@ -362,14 +362,14 @@ function WizardShell({
       <Breadcrumbs items={[CRUMBS.teacherCourses, { label: title }]} />
 
       <div className="mt-6 max-w-[1000px] mx-auto">
-        <div className="bg-card border border-border shadow-sm rounded-[20px] p-6 mb-6">
+        <div className="bg-card border border-border shadow-sm rounded-xl p-6 mb-6">
           <div className="flex items-center justify-between">
             {STEPS.map((step, index) => (
               <div key={step.id} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
                   <div
                     className={`
-                      w-10 h-10 rounded-full flex items-center justify-center text-[14px] font-medium transition-all
+                      w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all
                       ${
                         currentStep > step.id
                           ? "bg-success text-primary-foreground"
@@ -383,7 +383,7 @@ function WizardShell({
                   </div>
                   <span
                     className={`
-                      mt-2 text-[12px] desktop:text-[13px] text-center
+                      mt-2 text-xs desktop:text-13 text-center
                       ${currentStep === step.id ? "text-foreground font-medium" : "text-muted-foreground"}
                     `}
                   >
@@ -404,7 +404,7 @@ function WizardShell({
           </div>
         </div>
 
-        <div className="bg-card border border-border shadow-sm rounded-[20px] p-8 mb-6">
+        <div className="bg-card border border-border shadow-sm rounded-xl p-8 mb-6">
           {renderStep()}
         </div>
 
@@ -412,13 +412,13 @@ function WizardShell({
           <button
             onClick={handlePrev}
             disabled={currentStep === 1 || submitting}
-            className="flex items-center gap-2 px-4 py-3 border border-border text-foreground rounded-[12px] hover:bg-surface-hover hover:border-border-strong transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-3 border border-border text-foreground rounded-md hover:bg-surface-hover hover:border-border-strong transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-4 h-4" />
             {t("teacher.createAssignment.backBtn")}
           </button>
 
-          <div className="text-[14px] text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             {t("teacher.createAssignment.stepOf", { current: currentStep, total: STEPS.length })}
           </div>
 
@@ -426,7 +426,7 @@ function WizardShell({
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {t("teacher.createAssignment.nextBtn")}
               <ChevronRight className="w-4 h-4" />

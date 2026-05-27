@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 
 import { STORAGE_KEYS } from "@/shared/config/constants";
 
-import { getSession, setSession, clearSession, isAuthenticated, type Session } from "./session";
+import { getSession, setSession, clearSession, type Session } from "./session";
 
 const sample: Session = {
   userId: "user-1",
@@ -37,15 +37,6 @@ describe("session", () => {
     clearSession();
     expect(getSession()).toBeNull();
     expect(localStorage.getItem(STORAGE_KEYS.session)).toBeNull();
-  });
-
-  it("isAuthenticated returns false when no session", () => {
-    expect(isAuthenticated()).toBe(false);
-  });
-
-  it("isAuthenticated returns true after setSession", () => {
-    setSession(sample);
-    expect(isAuthenticated()).toBe(true);
   });
 
   it("getSession returns null when stored JSON is malformed", () => {

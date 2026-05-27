@@ -27,7 +27,7 @@ function mockFetchOnce(status: number, body: unknown = null) {
   (globalThis.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(response);
 }
 
-describe("httpClient onError behaviour", () => {
+describe("httpClient", () => {
   beforeEach(() => {
     globalThis.fetch = vi.fn() as unknown as typeof fetch;
     navigateMock.mockReset();
@@ -37,30 +37,17 @@ describe("httpClient onError behaviour", () => {
     vi.restoreAllMocks();
   });
 
-  it("defaults to inline mode: throws ApiError on 404 without redirecting", async () => {
+  it("throws ApiError on 404 without navigating — transport is side-effect-free", async () => {
     mockFetchOnce(404, { error: "not found" });
 
     await expect(http.get("/courses/missing")).rejects.toBeInstanceOf(ApiError);
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
-  it.each([
-    [403, "/403"],
-    [404, "/404"],
-    [500, "/500"],
-  ])("redirect mode: %d → navigates to %s and still throws", async (status, target) => {
+  it.each([403, 500])("throws ApiError on %d without navigating", async (status) => {
     mockFetchOnce(status);
 
-    await expect(http.get("/x", { onError: "redirect" })).rejects.toBeInstanceOf(ApiError);
-    expect(navigateMock).toHaveBeenCalledWith(target);
-  });
-
-  it("redirect mode: does NOT redirect on other 4xx", async () => {
-    mockFetchOnce(422, { errors: ["bad"] });
-
-    await expect(http.post("/form", { x: 1 }, { onError: "redirect" })).rejects.toBeInstanceOf(
-      ApiError,
-    );
+    await expect(http.get("/x")).rejects.toBeInstanceOf(ApiError);
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
@@ -68,16 +55,25 @@ describe("httpClient onError behaviour", () => {
     const payload = { id: "c1", name: "Course" };
     mockFetchOnce(200, payload);
 
-    const result = await http.get<typeof payload>("/courses/c1", { onError: "redirect" });
+    const result = await http.get<typeof payload>("/courses/c1");
 
     expect(result).toEqual(payload);
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
-  it("401 is handled by authInterceptor, not by onError redirect", async () => {
+  it("attaches HTTP status and parsed body to the thrown ApiError", async () => {
+    mockFetchOnce(422, { errors: ["bad"] });
+
+    await expect(http.post("/form", { x: 1 })).rejects.toMatchObject({
+      status: 422,
+      body: { errors: ["bad"] },
+    });
+  });
+
+  it("401 is escalated by authInterceptor, never navigated by the client", async () => {
     mockFetchOnce(401);
 
-    await expect(http.get("/me", { onError: "redirect" })).rejects.toMatchObject({ status: 401 });
-    expect(navigateMock).not.toHaveBeenCalledWith("/401");
+    await expect(http.get("/me")).rejects.toMatchObject({ status: 401 });
+    expect(navigateMock).not.toHaveBeenCalled();
   });
 });

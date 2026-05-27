@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 import { redirectForStatus } from "@/shared/api/errorRedirect";
-import { ApiError, type HttpErrorMode } from "@/shared/api/httpClient";
+import { ApiError } from "@/shared/api/httpClient";
 
 interface AsyncState<T> {
   data: T | null;
@@ -10,8 +10,10 @@ interface AsyncState<T> {
   refetch: () => void;
 }
 
+type AsyncErrorMode = "inline" | "redirect";
+
 interface UseAsyncOptions {
-  onError?: HttpErrorMode;
+  onError?: AsyncErrorMode;
 }
 
 export function useAsync<T>(

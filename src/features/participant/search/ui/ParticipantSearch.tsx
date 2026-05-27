@@ -24,10 +24,10 @@ export function ParticipantSearch({ value, onChange, placeholder }: ParticipantS
         placeholder={placeholder ?? t("feature.participantSearch.placeholder")}
         className="
           w-full pl-9 pr-4 py-2.5
-          text-[14px] leading-[1.4] text-foreground
+          text-sm leading-[1.4] text-foreground
           placeholder:text-text-tertiary
           bg-card
-          border border-border rounded-[12px]
+          border border-border rounded-md
           outline-none
           transition-colors
           focus:border-ring focus:ring-2 focus:ring-ring/20

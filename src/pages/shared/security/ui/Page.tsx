@@ -15,10 +15,10 @@ export default function SecurityPage() {
       <Breadcrumbs items={[CRUMBS.settings, { label: t("page.security.title") }]} />
 
       <div className="mt-6 max-w-[800px]">
-        <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-2">
+        <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("page.security.title")}
         </h1>
-        <p className="text-[16px] text-muted-foreground mb-8">{t("page.security.subtitle")}</p>
+        <p className="text-base text-muted-foreground mb-8">{t("page.security.subtitle")}</p>
 
         <ChangePasswordCard />
       </div>

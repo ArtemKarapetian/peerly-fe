@@ -27,7 +27,7 @@ export function TaskFilters({ activeFilter, onFilterChange }: TaskFiltersProps) 
           key={filter.id}
           onClick={() => onFilterChange(filter.id)}
           className={`
-            inline-flex items-center px-3.5 py-1.5 rounded-full text-[14px] font-medium
+            inline-flex items-center px-3.5 py-1.5 rounded-full text-sm font-medium
             border transition-colors
             ${
               activeFilter === filter.id

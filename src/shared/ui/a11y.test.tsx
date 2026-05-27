@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 
 import { Badge } from "./badge";
 import { Button } from "./button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./card";
+import { Card } from "./card";
 import { Input } from "./input";
 
 describe("a11y: shared UI components", () => {
@@ -34,13 +34,9 @@ describe("a11y: shared UI components", () => {
   it("Card with proper heading structure has no a11y violations", async () => {
     const { container } = render(
       <Card>
-        <CardHeader>
-          <CardTitle>Title</CardTitle>
-          <CardDescription>Description text</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Content goes here</p>
-        </CardContent>
+        <h3>Title</h3>
+        <p>Description text</p>
+        <p>Content goes here</p>
       </Card>,
     );
     const results = await axe(container);

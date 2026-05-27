@@ -39,15 +39,12 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
               <button
                 onClick={() => handleClick(item.href!)}
                 title={item.label}
-                className="text-[14px] text-[var(--text-secondary)] hover:text-[var(--brand-primary)] transition-colors cursor-pointer truncate min-w-0"
+                className="text-sm text-[var(--text-secondary)] hover:text-[var(--brand-primary)] transition-colors cursor-pointer truncate min-w-0"
               >
                 {item.label}
               </button>
             ) : (
-              <span
-                title={item.label}
-                className="text-[14px] text-[--text-primary] truncate min-w-0"
-              >
+              <span title={item.label} className="text-sm text-[--text-primary] truncate min-w-0">
                 {item.label}
               </span>
             )}

@@ -67,7 +67,7 @@ export function CourseParticipantsTab({ courseId }: CourseParticipantsTabProps) 
     <div className="space-y-3">
       <ParticipantSearch value={searchQuery} onChange={setSearchQuery} />
       {isLoading ? (
-        <p className="text-[14px] text-text-tertiary px-1">{t("common.loading")}</p>
+        <p className="text-sm text-text-tertiary px-1">{t("common.loading")}</p>
       ) : (
         <ParticipantsList participants={filtered} />
       )}

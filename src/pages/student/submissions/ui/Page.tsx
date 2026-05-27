@@ -89,7 +89,7 @@ export default function SubmissionsPage() {
       <AppShell title={t("student.submissions.title")}>
         <Breadcrumbs items={breadcrumbs} />
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
+          <div className="bg-muted rounded-xl p-8 max-w-[480px] text-center">
             <div className="mb-4">
               <div
                 className={`w-16 h-16 ${isDeadlinePassed ? "bg-error-light" : "bg-brand-primary-lighter"} rounded-full mx-auto flex items-center justify-center`}
@@ -101,12 +101,12 @@ export default function SubmissionsPage() {
                 )}
               </div>
             </div>
-            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
+            <h2 className="text-2xl font-medium text-foreground mb-3 tracking-[-0.5px]">
               {isDeadlinePassed
                 ? t("student.submissions.deadlinePassedTitle")
                 : t("student.submissions.noSubmissions")}
             </h2>
-            <p className="text-[16px] text-muted-foreground leading-[1.5] mb-6">
+            <p className="text-base text-muted-foreground leading-[1.5] mb-6">
               {isDeadlinePassed
                 ? t("student.submissions.deadlinePassedDesc")
                 : t("student.submissions.noSubmissionsDesc")}
@@ -114,7 +114,7 @@ export default function SubmissionsPage() {
             {!isDeadlinePassed && (
               <button
                 onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-[12px] transition-colors text-[15px] font-medium"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-md transition-colors text-15 font-medium"
               >
                 {t("student.submissions.submitWork")}
               </button>
@@ -131,15 +131,15 @@ export default function SubmissionsPage() {
 
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px] mb-1">
+          <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-1">
             {t("student.submissions.title")}
           </h1>
-          <p className="text-[16px] text-muted-foreground leading-[1.5]">{taskTitle}</p>
+          <p className="text-base text-muted-foreground leading-[1.5]">{taskTitle}</p>
         </div>
         {!isDeadlinePassed && (
           <button
             onClick={() => void navigate(ROUTES.submitWork(courseId, taskId))}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-[12px] text-[14px] font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary-lighter hover:bg-brand-primary-light text-foreground rounded-md text-sm font-medium transition-colors"
           >
             <Edit className="size-4" />
             {t("student.submissions.editWork")}
@@ -149,30 +149,30 @@ export default function SubmissionsPage() {
 
       <div className="grid gap-4 desktop:grid-cols-3">
         <div className="desktop:col-span-2 space-y-4">
-          <section className="bg-card border border-border rounded-[16px] p-6">
-            <h2 className="text-[16px] font-medium text-foreground mb-3">
+          <section className="bg-card border border-border rounded-lg p-6">
+            <h2 className="text-base font-medium text-foreground mb-3">
               {t("student.submissions.commentTitle")}
             </h2>
             {(() => {
               const trimmed = (submission.content ?? "").trim();
               return trimmed && trimmed !== "—";
             })() ? (
-              <p className="text-[15px] text-foreground whitespace-pre-wrap leading-[1.5]">
+              <p className="text-15 text-foreground whitespace-pre-wrap leading-[1.5]">
                 {submission.content}
               </p>
             ) : (
-              <p className="text-[14px] text-muted-foreground italic">
+              <p className="text-sm text-muted-foreground italic">
                 {t("student.submissions.noComment")}
               </p>
             )}
           </section>
 
-          <section className="bg-card border border-border rounded-[16px] p-6">
-            <h2 className="text-[16px] font-medium text-foreground mb-3">
+          <section className="bg-card border border-border rounded-lg p-6">
+            <h2 className="text-base font-medium text-foreground mb-3">
               {t("student.submissions.filesTitle")}
             </h2>
             {submission.files.length === 0 ? (
-              <p className="text-[14px] text-muted-foreground italic">
+              <p className="text-sm text-muted-foreground italic">
                 {t("student.submissions.noFiles")}
               </p>
             ) : (
@@ -180,14 +180,14 @@ export default function SubmissionsPage() {
                 {submission.files.map((file) => (
                   <li
                     key={file.id}
-                    className="flex items-center gap-3 px-3 py-2 rounded-[10px] bg-muted"
+                    className="flex items-center gap-3 px-3 py-2 rounded-2md bg-muted"
                   >
                     <FileText className="size-5 text-brand-primary shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] font-medium text-foreground truncate">
+                      <div className="text-sm font-medium text-foreground truncate">
                         {file.name}
                       </div>
-                      <div className="text-[12px] text-muted-foreground">
+                      <div className="text-xs text-muted-foreground">
                         {formatFileSize(file.size, t)}
                       </div>
                     </div>
@@ -199,7 +199,7 @@ export default function SubmissionsPage() {
                           t("student.submissions.downloadError"),
                         )
                       }
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-card border border-border hover:bg-surface-hover rounded-[8px] text-[13px] font-medium transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-card border border-border hover:bg-surface-hover rounded-sm text-13 font-medium transition-colors"
                     >
                       <Download className="size-4" />
                       {t("common.download")}
@@ -210,22 +210,22 @@ export default function SubmissionsPage() {
             )}
           </section>
 
-          <section className="bg-card border border-border rounded-[16px] p-6">
-            <h2 className="text-[16px] font-medium text-foreground mb-3">
+          <section className="bg-card border border-border rounded-lg p-6">
+            <h2 className="text-base font-medium text-foreground mb-3">
               {t("student.submissions.reviewsTitle")}
             </h2>
             {reviews.length === 0 ? (
-              <p className="text-[14px] text-muted-foreground italic">
+              <p className="text-sm text-muted-foreground italic">
                 {t("student.submissions.noReviews")}
               </p>
             ) : (
               <ul className="space-y-3">
                 {reviews.map((r) => (
-                  <li key={r.id} className="rounded-[10px] bg-muted p-4">
-                    <div className="mb-2 text-[13px] font-medium text-brand-primary">
+                  <li key={r.id} className="rounded-2md bg-muted p-4">
+                    <div className="mb-2 text-13 font-medium text-brand-primary">
                       {t("student.submissions.reviewMark")}: {r.mark} / 5
                     </div>
-                    <p className="text-[14px] text-foreground whitespace-pre-wrap leading-[1.5]">
+                    <p className="text-sm text-foreground whitespace-pre-wrap leading-[1.5]">
                       {r.comment}
                     </p>
                   </li>
@@ -236,17 +236,17 @@ export default function SubmissionsPage() {
         </div>
 
         <aside className="desktop:col-span-1">
-          <div className="bg-card border border-border rounded-[16px] p-6">
-            <h2 className="text-[14px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
+          <div className="bg-card border border-border rounded-lg p-6">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">
               {t("student.submissions.finalMarkTitle")}
             </h2>
             {finalMark != null ? (
               <div className="text-[40px] font-medium text-foreground leading-none">
                 {finalMark}
-                <span className="text-[20px] text-muted-foreground">/5</span>
+                <span className="text-xl text-muted-foreground">/5</span>
               </div>
             ) : (
-              <p className="text-[14px] text-muted-foreground italic">
+              <p className="text-sm text-muted-foreground italic">
                 {t("student.submissions.noFinalMark")}
               </p>
             )}

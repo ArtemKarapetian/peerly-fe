@@ -5,7 +5,9 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import { ApiError } from "@/shared/api";
-import { isFlagEnabled } from "@/shared/lib/feature-flags";
+import { ROUTES } from "@/shared/config/routes";
+import { isDemoFlagEnabled } from "@/shared/lib/demo-flags";
+import { Card } from "@/shared/ui";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
@@ -45,7 +47,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [touched, setTouched] = useState({ email: false, password: false });
 
-  const enablePasswordReset = isFlagEnabled("enablePasswordReset");
+  const enablePasswordReset = isDemoFlagEnabled("enablePasswordReset");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -83,12 +85,12 @@ export default function LoginPage() {
     <PublicLayout maxWidth="md" showLoginButton={false}>
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-8 tablet:py-12">
         <div className="w-full max-w-[440px]">
-          <div className="bg-card border-2 border-border rounded-xl p-6 tablet:p-8 space-y-6">
+          <Card className="space-y-6 tablet:p-8">
             <div className="space-y-2">
-              <h1 className="text-[32px] font-medium text-foreground tracking-[-0.5px]">
+              <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px]">
                 {t("auth.login")}
               </h1>
-              <p className="text-[15px] text-muted-foreground">{t("auth.loginSubtitle")}</p>
+              <p className="text-15 text-muted-foreground">{t("auth.loginSubtitle")}</p>
             </div>
 
             {error && (
@@ -146,7 +148,7 @@ export default function LoginPage() {
               {enablePasswordReset && (
                 <div className="text-center">
                   <Link
-                    to="/reset-password"
+                    to={ROUTES.resetPassword}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {t("auth.forgotPassword")}
@@ -156,12 +158,15 @@ export default function LoginPage() {
 
               <div className="text-center border-t border-border pt-4">
                 <p className="text-sm text-muted-foreground mb-2">{t("auth.noAccount")}</p>
-                <Link to="/register" className="text-sm font-medium text-primary hover:underline">
+                <Link
+                  to={ROUTES.register}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
                   {t("auth.createAccount")}
                 </Link>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </PublicLayout>

@@ -35,7 +35,7 @@ export function CourseFilters({ activeFilter, onFilterChange }: CourseFiltersPro
             aria-selected={isActive}
             onClick={() => onFilterChange(filter.value)}
             className={`
-              inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-medium
+              inline-flex items-center px-3.5 py-1.5 rounded-full text-13 font-medium
               border transition-colors whitespace-nowrap
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40
               ${

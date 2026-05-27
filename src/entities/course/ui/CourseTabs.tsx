@@ -20,7 +20,7 @@ export function CourseTabs({
 }: CourseTabsProps) {
   const { t } = useTranslation();
   const tabClass = (active: boolean) =>
-    `relative px-6 py-4 text-[16px] font-medium transition-colors ${
+    `relative px-6 py-4 text-base font-medium transition-colors ${
       active ? "text-brand-primary" : "text-muted-foreground hover:text-foreground"
     }`;
 

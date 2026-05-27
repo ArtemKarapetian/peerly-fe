@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
@@ -83,12 +84,12 @@ export default function TeacherRubricsPage() {
             placeholder={t("teacher.rubrics.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-card border-2 border-border rounded-[12px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors"
+            className="w-full pl-10 pr-4 py-3 bg-card border-2 border-border rounded-md text-sm focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
         <button
           onClick={handleCreateNew}
-          className="inline-flex items-center gap-2 px-4 py-3 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium shrink-0"
+          className="inline-flex items-center gap-2 px-4 py-3 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium shrink-0"
         >
           <Plus className="w-4 h-4" />
           {t("teacher.rubrics.create")}
@@ -97,14 +98,14 @@ export default function TeacherRubricsPage() {
 
       {/* List */}
       {filteredRubrics.length === 0 ? (
-        <div className="bg-card border-2 border-border rounded-[20px] py-20 px-6 text-center">
-          <div className="w-16 h-16 rounded-[16px] bg-brand-primary-lighter/40 flex items-center justify-center mx-auto mb-4">
+        <Card className="py-20 px-6 text-center">
+          <div className="w-16 h-16 rounded-lg bg-brand-primary-lighter/40 flex items-center justify-center mx-auto mb-4">
             <Library className="w-8 h-8 text-brand-primary" />
           </div>
-          <h3 className="text-[18px] font-medium text-foreground mb-2">
+          <h3 className="text-lg font-medium text-foreground mb-2">
             {searchQuery ? t("teacher.rubrics.notFound") : t("teacher.rubrics.createFirst")}
           </h3>
-          <p className="text-[14px] text-muted-foreground mb-6 max-w-[420px] mx-auto">
+          <p className="text-sm text-muted-foreground mb-6 max-w-[420px] mx-auto">
             {searchQuery
               ? t("teacher.rubrics.tryDifferentSearch")
               : t("teacher.rubrics.createFirstHint")}
@@ -112,23 +113,23 @@ export default function TeacherRubricsPage() {
           {!searchQuery && (
             <button
               onClick={handleCreateNew}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-primary-foreground rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
             >
               <Plus className="w-4 h-4" />
               {t("teacher.rubrics.createRubric")}
             </button>
           )}
-        </div>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
           {currentItems.map((rubric) => (
             <div
               key={rubric.id}
               onClick={() => void navigate(`/teacher/rubrics/${rubric.id}`)}
-              className="group relative bg-card border-2 border-border rounded-[16px] p-5 cursor-pointer hover:border-brand-primary hover:shadow-[var(--shadow-md)] transition-all"
+              className="group relative bg-card border-2 border-border rounded-lg p-5 cursor-pointer hover:border-brand-primary hover:shadow-[var(--shadow-md)] transition-all"
             >
               <div className="flex items-start justify-between gap-3 mb-3">
-                <h3 className="text-[16px] font-medium text-foreground tracking-[-0.2px] line-clamp-2 leading-snug flex-1">
+                <h3 className="text-base font-medium text-foreground tracking-[-0.2px] line-clamp-2 leading-snug flex-1">
                   {rubric.name}
                 </h3>
                 <button
@@ -136,18 +137,18 @@ export default function TeacherRubricsPage() {
                     e.stopPropagation();
                     handleDuplicate(rubric);
                   }}
-                  className="p-1.5 rounded-[8px] text-muted-foreground hover:text-foreground hover:bg-card border border-transparent hover:border-border opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                  className="p-1.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-card border border-transparent hover:border-border opacity-0 group-hover:opacity-100 transition-all shrink-0"
                   title={t("teacher.rubrics.duplicate")}
                 >
                   <Copy className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <p className="text-[13px] text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
+              <p className="text-13 text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
                 {rubric.description}
               </p>
 
-              <div className="flex items-center justify-between text-[12px] text-muted-foreground border-t border-border pt-3">
+              <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-3">
                 <span className="inline-flex items-center gap-1">
                   <span className="font-medium text-foreground">{rubric.criteria.length}</span>
                   {t("teacher.rubrics.criteriaCount", { count: rubric.criteria.length })}

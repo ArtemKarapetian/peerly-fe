@@ -6,12 +6,8 @@ import { API_PREFIX } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
 
 import { forceLogout, handleUnauthorized } from "./authInterceptor";
-import { redirectForStatus } from "./errorRedirect";
-
-export type HttpErrorMode = "inline" | "redirect";
 
 export interface HttpOptions extends RequestInit {
-  onError?: HttpErrorMode;
   skipAuthRefresh?: boolean;
 }
 
@@ -51,7 +47,7 @@ async function parseBody(res: Response): Promise<unknown> {
 }
 
 async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
-  const { onError = "inline", skipAuthRefresh = false, ...fetchInit } = init;
+  const { skipAuthRefresh = false, ...fetchInit } = init;
   const url = buildUrl(path);
   const hasJsonBody = fetchInit.body !== undefined && typeof fetchInit.body === "string";
 
@@ -78,7 +74,6 @@ async function request<T>(path: string, init: HttpOptions = {}): Promise<T> {
 
   if (!res.ok) {
     const body = await parseBody(res);
-    if (onError === "redirect") redirectForStatus(res.status);
     throw new ApiError(res.status, body, `HTTP ${res.status}: ${path}`);
   }
 
@@ -90,7 +85,7 @@ export interface PageQuery {
   pageSize: number;
 }
 
-export const DEFAULT_PAGE: PageQuery = { offset: 0, pageSize: 100 };
+const DEFAULT_PAGE: PageQuery = { offset: 0, pageSize: 100 };
 
 export function paged(path: string, p: PageQuery = DEFAULT_PAGE): string {
   const sep = path.includes("?") ? "&" : "?";

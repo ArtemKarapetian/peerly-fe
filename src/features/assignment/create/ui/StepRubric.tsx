@@ -40,33 +40,33 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-[24px] font-medium text-foreground tracking-[-0.5px] mb-2">
+        <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.rubric.title")}
         </h2>
-        <p className="text-[15px] text-muted-foreground">
+        <p className="text-15 text-muted-foreground">
           {t("feature.assignmentCreate.rubric.subtitle")}
         </p>
       </div>
 
       {selected && (
-        <div className="bg-success-light border-2 border-success rounded-[12px] p-4">
+        <div className="bg-success-light border-2 border-success rounded-md p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <Layers className="w-5 h-5 text-success" />
-                <h3 className="text-[16px] font-medium text-foreground">
+                <h3 className="text-base font-medium text-foreground">
                   {t("feature.assignmentCreate.rubric.selectedRubric")}
                 </h3>
               </div>
-              <p className="text-[15px] text-foreground font-medium mb-1">{selected.name}</p>
-              <p className="text-[13px] text-muted-foreground mb-2">{selected.description}</p>
-              <span className="text-[13px] text-muted-foreground">
+              <p className="text-15 text-foreground font-medium mb-1">{selected.name}</p>
+              <p className="text-13 text-muted-foreground mb-2">{selected.description}</p>
+              <span className="text-13 text-muted-foreground">
                 {t("feature.assignmentCreate.rubric.criteria", { count: selected.criteria.length })}
               </span>
             </div>
             <button
               onClick={handleDeselect}
-              className="px-3 py-2 text-[13px] text-muted-foreground hover:text-destructive transition-colors"
+              className="px-3 py-2 text-13 text-muted-foreground hover:text-destructive transition-colors"
             >
               {t("feature.assignmentCreate.rubric.deselect")}
             </button>
@@ -77,17 +77,17 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
       <button
         type="button"
         onClick={handleCreateNew}
-        className="w-full flex items-center justify-between p-4 border-2 border-dashed border-brand-primary bg-brand-primary-light rounded-[12px] hover:border-brand-primary hover:bg-brand-primary-light transition-all group"
+        className="w-full flex items-center justify-between p-4 border-2 border-dashed border-brand-primary bg-brand-primary-light rounded-md hover:border-brand-primary hover:bg-brand-primary-light transition-all group"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-primary rounded-[8px] flex items-center justify-center group-hover:bg-brand-primary-hover transition-colors">
+          <div className="w-10 h-10 bg-brand-primary rounded-sm flex items-center justify-center group-hover:bg-brand-primary-hover transition-colors">
             <Plus className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className="text-left">
-            <p className="text-[15px] font-medium text-foreground">
+            <p className="text-15 font-medium text-foreground">
               {t("feature.assignmentCreate.rubric.createNew")}
             </p>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-13 text-muted-foreground">
               {t("feature.assignmentCreate.rubric.createNewHint")}
             </p>
           </div>
@@ -103,20 +103,20 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
             placeholder={t("feature.assignmentCreate.rubric.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
+            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
           />
         </div>
       )}
 
       <div>
-        <h3 className="text-[14px] font-medium text-foreground mb-3">
+        <h3 className="text-sm font-medium text-foreground mb-3">
           {t("feature.assignmentCreate.rubric.library")}
         </h3>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-12 bg-muted border border-border rounded-[12px]">
+          <div className="text-center py-12 bg-muted border border-border rounded-md">
             <Layers className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-            <p className="text-[15px] text-muted-foreground">
+            <p className="text-15 text-muted-foreground">
               {t("feature.assignmentCreate.rubric.noRubrics")}
             </p>
           </div>
@@ -129,17 +129,17 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
                   key={rubric.id}
                   type="button"
                   onClick={() => handleSelect(rubric.id, rubric.name)}
-                  className={`w-full text-left p-4 border-2 rounded-[12px] transition-all ${
+                  className={`w-full text-left p-4 border-2 rounded-md transition-all ${
                     isSelected
                       ? "border-brand-primary bg-brand-primary-light"
                       : "border-border hover:border-brand-primary bg-card"
                   }`}
                 >
-                  <h4 className="text-[15px] font-medium text-foreground mb-2">{rubric.name}</h4>
-                  <p className="text-[13px] text-muted-foreground mb-3 line-clamp-2">
+                  <h4 className="text-15 font-medium text-foreground mb-2">{rubric.name}</h4>
+                  <p className="text-13 text-muted-foreground mb-3 line-clamp-2">
                     {rubric.description}
                   </p>
-                  <span className="text-[12px] text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {t("feature.assignmentCreate.rubric.criteria", {
                       count: rubric.criteria.length,
                     })}
@@ -156,8 +156,8 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
         )}
       </div>
 
-      <div className="bg-info-light border border-info rounded-[12px] p-4">
-        <p className="text-[13px] text-foreground">
+      <div className="bg-info-light border border-info rounded-md p-4">
+        <p className="text-13 text-foreground">
           <strong>{t("feature.assignmentCreate.rubric.skipTip")}</strong>{" "}
           {t("feature.assignmentCreate.rubric.skipTipText")}
         </p>

@@ -20,7 +20,7 @@ export interface Session {
 }
 
 export function getSession(): Session | null {
-  return storage.getJSON<Session>(STORAGE_KEYS.session);
+  return storage.getJSON(STORAGE_KEYS.session);
 }
 
 export function setSession(session: Session): void {
@@ -29,8 +29,4 @@ export function setSession(session: Session): void {
 
 export function clearSession(): void {
   storage.remove(STORAGE_KEYS.session);
-}
-
-export function isAuthenticated(): boolean {
-  return getSession() !== null;
 }

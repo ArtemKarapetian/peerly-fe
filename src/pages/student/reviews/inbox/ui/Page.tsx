@@ -73,22 +73,22 @@ export default function ReviewsInboxPage() {
         />
       </div>
 
-      {isLoading && <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>}
+      {isLoading && <p className="text-sm text-text-tertiary">{t("common.loading")}</p>}
 
       {!isLoading && isEmpty && (
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-muted rounded-[20px] p-8 max-w-[480px] text-center">
+          <div className="bg-muted rounded-xl p-8 max-w-[480px] text-center">
             <div className="mb-4">
               <div className="w-16 h-16 bg-brand-primary-lighter rounded-full mx-auto flex items-center justify-center">
-                <span className="text-[32px]">📝</span>
+                <span className="text-page-h1">📝</span>
               </div>
             </div>
-            <h2 className="text-[24px] font-medium text-foreground mb-3 tracking-[-0.5px]">
+            <h2 className="text-2xl font-medium text-foreground mb-3 tracking-[-0.5px]">
               {filter === "all" && t("student.reviews.noAssigned")}
               {filter === "not_started" && t("student.reviews.noToStart")}
               {filter === "submitted" && t("student.reviews.noSubmitted")}
             </h2>
-            <p className="text-[16px] text-muted-foreground leading-[1.5]">
+            <p className="text-base text-muted-foreground leading-[1.5]">
               {filter === "all" && t("student.reviews.willAppear")}
               {filter === "not_started" && t("student.reviews.allStarted")}
               {filter === "submitted" && t("student.reviews.notSubmittedYet")}

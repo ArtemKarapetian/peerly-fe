@@ -1,3 +1,5 @@
+import { Card } from "@/shared/ui";
+
 import type { CourseTeacher } from "../model/types";
 
 interface CourseHeaderProps {
@@ -20,15 +22,15 @@ export function CourseHeader({
   teachers,
 }: CourseHeaderProps) {
   return (
-    <div className="bg-card border-2 border-border rounded-[20px] overflow-hidden">
+    <Card className="p-0 overflow-hidden">
       <div className="w-full h-[100px]" style={{ backgroundColor: coverColor }} />
 
       <div className="px-6 pb-6 pt-4 space-y-3">
-        <h1 className="text-[32px] font-medium leading-[1.05] tracking-[-0.5px] text-foreground">
+        <h1 className="text-page-h1 font-medium leading-[1.05] tracking-[-0.5px] text-foreground">
           {title}
         </h1>
         {description ? (
-          <p className="text-[15px] text-muted-foreground leading-[1.5]">{description}</p>
+          <p className="text-15 text-muted-foreground leading-[1.5]">{description}</p>
         ) : null}
         {teachers && teachers.length > 0 ? (
           <ul className="flex flex-wrap gap-2 pt-1">
@@ -39,17 +41,17 @@ export function CourseHeader({
                 title={t.email}
               >
                 <span
-                  className="inline-flex items-center justify-center size-7 rounded-full text-[11px] font-semibold text-foreground"
+                  className="inline-flex items-center justify-center size-7 rounded-full text-2xs font-semibold text-foreground"
                   style={{ backgroundColor: coverColor }}
                 >
                   {getInitials(t.name)}
                 </span>
-                <span className="text-[13px] text-foreground">{t.name}</span>
+                <span className="text-13 text-foreground">{t.name}</span>
               </li>
             ))}
           </ul>
         ) : null}
       </div>
-    </div>
+    </Card>
   );
 }

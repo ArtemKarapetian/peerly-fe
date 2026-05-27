@@ -35,26 +35,26 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
   return (
     <div className="max-w-[600px] space-y-6">
       <div>
-        <label className="block text-[13px] font-medium text-foreground mb-2">
+        <label className="block text-13 font-medium text-foreground mb-2">
           {t("widget.settings.courseName")}
         </label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] focus:outline-none focus:border-brand-primary transition-colors"
+          className="w-full px-4 py-2 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
         />
       </div>
 
       <div>
-        <label className="block text-[13px] font-medium text-foreground mb-2">
+        <label className="block text-13 font-medium text-foreground mb-2">
           {t("widget.settings.description")}
         </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          className="w-full px-4 py-2 border-2 border-border rounded-[12px] text-[15px] resize-none focus:outline-none focus:border-brand-primary transition-colors"
+          className="w-full px-4 py-2 border-2 border-border rounded-md text-15 resize-none focus:outline-none focus:border-brand-primary transition-colors"
         />
       </div>
 
@@ -62,7 +62,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         <button
           onClick={handleSave}
           disabled={!isDirty || !name.trim() || mutation.isPending}
-          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-md hover:bg-brand-primary-hover transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-4 h-4" />
           {mutation.isPending ? t("common.saving") : t("widget.settings.saveChanges")}
@@ -70,13 +70,13 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
       </div>
 
       <div className="mt-8 pt-6 border-t-2 border-border">
-        <h3 className="text-[16px] font-medium text-destructive mb-2">
+        <h3 className="text-base font-medium text-destructive mb-2">
           {t("widget.settings.dangerZone")}
         </h3>
-        <p className="text-[14px] text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground mb-4">
           {t("widget.settings.dangerDescription")}
         </p>
-        <button className="px-4 py-2 bg-error-light text-destructive border-2 border-destructive rounded-[12px] hover:bg-destructive hover:text-text-inverse transition-colors">
+        <button className="px-4 py-2 bg-error-light text-destructive border-2 border-destructive rounded-md hover:bg-destructive hover:text-text-inverse transition-colors">
           {t("widget.settings.deleteCourse")}
         </button>
       </div>

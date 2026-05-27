@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { ApiError, humanizeApiError } from "@/shared/api";
 import { STORAGE_KEYS } from "@/shared/config/constants";
+import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button.tsx";
 
 import { authApi, defaultRouteForRole, useAuth } from "@/entities/user";
@@ -148,7 +149,7 @@ export default function VerifyEmailPage() {
               </Button>
             ) : null}
             <Link
-              to="/login"
+              to={ROUTES.login}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors block"
             >
               {t("page.resetPassword.backToLogin")}
@@ -201,7 +202,7 @@ export default function VerifyEmailPage() {
 
           <div className="pt-4 border-t border-border">
             <p className="text-xs text-muted-foreground mb-3">{t("page.verifyEmail.checkSpam")}</p>
-            <Link to="/login" className="text-sm text-primary hover:underline">
+            <Link to={ROUTES.login} className="text-sm text-primary hover:underline">
               {t("page.resetPassword.backToLogin")}
             </Link>
           </div>

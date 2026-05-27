@@ -68,7 +68,7 @@ export default function CoursesListPage() {
       <PageHeader title={t("student.courses.title")} subtitle={t("student.courses.subtitle")} />
 
       {isLoading ? (
-        <p className="text-[14px] text-text-tertiary">{t("common.loading")}</p>
+        <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
       ) : (
         <CourseFilterBar courses={items}>
           {(filteredCourses) => (
@@ -97,7 +97,7 @@ function CourseListContent({
   return (
     <>
       {courses.length > 0 && (
-        <p className="mb-3 text-[12px] text-[--text-tertiary]">
+        <p className="mb-3 text-xs text-[--text-tertiary]">
           {t("common.found")}: {courses.length}
         </p>
       )}
@@ -121,10 +121,10 @@ function CourseListContent({
           <div className="w-12 h-12 bg-[--surface-hover] rounded-[var(--radius-lg)] flex items-center justify-center mb-3">
             <span className="text-[22px]">📚</span>
           </div>
-          <p className="text-[14px] font-medium text-[--text-primary] mb-1">
+          <p className="text-sm font-medium text-[--text-primary] mb-1">
             {t("student.courses.notFound")}
           </p>
-          <p className="text-[13px] text-[--text-secondary]">
+          <p className="text-13 text-[--text-secondary]">
             {t("student.courses.tryChangingSearch")}
           </p>
         </div>

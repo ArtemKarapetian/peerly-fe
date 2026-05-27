@@ -26,7 +26,7 @@ export function TaskList({ tasks, onTaskClick }: TaskListProps) {
   if (tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-[14px] text-muted-foreground">{t("feature.taskList.notFound")}</p>
+        <p className="text-sm text-muted-foreground">{t("feature.taskList.notFound")}</p>
       </div>
     );
   }

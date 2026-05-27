@@ -32,7 +32,7 @@ export default function TaskPage() {
     return (
       <AppShell title={t("student.task.notFound")}>
         <Breadcrumbs items={[CRUMBS.courses, { label: t("student.task.notFound") }]} />
-        <p className="mt-6 text-[14px] text-text-tertiary">{t("student.task.notFound")}</p>
+        <p className="mt-6 text-sm text-text-tertiary">{t("student.task.notFound")}</p>
       </AppShell>
     );
   }

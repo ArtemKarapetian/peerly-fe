@@ -18,6 +18,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
+import { ROUTES } from "@/shared/config/routes";
+
 import { useRole } from "@/entities/user";
 
 import { RoleSwitcherPopover } from "./RoleSwitcherPopover.tsx";
@@ -128,8 +130,8 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
             <Link
-              to="/student/dashboard"
-              className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
+              to={ROUTES.dashboard}
+              className="text-base font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
             >
               Peerly
             </Link>
@@ -151,10 +153,10 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
                   key={item.hash}
                   to={item.hash}
                   onClick={() => onClose?.()}
-                  className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${navItemClass(active)}`}
+                  className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-2sm transition-colors duration-150 ${focusRing} ${navItemClass(active)}`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
-                  <span className="text-[14px]">{item.label}</span>
+                  <span className="text-sm">{item.label}</span>
                 </Link>
               );
             })}
@@ -168,20 +170,20 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
           <div className="border-t border-[--surface-border] shrink-0 px-2.5 py-2 space-y-0.5 pb-3">
             <Link
-              to="/profile"
+              to={ROUTES.profile}
               onClick={() => onClose?.()}
-              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
+              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-2sm transition-colors duration-150 ${focusRing} ${footerItemClass}`}
             >
               <User className="w-4 h-4 shrink-0" />
-              <span className="text-[14px]">{t("nav.profile")}</span>
+              <span className="text-sm">{t("nav.profile")}</span>
             </Link>
             <Link
-              to="/settings"
+              to={ROUTES.settings}
               onClick={() => onClose?.()}
-              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-[6px] transition-colors duration-150 ${focusRing} ${footerItemClass}`}
+              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-2sm transition-colors duration-150 ${focusRing} ${footerItemClass}`}
             >
               <Settings className="w-4 h-4 shrink-0" />
-              <span className="text-[14px]">{t("nav.settings")}</span>
+              <span className="text-sm">{t("nav.settings")}</span>
             </Link>
           </div>
         </div>
@@ -199,8 +201,8 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
       <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
         {!isCollapsed && (
           <Link
-            to="/student/dashboard"
-            className="text-[16px] font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
+            to={ROUTES.dashboard}
+            className="text-base font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
           >
             Peerly
           </Link>
@@ -228,13 +230,13 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
             <Link
               key={item.hash}
               to={item.hash}
-              className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${
+              className={`flex items-center rounded-2sm transition-colors duration-150 py-[7px] ${focusRing} ${
                 isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
               } ${navItemClass(active)}`}
               title={isCollapsed ? item.label : undefined}
             >
               <Icon className="w-4 h-4 shrink-0" />
-              {!isCollapsed && <span className="text-[14px]">{item.label}</span>}
+              {!isCollapsed && <span className="text-sm">{item.label}</span>}
             </Link>
           );
         })}
@@ -249,24 +251,24 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
 
         <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
           <Link
-            to="/profile"
-            className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
+            to={ROUTES.profile}
+            className={`flex items-center rounded-2sm transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
               isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
             }`}
             title={isCollapsed ? t("nav.profile") : undefined}
           >
             <User className="w-4 h-4 shrink-0" />
-            {!isCollapsed && <span className="text-[14px]">{t("nav.profile")}</span>}
+            {!isCollapsed && <span className="text-sm">{t("nav.profile")}</span>}
           </Link>
           <Link
-            to="/settings"
-            className={`flex items-center rounded-[6px] transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
+            to={ROUTES.settings}
+            className={`flex items-center rounded-2sm transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
               isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
             }`}
             title={isCollapsed ? t("nav.settings") : undefined}
           >
             <Settings className="w-4 h-4 shrink-0" />
-            {!isCollapsed && <span className="text-[14px]">{t("nav.settings")}</span>}
+            {!isCollapsed && <span className="text-sm">{t("nav.settings")}</span>}
           </Link>
         </div>
       </div>

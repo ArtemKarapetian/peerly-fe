@@ -25,7 +25,7 @@ export function CourseSearch({ value, onChange, placeholder }: CourseSearchProps
         placeholder={resolvedPlaceholder}
         className="
           w-full pl-9 pr-4 py-2.5
-          text-[14px] leading-[1.4] text-text-primary
+          text-sm leading-[1.4] text-text-primary
           placeholder:text-text-tertiary
           bg-card
           border border-surface-border rounded-[var(--radius-md)]

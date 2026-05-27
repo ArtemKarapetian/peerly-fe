@@ -2,6 +2,8 @@ import { Plus, GripVertical, Trash2, Save, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Card } from "@/shared/ui";
+
 import type { RubricData, RubricCriterionData } from "../model/types";
 
 interface RubricEditorProps {
@@ -84,25 +86,25 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   };
 
   const inputClass =
-    "w-full px-4 py-2 bg-background border-2 border-border rounded-[12px] text-[15px] outline-none focus:border-brand-primary transition-colors";
+    "w-full px-4 py-2 bg-background border-2 border-border rounded-md text-15 outline-none focus:border-brand-primary transition-colors";
   const innerInputClass =
-    "w-full px-3 py-2 bg-background border-2 border-border rounded-[8px] text-[15px] font-medium focus:outline-none focus:border-brand-primary transition-colors";
+    "w-full px-3 py-2 bg-background border-2 border-border rounded-sm text-15 font-medium focus:outline-none focus:border-brand-primary transition-colors";
   const smallInputClass =
-    "w-full px-3 py-2 bg-background border-2 border-border rounded-[8px] text-[14px] focus:outline-none focus:border-brand-primary transition-colors";
+    "w-full px-3 py-2 bg-background border-2 border-border rounded-sm text-sm focus:outline-none focus:border-brand-primary transition-colors";
 
   return (
-    <div className="bg-card border-2 border-border rounded-[20px] p-6">
+    <Card>
       {isDirty && (
-        <div className="mb-6 flex items-center justify-between bg-warning-light border border-warning rounded-[12px] p-3">
+        <div className="mb-6 flex items-center justify-between bg-warning-light border border-warning rounded-md p-3">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-warning" />
-            <span className="text-[14px] text-warning font-medium">
+            <span className="text-sm text-warning font-medium">
               {t("widget.rubricEditor.unsavedChanges")}
             </span>
           </div>
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors text-[14px] font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
           >
             <Save className="w-4 h-4" />
             {t("common.save")}
@@ -111,12 +113,12 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       )}
 
       <section className="mb-8 space-y-4">
-        <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px]">
+        <h3 className="text-lg font-medium text-foreground tracking-[-0.5px]">
           {t("widget.rubricEditor.basicInfo")}
         </h3>
 
         <div>
-          <label className="block text-[13px] font-medium text-foreground mb-2">
+          <label className="block text-13 font-medium text-foreground mb-2">
             {t("widget.rubricEditor.rubricName")}
           </label>
           <input
@@ -128,7 +130,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         </div>
 
         <div>
-          <label className="block text-[13px] font-medium text-foreground mb-2">
+          <label className="block text-13 font-medium text-foreground mb-2">
             {t("widget.rubricEditor.description")}
           </label>
           <textarea
@@ -141,7 +143,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
       </section>
 
       <section className="mb-6">
-        <h3 className="text-[18px] font-medium text-foreground tracking-[-0.5px] mb-4">
+        <h3 className="text-lg font-medium text-foreground tracking-[-0.5px] mb-4">
           {t("widget.rubricEditor.gradingCriteria")}
         </h3>
 
@@ -186,7 +188,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[12px] text-muted-foreground mb-1">
+                      <label className="block text-xs text-muted-foreground mb-1">
                         {t("widget.rubricEditor.maxPoints")}
                       </label>
                       <input
@@ -202,7 +204,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     </div>
 
                     <div>
-                      <label className="block text-[12px] text-muted-foreground mb-1">
+                      <label className="block text-xs text-muted-foreground mb-1">
                         {t("widget.rubricEditor.weight")}
                       </label>
                       <input
@@ -229,7 +231,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         onChange={(e) => updateCriterion(index, { required: e.target.checked })}
                         className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
                       />
-                      <span className="text-[13px] text-foreground">
+                      <span className="text-13 text-foreground">
                         {t("widget.rubricEditor.required")}
                       </span>
                     </label>
@@ -243,14 +245,14 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                         }
                         className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
                       />
-                      <span className="text-[13px] text-foreground">
+                      <span className="text-13 text-foreground">
                         {t("widget.rubricEditor.commentRequired")}
                       </span>
                     </label>
 
                     {criterion.commentRequired && (
                       <div className="flex items-center gap-2">
-                        <span className="text-[12px] text-muted-foreground">
+                        <span className="text-xs text-muted-foreground">
                           {t("widget.rubricEditor.minChars")}
                         </span>
                         <input
@@ -264,7 +266,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                                 : undefined,
                             })
                           }
-                          className="w-16 px-2 py-1 bg-background border-2 border-border rounded-[6px] text-[13px] focus:outline-none focus:border-brand-primary"
+                          className="w-16 px-2 py-1 bg-background border-2 border-border rounded-2sm text-13 focus:outline-none focus:border-brand-primary"
                           placeholder="20"
                         />
                       </div>
@@ -274,7 +276,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
                 <button
                   onClick={() => removeCriterion(index)}
-                  className="p-2 hover:bg-error-light rounded-[8px] transition-colors"
+                  className="p-2 hover:bg-error-light rounded-sm transition-colors"
                   title={t("widget.rubricEditor.deleteCriterion")}
                 >
                   <Trash2 className="w-4 h-4 text-destructive" />
@@ -285,7 +287,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
 
           <button
             onClick={addCriterion}
-            className="w-full flex items-center justify-center gap-2 px-3 py-3 border-2 border-dashed border-border rounded-[14px] text-[14px] font-medium text-muted-foreground hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary-light/30 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-3 py-3 border-2 border-dashed border-border rounded-[14px] text-sm font-medium text-muted-foreground hover:border-brand-primary hover:text-brand-primary hover:bg-brand-primary-light/30 transition-colors"
           >
             <Plus className="w-4 h-4" />
             {t("widget.rubricEditor.addCriterion")}
@@ -297,12 +299,12 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         <button
           onClick={handleSave}
           disabled={!isDirty}
-          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-[12px] hover:bg-brand-primary-hover transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 bg-brand-primary text-text-inverse rounded-md hover:bg-brand-primary-hover transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-4 h-4" />
           {t("widget.rubricEditor.saveChanges")}
         </button>
       </div>
-    </div>
+    </Card>
   );
 }

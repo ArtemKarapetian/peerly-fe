@@ -80,7 +80,7 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
     <button
       onClick={onClick}
       className="
-        relative w-full flex items-center gap-4 px-5 py-4 rounded-[12px]
+        relative w-full flex items-center gap-4 px-5 py-4 rounded-md
         text-left border border-transparent
         transition-colors duration-150
         hover:bg-brand-primary-lighter hover:border-brand-primary/30
@@ -89,15 +89,15 @@ export function TaskListItem({ title, deadline, status, onClick }: TaskListItemP
       "
     >
       <div className="flex-1 min-w-[100px] space-y-1">
-        <p className="text-[16px] font-medium leading-[1.3] tracking-[-0.3px] text-foreground group-hover:text-brand-primary transition-colors">
+        <p className="text-base font-medium leading-[1.3] tracking-[-0.3px] text-foreground group-hover:text-brand-primary transition-colors">
           {title}
         </p>
-        <p className="text-[13px] leading-[1.3] text-muted-foreground">{formattedDeadline}</p>
+        <p className="text-13 leading-[1.3] text-muted-foreground">{formattedDeadline}</p>
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
         <span
-          className={`${statusInfo.color} ${statusInfo.textColor} inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-medium whitespace-nowrap`}
+          className={`${statusInfo.color} ${statusInfo.textColor} inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap`}
         >
           {statusInfo.label}
         </span>
