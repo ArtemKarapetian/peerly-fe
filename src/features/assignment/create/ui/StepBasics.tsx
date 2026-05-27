@@ -22,15 +22,11 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
         <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.basics.title")}
         </h2>
-        <p className="text-15 text-muted-foreground">
-          {t("feature.assignmentCreate.basics.subtitle")}
-        </p>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.basics.courseLabel")}{" "}
-          <span className="text-destructive">*</span>
+          {t("feature.assignmentCreate.basics.courseLabel")}
         </label>
         <select
           value={data.courseId}
@@ -54,8 +50,7 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.basics.titleLabel")}{" "}
-          <span className="text-destructive">*</span>
+          {t("feature.assignmentCreate.basics.titleLabel")}
         </label>
         <input
           type="text"
@@ -79,13 +74,6 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
         />
         <p className="text-13 text-muted-foreground mt-1">
           {t("feature.assignmentCreate.basics.characters", { count: data.description.length })}
-        </p>
-      </div>
-
-      <div className="bg-info-light border border-info rounded-md p-4">
-        <p className="text-13 text-foreground">
-          <strong>{t("feature.assignmentCreate.basics.tip")}</strong>{" "}
-          {t("feature.assignmentCreate.basics.tipText")}
         </p>
       </div>
     </div>

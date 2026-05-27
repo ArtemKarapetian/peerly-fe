@@ -80,7 +80,7 @@ export interface UpdateCourseRequestBody {
 export interface GroupDto {
   id: Id;
   name: string;
-  courseId: Id;
+  studentCount: number;
 }
 
 export interface CreateGroupRequestBody {
@@ -94,7 +94,6 @@ export interface CreateGroupResponse {
 
 export interface UpdateGroupRequestBody {
   name: string;
-  courseId: Id;
 }
 
 export interface AddGroupStudentRequestBody {
@@ -106,7 +105,11 @@ export interface AddGroupTeacherRequestBody {
 }
 
 export interface ListGroupsResponse {
-  groups: GroupDto[];
+  groupInfos: GroupDto[];
+}
+
+export interface GetGroupResponse {
+  groupInfo: GroupDto;
 }
 
 // ── Participants ──────────────────────────────────────────────────

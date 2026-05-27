@@ -1,18 +1,30 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherCourseParticipants } from "./Participants";
 
-const { courseRepoMock } = vi.hoisted(() => ({
-  courseRepoMock: {
+const { courseRepoMock, groupRepoMock, toastMock, confirmMock } = vi.hoisted(() => ({
+  courseRepoMock: { getParticipants: vi.fn() },
+  groupRepoMock: {
+    listForCourse: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
     getParticipants: vi.fn(),
   },
+  toastMock: { success: vi.fn(), error: vi.fn() },
+  confirmMock: vi.fn(),
 }));
 
-vi.mock("@/entities/course", () => ({
-  courseRepo: courseRepoMock,
-}));
+vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
+
+vi.mock("@/entities/group", async () => {
+  const actual = await vi.importActual<typeof import("@/entities/group")>("@/entities/group");
+  return { ...actual, groupRepo: groupRepoMock };
+});
+
+vi.mock("sonner", () => ({ toast: toastMock }));
 
 vi.mock("@/features/participant/import", () => ({
   ParticipantImportModal: ({ onClose }: { onClose: () => void }) => (
@@ -22,107 +34,178 @@ vi.mock("@/features/participant/import", () => ({
   ),
 }));
 
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string, opts?: Record<string, unknown>) =>
+      opts ? `${key}:${JSON.stringify(opts)}` : key,
+    i18n: { language: "ru" },
+  }),
+}));
+
 beforeEach(() => {
   courseRepoMock.getParticipants.mockReset();
+  Object.values(groupRepoMock).forEach((m) => m.mockReset());
+  toastMock.success.mockReset();
+  toastMock.error.mockReset();
+  confirmMock.mockReset();
+  vi.stubGlobal("confirm", confirmMock);
 });
 
 describe("TeacherCourseParticipants", () => {
-  it("does not show the participants list while loading", () => {
-    let resolveFn: (v: { students: never[]; teachers: never[] }) => void = () => undefined;
-    courseRepoMock.getParticipants.mockReturnValue(
-      new Promise((res) => {
-        resolveFn = res;
-      }),
-    );
-    render(<TeacherCourseParticipants courseId="c-1" />);
-    expect(screen.queryByText(/widget\.participants\.empty/)).not.toBeInTheDocument();
-    expect(screen.queryByRole("table")).not.toBeInTheDocument();
-    resolveFn({ students: [], teachers: [] });
-  });
+  it("renders teacher section above groups section", async () => {
+    courseRepoMock.getParticipants.mockResolvedValueOnce({
+      students: [],
+      teachers: [{ teacherId: 9, email: "prof@x", name: "Prof X" }],
+    });
+    groupRepoMock.listForCourse.mockResolvedValueOnce([]);
 
-  it("shows the empty state when there are no participants", async () => {
-    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
     render(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => {
-      expect(screen.getByText(/widget\.participants\.empty/)).toBeInTheDocument();
+      expect(screen.getByText("Prof X")).toBeInTheDocument();
+    });
+    expect(screen.getByText(/widget\.participants\.teachersSection/)).toBeInTheDocument();
+    expect(screen.getByText(/widget\.participants\.groupsSection/)).toBeInTheDocument();
+  });
+
+  it("lists groups sorted alphabetically with student counts", async () => {
+    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValueOnce([
+      { id: "g-b", name: "Бета", studentCount: 5 },
+      { id: "g-a", name: "Альфа", studentCount: 3 },
+      { id: "g-g", name: "Гамма", studentCount: 0 },
+    ]);
+
+    render(<TeacherCourseParticipants courseId="c-1" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Альфа")).toBeInTheDocument();
+    });
+
+    const headings = screen
+      .getAllByRole("button", { expanded: false })
+      .map((btn) => btn.textContent ?? "");
+    expect(headings.findIndex((h) => h.includes("Альфа"))).toBeLessThan(
+      headings.findIndex((h) => h.includes("Бета")),
+    );
+    expect(headings.findIndex((h) => h.includes("Бета"))).toBeLessThan(
+      headings.findIndex((h) => h.includes("Гамма")),
+    );
+  });
+
+  it("creates a new group via inline form", async () => {
+    const user = userEvent.setup();
+    courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValue([]);
+    groupRepoMock.create.mockResolvedValueOnce({ id: "g-new", name: "G", studentCount: 0 });
+
+    render(<TeacherCourseParticipants courseId="c-1" />);
+
+    await waitFor(() => expect(screen.getByText(/widget\.groups\.empty/)).toBeInTheDocument());
+
+    await user.click(screen.getByRole("button", { name: /widget\.groups\.createGroup/ }));
+    await user.type(
+      screen.getByPlaceholderText(/widget\.groups\.groupNamePlaceholder/),
+      "New Group",
+    );
+    await user.click(screen.getByRole("button", { name: /common\.create/ }));
+
+    await waitFor(() => {
+      expect(groupRepoMock.create).toHaveBeenCalledWith({ courseId: "c-1", name: "New Group" });
+      expect(toastMock.success).toHaveBeenCalled();
     });
   });
 
-  it("renders teacher then student rows and shows correct counts", async () => {
-    courseRepoMock.getParticipants.mockResolvedValueOnce({
-      students: [
-        { studentId: 1, email: "alice@x", name: "Alice" },
-        { studentId: 2, email: "bob@x", name: "Bob" },
-      ],
-      teachers: [{ teacherId: 9, email: "p@x", name: "Prof X" }],
+  it("expands a group to show members", async () => {
+    const user = userEvent.setup();
+    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValueOnce([
+      { id: "g-1", name: "Group A", studentCount: 1 },
+    ]);
+    groupRepoMock.getParticipants.mockResolvedValueOnce({
+      students: [{ id: "u-1", name: "Alice", email: "a@x" }],
+      teachers: [],
     });
+
     render(<TeacherCourseParticipants courseId="c-1" />);
+
+    await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
+
+    await user.click(screen.getByRole("button", { name: /Group A/ }));
 
     await waitFor(() => {
       expect(screen.getByText("Alice")).toBeInTheDocument();
     });
-    expect(screen.getByText("Bob")).toBeInTheDocument();
-    expect(screen.getByText("Prof X")).toBeInTheDocument();
-
-    const totalSection = screen.getByText(/widget\.participants\.total/).closest("span");
-    expect(totalSection?.textContent).toContain("3");
-    const studentSection = screen.getByText(/widget\.participants\.studentsCount/).closest("span");
-    expect(studentSection?.textContent).toContain("2");
-    const teacherSection = screen.getByText(/widget\.participants\.teachersCount/).closest("span");
-    expect(teacherSection?.textContent).toContain("1");
   });
 
-  it("filters by role via the select", async () => {
+  it("opens the import modal preselected for a specific group", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValueOnce({
-      students: [{ studentId: 1, email: "alice@x", name: "Alice" }],
-      teachers: [{ teacherId: 9, email: "p@x", name: "Prof X" }],
-    });
+    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValueOnce([
+      { id: "g-1", name: "Group A", studentCount: 0 },
+    ]);
+
     render(<TeacherCourseParticipants courseId="c-1" />);
 
-    await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
 
-    const select = screen.getByRole("combobox");
-    await user.selectOptions(select, "teacher");
-
-    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
-    expect(screen.getByText("Prof X")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /widget\.groups\.addStudents/ }));
+    expect(screen.getByTestId("import-modal")).toBeInTheDocument();
   });
 
-  it("filters by name with the search input", async () => {
+  it("deletes a group after confirmation via ConfirmDialog", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValueOnce({
-      students: [
-        { studentId: 1, email: "alice@x", name: "Alice" },
-        { studentId: 2, email: "bob@x", name: "Bob" },
-      ],
-      teachers: [],
-    });
+    courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValue([
+      { id: "g-1", name: "Group A", studentCount: 0 },
+    ]);
+    groupRepoMock.delete.mockResolvedValueOnce(undefined);
+
     render(<TeacherCourseParticipants courseId="c-1" />);
 
-    await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
 
-    const search = screen.getByPlaceholderText(/widget\.participants\.searchPlaceholder/);
-    await user.type(search, "bob");
+    await user.click(screen.getByRole("button", { name: /widget\.groups\.deleteGroup/ }));
+    const dialog = await screen.findByRole("dialog");
+    await user.click(within(dialog).getByRole("button", { name: /common\.delete/ }));
 
-    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
-    expect(screen.getByText("Bob")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(groupRepoMock.delete).toHaveBeenCalledWith("g-1");
+      expect(toastMock.success).toHaveBeenCalled();
+    });
   });
 
-  it("shows notFound state when search excludes everyone", async () => {
-    const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValueOnce({
-      students: [{ studentId: 1, email: "alice@x", name: "Alice" }],
-      teachers: [],
-    });
+  it("shows empty state when course has no groups", async () => {
+    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValueOnce([]);
+
     render(<TeacherCourseParticipants courseId="c-1" />);
 
-    await waitFor(() => expect(screen.getByText("Alice")).toBeInTheDocument());
+    await waitFor(() => {
+      expect(screen.getByText(/widget\.groups\.empty/)).toBeInTheDocument();
+    });
+  });
 
-    const search = screen.getByPlaceholderText(/widget\.participants\.searchPlaceholder/);
-    await user.type(search, "zzzzz");
+  it("renames a group via inline pencil edit", async () => {
+    const user = userEvent.setup();
+    courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+    groupRepoMock.listForCourse.mockResolvedValue([
+      { id: "g-1", name: "Group A", studentCount: 0 },
+    ]);
+    groupRepoMock.update.mockResolvedValueOnce(undefined);
 
-    expect(screen.getByText(/widget\.participants\.notFound/)).toBeInTheDocument();
+    render(<TeacherCourseParticipants courseId="c-1" />);
+
+    await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
+
+    await user.click(screen.getByRole("button", { name: /widget\.groups\.rename/ }));
+    const input = await screen.findByDisplayValue("Group A");
+    await user.clear(input);
+    await user.type(input, "Group Renamed{Enter}");
+
+    await waitFor(() => {
+      expect(groupRepoMock.update).toHaveBeenCalledWith("g-1", { name: "Group Renamed" });
+      expect(toastMock.success).toHaveBeenCalled();
+    });
   });
 });

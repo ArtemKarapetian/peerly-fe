@@ -45,7 +45,7 @@ function blankFormData(): AssignmentFormData {
     reviewDeadline: null,
     rubricId: null,
     reviewsPerSubmission: 3,
-    discrepancyThreshold: 30,
+    discrepancyThreshold: 2,
     status: "draft",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -88,11 +88,12 @@ export default function TeacherCreateAssignmentPage({
 }: TeacherCreateAssignmentPageProps) {
   const [params] = useSearchParams();
   const editId = params.get("edit");
+  const courseIdFromQuery = params.get("courseId");
 
   if (editId) {
     return <EditDraftAssignment editId={editId} />;
   }
-  return <CreateAssignment initialCourseId={courseId} />;
+  return <CreateAssignment initialCourseId={courseId ?? courseIdFromQuery ?? undefined} />;
 }
 
 function CreateAssignment({ initialCourseId }: { initialCourseId?: string }) {
@@ -111,6 +112,7 @@ function CreateAssignment({ initialCourseId }: { initialCourseId?: string }) {
       title={t("teacher.createAssignment.title")}
       onSaved={() => localStorage.removeItem(STORAGE_KEY)}
       persistDraftToStorage
+      lockCourse={Boolean(initialCourseId)}
     />
   );
 }
@@ -235,6 +237,22 @@ function WizardShell({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<AssignmentFormData>(initialData);
+  const isDirty = useMemo(() => {
+    const cmp = (a: AssignmentFormData, b: AssignmentFormData) => {
+      const norm = (d: AssignmentFormData) => ({
+        courseId: d.courseId,
+        title: d.title,
+        description: d.description,
+        submissionDeadline: d.submissionDeadline?.getTime() ?? null,
+        reviewDeadline: d.reviewDeadline?.getTime() ?? null,
+        rubricId: d.rubricId,
+        reviewsPerSubmission: d.reviewsPerSubmission,
+        discrepancyThreshold: d.discrepancyThreshold,
+      });
+      return JSON.stringify(norm(a)) !== JSON.stringify(norm(b));
+    };
+    return cmp(formData, initialData);
+  }, [formData, initialData]);
 
   useEffect(() => {
     if (!persistDraftToStorage) return;
@@ -350,6 +368,7 @@ function WizardShell({
             submitting={submitting}
             errorMessage={submitError}
             mode={mode}
+            isDirty={isDirty}
           />
         );
       default:

@@ -53,7 +53,7 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
   );
 
   const handleCreateAssignment = () => {
-    void navigate(ROUTES.teacherCreateAssignment);
+    void navigate(`${ROUTES.teacherCreateAssignment}?courseId=${courseId}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, assignmentId: string) => {
@@ -120,15 +120,7 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
         {(assignments ?? []).length === 0 && (
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-            <p className="text-15 text-muted-foreground mb-4">
-              {t("widget.assignments.noAssignments")}
-            </p>
-            <button
-              onClick={handleCreateAssignment}
-              className="px-4 py-2 bg-brand-primary text-text-inverse rounded-md hover:bg-brand-primary-hover transition-colors"
-            >
-              {t("widget.assignments.createFirst")}
-            </button>
+            <p className="text-15 text-muted-foreground">{t("widget.assignments.noAssignments")}</p>
           </div>
         )}
       </div>

@@ -43,9 +43,6 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
         <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.rubric.title")}
         </h2>
-        <p className="text-15 text-muted-foreground">
-          {t("feature.assignmentCreate.rubric.subtitle")}
-        </p>
       </div>
 
       {selected && (
@@ -154,13 +151,6 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
             />
           </div>
         )}
-      </div>
-
-      <div className="bg-info-light border border-info rounded-md p-4">
-        <p className="text-13 text-foreground">
-          <strong>{t("feature.assignmentCreate.rubric.skipTip")}</strong>{" "}
-          {t("feature.assignmentCreate.rubric.skipTipText")}
-        </p>
       </div>
     </div>
   );

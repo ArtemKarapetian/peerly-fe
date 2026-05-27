@@ -8,5 +8,6 @@ export {
   useCourse,
   useCreateCourse,
   useUpdateCourse,
+  usePublishCourse,
   useCourseParticipants,
 } from "./model/queries";

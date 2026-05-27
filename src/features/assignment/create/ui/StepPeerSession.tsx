@@ -13,6 +13,8 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
+const DISCREPANCY_MAX_POINTS = 10;
+
 export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
   const { t } = useTranslation();
 
@@ -22,15 +24,11 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
         <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.peerSession.title")}
         </h2>
-        <p className="text-15 text-muted-foreground">
-          {t("feature.assignmentCreate.peerSession.subtitle")}
-        </p>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-3">
-          {t("feature.assignmentCreate.peerSession.reviewsPerSubmissionLabel")}{" "}
-          <span className="text-destructive">*</span>
+          {t("feature.assignmentCreate.peerSession.reviewsPerSubmissionLabel")}
         </label>
         <div className="flex items-center gap-4">
           <input
@@ -65,14 +63,13 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-3">
-          {t("feature.assignmentCreate.peerSession.discrepancyLabel")}{" "}
-          <span className="text-destructive">*</span>
+          {t("feature.assignmentCreate.peerSession.discrepancyLabel")}
         </label>
         <div className="flex items-center gap-4">
           <input
             type="range"
             min="1"
-            max="100"
+            max={DISCREPANCY_MAX_POINTS}
             step="1"
             value={data.discrepancyThreshold}
             onChange={(e) => onUpdate({ discrepancyThreshold: parseInt(e.target.value) })}
@@ -82,11 +79,15 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             <input
               type="number"
               min="1"
-              max="100"
+              max={DISCREPANCY_MAX_POINTS}
               value={data.discrepancyThreshold}
               onChange={(e) =>
                 onUpdate({
-                  discrepancyThreshold: clamp(parseInt(e.target.value) || 30, 1, 100),
+                  discrepancyThreshold: clamp(
+                    parseInt(e.target.value) || 2,
+                    1,
+                    DISCREPANCY_MAX_POINTS,
+                  ),
                 })
               }
               className="w-20 px-3 py-2 border-2 border-border rounded-sm text-15 font-medium text-center focus:outline-none focus:border-brand-primary"
@@ -98,13 +99,6 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
           {t("feature.assignmentCreate.peerSession.discrepancyHint", {
             value: data.discrepancyThreshold,
           })}
-        </p>
-      </div>
-
-      <div className="bg-info-light border border-info rounded-md p-4">
-        <p className="text-13 text-foreground">
-          <strong>{t("feature.assignmentCreate.peerSession.tip")}</strong>{" "}
-          {t("feature.assignmentCreate.peerSession.tipText")}
         </p>
       </div>
     </div>

@@ -61,6 +61,7 @@ describe("useParticipantImport", () => {
     ]);
 
     const { result } = renderHook(() => useParticipantImport("c-1"));
+    act(() => result.current.setQuery("abc"));
 
     await waitFor(() => {
       expect(result.current.candidates).toEqual([{ id: "u-1", name: "Alice", email: "a@x" }]);
@@ -74,6 +75,7 @@ describe("useParticipantImport", () => {
     ]);
 
     const { result } = renderHook(() => useParticipantImport("c-1"));
+    act(() => result.current.setQuery("abc"));
     await waitFor(() => expect(result.current.candidates).toHaveLength(2));
 
     act(() => result.current.toggleSelected("u-1"));
@@ -89,6 +91,7 @@ describe("useParticipantImport", () => {
   it("canSubmit is false until a student is picked and a group exists", async () => {
     userRepoMock.searchStudents.mockResolvedValue([{ id: "u-1", name: "Alice", email: "a@x" }]);
     const { result } = renderHook(() => useParticipantImport("c-1"));
+    act(() => result.current.setQuery("abc"));
     await waitFor(() => expect(result.current.candidates).toHaveLength(1));
 
     expect(result.current.canSubmit).toBe(false);

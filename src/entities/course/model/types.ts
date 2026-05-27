@@ -13,7 +13,7 @@ export interface DemoCourse {
   description: string;
   teachers: CourseTeacher[];
   enrollmentCount: number;
-  status: "active" | "archived";
+  status: "draft" | "active" | "archived";
   backendStatus: CourseStatus;
   homeworkCount: number;
   archived?: boolean;

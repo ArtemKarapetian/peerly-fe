@@ -64,6 +64,10 @@ export default function SubmitWorkPage() {
     setComment(incoming === "" || incoming === "—" ? "" : (submission.content ?? ""));
   }
 
+  const savedCommentRaw = (submission?.content ?? "").trim();
+  const savedComment = savedCommentRaw === "" || savedCommentRaw === "—" ? "" : savedCommentRaw;
+  const commentDirty = comment !== savedComment;
+
   const breadcrumbs = [
     CRUMBS.courses,
     { label: courseName, href: ROUTES.course(courseId) },
@@ -295,7 +299,7 @@ export default function SubmitWorkPage() {
               </button>
               <button
                 onClick={handleSave}
-                disabled={isBusy}
+                disabled={isBusy || !commentDirty}
                 className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-primary hover:bg-brand-primary-hover text-primary-foreground rounded-md text-15 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Save className="size-4" />

@@ -65,11 +65,11 @@ beforeEach(() => {
 });
 
 describe("StepBasics", () => {
-  it("renders subtitle and course options", async () => {
+  it("renders the title heading and course options", async () => {
     const onUpdate = vi.fn();
     render(<StepBasics data={makeData()} onUpdate={onUpdate} />);
 
-    expect(screen.getByText("feature.assignmentCreate.basics.subtitle")).toBeInTheDocument();
+    expect(screen.getByText("feature.assignmentCreate.basics.title")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Algebra" })).toBeInTheDocument();
     });

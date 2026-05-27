@@ -14,7 +14,7 @@ function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormDa
     reviewDeadline: null,
     rubricId: null,
     reviewsPerSubmission: 3,
-    discrepancyThreshold: 30,
+    discrepancyThreshold: 2,
     status: "draft",
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
@@ -58,19 +58,19 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const ranges = container.querySelectorAll("input[type='range']");
-    fireEvent.change(ranges[1], { target: { value: "45" } });
+    fireEvent.change(ranges[1], { target: { value: "5" } });
 
-    expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 45 });
+    expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 5 });
   });
 
-  it("clamps discrepancyThreshold above max=100", () => {
+  it("clamps discrepancyThreshold above max=10 (points scale)", () => {
     const onUpdate = vi.fn();
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const numbers = container.querySelectorAll("input[type='number']");
     fireEvent.change(numbers[1], { target: { value: "500" } });
 
-    expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 100 });
+    expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 10 });
   });
 
   it("clamps discrepancyThreshold below min=1", () => {
@@ -80,6 +80,6 @@ describe("StepPeerSession", () => {
     const numbers = container.querySelectorAll("input[type='number']");
     fireEvent.change(numbers[1], { target: { value: "0" } });
 
-    expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 30 });
+    expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 2 });
   });
 });

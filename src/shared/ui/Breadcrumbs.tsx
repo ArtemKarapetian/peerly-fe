@@ -32,7 +32,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         return (
           <div
             key={index}
-            className={`flex items-center gap-2 min-w-0 ${isLast ? "flex-1" : "shrink-0"}`}
+            className={`flex items-center gap-2 min-w-0 ${
+              isLast ? "flex-1" : "max-w-[160px] tablet:max-w-[220px] shrink"
+            }`}
           >
             {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-[--text-tertiary] shrink-0" />}
             {item.href ? (

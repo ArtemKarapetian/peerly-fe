@@ -1,4 +1,4 @@
-import { Edit, Trash2, Calendar, BarChart3, FileText } from "lucide-react";
+import { Edit, Trash2, Calendar, BarChart3, FileText, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
@@ -114,22 +114,28 @@ export default function TeacherAssignmentDetailsPage() {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {!isPublished && (
-              <button
-                onClick={() => void navigate(`/teacher/assignments/new?edit=${assignmentId}`)}
-                className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-md hover:bg-muted transition-colors"
-              >
-                <Edit className="w-4 h-4" />
-                <span className="text-sm font-medium">{t("teacher.assignmentDetail.editBtn")}</span>
-              </button>
+              <>
+                <button
+                  onClick={() => void navigate(`/teacher/assignments/new?edit=${assignmentId}`)}
+                  className="flex items-center gap-2 px-4 py-3 border-2 border-border text-foreground rounded-md hover:bg-muted transition-colors"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    {t("teacher.assignmentDetail.editBtn")}
+                  </span>
+                </button>
+                <button
+                  onClick={() => void handleDelete()}
+                  disabled={deleting}
+                  className="flex items-center gap-2 px-4 py-3 border-2 border-border text-error rounded-md hover:border-error hover:bg-error-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    {t("teacher.assignmentDetail.deleteBtn")}
+                  </span>
+                </button>
+              </>
             )}
-            <button
-              onClick={() => void handleDelete()}
-              disabled={deleting}
-              className="flex items-center gap-2 px-4 py-3 border-2 border-border text-error rounded-md hover:border-error hover:bg-error-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span className="text-sm font-medium">{t("teacher.assignmentDetail.deleteBtn")}</span>
-            </button>
           </div>
         </div>
 
@@ -190,6 +196,20 @@ export default function TeacherAssignmentDetailsPage() {
           ) : null}
         </div>
       </div>
+
+      {assignment.checklist ? (
+        <div className="mt-6 bg-card border border-border shadow-sm rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <ClipboardList className="w-5 h-5 text-brand-primary" />
+            <h2 className="text-xl font-medium text-foreground tracking-[-0.5px]">
+              {t("teacher.assignmentDetail.rubric")}
+            </h2>
+          </div>
+          <pre className="whitespace-pre-wrap text-sm text-foreground font-sans leading-relaxed">
+            {assignment.checklist}
+          </pre>
+        </div>
+      ) : null}
 
       <div className="mt-6 grid grid-cols-1 tablet:grid-cols-2 gap-4">
         <button

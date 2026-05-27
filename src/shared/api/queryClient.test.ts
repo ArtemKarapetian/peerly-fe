@@ -25,14 +25,11 @@ describe("queryClient", () => {
     expect(defaults.mutations?.retry).toBe(MUTATION_RETRY_COUNT);
   });
 
-  it("disables refetchOnWindowFocus by default", () => {
+  it("refetches aggressively (cache disabled by design — staleTime/gcTime=0)", () => {
     const defaults = queryClient.getDefaultOptions();
-    expect(defaults.queries?.refetchOnWindowFocus).toBe(false);
-  });
-
-  it("sets non-zero staleTime and gcTime defaults", () => {
-    const defaults = queryClient.getDefaultOptions();
-    expect(defaults.queries?.staleTime).toBeGreaterThan(0);
-    expect(defaults.queries?.gcTime).toBeGreaterThan(0);
+    expect(defaults.queries?.staleTime).toBe(0);
+    expect(defaults.queries?.gcTime).toBe(0);
+    expect(defaults.queries?.refetchOnMount).toBe(true);
+    expect(defaults.queries?.refetchOnWindowFocus).toBe(true);
   });
 });

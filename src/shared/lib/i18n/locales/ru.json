@@ -290,7 +290,8 @@
       "assignmentsLabel_few": "Задания",
       "assignmentsLabel_many": "Заданий",
       "createCourse": "Создать курс",
-      "searchPlaceholder": "Поиск по названию или коду курса...",
+      "searchPlaceholder": "Поиск по названию курса...",
+      "statusAll": "Все статусы",
       "noCourses": "Нет курсов",
       "noCoursesSearch": "Курсы не найдены",
       "tryChangingSearch": "Попробуйте изменить поисковый запрос",
@@ -578,6 +579,7 @@
       "deadlines": "Дедлайны",
       "submissionDeadline": "Дедлайн сдачи работы",
       "reviewDeadline": "Дедлайн рецензирования",
+      "rubric": "Рубрика",
       "peerReviewSettings": "Настройки peer review",
       "reviewsPerSubmission": "Рецензий на одну работу",
       "gradingRubric": "Рубрика оценивания",
@@ -633,8 +635,12 @@
       },
       "status": {
         "active": "Активен",
+        "draft": "Черновик",
         "archived": "Архив"
       },
+      "publishBtn": "Опубликовать курс",
+      "publishHint": "Курс в статусе «Черновик» не виден студентам. Опубликуйте, чтобы открыть доступ.",
+      "publishError": "Не удалось опубликовать курс. Попробуйте ещё раз.",
       "meta": {
         "participants": "Участников",
         "assignments": "Заданий",
@@ -1216,16 +1222,13 @@
         "skipTipText": "Рубрика преобразуется в чек-лист задания и редактируется, пока задание в черновике. После публикации чек-лист изменить уже нельзя."
       },
       "peerSession": {
-        "title": "Настройки peer review",
-        "subtitle": "Настройте параметры взаимного рецензирования",
-        "reviewsPerSubmissionLabel": "Количество рецензий на одну работу (k)",
-        "reviewsHint_one": "Каждая работа получит {{count}} рецензию. Рекомендуется: 3-5 для баланса качества и нагрузки.",
-        "reviewsHint_few": "Каждая работа получит {{count}} рецензии. Рекомендуется: 3-5 для баланса качества и нагрузки.",
-        "reviewsHint_many": "Каждая работа получит {{count}} рецензий. Рекомендуется: 3-5 для баланса качества и нагрузки.",
-        "discrepancyLabel": "Порог расхождения оценок (%)",
-        "discrepancyHint": "Если оценки рецензентов на одну работу расходятся более чем на {{value}}%, работа отправится на повторное рецензирование. Разумное значение — 20–40%.",
-        "tip": "Совет:",
-        "tipText": "Для курсов с большим количеством студентов (30+) обычно достаточно k=3-5 рецензий и порога расхождения 30%."
+        "title": "Настройки взаимной проверки",
+        "reviewsPerSubmissionLabel": "Количество рецензий на одну работу",
+        "reviewsHint_one": "Каждая работа получит {{count}} рецензию.",
+        "reviewsHint_few": "Каждая работа получит {{count}} рецензии.",
+        "reviewsHint_many": "Каждая работа получит {{count}} рецензий.",
+        "discrepancyLabel": "Порог расхождения оценок (балла)",
+        "discrepancyHint": "Если средние оценки рецензентов на одну работу расходятся более чем на {{value}} балла, работа отправится на третьего рецензента."
       },
       "plugins": {
         "title": "Плагины и проверки",
@@ -1257,7 +1260,6 @@
       },
       "publish": {
         "title": "Готово к публикации",
-        "subtitle": "Проверьте настройки и опубликуйте задание или сохраните как черновик",
         "basicInfo": "Основная информация",
         "courseLabel": "Курс",
         "courseNotSelected": "Не выбран",
@@ -1269,17 +1271,18 @@
         "reviewDeadline": "Дедлайн рецензирования",
         "rubricLabel": "Рубрика оценивания",
         "rubricNotSelected": "Не выбрана",
-        "peerReviewLabel": "Peer Review",
+        "peerReviewLabel": "Взаимная проверка",
         "reviewsPerSubmission": "Рецензий на работу",
         "discrepancyThreshold": "Порог расхождения оценок",
+        "discrepancyValue_one": "{{count}} балл",
+        "discrepancyValue_few": "{{count}} балла",
+        "discrepancyValue_many": "{{count}} баллов",
         "warningText": "После публикации задание станет видимым для студентов. Вы сможете редактировать настройки, но некоторые изменения (например, дедлайны) могут повлиять на уже начатые работы.",
         "warningAttention": "Обратите внимание:",
         "saveDraft": "Сохранить черновик",
         "saveDraftEdit": "Сохранить изменения",
         "publishAssignment": "Опубликовать задание",
         "publishing": "Публикация...",
-        "draftsInfo": "Черновики сохраняются автоматически и доступны только вам.",
-        "publishedInfo": "Опубликованные задания сразу становятся видимы студентам курса.",
         "errorMissingFields": "Заполните курс и оба дедлайна перед публикацией",
         "errorGeneric": "Не удалось создать задание. Попробуйте ещё раз."
       }
@@ -1290,6 +1293,7 @@
       "noGroups": "В курсе пока нет групп — создайте группу, чтобы добавить участников",
       "searchLabel": "Поиск студента",
       "searchPlaceholder": "Имя или email",
+      "minChars": "Введите минимум 3 символа",
       "startTyping": "Начните вводить имя или email",
       "noResults": "Никого не нашлось",
       "selectedCount_one": "Выбран {{count}} студент",
@@ -1612,7 +1616,8 @@
       "previous": "Предыдущая",
       "next": "Следующая",
       "pageLabel": "Страница",
-      "of": "из"
+      "of": "из",
+      "perPage": "На странице:"
     }
   },
   "widget": {
@@ -1629,25 +1634,39 @@
       "noAssignments": "Заданий пока нет",
       "createFirst": "Создать первое задание"
     },
+    "groups": {
+      "totalGroups": "Всего групп:",
+      "createGroup": "Создать группу",
+      "groupNamePlaceholder": "Название группы",
+      "empty": "В курсе ещё нет групп",
+      "studentsCount_one": "{{count}} студент",
+      "studentsCount_few": "{{count}} студента",
+      "studentsCount_many": "{{count}} студентов",
+      "addStudents": "Добавить студентов",
+      "addStudentsTo": "Добавить студентов в «{{name}}»",
+      "rename": "Переименовать",
+      "deleteGroup": "Удалить группу",
+      "deleteConfirm": "Удалить группу «{{name}}»?",
+      "noStudents": "В группе пока нет студентов",
+      "loadStudentsError": "Не удалось загрузить состав группы",
+      "createSuccess": "Группа создана",
+      "createError": "Не удалось создать группу",
+      "renameSuccess": "Группа переименована",
+      "renameError": "Не удалось переименовать группу",
+      "deleteSuccess": "Группа удалена",
+      "deleteError": "Не удалось удалить группу"
+    },
     "participants": {
-      "searchPlaceholder": "Поиск по имени...",
-      "allRoles": "Все роли",
-      "studentsRole": "Студенты",
-      "teachersRole": "Преподаватели",
-      "import": "Импорт",
-      "roleBadgeStudent": "Студент",
-      "roleBadgeTeacher": "Преподаватель",
-      "notFound": "По фильтрам никого не найдено.",
-      "empty": "На курс ещё никто не записан.",
-      "total": "Всего:",
-      "studentsCount": "Студентов:",
-      "teachersCount": "Преподавателей:"
+      "teachersSection": "Преподаватели курса",
+      "groupsSection": "Группы студентов",
+      "empty": "На курс ещё никто не записан."
     },
     "settings": {
       "courseName": "Название курса",
       "description": "Описание",
       "saveChanges": "Сохранить изменения",
       "settingsSaved": "Настройки сохранены",
+      "publishSuccess": "Курс опубликован",
       "dangerZone": "Опасная зона",
       "dangerDescription": "Удаление курса необратимо и удалит все связанные задания, работы и рецензии.",
       "deleteCourse": "Удалить курс"

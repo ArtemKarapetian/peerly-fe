@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
-import { Card } from "@/shared/ui";
+import { Card, Select } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -70,14 +70,27 @@ interface ContentData {
 function SubmissionsContent({ data }: { data: ContentData }) {
   const { t } = useTranslation();
   const { users, assignments, submissions } = data;
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
 
-  const [filterAssignment, setFilterAssignment] = useState<string>(
-    params.get("assignmentId") ?? "all",
-  );
-  const [filterStatus, setFilterStatus] = useState<StatusFilter>("all");
-  const [searchStudent, setSearchStudent] = useState("");
+  const filterAssignment = params.get("assignmentId") ?? "all";
+  const filterStatus = (params.get("status") ?? "all") as StatusFilter;
+  const searchStudent = params.get("search") ?? "";
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const updateParam = (key: string, value: string, fallback = "all") => {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (!value || value === fallback) next.delete(key);
+        else next.set(key, value);
+        return next;
+      },
+      { replace: true },
+    );
+  };
+  const setFilterAssignment = (v: string) => updateParam("assignmentId", v);
+  const setFilterStatus = (v: StatusFilter) => updateParam("status", v);
+  const setSearchStudent = (v: string) => updateParam("search", v, "");
 
   const rows = useMemo(() => {
     return submissions.map((sub) => {
@@ -162,34 +175,29 @@ function SubmissionsContent({ data }: { data: ContentData }) {
             <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("common.assignments")}
             </label>
-            <select
-              value={filterAssignment}
-              onChange={(e) => setFilterAssignment(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
-            >
+            <Select value={filterAssignment} onChange={(e) => setFilterAssignment(e.target.value)}>
               <option value="all">{t("teacher.submissions.allAssignments")}</option>
               {assignments.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.title}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
             <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("common.status")}
             </label>
-            <select
+            <Select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
-              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
             >
               <option value="all">{t("teacher.submissions.allStatuses")}</option>
               <option value="submitted">{t("teacher.submissions.submitted")}</option>
               <option value="late">{t("teacher.submissions.late")}</option>
               <option value="draft">{t("teacher.submissions.draft")}</option>
-            </select>
+            </Select>
           </div>
 
           <div>

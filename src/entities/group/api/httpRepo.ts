@@ -4,15 +4,19 @@ import {
   paged,
   type CreateGroupRequestBody,
   type CreateGroupResponse,
+  type GetGroupResponse,
   type ListGroupsResponse,
   type ListParticipantsResponse,
   type UpdateGroupRequestBody,
 } from "@/shared/api";
 
 import { mapDtoToGroup, mapParticipants } from "../model/mappers";
-import type { CreateGroupInput, DemoGroup, GroupParticipants } from "../model/types";
-
-type SingleGroupResponse = { group: import("@/shared/api").GroupDto };
+import type {
+  CreateGroupInput,
+  DemoGroup,
+  GroupParticipants,
+  UpdateGroupInput,
+} from "../model/types";
 
 function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";
@@ -26,15 +30,15 @@ export const groupHttpRepo = {
         ? `/teacher/courses/${courseId}/groups`
         : `/student/courses/${courseId}/groups`;
     const res = await http.get<ListGroupsResponse>(paged(path));
-    return res.groups.map(mapDtoToGroup);
+    return (res?.groupInfos ?? []).map(mapDtoToGroup);
   },
 
   getById: async (groupId: string): Promise<DemoGroup | undefined> => {
     const prefix = rolePrefix();
     const path = prefix === "teacher" ? `/teacher/groups/${groupId}` : `/student/groups/${groupId}`;
     try {
-      const res = await http.get<SingleGroupResponse>(path);
-      return mapDtoToGroup(res.group);
+      const res = await http.get<GetGroupResponse>(path);
+      return mapDtoToGroup(res.groupInfo);
     } catch {
       return undefined;
     }
@@ -48,11 +52,11 @@ export const groupHttpRepo = {
   create: async (input: CreateGroupInput): Promise<DemoGroup> => {
     const body: CreateGroupRequestBody = { courseId: input.courseId, name: input.name };
     const res = await http.post<CreateGroupResponse>("/groups", body);
-    return { id: String(res.groupId), name: input.name, courseId: input.courseId };
+    return { id: String(res.groupId), name: input.name, studentCount: 0 };
   },
 
-  update: async (groupId: string, input: CreateGroupInput): Promise<void> => {
-    const body: UpdateGroupRequestBody = { name: input.name, courseId: input.courseId };
+  update: async (groupId: string, input: UpdateGroupInput): Promise<void> => {
+    const body: UpdateGroupRequestBody = { name: input.name };
     await http.put<void>(`/groups/${groupId}`, body);
   },
 

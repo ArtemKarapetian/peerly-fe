@@ -1,9 +1,9 @@
-import { AlertCircle, CheckCircle, Clock, GitBranch, Info } from "lucide-react";
-import { useState } from "react";
+import { AlertCircle, CheckCircle, Clock, GitBranch, Info, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
-import { Card } from "@/shared/ui";
+import { Card, Select } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -49,15 +49,41 @@ export default function TeacherDistributionPage() {
     { onError: "redirect" },
   );
 
-  const [selectedCourse, setSelectedCourse] = useState<string>("");
-  const [selectedAssignment, setSelectedAssignment] = useState<string>("");
+  const [params, setParams] = useSearchParams();
+  const selectedCourse = params.get("courseId") ?? "";
+  const selectedAssignment = params.get("assignmentId") ?? "";
 
-  const effectiveCourse = selectedCourse || baseData?.courses[0]?.id || "";
+  const updateParam = (key: string, value: string) => {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (!value) next.delete(key);
+        else next.set(key, value);
+        return next;
+      },
+      { replace: true },
+    );
+  };
+  const setSelectedCourse = (v: string) => {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (v) next.set("courseId", v);
+        else next.delete("courseId");
+        next.delete("assignmentId");
+        return next;
+      },
+      { replace: true },
+    );
+  };
+  const setSelectedAssignment = (v: string) => updateParam("assignmentId", v);
+  const filtersDirty = Boolean(selectedCourse) || Boolean(selectedAssignment);
+  const resetFilters = () => setParams(new URLSearchParams(), { replace: true });
 
   const { data: assignments } = useAsync(async () => {
-    if (!effectiveCourse) return [];
-    return assignmentRepo.getByCourse(effectiveCourse);
-  }, [effectiveCourse]);
+    if (!selectedCourse) return [];
+    return assignmentRepo.getByCourse(selectedCourse);
+  }, [selectedCourse]);
 
   if (isLoading)
     return (
@@ -124,32 +150,24 @@ export default function TeacherDistributionPage() {
             <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("teacher.distribution.courseLabel")}
             </label>
-            <select
-              value={effectiveCourse}
-              onChange={(e) => {
-                setSelectedCourse(e.target.value);
-                setSelectedAssignment("");
-              }}
-              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
-            >
+            <Select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
               <option value="">{t("teacher.distribution.selectCourse")}</option>
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.title}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
             <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
               {t("teacher.distribution.assignmentLabel")}
             </label>
-            <select
+            <Select
               value={selectedAssignment}
               onChange={(e) => setSelectedAssignment(e.target.value)}
-              disabled={!effectiveCourse}
-              className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none disabled:opacity-50"
+              disabled={!selectedCourse}
             >
               <option value="">{t("teacher.distribution.selectAssignment")}</option>
               {(assignments ?? []).map((a) => (
@@ -157,9 +175,21 @@ export default function TeacherDistributionPage() {
                   {a.title}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
+
+        {filtersDirty ? (
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={resetFilters}
+              className="flex items-center gap-2 px-3 py-2 text-brand-primary hover:bg-info-light rounded-sm text-sm"
+            >
+              <X className="w-4 h-4" />
+              {t("teacher.submissions.resetFilters")}
+            </button>
+          </div>
+        ) : null}
       </Card>
 
       {!selectedAssignment ? (

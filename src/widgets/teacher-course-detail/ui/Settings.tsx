@@ -1,11 +1,11 @@
-import { Save } from "lucide-react";
+import { Save, Send } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
 
-import { useUpdateCourse } from "@/entities/course";
+import { usePublishCourse, useUpdateCourse } from "@/entities/course";
 import { DemoCourse } from "@/entities/course/model/types.ts";
 
 interface TeacherCourseSettingsProps {
@@ -18,8 +18,17 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
   const [description, setDescription] = useState(course.description ?? "");
 
   const mutation = useUpdateCourse(course.id);
+  const publishMutation = usePublishCourse(course.id);
 
   const isDirty = name !== course.name || description !== (course.description ?? "");
+  const isDraft = course.backendStatus === "draft";
+
+  const handlePublish = () => {
+    publishMutation.mutate(undefined, {
+      onSuccess: () => toast.success(t("widget.settings.publishSuccess")),
+      onError: (err) => toast.error(humanizeApiError(err, t("teacher.courseDetail.publishError"))),
+    });
+  };
 
   const handleSave = () => {
     if (!isDirty || !name.trim()) return;
@@ -58,7 +67,7 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
         />
       </div>
 
-      <div className="pt-2">
+      <div className="pt-2 flex items-center gap-3 flex-wrap">
         <button
           onClick={handleSave}
           disabled={!isDirty || !name.trim() || mutation.isPending}
@@ -67,7 +76,22 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
           <Save className="w-4 h-4" />
           {mutation.isPending ? t("common.saving") : t("widget.settings.saveChanges")}
         </button>
+
+        {isDraft ? (
+          <button
+            onClick={handlePublish}
+            disabled={publishMutation.isPending}
+            className="flex items-center gap-2 px-6 py-3 bg-success text-text-inverse rounded-md hover:opacity-90 transition-opacity font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Send className="w-4 h-4" />
+            {publishMutation.isPending ? t("common.saving") : t("teacher.courseDetail.publishBtn")}
+          </button>
+        ) : null}
       </div>
+
+      {isDraft ? (
+        <p className="text-13 text-muted-foreground">{t("teacher.courseDetail.publishHint")}</p>
+      ) : null}
 
       <div className="mt-8 pt-6 border-t-2 border-border">
         <h3 className="text-base font-medium text-destructive mb-2">

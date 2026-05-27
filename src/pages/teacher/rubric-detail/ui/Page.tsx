@@ -54,6 +54,7 @@ export default function TeacherRubricDetailPage() {
     setRubrics(
       rubrics.map((r) => (r.id === updated.id ? { ...updated, updatedAt: new Date() } : r)),
     );
+    void navigate(ROUTES.teacherRubrics);
   };
 
   const handleDelete = () => {
