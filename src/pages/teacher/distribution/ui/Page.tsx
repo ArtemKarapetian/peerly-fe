@@ -1,9 +1,10 @@
-import { AlertCircle, CheckCircle, Clock, GitBranch, Info, X } from "lucide-react";
+import { GitBranch, Info } from "lucide-react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 import { useAsync } from "@/shared/lib/useAsync";
-import { Card, Select } from "@/shared/ui";
+import { Card, EmptyState } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -12,21 +13,14 @@ import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
 import { reviewRepo } from "@/entities/review";
-import { userRepo } from "@/entities/user";
 import { workRepo } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-type OverallStatus = "not-started" | "in-progress" | "completed";
-type ReviewerStatus = "pending" | "draft" | "submitted";
+import { computeDistributions } from "../lib/computeDistributions";
 
-interface DistributionRow {
-  submissionId: string;
-  anonymousId: string;
-  authorName: string;
-  assignedReviewers: Array<{ id: string; name: string; status: ReviewerStatus }>;
-  overallStatus: OverallStatus;
-}
+import { DistributionFiltersCard } from "./DistributionFiltersCard";
+import { DistributionTable } from "./DistributionTable";
 
 export default function TeacherDistributionPage() {
   const { t } = useTranslation();
@@ -37,13 +31,12 @@ export default function TeacherDistributionPage() {
     refetch,
   } = useAsync(
     async () => {
-      const [courses, users, submissions, reviews] = await Promise.all([
+      const [courses, submissions, reviews] = await Promise.all([
         courseRepo.getAll(),
-        userRepo.getAll(),
         workRepo.getAll(),
         reviewRepo.getAll(),
       ]);
-      return { courses, users, submissions, reviews };
+      return { courses, submissions, reviews };
     },
     [],
     { onError: "redirect" },
@@ -53,17 +46,6 @@ export default function TeacherDistributionPage() {
   const selectedCourse = params.get("courseId") ?? "";
   const selectedAssignment = params.get("assignmentId") ?? "";
 
-  const updateParam = (key: string, value: string) => {
-    setParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        if (!value) next.delete(key);
-        else next.set(key, value);
-        return next;
-      },
-      { replace: true },
-    );
-  };
   const setSelectedCourse = (v: string) => {
     setParams(
       (prev) => {
@@ -76,7 +58,19 @@ export default function TeacherDistributionPage() {
       { replace: true },
     );
   };
-  const setSelectedAssignment = (v: string) => updateParam("assignmentId", v);
+
+  const setSelectedAssignment = (v: string) => {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (v) next.set("assignmentId", v);
+        else next.delete("assignmentId");
+        return next;
+      },
+      { replace: true },
+    );
+  };
+
   const filtersDirty = Boolean(selectedCourse) || Boolean(selectedAssignment);
   const resetFilters = () => setParams(new URLSearchParams(), { replace: true });
 
@@ -84,6 +78,19 @@ export default function TeacherDistributionPage() {
     if (!selectedCourse) return [];
     return assignmentRepo.getByCourse(selectedCourse);
   }, [selectedCourse]);
+
+  const { data: participants } = useAsync(async () => {
+    if (!selectedCourse) return null;
+    return courseRepo.getParticipants(selectedCourse);
+  }, [selectedCourse]);
+
+  const nameById = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!participants) return map;
+    for (const s of participants.students) map.set(String(s.studentId), s.name);
+    for (const tch of participants.teachers) map.set(String(tch.teacherId), tch.name);
+    return map;
+  }, [participants]);
 
   if (isLoading)
     return (
@@ -98,38 +105,16 @@ export default function TeacherDistributionPage() {
       </AppShell>
     );
 
-  const { courses, users, submissions, reviews } = baseData!;
+  const { courses, submissions, reviews } = baseData!;
 
-  const distributions: DistributionRow[] = selectedAssignment
-    ? submissions
-        .filter((s) => s.assignmentId === selectedAssignment)
-        .map((submission, idx) => {
-          const author = users.find((u) => u.id === submission.studentId);
-          const submissionReviews = reviews.filter((r) => r.submissionId === submission.id);
-          const assignedReviewers = submissionReviews.map((review) => {
-            const reviewer = users.find((u) => u.id === review.reviewerId);
-            return {
-              id: review.reviewerId,
-              name: reviewer?.name || t("teacher.distribution.unknownReviewer"),
-              status: review.status as ReviewerStatus,
-            };
-          });
-          const submittedCount = assignedReviewers.filter((r) => r.status === "submitted").length;
-          let overallStatus: OverallStatus = "not-started";
-          if (assignedReviewers.length > 0 && submittedCount === assignedReviewers.length) {
-            overallStatus = "completed";
-          } else if (submittedCount > 0) {
-            overallStatus = "in-progress";
-          }
-          return {
-            submissionId: submission.id,
-            anonymousId: `SUB-${String(idx + 1).padStart(3, "0")}`,
-            authorName: author?.name || t("teacher.distribution.unknownAuthor"),
-            assignedReviewers,
-            overallStatus,
-          };
-        })
-    : [];
+  const distributions = computeDistributions({
+    submissions,
+    reviews,
+    nameById,
+    selectedAssignment,
+    unknownReviewer: t("teacher.distribution.unknownReviewer"),
+    unknownAuthor: t("teacher.distribution.unknownAuthor"),
+  });
 
   return (
     <AppShell title={t("teacher.distribution.title")}>
@@ -144,162 +129,50 @@ export default function TeacherDistributionPage() {
         <p className="text-13 text-foreground">{t("teacher.distribution.readOnlyNotice")}</p>
       </div>
 
-      <Card className="mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              {t("teacher.distribution.courseLabel")}
-            </label>
-            <Select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
-              <option value="">{t("teacher.distribution.selectCourse")}</option>
-              {courses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
-              ))}
-            </Select>
-          </div>
+      <DistributionFiltersCard
+        courses={courses}
+        assignments={assignments ?? []}
+        selectedCourse={selectedCourse}
+        selectedAssignment={selectedAssignment}
+        filtersDirty={filtersDirty}
+        onCourseChange={setSelectedCourse}
+        onAssignmentChange={setSelectedAssignment}
+        onReset={resetFilters}
+      />
 
-          <div>
-            <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-              {t("teacher.distribution.assignmentLabel")}
-            </label>
-            <Select
-              value={selectedAssignment}
-              onChange={(e) => setSelectedAssignment(e.target.value)}
-              disabled={!selectedCourse}
-            >
-              <option value="">{t("teacher.distribution.selectAssignment")}</option>
-              {(assignments ?? []).map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.title}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </div>
-
-        {filtersDirty ? (
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={resetFilters}
-              className="flex items-center gap-2 px-3 py-2 text-brand-primary hover:bg-info-light rounded-sm text-sm"
-            >
-              <X className="w-4 h-4" />
-              {t("teacher.submissions.resetFilters")}
-            </button>
-          </div>
-        ) : null}
-      </Card>
-
-      {!selectedAssignment ? (
-        <Card className="p-12 text-center">
-          <GitBranch className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-          <p className="text-15 text-muted-foreground">
-            {t("teacher.distribution.pickAssignmentPrompt")}
-          </p>
-        </Card>
-      ) : distributions.length === 0 ? (
-        <Card className="p-12 text-center">
-          <p className="text-15 text-muted-foreground">{t("teacher.distribution.emptyState")}</p>
-        </Card>
-      ) : (
+      <DistributionContent
+        hasAssignment={Boolean(selectedAssignment)}
+        rowsCount={distributions.length}
+      >
         <DistributionTable rows={distributions} />
-      )}
+      </DistributionContent>
     </AppShell>
   );
 }
 
-function DistributionTable({ rows }: { rows: DistributionRow[] }) {
+function DistributionContent({
+  hasAssignment,
+  rowsCount,
+  children,
+}: {
+  hasAssignment: boolean;
+  rowsCount: number;
+  children: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  return (
-    <Card className="p-0 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-muted">
-            <tr>
-              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                {t("teacher.distribution.work")}
-              </th>
-              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                {t("teacher.distribution.author")}
-              </th>
-              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                {t("teacher.distribution.assignedReviewers")}
-              </th>
-              <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                {t("common.status")}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {rows.map((row) => (
-              <tr key={row.submissionId}>
-                <td className="p-4 text-sm text-foreground font-mono">{row.anonymousId}</td>
-                <td className="p-4 text-sm text-foreground">{row.authorName}</td>
-                <td className="p-4">
-                  {row.assignedReviewers.length === 0 ? (
-                    <span className="text-13 text-muted-foreground italic">
-                      {t("teacher.distribution.noReviewers")}
-                    </span>
-                  ) : (
-                    <ul className="space-y-1">
-                      {row.assignedReviewers.map((r) => (
-                        <li key={r.id} className="flex items-center gap-2 text-13">
-                          <ReviewerStatusDot status={r.status} />
-                          <span className="text-foreground">{r.name}</span>
-                          <span className="text-muted-foreground">
-                            ({t(`teacher.distribution.reviewerStatus.${r.status}`)})
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </td>
-                <td className="p-4">
-                  <OverallStatusBadge status={row.overallStatus} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-  );
-}
-
-function ReviewerStatusDot({ status }: { status: ReviewerStatus }) {
-  const color =
-    status === "submitted"
-      ? "bg-success"
-      : status === "draft"
-        ? "bg-warning"
-        : "bg-muted-foreground";
-  return <span className={`inline-block w-2 h-2 rounded-full ${color}`} />;
-}
-
-function OverallStatusBadge({ status }: { status: OverallStatus }) {
-  const { t } = useTranslation();
-  if (status === "completed") {
+  if (!hasAssignment) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 bg-success-light text-success rounded-2sm text-xs font-medium">
-        <CheckCircle className="w-3 h-3" />
-        {t("teacher.distribution.completed")}
-      </span>
+      <Card className="p-0">
+        <EmptyState icon={GitBranch} message={t("teacher.distribution.pickAssignmentPrompt")} />
+      </Card>
     );
   }
-  if (status === "in-progress") {
+  if (rowsCount === 0) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-light text-warning rounded-2sm text-xs font-medium">
-        <Clock className="w-3 h-3" />
-        {t("teacher.distribution.inProgress")}
-      </span>
+      <Card className="p-0">
+        <EmptyState message={t("teacher.distribution.emptyState")} />
+      </Card>
     );
   }
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-muted-foreground rounded-2sm text-xs font-medium">
-      <AlertCircle className="w-3 h-3" />
-      {t("teacher.distribution.notStarted")}
-    </span>
-  );
+  return <>{children}</>;
 }

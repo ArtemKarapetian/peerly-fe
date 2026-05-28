@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { adminStatsRepo } from "@/entities/admin-stats";
+import { courseRepo } from "@/entities/course";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
@@ -14,9 +14,9 @@ export default function AdminOverviewPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { data: stats } = useAsync(() => adminStatsRepo.getOverview(), []);
-  const totalStudents = stats?.totalStudents ?? 0;
-  const activeCourses = stats?.activeCourses ?? 0;
+  const { data: courses } = useAsync(() => courseRepo.getAll(), []);
+  const activeCourses = (courses ?? []).filter((c) => c.status === "active").length;
+  const totalStudents = (courses ?? []).reduce((sum, c) => sum + (c.enrollmentCount ?? 0), 0);
 
   const quickLinks = [
     {

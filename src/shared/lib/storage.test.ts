@@ -15,12 +15,13 @@ describe("storage", () => {
 
   it("setJSON + getJSON round-trip the typed value for a known key", () => {
     const value = {
-      supportChat: true,
-      enableEmailConfirmation: false,
-      enablePasswordReset: true,
+      userId: "u-1",
+      userName: "Alice",
+      email: "a@x",
+      role: "Student" as const,
     };
-    storage.setJSON(STORAGE_KEYS.demoFlags, value);
-    expect(storage.getJSON(STORAGE_KEYS.demoFlags)).toEqual(value);
+    storage.setJSON(STORAGE_KEYS.session, value);
+    expect(storage.getJSON(STORAGE_KEYS.session)).toEqual(value);
   });
 
   it("getJSON returns null when nothing stored", () => {

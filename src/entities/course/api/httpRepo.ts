@@ -34,6 +34,7 @@ type RawGetCourse = {
 function rolePrefix(): "student" | "teacher" | "admin" {
   const role = getSession()?.role;
   if (role === "Teacher") return "teacher";
+  if (role === "Admin") return "teacher";
   return "student";
 }
 

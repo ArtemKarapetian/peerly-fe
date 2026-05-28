@@ -1,0 +1,57 @@
+import { Download, FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+import { downloadFile } from "../lib/downloadFile";
+import { formatFileSize } from "../lib/formatters";
+
+interface SubmissionFile {
+  id: string;
+  name: string;
+  size: number;
+}
+
+interface FilesSectionProps {
+  files: SubmissionFile[];
+}
+
+export function FilesSection({ files }: FilesSectionProps) {
+  const { t } = useTranslation();
+  return (
+    <section className="bg-card border border-border rounded-lg p-6">
+      <h2 className="text-base font-medium text-foreground mb-3">
+        {t("student.submissions.filesTitle")}
+      </h2>
+      {files.length === 0 ? (
+        <p className="text-sm text-muted-foreground italic">{t("student.submissions.noFiles")}</p>
+      ) : (
+        <ul className="space-y-2">
+          {files.map((file) => (
+            <FileRow key={file.id} file={file} />
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function FileRow({ file }: { file: SubmissionFile }) {
+  const { t } = useTranslation();
+  return (
+    <li className="flex items-center gap-3 px-3 py-2 rounded-2md bg-muted">
+      <FileText className="size-5 text-brand-primary shrink-0" />
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium text-foreground truncate">{file.name}</div>
+        <div className="text-xs text-muted-foreground">{formatFileSize(file.size, t)}</div>
+      </div>
+      <button
+        onClick={() =>
+          void downloadFile(file.id, file.name, t("student.submissions.downloadError"))
+        }
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-card border border-border hover:bg-surface-hover rounded-sm text-13 font-medium transition-colors"
+      >
+        <Download className="size-4" />
+        {t("common.download")}
+      </button>
+    </li>
+  );
+}

@@ -1,7 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { humanizeApiError } from "@/shared/api";
+import { courseKeys } from "@/shared/api/queryKeys";
 import { useDebouncedValue } from "@/shared/lib/useDebouncedValue";
 
 import { courseRepo } from "@/entities/course";
@@ -50,6 +52,7 @@ export function useParticipantImport(
   initialGroupId?: string,
 ): UseParticipantImportResult {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
   const [groups, setGroups] = useState<GroupRow[]>([]);
@@ -126,6 +129,9 @@ export function useParticipantImport(
       groupRepo.addStudent,
     );
     setIsAdding(false);
+    if (added > 0) {
+      void queryClient.invalidateQueries({ queryKey: courseKeys.participants(courseId) });
+    }
     return {
       added,
       failed,

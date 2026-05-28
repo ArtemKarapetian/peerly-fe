@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
-import { Card } from "@/shared/ui";
+import { Card, Field, TextField } from "@/shared/ui";
 import { Button } from "@/shared/ui/button.tsx";
 
 import { useAuth, useRole } from "@/entities/user";
@@ -89,29 +89,27 @@ export function UserInfoCard() {
             <h3 className="text-2xl font-medium text-foreground tracking-[-0.5px]">
               {name || email || t("widget.profileDropdown.defaultUser")}
             </h3>
-            <span
-              className={`inline-flex px-3 py-1 rounded-sm text-13 font-medium ${getRoleBadgeColor(currentRole)}`}
-            >
-              {getRoleLabelKey(currentRole) ? t(getRoleLabelKey(currentRole)) : currentRole}
-            </span>
+            {currentRole && (
+              <span
+                className={`inline-flex px-3 py-1 rounded-sm text-13 font-medium ${getRoleBadgeColor(currentRole)}`}
+              >
+                {getRoleLabelKey(currentRole) ? t(getRoleLabelKey(currentRole)) : currentRole}
+              </span>
+            )}
           </div>
           <p className="text-15 text-muted-foreground">{email}</p>
         </div>
       </div>
 
       <div className="space-y-4">
-        <div>
-          <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-            {t("feature.profile.name")}
-          </label>
+        <Field label={t("feature.profile.name")}>
           {editing ? (
             <div className="flex gap-2">
-              <input
-                type="text"
+              <TextField
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 autoFocus
-                className="flex-1 px-4 py-3 border-2 border-border rounded-md text-15 bg-background focus:border-brand-primary focus:outline-none"
+                className="flex-1"
               />
               <Button
                 variant="primary"
@@ -135,12 +133,7 @@ export function UserInfoCard() {
             </div>
           ) : (
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={name}
-                disabled
-                className="flex-1 px-4 py-3 border-2 border-border rounded-md text-15 bg-muted text-muted-foreground cursor-not-allowed"
-              />
+              <TextField value={name} disabled className="flex-1" />
               <Button
                 variant="outline"
                 size="md"
@@ -151,19 +144,11 @@ export function UserInfoCard() {
               </Button>
             </div>
           )}
-        </div>
+        </Field>
 
-        <div>
-          <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-            {t("feature.profile.email")}
-          </label>
-          <input
-            type="email"
-            value={email}
-            disabled
-            className="w-full px-4 py-3 border-2 border-border rounded-md text-15 bg-muted text-muted-foreground cursor-not-allowed"
-          />
-        </div>
+        <Field label={t("feature.profile.email")}>
+          <TextField type="email" value={email} disabled />
+        </Field>
       </div>
     </Card>
   );

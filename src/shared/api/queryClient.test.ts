@@ -25,11 +25,11 @@ describe("queryClient", () => {
     expect(defaults.mutations?.retry).toBe(MUTATION_RETRY_COUNT);
   });
 
-  it("refetches aggressively (cache disabled by design — staleTime/gcTime=0)", () => {
+  it("uses non-aggressive defaults when VITE_AGGRESSIVE_REFETCH is unset", () => {
     const defaults = queryClient.getDefaultOptions();
-    expect(defaults.queries?.staleTime).toBe(0);
-    expect(defaults.queries?.gcTime).toBe(0);
-    expect(defaults.queries?.refetchOnMount).toBe(true);
-    expect(defaults.queries?.refetchOnWindowFocus).toBe(true);
+    expect(defaults.queries?.staleTime).toBe(30_000);
+    expect(defaults.queries?.gcTime).toBe(5 * 60_000);
+    expect(defaults.queries?.refetchOnMount).toBe(false);
+    expect(defaults.queries?.refetchOnWindowFocus).toBe(false);
   });
 });

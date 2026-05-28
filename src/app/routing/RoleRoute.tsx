@@ -10,7 +10,7 @@ interface RoleRouteProps {
 export function RoleRoute({ allow, redirectTo }: RoleRouteProps) {
   const { currentRole } = useRole();
 
-  if (!allow.includes(currentRole)) {
+  if (currentRole === null || !allow.includes(currentRole)) {
     return <Navigate to={redirectTo ?? defaultRouteForRole(currentRole)} replace />;
   }
 

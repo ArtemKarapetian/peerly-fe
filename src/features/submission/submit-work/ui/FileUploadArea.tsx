@@ -1,6 +1,9 @@
-import { Upload, AlertCircle } from "lucide-react";
-import { useState, useRef, DragEvent, ChangeEvent } from "react";
-import { useTranslation } from "react-i18next";
+import { useFileUploadDropzone } from "../model/useFileUploadDropzone";
+
+import { DropzonePrompt } from "./DropzonePrompt";
+import { UploadConstraintsHint } from "./UploadConstraintsHint";
+import { UploadErrorBanner } from "./UploadErrorBanner";
+import { UploadingPlaceholder } from "./UploadingPlaceholder";
 
 interface FileUploadAreaProps {
   acceptedFormats: string[];
@@ -21,77 +24,30 @@ export function FileUploadArea({
   error = "",
   disabled = false,
 }: FileUploadAreaProps) {
-  const { t } = useTranslation();
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const {
+    isDragging,
+    fileInputRef,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+    handleClick,
+    handleInputChange,
+  } = useFileUploadDropzone({
+    acceptedFormats,
+    maxSizeMB,
+    disabled,
+    isUploading,
+    onFileSelected,
+    onUploadError,
+  });
 
-  const validateFile = (file: File): string | null => {
-    const fileName = file.name.toLowerCase();
-    const hasValidExtension = acceptedFormats.some((ext) => fileName.endsWith(ext.toLowerCase()));
-    if (!hasValidExtension) {
-      return t("feature.submission.upload.invalidFormat", { formats: acceptedFormats.join(", ") });
-    }
-    const fileSizeMB = file.size / (1024 * 1024);
-    if (fileSizeMB > maxSizeMB) {
-      return t("feature.submission.upload.fileTooLarge", { max: maxSizeMB });
-    }
-    return null;
-  };
-
-  const handleFileSelect = (file: File) => {
-    const validationError = validateFile(file);
-    if (validationError) {
-      onUploadError?.(validationError);
-      return;
-    }
-    onUploadError?.("");
-    onFileSelected(file);
-  };
-
-  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!disabled && !isUploading) {
-      setIsDragging(true);
-    }
-  };
-
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    if (disabled || isUploading) return;
-
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
-  const handleClick = () => {
-    if (!disabled && !isUploading) {
-      fileInputRef.current?.click();
-    }
-  };
-
-  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
+  const stateClass = isDragging
+    ? "border-brand-primary bg-brand-primary-light"
+    : error
+      ? "border-error bg-error-light"
+      : "border-border bg-card hover:border-brand-primary hover:bg-muted";
+  const blockedClass = disabled || isUploading ? "opacity-50 cursor-not-allowed" : "";
 
   return (
     <div className="space-y-3">
@@ -101,83 +57,27 @@ export function FileUploadArea({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={handleClick}
-        className={`
-          relative border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer
-          ${
-            isDragging
-              ? "border-brand-primary bg-brand-primary-light"
-              : error
-                ? "border-error bg-error-light"
-                : "border-border bg-card hover:border-brand-primary hover:bg-muted"
-          }
-          ${disabled || isUploading ? "opacity-50 cursor-not-allowed" : ""}
-        `}
+        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${stateClass} ${blockedClass}`}
       >
         <input
           ref={fileInputRef}
           type="file"
           accept={acceptedFormats.join(",")}
-          onChange={handleFileInputChange}
+          onChange={handleInputChange}
           className="hidden"
           disabled={disabled || isUploading}
         />
 
         {isUploading ? (
-          <div className="space-y-3">
-            <div className="w-12 h-12 bg-brand-primary-light rounded-full mx-auto flex items-center justify-center animate-pulse">
-              <Upload className="w-6 h-6 text-brand-primary" />
-            </div>
-            <p className="text-15 text-foreground font-medium">
-              {t("feature.submission.upload.uploading")}
-            </p>
-          </div>
+          <UploadingPlaceholder />
         ) : (
-          <div className="space-y-3">
-            <div
-              className={`w-12 h-12 ${error ? "bg-error-light" : "bg-brand-primary-light"} rounded-full mx-auto flex items-center justify-center`}
-            >
-              {error ? (
-                <AlertCircle className="w-6 h-6 text-destructive" />
-              ) : (
-                <Upload className="w-6 h-6 text-brand-primary" />
-              )}
-            </div>
-            <div>
-              <p className="text-15 text-foreground font-medium mb-1">
-                {isDragging
-                  ? t("feature.submission.upload.dropFile")
-                  : t("feature.submission.upload.dragFileHere")}
-              </p>
-              <p className="text-13 text-muted-foreground">
-                {t("feature.submission.upload.or")}{" "}
-                <span className="text-brand-primary font-medium">
-                  {t("feature.submission.upload.browseFile")}
-                </span>
-              </p>
-            </div>
-          </div>
+          <DropzonePrompt isDragging={isDragging} hasError={Boolean(error)} />
         )}
       </div>
 
-      <div className="flex items-start gap-2 text-13 text-muted-foreground">
-        <div className="shrink-0">ℹ️</div>
-        <div>
-          <p>
-            <strong>{t("feature.submission.upload.formats")}</strong> {acceptedFormats.join(", ")}
-          </p>
-          <p>
-            <strong>{t("feature.submission.upload.maxSize")}</strong> {maxSizeMB}{" "}
-            {t("feature.submission.upload.mb")}
-          </p>
-        </div>
-      </div>
+      <UploadConstraintsHint acceptedFormats={acceptedFormats} maxSizeMB={maxSizeMB} />
 
-      {error && (
-        <div className="flex items-start gap-2 bg-error-light border border-error rounded-sm p-3">
-          <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
-          <p className="text-13 text-destructive">{error}</p>
-        </div>
-      )}
+      {error && <UploadErrorBanner message={error} />}
     </div>
   );
 }

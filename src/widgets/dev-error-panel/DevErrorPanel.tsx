@@ -2,23 +2,14 @@ import { Bug, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useDemoToolsVisible } from "@/shared/lib/demo-tools";
-
 /**
- * Dev-only panel for testing error pages
- * Only visible in development mode
+ * Dev-only panel for testing error pages. Only visible in development mode.
  */
 export function DevErrorPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const demoVisible = useDemoToolsVisible();
 
-  // Only show in development
   if (import.meta.env.PROD) {
-    return null;
-  }
-
-  if (!demoVisible) {
     return null;
   }
 

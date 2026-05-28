@@ -1,5 +1,6 @@
 export interface AssignmentFormData {
   courseId: string;
+  groupId: string | null;
   title: string;
   description: string;
   submissionDeadline: Date | null;

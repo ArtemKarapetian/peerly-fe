@@ -17,6 +17,7 @@ vi.mock("@/entities/course", () => ({
 function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormData {
   return {
     courseId: "c-1",
+    groupId: null,
     title: "My Essay Assignment",
     description: "Write something",
     submissionDeadline: new Date("2026-06-01T10:00"),

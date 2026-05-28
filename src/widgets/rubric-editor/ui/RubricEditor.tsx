@@ -1,10 +1,14 @@
-import { Plus, GripVertical, Trash2, Save, AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Plus, Save } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Card } from "@/shared/ui";
+import { Card, SectionHeader } from "@/shared/ui";
 
-import type { RubricData, RubricCriterionData } from "../model/types";
+import type { RubricData } from "../model/types";
+import { useRubricForm } from "../model/useRubricForm";
+
+import { CriterionCard } from "./CriterionCard";
+import { RubricBasicsSection } from "./RubricBasicsSection";
+import { UnsavedChangesBanner } from "./UnsavedChangesBanner";
 
 interface RubricEditorProps {
   rubric: RubricData;
@@ -13,257 +17,48 @@ interface RubricEditorProps {
 
 export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
   const { t } = useTranslation();
-  const [editedRubric, setEditedRubric] = useState<RubricData>(rubric);
-  const [isDirty, setIsDirty] = useState(false);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setEditedRubric(rubric);
-      setIsDirty(false);
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [rubric]);
-
-  const handleSave = () => {
-    onSave(editedRubric);
-    setIsDirty(false);
-  };
-
-  const updateRubric = (updates: Partial<RubricData>) => {
-    setEditedRubric({ ...editedRubric, ...updates });
-    setIsDirty(true);
-  };
-
-  const updateCriterion = (index: number, updates: Partial<RubricCriterionData>) => {
-    const newCriteria = [...editedRubric.criteria];
-    newCriteria[index] = { ...newCriteria[index], ...updates };
-    updateRubric({ criteria: newCriteria });
-  };
-
-  const addCriterion = () => {
-    const newCriterion: RubricCriterionData = {
-      id: `c${Date.now()}`,
-      name: t("widget.rubricEditor.newCriterion"),
-      description: "",
-      maxScore: 5,
-      required: true,
-    };
-    updateRubric({ criteria: [...editedRubric.criteria, newCriterion] });
-  };
-
-  const removeCriterion = (index: number) => {
-    if (editedRubric.criteria.length === 1) {
-      alert(t("widget.rubricEditor.cannotDeleteLast"));
-      return;
-    }
-    if (confirm(t("widget.rubricEditor.deleteCriterionConfirm"))) {
-      const newCriteria = editedRubric.criteria.filter((_, i) => i !== index);
-      updateRubric({ criteria: newCriteria });
-    }
-  };
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
-
-    const newCriteria = [...editedRubric.criteria];
-    const draggedItem = newCriteria[draggedIndex];
-    newCriteria.splice(draggedIndex, 1);
-    newCriteria.splice(index, 0, draggedItem);
-
-    setEditedRubric({ ...editedRubric, criteria: newCriteria });
-    setDraggedIndex(index);
-    setIsDirty(true);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const inputClass =
-    "w-full px-4 py-2 bg-background border-2 border-border rounded-md text-15 outline-none focus:border-brand-primary transition-colors";
-  const innerInputClass =
-    "w-full px-3 py-2 bg-background border-2 border-border rounded-sm text-15 font-medium focus:outline-none focus:border-brand-primary transition-colors";
-  const smallInputClass =
-    "w-full px-3 py-2 bg-background border-2 border-border rounded-sm text-sm focus:outline-none focus:border-brand-primary transition-colors";
+  const {
+    edited,
+    isDirty,
+    draggedIndex,
+    handleSave,
+    updateRubric,
+    updateCriterion,
+    addCriterion,
+    removeCriterion,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+  } = useRubricForm(rubric, onSave);
 
   return (
     <Card>
-      {isDirty && (
-        <div className="mb-6 flex items-center justify-between bg-warning-light border border-warning rounded-md p-3">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-warning" />
-            <span className="text-sm text-warning font-medium">
-              {t("widget.rubricEditor.unsavedChanges")}
-            </span>
-          </div>
-          <button
-            onClick={handleSave}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
-          >
-            <Save className="w-4 h-4" />
-            {t("common.save")}
-          </button>
-        </div>
-      )}
+      {isDirty && <UnsavedChangesBanner onSave={handleSave} />}
 
-      <section className="mb-8 space-y-4">
-        <h3 className="text-lg font-medium text-foreground tracking-[-0.5px]">
-          {t("widget.rubricEditor.basicInfo")}
-        </h3>
-
-        <div>
-          <label className="block text-13 font-medium text-foreground mb-2">
-            {t("widget.rubricEditor.rubricName")}
-          </label>
-          <input
-            type="text"
-            value={editedRubric.name}
-            onChange={(e) => updateRubric({ name: e.target.value })}
-            className={inputClass}
-          />
-        </div>
-
-        <div>
-          <label className="block text-13 font-medium text-foreground mb-2">
-            {t("widget.rubricEditor.description")}
-          </label>
-          <textarea
-            value={editedRubric.description}
-            onChange={(e) => updateRubric({ description: e.target.value })}
-            rows={3}
-            className={`${inputClass} resize-none`}
-          />
-        </div>
-      </section>
+      <RubricBasicsSection
+        name={edited.name}
+        description={edited.description}
+        onUpdate={updateRubric}
+      />
 
       <section className="mb-6">
-        <h3 className="text-lg font-medium text-foreground tracking-[-0.5px] mb-4">
+        <SectionHeader as="h3" className="tracking-[-0.5px]">
           {t("widget.rubricEditor.gradingCriteria")}
-        </h3>
+        </SectionHeader>
 
         <div className="space-y-4">
-          {editedRubric.criteria.map((criterion, index) => (
-            <div
+          {edited.criteria.map((criterion, index) => (
+            <CriterionCard
               key={criterion.id}
-              draggable
+              criterion={criterion}
+              index={index}
+              isDragging={draggedIndex === index}
+              onUpdate={(u) => updateCriterion(index, u)}
+              onRemove={() => removeCriterion(index)}
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
-              className={`
-                bg-card border rounded-[14px] p-4 transition-colors
-                ${draggedIndex === index ? "opacity-50" : "opacity-100"}
-                border-border hover:border-brand-primary/60
-              `}
-            >
-              <div className="flex items-start gap-3">
-                <button
-                  className="mt-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground"
-                  title={t("widget.rubricEditor.dragToReorder")}
-                >
-                  <GripVertical className="w-5 h-5" />
-                </button>
-
-                <div className="flex-1 space-y-3">
-                  <input
-                    type="text"
-                    value={criterion.name}
-                    onChange={(e) => updateCriterion(index, { name: e.target.value })}
-                    className={innerInputClass}
-                    placeholder={t("widget.rubricEditor.criterionNamePlaceholder")}
-                  />
-
-                  <textarea
-                    value={criterion.description}
-                    onChange={(e) => updateCriterion(index, { description: e.target.value })}
-                    rows={2}
-                    className={`${smallInputClass} resize-none`}
-                    placeholder={t("widget.rubricEditor.criterionDescPlaceholder")}
-                  />
-
-                  <div>
-                    <label className="block text-xs text-muted-foreground mb-1">
-                      {t("widget.rubricEditor.maxPoints")}
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={criterion.maxScore}
-                      onChange={(e) => {
-                        const raw = parseInt(e.target.value);
-                        const clamped = Number.isFinite(raw) ? Math.min(Math.max(raw, 1), 10) : 5;
-                        updateCriterion(index, { maxScore: clamped });
-                      }}
-                      className={smallInputClass}
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-6 flex-wrap">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={criterion.required}
-                        onChange={(e) => updateCriterion(index, { required: e.target.checked })}
-                        className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
-                      />
-                      <span className="text-13 text-foreground">
-                        {t("widget.rubricEditor.required")}
-                      </span>
-                    </label>
-
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={criterion.commentRequired || false}
-                        onChange={(e) =>
-                          updateCriterion(index, { commentRequired: e.target.checked })
-                        }
-                        className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
-                      />
-                      <span className="text-13 text-foreground">
-                        {t("widget.rubricEditor.commentRequired")}
-                      </span>
-                    </label>
-
-                    {criterion.commentRequired && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">
-                          {t("widget.rubricEditor.minChars")}
-                        </span>
-                        <input
-                          type="number"
-                          min="0"
-                          value={criterion.minCommentLength || ""}
-                          onChange={(e) =>
-                            updateCriterion(index, {
-                              minCommentLength: e.target.value
-                                ? parseInt(e.target.value)
-                                : undefined,
-                            })
-                          }
-                          className="w-16 px-2 py-1 bg-background border-2 border-border rounded-2sm text-13 focus:outline-none focus:border-brand-primary"
-                          placeholder="20"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => removeCriterion(index)}
-                  className="p-2 hover:bg-error-light rounded-sm transition-colors"
-                  title={t("widget.rubricEditor.deleteCriterion")}
-                >
-                  <Trash2 className="w-4 h-4 text-destructive" />
-                </button>
-              </div>
-            </div>
+            />
           ))}
 
           <button

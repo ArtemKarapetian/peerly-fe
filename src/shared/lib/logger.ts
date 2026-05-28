@@ -2,7 +2,9 @@
 // VITE_VERBOSE_LOGS=true включает её на время разбора инцидента.
 // Брошенные исключения уходят в Sentry через глобальный error boundary, не сюда.
 
-const enabled = import.meta.env.DEV || import.meta.env.VITE_VERBOSE_LOGS === "true";
+import { env } from "@/shared/config/env";
+
+const enabled = env.isDev || env.verboseLogs;
 
 export const logger = {
   warn: (...args: unknown[]): void => {

@@ -1,7 +1,16 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { createElement, type PropsWithChildren } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useParticipantImport } from "./useParticipantImport";
+
+function makeWrapper() {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return function Wrapper({ children }: PropsWithChildren) {
+    return createElement(QueryClientProvider, { client }, children);
+  };
+}
 
 const { groupRepoMock, courseRepoMock, userRepoMock } = vi.hoisted(() => ({
   groupRepoMock: {
@@ -41,7 +50,7 @@ beforeEach(() => {
 
 describe("useParticipantImport", () => {
   it("loads groups for the course and picks the first group as default", async () => {
-    const { result } = renderHook(() => useParticipantImport("c-1"));
+    const { result } = renderHook(() => useParticipantImport("c-1"), { wrapper: makeWrapper() });
 
     await waitFor(() => {
       expect(result.current.selectedGroupId).toBe("g-1");
@@ -60,7 +69,7 @@ describe("useParticipantImport", () => {
       { id: "u-2", name: "Bob", email: "b@x" },
     ]);
 
-    const { result } = renderHook(() => useParticipantImport("c-1"));
+    const { result } = renderHook(() => useParticipantImport("c-1"), { wrapper: makeWrapper() });
     act(() => result.current.setQuery("abc"));
 
     await waitFor(() => {
@@ -74,7 +83,7 @@ describe("useParticipantImport", () => {
       { id: "u-3", name: "Carol", email: "c@x" },
     ]);
 
-    const { result } = renderHook(() => useParticipantImport("c-1"));
+    const { result } = renderHook(() => useParticipantImport("c-1"), { wrapper: makeWrapper() });
     act(() => result.current.setQuery("abc"));
     await waitFor(() => expect(result.current.candidates).toHaveLength(2));
 
@@ -90,7 +99,7 @@ describe("useParticipantImport", () => {
 
   it("canSubmit is false until a student is picked and a group exists", async () => {
     userRepoMock.searchStudents.mockResolvedValue([{ id: "u-1", name: "Alice", email: "a@x" }]);
-    const { result } = renderHook(() => useParticipantImport("c-1"));
+    const { result } = renderHook(() => useParticipantImport("c-1"), { wrapper: makeWrapper() });
     act(() => result.current.setQuery("abc"));
     await waitFor(() => expect(result.current.candidates).toHaveLength(1));
 

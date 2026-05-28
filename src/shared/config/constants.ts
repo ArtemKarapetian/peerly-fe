@@ -10,11 +10,5 @@ export const STORAGE_KEYS = {
   session: "peerly_session",
   language: "peerly_language",
   theme: "peerly_theme",
-  demoFlags: "peerly_demo_flags",
-  demoToolsVisible: "peerly_demo_tools_visible",
   pendingVerificationEmail: "peerly_pending_verification_email",
-} as const;
-
-export const LEGACY_STORAGE_KEYS = {
-  featureFlags: "peerly_feature_flags",
 } as const;

@@ -1,7 +1,13 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ParticipantImportModal } from "./ParticipantImportModal";
+
+function renderWithClient(ui: React.ReactElement) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>);
+}
 
 const { groupRepoMock, courseRepoMock, userRepoMock, toastMock } = vi.hoisted(() => ({
   groupRepoMock: {
@@ -49,7 +55,7 @@ beforeEach(() => {
 
 describe("ParticipantImportModal", () => {
   it("loads groups and current course participants on mount", async () => {
-    render(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
+    renderWithClient(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
     await waitFor(() => {
       expect(groupRepoMock.listForCourse).toHaveBeenCalledWith("c-1");
       expect(courseRepoMock.getParticipants).toHaveBeenCalledWith("c-1");
@@ -62,7 +68,7 @@ describe("ParticipantImportModal", () => {
 
   it("disables the Add button when no group exists in the course", async () => {
     groupRepoMock.listForCourse.mockResolvedValueOnce([]);
-    render(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
+    renderWithClient(<ParticipantImportModal courseId="c-1" onClose={vi.fn()} />);
 
     await waitFor(() => {
       expect(screen.getByText(/noGroups/)).toBeInTheDocument();

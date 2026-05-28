@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import React from "react";
 import { Toaster as Sonner, ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
@@ -12,7 +13,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       toastOptions={
         {
-          // Screen readers announce toasts via aria-live polite region
           role: "status",
           "aria-live": "polite",
         } as Record<string, string>

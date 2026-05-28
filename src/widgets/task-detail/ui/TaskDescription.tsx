@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import { Card } from "@/shared/ui";
+
 interface TaskDescriptionProps {
   description: string;
 }
@@ -9,7 +11,7 @@ export function TaskDescription({ description }: TaskDescriptionProps) {
   const isEmpty = description.trim().length === 0;
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+    <Card variant="section">
       <h2 className="text-xl desktop:text-2xl tracking-[-0.5px] text-foreground mb-4">
         {t("student.task.description")}
       </h2>
@@ -20,6 +22,6 @@ export function TaskDescription({ description }: TaskDescriptionProps) {
       >
         {isEmpty ? t("student.task.noDescription") : description}
       </p>
-    </div>
+    </Card>
   );
 }

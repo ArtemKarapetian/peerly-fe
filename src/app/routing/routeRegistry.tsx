@@ -1,7 +1,6 @@
 import { ComponentType, LazyExoticComponent, lazy } from "react";
 
 import { ROUTES, ROUTE_PATTERNS } from "@/shared/config/routes";
-import type { DemoFlags } from "@/shared/lib/demo-flags";
 
 type LazyComponent = LazyExoticComponent<ComponentType>;
 
@@ -18,7 +17,6 @@ export interface RouteConfig {
   path: string;
   component?: LazyComponent;
   access: Access;
-  demoFlag?: keyof DemoFlags;
   redirectTo?: string;
 }
 
@@ -35,7 +33,6 @@ const Error500Page = lazy(() => import("@/pages/errors/500/ui/Page"));
 
 const HelpPage = lazy(() => import("@/pages/public/help/ui/Page"));
 const LandingPage = lazy(() => import("@/pages/public/landing/ui/Page"));
-const ResetPasswordPage = lazy(() => import("@/pages/public/reset-password/ui/Page"));
 const TermsPage = lazy(() => import("@/pages/public/terms/ui/Page"));
 const VerifyEmailPage = lazy(() => import("@/pages/public/verify-email/ui/Page"));
 
@@ -73,18 +70,9 @@ export const routeRegistry: RouteConfig[] = [
   { path: ROUTES.terms, component: TermsPage, access: "public" },
 
   {
-    path: ROUTES.resetPassword,
-    component: ResetPasswordPage,
-    access: "public",
-    demoFlag: "enablePasswordReset",
-    redirectTo: ROUTES.login,
-  },
-  {
     path: ROUTES.verifyEmail,
     component: VerifyEmailPage,
     access: "public",
-    demoFlag: "enableEmailConfirmation",
-    redirectTo: ROUTES.login,
   },
 
   { path: ROUTES.login, component: LoginPage, access: "publicOnly" },

@@ -1,7 +1,8 @@
-import { ChevronRight, Layers, Plus, Search } from "lucide-react";
+import { ChevronRight, Info, Layers, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { EmptyState, TextField } from "@/shared/ui";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import type { AssignmentFormData, RubricOption } from "../model/types";
@@ -44,6 +45,23 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
           {t("feature.assignmentCreate.rubric.title")}
         </h2>
       </div>
+
+      {!selected && (
+        <div
+          data-testid="no-rubric-banner"
+          className="flex items-start gap-3 bg-info-light border border-info rounded-md p-4"
+        >
+          <Info className="w-5 h-5 text-info shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-foreground mb-1">
+              {t("feature.assignmentCreate.rubric.noRubricBannerTitle")}
+            </p>
+            <p className="text-13 text-muted-foreground">
+              {t("feature.assignmentCreate.rubric.noRubricBanner")}
+            </p>
+          </div>
+        </div>
+      )}
 
       {selected && (
         <div className="bg-success-light border-2 border-success rounded-md p-4">
@@ -95,12 +113,11 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
       {rubrics.length > 0 && (
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
+          <TextField
             placeholder={t("feature.assignmentCreate.rubric.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
+            className="pl-10"
           />
         </div>
       )}
@@ -111,11 +128,8 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
         </h3>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-12 bg-muted border border-border rounded-md">
-            <Layers className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-            <p className="text-15 text-muted-foreground">
-              {t("feature.assignmentCreate.rubric.noRubrics")}
-            </p>
+          <div className="bg-muted border border-border rounded-md">
+            <EmptyState icon={Layers} message={t("feature.assignmentCreate.rubric.noRubrics")} />
           </div>
         ) : (
           <div className="space-y-3">

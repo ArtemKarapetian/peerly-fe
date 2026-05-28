@@ -5,20 +5,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import TeacherDistributionPage from "./Page";
 
-const { courseRepoMock, assignmentRepoMock, workRepoMock, reviewRepoMock, userRepoMock } =
-  vi.hoisted(() => ({
-    courseRepoMock: { getAll: vi.fn() },
-    assignmentRepoMock: { getByCourse: vi.fn() },
-    workRepoMock: { getAll: vi.fn() },
-    reviewRepoMock: { getAll: vi.fn() },
-    userRepoMock: { getAll: vi.fn() },
-  }));
+const { courseRepoMock, assignmentRepoMock, workRepoMock, reviewRepoMock } = vi.hoisted(() => ({
+  courseRepoMock: { getAll: vi.fn(), getParticipants: vi.fn() },
+  assignmentRepoMock: { getByCourse: vi.fn() },
+  workRepoMock: { getAll: vi.fn() },
+  reviewRepoMock: { getAll: vi.fn() },
+}));
 
 vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
 vi.mock("@/entities/assignment", () => ({ assignmentRepo: assignmentRepoMock }));
 vi.mock("@/entities/work", () => ({ workRepo: workRepoMock }));
 vi.mock("@/entities/review", () => ({ reviewRepo: reviewRepoMock }));
-vi.mock("@/entities/user", () => ({ userRepo: userRepoMock }));
 
 vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -27,10 +24,10 @@ vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
 beforeEach(() => {
   [
     courseRepoMock.getAll,
+    courseRepoMock.getParticipants,
     assignmentRepoMock.getByCourse,
     workRepoMock.getAll,
     reviewRepoMock.getAll,
-    userRepoMock.getAll,
   ].forEach((m) => m.mockReset());
 });
 
@@ -101,11 +98,14 @@ function setupData() {
       status: "draft",
     },
   ]);
-  userRepoMock.getAll.mockResolvedValue([
-    { id: "u-1", name: "Alice", email: "a@x", role: "Student", createdAt: new Date() },
-    { id: "u-2", name: "Bob", email: "b@x", role: "Student", createdAt: new Date() },
-    { id: "u-3", name: "Carol", email: "c@x", role: "Student", createdAt: new Date() },
-  ]);
+  courseRepoMock.getParticipants.mockResolvedValue({
+    students: [
+      { studentId: "u-1", name: "Alice", email: "a@x" },
+      { studentId: "u-2", name: "Bob", email: "b@x" },
+      { studentId: "u-3", name: "Carol", email: "c@x" },
+    ],
+    teachers: [],
+  });
 }
 
 function renderPage() {

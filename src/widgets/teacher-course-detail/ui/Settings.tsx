@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
+import { Label, TextField, Textarea } from "@/shared/ui";
 
 import { usePublishCourse, useUpdateCourse } from "@/entities/course";
 import { DemoCourse } from "@/entities/course/model/types.ts";
@@ -44,26 +45,17 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
   return (
     <div className="max-w-[600px] space-y-6">
       <div>
-        <label className="block text-13 font-medium text-foreground mb-2">
-          {t("widget.settings.courseName")}
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-2 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
-        />
+        <Label>{t("widget.settings.courseName")}</Label>
+        <TextField value={name} onChange={(e) => setName(e.target.value)} className="py-2" />
       </div>
 
       <div>
-        <label className="block text-13 font-medium text-foreground mb-2">
-          {t("widget.settings.description")}
-        </label>
-        <textarea
+        <Label>{t("widget.settings.description")}</Label>
+        <Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          className="w-full px-4 py-2 border-2 border-border rounded-md text-15 resize-none focus:outline-none focus:border-brand-primary transition-colors"
+          className="py-2"
         />
       </div>
 

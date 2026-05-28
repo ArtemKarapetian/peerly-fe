@@ -1,6 +1,8 @@
 import { Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Card } from "@/shared/ui";
+
 interface TaskChecklistProps {
   checklist: string;
 }
@@ -15,7 +17,7 @@ export function TaskChecklist({ checklist }: TaskChecklistProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+    <Card variant="section">
       <h2 className="text-xl desktop:text-2xl tracking-[-0.5px] text-foreground mb-4">
         {t("student.task.checklist")}
       </h2>
@@ -33,6 +35,6 @@ export function TaskChecklist({ checklist }: TaskChecklistProps) {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

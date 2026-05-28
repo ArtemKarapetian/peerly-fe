@@ -108,13 +108,11 @@ describe("authApi", () => {
     expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "T2" });
   });
 
-  it("confirmEmail URL-encodes the token and returns userId", async () => {
+  it("confirmEmail URL-encodes the token and returns userId from body", async () => {
     httpMock.get.mockResolvedValueOnce({ userId: "u-1" });
-    const res = await authApi.confirmEmail({ token: "abc def&xyz", userId: "u-1" });
+    const res = await authApi.confirmEmail({ token: "abc def&xyz" });
 
-    expect(httpMock.get.mock.calls[0][0]).toBe(
-      "/auth/confirm-email?token=abc%20def%26xyz&userId=u-1",
-    );
+    expect(httpMock.get.mock.calls[0][0]).toBe("/auth/confirm-email?token=abc%20def%26xyz");
     expect(httpMock.get.mock.calls[0][1]).toEqual({ skipAuthRefresh: true });
     expect(res.userId).toBe("u-1");
   });

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
-import { Card } from "@/shared/ui";
+import { Card, EmptyState, Field, TextField } from "@/shared/ui";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
@@ -69,23 +69,17 @@ export default function AdminUsersPage() {
 
       <div>
         <Card className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <label className="block text-13 font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-                {t("admin.usersPage.searchLabel")}
-              </label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t("admin.usersPage.searchPlaceholder")}
-                  className="w-full pl-11 pr-4 py-3 border-2 border-border rounded-md text-15 text-foreground focus:border-brand-primary focus:outline-none transition-colors"
-                />
-              </div>
+          <Field label={t("admin.usersPage.searchLabel")}>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <TextField
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("admin.usersPage.searchPlaceholder")}
+                className="pl-11"
+              />
             </div>
-          </div>
+          </Field>
 
           {searchQuery && (
             <div className="flex items-center gap-2 mt-4 pt-4 border-t-2 border-border">
@@ -147,13 +141,11 @@ export default function AdminUsersPage() {
           </div>
 
           {filteredUsers.length === 0 && (
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-              <h3 className="text-lg font-medium text-foreground mb-2">
-                {t("admin.usersPage.notFound")}
-              </h3>
-              <p className="text-sm text-muted-foreground">{t("admin.usersPage.notFoundHint")}</p>
-            </div>
+            <EmptyState
+              icon={Users}
+              title={t("admin.usersPage.notFound")}
+              message={t("admin.usersPage.notFoundHint")}
+            />
           )}
         </Card>
 

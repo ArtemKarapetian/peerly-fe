@@ -53,8 +53,9 @@ describe("useAsync", () => {
   });
 
   it("wraps non-Error rejection values in an Error", async () => {
-    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-    const fn = vi.fn(() => Promise.reject("string error"));
+    const fn = vi.fn(
+      () => new Promise<never>((_resolve, reject) => reject("string error" as unknown as Error)),
+    );
     const { result } = renderHook(() => useAsync(fn));
 
     await waitFor(() => {
