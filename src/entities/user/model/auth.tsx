@@ -1,4 +1,12 @@
-import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 
 import {
   ApiError,
@@ -9,6 +17,7 @@ import {
   type Session,
 } from "@/shared/api";
 import { ROUTES } from "@/shared/config/routes";
+import { logger } from "@/shared/lib/logger";
 import { appNavigate } from "@/shared/lib/navigate";
 
 import { authApi } from "../api/authHttp";
@@ -45,18 +54,23 @@ function isFatalAuthError(err: unknown): boolean {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const initialSession = getSession();
-  const [session, setSessionState] = useState<Session | null>(initialSession);
-  const [status, setStatus] = useState<AuthStatus>(initialSession ? "unknown" : "anonymous");
+  const [session, setSessionState] = useState<Session | null>(() => getSession());
+  const [status, setStatus] = useState<AuthStatus>(() => (getSession() ? "unknown" : "anonymous"));
+  const bootstrappedRef = useRef(false);
 
   useEffect(() => {
+    if (bootstrappedRef.current) return;
+    const initialSession = getSession();
     if (!initialSession) return;
-    let cancelled = false;
+    bootstrappedRef.current = true;
+
     void (async () => {
       try {
         const { role } = await authApi.getMyRole();
-        const me = await authApi.getMe(role).catch(() => null);
-        if (cancelled) return;
+        const me = await authApi.getMe(role).catch((err) => {
+          logger.warn("getMe failed during session bootstrap", err);
+          return null;
+        });
         const next: Session = {
           userId: me?.userId || initialSession.userId,
           userName: me?.name ?? initialSession.userName,
@@ -67,25 +81,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSessionState(next);
         setStatus("authenticated");
       } catch (err) {
-        if (cancelled) return;
         if (isFatalAuthError(err)) {
           clearSession();
           setSessionState(null);
           setStatus("anonymous");
         } else {
+          logger.warn("session bootstrap failed (non-fatal)", err);
           setStatus("authenticated");
         }
       }
     })();
-    return () => {
-      cancelled = true;
-    };
-  }, [initialSession]);
+  }, []);
 
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
     const { role } = await authApi.getMyRole();
-    const me = await authApi.getMe(role).catch(() => null);
+    const me = await authApi.getMe(role).catch((err) => {
+      logger.warn("getMe failed", err);
+      return null;
+    });
     const next: Session = {
       userId: me?.userId || String(res.userId),
       userName: me?.name ?? "",
@@ -109,7 +123,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const confirmEmail = useCallback<AuthContextType["confirmEmail"]>(async ({ token, userId }) => {
     const res = await authApi.confirmEmail({ token, userId });
     const { role } = await authApi.getMyRole();
-    const me = await authApi.getMe(role).catch(() => null);
+    const me = await authApi.getMe(role).catch((err) => {
+      logger.warn("getMe failed", err);
+      return null;
+    });
     const next: Session = {
       userId: me?.userId || String(res.userId),
       userName: me?.name ?? "",

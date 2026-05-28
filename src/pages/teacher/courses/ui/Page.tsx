@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
 import { useAsync } from "@/shared/lib/useAsync";
-import { Card } from "@/shared/ui";
+import { Card, Select } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
@@ -17,16 +17,19 @@ import { CourseSearch } from "@/features/course/search";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
+type StatusFilter = "all" | "draft" | "active" | "archived";
+
 interface CourseRow {
   id: string;
   name: string;
-  status: "active" | "archived";
+  status: "draft" | "active" | "archived";
 }
 
 export default function TeacherCoursesPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
 
   const {
     data: courses,
@@ -40,11 +43,11 @@ export default function TeacherCoursesPage() {
   const allCourseRows: CourseRow[] = (courses ?? []).map((course) => ({
     id: course.id,
     name: course.title,
-    status: course.archived ? "archived" : "active",
+    status: course.status,
   }));
 
   const filteredCourses = allCourseRows.filter((course) => {
-    if (course.status === "archived") return false;
+    if (statusFilter !== "all" && course.status !== statusFilter) return false;
     if (searchQuery) {
       return course.name.toLowerCase().includes(searchQuery.toLowerCase());
     }
@@ -67,7 +70,10 @@ export default function TeacherCoursesPage() {
     }
   };
 
-  const { currentPage, totalPages, handlePageChange } = usePagination(filteredCourses, 10);
+  const { currentPage, totalPages, pageSize, setPageSize, handlePageChange } = usePagination(
+    filteredCourses,
+    10,
+  );
 
   if (isLoading)
     return (
@@ -114,14 +120,25 @@ export default function TeacherCoursesPage() {
           </div>
         </Card>
 
-        {/* Search + count */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1">
+        {/* Search + status filter + count */}
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          <div className="flex-1 min-w-[220px]">
             <CourseSearch
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder={t("teacher.courses.searchPlaceholder")}
             />
+          </div>
+          <div className="w-[180px]">
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+            >
+              <option value="active">{t("teacher.courseDetail.status.active")}</option>
+              <option value="draft">{t("teacher.courseDetail.status.draft")}</option>
+              <option value="archived">{t("teacher.courseDetail.status.archived")}</option>
+              <option value="all">{t("teacher.courses.statusAll")}</option>
+            </Select>
           </div>
           {filteredCourses.length > 0 && (
             <p className="text-xs text-muted-foreground tabular-nums shrink-0 hidden tablet:block">
@@ -154,7 +171,7 @@ export default function TeacherCoursesPage() {
                   </thead>
                   <tbody className="divide-y divide-border">
                     {filteredCourses
-                      .slice((currentPage - 1) * 10, currentPage * 10)
+                      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
                       .map((course) => (
                         <tr
                           key={course.id}
@@ -177,6 +194,10 @@ export default function TeacherCoursesPage() {
                               <span className="inline-flex items-center gap-1 px-3 py-1 bg-success-light text-success rounded-sm text-xs font-medium">
                                 {t("common.active")}
                               </span>
+                            ) : course.status === "draft" ? (
+                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-warning-light text-warning rounded-sm text-xs font-medium">
+                                {t("teacher.courseDetail.status.draft")}
+                              </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 px-3 py-1 bg-muted text-muted-foreground rounded-sm text-xs font-medium">
                                 {t("common.archive")}
@@ -198,15 +219,15 @@ export default function TeacherCoursesPage() {
               </div>
             </Card>
 
-            {totalPages > 1 && (
-              <div className="mt-4">
-                <SimplePagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              </div>
-            )}
+            <div className="mt-4">
+              <SimplePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
+              />
+            </div>
           </>
         ) : (
           <Card className="p-12 text-center">

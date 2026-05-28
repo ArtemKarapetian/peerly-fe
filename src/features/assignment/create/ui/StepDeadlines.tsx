@@ -37,15 +37,11 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
         <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.deadlines.title")}
         </h2>
-        <p className="text-15 text-muted-foreground">
-          {t("feature.assignmentCreate.deadlines.subtitle")}
-        </p>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}{" "}
-          <span className="text-destructive">*</span>
+          {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}
         </label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
@@ -63,8 +59,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
 
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}{" "}
-          <span className="text-destructive">*</span>
+          {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}
         </label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />

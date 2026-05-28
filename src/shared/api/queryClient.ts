@@ -1,12 +1,7 @@
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import {
-  QUERY_STALE_TIME,
-  QUERY_GC_TIME,
-  QUERY_RETRY_COUNT,
-  MUTATION_RETRY_COUNT,
-} from "@/shared/config/constants";
+import { QUERY_RETRY_COUNT, MUTATION_RETRY_COUNT } from "@/shared/config/constants";
 
 import { humanizeApiError } from "./errorMessage";
 import { ApiError } from "./httpClient";
@@ -41,10 +36,11 @@ export const queryClient = new QueryClient({
   }),
   defaultOptions: {
     queries: {
-      staleTime: QUERY_STALE_TIME,
-      gcTime: QUERY_GC_TIME,
+      staleTime: 0,
+      gcTime: 0,
       retry: QUERY_RETRY_COUNT,
-      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
     },
     mutations: {
       retry: MUTATION_RETRY_COUNT,

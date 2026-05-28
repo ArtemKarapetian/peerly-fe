@@ -105,7 +105,7 @@ export const courseHttpRepo = {
       teachers: [],
       enrollmentCount: 0,
       homeworkCount: 0,
-      status: "active",
+      status: "draft",
       backendStatus: "draft",
       archived: false,
       createdAt: new Date(),
@@ -114,5 +114,9 @@ export const courseHttpRepo = {
 
   delete: async (courseId: string): Promise<void> => {
     await http.delete<void>(`/courses/${courseId}`);
+  },
+
+  publish: async (courseId: string): Promise<void> => {
+    await http.put<void>(`/teacher/courses/${courseId}/publish`);
   },
 };

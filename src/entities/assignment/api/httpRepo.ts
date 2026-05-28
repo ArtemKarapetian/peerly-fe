@@ -31,6 +31,24 @@ function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";
 }
 
+async function findCourseIdForHomework(homeworkId: string): Promise<string | undefined> {
+  try {
+    const prefix = rolePrefix();
+    const raw = await http.get<RawListCourses>(paged(`/${prefix}/courses`));
+    for (const c of raw.courseInfos) {
+      try {
+        const hws = await fetchCourseHomeworks(String(c.id));
+        if (hws.some((h) => String(h.id) === homeworkId)) return String(c.id);
+      } catch {
+        // continue
+      }
+    }
+  } catch {
+    // noop
+  }
+  return undefined;
+}
+
 async function fetchCourseHomeworks(courseId: string): Promise<HomeworkDto[]> {
   if (rolePrefix() === "teacher") {
     const raw = await http.get<RawListTeacherHomeworks>(
@@ -76,10 +94,12 @@ export const assignmentHttpRepo = {
     try {
       if (prefix === "teacher") {
         const raw = await http.get<RawGetTeacherHomework>(`/teacher/homeworks/${homeworkId}`);
-        return mapHomeworkToAssignment(raw.teacherHomeworkInfo);
+        const courseId = await findCourseIdForHomework(homeworkId);
+        return mapHomeworkToAssignment(raw.teacherHomeworkInfo, { courseId });
       }
       const raw = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
-      return mapHomeworkToAssignment(raw.studentHomeworkInfo);
+      const courseId = await findCourseIdForHomework(homeworkId);
+      return mapHomeworkToAssignment(raw.studentHomeworkInfo, { courseId });
     } catch {
       return undefined;
     }
@@ -88,8 +108,9 @@ export const assignmentHttpRepo = {
   getTeacherDetail: async (homeworkId: string): Promise<TeacherAssignmentDetail | undefined> => {
     try {
       const raw = await http.get<RawGetTeacherHomework>(`/teacher/homeworks/${homeworkId}`);
+      const courseId = await findCourseIdForHomework(homeworkId);
       return {
-        assignment: mapHomeworkToAssignment(raw.teacherHomeworkInfo),
+        assignment: mapHomeworkToAssignment(raw.teacherHomeworkInfo, { courseId }),
         submittedCount: raw.submittedCount,
       };
     } catch {

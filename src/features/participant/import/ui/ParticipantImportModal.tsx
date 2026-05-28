@@ -6,10 +6,17 @@ import { useParticipantImport } from "../model/useParticipantImport";
 
 interface ParticipantImportModalProps {
   courseId: string;
+  initialGroupId?: string;
+  lockGroup?: boolean;
   onClose: () => void;
 }
 
-export function ParticipantImportModal({ courseId, onClose }: ParticipantImportModalProps) {
+export function ParticipantImportModal({
+  courseId,
+  initialGroupId,
+  lockGroup,
+  onClose,
+}: ParticipantImportModalProps) {
   const { t } = useTranslation();
   const {
     query,
@@ -26,7 +33,8 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
     hasQuery,
     add,
     canSubmit,
-  } = useParticipantImport(courseId);
+  } = useParticipantImport(courseId, initialGroupId);
+  const lockedGroupName = groups.find((g) => g.id === selectedGroupId)?.name ?? "";
 
   const handleAdd = async () => {
     const result = await add();
@@ -64,22 +72,28 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
             <label className="block text-13 font-medium text-foreground mb-2">
               {t("feature.participantImport.targetGroup")}
             </label>
-            <select
-              value={selectedGroupId}
-              onChange={(e) => setSelectedGroupId(e.target.value)}
-              disabled={groups.length === 0}
-              className="w-full px-4 py-2 border-2 border-border rounded-md text-15 bg-card focus:outline-none focus:border-brand-primary transition-colors disabled:opacity-50"
-            >
-              {groups.length === 0 ? (
-                <option>{t("feature.participantImport.noGroups")}</option>
-              ) : (
-                groups.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.name}
-                  </option>
-                ))
-              )}
-            </select>
+            {lockGroup ? (
+              <div className="w-full px-4 py-2 border-2 border-border rounded-md text-15 bg-muted text-foreground">
+                {lockedGroupName || t("common.loading")}
+              </div>
+            ) : (
+              <select
+                value={selectedGroupId}
+                onChange={(e) => setSelectedGroupId(e.target.value)}
+                disabled={groups.length === 0}
+                className="w-full px-4 py-2 border-2 border-border rounded-md text-15 bg-card focus:outline-none focus:border-brand-primary transition-colors disabled:opacity-50"
+              >
+                {groups.length === 0 ? (
+                  <option>{t("feature.participantImport.noGroups")}</option>
+                ) : (
+                  groups.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            )}
           </div>
 
           <div>
@@ -96,6 +110,11 @@ export function ParticipantImportModal({ courseId, onClose }: ParticipantImportM
                 className="w-full pl-10 pr-4 py-2 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
               />
             </div>
+            {query.trim().length > 0 && query.trim().length < 3 ? (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("feature.participantImport.minChars")}
+              </p>
+            ) : null}
           </div>
         </div>
 

@@ -52,3 +52,15 @@ export function useUpdateCourse(courseId: string) {
     },
   });
 }
+
+export function usePublishCourse(courseId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => courseRepo.publish(courseId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: courseKeys.detail(courseId) });
+      void queryClient.invalidateQueries({ queryKey: courseKeys.lists() });
+    },
+  });
+}

@@ -1,11 +1,15 @@
 export interface DemoGroup {
   id: string;
   name: string;
-  courseId: string;
+  studentCount: number;
 }
 
 export interface CreateGroupInput {
   courseId: string;
+  name: string;
+}
+
+export interface UpdateGroupInput {
   name: string;
 }
 

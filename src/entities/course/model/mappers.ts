@@ -12,6 +12,12 @@ export function mapDtoToTeacher(t: CourseTeacherDto): CourseTeacher {
   return { id: String(t.teacherId), name: t.name, email: t.email };
 }
 
+function uiStatus(s: CourseStatus): "draft" | "active" | "archived" {
+  if (isArchivedStatus(s)) return "archived";
+  if (s === "draft") return "draft";
+  return "active";
+}
+
 export function mapDtoToCourse(
   dto: CourseDto,
   counts: { studentCount: number; homeworkCount: number } = { studentCount: 0, homeworkCount: 0 },
@@ -25,7 +31,7 @@ export function mapDtoToCourse(
     teachers: (dto.teachers ?? []).map(mapDtoToTeacher),
     enrollmentCount: counts.studentCount,
     homeworkCount: counts.homeworkCount,
-    status: archived ? "archived" : "active",
+    status: uiStatus(dto.status),
     backendStatus: dto.status,
     archived,
     createdAt: new Date(),

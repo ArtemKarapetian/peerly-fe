@@ -12,8 +12,49 @@ async function seedSession(page: import("@playwright/test").Page, session: typeo
     (s) => window.localStorage.setItem("peerly_session", JSON.stringify(s)),
     session,
   );
+  await page.route("**/api/v1/**", async (route) => {
+    const url = route.request().url();
+
+    console.warn(`[e2e seedSession] unhandled API call: ${url} — returning empty stub`);
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({}),
+    });
+  });
+
+  // Endpoints the bootstrap + dashboard actually need.
   await page.route("**/api/v1/me/role", (route) =>
-    route.fulfill({ status: 200, body: JSON.stringify({ role: session.role }) }),
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ role: session.role }),
+    }),
+  );
+  await page.route(`**/api/v1/${session.role.toLowerCase()}/me`, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(
+        session.role === "Student"
+          ? { studentInfo: { studentId: 1, email: session.email, name: session.userName } }
+          : { teacherInfo: { teacherId: 1, email: session.email, name: session.userName } },
+      ),
+    }),
+  );
+  await page.route(`**/api/v1/${session.role.toLowerCase()}/courses*`, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ courseInfos: [] }),
+    }),
+  );
+  await page.route(`**/api/v1/${session.role.toLowerCase()}/homeworks*`, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ homeworkInfos: [] }),
+    }),
   );
 }
 

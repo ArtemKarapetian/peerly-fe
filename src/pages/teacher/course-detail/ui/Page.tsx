@@ -94,6 +94,10 @@ export default function TeacherCourseDetailsPage() {
                   <span className="px-3 py-1 bg-success-light text-success rounded-sm text-13 font-medium whitespace-nowrap shrink-0">
                     {t("teacher.courseDetail.status.active")}
                   </span>
+                ) : course.status === "draft" ? (
+                  <span className="px-3 py-1 bg-warning-light text-warning rounded-sm text-13 font-medium whitespace-nowrap shrink-0">
+                    {t("teacher.courseDetail.status.draft")}
+                  </span>
                 ) : (
                   <span className="px-3 py-1 bg-muted text-muted-foreground rounded-sm text-13 font-medium whitespace-nowrap shrink-0">
                     {t("teacher.courseDetail.status.archived")}

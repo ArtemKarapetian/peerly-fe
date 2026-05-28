@@ -1,6 +1,3 @@
-// ── Time (ms) ─────────────────────────────────────────────────────
-export const QUERY_STALE_TIME = 10 * 1000;
-export const QUERY_GC_TIME = 2 * 60 * 1000;
 export const QUERY_RETRY_COUNT = 1;
 export const MUTATION_RETRY_COUNT = 0;
 

@@ -186,41 +186,22 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
                     placeholder={t("widget.rubricEditor.criterionDescPlaceholder")}
                   />
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs text-muted-foreground mb-1">
-                        {t("widget.rubricEditor.maxPoints")}
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="10"
-                        value={criterion.maxScore}
-                        onChange={(e) =>
-                          updateCriterion(index, { maxScore: parseInt(e.target.value) || 5 })
-                        }
-                        className={smallInputClass}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs text-muted-foreground mb-1">
-                        {t("widget.rubricEditor.weight")}
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={criterion.weight || ""}
-                        onChange={(e) =>
-                          updateCriterion(index, {
-                            weight: e.target.value ? parseInt(e.target.value) : undefined,
-                          })
-                        }
-                        className={smallInputClass}
-                        placeholder={t("widget.rubricEditor.optional")}
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-1">
+                      {t("widget.rubricEditor.maxPoints")}
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={criterion.maxScore}
+                      onChange={(e) => {
+                        const raw = parseInt(e.target.value);
+                        const clamped = Number.isFinite(raw) ? Math.min(Math.max(raw, 1), 10) : 5;
+                        updateCriterion(index, { maxScore: clamped });
+                      }}
+                      className={smallInputClass}
+                    />
                   </div>
 
                   <div className="flex items-center gap-6 flex-wrap">

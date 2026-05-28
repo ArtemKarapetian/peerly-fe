@@ -151,7 +151,8 @@ export function ChangePasswordCard() {
         <div className="flex gap-3 mt-6 pt-6 border-t border-border">
           <button
             onClick={handleChangePassword}
-            className="px-6 py-3 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors text-15 font-medium"
+            disabled={!passwordData.current || !passwordData.new || !passwordData.confirm}
+            className="px-6 py-3 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors text-15 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t("widget.changePassword.changePasswordButton")}
           </button>

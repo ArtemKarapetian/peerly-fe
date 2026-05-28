@@ -13,6 +13,7 @@ interface StepPublishProps {
   submitting?: boolean;
   errorMessage?: string | null;
   mode?: "create" | "edit";
+  isDirty?: boolean;
 }
 
 export function StepPublish({
@@ -21,6 +22,7 @@ export function StepPublish({
   submitting,
   errorMessage,
   mode = "create",
+  isDirty = true,
 }: StepPublishProps) {
   const { t } = useTranslation();
   const { data: courses } = useAsync(() => courseRepo.getAll(), []);
@@ -43,9 +45,6 @@ export function StepPublish({
         <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
           {t("feature.assignmentCreate.publish.title")}
         </h2>
-        <p className="text-15 text-muted-foreground">
-          {t("feature.assignmentCreate.publish.subtitle")}
-        </p>
       </div>
 
       <div className="space-y-4">
@@ -151,7 +150,11 @@ export function StepPublish({
               <p className="text-xs text-muted-foreground mb-1">
                 {t("feature.assignmentCreate.publish.discrepancyThreshold")}
               </p>
-              <p className="text-sm text-foreground">{data.discrepancyThreshold}%</p>
+              <p className="text-sm text-foreground">
+                {t("feature.assignmentCreate.publish.discrepancyValue", {
+                  count: data.discrepancyThreshold,
+                })}
+              </p>
             </div>
           </div>
         </div>
@@ -174,7 +177,7 @@ export function StepPublish({
       <div className="flex items-center gap-3 pt-4">
         <button
           onClick={() => onPublish(true)}
-          disabled={submitting}
+          disabled={submitting || (mode === "edit" && !isDirty)}
           className="flex-1 flex items-center justify-center gap-2 px-6 py-4 border-2 border-border text-foreground rounded-md hover:bg-muted transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-5 h-5" />
@@ -192,14 +195,6 @@ export function StepPublish({
             ? t("feature.assignmentCreate.publish.publishing")
             : t("feature.assignmentCreate.publish.publishAssignment")}
         </button>
-      </div>
-
-      <div className="text-center">
-        <p className="text-13 text-muted-foreground">
-          {t("feature.assignmentCreate.publish.draftsInfo")}
-          <br />
-          {t("feature.assignmentCreate.publish.publishedInfo")}
-        </p>
       </div>
     </div>
   );

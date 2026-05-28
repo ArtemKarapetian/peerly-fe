@@ -22,8 +22,15 @@ export const userHttpRepo = {
       "filter.roles": "Student",
       limit: String(limit),
     });
-    const res = await http.get<{ users: UserSearchInfo[] }>(`/users?${params.toString()}`);
-    return res.users.map((u) => ({ id: String(u.id), name: u.name, email: u.email }));
+    const res = await http.get<{ users?: UserSearchInfo[] }>(`/users?${params.toString()}`);
+    const rows = Array.isArray(res?.users) ? res.users : [];
+    return rows
+      .filter((u): u is UserSearchInfo => Boolean(u) && u.id !== undefined && u.id !== null)
+      .map((u) => ({
+        id: String(u.id),
+        name: typeof u.name === "string" ? u.name : "",
+        email: typeof u.email === "string" ? u.email : "",
+      }));
   },
 
   getById: (id: string): Promise<DemoUser | undefined> => {

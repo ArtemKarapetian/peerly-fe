@@ -45,12 +45,15 @@ export interface UseParticipantImportResult {
   canSubmit: boolean;
 }
 
-export function useParticipantImport(courseId: string): UseParticipantImportResult {
+export function useParticipantImport(
+  courseId: string,
+  initialGroupId?: string,
+): UseParticipantImportResult {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
   const [groups, setGroups] = useState<GroupRow[]>([]);
-  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
+  const [selectedGroupId, setSelectedGroupId] = useState<string>(initialGroupId ?? "");
   const [students, setStudents] = useState<StudentRow[]>([]);
   const [alreadyInCourse, setAlreadyInCourse] = useState<Set<string>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -64,7 +67,7 @@ export function useParticipantImport(courseId: string): UseParticipantImportResu
       .then(([gs, participants]) => {
         if (cancelled) return;
         setGroups(gs.map((g) => ({ id: g.id, name: g.name })));
-        setSelectedGroupId((prev) => prev || gs[0]?.id || "");
+        setSelectedGroupId((prev) => prev || initialGroupId || gs[0]?.id || "");
         setAlreadyInCourse(new Set(participants.students.map((s) => String(s.studentId))));
       })
       .catch((err) => {
@@ -74,9 +77,14 @@ export function useParticipantImport(courseId: string): UseParticipantImportResu
     return () => {
       cancelled = true;
     };
-  }, [courseId, t]);
+  }, [courseId, initialGroupId, t]);
 
   useEffect(() => {
+    if (debouncedQuery.trim().length < 3) {
+      setStudents([]);
+      setIsSearching(false);
+      return;
+    }
     let cancelled = false;
     const run = async () => {
       setIsSearching(true);
@@ -140,7 +148,7 @@ export function useParticipantImport(courseId: string): UseParticipantImportResu
     isSearching,
     isAdding,
     loadError,
-    hasQuery: debouncedQuery.length > 0,
+    hasQuery: debouncedQuery.trim().length >= 3,
     add,
     canSubmit: Boolean(selectedGroupId) && selectedIds.size > 0 && !isAdding,
   };

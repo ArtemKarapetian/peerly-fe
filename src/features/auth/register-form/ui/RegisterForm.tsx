@@ -195,7 +195,11 @@ export function RegisterForm() {
               size="lg"
               fullWidth
               isLoading={isSubmitting}
-              disabled={isSubmitting || !form.formState.isValid}
+              disabled={
+                isSubmitting ||
+                !form.formState.isValid ||
+                (form.formState.isSubmitSuccessful && !form.formState.isDirty)
+              }
             >
               {isSubmitting ? t("auth.creating") : t("auth.createAccount")}
             </Button>

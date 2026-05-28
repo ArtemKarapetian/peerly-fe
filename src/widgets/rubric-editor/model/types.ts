@@ -3,7 +3,6 @@ export interface RubricCriterionData {
   name: string;
   description: string;
   maxScore: number;
-  weight?: number;
   required: boolean;
   commentRequired?: boolean;
   minCommentLength?: number;

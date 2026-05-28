@@ -9,18 +9,27 @@ describe("mapDtoToGroup", () => {
     const dto: GroupDto = {
       id: 42 as unknown as string,
       name: "A",
-      courseId: 9 as unknown as string,
+      studentCount: 5,
     };
     const result = mapDtoToGroup(dto);
 
     expect(result.id).toBe("42");
     expect(result.name).toBe("A");
-    expect(result.courseId).toBe("9");
+    expect(result.studentCount).toBe(5);
   });
 
   it("handles string ids unchanged", () => {
-    const result = mapDtoToGroup({ id: "g-1", name: "Group 1", courseId: "c-1" });
-    expect(result).toEqual({ id: "g-1", name: "Group 1", courseId: "c-1" });
+    const result = mapDtoToGroup({ id: "g-1", name: "Group 1", studentCount: 0 });
+    expect(result).toEqual({ id: "g-1", name: "Group 1", studentCount: 0 });
+  });
+
+  it("defaults studentCount to 0 when missing", () => {
+    const result = mapDtoToGroup({
+      id: "g-2",
+      name: "G2",
+      studentCount: undefined as unknown as number,
+    });
+    expect(result.studentCount).toBe(0);
   });
 });
 
@@ -39,6 +48,24 @@ describe("mapParticipants", () => {
   it("returns empty arrays for empty input", () => {
     const result = mapParticipants({ students: [], teachers: [] });
     expect(result.students).toEqual([]);
+    expect(result.teachers).toEqual([]);
+  });
+
+  it("returns empty arrays for null or undefined input", () => {
+    expect(mapParticipants(null)).toEqual({ students: [], teachers: [] });
+    expect(mapParticipants(undefined)).toEqual({ students: [], teachers: [] });
+  });
+
+  it("skips rows with missing studentId / teacherId", () => {
+    const dto = {
+      students: [
+        { studentId: null as unknown as string, email: "x@x", name: "X" },
+        { studentId: "s-1", email: "a@x", name: "Alice" },
+      ],
+      teachers: undefined as unknown as ListParticipantsResponse["teachers"],
+    };
+    const result = mapParticipants(dto);
+    expect(result.students).toEqual([{ id: "s-1", name: "Alice", email: "a@x" }]);
     expect(result.teachers).toEqual([]);
   });
 });

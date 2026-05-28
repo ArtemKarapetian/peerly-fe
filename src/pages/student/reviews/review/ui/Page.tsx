@@ -54,9 +54,12 @@ export default function ReviewPage() {
   const isDeadlinePassed = inboxSaysDeadlinePassed || subErrorIsClosed;
 
   const breadcrumbItems = [
-    { label: t("page.reviewFill.breadcrumbCourses"), href: "/student/courses" },
     { label: t("nav.reviews"), href: "/student/reviews" },
-    { label: t("page.reviewFill.breadcrumbReview") },
+    {
+      label: inboxEntry?.taskTitle
+        ? `${inboxEntry.taskTitle}${inboxEntry.courseName ? ` · ${inboxEntry.courseName}` : ""}`
+        : t("page.reviewFill.breadcrumbReview"),
+    },
   ];
 
   if (!isLoading && !submission && isDeadlinePassed) {

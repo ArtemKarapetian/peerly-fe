@@ -117,32 +117,6 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         readonly={false}
       />
 
-      {rubric.criteria.some((c) => c.weight) && (
-        <div className="mt-6 border-2 border-border rounded-md p-4">
-          <h4 className="text-sm font-medium text-foreground mb-3">
-            {t("widget.rubricPreview.weightCoefficients")}
-          </h4>
-          <div className="space-y-2">
-            {rubric.criteria.map((criterion) => (
-              <div key={criterion.id} className="flex items-center justify-between">
-                <span className="text-13 text-muted-foreground">{criterion.name}</span>
-                <span className="text-13 font-medium text-foreground">
-                  {criterion.weight
-                    ? `${criterion.weight}%`
-                    : t("widget.rubricPreview.notSpecified")}
-                </span>
-              </div>
-            ))}
-          </div>
-          {rubric.criteria.reduce((sum, c) => sum + (c.weight || 0), 0) !== 100 && (
-            <p className="text-xs text-warning mt-3 flex items-center gap-1">
-              <span>⚠️</span>
-              {t("widget.rubricPreview.weightsWarning")}
-            </p>
-          )}
-        </div>
-      )}
-
       <div className="mt-6 flex justify-end">
         <button
           onClick={() => setScores([])}

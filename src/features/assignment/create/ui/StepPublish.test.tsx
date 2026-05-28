@@ -59,7 +59,7 @@ describe("StepPublish", () => {
     expect(screen.getByText("My Essay Assignment")).toBeInTheDocument();
     expect(screen.getByText("Standard Essay")).toBeInTheDocument();
     expect(screen.getByText("4")).toBeInTheDocument();
-    expect(screen.getByText("25%")).toBeInTheDocument();
+    expect(screen.getByText(/discrepancyValue/)).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("Algebra")).toBeInTheDocument();
     });

@@ -283,7 +283,8 @@
       "assignmentsLabel_one": "Assignment",
       "assignmentsLabel_other": "Assignments",
       "createCourse": "Create Course",
-      "searchPlaceholder": "Search by name or course code...",
+      "searchPlaceholder": "Search by course name...",
+      "statusAll": "All statuses",
       "noCourses": "No courses",
       "noCoursesSearch": "Courses not found",
       "tryChangingSearch": "Try changing your search query",
@@ -568,6 +569,7 @@
       "deadlines": "Deadlines",
       "submissionDeadline": "Submission Deadline",
       "reviewDeadline": "Review Deadline",
+      "rubric": "Rubric",
       "peerReviewSettings": "Peer Review Settings",
       "reviewsPerSubmission": "Reviews Per Submission",
       "gradingRubric": "Grading Rubric",
@@ -623,8 +625,12 @@
       },
       "status": {
         "active": "Active",
+        "draft": "Draft",
         "archived": "Archived"
       },
+      "publishBtn": "Publish course",
+      "publishHint": "A course in draft state is not visible to students. Publish to make it available.",
+      "publishError": "Failed to publish course. Please try again.",
       "meta": {
         "participants": "Participants",
         "assignments": "Assignments",
@@ -1051,25 +1057,38 @@
       "noAssignments": "No assignments yet",
       "createFirst": "Create first assignment"
     },
+    "groups": {
+      "totalGroups": "Total groups:",
+      "createGroup": "Create group",
+      "groupNamePlaceholder": "Group name",
+      "empty": "No groups in this course yet",
+      "studentsCount_one": "{{count}} student",
+      "studentsCount_other": "{{count}} students",
+      "addStudents": "Add students",
+      "addStudentsTo": "Add students to \"{{name}}\"",
+      "rename": "Rename",
+      "deleteGroup": "Delete group",
+      "deleteConfirm": "Delete group \"{{name}}\"?",
+      "noStudents": "No students in this group yet",
+      "loadStudentsError": "Failed to load group members",
+      "createSuccess": "Group created",
+      "createError": "Failed to create group",
+      "renameSuccess": "Group renamed",
+      "renameError": "Failed to rename group",
+      "deleteSuccess": "Group deleted",
+      "deleteError": "Failed to delete group"
+    },
     "participants": {
-      "searchPlaceholder": "Search by name...",
-      "allRoles": "All roles",
-      "studentsRole": "Students",
-      "teachersRole": "Teachers",
-      "import": "Import",
-      "roleBadgeStudent": "Student",
-      "roleBadgeTeacher": "Teacher",
-      "notFound": "No matches for current filters.",
-      "empty": "No one is enrolled in this course yet.",
-      "total": "Total:",
-      "studentsCount": "Students:",
-      "teachersCount": "Teachers:"
+      "teachersSection": "Course teachers",
+      "groupsSection": "Student groups",
+      "empty": "No one is enrolled in this course yet."
     },
     "settings": {
       "courseName": "Course name",
       "description": "Description",
       "saveChanges": "Save changes",
       "settingsSaved": "Settings saved",
+      "publishSuccess": "Course published",
       "dangerZone": "Danger zone",
       "dangerDescription": "Deleting a course is irreversible and will remove all associated assignments, submissions, and reviews.",
       "deleteCourse": "Delete course"
@@ -1794,14 +1813,11 @@
       },
       "peerSession": {
         "title": "Peer review settings",
-        "subtitle": "Configure mutual review parameters",
-        "reviewsPerSubmissionLabel": "Reviews per submission (k)",
-        "reviewsHint_one": "Each submission will receive {{count}} review. Recommended: 3-5 for a balance of quality and workload.",
-        "reviewsHint_other": "Each submission will receive {{count}} reviews. Recommended: 3-5 for a balance of quality and workload.",
-        "discrepancyLabel": "Score discrepancy threshold (%)",
-        "discrepancyHint": "If reviewer scores on one submission diverge by more than {{value}}%, the submission is re-reviewed. A reasonable value is 20–40%.",
-        "tip": "Tip:",
-        "tipText": "For courses with many students (30+), k=3-5 reviews and a 30% discrepancy threshold usually work well."
+        "reviewsPerSubmissionLabel": "Reviews per submission",
+        "reviewsHint_one": "Each submission will receive {{count}} review.",
+        "reviewsHint_other": "Each submission will receive {{count}} reviews.",
+        "discrepancyLabel": "Score discrepancy threshold (points)",
+        "discrepancyHint": "If reviewers' average scores on one submission differ by more than {{value}} points, the submission goes to a third reviewer."
       },
       "plugins": {
         "title": "Plugins and checks",
@@ -1833,7 +1849,6 @@
       },
       "publish": {
         "title": "Ready to publish",
-        "subtitle": "Review settings and publish the assignment or save as draft",
         "basicInfo": "Basic Information",
         "courseLabel": "Course",
         "courseNotSelected": "Not selected",
@@ -1848,14 +1863,14 @@
         "peerReviewLabel": "Peer Review",
         "reviewsPerSubmission": "Reviews per submission",
         "discrepancyThreshold": "Score discrepancy threshold",
+        "discrepancyValue_one": "{{count}} point",
+        "discrepancyValue_other": "{{count}} points",
         "warningText": "After publishing, the assignment will be visible to students. You can edit settings, but some changes (e.g., deadlines) may affect work already in progress.",
         "warningAttention": "Please note:",
         "saveDraft": "Save draft",
         "saveDraftEdit": "Save changes",
         "publishAssignment": "Publish assignment",
         "publishing": "Publishing...",
-        "draftsInfo": "Drafts are saved automatically and are only visible to you.",
-        "publishedInfo": "Published assignments are immediately visible to course students.",
         "errorMissingFields": "Pick a course and both deadlines before publishing",
         "errorGeneric": "Could not create the assignment. Please try again."
       }
@@ -1866,6 +1881,7 @@
       "noGroups": "No groups in this course yet — create one to add participants",
       "searchLabel": "Search student",
       "searchPlaceholder": "Name or email",
+      "minChars": "Enter at least 3 characters",
       "startTyping": "Start typing a name or email",
       "noResults": "No matches",
       "selectedCount_one": "{{count}} student selected",
@@ -2182,7 +2198,8 @@
       "previous": "Previous",
       "next": "Next",
       "pageLabel": "Page",
-      "of": "of"
+      "of": "of",
+      "perPage": "Per page:"
     }
   }
 }
