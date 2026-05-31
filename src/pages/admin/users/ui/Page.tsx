@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { useDebouncedValue } from "@/shared/lib/useDebouncedValue";
 import { Card, EmptyState, Field, TextField } from "@/shared/ui";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -13,31 +14,35 @@ import { userRepo } from "@/entities/user";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
+const MIN_SEARCH_LENGTH = 3;
+
 export default function AdminUsersPage() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedQuery = useDebouncedValue(searchQuery, 300);
+  const canSearch = debouncedQuery.trim().length >= MIN_SEARCH_LENGTH;
 
   const {
     data: users,
     isLoading,
     error,
     refetch,
-  } = useAsync(() => userRepo.getAll(), [], {
-    onError: "redirect",
-  });
-
-  const filteredUsers = (users ?? []).filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
+  } = useAsync(
+    () => (canSearch ? userRepo.search(debouncedQuery.trim()) : Promise.resolve([])),
+    [debouncedQuery, canSearch],
+    {
+      onError: "redirect",
+    },
   );
+
+  const filteredUsers = users ?? [];
 
   const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
     filteredUsers,
     10,
   );
 
-  if (isLoading)
+  if (isLoading && canSearch)
     return (
       <AppShell title={t("admin.users.title")}>
         <PageSkeleton />
@@ -140,7 +145,14 @@ export default function AdminUsersPage() {
             </table>
           </div>
 
-          {filteredUsers.length === 0 && (
+          {!canSearch && (
+            <EmptyState
+              icon={Search}
+              title={t("admin.usersPage.searchPromptTitle")}
+              message={t("admin.usersPage.searchPromptHint")}
+            />
+          )}
+          {canSearch && !isLoading && filteredUsers.length === 0 && (
             <EmptyState
               icon={Users}
               title={t("admin.usersPage.notFound")}

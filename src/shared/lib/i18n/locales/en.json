@@ -1029,7 +1029,9 @@
       "headerUser": "User",
       "headerRole": "Role",
       "notFound": "No users found",
-      "notFoundHint": "Try changing your search or filter parameters"
+      "notFoundHint": "Try changing your search or filter parameters",
+      "searchPromptTitle": "Start typing to search",
+      "searchPromptHint": "Enter at least 3 characters of a name or email"
     },
     "logsPage": {
       "title": "Logs & Audit",

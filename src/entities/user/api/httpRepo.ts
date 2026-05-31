@@ -16,8 +16,8 @@ function knownRole(r: unknown): "Student" | "Teacher" | "Admin" {
 }
 
 export const userHttpRepo = {
-  getAll: async (): Promise<DemoUser[]> => {
-    const params = new URLSearchParams({ "filter.query": "", limit: "100" });
+  search: async (query: string, limit = 100): Promise<DemoUser[]> => {
+    const params = new URLSearchParams({ "filter.query": query, limit: String(limit) });
     const res = await http.get<{ users?: UserSearchInfo[] }>(`/users?${params.toString()}`);
     const rows = Array.isArray(res?.users) ? res.users : [];
     return rows
