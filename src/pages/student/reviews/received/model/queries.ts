@@ -4,7 +4,10 @@ import { type GetSubmittedHomeworkResponse, http } from "@/shared/api";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
+import { rubricRepo } from "@/entities/rubric";
 import { workRepo } from "@/entities/work";
+
+const FALLBACK_MAX_SCORE = 100;
 
 export interface ReceivedReview {
   reviewId: string;
@@ -21,6 +24,7 @@ export interface TaskSubmissionReviews {
   reviewsReceived: number;
   reviewsRequired: number;
   finalMark: number | null;
+  maxScore: number;
   reviews: ReceivedReview[];
 }
 
@@ -34,6 +38,20 @@ export function useReceivedReviews() {
       const assignments = await assignmentRepo.getAll();
       const visible = assignments.filter(
         (a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted",
+      );
+
+      const rubricIds = Array.from(
+        new Set(visible.map((a) => a.rubricId).filter((id): id is string => !!id)),
+      );
+      const rubricTotals = new Map<string, number>();
+      await Promise.all(
+        rubricIds.map(async (id) => {
+          const detail = await rubricRepo.getById(id).catch(() => null);
+          if (detail) {
+            const total = detail.criteria.reduce((sum, c) => sum + c.maxScore, 0);
+            if (total > 0) rubricTotals.set(id, total);
+          }
+        }),
       );
 
       const items = await Promise.all(
@@ -55,6 +73,10 @@ export function useReceivedReviews() {
           const status: TaskSubmissionReviews["status"] =
             detail.finalMark != null ? "PUBLISHED" : reviews.length > 0 ? "IN_REVIEW" : "PENDING";
 
+          const maxScore = a.rubricId
+            ? (rubricTotals.get(a.rubricId) ?? FALLBACK_MAX_SCORE)
+            : FALLBACK_MAX_SCORE;
+
           return {
             taskId: a.id,
             taskTitle: a.title,
@@ -64,6 +86,7 @@ export function useReceivedReviews() {
             reviewsReceived: reviews.length,
             reviewsRequired: a.reviewCount,
             finalMark: detail.finalMark,
+            maxScore,
             reviews,
           };
         }),

@@ -18,6 +18,8 @@ function knownRole(r: unknown): "Student" | "Teacher" | "Admin" {
 export const userHttpRepo = {
   search: async (query: string, limit = 100): Promise<DemoUser[]> => {
     const params = new URLSearchParams({ "filter.query": query, limit: String(limit) });
+    params.append("filter.roles", "Student");
+    params.append("filter.roles", "Teacher");
     const res = await http.get<{ users?: UserSearchInfo[] }>(`/users?${params.toString()}`);
     const rows = Array.isArray(res?.users) ? res.users : [];
     return rows
