@@ -586,6 +586,8 @@
       "submissionDeadline": "Submission Deadline",
       "reviewDeadline": "Review Deadline",
       "rubric": "Rubric",
+      "maxScore_one": "max {{count}} pt",
+      "maxScore_other": "max {{count}} pts",
       "peerReviewSettings": "Peer Review Settings",
       "reviewsPerSubmission": "Reviews Per Submission",
       "gradingRubric": "Grading Rubric",
