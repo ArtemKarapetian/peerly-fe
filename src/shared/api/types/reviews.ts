@@ -9,8 +9,14 @@ export interface GetAssignedReviewResponse {
   submission: SubmissionForReviewDto;
 }
 
+export interface SubmittedReviewScoreInput {
+  rubricCriterionId: number;
+  score: number;
+  comment?: string | null;
+}
+
 export interface CreateSubmittedReviewRequestBody {
-  mark: number;
+  scores: SubmittedReviewScoreInput[];
   comment: string;
 }
 
@@ -19,6 +25,6 @@ export interface CreateSubmittedReviewResponse {
 }
 
 export interface UpdateSubmittedReviewRequestBody {
-  mark: number;
+  scores: SubmittedReviewScoreInput[];
   comment: string;
 }

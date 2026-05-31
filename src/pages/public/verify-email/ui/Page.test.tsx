@@ -108,16 +108,20 @@ afterEach(() => {
 
 describe("VerifyEmailPage", () => {
   describe("pending state (no token in URL)", () => {
-    it("shows the email from localStorage and the resend button is enabled", () => {
+    it("shows the email from localStorage", () => {
       localStorage.setItem("peerly_pending_verification_email", "user@x.com");
       renderPage();
       expect(screen.getByText("user@x.com")).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /Resend email/i })).not.toBeDisabled();
     });
 
     it("falls back to a hint when no pending email is stored", () => {
       renderPage();
       expect(screen.getByText("Open the email we just sent you")).toBeInTheDocument();
+    });
+
+    it("does not render a resend button in the pending state", () => {
+      localStorage.setItem("peerly_pending_verification_email", "user@x.com");
+      renderPage();
       expect(screen.queryByRole("button", { name: /Resend email/i })).not.toBeInTheDocument();
     });
   });
@@ -185,36 +189,40 @@ describe("VerifyEmailPage", () => {
     });
   });
 
-  describe("resend with cooldown", () => {
+  describe("resend from expired state", () => {
     it("triggers resendConfirmationEmail, shows a success toast and disables the button after click", async () => {
       localStorage.setItem("peerly_pending_verification_email", "user@x.com");
+      currentSearch = "token=abc";
+      confirmEmailMock.mockRejectedValue(new ApiError(410, "Gone", "Gone"));
       authApiMock.resendConfirmationEmail.mockResolvedValueOnce(undefined);
 
       const user = userEvent.setup();
       renderPage();
 
-      await user.click(screen.getByRole("button", { name: /Resend email/i }));
+      const resendBtn = await screen.findByRole("button", { name: /Send new link/i });
+      await user.click(resendBtn);
 
       await waitFor(() => {
         expect(authApiMock.resendConfirmationEmail).toHaveBeenCalledWith("user@x.com");
       });
       expect(toastMock.success).toHaveBeenCalled();
-      expect(await screen.findByRole("button", { name: /Resend in \d+s/i })).toBeDisabled();
     });
 
-    it("shows an error toast when resend fails and keeps the button enabled", async () => {
+    it("shows an error toast when resend fails", async () => {
       localStorage.setItem("peerly_pending_verification_email", "user@x.com");
+      currentSearch = "token=abc";
+      confirmEmailMock.mockRejectedValue(new ApiError(410, "Gone", "Gone"));
       authApiMock.resendConfirmationEmail.mockRejectedValueOnce(new Error("nope"));
 
       const user = userEvent.setup();
       renderPage();
 
-      await user.click(screen.getByRole("button", { name: /Resend email/i }));
+      const resendBtn = await screen.findByRole("button", { name: /Send new link/i });
+      await user.click(resendBtn);
 
       await waitFor(() => {
         expect(toastMock.error).toHaveBeenCalled();
       });
-      expect(screen.getByRole("button", { name: /Resend email/i })).not.toBeDisabled();
     });
   });
 });

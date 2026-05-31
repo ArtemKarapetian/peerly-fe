@@ -84,7 +84,7 @@ export default function TeacherAssignmentDetailsPage() {
         locale={i18n.language}
       />
 
-      {assignment.checklist && <RubricCard checklist={assignment.checklist} />}
+      {assignment.rubricId && <RubricCard rubricId={assignment.rubricId} />}
 
       <NavTilesRow assignmentId={assignmentId} />
 

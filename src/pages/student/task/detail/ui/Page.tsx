@@ -11,7 +11,7 @@ import { useCourse } from "@/entities/course";
 import { useMySubmission } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { TaskChecklist, TaskDescription, TaskHeader, TaskSidebar } from "@/widgets/task-detail";
+import { TaskDescription, TaskHeader, TaskRubric, TaskSidebar } from "@/widgets/task-detail";
 
 export default function TaskPage() {
   const { courseId = "", taskId = "" } = useParams();
@@ -26,7 +26,7 @@ export default function TaskPage() {
   const courseName = course?.title ?? "";
   const title = hw?.title ?? "";
   const description = hw?.description ?? "";
-  const checklist = hw?.checklist ?? "";
+  const rubricId = hw?.rubricId ?? null;
 
   if (!hwLoading && !hw) {
     return (
@@ -69,7 +69,7 @@ export default function TaskPage() {
         <div className="task-layout">
           <div className="w-full min-w-0 flex flex-col gap-4 desktop:gap-6">
             <TaskDescription description={description} />
-            <TaskChecklist checklist={checklist} />
+            <TaskRubric rubricId={rubricId} />
           </div>
 
           <div className="w-full min-w-0 hide-below-desktop">

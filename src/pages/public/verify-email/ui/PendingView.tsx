@@ -1,20 +1,13 @@
 import { Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-
-import { ROUTES } from "@/shared/config/routes";
-import { Button } from "@/shared/ui/button.tsx";
 
 import { VerifyShell } from "./VerifyShell";
 
 interface PendingViewProps {
   email: string;
-  resending: boolean;
-  resendCooldown: number;
-  onResend: () => void;
 }
 
-export function PendingView({ email, resending, resendCooldown, onResend }: PendingViewProps) {
+export function PendingView({ email }: PendingViewProps) {
   const { t } = useTranslation();
   return (
     <VerifyShell>
@@ -31,29 +24,6 @@ export function PendingView({ email, resending, resendCooldown, onResend }: Pend
         ) : (
           <p className="text-sm text-muted-foreground">{t("page.verifyEmail.noEmailHint")}</p>
         )}
-        <p className="text-sm text-muted-foreground">{t("page.verifyEmail.openEmailAndFollow")}</p>
-      </div>
-
-      {email && (
-        <Button
-          variant="outline"
-          size="lg"
-          fullWidth
-          onClick={onResend}
-          isLoading={resending}
-          disabled={resending || resendCooldown > 0}
-        >
-          {resendCooldown > 0
-            ? t("page.verifyEmail.resendIn", { seconds: resendCooldown })
-            : t("page.verifyEmail.resendEmail")}
-        </Button>
-      )}
-
-      <div className="pt-4 border-t border-border">
-        <p className="text-xs text-muted-foreground mb-3">{t("page.verifyEmail.checkSpam")}</p>
-        <Link to={ROUTES.login} className="text-sm text-primary hover:underline">
-          {t("page.verifyEmail.backToLogin")}
-        </Link>
       </div>
     </VerifyShell>
   );

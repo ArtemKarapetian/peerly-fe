@@ -28,6 +28,7 @@
     "students": "Студенты",
     "assignments": "Задания",
     "course": "Курс",
+    "assignment": "Задание",
     "additional": "Дополнительно",
     "comment": "Комментарий",
     "found": "Найдено",
@@ -278,10 +279,15 @@
     "courses": {
       "title": "Курсы",
       "management": "Управление курсами",
-      "activeCourses_one": "активный курс",
-      "activeCourses_few": "активных курса",
-      "activeCourses_many": "активных курсов",
-      "inArchive": "в архиве",
+      "activeCourses_one": "активный",
+      "activeCourses_few": "активных",
+      "activeCourses_many": "активных",
+      "inDraft_one": "в черновике",
+      "inDraft_few": "в черновиках",
+      "inDraft_many": "в черновиках",
+      "inArchive_one": "в архиве",
+      "inArchive_few": "в архиве",
+      "inArchive_many": "в архиве",
       "createFirst": "Создайте первый курс, чтобы начать работу",
       "studentsLabel_one": "Студент",
       "studentsLabel_few": "Студента",
@@ -304,11 +310,21 @@
       "title": "Работы студентов",
       "subtitle": "Управление работами студентов",
       "breadcrumb": "Работы студентов",
+      "coursePlaceholder": "Выберите курс",
+      "assignmentPlaceholder": "Выберите задание",
+      "pickCourseFirst": "Сначала выберите курс",
+      "pickCourseTitle": "Выберите курс",
+      "pickCourseHint": "Выберите курс и задание, чтобы посмотреть работы студентов",
+      "pickAssignmentTitle": "Выберите задание",
+      "pickAssignmentHint": "Выберите задание из этого курса, чтобы увидеть работы",
       "allAssignments": "Все задания",
       "allStatuses": "Все статусы",
       "submitted": "Сдано",
       "late": "Просрочено",
       "draft": "Черновик",
+      "openDetails": "Открыть →",
+      "loadingDetails": "Загружаем работу студента…",
+      "loadDetailsError": "Не удалось загрузить работу",
       "studentSearch": "Поиск студента",
       "studentNamePlaceholder": "Имя студента...",
       "foundSubmissions": "Найдено работ:",
@@ -632,6 +648,9 @@
       "error": "Ошибка",
       "courseNotFound": "Курс не найден",
       "openAnalytics": "Аналитика",
+      "publish": "Опубликовать курс",
+      "publishSuccess": "Курс опубликован",
+      "publishError": "Не удалось опубликовать курс",
       "tabs": {
         "assignments": "Задания",
         "participants": "Участники",
@@ -1325,6 +1344,9 @@
       "addedCount_many": "Добавлено {{count}} студентов",
       "loadError": "Не удалось загрузить группы и список участников",
       "addError": "Не удалось добавить выбранных студентов",
+      "skippedCount_one": "{{count}} студент не добавлен (уже в группе или не найден)",
+      "skippedCount_few": "{{count}} студента не добавлены (уже в группе или не найдены)",
+      "skippedCount_many": "{{count}} студентов не добавлены (уже в группе или не найдены)",
       "cancel": "Отмена",
       "close": "Закрыть"
     },
@@ -1618,7 +1640,10 @@
   "shared": {
     "errorBanner": {
       "retry": "Повторить",
-      "fallback": "Что-то пошло не так. Попробуйте ещё раз."
+      "fallback": "Что-то пошло не так. Попробуйте ещё раз.",
+      "notFound": "Не нашли то, что вы искали. Возможно, объект был удалён или ссылка устарела.",
+      "forbidden": "Нет доступа к этому разделу.",
+      "serverError": "Сервер временно недоступен. Попробуйте ещё раз через минуту."
     },
     "saveStatus": {
       "unsaved": "Несохранённые изменения",
@@ -1656,7 +1681,9 @@
       "totalGroups": "Всего групп:",
       "createGroup": "Создать группу",
       "groupNamePlaceholder": "Название группы",
-      "empty": "В курсе ещё нет групп",
+      "empty": "Создайте первую группу, чтобы пригласить студентов",
+      "emptyTitle": "Групп пока нет",
+      "lockedHint": "Опубликуйте курс, чтобы добавлять группы и студентов",
       "studentsCount_one": "{{count}} студент",
       "studentsCount_few": "{{count}} студента",
       "studentsCount_many": "{{count}} студентов",
@@ -1828,7 +1855,8 @@
       "newCriterion": "Новый критерий",
       "criterionNamePlaceholder": "Название критерия",
       "criterionDescPlaceholder": "Описание критерия...",
-      "maxPoints": "Макс. баллов",
+      "maxPoints": "Максимальная оценка",
+      "maxPointsHint": "От {{min}} до {{max}} баллов",
       "weight": "Вес (%)",
       "optional": "Опционально",
       "required": "Обязательный",
@@ -1838,7 +1866,8 @@
       "deleteCriterion": "Удалить критерий",
       "cannotDeleteLast": "Нельзя удалить последний критерий",
       "deleteCriterionConfirm": "Удалить этот критерий?",
-      "saveChanges": "Сохранить изменения"
+      "saveChanges": "Сохранить изменения",
+      "backToLibrary": "Назад к рубрикам"
     },
     "rubricPreview": {
       "previewMode": "Режим предпросмотра",
@@ -2063,7 +2092,8 @@
       "roleAdminSubtitle": "Прозрачность",
       "roleAdminDesc": "Администратор может следить за здоровьем системы и метриками.",
       "ctaTitle": "Peerly позволит оптимизировать нагрузку на преподавателя и улучшить качество образования.",
-      "footerHelp": "Помощь"
+      "footerHelp": "Помощь",
+      "footerTerms": "Условия использования"
     },
     "help": {
       "title": "Помощь и поддержка",

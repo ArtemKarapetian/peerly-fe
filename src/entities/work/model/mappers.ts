@@ -16,8 +16,8 @@ export function mapDtoToSubmission(
     id: String(dto.id),
     assignmentId: context.assignmentId ?? "",
     studentId: context.studentId ?? "",
-    content: dto.comment,
-    files: dto.files.map(fileFromDto),
+    content: dto.comment ?? "",
+    files: (dto.files ?? []).map(fileFromDto),
     submittedAt: new Date(),
     status: "submitted",
   };

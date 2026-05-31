@@ -28,6 +28,7 @@
     "students": "Students",
     "assignments": "Assignments",
     "course": "Course",
+    "assignment": "Assignment",
     "additional": "Additional",
     "comment": "Comment",
     "found": "Found",
@@ -274,9 +275,12 @@
     "courses": {
       "title": "Courses",
       "management": "Course Management",
-      "activeCourses_one": "active course",
-      "activeCourses_other": "active courses",
-      "inArchive": "in archive",
+      "activeCourses_one": "active",
+      "activeCourses_other": "active",
+      "inDraft_one": "in draft",
+      "inDraft_other": "in drafts",
+      "inArchive_one": "archived",
+      "inArchive_other": "archived",
       "createFirst": "Create your first course to get started",
       "studentsLabel_one": "Student",
       "studentsLabel_other": "Students",
@@ -296,11 +300,21 @@
       "title": "Student Submissions",
       "subtitle": "Manage student submissions",
       "breadcrumb": "Student Submissions",
+      "coursePlaceholder": "Pick a course",
+      "assignmentPlaceholder": "Pick an assignment",
+      "pickCourseFirst": "Pick a course first",
+      "pickCourseTitle": "Pick a course",
+      "pickCourseHint": "Pick a course and an assignment to see submissions",
+      "pickAssignmentTitle": "Pick an assignment",
+      "pickAssignmentHint": "Pick an assignment from this course to see submissions",
       "allAssignments": "All Assignments",
       "allStatuses": "All Statuses",
       "submitted": "Submitted",
       "late": "Late",
       "draft": "Draft",
+      "openDetails": "Open →",
+      "loadingDetails": "Loading the student's work…",
+      "loadDetailsError": "Failed to load the submission",
       "studentSearch": "Student Search",
       "studentNamePlaceholder": "Student name...",
       "foundSubmissions": "Found submissions:",
@@ -622,6 +636,9 @@
       "error": "Error",
       "courseNotFound": "Course not found",
       "openAnalytics": "Analytics",
+      "publish": "Publish course",
+      "publishSuccess": "Course published",
+      "publishError": "Failed to publish course",
       "tabs": {
         "assignments": "Assignments",
         "participants": "Participants",
@@ -1066,7 +1083,9 @@
       "totalGroups": "Total groups:",
       "createGroup": "Create group",
       "groupNamePlaceholder": "Group name",
-      "empty": "No groups in this course yet",
+      "empty": "Create the first group to invite students",
+      "emptyTitle": "No groups yet",
+      "lockedHint": "Publish the course to add groups and students",
       "studentsCount_one": "{{count}} student",
       "studentsCount_other": "{{count}} students",
       "addStudents": "Add students",
@@ -1236,7 +1255,8 @@
       "newCriterion": "New criterion",
       "criterionNamePlaceholder": "Criterion name",
       "criterionDescPlaceholder": "Criterion description...",
-      "maxPoints": "Max points",
+      "maxPoints": "Maximum score",
+      "maxPointsHint": "Between {{min}} and {{max}} points",
       "weight": "Weight (%)",
       "optional": "Optional",
       "required": "Required",
@@ -1246,7 +1266,8 @@
       "deleteCriterion": "Delete criterion",
       "cannotDeleteLast": "Cannot delete the last criterion",
       "deleteCriterionConfirm": "Delete this criterion?",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "backToLibrary": "Back to library"
     },
     "rubricPreview": {
       "previewMode": "Preview Mode",
@@ -1471,7 +1492,8 @@
       "roleAdminSubtitle": "Transparency",
       "roleAdminDesc": "The administrator can monitor system health and metrics.",
       "ctaTitle": "Peerly will help optimize teacher workload and improve the quality of education.",
-      "footerHelp": "Help"
+      "footerHelp": "Help",
+      "footerTerms": "Terms of Use"
     },
     "help": {
       "title": "Help & Support",
@@ -1891,6 +1913,8 @@
       "addedCount_other": "Added {{count}} students",
       "loadError": "Failed to load groups and participants",
       "addError": "Failed to add selected students",
+      "skippedCount_one": "{{count}} student skipped (already in group or not found)",
+      "skippedCount_other": "{{count}} students skipped (already in group or not found)",
       "cancel": "Cancel",
       "close": "Close"
     },
@@ -2181,7 +2205,10 @@
   "shared": {
     "errorBanner": {
       "retry": "Retry",
-      "fallback": "Something went wrong. Please try again."
+      "fallback": "Something went wrong. Please try again.",
+      "notFound": "We couldn't find what you were looking for. The item may have been deleted or the link is outdated.",
+      "forbidden": "You don't have access to this section.",
+      "serverError": "The server is temporarily unavailable. Try again in a minute."
     },
     "saveStatus": {
       "unsaved": "Unsaved changes",

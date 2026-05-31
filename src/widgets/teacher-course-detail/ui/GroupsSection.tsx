@@ -1,4 +1,4 @@
-import { Plus, Users } from "lucide-react";
+import { Lock, Plus, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { EmptyState } from "@/shared/ui";
@@ -11,6 +11,7 @@ interface GroupsSectionProps {
   groups: DemoGroup[];
   totalStudents: number;
   creating: boolean;
+  locked: boolean;
   onStartCreate: () => void;
   onCancelCreate: () => void;
   onCreateGroup: (name: string) => Promise<boolean>;
@@ -24,6 +25,7 @@ export function GroupsSection({
   groups,
   totalStudents,
   creating,
+  locked,
   onStartCreate,
   onCancelCreate,
   onCreateGroup,
@@ -38,11 +40,18 @@ export function GroupsSection({
       <GroupsHeader
         groupsCount={groups.length}
         totalStudents={totalStudents}
-        showCreateButton={!creating}
+        showCreateButton={!creating && !locked}
         onStartCreate={onStartCreate}
       />
 
-      {creating && (
+      {locked && (
+        <div className="flex items-start gap-3 bg-warning-light border border-warning rounded-md p-4 mb-3">
+          <Lock className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+          <p className="text-13 text-foreground">{t("widget.groups.lockedHint")}</p>
+        </div>
+      )}
+
+      {creating && !locked && (
         <CreateGroupForm
           onSubmit={async (name) => {
             const ok = await onCreateGroup(name);
@@ -53,9 +62,24 @@ export function GroupsSection({
       )}
 
       {groups.length === 0 ? (
-        <div className="border-2 border-dashed border-border rounded-md">
-          <EmptyState icon={Users} message={t("widget.groups.empty")} />
-        </div>
+        <EmptyState
+          icon={Users}
+          title={t("widget.groups.emptyTitle")}
+          message={t("widget.groups.empty")}
+          action={
+            !locked &&
+            !creating && (
+              <button
+                onClick={onStartCreate}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-text-inverse rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                {t("widget.groups.createGroup")}
+              </button>
+            )
+          }
+          className="border-2 border-dashed border-border rounded-md"
+        />
       ) : (
         <ul className="space-y-2">
           {groups.map((group) => (

@@ -1,4 +1,5 @@
 import {
+  ApiError,
   type CourseDto,
   type CreateSubmittedHomeworkRequestBody,
   type CreateSubmittedHomeworkResponse,
@@ -107,7 +108,7 @@ export const workHttpRepo = {
         );
         return {
           ...mapDtoToSubmission(res.submittedHomework),
-          files: res.submittedHomework.files.map(fileFromDto),
+          files: (res.submittedHomework.files ?? []).map(fileFromDto),
         };
       }
       const res = await http.get<GetSubmittedHomeworkResponse>(`/submissions/${submissionId}`);
@@ -115,12 +116,13 @@ export const workHttpRepo = {
         ...mapDtoToSubmission(res.submittedHomework),
         finalMark: res.finalMark,
       };
-    } catch {
-      return null;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return null;
+      throw err;
     }
   },
 
-  create: async (homeworkId: string, comment: string): Promise<{ submissionId: string }> => {
+  create: async (homeworkId: string, comment: string | null): Promise<{ submissionId: string }> => {
     const body: CreateSubmittedHomeworkRequestBody = { comment };
     const res = await http.post<CreateSubmittedHomeworkResponse>(
       `/homeworks/${homeworkId}/submissions`,
@@ -129,7 +131,7 @@ export const workHttpRepo = {
     return { submissionId: String(res.submittedHomeworkId) };
   },
 
-  update: async (submissionId: string, comment: string): Promise<void> => {
+  update: async (submissionId: string, comment: string | null): Promise<void> => {
     const body: UpdateSubmittedHomeworkRequestBody = { comment };
     await http.put<void>(`/submissions/${submissionId}`, body);
   },

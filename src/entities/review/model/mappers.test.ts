@@ -10,13 +10,19 @@ import { mapAssignedToReview, mapDtoToReview } from "./mappers";
 
 describe("mapDtoToReview", () => {
   it("maps a student SubmittedReviewDto with provided context", () => {
-    const dto: SubmittedReviewDto = { id: "r-1", mark: 7, comment: "ok" };
+    const dto: SubmittedReviewDto = {
+      id: "r-1",
+      mark: 7,
+      comment: "ok",
+      scores: [{ id: "s-1", rubricCriterionId: "c-1", score: 7, comment: null }],
+    };
     const result = mapDtoToReview(dto, { submissionId: "sub-1", reviewerId: "u-1" });
 
     expect(result.id).toBe("r-1");
     expect(result.submissionId).toBe("sub-1");
     expect(result.reviewerId).toBe("u-1");
-    expect(result.scores.overall).toBe(7);
+    expect(result.mark).toBe(7);
+    expect(result.scores).toEqual([{ criterionId: "c-1", score: 7, comment: null }]);
     expect(result.comment).toBe("ok");
     expect(result.status).toBe("submitted");
   });
@@ -26,6 +32,7 @@ describe("mapDtoToReview", () => {
       id: "r-2",
       mark: 9,
       comment: "great",
+      scores: [],
       reviewerId: "real-r",
       reviewerName: "Maria",
     };
@@ -34,7 +41,12 @@ describe("mapDtoToReview", () => {
   });
 
   it("falls back to empty context fields", () => {
-    const dto: SubmittedReviewDto = { id: 3 as unknown as string, mark: 5, comment: "" };
+    const dto: SubmittedReviewDto = {
+      id: 3 as unknown as string,
+      mark: 5,
+      comment: "",
+      scores: [],
+    };
     const result = mapDtoToReview(dto);
     expect(result.id).toBe("3");
     expect(result.submissionId).toBe("");

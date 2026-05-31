@@ -15,7 +15,7 @@ function makeWrapper() {
 const { groupRepoMock, courseRepoMock, userRepoMock } = vi.hoisted(() => ({
   groupRepoMock: {
     listForCourse: vi.fn(),
-    addStudent: vi.fn(),
+    addStudents: vi.fn(),
   },
   courseRepoMock: { getParticipants: vi.fn() },
   userRepoMock: { searchStudents: vi.fn() },
@@ -39,7 +39,7 @@ vi.mock("react-i18next", () => ({
 
 beforeEach(() => {
   groupRepoMock.listForCourse.mockReset();
-  groupRepoMock.addStudent.mockReset();
+  groupRepoMock.addStudents.mockReset();
   courseRepoMock.getParticipants.mockReset();
   userRepoMock.searchStudents.mockReset();
 
@@ -106,5 +106,15 @@ describe("useParticipantImport", () => {
     expect(result.current.canSubmit).toBe(false);
     act(() => result.current.toggleSelected("u-1"));
     expect(result.current.canSubmit).toBe(true);
+  });
+
+  it("add() short-circuits when no group or no selection", async () => {
+    groupRepoMock.listForCourse.mockResolvedValue([]);
+    const { result } = renderHook(() => useParticipantImport("c-1"), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current.groups).toEqual([]));
+
+    const res = await result.current.add();
+    expect(res).toBeNull();
+    expect(groupRepoMock.addStudents).not.toHaveBeenCalled();
   });
 });

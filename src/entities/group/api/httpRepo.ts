@@ -64,11 +64,31 @@ export const groupHttpRepo = {
     await http.delete<void>(`/groups/${groupId}`);
   },
 
-  addStudent: async (groupId: string, studentId: string): Promise<void> => {
-    await http.put<void>(`/groups/${groupId}/students`, { studentId });
+  addStudents: async (groupId: string, studentIds: string[]): Promise<BulkAddStudentsResult> => {
+    const body = { studentIds: studentIds.map((id) => Number(id)) };
+    const res = await http.put<RawBulkAddStudents>(`/groups/${groupId}/students`, body);
+    return {
+      addedIds: (res.addedStudentIds ?? []).map(String),
+      skipped: (res.skippedStudentInfos ?? []).map((s) => ({
+        studentId: String(s.studentId),
+        reason: s.reason,
+      })),
+    };
   },
 
   addTeacher: async (groupId: string, teacherId: string): Promise<void> => {
     await http.put<void>(`/groups/${groupId}/teachers`, { teacherId });
   },
 };
+
+type BulkSkipReason = "AlreadyInGroup" | "NotFound";
+
+type RawBulkAddStudents = {
+  addedStudentIds: number[];
+  skippedStudentInfos: { studentId: number; reason: BulkSkipReason }[];
+};
+
+export interface BulkAddStudentsResult {
+  addedIds: string[];
+  skipped: { studentId: string; reason: BulkSkipReason }[];
+}

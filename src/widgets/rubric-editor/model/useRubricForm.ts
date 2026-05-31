@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import type { RubricCriterionData, RubricData } from "./types";
+import type { RubricEditorCriterion, RubricEditorData } from "./types";
 
-export function useRubricForm(initial: RubricData, onSave: (r: RubricData) => void) {
+export function useRubricForm(initial: RubricEditorData, onSave: (r: RubricEditorData) => void) {
   const { t } = useTranslation();
-  const [edited, setEdited] = useState<RubricData>(initial);
+  const [edited, setEdited] = useState<RubricEditorData>(initial);
   const [isDirty, setIsDirty] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
@@ -18,16 +18,20 @@ export function useRubricForm(initial: RubricData, onSave: (r: RubricData) => vo
   }, [initial]);
 
   const handleSave = () => {
-    onSave(edited);
+    const withPositions: RubricEditorData = {
+      ...edited,
+      criteria: edited.criteria.map((c, i) => ({ ...c, position: i })),
+    };
+    onSave(withPositions);
     setIsDirty(false);
   };
 
-  const updateRubric = (updates: Partial<RubricData>) => {
+  const updateRubric = (updates: Partial<RubricEditorData>) => {
     setEdited((prev) => ({ ...prev, ...updates }));
     setIsDirty(true);
   };
 
-  const updateCriterion = (index: number, updates: Partial<RubricCriterionData>) => {
+  const updateCriterion = (index: number, updates: Partial<RubricEditorCriterion>) => {
     setEdited((prev) => {
       const next = [...prev.criteria];
       next[index] = { ...next[index], ...updates };
@@ -37,12 +41,13 @@ export function useRubricForm(initial: RubricData, onSave: (r: RubricData) => vo
   };
 
   const addCriterion = () => {
-    const newCriterion: RubricCriterionData = {
-      id: `c${Date.now()}`,
+    const newCriterion: RubricEditorCriterion = {
+      id: `new-${Date.now()}`,
       name: t("widget.rubricEditor.newCriterion"),
       description: "",
       maxScore: 5,
-      required: true,
+      commentRequired: false,
+      position: edited.criteria.length,
     };
     updateRubric({ criteria: [...edited.criteria, newCriterion] });
   };

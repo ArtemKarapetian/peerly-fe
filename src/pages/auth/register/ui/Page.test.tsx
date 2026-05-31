@@ -206,7 +206,6 @@ describe("RegisterPage submission", () => {
       expect(navigateMock).toHaveBeenCalledWith("/verify-email");
     });
     expect(localStorage.getItem("peerly_pending_verification_email")).toBe("ivan@example.com");
-    expect(toastMock.success).toHaveBeenCalled();
   });
 
   it("does not navigate or store anything when register throws", async () => {

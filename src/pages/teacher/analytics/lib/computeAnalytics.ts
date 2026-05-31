@@ -47,14 +47,14 @@ export function computeAssignmentMetrics({
     const reviewCompletionRate =
       expectedReviews > 0 ? (submittedReviews.length / expectedReviews) * 100 : 0;
 
-    const scoreVals = submittedReviews.flatMap((r) => Object.values(r.scores));
+    const scoreVals = submittedReviews.flatMap((r) => r.scores.map((s) => s.score));
     const avgScore = scoreVals.length > 0 ? mean(scoreVals) : 0;
 
     const discrepancies: number[] = [];
     for (const submission of completed) {
       const subReviewScores = submittedReviews
         .filter((r) => r.submissionId === submission.id)
-        .map((r) => mean(Object.values(r.scores)))
+        .map((r) => mean(r.scores.map((s) => s.score)))
         .filter((v) => Number.isFinite(v) && v > 0);
       if (subReviewScores.length >= 2) {
         discrepancies.push(Math.max(...subReviewScores) - Math.min(...subReviewScores));
@@ -120,7 +120,7 @@ export function computeGradebook({
       }
       const subReviews = reviews
         .filter((r) => r.submissionId === submission.id && r.status === "submitted")
-        .flatMap((r) => Object.values(r.scores));
+        .flatMap((r) => r.scores.map((s) => s.score));
       if (subReviews.length === 0) {
         scores[assignment.id] = null;
         continue;

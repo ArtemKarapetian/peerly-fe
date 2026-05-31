@@ -9,6 +9,7 @@ import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { assignmentRepo } from "@/entities/assignment";
+import { useRubrics } from "@/entities/rubric";
 
 import {
   StepBasics,
@@ -21,9 +22,7 @@ import { validateDeadlines } from "@/features/assignment/create/lib/validateDead
 import type { AssignmentFormData, RubricOption } from "@/features/assignment/create/model/types";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { useRubrics } from "@/widgets/rubric-editor";
 
-import { buildChecklist } from "../lib/buildChecklist";
 import { saveDraft } from "../lib/draftStorage";
 
 import { WizardFooter } from "./WizardFooter";
@@ -63,21 +62,11 @@ export function WizardShell({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
-  const rubrics = useRubrics();
+  const { data: rubrics } = useRubrics();
   const queryClient = useQueryClient();
 
   const rubricOptions: RubricOption[] = useMemo(
-    () =>
-      rubrics.map((r) => ({
-        id: r.id,
-        name: r.name,
-        description: r.description,
-        criteria: r.criteria.map((c) => ({
-          name: c.name,
-          description: c.description,
-          maxScore: c.maxScore,
-        })),
-      })),
+    () => (rubrics ?? []).map((r) => ({ id: r.id, name: r.name })),
     [rubrics],
   );
 
@@ -138,7 +127,7 @@ export function WizardShell({
       const input = {
         title: formData.title,
         description: formData.description || undefined,
-        checklist: buildChecklist(rubrics, formData.rubricId) || undefined,
+        rubricId: formData.rubricId ?? null,
         dueDate: formData.submissionDeadline,
         reviewDeadline: formData.reviewDeadline,
         reviewCount: formData.reviewsPerSubmission,

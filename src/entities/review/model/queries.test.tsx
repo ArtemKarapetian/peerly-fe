@@ -54,14 +54,15 @@ describe("review queries", () => {
     expect(repoMock.getById).toHaveBeenCalledWith("r-1");
   });
 
-  it("useSubmitReview invokes repo.create with mark+comment", async () => {
+  it("useSubmitReview invokes repo.create with scores+comment", async () => {
     repoMock.create.mockResolvedValueOnce({ reviewId: "r-new" });
     const { result } = renderHook(() => useSubmitReview(), { wrapper: wrapper() });
 
+    const scores = [{ criterionId: "c-1", score: 8, comment: null }];
     await act(async () => {
-      await result.current.mutateAsync({ submissionId: "sub-1", mark: 8, comment: "ok" });
+      await result.current.mutateAsync({ submissionId: "sub-1", scores, comment: "ok" });
     });
 
-    expect(repoMock.create).toHaveBeenCalledWith("sub-1", 8, "ok");
+    expect(repoMock.create).toHaveBeenCalledWith("sub-1", scores, "ok");
   });
 });

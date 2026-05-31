@@ -31,3 +31,11 @@ export const reviewKeys = {
   details: () => [...reviewKeys.all, "detail"] as const,
   detail: (id: string) => [...reviewKeys.details(), id] as const,
 };
+
+export const rubricKeys = {
+  all: ["rubrics"] as const,
+  lists: () => [...rubricKeys.all, "list"] as const,
+  list: () => [...rubricKeys.lists(), "mine"] as const,
+  details: () => [...rubricKeys.all, "detail"] as const,
+  detail: (id: string) => [...rubricKeys.details(), id] as const,
+};

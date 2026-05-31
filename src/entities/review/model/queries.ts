@@ -4,6 +4,8 @@ import { reviewKeys } from "@/shared/api/queryKeys";
 
 import { reviewHttpRepo } from "../api/httpRepo";
 
+import type { CriterionScore } from "./types";
+
 export function useAssignedSubmission(submissionId: string) {
   return useQuery({
     queryKey: ["assigned-reviews", "submission", submissionId],
@@ -20,18 +22,17 @@ export function useSubmittedReview(reviewId: string | null) {
   });
 }
 
+export interface SubmitReviewInput {
+  submissionId: string;
+  scores: CriterionScore[];
+  comment: string;
+}
+
 export function useSubmitReview() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      submissionId,
-      mark,
-      comment,
-    }: {
-      submissionId: string;
-      mark: number;
-      comment: string;
-    }) => reviewHttpRepo.create(submissionId, mark, comment),
+    mutationFn: ({ submissionId, scores, comment }: SubmitReviewInput) =>
+      reviewHttpRepo.create(submissionId, scores, comment),
     onSuccess: (_data, vars) => {
       void queryClient.invalidateQueries({
         queryKey: ["assigned-reviews", "submission", vars.submissionId],

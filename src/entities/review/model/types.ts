@@ -1,8 +1,15 @@
+export interface CriterionScore {
+  criterionId: string;
+  score: number;
+  comment: string | null;
+}
+
 export interface DemoReview {
   id: string;
   submissionId: string;
   reviewerId: string;
-  scores: Record<string, number>;
+  scores: CriterionScore[];
+  mark: number;
   comment: string;
   submittedAt?: Date;
   status: "pending" | "submitted";
@@ -21,10 +28,4 @@ export interface ReviewAssignment {
   status: ReviewStatus;
   isAnonymous: boolean;
   workSubmittedAt?: string;
-}
-
-export interface CriterionScore {
-  criterionId: string;
-  score: number | null;
-  comment: string;
 }

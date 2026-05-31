@@ -1,81 +1,73 @@
-import { Search, Plus, Copy, Library, ChevronRight } from "lucide-react";
+import { Search, Plus, Library, ChevronRight, Layers } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
+import { useCreateRubric, useRubrics } from "@/entities/rubric";
+
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { setRubrics, useRubrics } from "@/widgets/rubric-editor/model/store";
-import type { RubricData } from "@/widgets/rubric-editor/model/types";
 
 const PAGE_SIZE = 12;
 
 export default function TeacherRubricsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const rubrics = useRubrics();
+  const { data: rubrics, isLoading, error, refetch } = useRubrics();
+  const createMutation = useCreateRubric();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredRubrics = rubrics.filter((rubric) => {
-    const q = searchQuery.toLowerCase();
-    return rubric.name.toLowerCase().includes(q) || rubric.description.toLowerCase().includes(q);
-  });
+  const filteredRubrics = (rubrics ?? []).filter((r) =>
+    r.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
     filteredRubrics,
     PAGE_SIZE,
   );
 
-  const handleCreateNew = () => {
-    const newRubric: RubricData = {
-      id: `r${Date.now()}`,
+  const handleCreateNew = async () => {
+    const created = await createMutation.mutateAsync({
       name: t("teacher.rubrics.newRubricName"),
-      description: t("teacher.rubrics.newRubricDesc"),
       criteria: [
         {
-          id: `c${Date.now()}`,
           name: t("teacher.rubrics.newCriterionName"),
-          description: t("teacher.rubrics.newCriterionDesc"),
+          description: undefined,
           maxScore: 5,
-          required: true,
+          commentRequired: false,
+          position: 0,
         },
       ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      teacherId: "u2",
-    };
-    setRubrics([newRubric, ...rubrics]);
-    void navigate(`/teacher/rubrics/${newRubric.id}`);
+    });
+    void navigate(`/teacher/rubrics/${created.rubricId}`);
   };
 
-  const handleDuplicate = (rubric: RubricData) => {
-    const newId = crypto.randomUUID();
-    const duplicated: RubricData = {
-      ...rubric,
-      id: `r${newId}`,
-      name: `${rubric.name} ${t("teacher.rubrics.copySuffix")}`,
-      criteria: rubric.criteria.map((c) => ({
-        ...c,
-        id: `c${crypto.randomUUID()}`,
-      })),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    setRubrics([duplicated, ...rubrics]);
-    void navigate(`/teacher/rubrics/${duplicated.id}`);
-  };
+  if (isLoading) {
+    return (
+      <AppShell title={t("teacher.rubrics.title")}>
+        <PageSkeleton />
+      </AppShell>
+    );
+  }
+  if (error) {
+    return (
+      <AppShell title={t("teacher.rubrics.title")}>
+        <ErrorBanner error={error} onRetry={() => void refetch()} />
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell title={t("teacher.rubrics.title")}>
       <Breadcrumbs items={[{ label: t("teacher.rubrics.breadcrumb") }]} />
-
       <PageHeader title={t("teacher.rubrics.title")} subtitle={t("teacher.rubrics.subtitle")} />
 
-      {/* Toolbar */}
       <div className="flex items-center gap-3 mb-6 flex-wrap">
         <div className="relative flex-1 min-w-[240px]">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -88,15 +80,15 @@ export default function TeacherRubricsPage() {
           />
         </div>
         <button
-          onClick={handleCreateNew}
-          className="inline-flex items-center gap-2 px-4 py-3 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium shrink-0"
+          onClick={() => void handleCreateNew()}
+          disabled={createMutation.isPending}
+          className="inline-flex items-center gap-2 px-4 py-3 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium shrink-0 disabled:opacity-50"
         >
           <Plus className="w-4 h-4" />
           {t("teacher.rubrics.create")}
         </button>
       </div>
 
-      {/* List */}
       {filteredRubrics.length === 0 ? (
         <Card className="py-20 px-6 text-center">
           <div className="w-16 h-16 rounded-lg bg-brand-primary-lighter/40 flex items-center justify-center mx-auto mb-4">
@@ -112,8 +104,9 @@ export default function TeacherRubricsPage() {
           </p>
           {!searchQuery && (
             <button
-              onClick={handleCreateNew}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium"
+              onClick={() => void handleCreateNew()}
+              disabled={createMutation.isPending}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-primary-foreground rounded-md hover:bg-brand-primary-hover transition-colors text-sm font-medium disabled:opacity-50"
             >
               <Plus className="w-4 h-4" />
               {t("teacher.rubrics.createRubric")}
@@ -121,46 +114,28 @@ export default function TeacherRubricsPage() {
           )}
         </Card>
       ) : (
-        <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
+        <ul className="border-2 border-border rounded-lg bg-card overflow-hidden divide-y divide-border">
           {currentItems.map((rubric) => (
-            <div
-              key={rubric.id}
-              onClick={() => void navigate(`/teacher/rubrics/${rubric.id}`)}
-              className="group relative bg-card border-2 border-border rounded-lg p-5 cursor-pointer hover:border-brand-primary hover:shadow-[var(--shadow-md)] transition-all"
-            >
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <h3 className="text-base font-medium text-foreground tracking-[-0.2px] line-clamp-2 leading-snug flex-1">
+            <li key={rubric.id}>
+              <button
+                type="button"
+                onClick={() => void navigate(`/teacher/rubrics/${rubric.id}`)}
+                className="group w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface-hover transition-colors"
+              >
+                <div className="shrink-0 w-9 h-9 rounded-md bg-brand-primary-lighter/40 flex items-center justify-center group-hover:bg-brand-primary-lighter transition-colors">
+                  <Layers className="w-4 h-4 text-brand-primary" />
+                </div>
+                <span className="flex-1 min-w-0 text-15 font-medium text-foreground truncate">
                   {rubric.name}
-                </h3>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDuplicate(rubric);
-                  }}
-                  className="p-1.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-card border border-transparent hover:border-border opacity-0 group-hover:opacity-100 transition-all shrink-0"
-                  title={t("teacher.rubrics.duplicate")}
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              <p className="text-13 text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
-                {rubric.description}
-              </p>
-
-              <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-3">
-                <span className="inline-flex items-center gap-1">
-                  <span className="font-medium text-foreground">{rubric.criteria.length}</span>
-                  {t("teacher.rubrics.criteriaCount", { count: rubric.criteria.length })}
                 </span>
-                <span className="inline-flex items-center gap-1 text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="shrink-0 inline-flex items-center gap-1 text-13 text-brand-primary font-medium opacity-70 group-hover:opacity-100 group-hover:gap-2 transition-all">
                   {t("teacher.rubrics.openRubric")}
-                  <ChevronRight className="w-3 h-3" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </span>
-              </div>
-            </div>
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {filteredRubrics.length > 0 && (

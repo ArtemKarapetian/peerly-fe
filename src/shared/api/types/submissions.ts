@@ -18,16 +18,25 @@ export interface SubmittedHomeworkOverviewDto {
   teacherMark: number | null;
 }
 
+export interface SubmittedReviewScoreDto {
+  id: Id;
+  rubricCriterionId: Id;
+  score: number;
+  comment?: string | null;
+}
+
 export interface SubmittedReviewDto {
   id: Id;
   mark: number;
   comment: string;
+  scores: SubmittedReviewScoreDto[];
 }
 
 export interface TeacherSubmittedReviewDto {
   id: Id;
   mark: number;
   comment: string;
+  scores: SubmittedReviewScoreDto[];
   reviewerId?: Id;
   reviewerName?: string;
 }
@@ -36,7 +45,7 @@ export interface SubmissionForReviewDto {
   submittedHomeworkId: Id;
   comment: string;
   files: FileDto[];
-  checklist: string;
+  rubricId?: number | null;
   submittedReviewId?: Id;
 }
 
@@ -52,7 +61,7 @@ export interface GetTeacherSubmittedHomeworkResponse {
 }
 
 export interface CreateSubmittedHomeworkRequestBody {
-  comment: string;
+  comment: string | null;
 }
 
 export interface CreateSubmittedHomeworkResponse {
@@ -60,7 +69,7 @@ export interface CreateSubmittedHomeworkResponse {
 }
 
 export interface UpdateSubmittedHomeworkRequestBody {
-  comment: string;
+  comment: string | null;
 }
 
 export interface CorrectMarkRequestBody {

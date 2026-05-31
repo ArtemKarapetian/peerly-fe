@@ -1,15 +1,16 @@
 import { GripVertical, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { TextField, Textarea } from "@/shared/ui";
 
-import type { RubricCriterionData } from "../model/types";
+import type { RubricEditorCriterion } from "../model/types";
 
 interface CriterionCardProps {
-  criterion: RubricCriterionData;
+  criterion: RubricEditorCriterion;
   index: number;
   isDragging: boolean;
-  onUpdate: (updates: Partial<RubricCriterionData>) => void;
+  onUpdate: (updates: Partial<RubricEditorCriterion>) => void;
   onRemove: () => void;
   onDragStart: () => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -54,7 +55,10 @@ export function CriterionCard({
             value={criterion.maxScore}
             onChange={(v) => onUpdate({ maxScore: v })}
           />
-          <CriterionFlagsRow criterion={criterion} onUpdate={onUpdate} />
+          <CommentRequiredCheckbox
+            checked={criterion.commentRequired}
+            onChange={(v) => onUpdate({ commentRequired: v })}
+          />
         </div>
 
         <button
@@ -100,6 +104,9 @@ function CriterionDescriptionField({
   );
 }
 
+const MIN_SCORE = 1;
+const MAX_SCORE = 10;
+
 function CriterionMaxScoreField({
   value,
   onChange,
@@ -108,65 +115,59 @@ function CriterionMaxScoreField({
   onChange: (v: number) => void;
 }) {
   const { t } = useTranslation();
+  const [draft, setDraft] = useState(String(value));
+
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+
+  const commit = () => {
+    const n = parseInt(draft, 10);
+    if (!Number.isFinite(n)) {
+      setDraft(String(value));
+      return;
+    }
+    const clamped = Math.min(Math.max(n, MIN_SCORE), MAX_SCORE);
+    setDraft(String(clamped));
+    if (clamped !== value) onChange(clamped);
+  };
+
   return (
     <div>
-      <label className="block text-xs text-muted-foreground mb-1">
+      <label className="block text-13 text-muted-foreground mb-1">
         {t("widget.rubricEditor.maxPoints")}
       </label>
       <TextField
         type="number"
-        min="1"
-        max="10"
-        value={value}
-        onChange={(e) => {
-          const raw = parseInt(e.target.value);
-          const clamped = Number.isFinite(raw) ? Math.min(Math.max(raw, 1), 10) : 5;
-          onChange(clamped);
+        inputMode="numeric"
+        min={MIN_SCORE}
+        max={MAX_SCORE}
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            commit();
+          }
         }}
-        className="text-sm px-3 py-2 rounded-sm"
+        className="text-sm px-3 py-2 rounded-sm w-24"
       />
+      <p className="text-xs text-muted-foreground mt-1">
+        {t("widget.rubricEditor.maxPointsHint", { min: MIN_SCORE, max: MAX_SCORE })}
+      </p>
     </div>
   );
 }
 
-interface CriterionFlagsRowProps {
-  criterion: RubricCriterionData;
-  onUpdate: (updates: Partial<RubricCriterionData>) => void;
-}
-
-function CriterionFlagsRow({ criterion, onUpdate }: CriterionFlagsRowProps) {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center gap-6 flex-wrap">
-      <FlagCheckbox
-        checked={criterion.required}
-        label={t("widget.rubricEditor.required")}
-        onChange={(v) => onUpdate({ required: v })}
-      />
-      <FlagCheckbox
-        checked={criterion.commentRequired || false}
-        label={t("widget.rubricEditor.commentRequired")}
-        onChange={(v) => onUpdate({ commentRequired: v })}
-      />
-      {criterion.commentRequired && (
-        <MinCharsField
-          value={criterion.minCommentLength}
-          onChange={(v) => onUpdate({ minCommentLength: v })}
-        />
-      )}
-    </div>
-  );
-}
-
-function FlagCheckbox({
+function CommentRequiredCheckbox({
   checked,
-  label,
   onChange,
 }: {
   checked: boolean;
-  label: string;
   onChange: (v: boolean) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <label className="flex items-center gap-2 cursor-pointer">
       <input
@@ -175,30 +176,7 @@ function FlagCheckbox({
         onChange={(e) => onChange(e.target.checked)}
         className="w-4 h-4 rounded border-2 border-border text-brand-primary focus:ring-brand-primary"
       />
-      <span className="text-13 text-foreground">{label}</span>
+      <span className="text-13 text-foreground">{t("widget.rubricEditor.commentRequired")}</span>
     </label>
-  );
-}
-
-function MinCharsField({
-  value,
-  onChange,
-}: {
-  value: number | undefined;
-  onChange: (v: number | undefined) => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-muted-foreground">{t("widget.rubricEditor.minChars")}</span>
-      <input
-        type="number"
-        min="0"
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-        className="w-16 px-2 py-1 bg-background border-2 border-border rounded-2sm text-13 focus:outline-none focus:border-brand-primary"
-        placeholder="20"
-      />
-    </div>
   );
 }

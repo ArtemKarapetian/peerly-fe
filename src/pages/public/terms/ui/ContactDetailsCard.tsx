@@ -8,11 +8,8 @@ export function ContactDetailsCard() {
   const { t } = useTranslation();
   return (
     <div className="bg-accent/50 border border-border rounded-lg p-4 space-y-3">
-      <ContactRow label="Email">
-        <ExternalLink href="mailto:legal@peerly.edu">legal@peerly.edu</ExternalLink>
-      </ContactRow>
       <ContactRow label={t("page.terms.contactSupport")}>
-        <ExternalLink href="mailto:support@peerly.edu">support@peerly.edu</ExternalLink>
+        <ExternalLink href="mailto:peerly.edu@mail.ru">peerly.edu@mail.ru</ExternalLink>
       </ContactRow>
       <ContactRow label={t("page.terms.contactReference")}>
         <InternalLink to={ROUTES.help}>{t("page.terms.contactHelpCenter")}</InternalLink>

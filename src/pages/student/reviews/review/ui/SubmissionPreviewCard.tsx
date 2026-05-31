@@ -5,10 +5,9 @@ import { Card } from "@/shared/ui";
 interface SubmissionPreview {
   comment: string;
   files: { id: string; name: string; size: number }[];
-  checklist: string;
 }
 
-export function SubmissionPreviewCard({ comment, files, checklist }: SubmissionPreview) {
+export function SubmissionPreviewCard({ comment, files }: SubmissionPreview) {
   const { t } = useTranslation();
   return (
     <Card variant="section" className="space-y-4">
@@ -16,24 +15,10 @@ export function SubmissionPreviewCard({ comment, files, checklist }: SubmissionP
         {t("page.reviewFill.workTitle")}
       </h2>
 
-      {checklist.trim() && <ChecklistBlock checklist={checklist} />}
-
       <CommentBlock comment={comment} />
 
       {files.length > 0 && <FilesBlock files={files} />}
     </Card>
-  );
-}
-
-function ChecklistBlock({ checklist }: { checklist: string }) {
-  const { t } = useTranslation();
-  return (
-    <div className="bg-muted rounded-2md p-3">
-      <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-        {t("student.task.checklist")}
-      </p>
-      <p className="text-sm text-foreground whitespace-pre-wrap">{checklist}</p>
-    </div>
   );
 }
 

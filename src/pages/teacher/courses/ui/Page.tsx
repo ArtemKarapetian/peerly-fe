@@ -57,6 +57,8 @@ export default function TeacherCoursesPage() {
     status: c.status,
   }));
   const activeCount = allRows.filter((c) => c.status === "active").length;
+  const draftCount = allRows.filter((c) => c.status === "draft").length;
+  const archivedCount = allRows.filter((c) => c.status === "archived").length;
   const filteredRows = filterCourses(allRows, statusFilter, searchQuery);
 
   return (
@@ -64,7 +66,12 @@ export default function TeacherCoursesPage() {
       <Breadcrumbs items={[{ label: t("teacher.courses.title") }]} />
 
       <div className="mt-6">
-        <CoursesHeroCard total={allRows.length} active={activeCount} />
+        <CoursesHeroCard
+          total={allRows.length}
+          active={activeCount}
+          draft={draftCount}
+          archived={archivedCount}
+        />
 
         <CoursesFiltersRow
           searchQuery={searchQuery}

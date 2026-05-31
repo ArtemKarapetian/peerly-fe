@@ -23,6 +23,7 @@ vi.mock("@/features/group/manage-course-groups", () => ({
 }));
 
 const baseHandlers = {
+  locked: false,
   onStartCreate: vi.fn(),
   onCancelCreate: vi.fn(),
   onCreateGroup: vi.fn(),
@@ -41,7 +42,7 @@ describe("GroupsSection", () => {
     renderInRouter(
       <GroupsSection {...baseHandlers} groups={[]} totalStudents={0} creating={false} />,
     );
-    expect(screen.getByText(/widget.groups.empty/)).toBeInTheDocument();
+    expect(screen.getByText("widget.groups.empty")).toBeInTheDocument();
   });
 
   it("renders one GroupRow per group", () => {
@@ -57,6 +58,14 @@ describe("GroupsSection", () => {
     expect(screen.getAllByTestId("group-row")).toHaveLength(2);
   });
 
+  it("hides the create form and shows only the lock banner when locked=true", () => {
+    renderInRouter(
+      <GroupsSection {...baseHandlers} locked groups={[]} totalStudents={0} creating={false} />,
+    );
+    expect(screen.getByText(/widget.groups.lockedHint/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /widget.groups.createGroup/ })).toBeNull();
+  });
+
   it("hides the create button while a group is being created", () => {
     renderInRouter(
       <GroupsSection {...baseHandlers} groups={[]} totalStudents={0} creating={true} />,
@@ -65,10 +74,12 @@ describe("GroupsSection", () => {
     expect(screen.getByTestId("create-form")).toBeInTheDocument();
   });
 
-  it("shows the create button when not creating", () => {
+  it("shows the create button when not creating and not locked", () => {
     renderInRouter(
       <GroupsSection {...baseHandlers} groups={[]} totalStudents={0} creating={false} />,
     );
-    expect(screen.getByRole("button", { name: /widget.groups.createGroup/ })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: /widget.groups.createGroup/ }).length,
+    ).toBeGreaterThan(0);
   });
 });

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button.tsx";
 
-import { useAuth } from "@/entities/user";
+import { defaultRouteForRole, useAuth } from "@/entities/user";
 
 import { ProfileDropdown } from "@/widgets/navigation/ProfileDropdown.tsx";
 
@@ -19,13 +19,16 @@ interface PublicTopBarProps {
 }
 
 export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, session } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const ctaTarget = isAuthenticated ? defaultRouteForRole(session?.role) : ROUTES.register;
+  const ctaLabel = isAuthenticated ? t("page.landing.openDashboard") : t("page.landing.getStarted");
+
   return (
     <header className="w-full border-b border-border bg-background">
-      <div className="max-w-[1200px] mx-auto px-4 tablet:px-6 desktop:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 h-16 flex items-center justify-between">
         <Link
           to={ROUTES.landing}
           className="text-xl font-semibold text-primary hover:opacity-80 transition-opacity"
@@ -38,8 +41,8 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
             {isAuthenticated ? (
               <ProfileDropdown />
             ) : (
-              <Button variant="secondary" size="sm" onClick={() => void navigate(ROUTES.login)}>
-                {t("widget.publicLayout.signIn")}
+              <Button variant="primary" size="sm" onClick={() => void navigate(ctaTarget)}>
+                {ctaLabel}
               </Button>
             )}
           </div>
@@ -90,7 +93,7 @@ export function PublicLayout({
 
       {showFooter && (
         <footer className="w-full border-t border-border bg-background py-6">
-          <div className="max-w-[1200px] mx-auto px-4 tablet:px-6 desktop:px-8">
+          <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
             <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
               <nav className="flex items-center gap-4">
                 <Link

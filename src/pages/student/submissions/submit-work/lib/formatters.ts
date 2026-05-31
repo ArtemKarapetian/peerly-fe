@@ -16,8 +16,8 @@ export function formatDeadline(d: Date | undefined, locale: string): string {
   });
 }
 
-export function commentForBe(text: string): string {
-  return text.trim() === "" ? "—" : text;
+export function commentForBe(text: string): string | null {
+  return text.trim() === "" ? null : text;
 }
 
 export function normalizeSavedComment(raw: string | null | undefined): string {

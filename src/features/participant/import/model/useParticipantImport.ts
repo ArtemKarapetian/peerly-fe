@@ -10,8 +10,6 @@ import { courseRepo } from "@/entities/course";
 import { groupRepo } from "@/entities/group";
 import { userRepo } from "@/entities/user";
 
-import { addStudentsToGroup } from "./addStudents";
-
 interface StudentRow {
   id: string;
   name: string;
@@ -123,23 +121,31 @@ export function useParticipantImport(
   const add: UseParticipantImportResult["add"] = async () => {
     if (!selectedGroupId || selectedIds.size === 0) return null;
     setIsAdding(true);
-    const { added, failed, firstFailure } = await addStudentsToGroup(
-      selectedGroupId,
-      Array.from(selectedIds),
-      groupRepo.addStudent,
-    );
-    setIsAdding(false);
-    if (added > 0) {
-      void queryClient.invalidateQueries({ queryKey: courseKeys.participants(courseId) });
+    try {
+      const res = await groupRepo.addStudents(selectedGroupId, Array.from(selectedIds));
+      const added = res.addedIds.length;
+      const failed = res.skipped.length;
+      if (added > 0) {
+        void queryClient.invalidateQueries({ queryKey: courseKeys.participants(courseId) });
+      }
+      return {
+        added,
+        failed,
+        successMessage:
+          added > 0 ? t("feature.participantImport.addedCount", { count: added }) : null,
+        errorMessage:
+          failed > 0 ? t("feature.participantImport.skippedCount", { count: failed }) : null,
+      };
+    } catch (err) {
+      return {
+        added: 0,
+        failed: selectedIds.size,
+        successMessage: null,
+        errorMessage: humanizeApiError(err, t("feature.participantImport.addError")),
+      };
+    } finally {
+      setIsAdding(false);
     }
-    return {
-      added,
-      failed,
-      successMessage:
-        added > 0 ? t("feature.participantImport.addedCount", { count: added }) : null,
-      errorMessage:
-        failed > 0 ? humanizeApiError(firstFailure, t("feature.participantImport.addError")) : null,
-    };
   };
 
   return {

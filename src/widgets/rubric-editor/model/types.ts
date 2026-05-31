@@ -1,19 +1,15 @@
-export interface RubricCriterionData {
+export interface RubricEditorCriterion {
   id: string;
   name: string;
   description: string;
   maxScore: number;
-  required: boolean;
-  commentRequired?: boolean;
-  minCommentLength?: number;
+  commentRequired: boolean;
+  position: number;
 }
 
-export interface RubricData {
+export interface RubricEditorData {
   id: string;
-  name: string;
-  description: string;
-  criteria: RubricCriterionData[];
-  createdAt: Date;
-  updatedAt: Date;
   teacherId: string;
+  name: string;
+  criteria: RubricEditorCriterion[];
 }

@@ -30,29 +30,52 @@ function stripValidationPrefix(raw: string): string {
     .trim();
 }
 
+/**
+ * Recognises raw .NET runtime exception messages like
+ *   "Exception of type 'Peerly.Core.Exceptions.NotFoundException' was thrown."
+ * BE shouldn't leak these — until it's fixed, we drop them and use the fallback.
+ */
+function isRawDotnetException(text: string): boolean {
+  return /Exception of type '[\w.]+'\s+was thrown\.?/i.test(text);
+}
+
+function pickProblemDetailsMessage(body: ProblemDetailsBody): string | null {
+  if (body.errors) {
+    const lines = flattenErrors(body.errors)
+      .flatMap((line) => line.split(/\r?\n/))
+      .map(stripValidationPrefix)
+      .filter(Boolean)
+      .filter((line) => !isRawDotnetException(line));
+    if (lines.length > 0) return lines.join("\n");
+  }
+  if (typeof body.detail === "string") {
+    const trimmed = body.detail.trim();
+    if (trimmed && !isRawDotnetException(trimmed)) return trimmed;
+  }
+  if (typeof body.title === "string") {
+    const trimmed = body.title.trim();
+    if (trimmed && !isRawDotnetException(trimmed)) return trimmed;
+  }
+  return null;
+}
+
 export function humanizeApiError(error: unknown, fallback: string): string {
   if (!(error instanceof ApiError)) {
-    return error instanceof Error ? error.message : fallback;
+    if (error instanceof Error) {
+      const msg = error.message;
+      if (msg && !isRawDotnetException(msg)) return msg;
+    }
+    return fallback;
   }
 
   if (looksLikeProblemDetails(error.body)) {
-    if (error.body.errors) {
-      const lines = flattenErrors(error.body.errors)
-        .flatMap((line) => line.split(/\r?\n/))
-        .map(stripValidationPrefix)
-        .filter(Boolean);
-      if (lines.length > 0) return lines.join("\n");
-    }
-    if (typeof error.body.detail === "string" && error.body.detail.trim()) {
-      return error.body.detail.trim();
-    }
-    if (typeof error.body.title === "string" && error.body.title.trim()) {
-      return error.body.title.trim();
-    }
+    const picked = pickProblemDetailsMessage(error.body);
+    if (picked) return picked;
   }
 
-  if (typeof error.body === "string" && error.body.trim()) {
-    return error.body.trim();
+  if (typeof error.body === "string") {
+    const trimmed = error.body.trim();
+    if (trimmed && !isRawDotnetException(trimmed)) return trimmed;
   }
 
   return fallback;

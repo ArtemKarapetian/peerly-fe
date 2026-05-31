@@ -1,9 +1,9 @@
-import { Plus, Save } from "lucide-react";
+import { ArrowLeft, Plus, Save } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Card, SectionHeader } from "@/shared/ui";
 
-import type { RubricData } from "../model/types";
+import type { RubricEditorData } from "../model/types";
 import { useRubricForm } from "../model/useRubricForm";
 
 import { CriterionCard } from "./CriterionCard";
@@ -11,11 +11,12 @@ import { RubricBasicsSection } from "./RubricBasicsSection";
 import { UnsavedChangesBanner } from "./UnsavedChangesBanner";
 
 interface RubricEditorProps {
-  rubric: RubricData;
-  onSave: (rubric: RubricData) => void;
+  rubric: RubricEditorData;
+  onSave: (rubric: RubricEditorData) => void;
+  onCancel?: () => void;
 }
 
-export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
+export function RubricEditor({ rubric, onSave, onCancel }: RubricEditorProps) {
   const { t } = useTranslation();
   const {
     edited,
@@ -35,11 +36,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
     <Card>
       {isDirty && <UnsavedChangesBanner onSave={handleSave} />}
 
-      <RubricBasicsSection
-        name={edited.name}
-        description={edited.description}
-        onUpdate={updateRubric}
-      />
+      <RubricBasicsSection name={edited.name} onUpdate={updateRubric} />
 
       <section className="mb-6">
         <SectionHeader as="h3" className="tracking-[-0.5px]">
@@ -71,7 +68,17 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
         </div>
       </section>
 
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex items-center gap-2 px-6 py-3 border-2 border-border text-foreground rounded-md hover:border-brand-primary hover:text-brand-primary transition-colors font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t("widget.rubricEditor.backToLibrary")}
+          </button>
+        )}
         <button
           onClick={handleSave}
           disabled={!isDirty}

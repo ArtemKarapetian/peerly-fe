@@ -9,6 +9,7 @@ import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { courseRepo } from "@/entities/course";
+import type { DemoCourse } from "@/entities/course/model/types";
 import type { DemoGroup } from "@/entities/group";
 
 import { useCourseGroups } from "@/features/group/manage-course-groups";
@@ -19,9 +20,13 @@ import { TeachersSection } from "./TeachersSection";
 
 interface TeacherCourseParticipantsProps {
   courseId: string;
+  courseStatus?: DemoCourse["status"];
 }
 
-export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipantsProps) {
+export function TeacherCourseParticipants({
+  courseId,
+  courseStatus,
+}: TeacherCourseParticipantsProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [creating, setCreating] = useState(false);
@@ -65,6 +70,7 @@ export function TeacherCourseParticipants({ courseId }: TeacherCourseParticipant
         groups={groups}
         totalStudents={totalStudents}
         creating={creating}
+        locked={courseStatus === "draft" || courseStatus === "archived"}
         onStartCreate={() => setCreating(true)}
         onCancelCreate={() => setCreating(false)}
         onCreateGroup={createGroup}
