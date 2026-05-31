@@ -42,6 +42,6 @@ export interface ListRubricsResponse {
 }
 
 export interface GetRubricResponse {
-  rubric: RubricInfoDto;
+  rubric?: RubricInfoDto;
   criteria: RubricCriterionInfoDto[];
 }
