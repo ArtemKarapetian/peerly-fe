@@ -1,13 +1,13 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button.tsx";
 
 import { defaultRouteForRole, useAuth } from "@/entities/user";
 
-import { ProfileDropdown } from "@/widgets/navigation/ProfileDropdown.tsx";
+import { ProfileDropdown } from "@/widgets/navigation";
 
 /**
  * PublicTopBar - Минималистичный topbar для публичных страниц
@@ -61,7 +61,6 @@ interface PublicLayoutProps {
   children: ReactNode;
   showTopBar?: boolean;
   showLoginButton?: boolean;
-  showFooter?: boolean;
   maxWidth?: "sm" | "md" | "lg" | "xl" | "full";
 }
 
@@ -69,10 +68,15 @@ export function PublicLayout({
   children,
   showTopBar = true,
   showLoginButton = true,
-  showFooter = true,
   maxWidth = "full",
 }: PublicLayoutProps) {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [pathname]);
+
   const maxWidthClasses = {
     sm: "max-w-[640px]",
     md: "max-w-[768px]",
@@ -91,30 +95,28 @@ export function PublicLayout({
         {children}
       </main>
 
-      {showFooter && (
-        <footer className="w-full border-t border-border bg-background py-6">
-          <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
-            <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
-              <nav className="flex items-center gap-4">
-                <Link
-                  to={ROUTES.help}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("widget.publicLayout.help")}
-                </Link>
-                <Link
-                  to={ROUTES.terms}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("widget.publicLayout.terms")}
-                </Link>
-              </nav>
+      <footer className="w-full border-t border-border bg-background py-6">
+        <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
+          <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
+            <nav className="flex items-center gap-4">
+              <Link
+                to={ROUTES.help}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {t("widget.publicLayout.help")}
+              </Link>
+              <Link
+                to={ROUTES.terms}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {t("widget.publicLayout.terms")}
+              </Link>
+            </nav>
 
-              <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Peerly</p>
-            </div>
+            <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Peerly</p>
           </div>
-        </footer>
-      )}
+        </div>
+      </footer>
     </div>
   );
 }

@@ -53,15 +53,15 @@ describe("ReviewForm", () => {
       />,
     );
 
-    const submit = screen.getAllByText(/page\.reviewFill\.submit/i)[0].closest("button")!;
+    const submit = screen.getAllByText(/page\.reviewFill\.submit/i)[0]!.closest("button")!;
     expect(submit).toBeDisabled();
 
-    await user.click(screen.getAllByRole("button", { name: "5" })[0]);
-    await user.click(screen.getAllByRole("button", { name: "5" })[1]);
+    await user.click(screen.getAllByRole("button", { name: "5" })[0]!);
+    await user.click(screen.getAllByRole("button", { name: "5" })[1]!);
     expect(submit).toBeDisabled();
 
     const textareas = screen.getAllByRole("textbox");
-    const overall = textareas[textareas.length - 1];
+    const overall = textareas.at(-1)!;
     await user.type(overall, "a".repeat(40));
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -82,10 +82,10 @@ describe("ReviewForm", () => {
       />,
     );
 
-    await user.click(screen.getAllByRole("button", { name: "5" })[0]);
-    await user.click(screen.getAllByRole("button", { name: "5" })[1]);
+    await user.click(screen.getAllByRole("button", { name: "5" })[0]!);
+    await user.click(screen.getAllByRole("button", { name: "5" })[1]!);
 
-    const submit = screen.getAllByText(/page\.reviewFill\.submit/i)[0].closest("button")!;
+    const submit = screen.getAllByText(/page\.reviewFill\.submit/i)[0]!.closest("button")!;
     expect(submit).toBeDisabled();
     expect(onSubmit).not.toHaveBeenCalled();
   });
@@ -109,12 +109,12 @@ describe("ReviewForm", () => {
       />,
     );
 
-    const submit = screen.getAllByText(/page\.reviewFill\.submit/i)[0].closest("button")!;
+    const submit = screen.getAllByText(/page\.reviewFill\.submit/i)[0]!.closest("button")!;
     expect(submit).not.toBeDisabled();
     await user.click(submit);
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
-    const arg = onSubmit.mock.calls[0][0] as {
+    const arg = onSubmit.mock.calls[0]![0]! as {
       scores: { criterionId: string; score: number; comment: string | null }[];
       comment: string;
     };

@@ -13,8 +13,6 @@ vi.mock("react-i18next", () => ({
         "page.help.faq.gs2a": "It is a process of reviewing each other.",
         "page.help.faq.ts1q": "I see an error",
         "page.help.faq.ts1a": "Try refreshing the browser.",
-        "page.help.faq.cs1q": "Contact support",
-        "page.help.faq.cs1a": "Reach out via email.",
       };
       return map[key] ?? key;
     },
@@ -26,7 +24,6 @@ describe("useFAQSearch", () => {
     const { result } = renderHook(() => useFAQSearch());
     expect(result.current.sections["getting-started"].length).toBeGreaterThan(0);
     expect(result.current.sections.troubleshooting.length).toBeGreaterThan(0);
-    expect(result.current.sections.contact.length).toBeGreaterThan(0);
   });
 
   it("filters by question text (case-insensitive)", () => {

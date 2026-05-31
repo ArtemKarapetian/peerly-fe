@@ -14,14 +14,14 @@ import { useTranslation } from "react-i18next";
 import { useAsync } from "@/shared/lib/useAsync";
 import { TextField } from "@/shared/ui";
 
-import { groupRepo, type DemoGroup } from "@/entities/group";
+import { groupRepo, type Group } from "@/entities/group";
 
 interface GroupRowProps {
-  group: DemoGroup;
-  onRename: (group: DemoGroup, newName: string) => void | Promise<unknown>;
-  onDelete: (group: DemoGroup) => void;
-  onAddStudents: (group: DemoGroup) => void;
-  onCreateHomework?: (group: DemoGroup) => void;
+  group: Group;
+  onRename: (group: Group, newName: string) => void | Promise<unknown>;
+  onDelete: (group: Group) => void;
+  onAddStudents: (group: Group) => void;
+  onCreateHomework?: (group: Group) => void;
 }
 
 export function GroupRow({

@@ -13,3 +13,4 @@ export {
   useDeleteRubric,
 } from "./model/queries";
 export { rubricHttpRepo as rubricRepo } from "./api/httpRepo";
+export { loadRubricTotals } from "./lib/loadRubricTotals";

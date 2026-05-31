@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 
+import { ApiError } from "@/shared/api";
+
 import { ErrorBanner } from "./ErrorBanner";
 
 vi.mock("react-i18next", () => ({
@@ -28,5 +30,19 @@ describe("ErrorBanner", () => {
     render(<ErrorBanner message="Error" onRetry={handleRetry} />);
     fireEvent.click(screen.getByRole("button"));
     expect(handleRetry).toHaveBeenCalledTimes(1);
+  });
+
+  it("humanizes a ProblemDetails ApiError and hides the raw HTTP status", () => {
+    const err = new ApiError(
+      400,
+      {
+        title: "Bad Request",
+        errors: { "*": ["Validation failed: \n -- Name must not be empty. Severity: Error"] },
+      },
+      "HTTP 400: /foo",
+    );
+    render(<ErrorBanner error={err} />);
+    expect(screen.getByText(/Name must not be empty/)).toBeDefined();
+    expect(screen.queryByText(/HTTP 400/)).toBeNull();
   });
 });

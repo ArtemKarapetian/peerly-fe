@@ -21,5 +21,3 @@ export const TERMS_SUBSECTIONS = [
   { titleKey: "page.terms.terms5Title", textKey: "page.terms.terms5Text" },
   { titleKey: "page.terms.terms6Title", textKey: "page.terms.terms6Text" },
 ] as const;
-
-export type TermsSubsection = (typeof TERMS_SUBSECTIONS)[number];

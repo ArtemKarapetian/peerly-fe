@@ -52,14 +52,14 @@ describe("PasswordInput", () => {
 
   it("toggles to text type when the show-password button is clicked", () => {
     render(<PasswordInput />);
-    fireEvent.click(screen.getByRole("button", { name: /show password/i }));
+    fireEvent.click(screen.getByRole("button", { name: /feature\.auth\.showPassword/i }));
     expect(document.querySelector('input[type="text"]')).not.toBeNull();
   });
 
   it("toggles back to password type on the second click", () => {
     render(<PasswordInput />);
-    fireEvent.click(screen.getByRole("button", { name: /show password/i }));
-    fireEvent.click(screen.getByRole("button", { name: /hide password/i }));
+    fireEvent.click(screen.getByRole("button", { name: /feature\.auth\.showPassword/i }));
+    fireEvent.click(screen.getByRole("button", { name: /feature\.auth\.hidePassword/i }));
     expect(document.querySelector('input[type="password"]')).not.toBeNull();
   });
 

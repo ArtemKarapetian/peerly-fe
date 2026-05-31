@@ -21,7 +21,7 @@ const { authApiMock, navigateMock } = vi.hoisted(() => ({
   navigateMock: vi.fn(),
 }));
 
-vi.mock("../api/authHttp", () => ({
+vi.mock("../api/authApi", () => ({
   authApi: authApiMock,
 }));
 

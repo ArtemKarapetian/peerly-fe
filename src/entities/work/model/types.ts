@@ -1,17 +1,13 @@
-import {
-  fileFromDto as sharedFileFromDto,
-  type FileDto,
-  type SubmissionStatus,
-} from "@/shared/api";
+import { type SubmissionStatus } from "@/shared/api";
 
-export interface DemoSubmission {
+export interface Submission {
   id: string;
   assignmentId: string;
   studentId: string;
   studentName?: string;
   content: string;
   files: WorkFile[];
-  submittedAt: Date;
+  submittedAt?: Date;
   /** UI status — projected from backendStatus. */
   status: "draft" | "submitted" | "reviewed";
   backendStatus?: SubmissionStatus;
@@ -24,17 +20,4 @@ export interface WorkFile {
   id: string;
   name: string;
   size: number;
-  url?: string;
-}
-
-export interface ValidationCheck {
-  id: string;
-  name: string;
-  description?: string;
-  status: "passed" | "warning" | "failed";
-  message?: string;
-}
-
-export function fileFromDto(f: FileDto): WorkFile {
-  return sharedFileFromDto(f);
 }

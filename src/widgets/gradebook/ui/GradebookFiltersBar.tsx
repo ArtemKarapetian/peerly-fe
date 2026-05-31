@@ -41,7 +41,9 @@ export function GradebookFiltersBar({
       ? t("student.gradebook.allCourses")
       : (courses.find((c) => c.id === selectedCourse)?.name ?? "");
   const selectedStatusLabel =
-    selectedStatus === "all" ? t("student.gradebook.allStatuses") : statusLabels[selectedStatus];
+    selectedStatus === "all"
+      ? t("student.gradebook.allStatuses")
+      : (statusLabels[selectedStatus] ?? selectedStatus);
   const filtersDirty = selectedCourse !== "all" || selectedStatus !== "all";
 
   return (

@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { TaskReviewAccordion } from "@/widgets/received-reviews";
 
 import { useReceivedReviews } from "../model/queries";
@@ -13,7 +15,7 @@ import { useReceivedReviews } from "../model/queries";
 export default function ReceivedReviewsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, isLoading } = useReceivedReviews();
+  const { data, isLoading, error, refetch } = useReceivedReviews();
   const tasks = data ?? [];
 
   return (
@@ -25,7 +27,9 @@ export default function ReceivedReviewsPage() {
         />
 
         {isLoading ? (
-          <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
+          <PageSkeleton />
+        ) : error ? (
+          <ErrorBanner error={error} onRetry={() => void refetch()} />
         ) : tasks.length > 0 ? (
           <TaskReviewAccordion tasks={tasks} />
         ) : (

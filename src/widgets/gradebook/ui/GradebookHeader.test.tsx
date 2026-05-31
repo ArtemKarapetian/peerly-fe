@@ -33,7 +33,7 @@ describe("GradebookHeader", () => {
     const user = userEvent.setup();
     const { props } = renderHeader();
     const filterButtons = screen.getAllByRole("button");
-    await user.click(filterButtons[0]);
+    await user.click(filterButtons[0]!);
     await user.click(screen.getByText("Algebra"));
     expect(props.onCourseChange).toHaveBeenCalledWith("c-1");
   });

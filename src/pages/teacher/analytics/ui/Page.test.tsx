@@ -16,7 +16,7 @@ vi.mock("@/entities/assignment", () => ({ assignmentRepo: assignmentRepoMock }))
 vi.mock("@/entities/work", () => ({ workRepo: workRepoMock }));
 vi.mock("@/entities/review", () => ({ reviewRepo: reviewRepoMock }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 

@@ -1,12 +1,3 @@
-/**
- * Centralized query key factory.
- *
- * Convention: each entity exports an object with key builders.
- * This enables targeted invalidation, e.g.:
- *   queryClient.invalidateQueries({ queryKey: courseKeys.all })
- *   queryClient.invalidateQueries({ queryKey: courseKeys.detail("c1") })
- */
-
 export const courseKeys = {
   all: ["courses"] as const,
   lists: () => [...courseKeys.all, "list"] as const,
@@ -38,4 +29,28 @@ export const rubricKeys = {
   list: () => [...rubricKeys.lists(), "mine"] as const,
   details: () => [...rubricKeys.all, "detail"] as const,
   detail: (id: string) => [...rubricKeys.details(), id] as const,
+};
+
+export const submissionKeys = {
+  all: ["submissions"] as const,
+  mine: (homeworkId: string) => [...submissionKeys.all, "mine", homeworkId] as const,
+  mineId: (homeworkId: string) => [...submissionKeys.all, "mine-id", homeworkId] as const,
+  detail: (submissionId: string) => [...submissionKeys.all, "detail", submissionId] as const,
+};
+
+export const assignedReviewKeys = {
+  all: ["assigned-reviews"] as const,
+  forMe: () => [...assignedReviewKeys.all, "me"] as const,
+  submission: (submissionId: string) =>
+    [...assignedReviewKeys.all, "submission", submissionId] as const,
+};
+
+export const receivedReviewKeys = {
+  all: ["received-reviews"] as const,
+  forMe: () => [...receivedReviewKeys.all, "me"] as const,
+};
+
+export const gradebookKeys = {
+  all: ["gradebook"] as const,
+  forMe: () => [...gradebookKeys.all, "me"] as const,
 };

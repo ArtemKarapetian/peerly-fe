@@ -1,12 +1,12 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+import { STORAGE_KEYS } from "@/shared/config/constants";
+
 import en from "./locales/en.json";
 import ru from "./locales/ru.json";
 
-const STORAGE_KEY = "peerly_language";
-
-const savedLang = localStorage.getItem(STORAGE_KEY) || "ru";
+const savedLang = localStorage.getItem(STORAGE_KEYS.language) || "ru";
 
 void i18n.use(initReactI18next).init({
   resources: {
@@ -20,11 +20,10 @@ void i18n.use(initReactI18next).init({
   },
 });
 
-// Set lang on init and on every change
 document.documentElement.lang = savedLang;
 
 i18n.on("languageChanged", (lng) => {
-  localStorage.setItem(STORAGE_KEY, lng);
+  localStorage.setItem(STORAGE_KEYS.language, lng);
   document.documentElement.lang = lng;
 });
 

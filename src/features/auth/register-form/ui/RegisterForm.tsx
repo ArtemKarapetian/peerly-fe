@@ -1,13 +1,12 @@
 import { useTranslation } from "react-i18next";
 
-import { Card } from "@/shared/ui";
+import { Card, FormErrorAlert } from "@/shared/ui";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
 import { useRegisterForm } from "../model/useRegisterForm";
 
 import { PasswordStrengthMeter } from "./PasswordStrengthMeter";
-import { RegisterErrorAlert } from "./RegisterErrorAlert";
 import { RegisterFooter } from "./RegisterFooter";
 import { RoleSelectorField } from "./RoleSelectorField";
 
@@ -39,7 +38,7 @@ export function RegisterForm() {
           <p className="text-15 text-muted-foreground">{t("auth.registerSubtitle")}</p>
         </div>
 
-        {submitError && <RegisterErrorAlert message={submitError} />}
+        {submitError && <FormErrorAlert message={submitError} />}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">

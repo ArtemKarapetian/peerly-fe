@@ -201,6 +201,7 @@
       "aboutDesc": "Here you can see your grades for all assignments. Some grades may be hidden until the teacher publishes results. Click on a row to go to assignment details.",
       "statusPublished": "Published",
       "statusInReview": "In review",
+      "statusUngraded": "No grades",
       "statusNotStarted": "Not started",
       "statusOverdue": "Overdue",
       "allCourses": "All courses",
@@ -642,7 +643,7 @@
       "openAnalytics": "Analytics",
       "publish": "Publish course",
       "publishSuccess": "Course published",
-      "publishError": "Failed to publish course",
+      "publishError": "Failed to publish course. Please try again.",
       "tabs": {
         "assignments": "Assignments",
         "participants": "Participants",
@@ -656,7 +657,6 @@
       },
       "publishBtn": "Publish course",
       "publishHint": "A course in draft state is not visible to students. Publish to make it available.",
-      "publishError": "Failed to publish course. Please try again.",
       "meta": {
         "participants": "Participants",
         "assignments": "Assignments",
@@ -1121,10 +1121,7 @@
       "description": "Description",
       "saveChanges": "Save changes",
       "settingsSaved": "Settings saved",
-      "publishSuccess": "Course published",
-      "dangerZone": "Danger zone",
-      "dangerDescription": "Deleting a course is irreversible and will remove all associated assignments, submissions, and reviews.",
-      "deleteCourse": "Delete course"
+      "publishSuccess": "Course published"
     },
     "announcements": {
       "subtitle": "Announcements for course students",
@@ -1392,16 +1389,6 @@
       "systemTooltip": "Automatic theme coming soon",
       "note": "* Dark and system themes will be available in future versions"
     },
-    "timezone": {
-      "title": "Timezone",
-      "subtitle": "Choose the timezone for displaying time",
-      "auto": "Automatic",
-      "moscow": "Moscow (UTC+3)",
-      "london": "London (UTC+0)",
-      "newYork": "New York (UTC-5)",
-      "losAngeles": "Los Angeles (UTC-8)",
-      "tokyo": "Tokyo (UTC+9)"
-    },
     "about": {
       "title": "About",
       "security": "Security",
@@ -1410,24 +1397,9 @@
       "termsOfUse": "Terms of Use",
       "read": "Read"
     },
-    "changePassword": {
-      "successMessage": "Password changed successfully!",
-      "title": "Change Password",
-      "subtitle": "Use a strong password to protect your account",
-      "validationErrors": "Validation errors:",
-      "currentPassword": "Current Password",
-      "currentPasswordPlaceholder": "Enter current password",
-      "newPassword": "New Password",
-      "newPasswordPlaceholder": "Enter new password",
-      "passwordHint": "Minimum 8 characters, including an uppercase letter and a digit",
-      "confirmPassword": "Confirm Password",
-      "confirmPasswordPlaceholder": "Repeat new password",
-      "changePasswordButton": "Change Password",
-      "cancel": "Cancel"
-    },
     "profileDanger": {
       "title": "Danger Zone",
-      "subtitle": "Sign out",
+      "subtitle": "End your session and return to the sign-in page",
       "logout": "Sign Out",
       "confirmLogout": "Are you sure you want to sign out?"
     },
@@ -1497,9 +1469,7 @@
       "roleAdminTitle": "Administrator",
       "roleAdminSubtitle": "Transparency",
       "roleAdminDesc": "The administrator can monitor system health and metrics.",
-      "ctaTitle": "Peerly will help optimize teacher workload and improve the quality of education.",
-      "footerHelp": "Help",
-      "footerTerms": "Terms of Use"
+      "ctaTitle": "Peerly will help optimize teacher workload and improve the quality of education."
     },
     "help": {
       "title": "Help & Support",
@@ -1510,15 +1480,9 @@
       "contactSupport": "Contact Support",
       "notFoundQuery": "Nothing found for \"{{query}}\"",
       "tryChangingSearch": "Try changing your search query",
-      "noAnswerFound": "Didn't find the answer to your question?",
-      "chatSupportDesc": "Contact us via chat and we'll help you in real time.",
-      "openChatSupport": "Open Support Chat",
-      "contactInstructorDesc": "Contact your instructor or course administrator for help. They can answer questions related to your assignments and courses.",
-      "contactInstructor": "Contact your instructor",
-      "contactInstructorHint": "Use email or the course announcement system to contact your instructor",
       "faq": {
         "gs1q": "How do I sign in to Peerly?",
-        "gs1a": "Go to the sign-in page and enter your email and password. If you're a new user, you need to register first or receive an invitation from your instructor.",
+        "gs1a": "Go to the sign-in page and enter your email and password. If you don't have an account yet, click \"Register\" to create one.",
         "gs2q": "Where can I find my course list?",
         "gs2a": "After signing in, go to the \"Courses\" section via the sidebar menu. There you'll see all courses you participate in as a student or teacher.",
         "gs3q": "How do I submit an assignment?",
@@ -1526,25 +1490,29 @@
         "gs4q": "How do I review another student's work?",
         "gs4a": "In the \"Reviews\" section, you'll see works assigned to you for review. Open the work, study the material, and fill in the grading rubric. Leave a constructive comment and submit the review.",
         "gs5q": "What is a grading rubric?",
-        "gs5a": "A rubric is a set of criteria for evaluating work. Each criterion has a specific number of points. The teacher creates rubrics for each assignment to ensure objective evaluation.",
+        "gs5a": "A rubric is a set of criteria used to grade work. Each criterion has its own point scale. The instructor builds a rubric per assignment so reviewers grade against the same standard.",
         "gs6q": "How do I view my grades?",
-        "gs6a": "Go to the \"Gradebook\" section in the sidebar menu. There you'll see all grades across all courses, including peer-review grades and final grades from the teacher.",
+        "gs6a": "Go to \"Gradebook\" in the sidebar menu. You'll see grades across all courses — both peer-review grades and final grades from your instructor.",
         "ts1q": "I can't sign in. What should I do?",
-        "ts1a": "Make sure you're entering the correct email and password. Check if Caps Lock is on. If you forgot your password, use the \"Recover Password\" function on the sign-in page. If the problem persists, contact the administrator.",
+        "ts1a": "Make sure you're entering the correct email and password, and check that Caps Lock is off. If you forgot your password, contact your instructor or an administrator — they can help restore your access.",
         "ts2q": "I don't see my course in the list",
         "ts2a": "Check that you're enrolled in the course. Contact your instructor to make sure you've been added to the participant list. Try refreshing the page or signing out and back in.",
         "ts3q": "File won't upload when submitting work",
-        "ts3a": "Check the file size (no more than 50 MB) and format (usually PDF, DOC, DOCX, TXT are allowed). Make sure you have a stable internet connection. Try a different browser or clear the cache.",
+        "ts3a": "Check the file size and format — the limits are listed in the assignment description. If the file looks fine, refresh the page or try a different browser. If that doesn't help, email your instructor.",
         "ts4q": "An assignment disappeared from my list",
-        "ts4a": "The teacher may have changed the visibility settings or the assignment deadline. Check the \"Completed Assignments\" section or contact your instructor for clarification.",
+        "ts4a": "Your instructor may have changed visibility or the deadline. If you already submitted, your submission is still available in the assignment's submission history.",
         "ts5q": "I didn't receive the work assigned to me for review",
         "ts5a": "Work distribution happens automatically after the submission deadline. If more than 24 hours have passed and there's still no work, contact your instructor.",
         "ts6q": "My review comment isn't saving",
-        "ts6a": "Make sure you clicked \"Save\" or \"Submit\" after writing the comment. Check your internet connection and try again. Copy the text to the clipboard just in case.",
-        "cs1q": "How do I contact technical support?",
-        "cs1a": "You can contact support via the chat in the bottom-right corner of the screen (if available) or reach out to your instructor/administrator for help.",
-        "cs2q": "Where do I report a system bug?",
-        "cs2a": "If you found a bug, describe the problem in as much detail as possible (what you were doing, what error occurred, screenshots) and submit it via the feedback form or write to your instructor."
+        "ts6a": "Make sure you clicked \"Save\" or \"Submit\" after writing the comment. If the problem persists, refresh the page and let your instructor know."
+      },
+      "instructor": {
+        "title": "Contact your instructor",
+        "description": "Your instructor is the fastest path to answers about a specific assignment, review, or grade. Their email is shown on the course page."
+      },
+      "bugReport": {
+        "title": "Report a bug",
+        "description": "If you hit a bug or a technical glitch, describe the problem in as much detail as you can — what you were doing, what the error was, screenshots — and email us."
       }
     },
     "terms": {
@@ -1939,23 +1907,6 @@
     "taskSearch": {
       "placeholder": "Search assignments"
     },
-    "assignmentPicker": {
-      "title": "Attach rubric to assignment",
-      "rubricLabel": "Rubric",
-      "searchPlaceholder": "Search by assignment name...",
-      "allCourses": "All courses",
-      "notFound": "No assignments found",
-      "published": "Published",
-      "draft": "Draft",
-      "closed": "Closed",
-      "deadline": "Deadline",
-      "hasRubric": "Already has rubric",
-      "selectAssignment": "Select an assignment",
-      "rubricAttached": "Rubric \"{{rubricName}}\" successfully attached to assignment \"{{assignmentTitle}}\"",
-      "clickAttach": "Click \"Attach\" to confirm",
-      "selectFromList": "Select an assignment from the list above",
-      "attach": "Attach"
-    },
     "courseFilters": {
       "all": "All",
       "active": "Active",
@@ -1995,16 +1946,6 @@
       "checks": "Checks",
       "noChecks": "No checks",
       "changesLegend": "— changes compared to the other version"
-    },
-    "workPreview": {
-      "title": "Student Work",
-      "openInNewWindow": "Open in new window",
-      "files": "Files",
-      "downloadFile": "Download file",
-      "checks": "Checks",
-      "passed": "passed",
-      "warnings": "warnings",
-      "failed": "failed"
     },
     "filePreview": {
       "uploadedAt": "Uploaded",

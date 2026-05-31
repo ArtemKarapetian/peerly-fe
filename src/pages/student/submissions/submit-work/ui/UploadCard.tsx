@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import { Card } from "@/shared/ui";
 
-import { FileUploadArea } from "@/features/submission/submit-work/ui/FileUploadArea";
+import { FileUploadArea } from "@/features/submission/submit-work";
 
 const ACCEPTED_FORMATS = [".zip", ".pdf", ".jpg", ".jpeg", ".png", ".doc", ".docx", ".txt"];
 const MAX_FILE_SIZE_MB = 10;

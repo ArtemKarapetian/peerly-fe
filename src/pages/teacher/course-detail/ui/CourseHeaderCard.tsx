@@ -6,24 +6,24 @@ import { toast } from "sonner";
 import { humanizeApiError } from "@/shared/api";
 import { Card, StatusBadge } from "@/shared/ui";
 
-import type { DemoAssignment } from "@/entities/assignment/model/types";
+import type { Assignment } from "@/entities/assignment";
 import { usePublishCourse } from "@/entities/course";
-import type { DemoCourse } from "@/entities/course/model/types";
+import type { Course } from "@/entities/course";
 
 interface Teacher {
   name: string;
 }
 
 interface CourseHeaderCardProps {
-  course: DemoCourse;
+  course: Course;
   teacher: Teacher | null;
-  courseAssignments: DemoAssignment[];
+  courseAssignments: Assignment[];
 }
 
 export function CourseHeaderCard({ course, teacher, courseAssignments }: CourseHeaderCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const publishedCount = courseAssignments.filter((a) => a.status === "published").length;
+  const totalAssignments = courseAssignments.length;
   const publishMutation = usePublishCourse(course.id);
 
   const handlePublish = async () => {
@@ -61,7 +61,7 @@ export function CourseHeaderCard({ course, teacher, courseAssignments }: CourseH
             />
             <div className="w-px h-12 bg-border" />
             <MetricBlock
-              value={publishedCount}
+              value={totalAssignments}
               label={t("teacher.courseDetail.meta.assignments")}
             />
           </div>
@@ -91,10 +91,10 @@ export function CourseHeaderCard({ course, teacher, courseAssignments }: CourseH
   );
 }
 
-function CourseStatusBadge({ status }: { status: DemoCourse["status"] }) {
+function CourseStatusBadge({ status }: { status: Course["status"] }) {
   const { t } = useTranslation();
   const labelKey = `teacher.courseDetail.status.${status}`;
-  const variantByStatus: Record<DemoCourse["status"], "success" | "warning" | "secondary"> = {
+  const variantByStatus: Record<Course["status"], "success" | "warning" | "secondary"> = {
     active: "success",
     draft: "warning",
     archived: "secondary",

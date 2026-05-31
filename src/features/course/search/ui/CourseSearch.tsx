@@ -1,11 +1,6 @@
 import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * CourseSearch — поиск курсов.
- * Использует CSS-переменные дизайн-системы вместо хардкода.
- */
-
 interface CourseSearchProps {
   value: string;
   onChange: (value: string) => void;

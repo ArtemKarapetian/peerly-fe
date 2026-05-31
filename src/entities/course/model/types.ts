@@ -6,10 +6,9 @@ export interface CourseTeacher {
   email: string;
 }
 
-export interface DemoCourse {
+export interface Course {
   id: string;
   name: string;
-  title: string;
   description: string;
   teachers: CourseTeacher[];
   enrollmentCount: number;
@@ -17,8 +16,6 @@ export interface DemoCourse {
   backendStatus: CourseStatus;
   homeworkCount: number;
   archived?: boolean;
-  assignmentIds?: string[];
-  createdAt: Date;
 }
 
 export interface CreateCourseInput {

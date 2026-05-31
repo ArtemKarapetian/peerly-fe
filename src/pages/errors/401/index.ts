@@ -1,1 +1,1 @@
-export { default as Error401Page } from "./ui/Page";
+export { default } from "./ui/Page";

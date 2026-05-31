@@ -1,9 +1,5 @@
 import { useTranslation } from "react-i18next";
 
-/**
- * CourseFilters - Segmented control for filtering courses.
- */
-
 export type CourseFilterType = "all" | "active" | "completed";
 
 interface CourseFiltersProps {

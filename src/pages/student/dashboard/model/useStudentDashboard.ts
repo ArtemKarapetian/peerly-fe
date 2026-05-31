@@ -1,6 +1,8 @@
 import { useQueries } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
+import { submissionKeys } from "@/shared/api/queryKeys";
+
 import { useAssignments } from "@/entities/assignment";
 import { useCourses } from "@/entities/course";
 import { workRepo } from "@/entities/work";
@@ -38,7 +40,7 @@ export function useStudentDashboard(): StudentDashboardData {
 
   const courseNameById = useMemo(() => {
     const map = new Map<string, string>();
-    for (const c of courses ?? []) map.set(c.id, c.title);
+    for (const c of courses ?? []) map.set(c.id, c.name);
     return map;
   }, [courses]);
 
@@ -57,7 +59,7 @@ export function useStudentDashboard(): StudentDashboardData {
 
   const submissionQueries = useQueries({
     queries: visibleAssignments.map((a) => ({
-      queryKey: ["submissions", "mine-id", a.id] as const,
+      queryKey: submissionKeys.mineId(a.id),
       queryFn: () => workRepo.getMineSubmissionId(a.id),
     })),
   });

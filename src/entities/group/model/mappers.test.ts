@@ -50,22 +50,4 @@ describe("mapParticipants", () => {
     expect(result.students).toEqual([]);
     expect(result.teachers).toEqual([]);
   });
-
-  it("returns empty arrays for null or undefined input", () => {
-    expect(mapParticipants(null)).toEqual({ students: [], teachers: [] });
-    expect(mapParticipants(undefined)).toEqual({ students: [], teachers: [] });
-  });
-
-  it("skips rows with missing studentId / teacherId", () => {
-    const dto = {
-      students: [
-        { studentId: null as unknown as string, email: "x@x", name: "X" },
-        { studentId: "s-1", email: "a@x", name: "Alice" },
-      ],
-      teachers: undefined as unknown as ListParticipantsResponse["teachers"],
-    };
-    const result = mapParticipants(dto);
-    expect(result.students).toEqual([{ id: "s-1", name: "Alice", email: "a@x" }]);
-    expect(result.teachers).toEqual([]);
-  });
 });

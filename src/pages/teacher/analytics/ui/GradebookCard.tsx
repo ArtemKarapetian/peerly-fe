@@ -103,7 +103,7 @@ export function GradebookCard({ assignments, gradebook, canExport, onExport }: G
                     const score = entry.scores[a.id];
                     return (
                       <td key={a.id} className="p-3 text-center">
-                        {score !== null ? (
+                        {typeof score === "number" ? (
                           <ScoreBadge value={score} />
                         ) : (
                           <span className="text-muted-foreground text-sm">—</span>

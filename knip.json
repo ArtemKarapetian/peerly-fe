@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/app/App.tsx",
+    "tests/e2e/**/*.spec.ts",
+    "cypress/component/**/*.cy.{ts,tsx}",
+    "src/**/*.stories.{ts,tsx}",
+    "src/**/*.test.{ts,tsx}"
+  ],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignore": ["src/entities/admin-stats/**", "src/shared/api/types/**"],
+  "ignoreDependencies": ["tw-animate-css", "tailwindcss"],
+  "ignoreExportsUsedInFile": true,
+  "rules": {
+    "files": "error",
+    "exports": "warn",
+    "types": "warn",
+    "duplicates": "warn",
+    "optionalPeerDependencies": "off"
+  }
+}

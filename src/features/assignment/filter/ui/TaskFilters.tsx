@@ -1,9 +1,5 @@
 import { useTranslation } from "react-i18next";
 
-/**
- * TaskFilters - Filter chips for the assignment list
- */
-
 export type TaskFilter = "all" | "due-soon" | "completed";
 
 interface TaskFiltersProps {

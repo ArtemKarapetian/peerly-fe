@@ -53,9 +53,7 @@ describe("useAsync", () => {
   });
 
   it("wraps non-Error rejection values in an Error", async () => {
-    const fn = vi.fn(
-      () => new Promise<never>((_resolve, reject) => reject("string error" as unknown as Error)),
-    );
+    const fn = vi.fn(() => Promise.reject<never>("string error" as unknown as Error));
     const { result } = renderHook(() => useAsync(fn));
 
     await waitFor(() => {

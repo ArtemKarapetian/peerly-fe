@@ -4,6 +4,9 @@ node_modules/
 # Build output
 dist/
 build/
+storybook-static/
+.jscpd/
+debug-storybook.log
 
 # Environment files
 .env
@@ -49,5 +52,9 @@ coverage/
 # Misc
 *.local
 .cache/
+.local-screenshots/
 
 *storybook.log
+
+# rollup-plugin-visualizer output
+bundle-stats.html

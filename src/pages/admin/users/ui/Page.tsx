@@ -12,7 +12,7 @@ import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { userRepo } from "@/entities/user";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 const MIN_SEARCH_LENGTH = 3;
 

@@ -3,7 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { DemoAssignment } from "@/entities/assignment/model/types";
+import type { Assignment } from "@/entities/assignment";
 
 import { CourseAssignmentsTab } from "./CourseAssignmentsTab";
 
@@ -28,8 +28,8 @@ function assignment(
   id: string,
   title: string,
   daysFromNow: number,
-  backendStatus: DemoAssignment["backendStatus"] = "published",
-): DemoAssignment {
+  backendStatus: Assignment["backendStatus"] = "published",
+): Assignment {
   return {
     id,
     courseId: "c-1",

@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { submissionKeys } from "@/shared/api/queryKeys";
+
 import { useAssignmentsByCourse } from "@/entities/assignment";
 import { workRepo } from "@/entities/work";
 
@@ -28,7 +30,7 @@ export function CourseAssignmentsTab({ courseId }: CourseAssignmentsTabProps) {
 
   const submissionQueries = useQueries({
     queries: visibleAssignments.map((a) => ({
-      queryKey: ["submissions", "mine-id", a.id] as const,
+      queryKey: submissionKeys.mineId(a.id),
       queryFn: () => workRepo.getMineSubmissionId(a.id),
     })),
   });

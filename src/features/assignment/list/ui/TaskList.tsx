@@ -3,10 +3,6 @@ import { useTranslation } from "react-i18next";
 import { TaskListItem } from "@/entities/assignment";
 import type { TaskStatus } from "@/entities/assignment";
 
-/**
- * TaskList - Список заданий с разделителями
- */
-
 export interface Task {
   id: string;
   title: string;
@@ -41,7 +37,6 @@ export function TaskList({ tasks, onTaskClick }: TaskListProps) {
             status={task.status}
             onClick={() => onTaskClick?.(task.id)}
           />
-          {/* Divider - не показываем после последнего элемента */}
           {index < tasks.length - 1 && <div className="border-b border-border" />}
         </div>
       ))}

@@ -38,7 +38,6 @@ export function CoursesFiltersRow({
         >
           <option value="active">{t("teacher.courseDetail.status.active")}</option>
           <option value="draft">{t("teacher.courseDetail.status.draft")}</option>
-          <option value="archived">{t("teacher.courseDetail.status.archived")}</option>
           <option value="all">{t("teacher.courses.statusAll")}</option>
         </Select>
       </div>

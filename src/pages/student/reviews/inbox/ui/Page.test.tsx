@@ -19,7 +19,7 @@ vi.mock("@/widgets/reviews-inbox", async () => {
   return { ...actual, useAssignedReviewsInbox: useAssignedReviewsInboxMock };
 });
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
@@ -108,6 +108,6 @@ describe("ReviewsInboxPage", () => {
   it("shows loading state", () => {
     useAssignedReviewsInboxMock.mockReturnValue({ data: undefined, isLoading: true });
     renderPage();
-    expect(screen.getByText(/common\.loading/)).toBeInTheDocument();
+    expect(screen.getByTestId("page-skeleton")).toBeInTheDocument();
   });
 });

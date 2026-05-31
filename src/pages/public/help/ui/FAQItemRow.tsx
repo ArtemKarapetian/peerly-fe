@@ -9,19 +9,26 @@ interface FAQItemRowProps {
 
 export function FAQItemRow({ question, answer, isOpen, onToggle }: FAQItemRowProps) {
   return (
-    <div className="border border-border rounded-md overflow-hidden bg-card">
+    <div>
       <button
+        type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-surface-hover transition-colors text-left"
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 tablet:px-6 tablet:py-5 hover:bg-surface-hover transition-colors text-left"
       >
-        <span className="font-medium text-foreground pr-4">{question}</span>
+        <span className="font-medium text-foreground">{question}</span>
         <ChevronDown
           className={`size-5 text-muted-foreground shrink-0 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
+          aria-hidden
         />
       </button>
-      {isOpen && <div className="px-4 pb-4 pt-0 text-muted-foreground">{answer}</div>}
+      {isOpen && (
+        <div className="px-5 pb-5 tablet:px-6 tablet:pb-6 text-muted-foreground leading-relaxed">
+          {answer}
+        </div>
+      )}
     </div>
   );
 }

@@ -21,8 +21,8 @@ const { repoMock } = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("..", () => ({
-  courseRepo: repoMock,
+vi.mock("../api/httpRepo", () => ({
+  courseHttpRepo: repoMock,
 }));
 
 function wrapper() {

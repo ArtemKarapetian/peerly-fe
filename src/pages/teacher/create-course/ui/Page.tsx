@@ -13,7 +13,7 @@ import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { useCreateCourse } from "@/entities/course";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 export default function CreateCoursePage() {
   const navigate = useNavigate();

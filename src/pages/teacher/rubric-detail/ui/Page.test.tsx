@@ -24,7 +24,7 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
@@ -218,14 +218,14 @@ describe("TeacherRubricDetailPage", () => {
     await user.click(screen.getByTestId("trigger-save"));
 
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
-    const arg = mutateAsync.mock.calls[0][0] as {
+    const arg = mutateAsync.mock.calls[0]![0]! as {
       rubricId: string;
       input: { name: string; criteria: { description?: string; position: number }[] };
     };
     expect(arg.rubricId).toBe("r1");
     expect(arg.input.name).toBe("Updated");
-    expect(arg.input.criteria[0].description).toBeUndefined();
-    expect(arg.input.criteria[0].position).toBe(0);
+    expect(arg.input.criteria[0]!.description).toBeUndefined();
+    expect(arg.input.criteria[0]!.position).toBe(0);
     expect(navigateMock).toHaveBeenCalledWith("/teacher/rubrics");
   });
 

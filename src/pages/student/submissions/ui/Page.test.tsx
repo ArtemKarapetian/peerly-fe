@@ -21,7 +21,7 @@ vi.mock("@/entities/storage", () => ({
   storageApi: { getDownloadUrl: vi.fn(), triggerDownload: vi.fn() },
 }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 

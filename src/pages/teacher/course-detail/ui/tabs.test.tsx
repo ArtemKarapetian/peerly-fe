@@ -9,9 +9,9 @@ const source = readFileSync(pagePath, "utf8");
 
 describe("TeacherCourseDetailsPage — tabs", () => {
   it("defines exactly three tab keys", () => {
-    const match = source.match(/type TabKey =\s*([^;]+);/);
+    const match = /type TabKey =\s*([^;]+);/.exec(source);
     expect(match).not.toBeNull();
-    const keys = match![1]
+    const keys = match![1]!
       .split("|")
       .map((s) => s.trim().replace(/^"|"$/g, ""))
       .filter(Boolean);

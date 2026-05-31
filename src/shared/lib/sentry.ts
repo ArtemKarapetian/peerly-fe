@@ -18,10 +18,8 @@ export function initSentry() {
       }),
     ],
 
-    // Performance monitoring
     tracesSampleRate: env.isProd ? 0.2 : 1.0,
 
-    // Session replay — capture 10% of sessions, 100% of sessions with errors
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
   });

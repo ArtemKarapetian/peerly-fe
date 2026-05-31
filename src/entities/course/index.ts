@@ -1,4 +1,4 @@
-export type { DemoCourse, CreateCourseInput } from "./model/types";
+export type { Course, CreateCourseInput } from "./model/types";
 export { courseHttpRepo as courseRepo } from "./api/httpRepo";
 export { CourseCard } from "./ui/CourseCard";
 export { CourseHeader } from "./ui/CourseHeader";

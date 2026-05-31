@@ -1,4 +1,4 @@
-export type FAQCategory = "getting-started" | "troubleshooting" | "contact";
+export type FAQCategory = "getting-started" | "troubleshooting";
 
 export interface FAQItem {
   id: string;
@@ -15,13 +15,11 @@ export interface FAQEntry extends FAQItem {
 const PREFIX_BY_CATEGORY: Record<FAQCategory, string> = {
   "getting-started": "gs",
   troubleshooting: "ts",
-  contact: "cs",
 };
 
 const COUNTS: Record<FAQCategory, number> = {
   "getting-started": 6,
   troubleshooting: 6,
-  contact: 2,
 };
 
 function generateForCategory(category: FAQCategory): FAQItem[] {
@@ -40,5 +38,4 @@ function generateForCategory(category: FAQCategory): FAQItem[] {
 export const FAQ_ITEMS: FAQItem[] = [
   ...generateForCategory("getting-started"),
   ...generateForCategory("troubleshooting"),
-  ...generateForCategory("contact"),
 ];

@@ -12,7 +12,7 @@ import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { useCreateRubric, useRubrics } from "@/entities/rubric";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 const PAGE_SIZE = 12;
 

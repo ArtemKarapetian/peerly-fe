@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { Session } from "@/shared/api";
+import { ApiError, type Session } from "@/shared/api";
 
 import { groupHttpRepo } from "./httpRepo";
 
@@ -39,7 +39,7 @@ describe("groupHttpRepo", () => {
   it("listForCourse uses student prefix by default", async () => {
     httpMock.get.mockResolvedValueOnce({ groupInfos: [] });
     await groupHttpRepo.listForCourse("c-1");
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/student\/courses\/c-1\/groups\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/student\/courses\/c-1\/groups\?/);
   });
 
   it("listForCourse uses teacher prefix when role is Teacher", async () => {
@@ -50,12 +50,12 @@ describe("groupHttpRepo", () => {
 
     const out = await groupHttpRepo.listForCourse("c-1");
 
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/teacher\/courses\/c-1\/groups\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/teacher\/courses\/c-1\/groups\?/);
     expect(out[0]).toEqual({ id: "g-1", name: "G", studentCount: 3 });
   });
 
-  it("getById returns undefined on error", async () => {
-    httpMock.get.mockRejectedValueOnce(new Error("nope"));
+  it("getById returns undefined on 404", async () => {
+    httpMock.get.mockRejectedValueOnce(new ApiError(404, null, "not found"));
     expect(await groupHttpRepo.getById("g-x")).toBeUndefined();
   });
 
@@ -64,7 +64,7 @@ describe("groupHttpRepo", () => {
       groupInfo: { id: "g-2", name: "G2", studentCount: 7 },
     });
     const out = await groupHttpRepo.getById("g-2");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/student/groups/g-2");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/student/groups/g-2");
     expect(out?.name).toBe("G2");
     expect(out?.studentCount).toBe(7);
   });
@@ -75,7 +75,7 @@ describe("groupHttpRepo", () => {
       teachers: [],
     });
     const out = await groupHttpRepo.getParticipants("g-3");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/groups/g-3/participants");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/groups/g-3/participants");
     expect(out.students).toEqual([{ id: "s-1", name: "S", email: "s@x" }]);
   });
 
@@ -83,8 +83,8 @@ describe("groupHttpRepo", () => {
     httpMock.post.mockResolvedValueOnce({ groupId: 5 });
     const out = await groupHttpRepo.create({ courseId: "c-1", name: "New" });
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/groups");
-    expect(httpMock.post.mock.calls[0][1]).toEqual({ courseId: "c-1", name: "New" });
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/groups");
+    expect(httpMock.post.mock.calls[0]![1]).toEqual({ courseId: "c-1", name: "New" });
     expect(out).toEqual({ id: "5", name: "New", studentCount: 0 });
   });
 
@@ -96,11 +96,11 @@ describe("groupHttpRepo", () => {
     await groupHttpRepo.delete("g-1");
     await groupHttpRepo.addTeacher("g-1", "t-1");
 
-    expect(httpMock.put.mock.calls[0][0]).toBe("/groups/g-1");
-    expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "Renamed" });
-    expect(httpMock.delete.mock.calls[0][0]).toBe("/groups/g-1");
-    expect(httpMock.put.mock.calls[1][0]).toBe("/groups/g-1/teachers");
-    expect(httpMock.put.mock.calls[1][1]).toEqual({ teacherId: "t-1" });
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/groups/g-1");
+    expect(httpMock.put.mock.calls[0]![1]).toEqual({ name: "Renamed" });
+    expect(httpMock.delete.mock.calls[0]![0]).toBe("/groups/g-1");
+    expect(httpMock.put.mock.calls[1]![0]).toBe("/groups/g-1/teachers");
+    expect(httpMock.put.mock.calls[1]![1]).toEqual({ teacherId: "t-1" });
   });
 
   it("addStudents PUTs an array of numeric ids and maps the response", async () => {
@@ -114,8 +114,8 @@ describe("groupHttpRepo", () => {
 
     const out = await groupHttpRepo.addStudents("g-1", ["10", "11", "12", "13"]);
 
-    expect(httpMock.put.mock.calls[0][0]).toBe("/groups/g-1/students");
-    expect(httpMock.put.mock.calls[0][1]).toEqual({ studentIds: [10, 11, 12, 13] });
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/groups/g-1/students");
+    expect(httpMock.put.mock.calls[0]![1]).toEqual({ studentIds: [10, 11, 12, 13] });
     expect(out.addedIds).toEqual(["10", "11"]);
     expect(out.skipped).toEqual([
       { studentId: "12", reason: "AlreadyInGroup" },

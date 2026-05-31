@@ -3,22 +3,22 @@ import { useTranslation } from "react-i18next";
 
 import { EmptyState } from "@/shared/ui";
 
-import type { DemoGroup } from "@/entities/group";
+import type { Group } from "@/entities/group";
 
 import { CreateGroupForm, GroupRow } from "@/features/group/manage-course-groups";
 
 interface GroupsSectionProps {
-  groups: DemoGroup[];
+  groups: Group[];
   totalStudents: number;
   creating: boolean;
   locked: boolean;
   onStartCreate: () => void;
   onCancelCreate: () => void;
   onCreateGroup: (name: string) => Promise<boolean>;
-  onRenameGroup: (group: DemoGroup, name: string) => Promise<boolean>;
-  onRequestDelete: (group: DemoGroup) => void;
-  onAddStudents: (group: DemoGroup) => void;
-  onCreateHomework: (group: DemoGroup) => void;
+  onRenameGroup: (group: Group, name: string) => Promise<boolean>;
+  onRequestDelete: (group: Group) => void;
+  onAddStudents: (group: Group) => void;
+  onCreateHomework: (group: Group) => void;
 }
 
 export function GroupsSection({

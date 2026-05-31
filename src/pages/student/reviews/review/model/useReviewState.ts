@@ -6,7 +6,7 @@ import { ApiError, humanizeApiError } from "@/shared/api";
 import { useAssignedSubmission, useSubmitReview, useSubmittedReview } from "@/entities/review";
 import { useRubric } from "@/entities/rubric";
 
-import { emptyScoresFor, type UICriterionScore } from "@/features/review/fill-review/model/rubric";
+import type { UICriterionScore } from "@/features/review/fill-review/model/rubric";
 
 import { useAssignedReviewsInbox } from "@/widgets/reviews-inbox";
 
@@ -62,7 +62,6 @@ export function useReviewState() {
     });
   }, [criteria, existingReview]);
 
-  const fallbackScores = useMemo(() => emptyScoresFor(criteria), [criteria]);
   const initialOverallComment = existingReview?.comment ?? "";
 
   return {
@@ -78,7 +77,7 @@ export function useReviewState() {
     subErrorIsApi,
     readonly,
     criteria,
-    initialScores: initialScores.length > 0 ? initialScores : fallbackScores,
+    initialScores,
     initialOverallComment,
     submitMutation,
   };

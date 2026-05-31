@@ -3,10 +3,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { usePagination } from "@/shared/ui/simple-pagination";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import {
   ReviewCard,
   ReviewFilters,
@@ -21,7 +23,7 @@ const PAGE_SIZE = 9;
 export default function ReviewsInboxPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, isLoading } = useAssignedReviewsInbox();
+  const { data, isLoading, error, refetch } = useAssignedReviewsInbox();
   const reviews = data ?? [];
 
   const [filter, setFilter] = useState<ReviewFilter>("all");
@@ -73,9 +75,11 @@ export default function ReviewsInboxPage() {
         />
       </div>
 
-      {isLoading && <p className="text-sm text-text-tertiary">{t("common.loading")}</p>}
+      {isLoading && <PageSkeleton />}
 
-      {!isLoading && isEmpty && (
+      {!isLoading && error && <ErrorBanner error={error} onRetry={() => void refetch()} />}
+
+      {!isLoading && !error && isEmpty && (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="bg-muted rounded-xl p-8 max-w-[480px] text-center">
             <div className="mb-4">
@@ -97,7 +101,7 @@ export default function ReviewsInboxPage() {
         </div>
       )}
 
-      {!isLoading && !isEmpty && (
+      {!isLoading && !error && !isEmpty && (
         <>
           <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
             {currentItems.map((review) => (

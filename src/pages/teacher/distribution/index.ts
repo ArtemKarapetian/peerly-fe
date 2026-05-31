@@ -1,1 +1,1 @@
-export { default as TeacherDistributionPage } from "./ui/Page";
+export { default } from "./ui/Page";

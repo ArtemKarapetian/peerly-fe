@@ -4,65 +4,55 @@ import { ROUTES, ROUTE_PATTERNS } from "@/shared/config/routes";
 
 type LazyComponent = LazyExoticComponent<ComponentType>;
 
-export type Access =
-  | "public"
-  | "publicOnly"
-  | "auth"
-  | "student"
-  | "teacher"
-  | "admin"
-  | "redirect";
+export type Access = "public" | "publicOnly" | "auth" | "student" | "teacher" | "admin";
 
 export interface RouteConfig {
   path: string;
   component?: LazyComponent;
   access: Access;
-  redirectTo?: string;
 }
 
-const AdminOverviewPage = lazy(() => import("@/pages/admin/overview/ui/Page"));
-const AdminUsersPage = lazy(() => import("@/pages/admin/users/ui/Page"));
+const AdminOverviewPage = lazy(() => import("@/pages/admin/overview"));
+const AdminUsersPage = lazy(() => import("@/pages/admin/users"));
 
-const LoginPage = lazy(() => import("@/pages/auth/login/ui/Page"));
-const RegisterPage = lazy(() => import("@/pages/auth/register/ui/Page"));
+const LoginPage = lazy(() => import("@/pages/auth/login"));
+const RegisterPage = lazy(() => import("@/pages/auth/register"));
 
-const Error401Page = lazy(() => import("@/pages/errors/401/ui/Page"));
-const Error403Page = lazy(() => import("@/pages/errors/403/ui/Page"));
-const Error404Page = lazy(() => import("@/pages/errors/404/ui/Page"));
-const Error500Page = lazy(() => import("@/pages/errors/500/ui/Page"));
+const Error401Page = lazy(() => import("@/pages/errors/401"));
+const Error403Page = lazy(() => import("@/pages/errors/403"));
+export const Error404Page = lazy(() => import("@/pages/errors/404"));
+const Error500Page = lazy(() => import("@/pages/errors/500"));
 
-const HelpPage = lazy(() => import("@/pages/public/help/ui/Page"));
-const LandingPage = lazy(() => import("@/pages/public/landing/ui/Page"));
-const TermsPage = lazy(() => import("@/pages/public/terms/ui/Page"));
-const VerifyEmailPage = lazy(() => import("@/pages/public/verify-email/ui/Page"));
+const HelpPage = lazy(() => import("@/pages/public/help"));
+const LandingPage = lazy(() => import("@/pages/public/landing"));
+const TermsPage = lazy(() => import("@/pages/public/terms"));
+const VerifyEmailPage = lazy(() => import("@/pages/public/verify-email"));
 
-const ProfilePage = lazy(() => import("@/pages/shared/profile/ui/Page"));
-const SecurityPage = lazy(() => import("@/pages/shared/security/ui/Page"));
-const SettingsPage = lazy(() => import("@/pages/shared/settings/ui/Page"));
+const ProfilePage = lazy(() => import("@/pages/shared/profile"));
+const SecurityPage = lazy(() => import("@/pages/shared/security"));
+const SettingsPage = lazy(() => import("@/pages/shared/settings"));
 
-const CoursePage = lazy(() => import("@/pages/student/courses/detail/ui/Page"));
-const CoursesListPage = lazy(() => import("@/pages/student/courses/list/ui/Page"));
-const DashboardPage = lazy(() => import("@/pages/student/dashboard/ui/Page"));
-const GradebookPage = lazy(() => import("@/pages/student/gradebook/ui/Page"));
-const ReviewsInboxPage = lazy(() => import("@/pages/student/reviews/inbox/ui/Page"));
-const ReceivedReviewsPage = lazy(() => import("@/pages/student/reviews/received/ui/Page"));
-const ReviewPage = lazy(() => import("@/pages/student/reviews/review/ui/Page"));
-const SubmitWorkPage = lazy(() => import("@/pages/student/submissions/submit-work/ui/Page"));
-const SubmissionsPage = lazy(() => import("@/pages/student/submissions/ui/Page"));
-const TaskPage = lazy(() => import("@/pages/student/task/detail/ui/Page"));
+const CoursePage = lazy(() => import("@/pages/student/courses/detail"));
+const CoursesListPage = lazy(() => import("@/pages/student/courses/list"));
+const DashboardPage = lazy(() => import("@/pages/student/dashboard"));
+const GradebookPage = lazy(() => import("@/pages/student/gradebook"));
+const ReviewsInboxPage = lazy(() => import("@/pages/student/reviews/inbox"));
+const ReceivedReviewsPage = lazy(() => import("@/pages/student/reviews/received"));
+const ReviewPage = lazy(() => import("@/pages/student/reviews/review"));
+const SubmitWorkPage = lazy(() => import("@/pages/student/submissions/submit-work"));
+const SubmissionsPage = lazy(() => import("@/pages/student/submissions"));
+const TaskPage = lazy(() => import("@/pages/student/task/detail"));
 
-const TeacherAssignmentDetailsPage = lazy(
-  () => import("@/pages/teacher/assignment-detail/ui/Page"),
-);
-const TeacherAnalyticsPage = lazy(() => import("@/pages/teacher/analytics/ui/Page"));
-const TeacherCourseDetailsPage = lazy(() => import("@/pages/teacher/course-detail/ui/Page"));
-const TeacherCoursesPage = lazy(() => import("@/pages/teacher/courses/ui/Page"));
-const TeacherCreateAssignmentPage = lazy(() => import("@/pages/teacher/create-assignment/ui/Page"));
-const TeacherCreateCoursePage = lazy(() => import("@/pages/teacher/create-course/ui/Page"));
-const TeacherDistributionPage = lazy(() => import("@/pages/teacher/distribution/ui/Page"));
-const TeacherRubricsPage = lazy(() => import("@/pages/teacher/rubrics/ui/Page"));
-const TeacherRubricDetailPage = lazy(() => import("@/pages/teacher/rubric-detail/ui/Page"));
-const TeacherSubmissionsPage = lazy(() => import("@/pages/teacher/submissions/ui/Page"));
+const TeacherAssignmentDetailsPage = lazy(() => import("@/pages/teacher/assignment-detail"));
+const TeacherAnalyticsPage = lazy(() => import("@/pages/teacher/analytics"));
+const TeacherCourseDetailsPage = lazy(() => import("@/pages/teacher/course-detail"));
+const TeacherCoursesPage = lazy(() => import("@/pages/teacher/courses"));
+const TeacherCreateAssignmentPage = lazy(() => import("@/pages/teacher/create-assignment"));
+const TeacherCreateCoursePage = lazy(() => import("@/pages/teacher/create-course"));
+const TeacherDistributionPage = lazy(() => import("@/pages/teacher/distribution"));
+const TeacherRubricsPage = lazy(() => import("@/pages/teacher/rubrics"));
+const TeacherRubricDetailPage = lazy(() => import("@/pages/teacher/rubric-detail"));
+const TeacherSubmissionsPage = lazy(() => import("@/pages/teacher/submissions"));
 
 export const routeRegistry: RouteConfig[] = [
   { path: ROUTES.landing, component: LandingPage, access: "public" },

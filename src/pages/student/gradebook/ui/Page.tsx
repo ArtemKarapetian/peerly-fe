@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { usePagination } from "@/shared/ui/simple-pagination";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { GradebookHeader, GradeTable } from "@/widgets/gradebook";
 import type { GradeEntry } from "@/widgets/gradebook";
 
@@ -16,6 +18,7 @@ const PAGE_SIZE = 15;
 const STATUS_LABEL_KEYS: Record<string, string> = {
   PUBLISHED: "student.gradebook.statusPublished",
   IN_REVIEW: "student.gradebook.statusInReview",
+  UNGRADED: "student.gradebook.statusUngraded",
   NOT_STARTED: "student.gradebook.statusNotStarted",
   OVERDUE: "student.gradebook.statusOverdue",
 };
@@ -23,6 +26,7 @@ const STATUS_LABEL_KEYS: Record<string, string> = {
 const STATUS_COLORS: Record<string, string> = {
   PUBLISHED: "bg-success-light text-success",
   IN_REVIEW: "bg-warning-light text-warning",
+  UNGRADED: "bg-muted text-muted-foreground",
   NOT_STARTED: "bg-muted text-muted-foreground",
   OVERDUE: "bg-error-light text-error",
 };
@@ -30,7 +34,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function GradebookPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, isLoading } = useGradebookEntries();
+  const { data, isLoading, error, refetch } = useGradebookEntries();
   const grades = useMemo(() => data ?? [], [data]);
 
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
@@ -85,7 +89,7 @@ export default function GradebookPage() {
   );
 
   return (
-    <AppShell>
+    <AppShell title={t("student.gradebook.title")}>
       <GradebookHeader
         stats={stats}
         courses={courses}
@@ -101,7 +105,9 @@ export default function GradebookPage() {
       />
 
       {isLoading ? (
-        <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
+        <PageSkeleton />
+      ) : error ? (
+        <ErrorBanner error={error} onRetry={() => void refetch()} />
       ) : (
         <GradeTable
           grades={currentItems}

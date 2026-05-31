@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { reviewKeys } from "@/shared/api/queryKeys";
+import { assignedReviewKeys, reviewKeys } from "@/shared/api/queryKeys";
 
 import { reviewHttpRepo } from "../api/httpRepo";
 
@@ -8,7 +8,7 @@ import type { CriterionScore } from "./types";
 
 export function useAssignedSubmission(submissionId: string) {
   return useQuery({
-    queryKey: ["assigned-reviews", "submission", submissionId],
+    queryKey: assignedReviewKeys.submission(submissionId),
     queryFn: () => reviewHttpRepo.getAssignedSubmission(submissionId),
     enabled: !!submissionId,
   });
@@ -35,9 +35,9 @@ export function useSubmitReview() {
       reviewHttpRepo.create(submissionId, scores, comment),
     onSuccess: (_data, vars) => {
       void queryClient.invalidateQueries({
-        queryKey: ["assigned-reviews", "submission", vars.submissionId],
+        queryKey: assignedReviewKeys.submission(vars.submissionId),
       });
-      void queryClient.invalidateQueries({ queryKey: ["assigned-reviews", "me"] });
+      void queryClient.invalidateQueries({ queryKey: assignedReviewKeys.forMe() });
     },
   });
 }

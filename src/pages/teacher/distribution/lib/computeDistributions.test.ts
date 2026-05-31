@@ -47,8 +47,8 @@ describe("computeDistributions", () => {
       selectedAssignment: "a1",
     });
     expect(result).toHaveLength(1);
-    expect(result[0].overallStatus).toBe("not-started");
-    expect(result[0].assignedReviewers).toEqual([]);
+    expect(result[0]!.overallStatus).toBe("not-started");
+    expect(result[0]!.assignedReviewers).toEqual([]);
   });
 
   it("marks rows as in-progress when some reviews submitted", () => {
@@ -58,7 +58,7 @@ describe("computeDistributions", () => {
       reviews: [rev("r1", "s1", "rev-1", "submitted"), rev("r2", "s1", "rev-2", "pending")],
       selectedAssignment: "a1",
     });
-    expect(result[0].overallStatus).toBe("in-progress");
+    expect(result[0]!.overallStatus).toBe("in-progress");
   });
 
   it("marks rows as completed when all reviews submitted", () => {
@@ -68,7 +68,7 @@ describe("computeDistributions", () => {
       reviews: [rev("r1", "s1", "rev-1", "submitted"), rev("r2", "s1", "rev-2", "submitted")],
       selectedAssignment: "a1",
     });
-    expect(result[0].overallStatus).toBe("completed");
+    expect(result[0]!.overallStatus).toBe("completed");
   });
 
   it("uses unknown labels when name not found", () => {
@@ -78,8 +78,8 @@ describe("computeDistributions", () => {
       reviews: [rev("r1", "s1", "rev-unknown", "pending")],
       selectedAssignment: "a1",
     });
-    expect(result[0].authorName).toBe("(unknown author)");
-    expect(result[0].assignedReviewers[0].name).toBe("(unknown reviewer)");
+    expect(result[0]!.authorName).toBe("(unknown author)");
+    expect(result[0]!.assignedReviewers[0]!.name).toBe("(unknown reviewer)");
   });
 
   it("filters submissions by assignment", () => {
@@ -90,7 +90,7 @@ describe("computeDistributions", () => {
       selectedAssignment: "a1",
     });
     expect(result).toHaveLength(1);
-    expect(result[0].submissionId).toBe("s1");
+    expect(result[0]!.submissionId).toBe("s1");
   });
 
   it("anonymizes with SUB-001, SUB-002 padding", () => {
@@ -100,7 +100,7 @@ describe("computeDistributions", () => {
       reviews: [],
       selectedAssignment: "a1",
     });
-    expect(result[0].anonymousId).toBe("SUB-001");
-    expect(result[1].anonymousId).toBe("SUB-002");
+    expect(result[0]!.anonymousId).toBe("SUB-001");
+    expect(result[1]!.anonymousId).toBe("SUB-002");
   });
 });

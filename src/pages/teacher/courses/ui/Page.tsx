@@ -10,7 +10,7 @@ import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { courseRepo } from "@/entities/course";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { filterCourses } from "../lib/filterCourses";
 import type { CourseRow, StatusFilter } from "../model/types";
@@ -53,7 +53,7 @@ export default function TeacherCoursesPage() {
 
   const allRows: CourseRow[] = (courses ?? []).map((c) => ({
     id: c.id,
-    name: c.title,
+    name: c.name,
     status: c.status,
   }));
   const activeCount = allRows.filter((c) => c.status === "active").length;

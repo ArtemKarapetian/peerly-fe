@@ -13,26 +13,18 @@ interface ReviewCardProps {
 }
 
 function getStatusInfo(status: string, t: (key: string) => string) {
-  switch (status) {
-    case "not_started":
-      return {
-        label: t("widget.reviewCard.notStarted"),
-        color: "bg-muted",
-        textColor: "text-muted-foreground",
-      };
-    case "submitted":
-      return {
-        label: t("widget.reviewCard.submitted"),
-        color: "bg-success-light",
-        textColor: "text-foreground",
-      };
-    default:
-      return {
-        label: t("widget.reviewCard.notStarted"),
-        color: "bg-muted",
-        textColor: "text-muted-foreground",
-      };
+  if (status === "submitted") {
+    return {
+      label: t("widget.reviewCard.submitted"),
+      color: "bg-success-light",
+      textColor: "text-foreground",
+    };
   }
+  return {
+    label: t("widget.reviewCard.notStarted"),
+    color: "bg-muted",
+    textColor: "text-muted-foreground",
+  };
 }
 
 function getCtaLabel(status: string, t: (key: string) => string) {

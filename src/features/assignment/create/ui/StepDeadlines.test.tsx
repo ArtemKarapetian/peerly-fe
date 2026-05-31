@@ -29,11 +29,11 @@ describe("StepDeadlines", () => {
     const onUpdate = vi.fn();
     const { container } = render(<StepDeadlines data={makeData()} onUpdate={onUpdate} />);
 
-    const submissionInput = container.querySelectorAll("input[type='datetime-local']")[0];
+    const submissionInput = container.querySelectorAll("input[type='datetime-local']")[0]!;
     fireEvent.change(submissionInput, { target: { value: "2026-06-01T10:00" } });
 
     expect(onUpdate).toHaveBeenCalledTimes(1);
-    const call = onUpdate.mock.calls[0][0] as { submissionDeadline: Date };
+    const call = onUpdate.mock.calls[0]![0]! as { submissionDeadline: Date };
     expect(call.submissionDeadline).toBeInstanceOf(Date);
     expect(call.submissionDeadline.getFullYear()).toBe(2026);
     expect(call.submissionDeadline.getMonth()).toBe(5); // June
@@ -48,7 +48,7 @@ describe("StepDeadlines", () => {
       />,
     );
 
-    const submissionInput = container.querySelectorAll("input[type='datetime-local']")[0];
+    const submissionInput = container.querySelectorAll("input[type='datetime-local']")[0]!;
     fireEvent.change(submissionInput, { target: { value: "" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ submissionDeadline: null });

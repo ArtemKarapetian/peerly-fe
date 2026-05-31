@@ -42,7 +42,7 @@ export function StepPublish({
       <div className="space-y-4">
         <SummaryCard icon={Check} title={t("feature.assignmentCreate.publish.basicInfo")}>
           <SummaryField label={t("feature.assignmentCreate.publish.courseLabel")}>
-            {course?.title || t("feature.assignmentCreate.publish.courseNotSelected")}
+            {course?.name || t("feature.assignmentCreate.publish.courseNotSelected")}
           </SummaryField>
           <SummaryField label={t("feature.assignmentCreate.publish.titleLabel")}>
             {data.title || notSpecified}

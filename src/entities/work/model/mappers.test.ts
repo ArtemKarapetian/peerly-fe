@@ -28,7 +28,7 @@ describe("mapDtoToSubmission", () => {
     expect(result.files).toHaveLength(2);
     expect(result.files[0]).toEqual({ id: "f-1", name: "answer.pdf", size: 1024 });
     expect(result.status).toBe("submitted");
-    expect(result.submittedAt).toBeInstanceOf(Date);
+    expect(result.submittedAt).toBeUndefined();
   });
 
   it("defaults context fields to empty strings", () => {

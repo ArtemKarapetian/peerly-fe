@@ -54,6 +54,12 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Knip (dead code)
+        run: npm run knip
+
+      - name: jscpd (duplication)
+        run: npm run jscpd
+
   test:
     needs: install
     runs-on: ubuntu-latest

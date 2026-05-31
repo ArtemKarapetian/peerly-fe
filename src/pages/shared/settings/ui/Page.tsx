@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { AppearanceCard, LanguageCard, TimezoneCard, AboutCard } from "@/widgets/settings-cards";
+import { AppShell } from "@/widgets/app-shell";
+import { AppearanceCard, LanguageCard, AboutCard } from "@/widgets/settings-cards";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
@@ -20,7 +20,6 @@ export default function SettingsPage() {
 
         <AppearanceCard />
         <LanguageCard />
-        <TimezoneCard />
         <AboutCard />
       </div>
     </AppShell>

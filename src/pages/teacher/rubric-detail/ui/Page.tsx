@@ -11,7 +11,7 @@ import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { type RubricDetail, useDeleteRubric, useRubric, useUpdateRubric } from "@/entities/rubric";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { RubricEditor, RubricPreview, type RubricEditorData } from "@/widgets/rubric-editor";
 
 type ViewMode = "edit" | "preview";
@@ -179,6 +179,7 @@ export default function TeacherRubricDetailPage() {
 
         {viewMode === "edit" ? (
           <RubricEditor
+            key={detail.rubric.id}
             rubric={editable}
             onSave={(u) => void handleSave(u)}
             onCancel={() => void navigate(ROUTES.teacherRubrics)}

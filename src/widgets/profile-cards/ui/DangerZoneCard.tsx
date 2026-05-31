@@ -16,7 +16,7 @@ export function DangerZoneCard() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-base font-medium text-foreground mb-1">
-            {t("widget.profileDanger.logout")}
+            {t("widget.profileDanger.title")}
           </h2>
           <p className="text-sm text-muted-foreground">{t("widget.profileDanger.subtitle")}</p>
         </div>

@@ -40,10 +40,10 @@ describe("storageApi.upload", () => {
     const file = new File(["data"], "a.pdf", { type: "application/pdf" });
     const out = await storageApi.upload(file, { kind: "homework", homeworkId: "hw-1" });
 
-    expect(httpMock.get.mock.calls[0][0]).toBe("/storage/uploadUrl");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/storage/uploadUrl");
     expect((fetchSpy.mock.calls[0] as unknown[])[0]).toBe("https://s3/put");
-    expect(httpMock.post.mock.calls[0][0]).toBe("/homeworks/hw-1/file");
-    expect(httpMock.post.mock.calls[0][1]).toMatchObject({
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/homeworks/hw-1/file");
+    expect(httpMock.post.mock.calls[0]![1]).toMatchObject({
       storageId: "stg-1",
       fileName: "a.pdf",
     });
@@ -62,7 +62,7 @@ describe("storageApi.upload", () => {
       submissionId: "sub-7",
     });
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/submissions/sub-7/file");
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/submissions/sub-7/file");
   });
 
   it("throws when the storage PUT fails", async () => {
@@ -81,7 +81,7 @@ describe("storageApi.getDownloadUrl", () => {
   it("hits /storage/downloadUrl/:fileId and returns the url", async () => {
     httpMock.get.mockResolvedValueOnce({ url: "https://dl/x" });
     const out = await storageApi.getDownloadUrl("f-9");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/storage/downloadUrl/f-9");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/storage/downloadUrl/f-9");
     expect(out).toBe("https://dl/x");
   });
 });
@@ -90,7 +90,7 @@ describe("storageApi.triggerDownload", () => {
   it("creates an anchor with download attribute when fileName is provided", () => {
     const appendSpy = vi.spyOn(document.body, "appendChild");
     storageApi.triggerDownload("https://x/y", "report.pdf");
-    const a = appendSpy.mock.calls[0][0] as HTMLAnchorElement;
+    const a = appendSpy.mock.calls[0]![0] as HTMLAnchorElement;
     expect(a.tagName).toBe("A");
     expect(a.href).toContain("https://x/y");
     expect(a.download).toBe("report.pdf");
@@ -101,7 +101,7 @@ describe("storageApi.triggerDownload", () => {
   it("opens in a new tab when no fileName is provided", () => {
     const appendSpy = vi.spyOn(document.body, "appendChild");
     storageApi.triggerDownload("https://x/z");
-    const a = appendSpy.mock.calls[0][0] as HTMLAnchorElement;
+    const a = appendSpy.mock.calls[0]![0] as HTMLAnchorElement;
     expect(a.target).toBe("_blank");
     appendSpy.mockRestore();
   });
@@ -111,12 +111,12 @@ describe("storageApi delete helpers", () => {
   it("deleteHomeworkFile DELETEs /homeworks/:id/file/:fileId", async () => {
     httpMock.delete.mockResolvedValueOnce(undefined);
     await storageApi.deleteHomeworkFile("hw-1", "f-1");
-    expect(httpMock.delete.mock.calls[0][0]).toBe("/homeworks/hw-1/file/f-1");
+    expect(httpMock.delete.mock.calls[0]![0]).toBe("/homeworks/hw-1/file/f-1");
   });
 
   it("deleteSubmissionFile DELETEs /submissions/:id/files/:fileId", async () => {
     httpMock.delete.mockResolvedValueOnce(undefined);
     await storageApi.deleteSubmissionFile("sub-1", "f-1");
-    expect(httpMock.delete.mock.calls[0][0]).toBe("/submissions/sub-1/files/f-1");
+    expect(httpMock.delete.mock.calls[0]![0]).toBe("/submissions/sub-1/files/f-1");
   });
 });

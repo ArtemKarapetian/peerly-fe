@@ -1,10 +1,6 @@
 import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * TaskSearch - Assignment search field
- */
-
 interface TaskSearchProps {
   value: string;
   onChange: (value: string) => void;

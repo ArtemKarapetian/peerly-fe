@@ -8,7 +8,7 @@ import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { useTeacherAssignmentDetail } from "@/entities/assignment";
 import { useCourse } from "@/entities/course";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { useDeleteAssignment } from "../model/useDeleteAssignment";
 
@@ -50,7 +50,7 @@ export default function TeacherAssignmentDetailsPage() {
   }
 
   const { assignment, submittedCount } = detail;
-  const courseName = course?.title ?? "";
+  const courseName = course?.name ?? "";
   const isPublished = assignment.backendStatus !== "draft";
 
   return (

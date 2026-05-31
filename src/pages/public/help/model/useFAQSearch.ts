@@ -32,7 +32,6 @@ export function useFAQSearch() {
     () => ({
       "getting-started": filtered.filter((i) => i.category === "getting-started"),
       troubleshooting: filtered.filter((i) => i.category === "troubleshooting"),
-      contact: filtered.filter((i) => i.category === "contact"),
     }),
     [filtered],
   );

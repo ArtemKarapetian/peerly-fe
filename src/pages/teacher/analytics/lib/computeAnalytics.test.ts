@@ -82,10 +82,10 @@ describe("computeAssignmentMetrics", () => {
       selectedCourseId: "c1",
     });
     expect(metrics).toHaveLength(2);
-    expect(metrics[0].submissionRate).toBe(0);
-    expect(metrics[0].reviewCompletionRate).toBe(0);
-    expect(metrics[0].avgScore).toBe(0);
-    expect(metrics[0].hasDiscrepancyData).toBe(false);
+    expect(metrics[0]!.submissionRate).toBe(0);
+    expect(metrics[0]!.reviewCompletionRate).toBe(0);
+    expect(metrics[0]!.avgScore).toBe(0);
+    expect(metrics[0]!.hasDiscrepancyData).toBe(false);
   });
 
   it("filters by selectedAssignmentId", () => {
@@ -97,7 +97,7 @@ describe("computeAssignmentMetrics", () => {
       selectedAssignmentId: "a1",
     });
     expect(metrics).toHaveLength(1);
-    expect(metrics[0].id).toBe("a1");
+    expect(metrics[0]!.id).toBe("a1");
   });
 
   it("ignores assignments from other courses", () => {
@@ -233,8 +233,8 @@ describe("computeGradebook", () => {
       students: STUDENTS,
       selectedCourseId: "c1",
     });
-    expect(book[0].scores.a1).toBeNull();
-    expect(book[0].finalScore).toBeNull();
+    expect(book[0]!.scores.a1).toBeNull();
+    expect(book[0]!.finalScore).toBeNull();
   });
 
   it("filters columns when selectedAssignmentId is set", () => {
@@ -245,7 +245,7 @@ describe("computeGradebook", () => {
       selectedCourseId: "c1",
       selectedAssignmentId: "a1",
     });
-    expect(Object.keys(book[0].scores)).toEqual(["a1"]);
+    expect(Object.keys(book[0]!.scores)).toEqual(["a1"]);
   });
 
   it("computes per-student averaged final score from submitted reviews", () => {

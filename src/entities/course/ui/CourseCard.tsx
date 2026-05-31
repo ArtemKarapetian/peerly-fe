@@ -15,10 +15,13 @@ interface CourseCardProps {
 
 function getInitials(name: string): string {
   const parts = name.split(" ");
-  if (parts.length >= 2) return parts[0][0] + parts[1][0];
+  const a = parts[0]?.[0] ?? "";
+  const b = parts[1]?.[0] ?? "";
+  if (a && b) return (a + b).toUpperCase();
   return name.substring(0, 2).toUpperCase();
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function CourseCard({
   title,
   teacher,

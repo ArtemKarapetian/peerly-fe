@@ -48,7 +48,7 @@ describe("assignmentHttpRepo", () => {
     await assignmentHttpRepo.getByCourse("course-7");
 
     expect(httpMock.get).toHaveBeenCalledTimes(1);
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/student\/courses\/course-7\/homeworks\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/student\/courses\/course-7\/homeworks\?/);
   });
 
   it("getByCourse hits the teacher endpoint when role is Teacher", async () => {
@@ -71,9 +71,9 @@ describe("assignmentHttpRepo", () => {
 
     const out = await assignmentHttpRepo.getByCourse("c-9");
 
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/teacher\/courses\/c-9\/homeworks\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/teacher\/courses\/c-9\/homeworks\?/);
     expect(out).toHaveLength(1);
-    expect(out[0].id).toBe("hw-1");
+    expect(out[0]!.id).toBe("hw-1");
   });
 
   it("getById returns undefined on 404 ApiError", async () => {
@@ -115,7 +115,7 @@ describe("assignmentHttpRepo", () => {
 
     const out = await assignmentHttpRepo.getTeacherDetail("hw-2");
 
-    expect(httpMock.get.mock.calls[0][0]).toBe("/teacher/homeworks/hw-2");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/teacher/homeworks/hw-2");
     expect(out?.submittedCount).toBe(7);
     expect(out?.assignment.id).toBe("hw-2");
   });
@@ -130,8 +130,8 @@ describe("assignmentHttpRepo", () => {
       reviewCount: 2,
     });
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/courses/c-1/homeworks");
-    expect(httpMock.post.mock.calls[0][1]).toMatchObject({
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/courses/c-1/homeworks");
+    expect(httpMock.post.mock.calls[0]![1]).toMatchObject({
       name: "Title",
       amountOfReviewers: 2,
       deadline: "2026-01-01T00:00:00Z",
@@ -149,7 +149,7 @@ describe("assignmentHttpRepo", () => {
       reviewCount: 1,
     });
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/groups/g-3/homeworks");
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/groups/g-3/homeworks");
   });
 
   it("updateDraft PUTs the mapped body to /homeworks/:id", async () => {
@@ -162,8 +162,11 @@ describe("assignmentHttpRepo", () => {
       reviewCount: 3,
     });
 
-    expect(httpMock.put.mock.calls[0][0]).toBe("/homeworks/hw-x");
-    expect(httpMock.put.mock.calls[0][1]).toMatchObject({ name: "Updated", amountOfReviewers: 3 });
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/homeworks/hw-x");
+    expect(httpMock.put.mock.calls[0]![1]).toMatchObject({
+      name: "Updated",
+      amountOfReviewers: 3,
+    });
   });
 
   it("postponeDeadlines serialises Date arguments", async () => {
@@ -175,8 +178,8 @@ describe("assignmentHttpRepo", () => {
       new Date("2026-03-08T00:00:00Z"),
     );
 
-    expect(httpMock.put.mock.calls[0][0]).toBe("/homeworks/hw-x/deadlines");
-    expect(httpMock.put.mock.calls[0][1]).toEqual({
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/homeworks/hw-x/deadlines");
+    expect(httpMock.put.mock.calls[0]![1]).toEqual({
       deadline: "2026-03-01T00:00:00.000Z",
       reviewDeadline: "2026-03-08T00:00:00.000Z",
     });

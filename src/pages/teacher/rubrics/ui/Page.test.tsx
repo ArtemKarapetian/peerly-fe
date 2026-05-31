@@ -20,7 +20,7 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k, i18n: { language: "en" } }),
 }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
@@ -97,7 +97,7 @@ describe("TeacherRubricsPage", () => {
 
     renderPage();
 
-    await user.click(screen.getAllByText(/teacher\.rubrics\.create/i)[0]);
+    await user.click(screen.getAllByText(/teacher\.rubrics\.create/i)[0]!);
 
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
     expect(navigateMock).toHaveBeenCalledWith("/teacher/rubrics/new-1");

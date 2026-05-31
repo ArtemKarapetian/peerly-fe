@@ -10,7 +10,7 @@ import { assignmentRepo } from "@/entities/assignment";
 
 import type { AssignmentFormData } from "@/features/assignment/create/model/types";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { blankFormData, clearDraftStorage, loadDraftFromStorage } from "../lib/draftStorage";
 

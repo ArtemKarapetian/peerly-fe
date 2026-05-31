@@ -69,7 +69,7 @@ describe("rubric queries", () => {
       });
     });
     expect(repoMock.create).toHaveBeenCalledTimes(1);
-    expect(repoMock.create.mock.calls[0][0].name).toBe("X");
+    expect(repoMock.create.mock.calls[0]![0]!.name).toBe("X");
   });
 
   it("useUpdateRubric calls repo.update with id+input", async () => {
@@ -85,8 +85,8 @@ describe("rubric queries", () => {
       });
     });
     expect(repoMock.update).toHaveBeenCalledTimes(1);
-    expect(repoMock.update.mock.calls[0][0]).toBe("r1");
-    expect(repoMock.update.mock.calls[0][1].name).toBe("Y");
+    expect(repoMock.update.mock.calls[0]![0]).toBe("r1");
+    expect(repoMock.update.mock.calls[0]![1]!.name).toBe("Y");
   });
 
   it("useDeleteRubric calls repo.delete with the id", async () => {

@@ -17,13 +17,13 @@ describe("ReviewSort", () => {
     const { container } = render(<ReviewSort direction="asc" onToggle={() => {}} />);
     const icons = container.querySelectorAll("svg");
     expect(icons).toHaveLength(1);
-    expect(icons[0].classList.contains("lucide-arrow-up")).toBe(true);
+    expect(icons[0]!.classList.contains("lucide-arrow-up")).toBe(true);
   });
 
   it("shows the down arrow when descending", () => {
     const { container } = render(<ReviewSort direction="desc" onToggle={() => {}} />);
     const icons = container.querySelectorAll("svg");
-    expect(icons[0].classList.contains("lucide-arrow-down")).toBe(true);
+    expect(icons[0]!.classList.contains("lucide-arrow-down")).toBe(true);
   });
 
   it("calls onToggle when clicked", () => {

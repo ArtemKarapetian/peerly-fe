@@ -1,1 +1,1 @@
-export { default as LandingPage } from "./ui/Page";
+export { default } from "./ui/Page";

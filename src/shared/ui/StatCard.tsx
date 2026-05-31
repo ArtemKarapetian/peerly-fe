@@ -24,7 +24,7 @@ export function StatCard({ label, value, icon, accent, compact = false }: StatCa
         >
           {value}
         </p>
-        <p className="text-2xs text-[--text-secondary] truncate">{label}</p>
+        <p className="text-2xs text-[--text-secondary] leading-tight">{label}</p>
       </div>
     </div>
   );

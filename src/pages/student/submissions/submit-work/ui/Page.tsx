@@ -11,9 +11,9 @@ import { useCourse } from "@/entities/course";
 import { storageApi } from "@/entities/storage";
 import { useMySubmission } from "@/entities/work";
 
-import type { TaskRules } from "@/features/submission/submit-work/ui/TaskRulesCard";
+import type { TaskRules } from "@/features/submission/submit-work";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { formatDeadline, normalizeSavedComment } from "../lib/formatters";
 import { useSubmitWorkMutations } from "../model/useSubmitWorkMutations";
@@ -41,7 +41,7 @@ export default function SubmitWorkPage() {
   const [syncedId, setSyncedId] = useState<string | null>(null);
   const [now] = useState(() => Date.now());
 
-  const courseName = course?.title ?? "";
+  const courseName = course?.name ?? "";
   const taskTitle = hw?.title ?? "";
   const dueDate = hw?.dueDate;
   const isDeadlinePassed = dueDate ? dueDate.getTime() < now : false;

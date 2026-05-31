@@ -7,10 +7,10 @@ import { humanizeApiError } from "@/shared/api";
 import { Label, TextField, Textarea } from "@/shared/ui";
 
 import { usePublishCourse, useUpdateCourse } from "@/entities/course";
-import { DemoCourse } from "@/entities/course/model/types.ts";
+import { Course } from "@/entities/course";
 
 interface TeacherCourseSettingsProps {
-  course: DemoCourse;
+  course: Course;
 }
 
 export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
@@ -84,18 +84,6 @@ export function TeacherCourseSettings({ course }: TeacherCourseSettingsProps) {
       {isDraft ? (
         <p className="text-13 text-muted-foreground">{t("teacher.courseDetail.publishHint")}</p>
       ) : null}
-
-      <div className="mt-8 pt-6 border-t-2 border-border">
-        <h3 className="text-base font-medium text-destructive mb-2">
-          {t("widget.settings.dangerZone")}
-        </h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          {t("widget.settings.dangerDescription")}
-        </p>
-        <button className="px-4 py-2 bg-error-light text-destructive border-2 border-destructive rounded-md hover:bg-destructive hover:text-text-inverse transition-colors">
-          {t("widget.settings.deleteCourse")}
-        </button>
-      </div>
     </div>
   );
 }

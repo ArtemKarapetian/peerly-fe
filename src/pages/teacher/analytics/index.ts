@@ -1,1 +1,1 @@
-export { default as TeacherAnalyticsPage } from "./ui/Page";
+export { default } from "./ui/Page";

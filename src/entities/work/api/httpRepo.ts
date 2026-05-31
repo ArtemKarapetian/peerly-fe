@@ -9,26 +9,22 @@ import {
   type Id,
   type SubmittedHomeworkOverviewDto,
   type UpdateSubmittedHomeworkRequestBody,
+  fileFromDto,
   getSession,
   http,
   paged,
 } from "@/shared/api";
 
 import { mapDtoToSubmission, mapOverviewToSubmission } from "../model/mappers";
-import { fileFromDto, type DemoSubmission } from "../model/types";
+import type { Submission } from "../model/types";
 
-// BE wire shapes — translate to FE-clean shapes inside this module.
 type RawListCourses = { courseInfos: CourseDto[] };
 type RawListTeacherHomeworks = { teacherHomeworkInfos: HomeworkDto[] };
 type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewDto[] };
 type RawGetStudentHomework = { submittedHomeworkId: Id | null };
 
 export const workHttpRepo = {
-  /**
-   * Teacher-scoped aggregate: all submissions across all visible homeworks.
-   * Students get an empty list because the BE has no symmetric endpoint.
-   */
-  getAll: async (): Promise<DemoSubmission[]> => {
+  getAll: async (): Promise<Submission[]> => {
     if (getSession()?.role !== "Teacher") return [];
     const courses = await http.get<RawListCourses>(paged("/teacher/courses"));
     const homeworksPerCourse = await Promise.all(
@@ -54,14 +50,14 @@ export const workHttpRepo = {
             mapOverviewToSubmission(s, { assignmentId: hwId }),
           );
         } catch {
-          return [] as DemoSubmission[];
+          return [] as Submission[];
         }
       }),
     );
     return lists.flat();
   },
 
-  listForHomework: async (homeworkId: string): Promise<DemoSubmission[]> => {
+  listForHomework: async (homeworkId: string): Promise<Submission[]> => {
     const res = await http.get<RawListSubmissionsOverview>(
       paged(`/teacher/homeworks/${homeworkId}/submissions`),
     );
@@ -70,11 +66,7 @@ export const workHttpRepo = {
     );
   },
 
-  /**
-   * Student's own submission for a homework — inferred from the student
-   * homework detail endpoint.
-   */
-  getMineForHomework: async (homeworkId: string): Promise<DemoSubmission | null> => {
+  getMineForHomework: async (homeworkId: string): Promise<Submission | null> => {
     try {
       const res = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
       if (!res.submittedHomeworkId) return null;
@@ -90,7 +82,6 @@ export const workHttpRepo = {
     }
   },
 
-  /** One request to /student/homeworks/{id}, returns just the submission id if any. */
   getMineSubmissionId: async (homeworkId: string): Promise<string | null> => {
     try {
       const res = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
@@ -100,7 +91,7 @@ export const workHttpRepo = {
     }
   },
 
-  getById: async (submissionId: string): Promise<DemoSubmission | null> => {
+  getById: async (submissionId: string): Promise<Submission | null> => {
     try {
       if (getSession()?.role === "Teacher") {
         const res = await http.get<GetTeacherSubmittedHomeworkResponse>(

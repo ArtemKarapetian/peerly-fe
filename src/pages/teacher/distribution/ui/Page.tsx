@@ -15,7 +15,7 @@ import { courseRepo } from "@/entities/course";
 import { reviewRepo } from "@/entities/review";
 import { workRepo } from "@/entities/work";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { computeDistributions } from "../lib/computeDistributions";
 
@@ -130,7 +130,7 @@ export default function TeacherDistributionPage() {
       </div>
 
       <DistributionFiltersCard
-        courses={courses}
+        courses={courses.map((c) => ({ id: c.id, title: c.name }))}
         assignments={assignments ?? []}
         selectedCourse={selectedCourse}
         selectedAssignment={selectedAssignment}

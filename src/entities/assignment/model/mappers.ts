@@ -1,8 +1,8 @@
 import type { CreateHomeworkRequestBody, HomeworkDto, HomeworkStatus } from "@/shared/api";
 
-import type { CreateAssignmentInput, DemoAssignment } from "./types";
+import type { CreateAssignmentInput, Assignment } from "./types";
 
-function uiStatus(raw: HomeworkStatus): DemoAssignment["status"] {
+function uiStatus(raw: HomeworkStatus): Assignment["status"] {
   if (raw === "draft") return "draft";
   if (raw === "finished" || raw === "confirmed" || raw === "deleted") return "closed";
   return "published";
@@ -11,7 +11,7 @@ function uiStatus(raw: HomeworkStatus): DemoAssignment["status"] {
 export function mapHomeworkToAssignment(
   dto: HomeworkDto,
   context: { courseId?: string; groupId?: string } = {},
-): DemoAssignment {
+): Assignment {
   return {
     id: String(dto.id),
     courseId: context.courseId ?? "",

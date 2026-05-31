@@ -1,9 +1,8 @@
-import { AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
-import { Card } from "@/shared/ui";
+import { Card, FormErrorAlert } from "@/shared/ui";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
@@ -26,15 +25,7 @@ export function LoginForm() {
         <p className="text-15 text-muted-foreground">{t("auth.loginSubtitle")}</p>
       </div>
 
-      {submitError && (
-        <div
-          role="alert"
-          className="bg-destructive/10 border-2 border-destructive/50 rounded-lg px-4 py-3 flex items-start gap-3"
-        >
-          <AlertCircle className="size-5 text-destructive flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-destructive font-medium whitespace-pre-line">{submitError}</p>
-        </div>
-      )}
+      {submitError && <FormErrorAlert message={submitError} />}
 
       <form
         onSubmit={(e) => {

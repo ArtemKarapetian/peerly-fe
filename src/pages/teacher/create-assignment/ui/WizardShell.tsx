@@ -21,7 +21,7 @@ import {
 import { validateDeadlines } from "@/features/assignment/create/lib/validateDeadlines";
 import type { AssignmentFormData, RubricOption } from "@/features/assignment/create/model/types";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { saveDraft } from "../lib/draftStorage";
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Badge } from "./badge";
 
@@ -29,7 +29,7 @@ export const Warning: Story = {
   args: { children: "Pending", variant: "warning" },
 };
 
-export const Error: Story = {
+export const ErrorBadge: Story = {
   args: { children: "Rejected", variant: "error" },
 };
 

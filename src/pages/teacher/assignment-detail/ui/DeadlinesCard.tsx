@@ -1,7 +1,7 @@
 import { Calendar } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { formatLocalDate } from "../lib/formatDate";
+import { formatDateTimeLong } from "@/shared/lib/formatDate";
 
 interface DeadlinesCardProps {
   dueDate: Date;
@@ -23,12 +23,12 @@ export function DeadlinesCard({ dueDate, reviewDeadline, locale }: DeadlinesCard
       <div className="grid grid-cols-1 tablet:grid-cols-2 gap-6">
         <DeadlineField
           label={t("teacher.assignmentDetail.submissionDeadline")}
-          value={formatLocalDate(dueDate, locale)}
+          value={formatDateTimeLong(dueDate.toISOString(), locale)}
         />
         {reviewDeadline && (
           <DeadlineField
             label={t("teacher.assignmentDetail.reviewDeadline")}
-            value={formatLocalDate(reviewDeadline, locale)}
+            value={formatDateTimeLong(reviewDeadline.toISOString(), locale)}
           />
         )}
       </div>
