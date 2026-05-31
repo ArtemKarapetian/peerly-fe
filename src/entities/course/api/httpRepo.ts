@@ -118,6 +118,6 @@ export const courseHttpRepo = {
   },
 
   publish: async (courseId: string): Promise<void> => {
-    await http.put<void>(`/teacher/courses/${courseId}/publish`);
+    await http.put<void>(`/courses/${courseId}/publish`);
   },
 };

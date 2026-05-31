@@ -114,29 +114,28 @@ export default function TeacherRubricsPage() {
           )}
         </Card>
       ) : (
-        <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
+        <ul className="border-2 border-border rounded-lg bg-card overflow-hidden divide-y divide-border">
           {currentItems.map((rubric) => (
-            <button
-              key={rubric.id}
-              type="button"
-              onClick={() => void navigate(`/teacher/rubrics/${rubric.id}`)}
-              className="group relative bg-card border-2 border-border rounded-lg p-5 text-left flex flex-col gap-4 cursor-pointer hover:border-brand-primary hover:shadow-[var(--shadow-md)] transition-all"
-            >
-              <div className="flex items-start gap-3">
-                <div className="shrink-0 w-10 h-10 rounded-md bg-brand-primary-lighter/40 flex items-center justify-center group-hover:bg-brand-primary-lighter transition-colors">
-                  <Layers className="w-5 h-5 text-brand-primary" />
+            <li key={rubric.id}>
+              <button
+                type="button"
+                onClick={() => void navigate(`/teacher/rubrics/${rubric.id}`)}
+                className="group w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface-hover transition-colors"
+              >
+                <div className="shrink-0 w-9 h-9 rounded-md bg-brand-primary-lighter/40 flex items-center justify-center group-hover:bg-brand-primary-lighter transition-colors">
+                  <Layers className="w-4 h-4 text-brand-primary" />
                 </div>
-                <h3 className="text-base font-medium text-foreground tracking-[-0.2px] line-clamp-2 leading-snug">
+                <span className="flex-1 min-w-0 text-15 font-medium text-foreground truncate">
                   {rubric.name}
-                </h3>
-              </div>
-              <span className="inline-flex items-center gap-1 text-13 text-brand-primary font-medium self-end group-hover:gap-2 transition-all">
-                {t("teacher.rubrics.openRubric")}
-                <ChevronRight className="w-3.5 h-3.5" />
-              </span>
-            </button>
+                </span>
+                <span className="shrink-0 inline-flex items-center gap-1 text-13 text-brand-primary font-medium opacity-70 group-hover:opacity-100 group-hover:gap-2 transition-all">
+                  {t("teacher.rubrics.openRubric")}
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {filteredRubrics.length > 0 && (
