@@ -9,9 +9,11 @@ import { CreateCourseButton } from "./CreateCourseButton";
 interface CoursesHeroCardProps {
   total: number;
   active: number;
+  draft: number;
+  archived: number;
 }
 
-export function CoursesHeroCard({ total, active }: CoursesHeroCardProps) {
+export function CoursesHeroCard({ total, active, draft, archived }: CoursesHeroCardProps) {
   const { t } = useTranslation();
   return (
     <Card className="mb-6">
@@ -21,7 +23,7 @@ export function CoursesHeroCard({ total, active }: CoursesHeroCardProps) {
             {t("teacher.courses.title")}
           </h1>
           <p className="text-15 text-muted-foreground">
-            <CoursesCountLabel total={total} active={active} />
+            <CoursesCountLabel total={total} active={active} draft={draft} archived={archived} />
           </p>
         </div>
         <div className="shrink-0">
@@ -32,16 +34,27 @@ export function CoursesHeroCard({ total, active }: CoursesHeroCardProps) {
   );
 }
 
-function CoursesCountLabel({ total, active }: { total: number; active: number }) {
+function CoursesCountLabel({
+  total,
+  active,
+  draft,
+  archived,
+}: {
+  total: number;
+  active: number;
+  draft: number;
+  archived: number;
+}) {
   const { t } = useTranslation();
-  if (active === 0) return <>{t("teacher.courses.createFirst")}</>;
-  if (total === active) return <>{t("teacher.courses.coursesCount", { count: active })}</>;
-  return (
-    <>
-      {active} {t("teacher.courses.activeCourses", { count: active })}, {total - active}{" "}
-      {t("teacher.courses.inArchive")}
-    </>
-  );
+  if (total === 0) return <>{t("teacher.courses.createFirst")}</>;
+
+  const parts: string[] = [];
+  if (active > 0) parts.push(`${active} ${t("teacher.courses.activeCourses", { count: active })}`);
+  if (draft > 0) parts.push(`${draft} ${t("teacher.courses.inDraft", { count: draft })}`);
+  if (archived > 0)
+    parts.push(`${archived} ${t("teacher.courses.inArchive", { count: archived })}`);
+
+  return <>{parts.join(", ")}</>;
 }
 
 export type { CourseRow };
