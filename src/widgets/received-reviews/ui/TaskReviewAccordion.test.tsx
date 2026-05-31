@@ -11,6 +11,7 @@ const tasks = [
     taskTitle: "Linear Equations",
     status: "PUBLISHED" as const,
     finalMark: 4,
+    maxScore: 5,
     reviewsReceived: 3,
     reviewsRequired: 3,
     reviews: [
@@ -27,6 +28,7 @@ const tasks = [
     taskTitle: "Triangles",
     status: "IN_REVIEW" as const,
     finalMark: null,
+    maxScore: 5,
     reviewsReceived: 1,
     reviewsRequired: 3,
     reviews: [],
