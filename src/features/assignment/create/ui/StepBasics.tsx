@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { Label, Select, TextField, Textarea } from "@/shared/ui";
 
 import { courseRepo } from "@/entities/course";
+import { groupRepo } from "@/entities/group";
 
 import type { AssignmentFormData } from "../model/types";
 
@@ -10,9 +12,10 @@ interface StepBasicsProps {
   data: AssignmentFormData;
   onUpdate: (updates: Partial<AssignmentFormData>) => void;
   lockCourse?: boolean;
+  lockGroup?: boolean;
 }
 
-export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
+export function StepBasics({ data, onUpdate, lockCourse, lockGroup }: StepBasicsProps) {
   const { t } = useTranslation();
   const { data: courses } = useAsync(() => courseRepo.getAll(), []);
 
@@ -25,14 +28,12 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.basics.courseLabel")}
-        </label>
-        <select
+        <Label>{t("feature.assignmentCreate.basics.courseLabel")}</Label>
+        <Select
+          aria-label={t("feature.assignmentCreate.basics.courseLabel")}
           value={data.courseId}
-          onChange={(e) => onUpdate({ courseId: e.target.value })}
+          onChange={(e) => onUpdate({ courseId: e.target.value, groupId: null })}
           disabled={lockCourse}
-          className="w-full px-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors bg-card disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <option value="">{t("feature.assignmentCreate.basics.coursePlaceholder")}</option>
           {(courses ?? []).map((course) => (
@@ -40,7 +41,7 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
               {course.title}
             </option>
           ))}
-        </select>
+        </Select>
         {lockCourse && (
           <p className="text-xs text-muted-foreground mt-1">
             {t("feature.assignmentCreate.basics.courseLockedHint")}
@@ -48,34 +49,75 @@ export function StepBasics({ data, onUpdate, lockCourse }: StepBasicsProps) {
         )}
       </div>
 
+      <GroupField
+        courseId={data.courseId}
+        value={data.groupId}
+        onChange={(groupId) => onUpdate({ groupId })}
+        disabled={lockGroup}
+      />
+
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.basics.titleLabel")}
-        </label>
-        <input
-          type="text"
+        <Label>{t("feature.assignmentCreate.basics.titleLabel")}</Label>
+        <TextField
           value={data.title}
           onChange={(e) => onUpdate({ title: e.target.value })}
           placeholder={t("feature.assignmentCreate.basics.titlePlaceholder")}
-          className="w-full px-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.basics.descriptionLabel")}
-        </label>
-        <textarea
+        <Label>{t("feature.assignmentCreate.basics.descriptionLabel")}</Label>
+        <Textarea
           value={data.description}
           onChange={(e) => onUpdate({ description: e.target.value })}
           rows={6}
           placeholder={t("feature.assignmentCreate.basics.descriptionPlaceholder")}
-          className="w-full px-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors resize-none"
         />
         <p className="text-13 text-muted-foreground mt-1">
           {t("feature.assignmentCreate.basics.characters", { count: data.description.length })}
         </p>
       </div>
+    </div>
+  );
+}
+
+interface GroupFieldProps {
+  courseId: string;
+  value: string | null;
+  onChange: (groupId: string | null) => void;
+  disabled?: boolean;
+}
+
+function GroupField({ courseId, value, onChange, disabled }: GroupFieldProps) {
+  const { t } = useTranslation();
+  const { data: groups, isLoading } = useAsync(
+    () => (courseId ? groupRepo.listForCourse(courseId) : Promise.resolve([])),
+    [courseId],
+  );
+
+  const selectDisabled = disabled || !courseId || isLoading;
+
+  return (
+    <div>
+      <Label>{t("feature.assignmentCreate.basics.audienceLabel")}</Label>
+      <Select
+        aria-label={t("feature.assignmentCreate.basics.audienceLabel")}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value || null)}
+        disabled={selectDisabled}
+      >
+        <option value="">{t("feature.assignmentCreate.basics.audienceWholeCourse")}</option>
+        {(groups ?? []).map((g) => (
+          <option key={g.id} value={g.id}>
+            {g.name}
+          </option>
+        ))}
+      </Select>
+      <p className="text-xs text-muted-foreground mt-1">
+        {value
+          ? t("feature.assignmentCreate.basics.audienceGroupHint")
+          : t("feature.assignmentCreate.basics.audienceCourseHint")}
+      </p>
     </div>
   );
 }

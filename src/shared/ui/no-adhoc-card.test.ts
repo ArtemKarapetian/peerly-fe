@@ -17,9 +17,9 @@ const CARD_SHELL = /bg-card[^"`]*border-2[^"`]*border-border[^"`]*rounded-xl/;
 const PROJECT_ROOT = join(__dirname, "..", "..");
 const ALLOWED_PATHS = new Set([
   join(PROJECT_ROOT, "shared", "ui", "card.tsx"),
-  // <section> elements in the Terms page intentionally keep the card markup
+  // <section> wrapper in the Terms page intentionally keeps the card markup
   // inline so the semantic <section> tag is preserved.
-  join(PROJECT_ROOT, "pages", "public", "terms", "ui", "Page.tsx"),
+  join(PROJECT_ROOT, "pages", "public", "terms", "ui", "AnchoredSection.tsx"),
 ]);
 
 function* walk(dir: string): Generator<string> {

@@ -95,9 +95,9 @@ export const authApi = {
     }
   },
 
-  confirmEmail: (params: { token: string; userId: string }): Promise<{ userId: number | string }> =>
+  confirmEmail: (params: { token: string }): Promise<{ userId: number | string }> =>
     http.get<{ userId: number | string }>(
-      `/auth/confirm-email?token=${encodeURIComponent(params.token)}&userId=${encodeURIComponent(params.userId)}`,
+      `/auth/confirm-email?token=${encodeURIComponent(params.token)}`,
       { skipAuthRefresh: true },
     ),
 

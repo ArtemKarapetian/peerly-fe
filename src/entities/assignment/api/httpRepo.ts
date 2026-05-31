@@ -1,4 +1,5 @@
 import {
+  ApiError,
   type CourseDto,
   type CreateHomeworkResponse,
   type FileDto,
@@ -40,7 +41,7 @@ async function findCourseIdForHomework(homeworkId: string): Promise<string | und
         const hws = await fetchCourseHomeworks(String(c.id));
         if (hws.some((h) => String(h.id) === homeworkId)) return String(c.id);
       } catch {
-        // continue
+        // noop
       }
     }
   } catch {
@@ -100,8 +101,9 @@ export const assignmentHttpRepo = {
       const raw = await http.get<RawGetStudentHomework>(`/student/homeworks/${homeworkId}`);
       const courseId = await findCourseIdForHomework(homeworkId);
       return mapHomeworkToAssignment(raw.studentHomeworkInfo, { courseId });
-    } catch {
-      return undefined;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return undefined;
+      throw err;
     }
   },
 
@@ -113,8 +115,9 @@ export const assignmentHttpRepo = {
         assignment: mapHomeworkToAssignment(raw.teacherHomeworkInfo, { courseId }),
         submittedCount: raw.submittedCount,
       };
-    } catch {
-      return undefined;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return undefined;
+      throw err;
     }
   },
 

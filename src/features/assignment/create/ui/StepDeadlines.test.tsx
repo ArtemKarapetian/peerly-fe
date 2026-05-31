@@ -9,6 +9,7 @@ import { StepDeadlines } from "./StepDeadlines";
 function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormData {
   return {
     courseId: "c-1",
+    groupId: null,
     title: "T",
     description: "",
     submissionDeadline: null,

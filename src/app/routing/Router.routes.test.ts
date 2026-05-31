@@ -36,37 +36,6 @@ describe("routeRegistry", () => {
     }
   });
 
-  it("gates demo-flag routes with their respective flag", () => {
-    expect(byPath.get(ROUTES.resetPassword)?.demoFlag).toBe("enablePasswordReset");
-    expect(byPath.get(ROUTES.verifyEmail)?.demoFlag).toBe("enableEmailConfirmation");
-  });
-
-  it("demo-flag routes carry a redirectTo target that exists in ROUTES (so DemoFlagRoute does not bounce users to a dead URL)", () => {
-    const knownPaths = new Set<string>(
-      Object.values(ROUTES).flatMap((v) => (typeof v === "string" ? [v] : [])),
-    );
-    for (const r of routeRegistry) {
-      if (!r.demoFlag) continue;
-      expect(r.redirectTo, `${r.path} demo-flag route is missing redirectTo`).toBeDefined();
-      expect(
-        knownPaths.has(r.redirectTo ?? ""),
-        `${r.path} demo-flag fallback ${r.redirectTo ?? "<missing>"} is not a known ROUTES.* value`,
-      ).toBe(true);
-    }
-  });
-
-  it("no demo-flag route silently shares its flag with another — each flag belongs to exactly one route", () => {
-    const seen = new Map<string, string>();
-    for (const r of routeRegistry) {
-      if (!r.demoFlag) continue;
-      const prev = seen.get(r.demoFlag);
-      if (prev) {
-        throw new Error(`Demo flag ${r.demoFlag} is gating both ${prev} and ${r.path}`);
-      }
-      seen.set(r.demoFlag, r.path);
-    }
-  });
-
   it("marks login/register as publicOnly so authenticated users bounce away", () => {
     expect(byPath.get(ROUTES.login)?.access).toBe("publicOnly");
     expect(byPath.get(ROUTES.register)?.access).toBe("publicOnly");

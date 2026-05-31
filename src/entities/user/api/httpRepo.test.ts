@@ -46,10 +46,26 @@ const apiTeacher = {
 };
 
 describe("userHttpRepo", () => {
-  it("getAll resolves to empty list without network", async () => {
+  it("getAll fetches via SearchUsers (admin/users page uses this as bulk-list fallback)", async () => {
+    httpMock.get.mockResolvedValueOnce({
+      users: [
+        { id: 1, email: "a@x", name: "Alice", role: "Student" },
+        { id: 2, email: "b@x", name: "Bob", role: "Teacher" },
+      ],
+    });
     const out = await userHttpRepo.getAll();
-    expect(out).toEqual([]);
-    expect(httpMock.get).not.toHaveBeenCalled();
+    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/users\?/);
+    expect(httpMock.get.mock.calls[0][0]).toContain("filter.query=");
+    expect(httpMock.get.mock.calls[0][0]).toContain("limit=100");
+    expect(out).toHaveLength(2);
+    expect(out[0]).toMatchObject({ id: "1", name: "Alice", role: "Student" });
+    expect(out[1]).toMatchObject({ id: "2", name: "Bob", role: "Teacher" });
+  });
+
+  it("getAll defaults role to Student when BE omits it", async () => {
+    httpMock.get.mockResolvedValueOnce({ users: [{ id: 1, email: "a@x", name: "Alice" }] });
+    const out = await userHttpRepo.getAll();
+    expect(out[0].role).toBe("Student");
   });
 
   it("getStudent calls /students/:id and returns a mapped DemoUser", async () => {

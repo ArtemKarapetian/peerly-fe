@@ -1,6 +1,9 @@
+import { Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
+import { features } from "@/shared/config/features";
+import { Card, EmptyState } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -20,7 +23,17 @@ export default function SecurityPage() {
         </h1>
         <p className="text-base text-muted-foreground mb-8">{t("page.security.subtitle")}</p>
 
-        <ChangePasswordCard />
+        {features.passwordChange ? (
+          <ChangePasswordCard />
+        ) : (
+          <Card>
+            <EmptyState
+              icon={Lock}
+              title={t("page.security.passwordChangeUnavailableTitle")}
+              message={t("page.security.passwordChangeUnavailableMessage")}
+            />
+          </Card>
+        )}
       </div>
     </AppShell>
   );

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { Session } from "@/shared/api";
+import { ApiError, type Session } from "@/shared/api";
 
 import { assignmentHttpRepo } from "./httpRepo";
 
@@ -76,17 +76,29 @@ describe("assignmentHttpRepo", () => {
     expect(out[0].id).toBe("hw-1");
   });
 
-  it("getById returns undefined when the call fails", async () => {
+  it("getById returns undefined on 404 ApiError", async () => {
     currentSession = {
       userId: "s-1",
       userName: "S",
       email: "s@test.com",
       role: "Student",
     };
-    httpMock.get.mockRejectedValueOnce(new Error("404"));
+    httpMock.get.mockRejectedValueOnce(new ApiError(404, null, "not found"));
 
     const out = await assignmentHttpRepo.getById("hw-404");
     expect(out).toBeUndefined();
+  });
+
+  it("getById rethrows non-404 errors", async () => {
+    currentSession = {
+      userId: "s-1",
+      userName: "S",
+      email: "s@test.com",
+      role: "Student",
+    };
+    httpMock.get.mockRejectedValueOnce(new ApiError(500, null, "boom"));
+
+    await expect(assignmentHttpRepo.getById("hw-500")).rejects.toBeInstanceOf(ApiError);
   });
 
   it("getTeacherDetail returns the assignment plus submittedCount", async () => {

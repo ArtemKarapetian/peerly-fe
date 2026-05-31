@@ -36,7 +36,7 @@ interface AuthContextType {
     name: string;
     role: Role;
   }) => Promise<{ userId: string }>;
-  confirmEmail: (input: { token: string; userId: string }) => Promise<Session>;
+  confirmEmail: (input: { token: string }) => Promise<Session>;
   logout: () => Promise<void>;
   refreshMe: () => Promise<void>;
   updateMyName: (name: string) => Promise<void>;
@@ -120,8 +120,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const confirmEmail = useCallback<AuthContextType["confirmEmail"]>(async ({ token, userId }) => {
-    const res = await authApi.confirmEmail({ token, userId });
+  const confirmEmail = useCallback<AuthContextType["confirmEmail"]>(async ({ token }) => {
+    const res = await authApi.confirmEmail({ token });
     const { role } = await authApi.getMyRole();
     const me = await authApi.getMe(role).catch((err) => {
       logger.warn("getMe failed", err);

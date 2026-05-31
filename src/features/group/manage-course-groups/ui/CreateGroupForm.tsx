@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { TextField } from "@/shared/ui";
+
 interface CreateGroupFormProps {
   onSubmit: (name: string) => void | Promise<void>;
   onCancel: () => void;
@@ -12,9 +14,8 @@ export function CreateGroupForm({ onSubmit, onCancel }: CreateGroupFormProps) {
 
   return (
     <div className="mb-4 p-4 border-2 border-border rounded-md flex items-center gap-3">
-      <input
+      <TextField
         autoFocus
-        type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         onKeyDown={(e) => {
@@ -22,7 +23,7 @@ export function CreateGroupForm({ onSubmit, onCancel }: CreateGroupFormProps) {
           if (e.key === "Escape") onCancel();
         }}
         placeholder={t("widget.groups.groupNamePlaceholder")}
-        className="flex-1 px-4 py-2 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
+        className="flex-1 py-2"
       />
       <button
         onClick={() => void onSubmit(name)}

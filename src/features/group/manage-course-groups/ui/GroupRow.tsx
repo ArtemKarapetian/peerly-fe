@@ -1,8 +1,18 @@
-import { ChevronDown, ChevronRight, Pencil, Trash2, UserPlus } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  FileCheck,
+  Pencil,
+  Trash2,
+  UserPlus,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAsync } from "@/shared/lib/useAsync";
+import { TextField } from "@/shared/ui";
 
 import { groupRepo, type DemoGroup } from "@/entities/group";
 
@@ -11,9 +21,16 @@ interface GroupRowProps {
   onRename: (group: DemoGroup, newName: string) => void | Promise<unknown>;
   onDelete: (group: DemoGroup) => void;
   onAddStudents: (group: DemoGroup) => void;
+  onCreateHomework?: (group: DemoGroup) => void;
 }
 
-export function GroupRow({ group, onRename, onDelete, onAddStudents }: GroupRowProps) {
+export function GroupRow({
+  group,
+  onRename,
+  onDelete,
+  onAddStudents,
+  onCreateHomework,
+}: GroupRowProps) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [renaming, setRenaming] = useState(false);
@@ -28,54 +45,87 @@ export function GroupRow({ group, onRename, onDelete, onAddStudents }: GroupRowP
     [expanded, group.id],
   );
 
-  const submitRename = () => {
+  const cancelRename = () => {
     setRenaming(false);
-    if (draft.trim() && draft.trim() !== group.name) {
-      void onRename(group, draft);
-    } else {
-      setDraft(group.name);
+    setDraft(group.name);
+  };
+
+  const submitRename = () => {
+    const next = draft.trim();
+    if (!next || next === group.name) {
+      cancelRename();
+      return;
     }
+    setRenaming(false);
+    void onRename(group, next);
   };
 
   return (
     <li className="border-2 border-border rounded-md overflow-hidden">
       <div className="flex items-center gap-3 p-4">
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-2 flex-1 text-left hover:text-brand-primary transition-colors min-w-0"
-          aria-expanded={expanded}
-        >
-          {expanded ? (
-            <ChevronDown className="w-4 h-4 shrink-0" />
-          ) : (
-            <ChevronRight className="w-4 h-4 shrink-0" />
-          )}
-          {renaming ? (
-            <input
+        {renaming ? (
+          <div className="flex items-center gap-1 flex-1 min-w-0">
+            {expanded ? (
+              <ChevronDown className="w-4 h-4 shrink-0" />
+            ) : (
+              <ChevronRight className="w-4 h-4 shrink-0" />
+            )}
+            <TextField
               autoFocus
-              type="text"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") submitRename();
-                if (e.key === "Escape") {
-                  setRenaming(false);
-                  setDraft(group.name);
-                }
+                if (e.key === "Escape") cancelRename();
               }}
-              onBlur={submitRename}
-              onClick={(e) => e.stopPropagation()}
-              className="px-2 py-1 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary"
+              className="px-2 py-1 w-auto flex-1"
             />
-          ) : (
-            <>
-              <span className="text-base font-medium text-foreground truncate">{group.name}</span>
-              <span className="text-13 text-muted-foreground tabular-nums shrink-0">
-                · {t("widget.groups.studentsCount", { count: group.studentCount })}
-              </span>
-            </>
-          )}
-        </button>
+            <button
+              type="button"
+              onClick={submitRename}
+              title={t("widget.groups.saveRename")}
+              aria-label={t("widget.groups.saveRename")}
+              className="p-1 hover:bg-success-light rounded-sm text-success"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={cancelRename}
+              title={t("widget.groups.cancelRename")}
+              aria-label={t("widget.groups.cancelRename")}
+              className="p-1 hover:bg-surface-hover rounded-sm text-muted-foreground"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center gap-2 flex-1 text-left hover:text-brand-primary transition-colors min-w-0"
+            aria-expanded={expanded}
+          >
+            {expanded ? (
+              <ChevronDown className="w-4 h-4 shrink-0" />
+            ) : (
+              <ChevronRight className="w-4 h-4 shrink-0" />
+            )}
+            <span className="text-base font-medium text-foreground truncate">{group.name}</span>
+            <span className="text-13 text-muted-foreground tabular-nums shrink-0">
+              · {t("widget.groups.studentsCount", { count: group.studentCount })}
+            </span>
+          </button>
+        )}
+        {onCreateHomework ? (
+          <button
+            onClick={() => onCreateHomework(group)}
+            title={t("widget.groups.createHomework")}
+            aria-label={t("widget.groups.createHomework")}
+            className="p-2 hover:bg-surface-hover rounded-sm transition-colors text-muted-foreground"
+          >
+            <FileCheck className="w-4 h-4" />
+          </button>
+        ) : null}
         <button
           onClick={() => onAddStudents(group)}
           title={t("widget.groups.addStudents")}

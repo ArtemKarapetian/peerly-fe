@@ -1,6 +1,8 @@
 import { Scale, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Label, TextField } from "@/shared/ui";
+
 import type { AssignmentFormData } from "../model/types";
 
 interface StepPeerSessionProps {
@@ -27,9 +29,9 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-3">
+        <Label className="mb-3">
           {t("feature.assignmentCreate.peerSession.reviewsPerSubmissionLabel")}
-        </label>
+        </Label>
         <div className="flex items-center gap-4">
           <input
             type="range"
@@ -41,7 +43,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             className="flex-1"
           />
           <div className="flex items-center gap-2">
-            <input
+            <TextField
               type="number"
               min="1"
               max="10"
@@ -49,7 +51,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
               onChange={(e) =>
                 onUpdate({ reviewsPerSubmission: clamp(parseInt(e.target.value) || 1, 1, 10) })
               }
-              className="w-16 px-3 py-2 border-2 border-border rounded-sm text-15 font-medium text-center focus:outline-none focus:border-brand-primary"
+              className="w-16 px-3 py-2 rounded-sm font-medium text-center"
             />
             <Users className="w-5 h-5 text-muted-foreground" />
           </div>
@@ -62,9 +64,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-3">
-          {t("feature.assignmentCreate.peerSession.discrepancyLabel")}
-        </label>
+        <Label className="mb-3">{t("feature.assignmentCreate.peerSession.discrepancyLabel")}</Label>
         <div className="flex items-center gap-4">
           <input
             type="range"
@@ -76,7 +76,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
             className="flex-1"
           />
           <div className="flex items-center gap-2">
-            <input
+            <TextField
               type="number"
               min="1"
               max={DISCREPANCY_MAX_POINTS}
@@ -90,7 +90,7 @@ export function StepPeerSession({ data, onUpdate }: StepPeerSessionProps) {
                   ),
                 })
               }
-              className="w-20 px-3 py-2 border-2 border-border rounded-sm text-15 font-medium text-center focus:outline-none focus:border-brand-primary"
+              className="w-20 px-3 py-2 rounded-sm font-medium text-center"
             />
             <Scale className="w-5 h-5 text-muted-foreground" />
           </div>

@@ -1,11 +1,8 @@
-import { BookOpen, ChevronRight, Plus } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ROUTES } from "@/shared/config/routes";
 import { useAsync } from "@/shared/lib/useAsync";
-import { Card, Select } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
@@ -13,17 +10,15 @@ import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
 import { courseRepo } from "@/entities/course";
 
-import { CourseSearch } from "@/features/course/search";
-
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
-type StatusFilter = "all" | "draft" | "active" | "archived";
+import { filterCourses } from "../lib/filterCourses";
+import type { CourseRow, StatusFilter } from "../model/types";
 
-interface CourseRow {
-  id: string;
-  name: string;
-  status: "draft" | "active" | "archived";
-}
+import { CoursesEmptyState } from "./CoursesEmptyState";
+import { CoursesFiltersRow } from "./CoursesFiltersRow";
+import { CoursesHeroCard } from "./CoursesHeroCard";
+import { CoursesTable } from "./CoursesTable";
 
 export default function TeacherCoursesPage() {
   const navigate = useNavigate();
@@ -36,43 +31,11 @@ export default function TeacherCoursesPage() {
     isLoading,
     error,
     refetch,
-  } = useAsync(() => courseRepo.getAll(), [], {
-    onError: "redirect",
-  });
-
-  const allCourseRows: CourseRow[] = (courses ?? []).map((course) => ({
-    id: course.id,
-    name: course.title,
-    status: course.status,
-  }));
-
-  const filteredCourses = allCourseRows.filter((course) => {
-    if (statusFilter !== "all" && course.status !== statusFilter) return false;
-    if (searchQuery) {
-      return course.name.toLowerCase().includes(searchQuery.toLowerCase());
-    }
-    return true;
-  });
-
-  const activeCourses = allCourseRows.filter((c) => c.status === "active");
+  } = useAsync(() => courseRepo.getAll(), [], { onError: "redirect" });
 
   const handleOpenCourse = useCallback(
-    (courseId: string) => {
-      void navigate(`/teacher/courses/${courseId}`);
-    },
+    (courseId: string) => void navigate(`/teacher/courses/${courseId}`),
     [navigate],
-  );
-
-  const handleRowKeyDown = (e: React.KeyboardEvent, courseId: string) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleOpenCourse(courseId);
-    }
-  };
-
-  const { currentPage, totalPages, pageSize, setPageSize, handlePageChange } = usePagination(
-    filteredCourses,
-    10,
   );
 
   if (isLoading)
@@ -88,172 +51,63 @@ export default function TeacherCoursesPage() {
       </AppShell>
     );
 
+  const allRows: CourseRow[] = (courses ?? []).map((c) => ({
+    id: c.id,
+    name: c.title,
+    status: c.status,
+  }));
+  const activeCount = allRows.filter((c) => c.status === "active").length;
+  const filteredRows = filterCourses(allRows, statusFilter, searchQuery);
+
   return (
     <AppShell title={t("teacher.courses.management")}>
       <Breadcrumbs items={[{ label: t("teacher.courses.title") }]} />
 
       <div className="mt-6">
-        {/* Hero header card */}
-        <Card className="mb-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-1">
-                {t("teacher.courses.title")}
-              </h1>
-              <p className="text-15 text-muted-foreground">
-                {activeCourses.length === 0
-                  ? t("teacher.courses.createFirst")
-                  : allCourseRows.length === activeCourses.length
-                    ? t("teacher.courses.coursesCount", { count: activeCourses.length })
-                    : `${activeCourses.length} ${t("teacher.courses.activeCourses", { count: activeCourses.length })}, ${allCourseRows.length - activeCourses.length} ${t("teacher.courses.inArchive")}`}
-              </p>
-            </div>
-            <div className="shrink-0">
-              <button
-                onClick={() => void navigate(ROUTES.teacherCreateCourse)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-2md hover:bg-brand-primary-hover active:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.25)] text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Plus className="w-4 h-4" />
-                {t("teacher.courses.createCourse")}
-              </button>
-            </div>
-          </div>
-        </Card>
+        <CoursesHeroCard total={allRows.length} active={activeCount} />
 
-        {/* Search + status filter + count */}
-        <div className="flex items-center gap-3 mb-4 flex-wrap">
-          <div className="flex-1 min-w-[220px]">
-            <CourseSearch
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder={t("teacher.courses.searchPlaceholder")}
-            />
-          </div>
-          <div className="w-[180px]">
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            >
-              <option value="active">{t("teacher.courseDetail.status.active")}</option>
-              <option value="draft">{t("teacher.courseDetail.status.draft")}</option>
-              <option value="archived">{t("teacher.courseDetail.status.archived")}</option>
-              <option value="all">{t("teacher.courses.statusAll")}</option>
-            </Select>
-          </div>
-          {filteredCourses.length > 0 && (
-            <p className="text-xs text-muted-foreground tabular-nums shrink-0 hidden tablet:block">
-              {t("teacher.courses.coursesCount", { count: filteredCourses.length })}
-            </p>
-          )}
-        </div>
+        <CoursesFiltersRow
+          searchQuery={searchQuery}
+          statusFilter={statusFilter}
+          resultsCount={filteredRows.length}
+          onSearchChange={setSearchQuery}
+          onStatusChange={setStatusFilter}
+        />
 
-        {/* Table or empty state */}
-        {filteredCourses.length > 0 ? (
-          <>
-            <Card className="p-0 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
-                  <colgroup>
-                    <col />
-                    <col className="w-[105px]" />
-                    <col className="w-[48px]" />
-                  </colgroup>
-                  <thead>
-                    <tr className="border-b-2 border-border bg-surface-hover">
-                      <th className="text-left px-5 py-3 text-2xs font-semibold text-muted-foreground uppercase tracking-[0.5px]">
-                        {t("common.course")}
-                      </th>
-                      <th className="text-left px-5 py-3 text-2xs font-semibold text-muted-foreground uppercase tracking-[0.5px]">
-                        {t("common.status")}
-                      </th>
-                      <th className="py-3 w-[48px]" />
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {filteredCourses
-                      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
-                      .map((course) => (
-                        <tr
-                          key={course.id}
-                          className="hover:bg-brand-primary-lighter transition-colors duration-150 cursor-pointer group"
-                          onClick={() => handleOpenCourse(course.id)}
-                          onKeyDown={(e) => handleRowKeyDown(e, course.id)}
-                          role="button"
-                          tabIndex={0}
-                          aria-label={t("teacher.courses.openCourse", { name: course.name })}
-                        >
-                          <td className="px-5 py-4">
-                            <p className="text-sm font-semibold text-foreground tracking-[-0.2px] leading-snug">
-                              {course.name}
-                            </p>
-                          </td>
-
-                          {/* Status */}
-                          <td className="px-5 py-4">
-                            {course.status === "active" ? (
-                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-success-light text-success rounded-sm text-xs font-medium">
-                                {t("common.active")}
-                              </span>
-                            ) : course.status === "draft" ? (
-                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-warning-light text-warning rounded-sm text-xs font-medium">
-                                {t("teacher.courseDetail.status.draft")}
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-3 py-1 bg-muted text-muted-foreground rounded-sm text-xs font-medium">
-                                {t("common.archive")}
-                              </span>
-                            )}
-                          </td>
-
-                          {/* Row-navigation affordance */}
-                          <td className="pr-4 py-4 w-[48px]">
-                            <ChevronRight
-                              aria-hidden="true"
-                              className="w-4 h-4 text-muted-foreground opacity-20 group-hover:opacity-50 transition-opacity duration-150 ml-auto"
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
-
-            <div className="mt-4">
-              <SimplePagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-                pageSize={pageSize}
-                onPageSizeChange={setPageSize}
-              />
-            </div>
-          </>
+        {filteredRows.length > 0 ? (
+          <PaginatedCoursesTable rows={filteredRows} onOpen={handleOpenCourse} />
         ) : (
-          <Card className="p-12 text-center">
-            <div className="w-12 h-12 bg-brand-primary-lighter rounded-md flex items-center justify-center mx-auto mb-4">
-              <BookOpen className="w-6 h-6 text-muted-foreground" />
-            </div>
-            <h3 className="text-[17px] font-medium text-foreground mb-2">
-              {searchQuery ? t("teacher.courses.noCoursesSearch") : t("teacher.courses.noCourses")}
-            </h3>
-            <p className="text-sm text-muted-foreground mb-6">
-              {searchQuery
-                ? t("teacher.courses.tryChangingSearch")
-                : t("teacher.courses.createFirst")}
-            </p>
-            {!searchQuery && (
-              <button
-                onClick={() => void navigate(ROUTES.teacherCreateCourse)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-primary-foreground rounded-2md hover:bg-brand-primary-hover transition-colors shadow-[0_2px_8px_rgba(37,99,235,0.2)] text-sm font-medium"
-              >
-                <Plus className="w-4 h-4" />
-                {t("teacher.courses.createCourse")}
-              </button>
-            )}
-          </Card>
+          <CoursesEmptyState isSearching={Boolean(searchQuery)} />
         )}
       </div>
     </AppShell>
+  );
+}
+
+function PaginatedCoursesTable({
+  rows,
+  onOpen,
+}: {
+  rows: CourseRow[];
+  onOpen: (id: string) => void;
+}) {
+  const { currentPage, totalPages, pageSize, setPageSize, handlePageChange } = usePagination(
+    rows,
+    10,
+  );
+  const pageRows = rows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  return (
+    <>
+      <CoursesTable rows={pageRows} onOpen={onOpen} />
+      <div className="mt-4">
+        <SimplePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+        />
+      </div>
+    </>
   );
 }

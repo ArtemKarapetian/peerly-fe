@@ -1,8 +1,14 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ReactNode } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { TeacherCourseParticipants } from "./Participants";
+
+function renderWithRouter(ui: ReactNode) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+}
 
 const { courseRepoMock, groupRepoMock, toastMock, confirmMock } = vi.hoisted(() => ({
   courseRepoMock: { getParticipants: vi.fn() },
@@ -59,7 +65,7 @@ describe("TeacherCourseParticipants", () => {
     });
     groupRepoMock.listForCourse.mockResolvedValueOnce([]);
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => {
       expect(screen.getByText("Prof X")).toBeInTheDocument();
@@ -76,7 +82,7 @@ describe("TeacherCourseParticipants", () => {
       { id: "g-g", name: "Гамма", studentCount: 0 },
     ]);
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => {
       expect(screen.getByText("Альфа")).toBeInTheDocument();
@@ -99,7 +105,7 @@ describe("TeacherCourseParticipants", () => {
     groupRepoMock.listForCourse.mockResolvedValue([]);
     groupRepoMock.create.mockResolvedValueOnce({ id: "g-new", name: "G", studentCount: 0 });
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => expect(screen.getByText(/widget\.groups\.empty/)).toBeInTheDocument());
 
@@ -127,7 +133,7 @@ describe("TeacherCourseParticipants", () => {
       teachers: [],
     });
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
 
@@ -145,7 +151,7 @@ describe("TeacherCourseParticipants", () => {
       { id: "g-1", name: "Group A", studentCount: 0 },
     ]);
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
 
@@ -161,7 +167,7 @@ describe("TeacherCourseParticipants", () => {
     ]);
     groupRepoMock.delete.mockResolvedValueOnce(undefined);
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
 
@@ -179,7 +185,7 @@ describe("TeacherCourseParticipants", () => {
     courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValueOnce([]);
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => {
       expect(screen.getByText(/widget\.groups\.empty/)).toBeInTheDocument();
@@ -194,7 +200,7 @@ describe("TeacherCourseParticipants", () => {
     ]);
     groupRepoMock.update.mockResolvedValueOnce(undefined);
 
-    render(<TeacherCourseParticipants courseId="c-1" />);
+    renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => expect(screen.getByText("Group A")).toBeInTheDocument());
 

@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { UserInfoCard } from "@/features/profile/edit-profile";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
-import { DangerZoneCard, SupportLinkCard } from "@/widgets/profile-cards";
+import { DangerZoneCard } from "@/widgets/profile-cards";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -22,7 +22,6 @@ export default function ProfilePage() {
 
         <UserInfoCard />
         <DangerZoneCard />
-        <SupportLinkCard />
       </div>
     </AppShell>
   );

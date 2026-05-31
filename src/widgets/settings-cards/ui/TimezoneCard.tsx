@@ -2,7 +2,7 @@ import { Clock } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card } from "@/shared/ui";
+import { Card, Select } from "@/shared/ui";
 
 export function TimezoneCard() {
   const { t } = useTranslation();
@@ -28,17 +28,17 @@ export function TimezoneCard() {
 
       <p className="text-sm text-muted-foreground mb-4">{t("widget.timezone.subtitle")}</p>
 
-      <select
+      <Select
         value={timezone}
         onChange={(e) => setTimezone(e.target.value)}
-        className="w-full max-w-[400px] px-4 py-3 border-2 border-border rounded-md text-15 text-foreground bg-card focus:border-accent focus:outline-none transition-colors"
+        className="max-w-[400px]"
       >
         {TIMEZONES.map((tz) => (
           <option key={tz.value} value={tz.value}>
             {tz.label}
           </option>
         ))}
-      </select>
+      </Select>
     </Card>
   );
 }

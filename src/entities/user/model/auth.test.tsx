@@ -233,7 +233,7 @@ describe("AuthProvider", () => {
     renderProvider();
 
     await act(async () => {
-      await captured.value!.confirmEmail({ token: "tok", userId: "u-7" });
+      await captured.value!.confirmEmail({ token: "tok" });
     });
 
     expect(screen.getByTestId("auth")).toHaveTextContent("yes");

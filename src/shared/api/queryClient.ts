@@ -2,6 +2,7 @@ import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { QUERY_RETRY_COUNT, MUTATION_RETRY_COUNT } from "@/shared/config/constants";
+import { env } from "@/shared/config/env";
 
 import { humanizeApiError } from "./errorMessage";
 import { ApiError } from "./httpClient";
@@ -22,8 +23,8 @@ function getErrorMessage(error: unknown): string {
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
+      if (!query.meta?.showGlobalErrorToast) return;
       if (error instanceof ApiError && error.status === 401) return;
-      if (query.meta?.suppressGlobalErrorToast) return;
       toast.error(getErrorMessage(error));
     },
   }),
@@ -36,11 +37,11 @@ export const queryClient = new QueryClient({
   }),
   defaultOptions: {
     queries: {
-      staleTime: 0,
-      gcTime: 0,
+      staleTime: env.aggressiveRefetch ? 0 : 30_000,
+      gcTime: env.aggressiveRefetch ? 0 : 5 * 60_000,
       retry: QUERY_RETRY_COUNT,
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
+      refetchOnMount: env.aggressiveRefetch,
+      refetchOnWindowFocus: env.aggressiveRefetch,
     },
     mutations: {
       retry: MUTATION_RETRY_COUNT,

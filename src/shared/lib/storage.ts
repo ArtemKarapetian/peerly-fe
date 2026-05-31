@@ -2,21 +2,17 @@
  * Typed localStorage wrapper.
  *
  * The StorageMap binds each known key to the actual JSON-deserialized value
- * type — so `storage.getJSON(STORAGE_KEYS.demoFlags)` is `DemoFlags | null`
+ * type — so `storage.getJSON(STORAGE_KEYS.session)` is `Session | null`
  * automatically, no generic argument needed.
  */
 
 import type { Session } from "@/shared/api/session";
 import { STORAGE_KEYS } from "@/shared/config/constants";
 
-import type { DemoFlags } from "./demo-flags";
-
 interface StorageMap {
   [STORAGE_KEYS.session]: Session;
-  [STORAGE_KEYS.demoFlags]: DemoFlags;
   [STORAGE_KEYS.language]: string;
   [STORAGE_KEYS.theme]: string;
-  [STORAGE_KEYS.demoToolsVisible]: boolean;
   [STORAGE_KEYS.pendingVerificationEmail]: string;
 }
 

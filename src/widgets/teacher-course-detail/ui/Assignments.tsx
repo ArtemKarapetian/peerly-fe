@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
 import { useAsync } from "@/shared/lib/useAsync";
+import { EmptyState, StatusBadge } from "@/shared/ui";
 
 import { assignmentRepo } from "@/entities/assignment";
 
@@ -23,23 +24,11 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "published":
-        return (
-          <span className="px-2 py-1 bg-success-light text-success rounded-2sm text-xs font-medium">
-            {t("widget.assignments.published")}
-          </span>
-        );
+        return <StatusBadge variant="success">{t("widget.assignments.published")}</StatusBadge>;
       case "draft":
-        return (
-          <span className="px-2 py-1 bg-muted text-muted-foreground rounded-2sm text-xs font-medium">
-            {t("widget.assignments.draft")}
-          </span>
-        );
+        return <StatusBadge variant="secondary">{t("widget.assignments.draft")}</StatusBadge>;
       case "closed":
-        return (
-          <span className="px-2 py-1 bg-error-light text-error rounded-2sm text-xs font-medium">
-            {t("widget.assignments.closed")}
-          </span>
-        );
+        return <StatusBadge variant="error">{t("widget.assignments.closed")}</StatusBadge>;
       default:
         return null;
     }
@@ -64,11 +53,7 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
   };
 
   if (isLoading) {
-    return (
-      <div className="text-center py-12 text-muted-foreground">
-        {t("widget.assignments.loading")}
-      </div>
-    );
+    return <EmptyState message={t("widget.assignments.loading")} />;
   }
 
   return (
@@ -118,10 +103,7 @@ export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsP
         ))}
 
         {(assignments ?? []).length === 0 && (
-          <div className="text-center py-12">
-            <FileText className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-            <p className="text-15 text-muted-foreground">{t("widget.assignments.noAssignments")}</p>
-          </div>
+          <EmptyState icon={FileText} message={t("widget.assignments.noAssignments")} />
         )}
       </div>
     </div>

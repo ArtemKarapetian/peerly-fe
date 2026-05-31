@@ -1,28 +1,8 @@
-import {
-  Book,
-  User,
-  Users,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  LayoutDashboard,
-  FileCheck,
-  MessageSquare,
-  BookOpen,
-  Layers,
-  Settings,
-  Shuffle,
-  Archive,
-  BarChart3,
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
-
-import { ROUTES } from "@/shared/config/routes";
-
 import { useRole } from "@/entities/user";
 
-import { RoleSwitcherPopover } from "./RoleSwitcherPopover.tsx";
+import { getNavItemsForRole } from "./model/navItems";
+import { DesktopSideNav } from "./ui/DesktopSideNav";
+import { MobileDrawerSideNav } from "./ui/MobileDrawerSideNav";
 
 type SideNavVariant =
   | "desktop-expanded"
@@ -38,240 +18,31 @@ interface SideNavProps {
   onToggleCollapse?: () => void;
 }
 
-interface NavItem {
-  icon: React.ElementType;
-  label: string;
-  hash: string;
-}
-
-/* Shared focus ring for all interactive sidebar elements */
-const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--brand-primary]/25";
-
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
-  const { t } = useTranslation();
   const { currentRole } = useRole();
   const showRoleSwitcher = import.meta.env.DEV;
-  const isCollapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
-  const isMobileDrawer = variant === "mobile-drawer";
-  const showToggleButton =
-    variant === "desktop-expanded" ||
-    variant === "desktop-collapsed" ||
-    variant === "tablet-collapsed" ||
-    variant === "tablet-expanded";
+  const navItems = getNavItemsForRole(currentRole);
 
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  const isActive = (hash: string, navItems: NavItem[]) => {
-    if (currentPath === hash) return true;
-    // Don't match parent path if a more specific sibling route matches
-    // e.g. /student/reviews should NOT match when on /student/reviews/received
-    const hasMoreSpecificMatch = navItems.some(
-      (item) =>
-        item.hash !== hash && item.hash.startsWith(hash + "/") && currentPath.startsWith(item.hash),
-    );
-    if (hasMoreSpecificMatch) return false;
-    return currentPath.startsWith(hash + "/");
-  };
-
-  const getNavItems = (): NavItem[] => {
-    switch (currentRole) {
-      case "Student":
-        return [
-          { icon: LayoutDashboard, label: t("nav.home"), hash: "/student/dashboard" },
-          { icon: Book, label: t("nav.courses"), hash: "/student/courses" },
-          { icon: FileCheck, label: t("nav.reviews"), hash: "/student/reviews" },
-          {
-            icon: MessageSquare,
-            label: t("nav.receivedReviews"),
-            hash: "/student/reviews/received",
-          },
-          { icon: BookOpen, label: t("nav.gradebook"), hash: "/student/gradebook" },
-        ];
-      case "Teacher":
-        return [
-          { icon: Book, label: t("nav.courses"), hash: "/teacher/courses" },
-          { icon: FileCheck, label: t("nav.createAssignment"), hash: "/teacher/assignments/new" },
-          { icon: Layers, label: t("nav.rubrics"), hash: "/teacher/rubrics" },
-          { icon: Shuffle, label: t("nav.distribution"), hash: "/teacher/distribution" },
-          { icon: Archive, label: t("nav.studentSubmissions"), hash: "/teacher/submissions" },
-          { icon: BarChart3, label: t("nav.analytics"), hash: "/teacher/analytics" },
-        ];
-      case "Admin":
-        return [
-          { icon: LayoutDashboard, label: t("nav.overview"), hash: "/admin/overview" },
-          { icon: Users, label: t("nav.users"), hash: "/admin/users" },
-        ];
-      default:
-        return [];
-    }
-  };
-
-  const navItems = getNavItems();
-
-  const navItemClass = (active: boolean) =>
-    active
-      ? "bg-brand-primary-light text-[--brand-primary] font-medium hover:bg-[--brand-primary-light]"
-      : "text-[--text-secondary] hover:bg-surface-hover hover:text-[--text-primary]";
-
-  const footerItemClass =
-    "text-[--text-secondary] hover:bg-surface-hover hover:text-[--text-primary]";
-
-  // ── Mobile Drawer ──────────────────────────────────────────────────────
-  if (isMobileDrawer) {
+  if (variant === "mobile-drawer") {
     return (
-      <div
-        className={`fixed inset-y-0 left-0 z-50 bg-sidebar transform transition-transform duration-300 w-[272px] ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-        style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.08)" }}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
-            <Link
-              to={ROUTES.dashboard}
-              className="text-base font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
-            >
-              Peerly
-            </Link>
-            <button
-              onClick={onClose}
-              className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-surface-hover hover:text-[--text-primary] transition-colors duration-150 ${focusRing}`}
-              aria-label={t("nav.closeMenu")}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          <nav className="flex-1 py-2 px-2.5 space-y-0.5 overflow-y-auto">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.hash, navItems);
-              return (
-                <Link
-                  key={item.hash}
-                  to={item.hash}
-                  onClick={() => onClose?.()}
-                  className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-2sm transition-colors duration-150 ${focusRing} ${navItemClass(active)}`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="text-sm">{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          {showRoleSwitcher && (
-            <div className="border-t border-[--surface-border] pt-2 shrink-0">
-              <RoleSwitcherPopover collapsed={false} />
-            </div>
-          )}
-
-          <div className="border-t border-[--surface-border] shrink-0 px-2.5 py-2 space-y-0.5 pb-3">
-            <Link
-              to={ROUTES.profile}
-              onClick={() => onClose?.()}
-              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-2sm transition-colors duration-150 ${focusRing} ${footerItemClass}`}
-            >
-              <User className="w-4 h-4 shrink-0" />
-              <span className="text-sm">{t("nav.profile")}</span>
-            </Link>
-            <Link
-              to={ROUTES.settings}
-              onClick={() => onClose?.()}
-              className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-2sm transition-colors duration-150 ${focusRing} ${footerItemClass}`}
-            >
-              <Settings className="w-4 h-4 shrink-0" />
-              <span className="text-sm">{t("nav.settings")}</span>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <MobileDrawerSideNav
+        isOpen={isOpen}
+        navItems={navItems}
+        showRoleSwitcher={showRoleSwitcher}
+        onClose={() => onClose?.()}
+      />
     );
   }
 
-  // ── Desktop / Tablet Sidebar ───────────────────────────────────────────
+  const collapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
+
   return (
-    <div
-      className={`bg-sidebar border-r border-sidebar-border h-screen flex flex-col shrink-0 transition-all duration-300 ${
-        isCollapsed ? "w-[72px]" : "w-[240px]"
-      }`}
-    >
-      <div className="flex items-center justify-between h-[56px] px-4 border-b border-[--surface-border] shrink-0">
-        {!isCollapsed && (
-          <Link
-            to={ROUTES.dashboard}
-            className="text-base font-semibold text-[--text-primary] tracking-[-0.4px] hover:opacity-70 transition-opacity"
-          >
-            Peerly
-          </Link>
-        )}
-        {showToggleButton && (
-          <button
-            onClick={onToggleCollapse}
-            className={`w-6 h-6 flex items-center justify-center rounded-[5px] text-[--text-tertiary] hover:bg-surface-hover hover:text-[--text-primary] transition-colors duration-150 ${focusRing} ${isCollapsed ? "mx-auto" : ""}`}
-            aria-label={isCollapsed ? t("nav.expand") : t("nav.collapse")}
-          >
-            {isCollapsed ? (
-              <ChevronRight className="w-3.5 h-3.5" />
-            ) : (
-              <ChevronLeft className="w-3.5 h-3.5" />
-            )}
-          </button>
-        )}
-      </div>
-
-      <nav className="flex-1 py-2 px-2.5 overflow-y-auto space-y-0.5">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.hash, navItems);
-          return (
-            <Link
-              key={item.hash}
-              to={item.hash}
-              className={`flex items-center rounded-2sm transition-colors duration-150 py-[7px] ${focusRing} ${
-                isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
-              } ${navItemClass(active)}`}
-              title={isCollapsed ? item.label : undefined}
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              {!isCollapsed && <span className="text-sm">{item.label}</span>}
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className="shrink-0">
-        {showRoleSwitcher && (
-          <div className="border-t border-[--surface-border] pt-2">
-            <RoleSwitcherPopover collapsed={isCollapsed} />
-          </div>
-        )}
-
-        <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
-          <Link
-            to={ROUTES.profile}
-            className={`flex items-center rounded-2sm transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
-              isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
-            }`}
-            title={isCollapsed ? t("nav.profile") : undefined}
-          >
-            <User className="w-4 h-4 shrink-0" />
-            {!isCollapsed && <span className="text-sm">{t("nav.profile")}</span>}
-          </Link>
-          <Link
-            to={ROUTES.settings}
-            className={`flex items-center rounded-2sm transition-colors duration-150 py-[7px] ${focusRing} ${footerItemClass} ${
-              isCollapsed ? "justify-center px-2" : "gap-2.5 px-2.5"
-            }`}
-            title={isCollapsed ? t("nav.settings") : undefined}
-          >
-            <Settings className="w-4 h-4 shrink-0" />
-            {!isCollapsed && <span className="text-sm">{t("nav.settings")}</span>}
-          </Link>
-        </div>
-      </div>
-    </div>
+    <DesktopSideNav
+      collapsed={collapsed}
+      showToggleButton
+      showRoleSwitcher={showRoleSwitcher}
+      navItems={navItems}
+      onToggleCollapse={onToggleCollapse}
+    />
   );
 }

@@ -1,6 +1,9 @@
-import { Calendar, Clock, AlertTriangle } from "lucide-react";
+import { AlertTriangle, Calendar, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Label, TextField } from "@/shared/ui";
+
+import { isValidDate, validateDeadlines } from "../lib/validateDeadlines";
 import type { AssignmentFormData } from "../model/types";
 
 interface StepDeadlinesProps {
@@ -9,27 +12,45 @@ interface StepDeadlinesProps {
 }
 
 function formatDateForInput(date: Date | null): string {
-  if (!date) return "";
+  if (!isValidDate(date)) return "";
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function parseInputDate(value: string): Date | null {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return isValidDate(parsed) ? parsed : null;
 }
 
 export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
   const { t } = useTranslation();
 
   const handleDateChange = (field: "submissionDeadline" | "reviewDeadline", value: string) => {
-    onUpdate({ [field]: value ? new Date(value) : null });
+    onUpdate({ [field]: parseInputDate(value) });
   };
 
-  const timeDiff = (() => {
-    if (!data.submissionDeadline || !data.reviewDeadline) return null;
-    const diff = data.reviewDeadline.getTime() - data.submissionDeadline.getTime();
-    return {
-      days: Math.floor(diff / 86_400_000),
-      hours: Math.floor((diff % 86_400_000) / 3_600_000),
-      total: diff,
-    };
-  })();
+  const { errors } = validateDeadlines({
+    submission: data.submissionDeadline,
+    review: data.reviewDeadline,
+  });
+
+  const showTimeDiff =
+    isValidDate(data.submissionDeadline) &&
+    isValidDate(data.reviewDeadline) &&
+    data.reviewDeadline.getTime() > data.submissionDeadline.getTime();
+  const timeDiff = showTimeDiff
+    ? (() => {
+        const diff = data.reviewDeadline!.getTime() - data.submissionDeadline!.getTime();
+        return {
+          days: Math.floor(diff / 86_400_000),
+          hours: Math.floor((diff % 86_400_000) / 3_600_000),
+          total: diff,
+        };
+      })()
+    : null;
+
+  const nowIso = formatDateForInput(new Date());
 
   return (
     <div className="space-y-6">
@@ -40,40 +61,53 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}
-        </label>
+        <Label>{t("feature.assignmentCreate.deadlines.submissionDeadlineLabel")}</Label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <input
+          <TextField
             type="datetime-local"
             value={formatDateForInput(data.submissionDeadline)}
             onChange={(e) => handleDateChange("submissionDeadline", e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
+            min={nowIso}
+            className="pl-10"
           />
         </div>
-        <p className="text-13 text-muted-foreground mt-1">
-          {t("feature.assignmentCreate.deadlines.submissionDeadlineHint")}
-        </p>
+        {errors.submission && data.submissionDeadline !== null ? (
+          <p className="text-13 text-destructive mt-1">
+            {t(`feature.assignmentCreate.deadlines.errors.${errors.submission}`)}
+          </p>
+        ) : (
+          <p className="text-13 text-muted-foreground mt-1">
+            {t("feature.assignmentCreate.deadlines.submissionDeadlineHint")}
+          </p>
+        )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          {t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}
-        </label>
+        <Label>{t("feature.assignmentCreate.deadlines.reviewDeadlineLabel")}</Label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <input
+          <TextField
             type="datetime-local"
             value={formatDateForInput(data.reviewDeadline)}
             onChange={(e) => handleDateChange("reviewDeadline", e.target.value)}
-            min={formatDateForInput(data.submissionDeadline)}
-            className="w-full pl-10 pr-4 py-3 border-2 border-border rounded-md text-15 focus:outline-none focus:border-brand-primary transition-colors"
+            min={
+              isValidDate(data.submissionDeadline)
+                ? formatDateForInput(data.submissionDeadline)
+                : nowIso
+            }
+            className="pl-10"
           />
         </div>
-        <p className="text-13 text-muted-foreground mt-1">
-          {t("feature.assignmentCreate.deadlines.reviewDeadlineHint")}
-        </p>
+        {errors.review && data.reviewDeadline !== null ? (
+          <p className="text-13 text-destructive mt-1">
+            {t(`feature.assignmentCreate.deadlines.errors.${errors.review}`)}
+          </p>
+        ) : (
+          <p className="text-13 text-muted-foreground mt-1">
+            {t("feature.assignmentCreate.deadlines.reviewDeadlineHint")}
+          </p>
+        )}
       </div>
 
       {timeDiff && (

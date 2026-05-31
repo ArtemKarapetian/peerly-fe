@@ -8,10 +8,28 @@ interface UserSearchInfo {
   id: number | string;
   email: string;
   name: string;
+  role?: "Student" | "Teacher" | "Admin";
+}
+
+function knownRole(r: unknown): "Student" | "Teacher" | "Admin" {
+  return r === "Teacher" || r === "Admin" ? r : "Student";
 }
 
 export const userHttpRepo = {
-  getAll: (): Promise<DemoUser[]> => Promise.resolve([]), // No bulk endpoint — keep empty
+  getAll: async (): Promise<DemoUser[]> => {
+    const params = new URLSearchParams({ "filter.query": "", limit: "100" });
+    const res = await http.get<{ users?: UserSearchInfo[] }>(`/users?${params.toString()}`);
+    const rows = Array.isArray(res?.users) ? res.users : [];
+    return rows
+      .filter((u): u is UserSearchInfo => Boolean(u) && u.id !== undefined && u.id !== null)
+      .map((u) => ({
+        id: String(u.id),
+        name: typeof u.name === "string" ? u.name : "",
+        email: typeof u.email === "string" ? u.email : "",
+        role: knownRole(u.role),
+        createdAt: new Date(0),
+      }));
+  },
 
   searchStudents: async (
     query: string,

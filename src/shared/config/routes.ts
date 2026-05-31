@@ -5,12 +5,10 @@ export const ROUTES = {
 
   login: "/login",
   register: "/register",
-  resetPassword: "/reset-password",
   verifyEmail: "/verify-email",
   help: "/help",
   status: "/status",
   terms: "/terms",
-  supportChat: "/support/chat",
 
   error401: "/401",
   error403: "/403",

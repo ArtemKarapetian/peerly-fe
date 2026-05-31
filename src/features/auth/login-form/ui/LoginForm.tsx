@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
-import { isDemoFlagEnabled } from "@/shared/lib/demo-flags";
 import { Card } from "@/shared/ui";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
@@ -17,8 +16,6 @@ export function LoginForm() {
     register,
     formState: { errors, touchedFields },
   } = form;
-
-  const enablePasswordReset = isDemoFlagEnabled("enablePasswordReset");
 
   return (
     <Card className="space-y-6 tablet:p-8">
@@ -80,17 +77,6 @@ export function LoginForm() {
       </form>
 
       <div className="space-y-3 pt-2">
-        {enablePasswordReset && (
-          <div className="text-center">
-            <Link
-              to={ROUTES.resetPassword}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {t("auth.forgotPassword")}
-            </Link>
-          </div>
-        )}
-
         <div className="text-center border-t border-border pt-4">
           <p className="text-sm text-muted-foreground mb-2">{t("auth.noAccount")}</p>
           <Link to={ROUTES.register} className="text-sm font-medium text-primary hover:underline">

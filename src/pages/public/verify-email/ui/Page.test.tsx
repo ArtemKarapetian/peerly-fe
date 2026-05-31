@@ -62,7 +62,7 @@ vi.mock("react-i18next", () => ({
         "page.verifyEmail.emailSent": "Email sent",
         "page.verifyEmail.resendFailed": "Failed to resend",
         "page.verifyEmail.checkSpam": "Check your spam folder",
-        "page.resetPassword.backToLogin": "Back to login",
+        "page.verifyEmail.backToLogin": "Back to login",
       };
       if (key === "page.verifyEmail.resendIn" && opts && "seconds" in opts) {
         return `Resend in ${String(opts.seconds)}s`;
@@ -123,9 +123,9 @@ describe("VerifyEmailPage", () => {
   });
 
   describe("confirming via URL params", () => {
-    it("calls confirmEmail with the parsed params and redirects to the role-default route on success", async () => {
+    it("calls confirmEmail with the parsed token and redirects to the role-default route on success", async () => {
       localStorage.setItem("peerly_pending_verification_email", "user@x.com");
-      currentSearch = "token=abc&userId=42";
+      currentSearch = "token=abc";
       confirmEmailMock.mockResolvedValue({
         userId: "42",
         userName: "X",
@@ -143,14 +143,30 @@ describe("VerifyEmailPage", () => {
         { timeout: 3000 },
       );
 
-      expect(confirmEmailMock).toHaveBeenCalledWith({ token: "abc", userId: "42" });
+      expect(confirmEmailMock).toHaveBeenCalledWith({ token: "abc" });
       expect(localStorage.getItem("peerly_pending_verification_email")).toBeNull();
       expect(defaultRouteForRoleMock).toHaveBeenCalledWith("Teacher");
     });
 
+    it("accepts ?Token=... (capital T) — BE email template uses CamelCase", async () => {
+      localStorage.setItem("peerly_pending_verification_email", "user@x.com");
+      currentSearch = "Token=ABC";
+      confirmEmailMock.mockResolvedValue({
+        userId: "1",
+        userName: "",
+        email: "user@x.com",
+        role: "Student",
+      });
+      defaultRouteForRoleMock.mockReturnValue("/student");
+
+      renderPage();
+
+      await waitFor(() => expect(confirmEmailMock).toHaveBeenCalledWith({ token: "ABC" }));
+    });
+
     it("shows the expired state on 410, with a resend-new-link button", async () => {
       localStorage.setItem("peerly_pending_verification_email", "user@x.com");
-      currentSearch = "token=abc&userId=42";
+      currentSearch = "token=abc";
       confirmEmailMock.mockRejectedValue(new ApiError(410, "Gone", "Gone"));
 
       renderPage();
@@ -160,7 +176,7 @@ describe("VerifyEmailPage", () => {
     });
 
     it("shows a generic error state on 500", async () => {
-      currentSearch = "token=abc&userId=42";
+      currentSearch = "token=abc";
       confirmEmailMock.mockRejectedValue(new ApiError(500, "Boom", "Boom"));
 
       renderPage();

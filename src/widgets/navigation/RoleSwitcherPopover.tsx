@@ -66,6 +66,8 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
     }
   };
 
+  if (!currentRole) return null;
+
   // Expanded mode — inline list
   if (!collapsed) {
     return (

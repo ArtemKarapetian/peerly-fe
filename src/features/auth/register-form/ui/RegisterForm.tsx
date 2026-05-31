@@ -1,64 +1,15 @@
-import { GraduationCap, BookOpen, AlertCircle } from "lucide-react";
-import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 
-import { ROUTES } from "@/shared/config/routes";
-import { type PasswordStrength } from "@/shared/lib/password";
 import { Card } from "@/shared/ui";
 import { Button } from "@/shared/ui/button.tsx";
 import { Input, PasswordInput } from "@/shared/ui/input.tsx";
 
-import { type RegistrableRole } from "../model/schema";
 import { useRegisterForm } from "../model/useRegisterForm";
 
-const STRENGTH_COLORS = [
-  "bg-destructive",
-  "bg-destructive",
-  "bg-warning",
-  "bg-success",
-  "bg-success",
-] as const;
-
-function PasswordStrengthMeter({ strength }: { strength: PasswordStrength }) {
-  const { t } = useTranslation();
-  const labelKeys = [
-    "auth.strength.veryWeak",
-    "auth.strength.weak",
-    "auth.strength.fair",
-    "auth.strength.good",
-    "auth.strength.strong",
-  ];
-  return (
-    <div className="space-y-1" aria-live="polite">
-      <div className="flex gap-1">
-        {[0, 1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className={`h-1 flex-1 rounded-full ${strength.score > i ? STRENGTH_COLORS[strength.score] : "bg-muted"}`}
-          />
-        ))}
-      </div>
-      <p className="text-xs text-muted-foreground">{t(labelKeys[strength.score])}</p>
-      {strength.suggestions.length > 0 && (
-        <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-0.5">
-          {strength.suggestions.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-const ROLE_OPTIONS: ReadonlyArray<{
-  value: RegistrableRole;
-  titleKey: string;
-  Icon: typeof GraduationCap;
-}> = [
-  { value: "Student", titleKey: "auth.roleStudentTitle", Icon: GraduationCap },
-  { value: "Teacher", titleKey: "auth.roleTeacherTitle", Icon: BookOpen },
-];
+import { PasswordStrengthMeter } from "./PasswordStrengthMeter";
+import { RegisterErrorAlert } from "./RegisterErrorAlert";
+import { RegisterFooter } from "./RegisterFooter";
+import { RoleSelectorField } from "./RoleSelectorField";
 
 export function RegisterForm() {
   const { t } = useTranslation();
@@ -66,11 +17,17 @@ export function RegisterForm() {
     useRegisterForm();
   const {
     register,
-    formState: { errors, touchedFields },
+    formState: { errors, touchedFields, isValid, isSubmitSuccessful, isDirty },
     watch,
   } = form;
 
   const passwordValue = watch("password");
+  const submitDisabled = isSubmitting || !isValid || (isSubmitSuccessful && !isDirty);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    clearSubmitError();
+    void submit(e);
+  };
 
   return (
     <div className="w-full max-w-[540px]">
@@ -82,25 +39,9 @@ export function RegisterForm() {
           <p className="text-15 text-muted-foreground">{t("auth.registerSubtitle")}</p>
         </div>
 
-        {submitError && (
-          <div
-            role="alert"
-            className="bg-destructive/10 border-2 border-destructive/50 rounded-lg px-4 py-3 flex items-start gap-3"
-          >
-            <AlertCircle className="size-5 text-destructive flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-destructive font-medium whitespace-pre-line">
-              {submitError}
-            </p>
-          </div>
-        )}
+        {submitError && <RegisterErrorAlert message={submitError} />}
 
-        <form
-          onSubmit={(e) => {
-            clearSubmitError();
-            void submit(e);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
             <Input
               label={t("auth.firstName")}
@@ -156,37 +97,7 @@ export function RegisterForm() {
             {...register("confirmPassword")}
           />
 
-          <Controller
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <fieldset className="space-y-2">
-                <legend className="block text-sm text-foreground mb-2">{t("auth.role")}</legend>
-                <div className="grid grid-cols-2 gap-3">
-                  {ROLE_OPTIONS.map(({ value, titleKey, Icon }) => {
-                    const selected = field.value === value;
-                    return (
-                      <button
-                        type="button"
-                        key={value}
-                        onClick={() => field.onChange(value)}
-                        disabled={isSubmitting}
-                        aria-pressed={selected}
-                        className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
-                          selected
-                            ? "border-primary bg-primary/5 text-foreground"
-                            : "border-border hover:border-primary/40 bg-card text-muted-foreground"
-                        }`}
-                      >
-                        <Icon className="size-4" />
-                        <span>{t(titleKey)}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </fieldset>
-            )}
-          />
+          <RoleSelectorField control={form.control} disabled={isSubmitting} />
 
           <div className="pt-2">
             <Button
@@ -195,32 +106,14 @@ export function RegisterForm() {
               size="lg"
               fullWidth
               isLoading={isSubmitting}
-              disabled={
-                isSubmitting ||
-                !form.formState.isValid ||
-                (form.formState.isSubmitSuccessful && !form.formState.isDirty)
-              }
+              disabled={submitDisabled}
             >
               {isSubmitting ? t("auth.creating") : t("auth.createAccount")}
             </Button>
           </div>
         </form>
 
-        <div className="text-center border-t border-border pt-4">
-          <p className="text-sm text-muted-foreground mb-2">{t("auth.alreadyHaveAccount")}</p>
-          <Link to={ROUTES.login} className="text-sm font-medium text-primary hover:underline">
-            {t("auth.signIn")}
-          </Link>
-
-          <div className="mt-4 pt-4 border-t border-border">
-            <p className="text-xs text-muted-foreground">
-              {t("auth.agreeWith")}{" "}
-              <Link to={ROUTES.terms} className="text-primary hover:underline">
-                {t("auth.termsOfUse")}
-              </Link>
-            </p>
-          </div>
-        </div>
+        <RegisterFooter />
       </Card>
     </div>
   );

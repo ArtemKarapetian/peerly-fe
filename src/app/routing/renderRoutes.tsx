@@ -1,7 +1,6 @@
 import { ComponentType, ReactElement, createElement } from "react";
 import { Navigate, Route } from "react-router-dom";
 
-import { DemoFlagRoute } from "./DemoFlagRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicOnlyRoute } from "./PublicOnlyRoute";
 import { RoleRoute } from "./RoleRoute";
@@ -18,16 +17,6 @@ function leafElement(config: RouteConfig): ReactElement {
 }
 
 function renderLeaf(config: RouteConfig): ReactElement {
-  if (config.demoFlag && config.access !== "redirect") {
-    return (
-      <Route
-        key={`${config.path}::flag`}
-        element={<DemoFlagRoute flag={config.demoFlag} redirectTo={config.redirectTo} />}
-      >
-        <Route path={config.path} element={leafElement(config)} />
-      </Route>
-    );
-  }
   return <Route key={config.path} path={config.path} element={leafElement(config)} />;
 }
 

@@ -1,3 +1,5 @@
+import { Card, Textarea } from "@/shared/ui";
+
 import type { CriterionScore, RubricCriterion } from "@/features/review/fill-review/model/rubric";
 
 interface CriterionCardProps {
@@ -11,7 +13,7 @@ const SCORE_VALUES = [1, 2, 3, 4, 5];
 
 export function CriterionCard({ criterion, score, readonly, onChange }: CriterionCardProps) {
   return (
-    <div className="bg-card border border-border shadow-sm rounded-lg p-4 desktop:p-6">
+    <Card variant="section">
       <h3 className="text-lg desktop:text-xl tracking-[-0.3px] text-foreground font-medium mb-4">
         {criterion.title}
       </h3>
@@ -37,18 +39,14 @@ export function CriterionCard({ criterion, score, readonly, onChange }: Criterio
         })}
       </div>
 
-      <textarea
+      <Textarea
         value={score.comment}
         disabled={readonly}
         onChange={(e) => onChange({ ...score, comment: e.target.value })}
         rows={3}
         placeholder="Комментарий по критерию (необязательно)"
-        className={`w-full px-3 py-2 border-2 border-border rounded-2md text-sm resize-none transition-colors ${
-          readonly
-            ? "bg-muted text-muted-foreground cursor-not-allowed"
-            : "bg-card text-foreground focus:border-brand-primary focus:outline-none"
-        }`}
+        className="px-3 py-2 rounded-2md text-sm"
       />
-    </div>
+    </Card>
   );
 }
