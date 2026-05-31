@@ -1019,12 +1019,7 @@
       "quickLinks": "Quick Links",
       "qlUsers": "Users",
       "qlUsersDesc": "Manage users and roles",
-      "qlLogs": "Audit Log",
-      "qlLogsDesc": "Action audit and system logs",
-      "qlSettings": "System Settings",
-      "qlSettingsDesc": "Platform-wide configuration",
-      "goTo": "Go to",
-      "comingSoon": "Coming soon"
+      "goTo": "Go to"
     },
     "usersPage": {
       "searchLabel": "Search",
