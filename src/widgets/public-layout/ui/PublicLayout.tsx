@@ -28,7 +28,7 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
 
   return (
     <header className="w-full border-b border-border bg-background">
-      <div className="max-w-[1200px] mx-auto px-4 tablet:px-6 desktop:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12 h-16 flex items-center justify-between">
         <Link
           to={ROUTES.landing}
           className="text-xl font-semibold text-primary hover:opacity-80 transition-opacity"
@@ -93,7 +93,7 @@ export function PublicLayout({
 
       {showFooter && (
         <footer className="w-full border-t border-border bg-background py-6">
-          <div className="max-w-[1200px] mx-auto px-4 tablet:px-6 desktop:px-8">
+          <div className="max-w-[1200px] mx-auto px-6 tablet:px-8 desktop:px-12">
             <div className="flex flex-col tablet:flex-row justify-between items-center gap-4">
               <nav className="flex items-center gap-4">
                 <Link
