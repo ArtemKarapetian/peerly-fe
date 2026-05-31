@@ -31,7 +31,7 @@ export function mapRubricDetail(dto: GetRubricResponse): RubricDetail {
     .sort((a, b) => a.position - b.position)
     .map(mapRubricCriterion);
   return {
-    rubric: mapRubricSummary(dto.rubric),
+    rubric: dto.rubric ? mapRubricSummary(dto.rubric) : { id: "", teacherId: "", name: "" },
     criteria: sortedCriteria,
   };
 }
