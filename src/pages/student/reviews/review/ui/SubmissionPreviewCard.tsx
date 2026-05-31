@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card } from "@/shared/ui";
 
 interface SubmissionPreview {
-  comment: string;
+  comment: string | null;
   files: { id: string; name: string; size: number }[];
 }
 
@@ -22,7 +22,7 @@ export function SubmissionPreviewCard({ comment, files }: SubmissionPreview) {
   );
 }
 
-function CommentBlock({ comment }: { comment: string }) {
+function CommentBlock({ comment }: { comment: string | null }) {
   const { t } = useTranslation();
   return (
     <div>
@@ -30,7 +30,7 @@ function CommentBlock({ comment }: { comment: string }) {
         {t("page.reviewFill.studentComment")}
       </p>
       <p className="text-sm text-foreground whitespace-pre-wrap">
-        {comment.trim() || t("page.reviewFill.noStudentComment")}
+        {comment?.trim() || t("page.reviewFill.noStudentComment")}
       </p>
     </div>
   );
