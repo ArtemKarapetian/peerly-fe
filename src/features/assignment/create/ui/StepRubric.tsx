@@ -22,9 +22,7 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return rubrics;
-    return rubrics.filter(
-      (r) => r.name.toLowerCase().includes(q) || r.description.toLowerCase().includes(q),
-    );
+    return rubrics.filter((r) => r.name.toLowerCase().includes(q));
   }, [rubrics, searchQuery]);
 
   const { currentPage, totalPages, currentItems, setCurrentPage } = usePagination(
@@ -73,11 +71,7 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
                   {t("feature.assignmentCreate.rubric.selectedRubric")}
                 </h3>
               </div>
-              <p className="text-15 text-foreground font-medium mb-1">{selected.name}</p>
-              <p className="text-13 text-muted-foreground mb-2">{selected.description}</p>
-              <span className="text-13 text-muted-foreground">
-                {t("feature.assignmentCreate.rubric.criteria", { count: selected.criteria.length })}
-              </span>
+              <p className="text-15 text-foreground font-medium">{selected.name}</p>
             </div>
             <button
               onClick={handleDeselect}
@@ -146,15 +140,7 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
                       : "border-border hover:border-brand-primary bg-card"
                   }`}
                 >
-                  <h4 className="text-15 font-medium text-foreground mb-2">{rubric.name}</h4>
-                  <p className="text-13 text-muted-foreground mb-3 line-clamp-2">
-                    {rubric.description}
-                  </p>
-                  <span className="text-xs text-muted-foreground">
-                    {t("feature.assignmentCreate.rubric.criteria", {
-                      count: rubric.criteria.length,
-                    })}
-                  </span>
+                  <h4 className="text-15 font-medium text-foreground">{rubric.name}</h4>
                 </button>
               );
             })}

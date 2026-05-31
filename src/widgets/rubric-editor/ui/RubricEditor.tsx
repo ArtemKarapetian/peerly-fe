@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { Card, SectionHeader } from "@/shared/ui";
 
-import type { RubricData } from "../model/types";
+import type { RubricEditorData } from "../model/types";
 import { useRubricForm } from "../model/useRubricForm";
 
 import { CriterionCard } from "./CriterionCard";
@@ -11,8 +11,8 @@ import { RubricBasicsSection } from "./RubricBasicsSection";
 import { UnsavedChangesBanner } from "./UnsavedChangesBanner";
 
 interface RubricEditorProps {
-  rubric: RubricData;
-  onSave: (rubric: RubricData) => void;
+  rubric: RubricEditorData;
+  onSave: (rubric: RubricEditorData) => void;
 }
 
 export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
@@ -35,11 +35,7 @@ export function RubricEditor({ rubric, onSave }: RubricEditorProps) {
     <Card>
       {isDirty && <UnsavedChangesBanner onSave={handleSave} />}
 
-      <RubricBasicsSection
-        name={edited.name}
-        description={edited.description}
-        onUpdate={updateRubric}
-      />
+      <RubricBasicsSection name={edited.name} onUpdate={updateRubric} />
 
       <section className="mb-6">
         <SectionHeader as="h3" className="tracking-[-0.5px]">

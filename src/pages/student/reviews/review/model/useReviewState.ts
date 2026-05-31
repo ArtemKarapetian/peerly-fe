@@ -1,15 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ApiError, humanizeApiError } from "@/shared/api";
 
 import { useAssignedSubmission, useSubmitReview, useSubmittedReview } from "@/entities/review";
+import { useRubric } from "@/entities/rubric";
 
-import { parseReview } from "@/features/review/fill-review/model/markdown";
-import {
-  emptyScoresFor,
-  parseRubricFromChecklist,
-} from "@/features/review/fill-review/model/rubric";
+import { emptyScoresFor, type UICriterionScore } from "@/features/review/fill-review/model/rubric";
 
 import { useAssignedReviewsInbox } from "@/widgets/reviews-inbox";
 
@@ -25,12 +22,16 @@ export function useReviewState() {
   } = useAssignedSubmission(submissionId);
   const existingReviewId = submission?.submittedReviewId ?? null;
   const { data: existingReview, isLoading: revLoading } = useSubmittedReview(existingReviewId);
+  const { data: rubricDetail, isLoading: rubricLoading } = useRubric(
+    submission?.rubricId ?? undefined,
+  );
   const { data: inbox } = useAssignedReviewsInbox();
   const submitMutation = useSubmitReview();
   const [now] = useState(() => Date.now());
 
   const waitingForExisting = existingReviewId !== null && revLoading;
-  const isLoading = subLoading || waitingForExisting;
+  const waitingForRubric = !!submission?.rubricId && rubricLoading;
+  const isLoading = subLoading || waitingForExisting || waitingForRubric;
 
   const inboxEntry = inbox?.find((r) => r.id === submissionId);
   const deadlineTs = inboxEntry?.reviewDeadlineTimestamp ?? 0;
@@ -44,13 +45,25 @@ export function useReviewState() {
   const isDeadlinePassed = inboxSaysDeadlinePassed || subErrorIsClosed;
 
   const readonly = existingReviewId !== null;
-  const parsed = existingReview ? parseReview(existingReview.comment ?? "") : null;
-  const criteria =
-    parsed && parsed.criteria.length > 0
-      ? parsed.criteria
-      : parseRubricFromChecklist(submission?.checklist ?? "");
-  const initialScores = parsed?.scores.length ? parsed.scores : emptyScoresFor(criteria);
-  const initialOverallComment = parsed?.overallComment ?? "";
+  const criteria = useMemo(() => rubricDetail?.criteria ?? [], [rubricDetail]);
+
+  const initialScores: UICriterionScore[] = useMemo(() => {
+    if (criteria.length === 0) return [];
+    const existingByCriterion = new Map(
+      (existingReview?.scores ?? []).map((s) => [s.criterionId, s] as const),
+    );
+    return criteria.map((c) => {
+      const ex = existingByCriterion.get(c.id);
+      return {
+        criterionId: c.id,
+        score: ex?.score ?? null,
+        comment: ex?.comment ?? "",
+      };
+    });
+  }, [criteria, existingReview]);
+
+  const fallbackScores = useMemo(() => emptyScoresFor(criteria), [criteria]);
+  const initialOverallComment = existingReview?.comment ?? "";
 
   return {
     submissionId,
@@ -65,7 +78,7 @@ export function useReviewState() {
     subErrorIsApi,
     readonly,
     criteria,
-    initialScores,
+    initialScores: initialScores.length > 0 ? initialScores : fallbackScores,
     initialOverallComment,
     submitMutation,
   };

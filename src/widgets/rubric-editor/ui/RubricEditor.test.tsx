@@ -2,34 +2,33 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { RubricData } from "../model/types";
+import type { RubricEditorData } from "../model/types";
 
 import { RubricEditor } from "./RubricEditor";
 
-function makeRubric(): RubricData {
+function makeRubric(): RubricEditorData {
   return {
     id: "r-1",
+    teacherId: "t-1",
     name: "Test Rubric",
-    description: "Test description",
     criteria: [
       {
         id: "c-1",
         name: "Clarity",
         description: "Is the writing clear",
         maxScore: 5,
-        required: true,
+        commentRequired: false,
+        position: 0,
       },
       {
         id: "c-2",
         name: "Depth",
         description: "Depth of analysis",
         maxScore: 5,
-        required: true,
+        commentRequired: false,
+        position: 1,
       },
     ],
-    createdAt: new Date("2026-01-01"),
-    updatedAt: new Date("2026-01-02"),
-    teacherId: "t-1",
   };
 }
 
@@ -93,7 +92,7 @@ describe("RubricEditor", () => {
     expect(remaining).toHaveLength(1);
   });
 
-  it("calls onSave with the edited rubric when Save Changes is clicked", async () => {
+  it("calls onSave with the edited rubric (positions recomputed) when Save Changes is clicked", async () => {
     const user = userEvent.setup();
     const onSave = vi.fn();
     render(<RubricEditor rubric={makeRubric()} onSave={onSave} />);
@@ -105,8 +104,9 @@ describe("RubricEditor", () => {
     await user.click(saveBtn);
 
     expect(onSave).toHaveBeenCalledTimes(1);
-    const saved = onSave.mock.calls[0][0] as RubricData;
+    const saved = onSave.mock.calls[0][0] as RubricEditorData;
     expect(saved.name).toBe("Test Rubric v2");
+    expect(saved.criteria.map((c) => c.position)).toEqual([0, 1]);
   });
 
   it("save button is disabled when there are no unsaved changes", () => {
@@ -120,7 +120,7 @@ describe("RubricEditor", () => {
   it("alerts when trying to delete the last criterion", async () => {
     const user = userEvent.setup();
     const onSave = vi.fn();
-    const rubric: RubricData = {
+    const rubric: RubricEditorData = {
       ...makeRubric(),
       criteria: [makeRubric().criteria[0]],
     };

@@ -88,21 +88,38 @@ describe("groupHttpRepo", () => {
     expect(out).toEqual({ id: "5", name: "New", studentCount: 0 });
   });
 
-  it("update sends only the name (BE ignores courseId)", async () => {
+  it("update sends only the name; delete + addTeacher hit the right paths", async () => {
     httpMock.put.mockResolvedValue(undefined);
     httpMock.delete.mockResolvedValue(undefined);
 
     await groupHttpRepo.update("g-1", { name: "Renamed" });
     await groupHttpRepo.delete("g-1");
-    await groupHttpRepo.addStudent("g-1", "s-1");
     await groupHttpRepo.addTeacher("g-1", "t-1");
 
     expect(httpMock.put.mock.calls[0][0]).toBe("/groups/g-1");
     expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "Renamed" });
     expect(httpMock.delete.mock.calls[0][0]).toBe("/groups/g-1");
-    expect(httpMock.put.mock.calls[1][0]).toBe("/groups/g-1/students");
-    expect(httpMock.put.mock.calls[1][1]).toEqual({ studentId: "s-1" });
-    expect(httpMock.put.mock.calls[2][0]).toBe("/groups/g-1/teachers");
-    expect(httpMock.put.mock.calls[2][1]).toEqual({ teacherId: "t-1" });
+    expect(httpMock.put.mock.calls[1][0]).toBe("/groups/g-1/teachers");
+    expect(httpMock.put.mock.calls[1][1]).toEqual({ teacherId: "t-1" });
+  });
+
+  it("addStudents PUTs an array of numeric ids and maps the response", async () => {
+    httpMock.put.mockResolvedValueOnce({
+      addedStudentIds: [10, 11],
+      skippedStudentInfos: [
+        { studentId: 12, reason: "AlreadyInGroup" },
+        { studentId: 13, reason: "NotFound" },
+      ],
+    });
+
+    const out = await groupHttpRepo.addStudents("g-1", ["10", "11", "12", "13"]);
+
+    expect(httpMock.put.mock.calls[0][0]).toBe("/groups/g-1/students");
+    expect(httpMock.put.mock.calls[0][1]).toEqual({ studentIds: [10, 11, 12, 13] });
+    expect(out.addedIds).toEqual(["10", "11"]);
+    expect(out.skipped).toEqual([
+      { studentId: "12", reason: "AlreadyInGroup" },
+      { studentId: "13", reason: "NotFound" },
+    ]);
   });
 });

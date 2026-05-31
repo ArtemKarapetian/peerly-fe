@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
 
-import { serializeReview } from "@/features/review/fill-review/model/markdown";
+import type { RubricCriterion } from "@/entities/rubric";
+
 import {
   MIN_OVERALL_COMMENT_LENGTH,
-  aggregateMark,
-  type CriterionScore,
-  type RubricCriterion,
+  type UICriterionScore,
 } from "@/features/review/fill-review/model/rubric";
 
 import { CriterionCard } from "./CriterionCard";
@@ -14,14 +13,19 @@ import { ProgressCard } from "./ProgressCard";
 import { SubmissionPreviewCard, type SubmissionPreview } from "./SubmissionPreviewCard";
 import { SubmitReviewButton } from "./SubmitReviewButton";
 
+export interface SubmitPayload {
+  scores: { criterionId: string; score: number; comment: string | null }[];
+  comment: string;
+}
+
 interface ReviewFormProps {
   submission: SubmissionPreview;
   criteria: RubricCriterion[];
   readonly: boolean;
-  initialScores: CriterionScore[];
+  initialScores: UICriterionScore[];
   initialOverallComment: string;
   isSubmitting: boolean;
-  onSubmit: (payload: { mark: number; comment: string }) => void;
+  onSubmit: (payload: SubmitPayload) => void;
 }
 
 export function ReviewForm({
@@ -33,22 +37,42 @@ export function ReviewForm({
   isSubmitting,
   onSubmit,
 }: ReviewFormProps) {
-  const [scores, setScores] = useState<CriterionScore[]>(initialScores);
+  const [scores, setScores] = useState<UICriterionScore[]>(initialScores);
   const [overallComment, setOverallComment] = useState(initialOverallComment);
 
   const filledCount = useMemo(() => scores.filter((s) => s.score !== null).length, [scores]);
   const overallValid = overallComment.trim().length >= MIN_OVERALL_COMMENT_LENGTH;
-  const canSubmit = filledCount === criteria.length && overallValid && !isSubmitting && !readonly;
+  const requiredCommentsFilled = useMemo(
+    () =>
+      scores.every((s) => {
+        const c = criteria.find((x) => x.id === s.criterionId);
+        if (!c?.commentRequired) return true;
+        return s.score === null || s.comment.trim().length > 0;
+      }),
+    [scores, criteria],
+  );
+  const canSubmit =
+    filledCount === criteria.length &&
+    overallValid &&
+    requiredCommentsFilled &&
+    !isSubmitting &&
+    !readonly;
 
-  const handleScoreChange = (criterionId: string, next: CriterionScore) => {
+  const handleScoreChange = (criterionId: string, next: UICriterionScore) => {
     setScores((prev) => prev.map((s) => (s.criterionId === criterionId ? next : s)));
   };
 
   const handleSubmit = () => {
     if (!canSubmit) return;
     onSubmit({
-      mark: aggregateMark(scores),
-      comment: serializeReview({ scores, overallComment }, criteria),
+      scores: scores
+        .filter((s): s is UICriterionScore & { score: number } => s.score !== null)
+        .map((s) => ({
+          criterionId: s.criterionId,
+          score: s.score,
+          comment: s.comment.trim() ? s.comment : null,
+        })),
+      comment: overallComment,
     });
   };
 

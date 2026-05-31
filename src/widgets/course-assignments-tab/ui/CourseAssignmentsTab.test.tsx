@@ -39,6 +39,7 @@ function assignment(
     reviewCount: 0,
     status: "published",
     backendStatus,
+    rubricId: null,
   };
 }
 

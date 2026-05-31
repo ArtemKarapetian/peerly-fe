@@ -14,15 +14,7 @@ export interface AssignmentFormData {
   updatedAt: Date;
 }
 
-export interface RubricOptionCriterion {
-  name: string;
-  description: string;
-  maxScore: number;
-}
-
 export interface RubricOption {
   id: string;
   name: string;
-  description: string;
-  criteria: RubricOptionCriterion[];
 }

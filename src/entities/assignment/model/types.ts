@@ -12,10 +12,9 @@ export interface DemoAssignment {
   /** UI status — a simplified projection of `backendStatus`. */
   status: "draft" | "published" | "closed";
   backendStatus: HomeworkStatus;
-  checklist?: string;
+  rubricId: string | null;
   discrepancyThreshold?: number;
   archived?: boolean;
-  rubricId?: string;
 }
 
 export interface TeacherAssignmentDetail {
@@ -26,7 +25,7 @@ export interface TeacherAssignmentDetail {
 export interface CreateAssignmentInput {
   title: string;
   description?: string;
-  checklist?: string;
+  rubricId?: string | null;
   dueDate: Date | string;
   reviewDeadline: Date | string;
   reviewCount: number;

@@ -1,25 +1,39 @@
 import { Card, Textarea } from "@/shared/ui";
 
-import type { CriterionScore, RubricCriterion } from "@/features/review/fill-review/model/rubric";
+import type { RubricCriterion } from "@/entities/rubric";
+
+import type { UICriterionScore } from "@/features/review/fill-review/model/rubric";
 
 interface CriterionCardProps {
   criterion: RubricCriterion;
-  score: CriterionScore;
+  score: UICriterionScore;
   readonly: boolean;
-  onChange: (next: CriterionScore) => void;
+  onChange: (next: UICriterionScore) => void;
 }
 
-const SCORE_VALUES = [1, 2, 3, 4, 5];
-
 export function CriterionCard({ criterion, score, readonly, onChange }: CriterionCardProps) {
+  const max = Math.max(1, criterion.maxScore);
+  const scoreValues = Array.from({ length: max }, (_, i) => i + 1);
+  const commentRequired = criterion.commentRequired && score.score !== null;
+
   return (
     <Card variant="section">
-      <h3 className="text-lg desktop:text-xl tracking-[-0.3px] text-foreground font-medium mb-4">
-        {criterion.title}
-      </h3>
+      <div className="flex items-baseline justify-between gap-3 mb-2">
+        <h3 className="text-lg desktop:text-xl tracking-[-0.3px] text-foreground font-medium">
+          {criterion.name}
+        </h3>
+        <span className="text-13 text-muted-foreground tabular-nums shrink-0">
+          {`/ ${criterion.maxScore}`}
+        </span>
+      </div>
+      {criterion.description && (
+        <p className="text-13 text-muted-foreground leading-relaxed mb-4">
+          {criterion.description}
+        </p>
+      )}
 
-      <div className="flex gap-2 mb-4">
-        {SCORE_VALUES.map((v) => {
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {scoreValues.map((v) => {
           const selected = score.score === v;
           return (
             <button
@@ -27,7 +41,7 @@ export function CriterionCard({ criterion, score, readonly, onChange }: Criterio
               type="button"
               disabled={readonly}
               onClick={() => onChange({ ...score, score: v })}
-              className={`flex-1 h-11 rounded-2md border-2 text-15 font-medium transition-colors ${
+              className={`min-w-[44px] h-11 px-3 rounded-2md border-2 text-15 font-medium transition-colors ${
                 selected
                   ? "bg-brand-primary border-brand-primary text-primary-foreground"
                   : "bg-card border-border text-foreground hover:border-brand-primary disabled:opacity-50 disabled:cursor-not-allowed"
@@ -44,7 +58,9 @@ export function CriterionCard({ criterion, score, readonly, onChange }: Criterio
         disabled={readonly}
         onChange={(e) => onChange({ ...score, comment: e.target.value })}
         rows={3}
-        placeholder="Комментарий по критерию (необязательно)"
+        placeholder={
+          commentRequired ? "Комментарий обязателен" : "Комментарий по критерию (необязательно)"
+        }
         className="px-3 py-2 rounded-2md text-sm"
       />
     </Card>

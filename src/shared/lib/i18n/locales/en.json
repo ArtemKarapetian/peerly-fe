@@ -1892,6 +1892,8 @@
       "addedCount_other": "Added {{count}} students",
       "loadError": "Failed to load groups and participants",
       "addError": "Failed to add selected students",
+      "skippedCount_one": "{{count}} student skipped (already in group or not found)",
+      "skippedCount_other": "{{count}} students skipped (already in group or not found)",
       "cancel": "Cancel",
       "close": "Close"
     },

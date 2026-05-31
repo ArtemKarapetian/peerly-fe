@@ -25,21 +25,8 @@ function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormDa
 }
 
 const sampleRubrics: RubricOption[] = [
-  {
-    id: "r-1",
-    name: "Standard Essay",
-    description: "Generic essay rubric",
-    criteria: [{ name: "Clarity", description: "", maxScore: 5 }],
-  },
-  {
-    id: "r-2",
-    name: "Code Review",
-    description: "Software design rubric",
-    criteria: [
-      { name: "Style", description: "", maxScore: 5 },
-      { name: "Correctness", description: "", maxScore: 5 },
-    ],
-  },
+  { id: "r-1", name: "Standard Essay" },
+  { id: "r-2", name: "Code Review" },
 ];
 
 describe("StepRubric", () => {

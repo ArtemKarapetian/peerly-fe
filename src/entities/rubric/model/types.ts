@@ -1,16 +1,32 @@
-export interface Criterion {
+export interface RubricSummary {
   id: string;
+  teacherId: string;
+  name: string;
+}
+
+export interface RubricCriterion {
+  id: string;
+  name: string;
+  description: string | null;
+  maxScore: number;
+  commentRequired: boolean;
+  position: number;
+}
+
+export interface RubricDetail {
+  rubric: RubricSummary;
+  criteria: RubricCriterion[];
+}
+
+export interface RubricCriterionInput {
   name: string;
   description?: string;
   maxScore: number;
-  required: boolean;
-  commentRequired?: boolean;
-  minCommentLength?: number;
+  commentRequired: boolean;
+  position: number;
 }
 
-export interface RubricSectionData {
-  id: string;
+export interface RubricInput {
   name: string;
-  description?: string;
-  criteria: Criterion[];
+  criteria: RubricCriterionInput[];
 }

@@ -1,63 +1,14 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CriterionScore } from "@/entities/review/model/types.ts";
-import { RubricSectionData } from "@/entities/rubric/model/types.ts";
-
-import { RubricSection } from "@/features/review/fill-review/ui/RubricSection.tsx";
-
-import type { RubricData } from "../model/types";
-
-/**
- * RubricPreview - Предпросмотр рубрики
- *
- * Отображает рубрику в том виде, как она будет выглядеть
- * для студентов в форме рецензирования
- */
+import type { RubricEditorData } from "../model/types";
 
 interface RubricPreviewProps {
-  rubric: RubricData;
+  rubric: RubricEditorData;
 }
 
 export function RubricPreview({ rubric }: RubricPreviewProps) {
   const { t } = useTranslation();
-  const [scores, setScores] = useState<CriterionScore[]>([]);
-
-  // Convert RubricData to RubricSectionData format
-  const section: RubricSectionData = {
-    id: rubric.id,
-    name: rubric.name,
-    description: rubric.description,
-    criteria: rubric.criteria.map((c) => ({
-      id: c.id,
-      name: c.name,
-      description: c.description,
-      maxScore: c.maxScore,
-      required: c.required,
-      commentRequired: c.commentRequired,
-      minCommentLength: c.minCommentLength,
-    })),
-  };
-
-  const handleScoreChange = (criterionId: string, score: CriterionScore) => {
-    setScores((prev) => {
-      const existing = prev.find((s) => s.criterionId === criterionId);
-      if (existing) {
-        return prev.map((s) => (s.criterionId === criterionId ? score : s));
-      }
-      return [...prev, score];
-    });
-  };
-
-  // Calculate stats
   const totalPossible = rubric.criteria.reduce((sum, c) => sum + c.maxScore, 0);
-  const totalScored = scores.reduce((sum, s) => sum + (s.score || 0), 0);
-  const completedCount = scores.filter((s) => s.score !== null).length;
-  const totalCriteria = rubric.criteria.length;
-  const requiredCount = rubric.criteria.filter((c) => c.required).length;
-  const completedRequiredCount = scores.filter(
-    (s) => s.score !== null && rubric.criteria.find((c) => c.id === s.criterionId)?.required,
-  ).length;
 
   return (
     <div>
@@ -68,63 +19,43 @@ export function RubricPreview({ rubric }: RubricPreviewProps) {
         <p className="text-sm text-muted-foreground">{t("widget.rubricPreview.previewDesc")}</p>
       </div>
 
-      <div className="mb-6">
-        <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px] mb-2">
-          {rubric.name}
-        </h2>
-        <p className="text-15 text-muted-foreground leading-[1.5]">{rubric.description}</p>
+      <div className="mb-6 flex items-baseline justify-between gap-4">
+        <h2 className="text-2xl font-medium text-foreground tracking-[-0.5px]">{rubric.name}</h2>
+        <span className="text-sm text-muted-foreground tabular-nums">
+          {t("widget.rubricPreview.maxTotal", { count: totalPossible })}
+        </span>
       </div>
 
-      <div className="border border-border rounded-md p-4 mb-6">
-        <div className="grid grid-cols-4 gap-4 text-center">
-          <div>
-            <p className="text-2xl font-medium text-foreground">
-              {completedCount}/{totalCriteria}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t("widget.rubricPreview.criteriaRated")}
-            </p>
-          </div>
-          <div>
-            <p className="text-2xl font-medium text-foreground">
-              {completedRequiredCount}/{requiredCount}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t("widget.rubricPreview.requiredLabel")}
-            </p>
-          </div>
-          <div>
-            <p className="text-2xl font-medium text-brand-primary">
-              {totalScored}/{totalPossible}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t("widget.rubricPreview.pointsScored")}
-            </p>
-          </div>
-          <div>
-            <p className="text-2xl font-medium text-success">
-              {totalPossible > 0 ? Math.round((totalScored / totalPossible) * 100) : 0}%
-            </p>
-            <p className="text-xs text-muted-foreground">{t("widget.rubricPreview.percent")}</p>
-          </div>
-        </div>
-      </div>
-
-      <RubricSection
-        section={section}
-        scores={scores}
-        onScoreChange={handleScoreChange}
-        readonly={false}
-      />
-
-      <div className="mt-6 flex justify-end">
-        <button
-          onClick={() => setScores([])}
-          className="px-4 py-2 border-2 border-border text-muted-foreground rounded-md hover:border-brand-primary hover:text-foreground transition-colors text-sm"
-        >
-          {t("widget.rubricPreview.resetScores")}
-        </button>
-      </div>
+      <ol className="space-y-3">
+        {rubric.criteria.map((criterion, idx) => (
+          <li
+            key={criterion.id}
+            className="border border-border rounded-md p-4 bg-card flex items-start gap-3"
+          >
+            <span className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand-primary-lighter text-13 font-medium text-brand-primary">
+              {idx + 1}
+            </span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline justify-between gap-3 mb-1">
+                <h4 className="text-base font-medium text-foreground">{criterion.name}</h4>
+                <span className="text-13 text-muted-foreground tabular-nums shrink-0">
+                  {t("widget.rubricPreview.maxScore", { count: criterion.maxScore })}
+                </span>
+              </div>
+              {criterion.description && (
+                <p className="text-13 text-muted-foreground leading-relaxed mb-2">
+                  {criterion.description}
+                </p>
+              )}
+              {criterion.commentRequired && (
+                <span className="inline-flex items-center text-xs text-warning font-medium">
+                  {t("widget.rubricPreview.commentRequired")}
+                </span>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }

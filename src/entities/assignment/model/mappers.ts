@@ -23,7 +23,7 @@ export function mapHomeworkToAssignment(
     reviewCount: dto.amountOfReviewers ?? 0,
     status: uiStatus(dto.status),
     backendStatus: dto.status,
-    checklist: dto.checklist,
+    rubricId: dto.rubricId != null ? String(dto.rubricId) : null,
     discrepancyThreshold: dto.discrepancyThreshold,
     archived: dto.status === "deleted",
   };
@@ -40,7 +40,7 @@ export function mapInputToCreateBody(input: CreateAssignmentInput): CreateHomewo
     name: input.title,
     amountOfReviewers: input.reviewCount,
     description: input.description,
-    checklist: input.checklist ?? "",
+    rubricId: input.rubricId != null ? Number(input.rubricId) : null,
     deadline,
     reviewDeadline,
     discrepancyThreshold: input.discrepancyThreshold ?? 0,

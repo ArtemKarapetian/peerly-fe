@@ -144,13 +144,13 @@ describe("computeAssignmentMetrics", () => {
         id: "r1",
         submissionId: "sub1",
         status: "submitted",
-        scores: { c1: 5 },
+        scores: [{ criterionId: "c1", score: 5, comment: null }],
       } as unknown as AnalyticsRawData["reviews"][number],
       {
         id: "r2",
         submissionId: "sub1",
         status: "submitted",
-        scores: { c1: 3 },
+        scores: [{ criterionId: "c1", score: 3, comment: null }],
       } as unknown as AnalyticsRawData["reviews"][number],
     ];
     const metrics = computeAssignmentMetrics({
@@ -178,7 +178,7 @@ describe("computeAssignmentMetrics", () => {
         id: "r1",
         submissionId: "sub1",
         status: "submitted",
-        scores: { c1: 5 },
+        scores: [{ criterionId: "c1", score: 5, comment: null }],
       } as unknown as AnalyticsRawData["reviews"][number],
     ];
     const metrics = computeAssignmentMetrics({
@@ -263,7 +263,10 @@ describe("computeGradebook", () => {
         id: "r1",
         submissionId: "sub1",
         status: "submitted",
-        scores: { c: 4, d: 5 },
+        scores: [
+          { criterionId: "c", score: 4, comment: null },
+          { criterionId: "d", score: 5, comment: null },
+        ],
       } as unknown as AnalyticsRawData["reviews"][number],
     ];
     const book = computeGradebook({

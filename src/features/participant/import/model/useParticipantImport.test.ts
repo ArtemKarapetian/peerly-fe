@@ -15,7 +15,7 @@ function makeWrapper() {
 const { groupRepoMock, courseRepoMock, userRepoMock } = vi.hoisted(() => ({
   groupRepoMock: {
     listForCourse: vi.fn(),
-    addStudent: vi.fn(),
+    addStudents: vi.fn(),
   },
   courseRepoMock: { getParticipants: vi.fn() },
   userRepoMock: { searchStudents: vi.fn() },
@@ -39,7 +39,7 @@ vi.mock("react-i18next", () => ({
 
 beforeEach(() => {
   groupRepoMock.listForCourse.mockReset();
-  groupRepoMock.addStudent.mockReset();
+  groupRepoMock.addStudents.mockReset();
   courseRepoMock.getParticipants.mockReset();
   userRepoMock.searchStudents.mockReset();
 

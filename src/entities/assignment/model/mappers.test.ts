@@ -12,7 +12,7 @@ const baseDto: HomeworkDto = {
   deadline: "2026-04-01T23:59:00Z",
   reviewDeadline: "2026-04-08T23:59:00Z",
   description: "Solve all problems.",
-  checklist: "- prove theorem 1\n- prove theorem 2",
+  rubricId: 42,
   amountOfReviewers: 3,
   discrepancyThreshold: 2,
 };
@@ -30,7 +30,7 @@ describe("mapHomeworkToAssignment", () => {
     expect(result.dueDate.toISOString()).toBe("2026-04-01T23:59:00.000Z");
     expect(result.reviewDeadline?.toISOString()).toBe("2026-04-08T23:59:00.000Z");
     expect(result.reviewCount).toBe(3);
-    expect(result.checklist).toBe("- prove theorem 1\n- prove theorem 2");
+    expect(result.rubricId).toBe("42");
     expect(result.discrepancyThreshold).toBe(2);
     expect(result.backendStatus).toBe("published");
     expect(result.status).toBe("published");
@@ -51,6 +51,7 @@ describe("mapHomeworkToAssignment", () => {
     expect(result.description).toBe("");
     expect(result.reviewDeadline).toBeUndefined();
     expect(result.reviewCount).toBe(0);
+    expect(result.rubricId).toBeNull();
     expect(result.status).toBe("draft");
     expect(result.archived).toBe(false);
   });
@@ -75,11 +76,11 @@ describe("mapHomeworkToAssignment", () => {
 });
 
 describe("mapInputToCreateBody", () => {
-  it("serialises Date deadlines to ISO strings", () => {
+  it("serialises Date deadlines to ISO strings and converts rubricId to number", () => {
     const input: CreateAssignmentInput = {
       title: "HW2",
       description: "do it",
-      checklist: "step 1",
+      rubricId: "7",
       dueDate: new Date("2026-06-01T12:00:00Z"),
       reviewDeadline: new Date("2026-06-08T12:00:00Z"),
       reviewCount: 4,
@@ -91,13 +92,13 @@ describe("mapInputToCreateBody", () => {
     expect(body.name).toBe("HW2");
     expect(body.amountOfReviewers).toBe(4);
     expect(body.description).toBe("do it");
-    expect(body.checklist).toBe("step 1");
+    expect(body.rubricId).toBe(7);
     expect(body.deadline).toBe("2026-06-01T12:00:00.000Z");
     expect(body.reviewDeadline).toBe("2026-06-08T12:00:00.000Z");
     expect(body.discrepancyThreshold).toBe(5);
   });
 
-  it("passes through string deadlines unchanged and defaults checklist + threshold", () => {
+  it("passes through string deadlines unchanged and defaults rubricId + threshold", () => {
     const input: CreateAssignmentInput = {
       title: "HW3",
       dueDate: "2026-07-01T00:00:00Z",
@@ -109,7 +110,7 @@ describe("mapInputToCreateBody", () => {
 
     expect(body.deadline).toBe("2026-07-01T00:00:00Z");
     expect(body.reviewDeadline).toBe("2026-07-08T00:00:00Z");
-    expect(body.checklist).toBe("");
+    expect(body.rubricId).toBeNull();
     expect(body.discrepancyThreshold).toBe(0);
     expect(body.description).toBeUndefined();
   });

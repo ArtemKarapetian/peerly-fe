@@ -16,7 +16,7 @@ export interface HomeworkDto {
   deadline: string;
   reviewDeadline?: string;
   description?: string;
-  checklist?: string;
+  rubricId?: number | null;
   amountOfReviewers?: number;
   discrepancyThreshold?: number;
   files?: FileDto[];
@@ -26,7 +26,7 @@ export interface CreateHomeworkRequestBody {
   name: string;
   amountOfReviewers: number;
   description?: string;
-  checklist: string;
+  rubricId?: number | null;
   deadline: string;
   reviewDeadline: string;
   discrepancyThreshold: number;

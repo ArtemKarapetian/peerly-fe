@@ -34,7 +34,7 @@ export interface SubmissionToReview {
   id: string;
   comment: string;
   files: { id: string; name: string; size: number }[];
-  checklist: string;
+  rubricId: string | null;
   submittedReviewId: string | null;
 }
 
@@ -108,7 +108,7 @@ export const reviewHttpRepo = {
       id: String(res.submission.submittedHomeworkId),
       comment: res.submission.comment,
       files: res.submission.files.map(fileFromDto),
-      checklist: res.submission.checklist,
+      rubricId: res.submission.rubricId != null ? String(res.submission.rubricId) : null,
       submittedReviewId: res.submission.submittedReviewId
         ? String(res.submission.submittedReviewId)
         : null,
@@ -117,10 +117,17 @@ export const reviewHttpRepo = {
 
   create: async (
     submissionId: string,
-    mark: number,
+    scores: { criterionId: string; score: number; comment?: string | null }[],
     comment: string,
   ): Promise<{ reviewId: string }> => {
-    const body: CreateSubmittedReviewRequestBody = { mark, comment };
+    const body: CreateSubmittedReviewRequestBody = {
+      scores: scores.map((s) => ({
+        rubricCriterionId: Number(s.criterionId),
+        score: s.score,
+        comment: s.comment ?? null,
+      })),
+      comment,
+    };
     const res = await http.post<CreateSubmittedReviewResponse>(
       `/submissions/${submissionId}/reviews`,
       body,
@@ -137,8 +144,19 @@ export const reviewHttpRepo = {
     }
   },
 
-  update: async (reviewId: string, mark: number, comment: string): Promise<void> => {
-    const body: UpdateSubmittedReviewRequestBody = { mark, comment };
+  update: async (
+    reviewId: string,
+    scores: { criterionId: string; score: number; comment?: string | null }[],
+    comment: string,
+  ): Promise<void> => {
+    const body: UpdateSubmittedReviewRequestBody = {
+      scores: scores.map((s) => ({
+        rubricCriterionId: Number(s.criterionId),
+        score: s.score,
+        comment: s.comment ?? null,
+      })),
+      comment,
+    };
     await http.put<void>(`/reviews/${reviewId}`, body);
   },
 

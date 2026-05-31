@@ -85,9 +85,9 @@ export default function ReviewPage() {
         initialScores={initialScores}
         initialOverallComment={initialOverallComment}
         isSubmitting={submitMutation.isPending}
-        onSubmit={({ mark, comment }) =>
+        onSubmit={({ scores, comment }) =>
           submitMutation.mutate(
-            { submissionId, mark, comment },
+            { submissionId, scores, comment },
             {
               onSuccess: () => {
                 toast.success(t("page.reviewFill.successToast"));

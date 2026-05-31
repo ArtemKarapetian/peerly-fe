@@ -23,9 +23,9 @@ describe("formatDeadline", () => {
 });
 
 describe("commentForBe", () => {
-  it("returns em-dash for empty / whitespace-only", () => {
-    expect(commentForBe("")).toBe("—");
-    expect(commentForBe("   ")).toBe("—");
+  it("returns null for empty / whitespace-only", () => {
+    expect(commentForBe("")).toBeNull();
+    expect(commentForBe("   ")).toBeNull();
   });
   it("returns original text otherwise", () => {
     expect(commentForBe("hi")).toBe("hi");
