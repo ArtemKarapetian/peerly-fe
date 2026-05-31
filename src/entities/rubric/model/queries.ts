@@ -10,6 +10,8 @@ export function useRubrics() {
   return useQuery({
     queryKey: rubricKeys.list(),
     queryFn: () => rubricHttpRepo.listMine(),
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 }
 
