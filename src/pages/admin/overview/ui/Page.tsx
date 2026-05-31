@@ -1,15 +1,22 @@
-import { Users, ArrowRight } from "lucide-react";
+import { Users, BookOpen, ArrowRight } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { useAsync } from "@/shared/lib/useAsync";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+
+import { userRepo } from "@/entities/user";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 
 export default function AdminOverviewPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const { data: users } = useAsync(() => userRepo.search("demo"), []);
+  const activeCourses = 6;
+  const totalStudents = (users ?? []).filter((u) => u.role === "Student").length;
 
   const quickLinks = [
     {
@@ -39,6 +46,32 @@ export default function AdminOverviewPage() {
             {t("admin.overview.title")}
           </h1>
           <p className="text-base text-muted-foreground">{t("admin.overview.subtitle")}</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="bg-card border-2 border-border rounded-lg p-6">
+            <div className="w-12 h-12 bg-info-light rounded-md flex items-center justify-center mb-4">
+              <Users className="w-6 h-6 text-brand-primary" />
+            </div>
+            <p className="text-13 text-muted-foreground uppercase tracking-wide mb-1">
+              {t("admin.overviewPage.totalStudents")}
+            </p>
+            <p className="text-page-h1 font-medium text-foreground tracking-[-0.5px]">
+              {totalStudents.toLocaleString()}
+            </p>
+          </div>
+
+          <div className="bg-card border-2 border-border rounded-lg p-6">
+            <div className="w-12 h-12 bg-success-light rounded-md flex items-center justify-center mb-4">
+              <BookOpen className="w-6 h-6 text-success" />
+            </div>
+            <p className="text-13 text-muted-foreground uppercase tracking-wide mb-1">
+              {t("admin.overviewPage.activeCourses", { count: activeCourses })}
+            </p>
+            <p className="text-page-h1 font-medium text-foreground tracking-[-0.5px]">
+              {activeCourses.toLocaleString()}
+            </p>
+          </div>
         </div>
 
         <div>

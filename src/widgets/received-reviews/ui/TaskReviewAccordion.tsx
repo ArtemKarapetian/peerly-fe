@@ -2,8 +2,6 @@ import { ChevronDown, ChevronUp, CheckCircle, Clock } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const MARK_MAX = 5;
-
 interface Review {
   reviewId: string;
   mark: number;
@@ -16,6 +14,7 @@ interface TaskSubmission {
   taskTitle: string;
   status: "PUBLISHED" | "IN_REVIEW" | "PENDING";
   finalMark: number | null;
+  maxScore: number;
   reviewsReceived: number;
   reviewsRequired: number;
   reviews: Review[];
@@ -99,7 +98,7 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
 
                   {task.status === "PUBLISHED" && task.finalMark !== null && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-primary-light text-foreground rounded-sm text-13 font-medium">
-                      {t("widget.taskReviewAccordion.finalMark")} {task.finalMark}/{MARK_MAX}
+                      {t("widget.taskReviewAccordion.finalMark")} {task.finalMark}/{task.maxScore}
                     </span>
                   )}
 
@@ -130,7 +129,7 @@ export function TaskReviewAccordion({ tasks }: TaskReviewAccordionProps) {
                         {t("widget.taskReviewAccordion.anonymousReviewer")}
                       </span>
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-brand-primary-lighter text-foreground rounded-2sm text-13 font-medium">
-                        {t("widget.taskReviewAccordion.reviewMark")} {review.mark}/{MARK_MAX}
+                        {t("widget.taskReviewAccordion.reviewMark")} {review.mark}/{task.maxScore}
                       </span>
                     </div>
                     {review.comment && (
