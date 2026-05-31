@@ -32,7 +32,7 @@ export interface AssignedReviewEntry {
 
 export interface SubmissionToReview {
   id: string;
-  comment: string;
+  comment: string | null;
   files: { id: string; name: string; size: number }[];
   rubricId: string | null;
   submittedReviewId: string | null;
@@ -91,8 +91,10 @@ export const reviewHttpRepo = {
   },
 
   listAssigned: async (homeworkId: string): Promise<AssignedReviewEntry[]> => {
+    const role = getSession()?.role;
+    const prefix = role === "Teacher" || role === "Admin" ? "teacher" : "student";
     const res = await http.get<ListAssignedReviewsResponse>(
-      paged(`/homeworks/${homeworkId}/assigned-reviews`),
+      paged(`/${prefix}/homeworks/${homeworkId}/assigned-reviews`),
     );
     return res.assignedReviews.map((r) => ({
       submissionId: String(r.submittedHomeworkId),

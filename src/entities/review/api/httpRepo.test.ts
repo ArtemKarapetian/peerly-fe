@@ -50,7 +50,9 @@ describe("reviewHttpRepo", () => {
 
     const out = await reviewHttpRepo.listAssigned("hw-9");
 
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/homeworks\/hw-9\/assigned-reviews\?/);
+    expect(httpMock.get.mock.calls[0][0]).toMatch(
+      /^\/student\/homeworks\/hw-9\/assigned-reviews\?/,
+    );
     expect(out).toEqual([
       {
         submissionId: "sub-1",
