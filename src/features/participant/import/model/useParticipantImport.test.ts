@@ -107,4 +107,14 @@ describe("useParticipantImport", () => {
     act(() => result.current.toggleSelected("u-1"));
     expect(result.current.canSubmit).toBe(true);
   });
+
+  it("add() short-circuits when no group or no selection", async () => {
+    groupRepoMock.listForCourse.mockResolvedValue([]);
+    const { result } = renderHook(() => useParticipantImport("c-1"), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current.groups).toEqual([]));
+
+    const res = await result.current.add();
+    expect(res).toBeNull();
+    expect(groupRepoMock.addStudents).not.toHaveBeenCalled();
+  });
 });
