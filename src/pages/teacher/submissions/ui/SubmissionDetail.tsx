@@ -6,11 +6,19 @@ import type { SubmissionRow } from "../model/types";
 
 interface SubmissionDetailProps {
   row: SubmissionRow;
+  isLoadingDetails?: boolean;
+  detailsError?: Error | null;
   onClose: () => void;
   onDownload: (fileId: string, fileName: string) => Promise<void>;
 }
 
-export function SubmissionDetail({ row, onClose, onDownload }: SubmissionDetailProps) {
+export function SubmissionDetail({
+  row,
+  isLoadingDetails,
+  detailsError,
+  onClose,
+  onDownload,
+}: SubmissionDetailProps) {
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-foreground/40" onClick={onClose}>
       <div
@@ -19,11 +27,39 @@ export function SubmissionDetail({ row, onClose, onDownload }: SubmissionDetailP
       >
         <DetailHeader row={row} onClose={onClose} />
         <div className="p-6 space-y-6">
-          <CommentSection comment={row.sub.content} />
-          <FilesSection files={row.sub.files} onDownload={onDownload} />
+          {detailsError ? (
+            <DetailsErrorBlock error={detailsError} />
+          ) : isLoadingDetails ? (
+            <DetailsLoadingBlock />
+          ) : (
+            <>
+              <CommentSection comment={row.sub.content} />
+              <FilesSection files={row.sub.files} onDownload={onDownload} />
+            </>
+          )}
           <MarksSection sub={row.sub} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function DetailsLoadingBlock() {
+  const { t } = useTranslation();
+  return (
+    <div className="text-13 text-muted-foreground">{t("teacher.submissions.loadingDetails")}</div>
+  );
+}
+
+function DetailsErrorBlock({ error }: { error: Error }) {
+  const { t } = useTranslation();
+  return (
+    <div className="bg-error-light border border-error/30 rounded-md p-3">
+      <p className="text-13 text-error whitespace-pre-line">
+        {t("teacher.submissions.loadDetailsError")}
+        {": "}
+        {error.message}
+      </p>
     </div>
   );
 }

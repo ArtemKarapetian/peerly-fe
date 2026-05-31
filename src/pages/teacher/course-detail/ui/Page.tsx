@@ -3,14 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
-import { useAsync } from "@/shared/lib/useAsync";
 import { Card, EmptyState } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { assignmentRepo } from "@/entities/assignment";
-import { courseRepo } from "@/entities/course";
+import { useAssignmentsByCourse } from "@/entities/assignment";
+import { useCourse, useCourseParticipants } from "@/entities/course";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
 import {
@@ -26,42 +25,41 @@ type TabKey = "assignments" | "participants" | "settings";
 
 export default function TeacherCourseDetailsPage() {
   const { courseId: routeCourseId } = useParams<{ courseId: string }>();
-  const courseId = routeCourseId ?? "c1";
+  const courseId = routeCourseId ?? "";
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<TabKey>("assignments");
 
-  const { data, isLoading, error, refetch } = useAsync(
-    async () => {
-      const course = await courseRepo.getById(courseId || "c1");
-      const [participants, courseAssignments] = await Promise.all([
-        course
-          ? courseRepo.getParticipants(course.id)
-          : Promise.resolve({ teachers: [], students: [] }),
-        course ? assignmentRepo.getByCourse(course.id) : Promise.resolve([]),
-      ]);
-      const teacher = participants.teachers[0] ?? null;
-      return { course, teacher, courseAssignments };
-    },
-    [courseId],
-    { onError: "redirect" },
+  const {
+    data: course,
+    isLoading: courseLoading,
+    error: courseError,
+    refetch: refetchCourse,
+  } = useCourse(courseId);
+  const { data: participants, isLoading: participantsLoading } = useCourseParticipants(
+    course ? course.id : "",
+  );
+  const { data: courseAssignments, isLoading: assignmentsLoading } = useAssignmentsByCourse(
+    course ? course.id : "",
   );
 
-  if (isLoading)
+  const isLoading = courseLoading || participantsLoading || assignmentsLoading;
+  const teacher = participants?.teachers[0] ?? null;
+
+  if (isLoading) {
     return (
       <AppShell title={t("teacher.courseDetail.loadingCourse")}>
         <PageSkeleton />
       </AppShell>
     );
-  if (error)
+  }
+  if (courseError) {
     return (
       <AppShell title={t("teacher.courseDetail.error")}>
-        <ErrorBanner error={error} onRetry={refetch} />
+        <ErrorBanner error={courseError} onRetry={() => void refetchCourse()} />
       </AppShell>
     );
-
-  const { course, teacher, courseAssignments } = data!;
-
+  }
   if (!course) {
     return (
       <AppShell title={t("teacher.courseDetail.courseNotFound")}>
@@ -84,8 +82,7 @@ export default function TeacherCourseDetailsPage() {
         <CourseHeaderCard
           course={course}
           teacher={teacher}
-          courseAssignments={courseAssignments}
-          onPublished={refetch}
+          courseAssignments={courseAssignments ?? []}
         />
 
         <Card className="p-0 overflow-hidden">

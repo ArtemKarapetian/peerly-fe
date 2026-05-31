@@ -18,15 +18,9 @@ interface CourseHeaderCardProps {
   course: DemoCourse;
   teacher: Teacher | null;
   courseAssignments: DemoAssignment[];
-  onPublished?: () => void;
 }
 
-export function CourseHeaderCard({
-  course,
-  teacher,
-  courseAssignments,
-  onPublished,
-}: CourseHeaderCardProps) {
+export function CourseHeaderCard({ course, teacher, courseAssignments }: CourseHeaderCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const publishedCount = courseAssignments.filter((a) => a.status === "published").length;
@@ -36,7 +30,6 @@ export function CourseHeaderCard({
     try {
       await publishMutation.mutateAsync();
       toast.success(t("teacher.courseDetail.publishSuccess"));
-      onPublished?.();
     } catch (err) {
       toast.error(humanizeApiError(err, t("teacher.courseDetail.publishError")));
     }

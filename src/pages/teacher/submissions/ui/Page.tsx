@@ -264,7 +264,11 @@ interface SubmissionDetailContainerProps {
 }
 
 function SubmissionDetailContainer({ row, onClose, onDownload }: SubmissionDetailContainerProps) {
-  const { data: fullSubmission } = useAsync(() => workRepo.getById(row.sub.id), [row.sub.id]);
+  const {
+    data: fullSubmission,
+    isLoading,
+    error,
+  } = useAsync(() => workRepo.getById(row.sub.id), [row.sub.id]);
 
   const enrichedRow = useMemo(
     () =>
@@ -281,5 +285,13 @@ function SubmissionDetailContainer({ row, onClose, onDownload }: SubmissionDetai
     [row, fullSubmission],
   );
 
-  return <SubmissionDetail row={enrichedRow} onClose={onClose} onDownload={onDownload} />;
+  return (
+    <SubmissionDetail
+      row={enrichedRow}
+      isLoadingDetails={isLoading}
+      detailsError={error}
+      onClose={onClose}
+      onDownload={onDownload}
+    />
+  );
 }

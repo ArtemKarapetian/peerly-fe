@@ -68,9 +68,7 @@ function SubmissionListItem({
               })}
             </p>
           )}
-          <p className="text-xs text-muted-foreground">
-            {t("teacher.submissions.filesLabel", { count: row.sub.files.length })}
-          </p>
+          <p className="text-xs text-brand-primary mt-1">{t("teacher.submissions.openDetails")}</p>
         </div>
       </div>
     </button>
