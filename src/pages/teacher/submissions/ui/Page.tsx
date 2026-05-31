@@ -247,7 +247,7 @@ function SubmissionsContent({ assignmentId }: { assignmentId: string }) {
       <SubmissionList rows={filtered} onSelect={setSelectedId} />
 
       {selected && (
-        <SubmissionDetail
+        <SubmissionDetailContainer
           row={selected}
           onClose={() => setSelectedId(null)}
           onDownload={handleDownload}
@@ -255,4 +255,31 @@ function SubmissionsContent({ assignmentId }: { assignmentId: string }) {
       )}
     </>
   );
+}
+
+interface SubmissionDetailContainerProps {
+  row: import("../model/types").SubmissionRow;
+  onClose: () => void;
+  onDownload: (fileId: string, fileName: string) => Promise<void>;
+}
+
+function SubmissionDetailContainer({ row, onClose, onDownload }: SubmissionDetailContainerProps) {
+  const { data: fullSubmission } = useAsync(() => workRepo.getById(row.sub.id), [row.sub.id]);
+
+  const enrichedRow = useMemo(
+    () =>
+      fullSubmission
+        ? {
+            ...row,
+            sub: {
+              ...row.sub,
+              content: fullSubmission.content,
+              files: fullSubmission.files,
+            },
+          }
+        : row,
+    [row, fullSubmission],
+  );
+
+  return <SubmissionDetail row={enrichedRow} onClose={onClose} onDownload={onDownload} />;
 }

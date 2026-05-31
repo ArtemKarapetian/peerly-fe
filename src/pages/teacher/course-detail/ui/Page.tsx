@@ -81,7 +81,12 @@ export default function TeacherCourseDetailsPage() {
       <Breadcrumbs items={[CRUMBS.teacherCourses, { label: course.name }]} />
 
       <div className="mt-6">
-        <CourseHeaderCard course={course} teacher={teacher} courseAssignments={courseAssignments} />
+        <CourseHeaderCard
+          course={course}
+          teacher={teacher}
+          courseAssignments={courseAssignments}
+          onPublished={refetch}
+        />
 
         <Card className="p-0 overflow-hidden">
           <CourseTabsBar tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />

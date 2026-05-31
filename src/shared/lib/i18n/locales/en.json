@@ -2199,7 +2199,10 @@
   "shared": {
     "errorBanner": {
       "retry": "Retry",
-      "fallback": "Something went wrong. Please try again."
+      "fallback": "Something went wrong. Please try again.",
+      "notFound": "We couldn't find what you were looking for. The item may have been deleted or the link is outdated.",
+      "forbidden": "You don't have access to this section.",
+      "serverError": "The server is temporarily unavailable. Try again in a minute."
     },
     "saveStatus": {
       "unsaved": "Unsaved changes",

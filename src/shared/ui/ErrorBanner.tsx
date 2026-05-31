@@ -1,7 +1,7 @@
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { humanizeApiError } from "@/shared/api";
+import { ApiError, humanizeApiError } from "@/shared/api";
 
 interface ErrorBannerProps {
   message?: string;
@@ -9,9 +9,18 @@ interface ErrorBannerProps {
   onRetry?: () => void;
 }
 
+function pickStatusFallback(error: unknown, t: (k: string) => string): string {
+  if (error instanceof ApiError) {
+    if (error.status === 404) return t("shared.errorBanner.notFound");
+    if (error.status === 403) return t("shared.errorBanner.forbidden");
+    if (error.status >= 500) return t("shared.errorBanner.serverError");
+  }
+  return t("shared.errorBanner.fallback");
+}
+
 export function ErrorBanner({ message, error, onRetry }: ErrorBannerProps) {
   const { t } = useTranslation();
-  const fallback = t("shared.errorBanner.fallback");
+  const fallback = pickStatusFallback(error, t);
   const text = message ?? humanizeApiError(error, fallback);
   return (
     <div className="bg-error-light border border-error/20 rounded-lg p-6 text-center">
