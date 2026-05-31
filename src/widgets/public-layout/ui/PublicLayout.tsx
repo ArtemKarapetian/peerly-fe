@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui/button.tsx";
 
-import { useAuth } from "@/entities/user";
+import { defaultRouteForRole, useAuth } from "@/entities/user";
 
 import { ProfileDropdown } from "@/widgets/navigation/ProfileDropdown.tsx";
 
@@ -19,9 +19,12 @@ interface PublicTopBarProps {
 }
 
 export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, session } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const ctaTarget = isAuthenticated ? defaultRouteForRole(session?.role) : ROUTES.register;
+  const ctaLabel = isAuthenticated ? t("page.landing.openDashboard") : t("page.landing.getStarted");
 
   return (
     <header className="w-full border-b border-border bg-background">
@@ -38,8 +41,8 @@ export function PublicTopBar({ showAuthControls = true }: PublicTopBarProps) {
             {isAuthenticated ? (
               <ProfileDropdown />
             ) : (
-              <Button variant="secondary" size="sm" onClick={() => void navigate(ROUTES.login)}>
-                {t("widget.publicLayout.signIn")}
+              <Button variant="primary" size="sm" onClick={() => void navigate(ctaTarget)}>
+                {ctaLabel}
               </Button>
             )}
           </div>

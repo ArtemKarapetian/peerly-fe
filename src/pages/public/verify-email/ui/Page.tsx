@@ -22,12 +22,5 @@ export default function VerifyEmailPage() {
       />
     );
   }
-  return (
-    <PendingView
-      email={email}
-      resending={resending}
-      resendCooldown={resendCooldown}
-      onResend={() => void handleResend()}
-    />
-  );
+  return <PendingView email={email} />;
 }

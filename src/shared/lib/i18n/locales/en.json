@@ -1471,7 +1471,8 @@
       "roleAdminSubtitle": "Transparency",
       "roleAdminDesc": "The administrator can monitor system health and metrics.",
       "ctaTitle": "Peerly will help optimize teacher workload and improve the quality of education.",
-      "footerHelp": "Help"
+      "footerHelp": "Help",
+      "footerTerms": "Terms of Use"
     },
     "help": {
       "title": "Help & Support",

@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
 import { STORAGE_KEYS } from "@/shared/config/constants";
@@ -51,7 +50,6 @@ export function useRegisterForm() {
         role: values.role,
       });
       localStorage.setItem(STORAGE_KEYS.pendingVerificationEmail, trimmedEmail);
-      toast.success(t("auth.accountCreated"), { description: t("auth.checkYourEmail") });
       void navigate(ROUTES.verifyEmail);
     } catch (err) {
       setSubmitError(humanizeApiError(err, t("auth.registrationError")));
