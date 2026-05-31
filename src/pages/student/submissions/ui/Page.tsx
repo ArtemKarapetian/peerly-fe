@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { useAssignment } from "@/entities/assignment";
 import { useCourse } from "@/entities/course";
+import { useRubric } from "@/entities/rubric";
 import { useMySubmission } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
@@ -30,6 +31,7 @@ export default function SubmissionsPage() {
   const { data: hw } = useAssignment(taskId);
   const { data: submission, isLoading, isError } = useMySubmission(taskId);
   const submissionDetail = useSubmissionDetail(submission?.id);
+  const { data: rubricDetail } = useRubric(hw?.rubricId ?? undefined);
 
   const [now] = useState(() => Date.now());
   const isDeadlinePassed = hw?.dueDate ? hw.dueDate.getTime() < now : false;
@@ -38,6 +40,8 @@ export default function SubmissionsPage() {
   const taskTitle = hw?.title ?? "";
   const reviews = submissionDetail.data?.submittedReviews ?? [];
   const finalMark = submissionDetail.data?.finalMark ?? null;
+  const rubricTotal = rubricDetail?.criteria.reduce((sum, c) => sum + c.maxScore, 0) ?? 0;
+  const maxScore = rubricTotal > 0 ? rubricTotal : 100;
 
   const breadcrumbs = [
     CRUMBS.courses,
@@ -94,9 +98,9 @@ export default function SubmissionsPage() {
         <div className="desktop:col-span-2 space-y-4">
           <CommentSection content={submission.content} />
           <FilesSection files={submission.files} />
-          <ReviewsSection reviews={reviews} />
+          <ReviewsSection reviews={reviews} maxScore={maxScore} />
         </div>
-        <FinalMarkAside finalMark={finalMark} />
+        <FinalMarkAside finalMark={finalMark} maxScore={maxScore} />
       </div>
     </AppShell>
   );

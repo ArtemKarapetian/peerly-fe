@@ -6,7 +6,7 @@ export type StatusFilter = "all" | "draft" | "submitted" | "late";
 export type RowStatus = Exclude<StatusFilter, "all">;
 
 export interface SubmissionsRawData {
-  users: Awaited<ReturnType<typeof userRepo.getAll>>;
+  users: Awaited<ReturnType<typeof userRepo.search>>;
   assignments: Awaited<ReturnType<typeof assignmentRepo.getAll>>;
   submissions: Awaited<ReturnType<typeof workRepo.getAll>>;
 }

@@ -241,7 +241,9 @@
       "reviewDeadline": "Review deadline",
       "reviewers": "Reviewers",
       "notFound": "Assignment not found",
-      "noDescription": "No description provided"
+      "noDescription": "No description provided",
+      "maxScore_one": "max {{count}} point",
+      "maxScore_other": "max {{count}} points"
     },
     "submissions": {
       "title": "My Submission",
@@ -1027,7 +1029,9 @@
       "headerUser": "User",
       "headerRole": "Role",
       "notFound": "No users found",
-      "notFoundHint": "Try changing your search or filter parameters"
+      "notFoundHint": "Try changing your search or filter parameters",
+      "searchPromptTitle": "Start typing to search",
+      "searchPromptHint": "Enter at least 3 characters of a name or email"
     },
     "logsPage": {
       "title": "Logs & Audit",

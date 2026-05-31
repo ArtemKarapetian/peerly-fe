@@ -8,9 +8,10 @@ interface ReviewItem {
 
 interface ReviewsSectionProps {
   reviews: ReviewItem[];
+  maxScore: number;
 }
 
-export function ReviewsSection({ reviews }: ReviewsSectionProps) {
+export function ReviewsSection({ reviews, maxScore }: ReviewsSectionProps) {
   const { t } = useTranslation();
   return (
     <section className="bg-card border border-border rounded-lg p-6">
@@ -22,7 +23,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
       ) : (
         <ul className="space-y-3">
           {reviews.map((review) => (
-            <ReviewRow key={review.id} review={review} />
+            <ReviewRow key={review.id} review={review} maxScore={maxScore} />
           ))}
         </ul>
       )}
@@ -30,12 +31,12 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
   );
 }
 
-function ReviewRow({ review }: { review: ReviewItem }) {
+function ReviewRow({ review, maxScore }: { review: ReviewItem; maxScore: number }) {
   const { t } = useTranslation();
   return (
     <li className="rounded-2md bg-muted p-4">
       <div className="mb-2 text-13 font-medium text-brand-primary">
-        {t("student.submissions.reviewMark")}: {review.mark} / 5
+        {t("student.submissions.reviewMark")}: {review.mark} / {maxScore}
       </div>
       <p className="text-sm text-foreground whitespace-pre-wrap leading-[1.5]">{review.comment}</p>
     </li>

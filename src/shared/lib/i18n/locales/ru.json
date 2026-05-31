@@ -245,7 +245,11 @@
       "reviewDeadline": "Срок рецензирования",
       "reviewers": "Рецензенты",
       "notFound": "Задание не найдено",
-      "noDescription": "Описание не указано"
+      "noDescription": "Описание не указано",
+      "maxScore_one": "максимум {{count}} балл",
+      "maxScore_few": "максимум {{count}} балла",
+      "maxScore_many": "максимум {{count}} баллов",
+      "maxScore_other": "максимум {{count}} баллов"
     },
     "submissions": {
       "title": "Моя работа",
@@ -1041,7 +1045,9 @@
       "headerUser": "Пользователь",
       "headerRole": "Роль",
       "notFound": "Пользователи не найдены",
-      "notFoundHint": "Попробуйте изменить параметры поиска или фильтры"
+      "notFoundHint": "Попробуйте изменить параметры поиска или фильтры",
+      "searchPromptTitle": "Начните вводить запрос",
+      "searchPromptHint": "Введите минимум 3 символа имени или email"
     },
     "logsPage": {
       "title": "Логи и аудит",

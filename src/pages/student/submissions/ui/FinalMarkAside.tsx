@@ -2,9 +2,10 @@ import { useTranslation } from "react-i18next";
 
 interface FinalMarkAsideProps {
   finalMark: number | null;
+  maxScore: number;
 }
 
-export function FinalMarkAside({ finalMark }: FinalMarkAsideProps) {
+export function FinalMarkAside({ finalMark, maxScore }: FinalMarkAsideProps) {
   const { t } = useTranslation();
   return (
     <aside className="desktop:col-span-1">
@@ -15,7 +16,7 @@ export function FinalMarkAside({ finalMark }: FinalMarkAsideProps) {
         {finalMark != null ? (
           <div className="text-[40px] font-medium text-foreground leading-none">
             {finalMark}
-            <span className="text-xl text-muted-foreground">/5</span>
+            <span className="text-xl text-muted-foreground">/{maxScore}</span>
           </div>
         ) : (
           <p className="text-sm text-muted-foreground italic">
