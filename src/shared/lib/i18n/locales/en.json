@@ -241,7 +241,9 @@
       "reviewDeadline": "Review deadline",
       "reviewers": "Reviewers",
       "notFound": "Assignment not found",
-      "noDescription": "No description provided"
+      "noDescription": "No description provided",
+      "maxScore_one": "max {{count}} point",
+      "maxScore_other": "max {{count}} points"
     },
     "submissions": {
       "title": "My Submission",

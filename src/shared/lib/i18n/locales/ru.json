@@ -245,7 +245,11 @@
       "reviewDeadline": "Срок рецензирования",
       "reviewers": "Рецензенты",
       "notFound": "Задание не найдено",
-      "noDescription": "Описание не указано"
+      "noDescription": "Описание не указано",
+      "maxScore_one": "максимум {{count}} балл",
+      "maxScore_few": "максимум {{count}} балла",
+      "maxScore_many": "максимум {{count}} баллов",
+      "maxScore_other": "максимум {{count}} баллов"
     },
     "submissions": {
       "title": "Моя работа",
