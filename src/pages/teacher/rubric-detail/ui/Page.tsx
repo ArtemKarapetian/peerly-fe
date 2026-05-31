@@ -178,7 +178,11 @@ export default function TeacherRubricDetailPage() {
         </Card>
 
         {viewMode === "edit" ? (
-          <RubricEditor rubric={editable} onSave={(u) => void handleSave(u)} />
+          <RubricEditor
+            rubric={editable}
+            onSave={(u) => void handleSave(u)}
+            onCancel={() => void navigate(ROUTES.teacherRubrics)}
+          />
         ) : (
           <RubricPreview rubric={editable} />
         )}

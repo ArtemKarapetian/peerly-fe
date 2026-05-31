@@ -107,9 +107,9 @@ describe("TeacherCourseParticipants", () => {
 
     renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
-    await waitFor(() => expect(screen.getByText(/widget\.groups\.empty/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("widget.groups.empty")).toBeInTheDocument());
 
-    await user.click(screen.getByRole("button", { name: /widget\.groups\.createGroup/ }));
+    await user.click(screen.getAllByRole("button", { name: /widget\.groups\.createGroup/ })[0]);
     await user.type(
       screen.getByPlaceholderText(/widget\.groups\.groupNamePlaceholder/),
       "New Group",
@@ -188,7 +188,7 @@ describe("TeacherCourseParticipants", () => {
     renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
 
     await waitFor(() => {
-      expect(screen.getByText(/widget\.groups\.empty/)).toBeInTheDocument();
+      expect(screen.getByText("widget.groups.empty")).toBeInTheDocument();
     });
   });
 

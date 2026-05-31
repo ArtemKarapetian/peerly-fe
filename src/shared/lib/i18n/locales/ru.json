@@ -632,6 +632,9 @@
       "error": "Ошибка",
       "courseNotFound": "Курс не найден",
       "openAnalytics": "Аналитика",
+      "publish": "Опубликовать курс",
+      "publishSuccess": "Курс опубликован",
+      "publishError": "Не удалось опубликовать курс",
       "tabs": {
         "assignments": "Задания",
         "participants": "Участники",
@@ -1659,7 +1662,9 @@
       "totalGroups": "Всего групп:",
       "createGroup": "Создать группу",
       "groupNamePlaceholder": "Название группы",
-      "empty": "В курсе ещё нет групп",
+      "empty": "Создайте первую группу, чтобы пригласить студентов",
+      "emptyTitle": "Групп пока нет",
+      "lockedHint": "Опубликуйте курс, чтобы добавлять группы и студентов",
       "studentsCount_one": "{{count}} студент",
       "studentsCount_few": "{{count}} студента",
       "studentsCount_many": "{{count}} студентов",
@@ -1831,7 +1836,8 @@
       "newCriterion": "Новый критерий",
       "criterionNamePlaceholder": "Название критерия",
       "criterionDescPlaceholder": "Описание критерия...",
-      "maxPoints": "Макс. баллов",
+      "maxPoints": "Максимальная оценка",
+      "maxPointsHint": "От {{min}} до {{max}} баллов",
       "weight": "Вес (%)",
       "optional": "Опционально",
       "required": "Обязательный",
@@ -1841,7 +1847,8 @@
       "deleteCriterion": "Удалить критерий",
       "cannotDeleteLast": "Нельзя удалить последний критерий",
       "deleteCriterionConfirm": "Удалить этот критерий?",
-      "saveChanges": "Сохранить изменения"
+      "saveChanges": "Сохранить изменения",
+      "backToLibrary": "Назад к рубрикам"
     },
     "rubricPreview": {
       "previewMode": "Режим предпросмотра",

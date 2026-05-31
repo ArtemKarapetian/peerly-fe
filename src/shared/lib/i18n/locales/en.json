@@ -622,6 +622,9 @@
       "error": "Error",
       "courseNotFound": "Course not found",
       "openAnalytics": "Analytics",
+      "publish": "Publish course",
+      "publishSuccess": "Course published",
+      "publishError": "Failed to publish course",
       "tabs": {
         "assignments": "Assignments",
         "participants": "Participants",
@@ -1066,7 +1069,9 @@
       "totalGroups": "Total groups:",
       "createGroup": "Create group",
       "groupNamePlaceholder": "Group name",
-      "empty": "No groups in this course yet",
+      "empty": "Create the first group to invite students",
+      "emptyTitle": "No groups yet",
+      "lockedHint": "Publish the course to add groups and students",
       "studentsCount_one": "{{count}} student",
       "studentsCount_other": "{{count}} students",
       "addStudents": "Add students",
@@ -1236,7 +1241,8 @@
       "newCriterion": "New criterion",
       "criterionNamePlaceholder": "Criterion name",
       "criterionDescPlaceholder": "Criterion description...",
-      "maxPoints": "Max points",
+      "maxPoints": "Maximum score",
+      "maxPointsHint": "Between {{min}} and {{max}} points",
       "weight": "Weight (%)",
       "optional": "Optional",
       "required": "Required",
@@ -1246,7 +1252,8 @@
       "deleteCriterion": "Delete criterion",
       "cannotDeleteLast": "Cannot delete the last criterion",
       "deleteCriterionConfirm": "Delete this criterion?",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "backToLibrary": "Back to library"
     },
     "rubricPreview": {
       "previewMode": "Preview Mode",

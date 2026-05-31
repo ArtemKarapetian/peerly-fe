@@ -88,7 +88,9 @@ export default function TeacherCourseDetailsPage() {
 
           <div className="p-6">
             {activeTab === "assignments" && <TeacherCourseAssignments courseId={course.id} />}
-            {activeTab === "participants" && <TeacherCourseParticipants courseId={course.id} />}
+            {activeTab === "participants" && (
+              <TeacherCourseParticipants courseId={course.id} courseStatus={course.status} />
+            )}
             {activeTab === "settings" && <TeacherCourseSettings course={course} />}
           </div>
         </Card>
