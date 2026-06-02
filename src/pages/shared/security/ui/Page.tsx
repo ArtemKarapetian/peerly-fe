@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { Card, EmptyState } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell";
 
@@ -15,11 +16,8 @@ export default function SecurityPage() {
     <AppShell title={t("page.security.title")}>
       <Breadcrumbs items={[CRUMBS.settings, { label: t("page.security.title") }]} />
 
-      <div className="mt-6 max-w-[800px]">
-        <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-2">
-          {t("page.security.title")}
-        </h1>
-        <p className="text-base text-muted-foreground mb-8">{t("page.security.subtitle")}</p>
+      <div className="max-w-[800px]">
+        <PageHeader title={t("page.security.title")} subtitle={t("page.security.subtitle")} />
 
         <Card>
           <EmptyState

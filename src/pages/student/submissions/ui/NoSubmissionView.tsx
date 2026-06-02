@@ -24,7 +24,7 @@ export function NoSubmissionView({
   const navigate = useNavigate();
   const Icon = isDeadlinePassed ? Clock : Upload;
   const iconBg = isDeadlinePassed ? "bg-error-light" : "bg-brand-primary-lighter";
-  const iconColor = isDeadlinePassed ? "text-destructive" : "text-brand-primary";
+  const iconColor = isDeadlinePassed ? "text-error" : "text-brand-primary";
 
   return (
     <AppShell title={t("student.submissions.title")}>

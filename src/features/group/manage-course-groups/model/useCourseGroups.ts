@@ -3,9 +3,14 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { humanizeApiError } from "@/shared/api";
-import { useAsync } from "@/shared/lib/useAsync";
 
-import { groupRepo, type Group } from "@/entities/group";
+import {
+  useGroupsByCourse,
+  useCreateGroup,
+  useUpdateGroup,
+  useDeleteGroup,
+  type Group,
+} from "@/entities/group";
 
 interface UseCourseGroupsArgs {
   courseId: string;
@@ -26,10 +31,10 @@ export interface UseCourseGroupsResult {
 
 export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGroupsResult {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(
-    () => groupRepo.listForCourse(courseId),
-    [courseId],
-  );
+  const { data, isLoading, error, refetch } = useGroupsByCourse(courseId);
+  const { mutateAsync: createMutation } = useCreateGroup(courseId);
+  const { mutateAsync: updateMutation } = useUpdateGroup(courseId);
+  const { mutateAsync: deleteMutation } = useDeleteGroup(courseId);
   const [pendingDelete, setPendingDelete] = useState<Group | null>(null);
 
   const groups = useMemo(
@@ -43,16 +48,15 @@ export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGro
       const trimmed = name.trim();
       if (!trimmed) return false;
       try {
-        await groupRepo.create({ courseId, name: trimmed });
+        await createMutation({ courseId, name: trimmed });
         toast.success(t("widget.groups.createSuccess"));
-        refetch();
         return true;
       } catch (err) {
         toast.error(humanizeApiError(err, t("widget.groups.createError")));
         return false;
       }
     },
-    [courseId, refetch, t],
+    [courseId, createMutation, t],
   );
 
   const renameGroup = useCallback(
@@ -60,38 +64,36 @@ export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGro
       const trimmed = name.trim();
       if (!trimmed || trimmed === group.name) return false;
       try {
-        await groupRepo.update(group.id, { name: trimmed });
+        await updateMutation({ groupId: group.id, input: { name: trimmed } });
         toast.success(t("widget.groups.renameSuccess"));
-        refetch();
         return true;
       } catch (err) {
         toast.error(humanizeApiError(err, t("widget.groups.renameError")));
         return false;
       }
     },
-    [refetch, t],
+    [updateMutation, t],
   );
 
   const deleteGroup = useCallback(
     async (group: Group) => {
       try {
-        await groupRepo.delete(group.id);
+        await deleteMutation(group.id);
         toast.success(t("widget.groups.deleteSuccess"));
-        refetch();
         return true;
       } catch (err) {
         toast.error(humanizeApiError(err, t("widget.groups.deleteError")));
         return false;
       }
     },
-    [refetch, t],
+    [deleteMutation, t],
   );
 
   return {
     groups,
     isLoading,
     error,
-    refetch,
+    refetch: () => void refetch(),
     totalStudents,
     createGroup,
     renameGroup,

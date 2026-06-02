@@ -53,7 +53,7 @@ export function ParticipantImportModal({
         <ImportModalHeader onClose={onClose} />
 
         {loadError && (
-          <div className="flex items-center gap-2 m-6 p-4 bg-error-light text-destructive rounded-md">
+          <div className="flex items-center gap-2 m-6 p-4 bg-error-light text-error rounded-md">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <span className="text-sm">{loadError}</span>
           </div>

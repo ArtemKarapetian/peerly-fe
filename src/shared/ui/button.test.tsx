@@ -6,14 +6,14 @@ import { Button } from "./button";
 describe("Button", () => {
   it("renders children text", () => {
     render(<Button>Click me</Button>);
-    expect(screen.getByRole("button", { name: "Click me" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Click me" })).toBeInTheDocument();
   });
 
   it("renders with different variants", () => {
     const variants = ["primary", "secondary", "ghost", "danger", "outline"] as const;
     for (const variant of variants) {
       const { unmount } = render(<Button variant={variant}>Btn</Button>);
-      expect(screen.getByRole("button", { name: "Btn" })).toBeDefined();
+      expect(screen.getByRole("button", { name: "Btn" })).toBeInTheDocument();
       unmount();
     }
   });
@@ -39,12 +39,12 @@ describe("Button", () => {
 
   it("renders leftIcon when provided", () => {
     render(<Button leftIcon={<span data-testid="left-icon">L</span>}>With Icon</Button>);
-    expect(screen.getByTestId("left-icon")).toBeDefined();
+    expect(screen.getByTestId("left-icon")).toBeInTheDocument();
   });
 
   it("renders rightIcon when provided", () => {
     render(<Button rightIcon={<span data-testid="right-icon">R</span>}>With Icon</Button>);
-    expect(screen.getByTestId("right-icon")).toBeDefined();
+    expect(screen.getByTestId("right-icon")).toBeInTheDocument();
   });
 
   it("hides icons when isLoading", () => {

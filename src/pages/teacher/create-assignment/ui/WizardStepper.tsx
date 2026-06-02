@@ -1,5 +1,7 @@
 import { Check } from "lucide-react";
 
+import { Card } from "@/shared/ui";
+
 interface StepInfo {
   id: number;
   shortName: string;
@@ -35,7 +37,7 @@ function StepConnector({ done }: { done: boolean }) {
 
 export function WizardStepper({ steps, currentStep }: WizardStepperProps) {
   return (
-    <div className="bg-card border border-border shadow-sm rounded-xl p-6 mb-6">
+    <Card variant="section" className="rounded-xl p-6 mb-6">
       <div className="flex items-center justify-between">
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center flex-1">
@@ -53,6 +55,6 @@ export function WizardStepper({ steps, currentStep }: WizardStepperProps) {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

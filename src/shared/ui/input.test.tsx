@@ -6,28 +6,28 @@ import { Input, PasswordInput } from "./input";
 describe("Input", () => {
   it("renders with label", () => {
     render(<Input label="Email" />);
-    expect(screen.getByText("Email")).toBeDefined();
+    expect(screen.getByText("Email")).toBeInTheDocument();
   });
 
   it("renders with placeholder", () => {
     render(<Input placeholder="Enter email" />);
-    expect(screen.getByPlaceholderText("Enter email")).toBeDefined();
+    expect(screen.getByPlaceholderText("Enter email")).toBeInTheDocument();
   });
 
   it("shows error message when error prop is provided", () => {
     render(<Input error="This field is required" />);
-    expect(screen.getByText("This field is required")).toBeDefined();
+    expect(screen.getByText("This field is required")).toBeInTheDocument();
   });
 
   it("shows helper text when no error", () => {
     render(<Input helperText="Some helpful text" />);
-    expect(screen.getByText("Some helpful text")).toBeDefined();
+    expect(screen.getByText("Some helpful text")).toBeInTheDocument();
   });
 
   it("does not show helper text when error is present", () => {
     render(<Input error="Error!" helperText="Some helpful text" />);
     expect(screen.queryByText("Some helpful text")).toBeNull();
-    expect(screen.getByText("Error!")).toBeDefined();
+    expect(screen.getByText("Error!")).toBeInTheDocument();
   });
 
   it("applies error styling when error prop is set", () => {
@@ -65,11 +65,11 @@ describe("PasswordInput", () => {
 
   it("shows error message", () => {
     render(<PasswordInput error="Password too short" />);
-    expect(screen.getByText("Password too short")).toBeDefined();
+    expect(screen.getByText("Password too short")).toBeInTheDocument();
   });
 
   it("shows helper text", () => {
     render(<PasswordInput helperText="At least 8 characters" />);
-    expect(screen.getByText("At least 8 characters")).toBeDefined();
+    expect(screen.getByText("At least 8 characters")).toBeInTheDocument();
   });
 });

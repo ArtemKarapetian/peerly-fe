@@ -1,9 +1,7 @@
 import { AlertTriangle, Calendar, Check, Layers, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { useAsync } from "@/shared/lib/useAsync";
-
-import { courseRepo } from "@/entities/course";
+import { useCourses } from "@/entities/course";
 
 import { formatPublishDate } from "../lib/formatPublishDate";
 import type { AssignmentFormData } from "../model/types";
@@ -29,7 +27,7 @@ export function StepPublish({
   isDirty = true,
 }: StepPublishProps) {
   const { t } = useTranslation();
-  const { data: courses } = useAsync(() => courseRepo.getAll(), []);
+  const { data: courses } = useCourses();
   const course = (courses ?? []).find((c) => c.id === data.courseId);
   const notSpecified = t("feature.assignmentCreate.publish.notSpecified");
 
@@ -89,8 +87,8 @@ export function StepPublish({
       </div>
 
       {errorMessage && (
-        <div className="flex items-start gap-3 bg-destructive-light border border-destructive rounded-md p-4">
-          <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 bg-error-light border border-error/20 rounded-md p-4">
+          <AlertTriangle className="w-5 h-5 text-error shrink-0 mt-0.5" />
           <p className="text-13 text-foreground">{errorMessage}</p>
         </div>
       )}

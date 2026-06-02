@@ -1,22 +1,28 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useCourseGroups } from "./useCourseGroups";
 
-const { groupRepoMock, toastMock } = vi.hoisted(() => ({
-  groupRepoMock: {
-    listForCourse: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-  },
-  toastMock: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
+const {
+  useGroupsByCourseMock,
+  createMutateAsync,
+  updateMutateAsync,
+  deleteMutateAsync,
+  toastMock,
+} = vi.hoisted(() => ({
+  useGroupsByCourseMock: vi.fn(),
+  createMutateAsync: vi.fn(),
+  updateMutateAsync: vi.fn(),
+  deleteMutateAsync: vi.fn(),
+  toastMock: { success: vi.fn(), error: vi.fn() },
 }));
 
-vi.mock("@/entities/group", () => ({ groupRepo: groupRepoMock }));
+vi.mock("@/entities/group", () => ({
+  useGroupsByCourse: () => useGroupsByCourseMock(),
+  useCreateGroup: () => ({ mutateAsync: createMutateAsync }),
+  useUpdateGroup: () => ({ mutateAsync: updateMutateAsync }),
+  useDeleteGroup: () => ({ mutateAsync: deleteMutateAsync }),
+}));
 
 vi.mock("sonner", () => ({ toast: toastMock }));
 
@@ -27,49 +33,45 @@ vi.mock("react-i18next", () => ({
   }),
 }));
 
-beforeEach(() => {
-  groupRepoMock.listForCourse.mockReset();
-  groupRepoMock.create.mockReset();
-  groupRepoMock.update.mockReset();
-  groupRepoMock.delete.mockReset();
-  toastMock.success.mockReset();
-  toastMock.error.mockReset();
-
-  groupRepoMock.listForCourse.mockResolvedValue([]);
-});
-
 const groupB = { id: "g-b", name: "Бета", studentCount: 3 };
 const groupA = { id: "g-a", name: "Альфа", studentCount: 5 };
 
+function mockGroups(data: unknown[]) {
+  useGroupsByCourseMock.mockReturnValue({
+    data,
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  });
+}
+
+beforeEach(() => {
+  useGroupsByCourseMock.mockReset();
+  createMutateAsync.mockReset();
+  updateMutateAsync.mockReset();
+  deleteMutateAsync.mockReset();
+  toastMock.success.mockReset();
+  toastMock.error.mockReset();
+  mockGroups([]);
+});
+
 describe("useCourseGroups", () => {
-  it("loads groups for the course and sorts alphabetically (ru)", async () => {
-    groupRepoMock.listForCourse.mockResolvedValue([groupB, groupA]);
-
+  it("sorts groups alphabetically (ru)", () => {
+    mockGroups([groupB, groupA]);
     const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-    expect(groupRepoMock.listForCourse).toHaveBeenCalledWith("c-1");
     expect(result.current.groups.map((g) => g.name)).toEqual(["Альфа", "Бета"]);
   });
 
-  it("totalStudents sums studentCount across groups", async () => {
-    groupRepoMock.listForCourse.mockResolvedValue([groupA, groupB]);
-
+  it("totalStudents sums studentCount across groups", () => {
+    mockGroups([groupA, groupB]);
     const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-
-    await waitFor(() => {
-      expect(result.current.totalStudents).toBe(8);
-    });
+    expect(result.current.totalStudents).toBe(8);
   });
 
   describe("createGroup", () => {
-    it("trims, calls repo, refetches, toasts success, returns true", async () => {
-      groupRepoMock.create.mockResolvedValue(undefined);
+    it("trims, calls the create mutation, toasts success, returns true", async () => {
+      createMutateAsync.mockResolvedValue(undefined);
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
-      groupRepoMock.listForCourse.mockClear();
 
       let ok = false;
       await act(async () => {
@@ -77,15 +79,13 @@ describe("useCourseGroups", () => {
       });
 
       expect(ok).toBe(true);
-      expect(groupRepoMock.create).toHaveBeenCalledWith({ courseId: "c-1", name: "New Group" });
-      expect(groupRepoMock.listForCourse).toHaveBeenCalledTimes(1);
+      expect(createMutateAsync).toHaveBeenCalledWith({ courseId: "c-1", name: "New Group" });
       expect(toastMock.success).toHaveBeenCalled();
       expect(toastMock.error).not.toHaveBeenCalled();
     });
 
-    it("returns false and does NOT call repo when name is blank", async () => {
+    it("returns false and does NOT call the mutation when name is blank", async () => {
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       let ok = true;
       await act(async () => {
@@ -93,13 +93,12 @@ describe("useCourseGroups", () => {
       });
 
       expect(ok).toBe(false);
-      expect(groupRepoMock.create).not.toHaveBeenCalled();
+      expect(createMutateAsync).not.toHaveBeenCalled();
     });
 
-    it("returns false and toasts error when repo throws", async () => {
-      groupRepoMock.create.mockRejectedValue(new Error("boom"));
+    it("returns false and toasts error when the mutation throws", async () => {
+      createMutateAsync.mockRejectedValue(new Error("boom"));
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       let ok = true;
       await act(async () => {
@@ -113,12 +112,9 @@ describe("useCourseGroups", () => {
   });
 
   describe("renameGroup", () => {
-    it("trims, calls update, refetches, returns true", async () => {
-      groupRepoMock.update.mockResolvedValue(undefined);
-      groupRepoMock.listForCourse.mockResolvedValue([groupA]);
+    it("trims, calls the update mutation, returns true", async () => {
+      updateMutateAsync.mockResolvedValue(undefined);
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
-      groupRepoMock.listForCourse.mockClear();
 
       let ok = false;
       await act(async () => {
@@ -126,14 +122,15 @@ describe("useCourseGroups", () => {
       });
 
       expect(ok).toBe(true);
-      expect(groupRepoMock.update).toHaveBeenCalledWith("g-a", { name: "Альфа+" });
-      expect(groupRepoMock.listForCourse).toHaveBeenCalledTimes(1);
+      expect(updateMutateAsync).toHaveBeenCalledWith({
+        groupId: "g-a",
+        input: { name: "Альфа+" },
+      });
       expect(toastMock.success).toHaveBeenCalled();
     });
 
-    it("returns false without calling repo when name unchanged after trim", async () => {
+    it("returns false without calling the mutation when name unchanged after trim", async () => {
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       let ok = true;
       await act(async () => {
@@ -141,13 +138,12 @@ describe("useCourseGroups", () => {
       });
 
       expect(ok).toBe(false);
-      expect(groupRepoMock.update).not.toHaveBeenCalled();
+      expect(updateMutateAsync).not.toHaveBeenCalled();
     });
 
-    it("returns false and toasts error when repo throws", async () => {
-      groupRepoMock.update.mockRejectedValue(new Error("nope"));
+    it("returns false and toasts error when the mutation throws", async () => {
+      updateMutateAsync.mockRejectedValue(new Error("nope"));
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       let ok = true;
       await act(async () => {
@@ -160,12 +156,9 @@ describe("useCourseGroups", () => {
   });
 
   describe("deleteGroup", () => {
-    it("calls delete, refetches, toasts success, returns true", async () => {
-      groupRepoMock.delete.mockResolvedValue(undefined);
-      groupRepoMock.listForCourse.mockResolvedValue([groupA]);
+    it("calls the delete mutation, toasts success, returns true", async () => {
+      deleteMutateAsync.mockResolvedValue(undefined);
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
-      groupRepoMock.listForCourse.mockClear();
 
       let ok = false;
       await act(async () => {
@@ -173,15 +166,13 @@ describe("useCourseGroups", () => {
       });
 
       expect(ok).toBe(true);
-      expect(groupRepoMock.delete).toHaveBeenCalledWith("g-a");
-      expect(groupRepoMock.listForCourse).toHaveBeenCalledTimes(1);
+      expect(deleteMutateAsync).toHaveBeenCalledWith("g-a");
       expect(toastMock.success).toHaveBeenCalled();
     });
 
-    it("returns false and toasts error when repo throws", async () => {
-      groupRepoMock.delete.mockRejectedValue(new Error("forbidden"));
+    it("returns false and toasts error when the mutation throws", async () => {
+      deleteMutateAsync.mockRejectedValue(new Error("forbidden"));
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       let ok = true;
       await act(async () => {
@@ -194,9 +185,8 @@ describe("useCourseGroups", () => {
   });
 
   describe("pendingDelete state", () => {
-    it("setPendingDelete updates and clears the pending group", async () => {
+    it("setPendingDelete updates and clears the pending group", () => {
       const { result } = renderHook(() => useCourseGroups({ courseId: "c-1" }));
-      await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       expect(result.current.pendingDelete).toBeNull();
 

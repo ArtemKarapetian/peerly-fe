@@ -3,17 +3,17 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
-import { useAsync } from "@/shared/lib/useAsync";
+import { useRedirectOnError } from "@/shared/lib/useRedirectOnError";
 import { Card, EmptyState } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { assignmentRepo } from "@/entities/assignment";
-import { courseRepo } from "@/entities/course";
-import { reviewRepo } from "@/entities/review";
-import { workRepo } from "@/entities/work";
+import { useAssignmentsByCourse } from "@/entities/assignment";
+import { useCourseParticipants, useCourses } from "@/entities/course";
+import { useAllReviews } from "@/entities/review";
+import { useAllSubmissions } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell";
 
@@ -24,23 +24,18 @@ import { DistributionTable } from "./DistributionTable";
 
 export default function TeacherDistributionPage() {
   const { t } = useTranslation();
-  const {
-    data: baseData,
-    isLoading,
-    error,
-    refetch,
-  } = useAsync(
-    async () => {
-      const [courses, submissions, reviews] = await Promise.all([
-        courseRepo.getAll(),
-        workRepo.getAll(),
-        reviewRepo.getAll(),
-      ]);
-      return { courses, submissions, reviews };
-    },
-    [],
-    { onError: "redirect" },
-  );
+  const coursesQuery = useCourses();
+  const submissionsQuery = useAllSubmissions();
+  const reviewsQuery = useAllReviews();
+
+  const isLoading = coursesQuery.isLoading || submissionsQuery.isLoading || reviewsQuery.isLoading;
+  const error = coursesQuery.error ?? submissionsQuery.error ?? reviewsQuery.error;
+  useRedirectOnError(error);
+  const refetch = () => {
+    void coursesQuery.refetch();
+    void submissionsQuery.refetch();
+    void reviewsQuery.refetch();
+  };
 
   const [params, setParams] = useSearchParams();
   const selectedCourse = params.get("courseId") ?? "";
@@ -74,15 +69,8 @@ export default function TeacherDistributionPage() {
   const filtersDirty = Boolean(selectedCourse) || Boolean(selectedAssignment);
   const resetFilters = () => setParams(new URLSearchParams(), { replace: true });
 
-  const { data: assignments } = useAsync(async () => {
-    if (!selectedCourse) return [];
-    return assignmentRepo.getByCourse(selectedCourse);
-  }, [selectedCourse]);
-
-  const { data: participants } = useAsync(async () => {
-    if (!selectedCourse) return null;
-    return courseRepo.getParticipants(selectedCourse);
-  }, [selectedCourse]);
+  const { data: assignments } = useAssignmentsByCourse(selectedCourse);
+  const { data: participants } = useCourseParticipants(selectedCourse);
 
   const nameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -105,11 +93,9 @@ export default function TeacherDistributionPage() {
       </AppShell>
     );
 
-  const { courses, submissions, reviews } = baseData!;
-
   const distributions = computeDistributions({
-    submissions,
-    reviews,
+    submissions: submissionsQuery.data ?? [],
+    reviews: reviewsQuery.data ?? [],
     nameById,
     selectedAssignment,
     unknownReviewer: t("teacher.distribution.unknownReviewer"),
@@ -130,7 +116,7 @@ export default function TeacherDistributionPage() {
       </div>
 
       <DistributionFiltersCard
-        courses={courses.map((c) => ({ id: c.id, title: c.name }))}
+        courses={(coursesQuery.data ?? []).map((c) => ({ id: c.id, title: c.name }))}
         assignments={assignments ?? []}
         selectedCourse={selectedCourse}
         selectedAssignment={selectedAssignment}

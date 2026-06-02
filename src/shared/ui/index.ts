@@ -7,7 +7,6 @@ export { Select } from "./select.tsx";
 export { StatCard } from "./StatCard";
 
 export { Label } from "./Label";
-export { FieldLabel } from "./FieldLabel";
 export { Field } from "./Field";
 export { TextField } from "./TextField";
 export { Textarea } from "./Textarea";
@@ -16,3 +15,4 @@ export { FormErrorAlert } from "./FormErrorAlert";
 export { StatusBadge } from "./StatusBadge";
 export { SectionHeader } from "./SectionHeader";
 export { FiltersCard } from "./FiltersCard";
+export { SearchInput } from "./SearchInput";

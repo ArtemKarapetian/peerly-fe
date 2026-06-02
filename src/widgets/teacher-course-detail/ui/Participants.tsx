@@ -3,12 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
-import { useAsync } from "@/shared/lib/useAsync";
 import { ConfirmDialog } from "@/shared/ui/confirm-dialog";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { courseRepo } from "@/entities/course";
+import { useCourseParticipants } from "@/entities/course";
 import type { Course } from "@/entities/course";
 import type { Group } from "@/entities/group";
 
@@ -50,11 +49,11 @@ export function TeacherCourseParticipants({
     isLoading: courseLoading,
     error: courseError,
     refetch: refetchCourse,
-  } = useAsync(() => courseRepo.getParticipants(courseId), [courseId]);
+  } = useCourseParticipants(courseId);
 
   if (groupsLoading || courseLoading) return <PageSkeleton />;
   if (groupsError) return <ErrorBanner error={groupsError} onRetry={refetchGroups} />;
-  if (courseError) return <ErrorBanner error={courseError} onRetry={refetchCourse} />;
+  if (courseError) return <ErrorBanner error={courseError} onRetry={() => void refetchCourse()} />;
 
   const teachers = courseParticipants?.teachers ?? [];
 
@@ -106,7 +105,7 @@ export function TeacherCourseParticipants({
           onClose={() => {
             setImportTarget(null);
             refetchGroups();
-            // eslint-disable-next-line sonarjs/void-use
+
             void refetchCourse();
           }}
         />

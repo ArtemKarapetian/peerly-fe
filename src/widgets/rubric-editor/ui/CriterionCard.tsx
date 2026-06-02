@@ -66,7 +66,7 @@ export function CriterionCard({
           className="p-2 hover:bg-error-light rounded-sm transition-colors"
           title={t("widget.rubricEditor.deleteCriterion")}
         >
-          <Trash2 className="w-4 h-4 text-destructive" />
+          <Trash2 className="w-4 h-4 text-error" />
         </button>
       </div>
     </div>

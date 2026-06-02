@@ -11,16 +11,10 @@ import { SideNavList } from "./SideNavList";
 interface MobileDrawerSideNavProps {
   isOpen: boolean;
   navItems: NavItem[];
-  showRoleSwitcher: boolean;
   onClose: () => void;
 }
 
-export function MobileDrawerSideNav({
-  isOpen,
-  navItems,
-  showRoleSwitcher,
-  onClose,
-}: MobileDrawerSideNavProps) {
+export function MobileDrawerSideNav({ isOpen, navItems, onClose }: MobileDrawerSideNavProps) {
   const { t } = useTranslation();
   return (
     <div
@@ -45,11 +39,7 @@ export function MobileDrawerSideNav({
 
         <SideNavList items={navItems} collapsed={false} onItemClick={onClose} />
 
-        <SideNavFooter
-          collapsed={false}
-          showRoleSwitcher={showRoleSwitcher}
-          onItemClick={onClose}
-        />
+        <SideNavFooter collapsed={false} onItemClick={onClose} />
       </div>
     </div>
   );

@@ -75,7 +75,7 @@ export function StepRubric({ data, onUpdate, rubrics }: StepRubricProps) {
             </div>
             <button
               onClick={handleDeselect}
-              className="px-3 py-2 text-13 text-muted-foreground hover:text-destructive transition-colors"
+              className="px-3 py-2 text-13 text-muted-foreground hover:text-error transition-colors"
             >
               {t("feature.assignmentCreate.rubric.deselect")}
             </button>

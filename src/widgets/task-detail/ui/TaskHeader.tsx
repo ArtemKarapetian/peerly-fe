@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { formatDateTime } from "@/shared/lib/formatDate";
+import { Card } from "@/shared/ui";
 
 interface TaskHeaderProps {
   title: string;
@@ -27,7 +28,7 @@ function urgencyFor(date: Date, now: number): Urgency {
 
 function colorsFor(urgency: Urgency): { icon: string; text: string } {
   if (urgency === "passed") {
-    return { icon: "text-destructive", text: "text-destructive font-medium" };
+    return { icon: "text-error", text: "text-error font-medium" };
   }
   if (urgency === "soon") {
     return { icon: "text-warning", text: "text-warning font-medium" };
@@ -51,7 +52,7 @@ export function TaskHeader({
   const reviewColors = reviewDeadline ? colorsFor(urgencyFor(reviewDeadline, now)) : null;
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-xl p-5 desktop:p-8 mb-6 desktop:mb-8">
+    <Card variant="section" className="rounded-xl p-5 desktop:p-8 mb-6 desktop:mb-8">
       <div className="flex flex-col desktop:flex-row items-start desktop:justify-between gap-4 mb-4">
         <div className="flex-1 min-w-0">
           <h1 className="text-[28px] desktop:text-[40px] tracking-[-1.2px] text-foreground leading-[1.05] mb-2 break-words">
@@ -97,6 +98,6 @@ export function TaskHeader({
           </div>
         ) : null}
       </div>
-    </div>
+    </Card>
   );
 }

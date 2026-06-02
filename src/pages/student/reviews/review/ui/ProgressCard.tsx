@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import { Card } from "@/shared/ui";
+
 interface ProgressCardProps {
   filled: number;
   total: number;
@@ -12,7 +14,7 @@ export function ProgressCard({ filled, total, commentLength, commentMin }: Progr
   const allCriteriaDone = filled === total;
   const commentDone = commentLength >= commentMin;
   return (
-    <div className="bg-card border border-border shadow-sm rounded-lg p-4">
+    <Card variant="section">
       <h3 className="text-base font-medium text-foreground mb-3">
         {t("page.reviewFill.progressTitle")}
       </h3>
@@ -26,7 +28,7 @@ export function ProgressCard({ filled, total, commentLength, commentMin }: Progr
           label={`${t("page.reviewFill.progressComment")}: ${commentLength} / ${commentMin}`}
         />
       </div>
-    </div>
+    </Card>
   );
 }
 

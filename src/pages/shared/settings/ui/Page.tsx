@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { PageHeader } from "@/shared/ui/PageHeader";
 
 import { AppShell } from "@/widgets/app-shell";
 import { AppearanceCard, LanguageCard, AboutCard } from "@/widgets/settings-cards";
@@ -12,11 +13,8 @@ export default function SettingsPage() {
     <AppShell title={t("page.settings.title")}>
       <Breadcrumbs items={[{ label: t("page.settings.title") }]} />
 
-      <div className="mt-6 max-w-[800px]">
-        <h1 className="text-page-h1 font-medium text-foreground tracking-[-0.5px] mb-2">
-          {t("page.settings.title")}
-        </h1>
-        <p className="text-base text-muted-foreground mb-8">{t("page.settings.subtitle")}</p>
+      <div className="max-w-[800px]">
+        <PageHeader title={t("page.settings.title")} subtitle={t("page.settings.subtitle")} />
 
         <AppearanceCard />
         <LanguageCard />

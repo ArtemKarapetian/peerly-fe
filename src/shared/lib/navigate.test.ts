@@ -17,14 +17,18 @@ describe("navigate", () => {
   });
 
   it("falls back to window.location.href when no navigate registered", () => {
-    const hrefSpy = vi.spyOn(window, "location", "get").mockReturnValue({
-      ...window.location,
-      href: "",
-    } as Location);
+    const originalLocation = window.location;
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { href: "" },
+    });
 
-    // Since we can't easily spy on setting href, just verify it doesn't throw
-    expect(() => appNavigate("/login")).not.toThrow();
+    appNavigate("/login");
+    expect(window.location.href).toBe("/login");
 
-    hrefSpy.mockRestore();
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: originalLocation,
+    });
   });
 });

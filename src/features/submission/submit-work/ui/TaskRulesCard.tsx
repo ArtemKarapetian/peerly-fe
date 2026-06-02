@@ -26,7 +26,7 @@ export function TaskRulesCard({ rules }: TaskRulesCardProps) {
             {t("feature.submission.rules.deadline")}
           </div>
           <div
-            className={`text-15 font-medium ${rules.isDeadlinePassed ? "text-destructive" : "text-foreground"}`}
+            className={`text-15 font-medium ${rules.isDeadlinePassed ? "text-error" : "text-foreground"}`}
           >
             {rules.deadline}
             {rules.isDeadlinePassed && (

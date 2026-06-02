@@ -10,14 +10,14 @@ interface ErrorPageAction {
 interface ErrorPageProps {
   code: string;
   Icon: LucideIcon;
-  tone?: "destructive" | "muted";
+  tone?: "error" | "muted";
   title: ReactNode;
   description: ReactNode;
   actions: [ErrorPageAction, ErrorPageAction];
 }
 
 const ICON_BG: Record<NonNullable<ErrorPageProps["tone"]>, string> = {
-  destructive: "bg-destructive/10 text-destructive",
+  error: "bg-error/10 text-error",
   muted: "bg-muted text-muted-foreground",
 };
 
@@ -29,7 +29,7 @@ const BUTTON_VARIANT: Record<NonNullable<ErrorPageAction["variant"]>, string> = 
 export function ErrorPage({
   code,
   Icon,
-  tone = "destructive",
+  tone = "error",
   title,
   description,
   actions,

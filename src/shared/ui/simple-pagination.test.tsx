@@ -21,13 +21,13 @@ describe("usePagination", () => {
     expect(result.current.currentItems).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
     act(() => {
-      result.current.handlePageChange(2);
+      result.current.setCurrentPage(2);
     });
     expect(result.current.currentPage).toBe(2);
     expect(result.current.currentItems).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
 
     act(() => {
-      result.current.handlePageChange(3);
+      result.current.setCurrentPage(3);
     });
     expect(result.current.currentItems).toEqual([20, 21, 22, 23, 24]);
   });
@@ -37,7 +37,7 @@ describe("usePagination", () => {
       initialProps: { items: Array.from({ length: 25 }, (_, i) => i) },
     });
     act(() => {
-      result.current.handlePageChange(5);
+      result.current.setCurrentPage(5);
     });
     expect(result.current.currentPage).toBe(5);
 

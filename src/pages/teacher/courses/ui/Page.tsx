@@ -2,13 +2,13 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { useAsync } from "@/shared/lib/useAsync";
+import { useRedirectOnError } from "@/shared/lib/useRedirectOnError";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { SimplePagination, usePagination } from "@/shared/ui/simple-pagination";
 
-import { courseRepo } from "@/entities/course";
+import { useCourses } from "@/entities/course";
 
 import { AppShell } from "@/widgets/app-shell";
 
@@ -26,12 +26,8 @@ export default function TeacherCoursesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
 
-  const {
-    data: courses,
-    isLoading,
-    error,
-    refetch,
-  } = useAsync(() => courseRepo.getAll(), [], { onError: "redirect" });
+  const { data: courses, isLoading, error, refetch } = useCourses();
+  useRedirectOnError(error);
 
   const handleOpenCourse = useCallback(
     (courseId: string) => void navigate(`/teacher/courses/${courseId}`),
@@ -47,7 +43,7 @@ export default function TeacherCoursesPage() {
   if (error)
     return (
       <AppShell title={t("teacher.courses.management")}>
-        <ErrorBanner error={error} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={() => void refetch()} />
       </AppShell>
     );
 
@@ -98,7 +94,7 @@ function PaginatedCoursesTable({
   rows: CourseRow[];
   onOpen: (id: string) => void;
 }) {
-  const { currentPage, totalPages, pageSize, setPageSize, handlePageChange } = usePagination(
+  const { currentPage, totalPages, pageSize, setPageSize, setCurrentPage } = usePagination(
     rows,
     10,
   );
@@ -110,7 +106,7 @@ function PaginatedCoursesTable({
         <SimplePagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChange={setCurrentPage}
           pageSize={pageSize}
           onPageSizeChange={setPageSize}
         />

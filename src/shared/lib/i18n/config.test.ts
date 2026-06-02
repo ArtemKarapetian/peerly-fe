@@ -4,7 +4,6 @@ import i18n from "./config";
 
 describe("i18n config", () => {
   it("exports an initialized i18next instance", () => {
-    expect(i18n).toBeDefined();
     expect(typeof i18n.t).toBe("function");
   });
 
@@ -21,7 +20,7 @@ describe("i18n config", () => {
   });
 
   it("can change language without throwing", async () => {
-    await expect(i18n.changeLanguage("en")).resolves.toBeDefined();
+    await i18n.changeLanguage("en");
     expect(i18n.language).toBe("en");
     await i18n.changeLanguage("ru");
   });

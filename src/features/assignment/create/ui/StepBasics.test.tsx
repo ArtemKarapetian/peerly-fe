@@ -6,17 +6,17 @@ import type { AssignmentFormData } from "../model/types";
 
 import { StepBasics } from "./StepBasics";
 
-const { courseRepoMock, groupRepoMock } = vi.hoisted(() => ({
-  courseRepoMock: { getAll: vi.fn() },
-  groupRepoMock: { listForCourse: vi.fn() },
+const { useCoursesMock, useGroupsByCourseMock } = vi.hoisted(() => ({
+  useCoursesMock: vi.fn(),
+  useGroupsByCourseMock: vi.fn(),
 }));
 
 vi.mock("@/entities/course", () => ({
-  courseRepo: courseRepoMock,
+  useCourses: () => useCoursesMock(),
 }));
 
 vi.mock("@/entities/group", () => ({
-  groupRepo: groupRepoMock,
+  useGroupsByCourse: () => useGroupsByCourseMock(),
 }));
 
 function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormData {
@@ -38,39 +38,41 @@ function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormDa
 }
 
 beforeEach(() => {
-  courseRepoMock.getAll.mockReset();
-  groupRepoMock.listForCourse.mockReset();
-  courseRepoMock.getAll.mockResolvedValue([
-    {
-      id: "c-1",
-      title: "Algebra",
-      description: "",
-      code: "",
-      teachers: [],
-      enrollmentCount: 0,
-      homeworkCount: 0,
-      status: "active",
-      archived: false,
-      createdAt: new Date(),
-      name: "Algebra",
-      backendStatus: "inProgress",
-    },
-    {
-      id: "c-2",
-      title: "Geometry",
-      description: "",
-      code: "",
-      teachers: [],
-      enrollmentCount: 0,
-      homeworkCount: 0,
-      status: "active",
-      archived: false,
-      createdAt: new Date(),
-      name: "Geometry",
-      backendStatus: "inProgress",
-    },
-  ]);
-  groupRepoMock.listForCourse.mockResolvedValue([]);
+  useCoursesMock.mockReset();
+  useGroupsByCourseMock.mockReset();
+  useCoursesMock.mockReturnValue({
+    data: [
+      {
+        id: "c-1",
+        title: "Algebra",
+        description: "",
+        code: "",
+        teachers: [],
+        enrollmentCount: 0,
+        homeworkCount: 0,
+        status: "active",
+        archived: false,
+        createdAt: new Date(),
+        name: "Algebra",
+        backendStatus: "inProgress",
+      },
+      {
+        id: "c-2",
+        title: "Geometry",
+        description: "",
+        code: "",
+        teachers: [],
+        enrollmentCount: 0,
+        homeworkCount: 0,
+        status: "active",
+        archived: false,
+        createdAt: new Date(),
+        name: "Geometry",
+        backendStatus: "inProgress",
+      },
+    ],
+  });
+  useGroupsByCourseMock.mockReturnValue({ data: [], isLoading: false });
 });
 
 describe("StepBasics", () => {
@@ -125,10 +127,13 @@ describe("StepBasics", () => {
   });
 
   it("loads groups for the selected course and fires onUpdate with groupId on selection", async () => {
-    groupRepoMock.listForCourse.mockResolvedValueOnce([
-      { id: "g-1", name: "Группа A", studentCount: 0 },
-      { id: "g-2", name: "Группа B", studentCount: 0 },
-    ]);
+    useGroupsByCourseMock.mockReturnValue({
+      data: [
+        { id: "g-1", name: "Группа A", studentCount: 0 },
+        { id: "g-2", name: "Группа B", studentCount: 0 },
+      ],
+      isLoading: false,
+    });
     const user = userEvent.setup();
     const onUpdate = vi.fn();
     render(<StepBasics data={makeData({ courseId: "c-1" })} onUpdate={onUpdate} />);

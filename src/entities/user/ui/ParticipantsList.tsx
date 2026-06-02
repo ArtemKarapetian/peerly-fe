@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import { EmptyState } from "@/shared/ui";
+
 export interface Participant {
   id: string;
   firstName: string;
@@ -42,11 +44,7 @@ export function ParticipantsList({ participants }: ParticipantsListProps) {
   };
 
   if (participants.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-sm text-text-tertiary">{t("entity.user.participantsNotFound")}</p>
-      </div>
-    );
+    return <EmptyState message={t("entity.user.participantsNotFound")} />;
   }
 
   return (

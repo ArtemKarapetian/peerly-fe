@@ -31,7 +31,7 @@ describe("TaskHeader urgency", () => {
     const span = screen.getByText(/student\.task\.deadline/);
     expect(span.className).toMatch(/text-muted-foreground/);
     expect(span.className).not.toMatch(/text-warning/);
-    expect(span.className).not.toMatch(/text-destructive/);
+    expect(span.className).not.toMatch(/text-error/);
   });
 
   it("renders deadline in warning color when less than 2 days away", () => {
@@ -41,11 +41,11 @@ describe("TaskHeader urgency", () => {
     expect(span.className).toMatch(/text-warning/);
   });
 
-  it("renders deadline in destructive color when already passed", () => {
+  it("renders deadline in error color when already passed", () => {
     const past = new Date(Date.now() - ONE_DAY);
     renderHeader({ deadline: past });
     const span = screen.getByText(/student\.task\.deadline/);
-    expect(span.className).toMatch(/text-destructive/);
+    expect(span.className).toMatch(/text-error/);
   });
 
   it("renders reviewDeadline in warning color when less than 2 days away", () => {
@@ -55,11 +55,11 @@ describe("TaskHeader urgency", () => {
     expect(span.className).toMatch(/text-warning/);
   });
 
-  it("renders reviewDeadline in destructive color when already passed", () => {
+  it("renders reviewDeadline in error color when already passed", () => {
     const reviewPast = new Date(Date.now() - 5 * ONE_DAY);
     renderHeader({ reviewDeadline: reviewPast });
     const span = screen.getByText(/student\.task\.reviewDeadline/);
-    expect(span.className).toMatch(/text-destructive/);
+    expect(span.className).toMatch(/text-error/);
   });
 
   it("does not render either deadline block when both are absent", () => {

@@ -3,17 +3,16 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
-import { useAsync } from "@/shared/lib/useAsync";
-import { EmptyState, Field, Select } from "@/shared/ui";
+import { Card, EmptyState, Field, Select } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { assignmentRepo } from "@/entities/assignment";
-import { courseRepo } from "@/entities/course";
+import { useAssignment, useAssignmentsByCourse } from "@/entities/assignment";
+import { useCourses } from "@/entities/course";
 import { storageApi } from "@/entities/storage";
-import { workRepo } from "@/entities/work";
+import { useHomeworkSubmissions, useSubmission } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell";
 
@@ -107,14 +106,11 @@ function PickerCard({
 }: PickerCardProps) {
   const { t } = useTranslation();
 
-  const { data: courses, isLoading: coursesLoading } = useAsync(() => courseRepo.getAll(), []);
-  const { data: assignments, isLoading: assignmentsLoading } = useAsync(
-    () => (courseId ? assignmentRepo.getByCourse(courseId) : Promise.resolve([])),
-    [courseId],
-  );
+  const { data: courses, isLoading: coursesLoading } = useCourses();
+  const { data: assignments, isLoading: assignmentsLoading } = useAssignmentsByCourse(courseId);
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-xl p-4 tablet:p-6 mb-6">
+    <Card variant="section" className="rounded-xl p-4 tablet:p-6 mb-6">
       <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
         <Field label={t("common.course")}>
           <Select
@@ -150,7 +146,7 @@ function PickerCard({
           </Select>
         </Field>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -174,25 +170,29 @@ function SubmissionsContent({ assignmentId }: { assignmentId: string }) {
     );
   };
 
-  const { data, isLoading, error, refetch } = useAsync(async () => {
-    const [assignment, submissions] = await Promise.all([
-      assignmentRepo.getById(assignmentId),
-      workRepo.listForHomework(assignmentId),
-    ]);
-    return { assignment, submissions };
-  }, [assignmentId]);
+  const assignmentQuery = useAssignment(assignmentId);
+  const submissionsQuery = useHomeworkSubmissions(assignmentId);
+  const isLoading = assignmentQuery.isLoading || submissionsQuery.isLoading;
+  const error = assignmentQuery.error ?? submissionsQuery.error;
+  const refetch = () => {
+    void assignmentQuery.refetch();
+    void submissionsQuery.refetch();
+  };
+
+  const assignment = assignmentQuery.data;
+  const submissions = submissionsQuery.data;
 
   const rows = useMemo(() => {
-    if (!data?.assignment) return [];
+    if (!assignment) return [];
     return computeRows({
       data: {
         users: [],
-        assignments: [data.assignment],
-        submissions: data.submissions,
+        assignments: [assignment],
+        submissions: submissions ?? [],
       },
       unknownStudentLabel: t("teacher.submissions.unknownStudent"),
     });
-  }, [data, t]);
+  }, [assignment, submissions, t]);
 
   const filtered = rows.filter((r) => {
     if (filterStatus !== "all" && r.status !== filterStatus) return false;
@@ -218,7 +218,10 @@ function SubmissionsContent({ assignmentId }: { assignmentId: string }) {
 
   return (
     <>
-      <div className="bg-card border border-border shadow-sm rounded-xl p-4 tablet:p-6 mb-6 flex flex-wrap items-end gap-4 justify-between">
+      <Card
+        variant="section"
+        className="rounded-xl p-4 tablet:p-6 mb-6 flex flex-wrap items-end gap-4 justify-between"
+      >
         <div className="flex flex-wrap items-end gap-4">
           <Field label={t("common.status")}>
             <Select value={filterStatus} onChange={(e) => setParam("status", e.target.value)}>
@@ -242,7 +245,7 @@ function SubmissionsContent({ assignmentId }: { assignmentId: string }) {
           {t("teacher.submissions.foundSubmissions")}{" "}
           <strong className="text-foreground">{filtered.length}</strong>
         </p>
-      </div>
+      </Card>
 
       <SubmissionList rows={filtered} onSelect={setSelectedId} />
 
@@ -264,11 +267,7 @@ interface SubmissionDetailContainerProps {
 }
 
 function SubmissionDetailContainer({ row, onClose, onDownload }: SubmissionDetailContainerProps) {
-  const {
-    data: fullSubmission,
-    isLoading,
-    error,
-  } = useAsync(() => workRepo.getById(row.sub.id), [row.sub.id]);
+  const { data: fullSubmission, isLoading, error } = useSubmission(row.sub.id);
 
   const enrichedRow = useMemo(
     () =>

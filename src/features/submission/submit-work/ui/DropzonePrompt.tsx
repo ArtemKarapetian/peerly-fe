@@ -13,7 +13,7 @@ export function DropzonePrompt({ isDragging, hasError }: DropzonePromptProps) {
     <div className="space-y-3">
       <div className={`w-12 h-12 ${iconBg} rounded-full mx-auto flex items-center justify-center`}>
         {hasError ? (
-          <AlertCircle className="w-6 h-6 text-destructive" />
+          <AlertCircle className="w-6 h-6 text-error" />
         ) : (
           <Upload className="w-6 h-6 text-brand-primary" />
         )}

@@ -22,7 +22,7 @@ export function DeadlinePassedView({ courseId, taskId, breadcrumbs }: DeadlinePa
         <div className="bg-error-light border border-error rounded-xl p-8 max-w-[480px] text-center">
           <div className="mb-4">
             <div className="w-16 h-16 bg-card rounded-full mx-auto flex items-center justify-center">
-              <Clock className="size-7 text-destructive" />
+              <Clock className="size-7 text-error" />
             </div>
           </div>
           <h2 className="text-2xl font-medium text-foreground mb-3 tracking-[-0.5px]">

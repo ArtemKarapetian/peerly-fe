@@ -14,6 +14,13 @@ export function useAssignedSubmission(submissionId: string) {
   });
 }
 
+export function useAllReviews() {
+  return useQuery({
+    queryKey: reviewKeys.lists(),
+    queryFn: () => reviewHttpRepo.getAll(),
+  });
+}
+
 export function useSubmittedReview(reviewId: string | null) {
   return useQuery({
     queryKey: reviewKeys.detail(reviewId ?? ""),

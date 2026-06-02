@@ -6,12 +6,12 @@ import type { AssignmentFormData } from "../model/types";
 
 import { StepPublish } from "./StepPublish";
 
-const { courseRepoMock } = vi.hoisted(() => ({
-  courseRepoMock: { getAll: vi.fn() },
+const { useCoursesMock } = vi.hoisted(() => ({
+  useCoursesMock: vi.fn(),
 }));
 
 vi.mock("@/entities/course", () => ({
-  courseRepo: courseRepoMock,
+  useCourses: () => useCoursesMock(),
 }));
 
 function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormData {
@@ -34,23 +34,27 @@ function makeData(overrides: Partial<AssignmentFormData> = {}): AssignmentFormDa
 }
 
 beforeEach(() => {
-  courseRepoMock.getAll.mockReset();
-  courseRepoMock.getAll.mockResolvedValue([
-    {
-      id: "c-1",
-      title: "Algebra",
-      description: "",
-      code: "",
-      teachers: [],
-      enrollmentCount: 0,
-      homeworkCount: 0,
-      status: "active",
-      archived: false,
-      createdAt: new Date(),
-      name: "Algebra",
-      backendStatus: "inProgress",
-    },
-  ]);
+  useCoursesMock.mockReset();
+  useCoursesMock.mockReturnValue({
+    data: [
+      {
+        id: "c-1",
+        title: "Algebra",
+        description: "",
+        code: "",
+        teachers: [],
+        enrollmentCount: 0,
+        homeworkCount: 0,
+        status: "active",
+        archived: false,
+        createdAt: new Date(),
+        name: "Algebra",
+        backendStatus: "inProgress",
+      },
+    ],
+    isLoading: false,
+    error: null,
+  });
 });
 
 describe("StepPublish", () => {

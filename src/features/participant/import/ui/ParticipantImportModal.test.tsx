@@ -12,7 +12,6 @@ function renderWithClient(ui: React.ReactElement) {
 const { groupRepoMock, courseRepoMock, userRepoMock, toastMock } = vi.hoisted(() => ({
   groupRepoMock: {
     listForCourse: vi.fn(),
-    addStudent: vi.fn(),
   },
   courseRepoMock: {
     getParticipants: vi.fn(),
@@ -42,7 +41,6 @@ vi.mock("@/shared/lib/useDebouncedValue", () => ({
 
 beforeEach(() => {
   groupRepoMock.listForCourse.mockReset();
-  groupRepoMock.addStudent.mockReset();
   courseRepoMock.getParticipants.mockReset();
   userRepoMock.searchStudents.mockReset();
   toastMock.success.mockReset();
