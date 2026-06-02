@@ -1,3 +1,5 @@
+import storybook from "eslint-plugin-storybook";
+
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
@@ -7,12 +9,12 @@ import reactHooks from "eslint-plugin-react-hooks";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import boundaries from "eslint-plugin-boundaries";
 import importPlugin from "eslint-plugin-import";
+import sonarjs from "eslint-plugin-sonarjs";
 
 export default [
   js.configs.recommended,
-
   ...tseslint.configs.recommendedTypeChecked,
-
+  sonarjs.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
@@ -21,12 +23,10 @@ export default [
       },
     },
   },
-
   {
     files: ["**/*.{js,mjs,cjs}"],
     ...tseslint.configs.disableTypeChecked,
   },
-
   {
     files: ["scripts/**/*.{js,mjs,cjs}"],
     languageOptions: {
@@ -37,7 +37,6 @@ export default [
       },
     },
   },
-
   {
     files: ["**/*.{ts,tsx}"],
     plugins: {
@@ -45,6 +44,8 @@ export default [
     },
     rules: {
       "prettier/prettier": "error",
+
+      "no-empty": ["error", { allowEmptyCatch: true }],
 
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-unsafe-assignment": "error",
@@ -54,11 +55,16 @@ export default [
       "@typescript-eslint/no-unsafe-argument": "error",
       "@typescript-eslint/no-base-to-string": "warn",
       "@typescript-eslint/restrict-template-expressions": "warn",
+
+      "sonarjs/prefer-read-only-props": "off",
+      "sonarjs/deprecation": "off",
+      "sonarjs/no-nested-conditional": "off",
+      "sonarjs/different-types-comparison": "off",
+      "sonarjs/slow-regex": "off",
+      "sonarjs/assertions-in-tests": "off",
     },
   },
-
   prettier,
-
   {
     ignores: [
       "**/node_modules/**",
@@ -66,7 +72,7 @@ export default [
       "**/build/**",
       "**/.next/**",
       "**/coverage/**",
-      "**/src/pages/_archived/**",
+      "**/storybook-static/**",
       "**/.storybook/**",
       "**/playwright-report/**",
       "**/test-results/**",
@@ -75,7 +81,6 @@ export default [
       "**/cypress/downloads/**",
     ],
   },
-
   {
     files: [
       "**/*.{test,spec}.{ts,tsx}",
@@ -94,9 +99,14 @@ export default [
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-empty-function": "off",
       "boundaries/element-types": "off",
+      "sonarjs/no-duplicate-string": "off",
+      "sonarjs/no-identical-functions": "off",
+      "sonarjs/cognitive-complexity": "off",
+      "sonarjs/no-nested-functions": "off",
+      "sonarjs/no-hardcoded-passwords": "off",
+      "sonarjs/no-clear-text-protocols": "off",
     },
   },
-
   {
     files: ["**/*.{tsx,jsx}"],
     plugins: {
@@ -111,7 +121,6 @@ export default [
       ...reactHooks.configs.recommended.rules,
     },
   },
-
   {
     files: ["**/*.{ts,tsx}"],
     plugins: { boundaries },
@@ -143,7 +152,6 @@ export default [
       ],
     },
   },
-
   {
     files: ["**/*.{ts,tsx}"],
     plugins: { import: importPlugin },
@@ -175,4 +183,5 @@ export default [
       "import/newline-after-import": "error",
     },
   },
+  ...storybook.configs["flat/recommended"]
 ];

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { RubricEditorCriterion, RubricEditorData } from "./types";
@@ -8,14 +8,6 @@ export function useRubricForm(initial: RubricEditorData, onSave: (r: RubricEdito
   const [edited, setEdited] = useState<RubricEditorData>(initial);
   const [isDirty, setIsDirty] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setEdited(initial);
-      setIsDirty(false);
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [initial]);
 
   const handleSave = () => {
     const withPositions: RubricEditorData = {
@@ -34,7 +26,9 @@ export function useRubricForm(initial: RubricEditorData, onSave: (r: RubricEdito
   const updateCriterion = (index: number, updates: Partial<RubricEditorCriterion>) => {
     setEdited((prev) => {
       const next = [...prev.criteria];
-      next[index] = { ...next[index], ...updates };
+      const existing = next[index];
+      if (!existing) return prev;
+      next[index] = { ...existing, ...updates };
       return { ...prev, criteria: next };
     });
     setIsDirty(true);
@@ -70,6 +64,7 @@ export function useRubricForm(initial: RubricEditorData, onSave: (r: RubricEdito
     setEdited((prev) => {
       const next = [...prev.criteria];
       const dragged = next[draggedIndex];
+      if (!dragged) return prev;
       next.splice(draggedIndex, 1);
       next.splice(index, 0, dragged);
       return { ...prev, criteria: next };

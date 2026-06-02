@@ -5,7 +5,6 @@ const envSchema = z.object({
   sentryDsn: z.string().url().optional(),
   isProd: z.boolean(),
   isDev: z.boolean(),
-  enablePasswordChange: z.boolean(),
   aggressiveRefetch: z.boolean(),
   verboseLogs: z.boolean(),
 });
@@ -28,7 +27,6 @@ export const env: Env = envSchema.parse({
   sentryDsn: import.meta.env.VITE_SENTRY_DSN || undefined,
   isProd: import.meta.env.PROD,
   isDev: import.meta.env.DEV,
-  enablePasswordChange: parseBool(import.meta.env.VITE_ENABLE_PASSWORD_CHANGE),
   aggressiveRefetch: parseBool(import.meta.env.VITE_AGGRESSIVE_REFETCH),
   verboseLogs: parseBool(import.meta.env.VITE_VERBOSE_LOGS),
 });

@@ -34,8 +34,8 @@ export function GradeTableDesktop({
             <GradeRow
               key={grade.id}
               grade={grade}
-              statusLabel={statusLabels[grade.status]}
-              statusColor={statusColors[grade.status]}
+              statusLabel={statusLabels[grade.status] ?? ""}
+              statusColor={statusColors[grade.status] ?? ""}
               onClick={() => onRowClick(grade)}
             />
           ))}
@@ -52,9 +52,10 @@ function TableHeader({
   children: React.ReactNode;
   align?: "left" | "right";
 }) {
+  const alignClass = align === "right" ? "text-right" : "text-left";
   return (
     <th
-      className={`text-${align} px-4 desktop:px-6 py-4 text-13 font-medium text-muted-foreground uppercase tracking-wide`}
+      className={`${alignClass} px-4 desktop:px-6 py-4 text-13 font-medium text-muted-foreground uppercase tracking-wide`}
     >
       {children}
     </th>

@@ -8,7 +8,7 @@ import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { userRepo } from "@/entities/user";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 export default function AdminOverviewPage() {
   const { t } = useTranslation();

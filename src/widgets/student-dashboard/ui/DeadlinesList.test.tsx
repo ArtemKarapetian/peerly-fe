@@ -5,7 +5,6 @@ import { describe, expect, it, vi } from "vitest";
 import { DeadlinesList, type DeadlineItem } from "./DeadlinesList";
 
 vi.mock("@/shared/lib/formatDate", () => ({
-  formatRelativeTime: (iso: string) => iso,
   formatDateTime: (iso: string) => iso,
 }));
 

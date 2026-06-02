@@ -38,7 +38,7 @@ export function StepBasics({ data, onUpdate, lockCourse, lockGroup }: StepBasics
           <option value="">{t("feature.assignmentCreate.basics.coursePlaceholder")}</option>
           {(courses ?? []).map((course) => (
             <option key={course.id} value={course.id}>
-              {course.title}
+              {course.name}
             </option>
           ))}
         </Select>

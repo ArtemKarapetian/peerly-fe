@@ -12,6 +12,7 @@ export { Field } from "./Field";
 export { TextField } from "./TextField";
 export { Textarea } from "./Textarea";
 export { EmptyState } from "./EmptyState";
+export { FormErrorAlert } from "./FormErrorAlert";
 export { StatusBadge } from "./StatusBadge";
 export { SectionHeader } from "./SectionHeader";
 export { FiltersCard } from "./FiltersCard";

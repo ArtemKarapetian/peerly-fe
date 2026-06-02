@@ -1,7 +1,3 @@
-/**
- * Minimal HTTP client built on fetch().
- */
-
 import { API_PREFIX } from "@/shared/config/constants";
 import { env } from "@/shared/config/env";
 

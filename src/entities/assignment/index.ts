@@ -1,4 +1,4 @@
-export type { DemoAssignment, TeacherAssignmentDetail } from "./model/types";
+export type { Assignment, TeacherAssignmentDetail } from "./model/types";
 export { assignmentHttpRepo as assignmentRepo } from "./api/httpRepo";
 export {
   useAssignments,

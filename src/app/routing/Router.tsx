@@ -1,11 +1,9 @@
-import { Suspense, lazy } from "react";
+import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { NavigateRegistrar } from "@/app/routing/NavigateRegistrar";
 import { renderRoutes } from "@/app/routing/renderRoutes";
-import { routeRegistry } from "@/app/routing/routeRegistry";
-
-const Error404Page = lazy(() => import("@/pages/errors/404/ui/Page"));
+import { Error404Page, routeRegistry } from "@/app/routing/routeRegistry";
 
 function PageFallback() {
   return (

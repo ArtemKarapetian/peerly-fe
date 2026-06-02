@@ -1,10 +1,6 @@
 import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-/**
- * ParticipantSearch - Participant search field
- */
-
 interface ParticipantSearchProps {
   value: string;
   onChange: (value: string) => void;

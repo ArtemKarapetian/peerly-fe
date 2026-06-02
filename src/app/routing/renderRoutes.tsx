@@ -1,5 +1,5 @@
 import { ComponentType, ReactElement, createElement } from "react";
-import { Navigate, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicOnlyRoute } from "./PublicOnlyRoute";
@@ -7,11 +7,8 @@ import { RoleRoute } from "./RoleRoute";
 import type { Access, RouteConfig } from "./routeRegistry";
 
 function leafElement(config: RouteConfig): ReactElement {
-  if (config.access === "redirect") {
-    return <Navigate to={config.redirectTo ?? "/"} replace />;
-  }
   if (!config.component) {
-    throw new Error(`Route ${config.path} has no component and is not a redirect`);
+    throw new Error(`Route ${config.path} has no component`);
   }
   return createElement(config.component as ComponentType);
 }
@@ -20,17 +17,17 @@ function renderLeaf(config: RouteConfig): ReactElement {
   return <Route key={config.path} path={config.path} element={leafElement(config)} />;
 }
 
-function groupBy(configs: RouteConfig[], access: Access): RouteConfig[] {
+function routesWithAccess(configs: RouteConfig[], access: Access): RouteConfig[] {
   return configs.filter((c) => c.access === access);
 }
 
 export function renderRoutes(registry: RouteConfig[]): ReactElement {
-  const publics = groupBy(registry, "public");
-  const publicOnly = groupBy(registry, "publicOnly");
-  const auth = groupBy(registry, "auth");
-  const students = groupBy(registry, "student");
-  const teachers = groupBy(registry, "teacher");
-  const admins = groupBy(registry, "admin");
+  const publics = routesWithAccess(registry, "public");
+  const publicOnly = routesWithAccess(registry, "publicOnly");
+  const auth = routesWithAccess(registry, "auth");
+  const students = routesWithAccess(registry, "student");
+  const teachers = routesWithAccess(registry, "teacher");
+  const admins = routesWithAccess(registry, "admin");
 
   return (
     <>

@@ -72,10 +72,10 @@ describe("GradeTable", () => {
         onRowClick={onRowClick}
       />,
     );
-    const firstRow = screen.getAllByText("Linear Equations")[0];
+    const firstRow = screen.getAllByText("Linear Equations")[0]!;
     await user.click(firstRow);
     expect(onRowClick).toHaveBeenCalled();
-    const arg = onRowClick.mock.calls[0][0] as GradeEntry;
+    const arg = onRowClick.mock.calls[0]![0]! as GradeEntry;
     expect(arg.id).toBe("g-1");
   });
 });

@@ -14,7 +14,7 @@ import { courseRepo } from "@/entities/course";
 import { reviewRepo } from "@/entities/review";
 import { workRepo } from "@/entities/work";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import {
   computeAssignmentMetrics,
@@ -147,7 +147,7 @@ function AnalyticsContent({ data }: { data: AnalyticsRawData }) {
   const handleExportCSV = () => {
     const course = courses.find((c) => c.id === selectedCourse);
     exportGradebookCsv({
-      courseTitle: course?.title ?? "course",
+      courseTitle: course?.name ?? "course",
       assignments: filteredAssignments,
       gradebook,
       studentHeader: t("teacher.analytics.csvStudentHeader"),
@@ -164,7 +164,11 @@ function AnalyticsContent({ data }: { data: AnalyticsRawData }) {
       <Breadcrumbs items={[{ label: t("teacher.analytics.breadcrumb") }]} />
       <PageHeader title={t("teacher.analytics.title")} subtitle={t("teacher.analytics.subtitle")} />
 
-      <CourseSelectorCard courses={courses} value={selectedCourse} onChange={setSelectedCourse} />
+      <CourseSelectorCard
+        courses={courses.map((c) => ({ id: c.id, title: c.name }))}
+        value={selectedCourse}
+        onChange={setSelectedCourse}
+      />
 
       {assignmentFilterName && (
         <AssignmentFilterChip

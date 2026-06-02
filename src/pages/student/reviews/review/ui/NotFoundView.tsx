@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 export function NotFoundView() {
   const { t } = useTranslation();

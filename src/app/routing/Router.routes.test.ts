@@ -48,9 +48,8 @@ describe("routeRegistry", () => {
     }
   });
 
-  it("every non-redirect route has a lazy component", () => {
+  it("every route has a lazy component", () => {
     for (const r of routeRegistry) {
-      if (r.access === "redirect") continue;
       expect(r.component, `path ${r.path} is missing a component`).toBeDefined();
     }
   });

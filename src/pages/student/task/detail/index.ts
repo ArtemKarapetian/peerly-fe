@@ -1,1 +1,1 @@
-export { default as TaskPage } from "./ui/Page";
+export { default } from "./ui/Page";

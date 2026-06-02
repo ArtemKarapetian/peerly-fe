@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { DemoAssignment } from "@/entities/assignment/model/types";
+import type { Assignment } from "@/entities/assignment";
 
 import DashboardPage from "./Page";
 
@@ -26,7 +26,7 @@ vi.mock("@/widgets/reviews-inbox", () => ({
   useAssignedReviewsInbox: () => useAssignedReviewsInboxMock(),
 }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
@@ -34,8 +34,8 @@ function assignment(
   id: string,
   title: string,
   daysFromNow: number,
-  backendStatus: DemoAssignment["backendStatus"] = "published",
-): DemoAssignment {
+  backendStatus: Assignment["backendStatus"] = "published",
+): Assignment {
   return {
     id,
     courseId: "c-1",

@@ -7,7 +7,6 @@ export const ROUTES = {
   register: "/register",
   verifyEmail: "/verify-email",
   help: "/help",
-  status: "/status",
   terms: "/terms",
 
   error401: "/401",
@@ -34,7 +33,6 @@ export const ROUTES = {
   settings: "/settings",
   security: "/security",
 
-  teacherDashboard: "/teacher/dashboard",
   teacherCourses: "/teacher/courses",
   teacherCreateCourse: "/teacher/courses/new",
   teacherCourse: (courseId: string) => `/teacher/courses/${courseId}`,

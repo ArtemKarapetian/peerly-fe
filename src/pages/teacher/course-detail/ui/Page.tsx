@@ -11,7 +11,7 @@ import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { useAssignmentsByCourse } from "@/entities/assignment";
 import { useCourse, useCourseParticipants } from "@/entities/course";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import {
   TeacherCourseAssignments,
   TeacherCourseParticipants,

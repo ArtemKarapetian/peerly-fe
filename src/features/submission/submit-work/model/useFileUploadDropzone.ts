@@ -70,7 +70,8 @@ export function useFileUploadDropzone({
     setIsDragging(false);
     if (blocked) return;
     const files = e.dataTransfer.files;
-    if (files && files.length > 0) handleFileSelect(files[0]);
+    const first = files?.[0];
+    if (first) handleFileSelect(first);
   };
 
   const handleClick = () => {
@@ -79,7 +80,8 @@ export function useFileUploadDropzone({
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && files.length > 0) handleFileSelect(files[0]);
+    const first = files?.[0];
+    if (first) handleFileSelect(first);
   };
 
   return {

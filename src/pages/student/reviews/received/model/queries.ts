@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { type GetSubmittedHomeworkResponse, http } from "@/shared/api";
+import { receivedReviewKeys } from "@/shared/api/queryKeys";
 
 import { assignmentRepo } from "@/entities/assignment";
 import { courseRepo } from "@/entities/course";
-import { rubricRepo } from "@/entities/rubric";
+import { loadRubricTotals } from "@/entities/rubric";
 import { workRepo } from "@/entities/work";
 
 const FALLBACK_MAX_SCORE = 100;
@@ -30,28 +31,18 @@ export interface TaskSubmissionReviews {
 
 export function useReceivedReviews() {
   return useQuery({
-    queryKey: ["received-reviews", "me"],
+    queryKey: receivedReviewKeys.forMe(),
     queryFn: async (): Promise<TaskSubmissionReviews[]> => {
       const courses = await courseRepo.getForStudent();
-      const courseNameById = new Map(courses.map((c) => [c.id, c.title]));
+      const courseNameById = new Map(courses.map((c) => [c.id, c.name]));
 
       const assignments = await assignmentRepo.getAll();
       const visible = assignments.filter(
         (a) => a.backendStatus !== "draft" && a.backendStatus !== "deleted",
       );
 
-      const rubricIds = Array.from(
-        new Set(visible.map((a) => a.rubricId).filter((id): id is string => !!id)),
-      );
-      const rubricTotals = new Map<string, number>();
-      await Promise.all(
-        rubricIds.map(async (id) => {
-          const detail = await rubricRepo.getById(id).catch(() => null);
-          if (detail) {
-            const total = detail.criteria.reduce((sum, c) => sum + c.maxScore, 0);
-            if (total > 0) rubricTotals.set(id, total);
-          }
-        }),
+      const rubricTotals = await loadRubricTotals(
+        visible.map((a) => a.rubricId).filter((id): id is string => !!id),
       );
 
       const items = await Promise.all(

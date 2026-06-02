@@ -17,7 +17,7 @@ vi.mock("@/entities/assignment", () => ({ assignmentRepo: assignmentRepoMock }))
 vi.mock("@/entities/work", () => ({ workRepo: workRepoMock }));
 vi.mock("@/entities/review", () => ({ reviewRepo: reviewRepoMock }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
@@ -136,7 +136,7 @@ describe("TeacherDistributionPage", () => {
     });
 
     const selects = screen.getAllByRole("combobox");
-    await user.selectOptions(selects[0], "c-1");
+    await user.selectOptions(selects[0]!, "c-1");
 
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Assignment 1" })).toBeInTheDocument();
@@ -153,13 +153,13 @@ describe("TeacherDistributionPage", () => {
     });
 
     const selects = screen.getAllByRole("combobox");
-    await user.selectOptions(selects[0], "c-1");
+    await user.selectOptions(selects[0]!, "c-1");
 
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Assignment 1" })).toBeInTheDocument();
     });
 
-    await user.selectOptions(selects[1], "a-1");
+    await user.selectOptions(selects[1]!, "a-1");
 
     expect(screen.getByText("SUB-001")).toBeInTheDocument();
     expect(screen.getByText("SUB-002")).toBeInTheDocument();
@@ -177,12 +177,12 @@ describe("TeacherDistributionPage", () => {
     });
 
     const selects = screen.getAllByRole("combobox");
-    await user.selectOptions(selects[0], "c-1");
+    await user.selectOptions(selects[0]!, "c-1");
 
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Assignment 1" })).toBeInTheDocument();
     });
-    await user.selectOptions(selects[1], "a-1");
+    await user.selectOptions(selects[1]!, "a-1");
 
     expect(
       screen.getByText(/teacher\.distribution\.reviewerStatus\.submitted/),
@@ -201,12 +201,12 @@ describe("TeacherDistributionPage", () => {
     });
 
     const selects = screen.getAllByRole("combobox");
-    await user.selectOptions(selects[0], "c-1");
+    await user.selectOptions(selects[0]!, "c-1");
 
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Assignment 1" })).toBeInTheDocument();
     });
-    await user.selectOptions(selects[1], "a-1");
+    await user.selectOptions(selects[1]!, "a-1");
 
     const noReviewers = screen.getAllByText(/teacher\.distribution\.noReviewers/);
     expect(noReviewers.length).toBeGreaterThanOrEqual(2);
@@ -223,12 +223,12 @@ describe("TeacherDistributionPage", () => {
     });
 
     const selects = screen.getAllByRole("combobox");
-    await user.selectOptions(selects[0], "c-1");
+    await user.selectOptions(selects[0]!, "c-1");
 
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Assignment 1" })).toBeInTheDocument();
     });
-    await user.selectOptions(selects[1], "a-1");
+    await user.selectOptions(selects[1]!, "a-1");
 
     expect(screen.getByText(/teacher\.distribution\.emptyState/)).toBeInTheDocument();
   });

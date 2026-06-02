@@ -109,7 +109,7 @@ describe("TeacherCourseParticipants", () => {
 
     await waitFor(() => expect(screen.getByText("widget.groups.empty")).toBeInTheDocument());
 
-    await user.click(screen.getAllByRole("button", { name: /widget\.groups\.createGroup/ })[0]);
+    await user.click(screen.getAllByRole("button", { name: /widget\.groups\.createGroup/ })[0]!);
     await user.type(
       screen.getByPlaceholderText(/widget\.groups\.groupNamePlaceholder/),
       "New Group",

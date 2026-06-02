@@ -27,14 +27,12 @@ vi.mock("@/entities/storage", () => ({
   storageApi: { upload: vi.fn(), deleteSubmissionFile: vi.fn(), getDownloadUrl: vi.fn() },
 }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-vi.mock("@/features/submission/submit-work/ui/FileUploadArea", () => ({
+vi.mock("@/features/submission/submit-work", () => ({
   FileUploadArea: () => <div data-testid="upload-area" />,
-}));
-vi.mock("@/features/submission/submit-work/ui/TaskRulesCard", () => ({
   TaskRulesCard: () => <div data-testid="task-rules" />,
 }));
 

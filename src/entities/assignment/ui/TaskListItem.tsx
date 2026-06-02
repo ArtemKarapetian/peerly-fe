@@ -2,10 +2,6 @@ import { useTranslation } from "react-i18next";
 
 import type { TaskStatus } from "./types";
 
-/**
- * TaskListItem - Строка задания в списке
- */
-
 interface TaskListItemProps {
   title: string;
   /** ISO date string (e.g. "2026-01-31") or already-formatted string. */

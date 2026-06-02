@@ -18,6 +18,8 @@ const LABEL_KEYS = [
   "auth.strength.strong",
 ];
 
+const FALLBACK_LABEL_KEY = "auth.strength.weak";
+
 export function PasswordStrengthMeter({ strength }: { strength: PasswordStrength }) {
   const { t } = useTranslation();
   return (
@@ -27,12 +29,14 @@ export function PasswordStrengthMeter({ strength }: { strength: PasswordStrength
           <div
             key={i}
             className={`h-1 flex-1 rounded-full ${
-              strength.score > i ? STRENGTH_COLORS[strength.score] : "bg-muted"
+              strength.score > i ? (STRENGTH_COLORS[strength.score] ?? "bg-muted") : "bg-muted"
             }`}
           />
         ))}
       </div>
-      <p className="text-xs text-muted-foreground">{t(LABEL_KEYS[strength.score])}</p>
+      <p className="text-xs text-muted-foreground">
+        {t(LABEL_KEYS[strength.score] ?? FALLBACK_LABEL_KEY)}
+      </p>
       {strength.suggestions.length > 0 && (
         <ul className="text-xs text-muted-foreground list-disc pl-4 space-y-0.5">
           {strength.suggestions.map((s) => (

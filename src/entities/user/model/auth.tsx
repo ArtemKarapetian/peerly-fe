@@ -20,7 +20,7 @@ import { ROUTES } from "@/shared/config/routes";
 import { logger } from "@/shared/lib/logger";
 import { appNavigate } from "@/shared/lib/navigate";
 
-import { authApi } from "../api/authHttp";
+import { authApi } from "../api/authApi";
 
 export type AuthStatus = "unknown" | "anonymous" | "authenticated";
 
@@ -47,6 +47,20 @@ const Auth = createContext<AuthContextType | undefined>(undefined);
 
 function sessionToUser(s: Session | null) {
   return s ? { id: s.userId, name: s.userName, email: s.email } : null;
+}
+
+async function deriveSession(userIdFallback: string, emailFallback: string): Promise<Session> {
+  const { role } = await authApi.getMyRole();
+  const me = await authApi.getMe(role).catch((err) => {
+    logger.warn("getMe failed", err);
+    return null;
+  });
+  return {
+    userId: me?.userId || userIdFallback,
+    userName: me?.name ?? "",
+    email: me?.email || emailFallback,
+    role,
+  };
 }
 
 function isFatalAuthError(err: unknown): boolean {
@@ -95,17 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback<AuthContextType["login"]>(async ({ email, password }) => {
     const res = await authApi.login({ email, password });
-    const { role } = await authApi.getMyRole();
-    const me = await authApi.getMe(role).catch((err) => {
-      logger.warn("getMe failed", err);
-      return null;
-    });
-    const next: Session = {
-      userId: me?.userId || String(res.userId),
-      userName: me?.name ?? "",
-      email: me?.email || email,
-      role,
-    };
+    const next = await deriveSession(String(res.userId), email);
     setSession(next);
     setSessionState(next);
     setStatus("authenticated");
@@ -122,17 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const confirmEmail = useCallback<AuthContextType["confirmEmail"]>(async ({ token }) => {
     const res = await authApi.confirmEmail({ token });
-    const { role } = await authApi.getMyRole();
-    const me = await authApi.getMe(role).catch((err) => {
-      logger.warn("getMe failed", err);
-      return null;
-    });
-    const next: Session = {
-      userId: me?.userId || String(res.userId),
-      userName: me?.name ?? "",
-      email: me?.email ?? "",
-      role,
-    };
+    const next = await deriveSession(String(res.userId), "");
     setSession(next);
     setSessionState(next);
     setStatus("authenticated");

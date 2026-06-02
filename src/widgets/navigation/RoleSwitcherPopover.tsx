@@ -86,7 +86,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
                   : "text-[--text-secondary] hover:bg-[--surface-hover] hover:text-[--text-primary]"
               }`}
             >
-              <span>{t(ROLE_KEYS[role])}</span>
+              <span>{t(ROLE_KEYS[role] ?? role)}</span>
               {role === currentRole && (
                 <div className="w-1.5 h-1.5 rounded-full bg-[--brand-primary]" />
               )}
@@ -104,11 +104,11 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
         <button
           onClick={handleToggle}
           className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-primary to-brand-primary-hover flex items-center justify-center cursor-pointer hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-[--brand-primary] focus:ring-offset-2"
-          title={`${t("roles.switchRole")}: ${t(ROLE_KEYS[currentRole])}`}
+          title={`${t("roles.switchRole")}: ${t(ROLE_KEYS[currentRole] ?? currentRole)}`}
           aria-label={t("roles.switchRole")}
           aria-expanded={isOpen}
         >
-          <span className="text-text-inverse text-[10px] font-bold">{currentRole[0]}</span>
+          <span className="text-text-inverse text-[10px] font-bold">{currentRole[0] ?? "?"}</span>
         </button>
       </div>
 
@@ -127,7 +127,7 @@ export function RoleSwitcherPopover({ collapsed = true }: RoleSwitcherPopoverPro
                   : "text-[--text-primary] hover:bg-[--surface-hover]"
               }`}
             >
-              {t(ROLE_KEYS[role])}
+              {t(ROLE_KEYS[role] ?? role)}
             </button>
           ))}
         </div>

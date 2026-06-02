@@ -1,6 +1,10 @@
-import type { SubmittedHomeworkDto, SubmittedHomeworkOverviewDto } from "@/shared/api";
+import {
+  fileFromDto,
+  type SubmittedHomeworkDto,
+  type SubmittedHomeworkOverviewDto,
+} from "@/shared/api";
 
-import { fileFromDto, type DemoSubmission } from "./types";
+import type { Submission } from "./types";
 
 function uiStatusFromOverview(s: SubmittedHomeworkOverviewDto["submissionStatus"]) {
   if (s === "draft") return "draft" as const;
@@ -11,14 +15,13 @@ function uiStatusFromOverview(s: SubmittedHomeworkOverviewDto["submissionStatus"
 export function mapDtoToSubmission(
   dto: SubmittedHomeworkDto,
   context: { assignmentId?: string; studentId?: string } = {},
-): DemoSubmission {
+): Submission {
   return {
     id: String(dto.id),
     assignmentId: context.assignmentId ?? "",
     studentId: context.studentId ?? "",
     content: dto.comment ?? "",
     files: (dto.files ?? []).map(fileFromDto),
-    submittedAt: new Date(),
     status: "submitted",
   };
 }
@@ -26,7 +29,7 @@ export function mapDtoToSubmission(
 export function mapOverviewToSubmission(
   dto: SubmittedHomeworkOverviewDto,
   context: { assignmentId?: string } = {},
-): DemoSubmission {
+): Submission {
   return {
     id: String(dto.id),
     assignmentId: context.assignmentId ?? "",
@@ -34,7 +37,6 @@ export function mapOverviewToSubmission(
     studentName: dto.studentName,
     content: "",
     files: [],
-    submittedAt: new Date(),
     status: uiStatusFromOverview(dto.submissionStatus),
     backendStatus: dto.submissionStatus,
     studentMark: dto.studentMark,

@@ -1,5 +1,3 @@
-// Двухфазный аплоад: signed PUT в storage, потом регистрация файла под homework/submission
-
 import {
   http,
   type CreateFileRequestBody,

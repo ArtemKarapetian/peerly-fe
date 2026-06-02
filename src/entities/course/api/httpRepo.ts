@@ -8,6 +8,7 @@
  */
 
 import {
+  ApiError,
   type CourseDto,
   type CreateCourseRequestBody,
   type CreateCourseResponse,
@@ -21,7 +22,7 @@ import {
 } from "@/shared/api";
 
 import { mapDtoToCourse } from "../model/mappers";
-import type { CreateCourseInput, DemoCourse } from "../model/types";
+import type { CreateCourseInput, Course } from "../model/types";
 
 type RawListCourses = { courseInfos: CourseDto[] };
 type RawGetCourse = {
@@ -31,11 +32,9 @@ type RawGetCourse = {
   files: FileDto[];
 };
 
-function rolePrefix(): "student" | "teacher" | "admin" {
+function rolePrefix(): "student" | "teacher" {
   const role = getSession()?.role;
-  if (role === "Teacher") return "teacher";
-  if (role === "Admin") return "teacher";
-  return "student";
+  return role === "Teacher" || role === "Admin" ? "teacher" : "student";
 }
 
 async function listCourses(): Promise<CourseDto[]> {
@@ -58,29 +57,30 @@ async function getOneCourse(id: string): Promise<GetCourseResponse> {
 }
 
 export const courseHttpRepo = {
-  getAll: async (): Promise<DemoCourse[]> => {
+  getAll: async (): Promise<Course[]> => {
     const list = await listCourses();
     return list.map((info) => mapDtoToCourse(info));
   },
 
-  getById: async (id: string): Promise<DemoCourse | undefined> => {
+  getById: async (id: string): Promise<Course | undefined> => {
     try {
       const res = await getOneCourse(id);
       return mapDtoToCourse(res.course, {
         studentCount: res.studentCount,
         homeworkCount: res.homeworkCount,
       });
-    } catch {
-      return undefined;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return undefined;
+      throw err;
     }
   },
 
-  getForTeacher: async (): Promise<DemoCourse[]> => {
+  getForTeacher: async (): Promise<Course[]> => {
     const raw = await http.get<RawListCourses>(paged("/teacher/courses"));
     return raw.courseInfos.map((info) => mapDtoToCourse(info));
   },
 
-  getForStudent: async (): Promise<DemoCourse[]> => {
+  getForStudent: async (): Promise<Course[]> => {
     const raw = await http.get<RawListCourses>(paged("/student/courses"));
     return raw.courseInfos.map((info) => mapDtoToCourse(info));
   },
@@ -92,7 +92,7 @@ export const courseHttpRepo = {
     await http.put<void>(`/courses/${courseId}`, body);
   },
 
-  create: async (input: CreateCourseInput): Promise<DemoCourse> => {
+  create: async (input: CreateCourseInput): Promise<Course> => {
     const body: CreateCourseRequestBody = {
       name: input.title,
       description: input.description ?? "",
@@ -101,7 +101,6 @@ export const courseHttpRepo = {
     return {
       id: String(res.courseId),
       name: input.title,
-      title: input.title,
       description: input.description ?? "",
       teachers: [],
       enrollmentCount: 0,
@@ -109,7 +108,6 @@ export const courseHttpRepo = {
       status: "draft",
       backendStatus: "draft",
       archived: false,
-      createdAt: new Date(),
     };
   },
 

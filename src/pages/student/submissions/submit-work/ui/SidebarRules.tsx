@@ -2,8 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import { Card } from "@/shared/ui";
 
-import type { TaskRules } from "@/features/submission/submit-work/ui/TaskRulesCard";
-import { TaskRulesCard } from "@/features/submission/submit-work/ui/TaskRulesCard";
+import { TaskRulesCard, type TaskRules } from "@/features/submission/submit-work";
 
 interface SidebarRulesProps {
   rules: TaskRules;

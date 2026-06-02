@@ -1,6 +1,6 @@
 import type { HomeworkStatus } from "@/shared/api";
 
-export interface DemoAssignment {
+export interface Assignment {
   id: string;
   courseId: string;
   groupId?: string;
@@ -18,7 +18,7 @@ export interface DemoAssignment {
 }
 
 export interface TeacherAssignmentDetail {
-  assignment: DemoAssignment;
+  assignment: Assignment;
   submittedCount: number;
 }
 

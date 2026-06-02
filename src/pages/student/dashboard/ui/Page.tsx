@@ -6,7 +6,7 @@ import { ROUTES } from "@/shared/config/routes";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { StatCard } from "@/shared/ui/StatCard";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { DeadlinesList } from "@/widgets/student-dashboard";
 
 import { useStudentDashboard } from "../model/useStudentDashboard";

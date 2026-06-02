@@ -27,18 +27,18 @@ export function AppearanceCard() {
 
       <p className="text-sm text-muted-foreground mb-4">{t("widget.appearance.subtitle")}</p>
 
-      <div className="inline-flex bg-muted rounded-md p-1">
+      <div className="flex flex-col gap-1 w-full bg-muted rounded-md p-1 tablet:flex-row tablet:gap-0 tablet:w-auto tablet:inline-flex">
         {themes.map(({ value, label, icon: Icon }) => (
           <button
             key={value}
             onClick={() => setTheme(value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-sm text-sm font-medium transition-all ${
+            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-sm text-sm font-medium transition-all ${
               theme === value
                 ? "bg-card text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-4 h-4 shrink-0" />
             {label}
           </button>
         ))}

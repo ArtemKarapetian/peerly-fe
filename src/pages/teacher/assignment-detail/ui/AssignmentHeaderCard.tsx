@@ -1,11 +1,11 @@
-import type { DemoAssignment } from "@/entities/assignment/model/types";
+import type { Assignment } from "@/entities/assignment";
 
 import { AssignmentMetricRow } from "./AssignmentMetricRow";
 import { DraftActions } from "./DraftActions";
 import { PublishedStatusBadge } from "./PublishedStatusBadge";
 
 interface AssignmentHeaderCardProps {
-  assignment: DemoAssignment;
+  assignment: Assignment;
   courseName: string;
   submittedCount: number;
   isPublished: boolean;

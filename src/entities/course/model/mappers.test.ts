@@ -50,16 +50,14 @@ describe("mapDtoToCourse", () => {
 
     expect(result.id).toBe("c-1");
     expect(result.name).toBe("Algebra");
-    expect(result.title).toBe("Algebra");
     expect(result.description).toBe("Intro course");
     expect(result.teachers).toHaveLength(1);
-    expect(result.teachers[0].id).toBe("t-1");
+    expect(result.teachers[0]!.id).toBe("t-1");
     expect(result.enrollmentCount).toBe(0);
     expect(result.homeworkCount).toBe(0);
     expect(result.status).toBe("active");
     expect(result.archived).toBe(false);
     expect(result.backendStatus).toBe("inProgress");
-    expect(result.createdAt).toBeInstanceOf(Date);
   });
 
   it("applies the provided counts", () => {

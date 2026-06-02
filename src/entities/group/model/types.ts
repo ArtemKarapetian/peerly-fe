@@ -1,4 +1,4 @@
-export interface DemoGroup {
+export interface Group {
   id: string;
   name: string;
   studentCount: number;

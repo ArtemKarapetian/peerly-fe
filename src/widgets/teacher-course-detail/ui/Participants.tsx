@@ -9,8 +9,8 @@ import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { courseRepo } from "@/entities/course";
-import type { DemoCourse } from "@/entities/course/model/types";
-import type { DemoGroup } from "@/entities/group";
+import type { Course } from "@/entities/course";
+import type { Group } from "@/entities/group";
 
 import { useCourseGroups } from "@/features/group/manage-course-groups";
 import { ParticipantImportModal } from "@/features/participant/import";
@@ -20,7 +20,7 @@ import { TeachersSection } from "./TeachersSection";
 
 interface TeacherCourseParticipantsProps {
   courseId: string;
-  courseStatus?: DemoCourse["status"];
+  courseStatus?: Course["status"];
 }
 
 export function TeacherCourseParticipants({
@@ -30,7 +30,7 @@ export function TeacherCourseParticipants({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [creating, setCreating] = useState(false);
-  const [importTarget, setImportTarget] = useState<DemoGroup | null>(null);
+  const [importTarget, setImportTarget] = useState<Group | null>(null);
 
   const {
     groups,
@@ -58,7 +58,7 @@ export function TeacherCourseParticipants({
 
   const teachers = courseParticipants?.teachers ?? [];
 
-  const handleCreateHomework = (group: DemoGroup) => {
+  const handleCreateHomework = (group: Group) => {
     void navigate(`${ROUTES.teacherCreateAssignment}?courseId=${courseId}&groupId=${group.id}`);
   };
 
@@ -106,6 +106,7 @@ export function TeacherCourseParticipants({
           onClose={() => {
             setImportTarget(null);
             refetchGroups();
+            // eslint-disable-next-line sonarjs/void-use
             void refetchCourse();
           }}
         />

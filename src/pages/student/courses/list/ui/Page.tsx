@@ -4,13 +4,15 @@ import { useNavigate } from "react-router-dom";
 
 import { coverColorFor } from "@/shared/lib/coverColor";
 import { AdvancedPagination } from "@/shared/ui/advanced-pagination";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 import { usePagination } from "@/shared/ui/simple-pagination";
 
 import { CourseCard, useCourses } from "@/entities/course";
-import type { DemoCourse } from "@/entities/course";
+import type { Course } from "@/entities/course";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { CourseFilterBar } from "@/widgets/course-filter-bar";
 
 interface CourseListItem {
@@ -21,10 +23,10 @@ interface CourseListItem {
   status: "active" | "completed";
 }
 
-function toListItem(c: DemoCourse): CourseListItem {
+function toListItem(c: Course): CourseListItem {
   return {
     id: c.id,
-    title: c.title,
+    title: c.name,
     teacher: c.teachers.map((t) => t.name).join(", "),
     coverColor: coverColorFor(c.id),
     status: c.status === "archived" ? "completed" : "active",
@@ -52,7 +54,7 @@ function useCoursesPageSize(): number {
 export default function CoursesListPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, isLoading } = useCourses();
+  const { data, isLoading, error, refetch } = useCourses();
 
   const items = useMemo(() => (data ?? []).map(toListItem), [data]);
 
@@ -68,7 +70,9 @@ export default function CoursesListPage() {
       <PageHeader title={t("student.courses.title")} subtitle={t("student.courses.subtitle")} />
 
       {isLoading ? (
-        <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
+        <PageSkeleton />
+      ) : error ? (
+        <ErrorBanner error={error} onRetry={() => void refetch()} />
       ) : (
         <CourseFilterBar courses={items}>
           {(filteredCourses) => (

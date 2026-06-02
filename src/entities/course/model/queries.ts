@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UpdateCourseRequestBody } from "@/shared/api";
 import { courseKeys } from "@/shared/api/queryKeys";
 
-import { courseRepo } from "..";
+import { courseHttpRepo as courseRepo } from "../api/httpRepo";
 
 import type { CreateCourseInput } from "./types";
 

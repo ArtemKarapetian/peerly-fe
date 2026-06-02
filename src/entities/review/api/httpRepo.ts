@@ -1,4 +1,5 @@
 import {
+  ApiError,
   type CourseDto,
   type CreateSubmittedReviewRequestBody,
   type CreateSubmittedReviewResponse,
@@ -16,9 +17,8 @@ import {
 } from "@/shared/api";
 
 import { mapDtoToReview } from "../model/mappers";
-import type { DemoReview } from "../model/types";
+import type { Review } from "../model/types";
 
-// BE wire shapes — translate to FE-clean shapes inside this module.
 type RawListCourses = { courseInfos: CourseDto[] };
 type RawListTeacherHomeworks = { teacherHomeworkInfos: HomeworkDto[] };
 type RawListSubmissionsOverview = { submittedHomeworks: SubmittedHomeworkOverviewDto[] };
@@ -44,7 +44,7 @@ export const reviewHttpRepo = {
    * endpoint, so we derive them by walking submissions. Students get
    * an empty list.
    */
-  getAll: async (): Promise<DemoReview[]> => {
+  getAll: async (): Promise<Review[]> => {
     if (getSession()?.role !== "Teacher") return [];
     const courses = await http.get<RawListCourses>(paged("/teacher/courses"));
     const homeworkIdsPerCourse = await Promise.all(
@@ -77,13 +77,13 @@ export const reviewHttpRepo = {
                   mapDtoToReview(r, { submissionId: String(s.id) }),
                 );
               } catch {
-                return [] as DemoReview[];
+                return [] as Review[];
               }
             }),
           );
           return perSubmission.flat();
         } catch {
-          return [] as DemoReview[];
+          return [] as Review[];
         }
       }),
     );
@@ -135,12 +135,13 @@ export const reviewHttpRepo = {
     return { reviewId: String(res.reviewId) };
   },
 
-  getById: async (reviewId: string): Promise<DemoReview | null> => {
+  getById: async (reviewId: string): Promise<Review | null> => {
     try {
       const res = await http.get<GetSubmittedReviewResponse>(`/reviews/${reviewId}`);
       return mapDtoToReview(res.submittedReview);
-    } catch {
-      return null;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return null;
+      throw err;
     }
   },
 

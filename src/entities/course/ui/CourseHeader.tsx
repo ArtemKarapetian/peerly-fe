@@ -11,7 +11,9 @@ interface CourseHeaderProps {
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  const a = parts[0]?.[0] ?? "";
+  const b = parts[1]?.[0] ?? "";
+  if (a && b) return (a + b).toUpperCase();
   return name.slice(0, 2).toUpperCase();
 }
 

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs, type BreadcrumbItem } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 interface NoSubmissionViewProps {
   courseId: string;

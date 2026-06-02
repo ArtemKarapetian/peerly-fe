@@ -10,7 +10,7 @@ import { useAssignment } from "@/entities/assignment";
 import { useCourse } from "@/entities/course";
 import { useMySubmission } from "@/entities/work";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { TaskDescription, TaskHeader, TaskRubric, TaskSidebar } from "@/widgets/task-detail";
 
 export default function TaskPage() {
@@ -23,7 +23,7 @@ export default function TaskPage() {
   const { data: submission } = useMySubmission(taskId);
   const [now] = useState(() => Date.now());
 
-  const courseName = course?.title ?? "";
+  const courseName = course?.name ?? "";
   const title = hw?.title ?? "";
   const description = hw?.description ?? "";
   const rubricId = hw?.rubricId ?? null;

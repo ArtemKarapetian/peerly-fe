@@ -6,11 +6,13 @@ import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { coverColorFor } from "@/shared/lib/coverColor";
 import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { useAssignmentsByCourse } from "@/entities/assignment";
 import { CourseHeader, CourseTabs, useCourse, useCourseParticipants } from "@/entities/course";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { CourseAssignmentsTab } from "@/widgets/course-assignments-tab";
 import { CourseParticipantsTab } from "@/widgets/course-participants-tab";
 
@@ -21,11 +23,11 @@ export default function CoursePage() {
   const CRUMBS = getCrumbs();
   const [activeTab, setActiveTab] = useState<"assignments" | "participants">("assignments");
 
-  const { data: course, isLoading } = useCourse(courseId);
+  const { data: course, isLoading, error, refetch } = useCourse(courseId);
   const { data: assignments } = useAssignmentsByCourse(courseId);
   const { data: participants } = useCourseParticipants(courseId);
 
-  const title = course?.title ?? "";
+  const title = course?.name ?? "";
   const description = course?.description ?? "";
 
   const assignmentsCount = (assignments ?? []).filter(
@@ -40,7 +42,9 @@ export default function CoursePage() {
 
       <div className="mt-6 space-y-6">
         {isLoading ? (
-          <p className="text-sm text-text-tertiary">{t("common.loading")}</p>
+          <PageSkeleton />
+        ) : error ? (
+          <ErrorBanner error={error} onRetry={() => void refetch()} />
         ) : (
           <CourseHeader
             title={title}

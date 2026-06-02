@@ -4,7 +4,7 @@ export interface CriterionScore {
   comment: string | null;
 }
 
-export interface DemoReview {
+export interface Review {
   id: string;
   submissionId: string;
   reviewerId: string;

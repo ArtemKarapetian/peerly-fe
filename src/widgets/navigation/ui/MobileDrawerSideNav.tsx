@@ -24,7 +24,7 @@ export function MobileDrawerSideNav({
   const { t } = useTranslation();
   return (
     <div
-      className={`fixed inset-y-0 left-0 z-50 bg-sidebar transform transition-transform duration-300 w-[272px] ${
+      className={`fixed inset-y-0 left-0 z-50 bg-sidebar transform transition-transform duration-300 w-[85vw] max-w-[340px] ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
       style={{ boxShadow: "2px 0 8px rgba(0,0,0,0.08)" }}

@@ -84,20 +84,20 @@ export function UserInfoCard() {
         <div className="w-20 h-20 bg-brand-primary-lighter text-brand-primary rounded-full flex items-center justify-center shrink-0">
           <User className="w-10 h-10 text-accent-foreground" />
         </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h3 className="text-2xl font-medium text-foreground tracking-[-0.5px]">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-2">
+            <h3 className="text-2xl font-medium text-foreground tracking-[-0.5px] [overflow-wrap:anywhere]">
               {name || email || t("widget.profileDropdown.defaultUser")}
             </h3>
             {currentRole && (
               <span
-                className={`inline-flex px-3 py-1 rounded-sm text-13 font-medium ${getRoleBadgeColor(currentRole)}`}
+                className={`inline-flex shrink-0 px-3 py-1 rounded-sm text-13 font-medium ${getRoleBadgeColor(currentRole)}`}
               >
                 {getRoleLabelKey(currentRole) ? t(getRoleLabelKey(currentRole)) : currentRole}
               </span>
             )}
           </div>
-          <p className="text-15 text-muted-foreground">{email}</p>
+          <p className="text-15 text-muted-foreground break-all">{email}</p>
         </div>
       </div>
 

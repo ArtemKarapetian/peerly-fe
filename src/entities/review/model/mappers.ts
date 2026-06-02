@@ -5,7 +5,7 @@ import type {
   TeacherSubmittedReviewDto,
 } from "@/shared/api";
 
-import type { CriterionScore, DemoReview, ReviewAssignment } from "./types";
+import type { CriterionScore, Review, ReviewAssignment } from "./types";
 
 function mapScore(dto: SubmittedReviewScoreDto): CriterionScore {
   return {
@@ -18,7 +18,7 @@ function mapScore(dto: SubmittedReviewScoreDto): CriterionScore {
 export function mapDtoToReview(
   dto: SubmittedReviewDto | TeacherSubmittedReviewDto,
   context: { submissionId?: string; reviewerId?: string } = {},
-): DemoReview {
+): Review {
   const reviewerId =
     "reviewerId" in dto && dto.reviewerId ? String(dto.reviewerId) : (context.reviewerId ?? "");
   return {

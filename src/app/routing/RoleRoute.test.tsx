@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { Session } from "@/shared/api";
 import { STORAGE_KEYS } from "@/shared/config/constants";
 
-import { AuthProvider } from "@/entities/user/model/auth";
+import { AuthProvider } from "@/entities/user";
 
 import { RoleRoute } from "./RoleRoute";
 

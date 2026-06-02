@@ -1,7 +1,7 @@
 import type { ApiStudent, ApiTeacher } from "./api.types";
-import type { DemoUser } from "./types";
+import type { User } from "./types";
 
-export function mapApiStudent(api: ApiStudent): DemoUser {
+export function mapApiStudent(api: ApiStudent): User {
   return {
     id: api.student_id,
     email: api.email,
@@ -12,7 +12,7 @@ export function mapApiStudent(api: ApiStudent): DemoUser {
   };
 }
 
-export function mapApiTeacher(api: ApiTeacher): DemoUser {
+export function mapApiTeacher(api: ApiTeacher): User {
   return {
     id: api.teacher_id,
     email: api.email,

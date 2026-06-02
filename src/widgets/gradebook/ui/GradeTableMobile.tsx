@@ -24,8 +24,8 @@ export function GradeTableMobile({
         <MobileGradeCard
           key={grade.id}
           grade={grade}
-          statusLabel={statusLabels[grade.status]}
-          statusColor={statusColors[grade.status]}
+          statusLabel={statusLabels[grade.status] ?? ""}
+          statusColor={statusColors[grade.status] ?? ""}
           onClick={() => onRowClick(grade)}
         />
       ))}

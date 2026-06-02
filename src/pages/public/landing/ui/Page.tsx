@@ -4,7 +4,6 @@ import { PublicLayout } from "@/widgets/public-layout";
 
 import { LandingCTASection } from "./LandingCTASection";
 import { LandingFeatures } from "./LandingFeatures";
-import { LandingFooter } from "./LandingFooter";
 import { LandingHeader } from "./LandingHeader";
 import { LandingHero } from "./LandingHero";
 import { LandingIntro } from "./LandingIntro";
@@ -16,14 +15,13 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <PublicLayout showTopBar={false} showLoginButton={false} showFooter={false}>
+    <PublicLayout showTopBar={false} showLoginButton={false}>
       <LandingHeader />
       <LandingHero />
       <LandingIntro />
       <LandingFeatures />
       <LandingRoles />
       <LandingCTASection />
-      <LandingFooter />
     </PublicLayout>
   );
 }

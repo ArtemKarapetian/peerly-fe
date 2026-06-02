@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { Session } from "@/shared/api";
+import { ApiError, type Session } from "@/shared/api";
 
 import { reviewHttpRepo } from "./httpRepo";
 
@@ -50,7 +50,7 @@ describe("reviewHttpRepo", () => {
 
     const out = await reviewHttpRepo.listAssigned("hw-9");
 
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/homeworks\/hw-9\/assigned-reviews\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/homeworks\/hw-9\/assigned-reviews\?/);
     expect(out).toEqual([
       {
         submissionId: "sub-1",
@@ -74,7 +74,7 @@ describe("reviewHttpRepo", () => {
 
     const out = await reviewHttpRepo.getAssignedSubmission("sub-1");
 
-    expect(httpMock.get.mock.calls[0][0]).toBe("/submissions/sub-1/reviews");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/submissions/sub-1/reviews");
     expect(out.id).toBe("sub-1");
     expect(out.comment).toBe("see this");
     expect(out.files).toEqual([{ id: "f1", name: "n", size: 1 }]);
@@ -107,8 +107,8 @@ describe("reviewHttpRepo", () => {
       "well done",
     );
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/submissions/sub-1/reviews");
-    expect(httpMock.post.mock.calls[0][1]).toEqual({
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/submissions/sub-1/reviews");
+    expect(httpMock.post.mock.calls[0]![1]).toEqual({
       scores: [
         { rubricCriterionId: 1, score: 4, comment: "ok" },
         { rubricCriterionId: 2, score: 5, comment: null },
@@ -118,8 +118,8 @@ describe("reviewHttpRepo", () => {
     expect(out.reviewId).toBe("17");
   });
 
-  it("getById returns null on error", async () => {
-    httpMock.get.mockRejectedValueOnce(new Error("nope"));
+  it("getById returns null on 404", async () => {
+    httpMock.get.mockRejectedValueOnce(new ApiError(404, null, "not found"));
     expect(await reviewHttpRepo.getById("r-x")).toBeNull();
   });
 
@@ -133,9 +133,9 @@ describe("reviewHttpRepo", () => {
       },
     });
     const out = await reviewHttpRepo.getById("r-1");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/reviews/r-1");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/reviews/r-1");
     expect(out?.scores).toHaveLength(1);
-    expect(out?.scores[0].criterionId).toBe("9");
+    expect(out?.scores[0]!.criterionId).toBe("9");
     expect(out?.mark).toBe(4);
   });
 
@@ -146,11 +146,11 @@ describe("reviewHttpRepo", () => {
     await reviewHttpRepo.update("r-1", [{ criterionId: "5", score: 9 }], "ok");
     await reviewHttpRepo.delete("r-1");
 
-    expect(httpMock.put.mock.calls[0][0]).toBe("/reviews/r-1");
-    expect(httpMock.put.mock.calls[0][1]).toEqual({
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/reviews/r-1");
+    expect(httpMock.put.mock.calls[0]![1]).toEqual({
       scores: [{ rubricCriterionId: 5, score: 9, comment: null }],
       comment: "ok",
     });
-    expect(httpMock.delete.mock.calls[0][0]).toBe("/reviews/r-1");
+    expect(httpMock.delete.mock.calls[0]![0]).toBe("/reviews/r-1");
   });
 });

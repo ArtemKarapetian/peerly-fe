@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 interface DeadlinePassedViewProps {
   courseId: string;

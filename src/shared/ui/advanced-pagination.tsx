@@ -31,7 +31,7 @@ export function AdvancedPagination({
     return null;
   }
 
-  // Генерируем массив видимых номеров страниц
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   const getPageNumbers = () => {
     const pages: (number | "ellipsis")[] = [];
 

@@ -3,7 +3,7 @@ import { render, type RenderOptions } from "@testing-library/react";
 import { ReactElement, ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 
-import { AuthProvider } from "@/entities/user/model/auth";
+import { AuthProvider } from "@/entities/user";
 
 function createTestQueryClient() {
   return new QueryClient({

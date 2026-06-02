@@ -32,7 +32,7 @@ export default function HelpPage() {
         <HelpHero />
         <HelpSearch value={searchQuery} onChange={setSearchQuery} />
 
-        <div className="max-w-[800px] mx-auto space-y-12">
+        <div className="max-w-[800px] mx-auto space-y-12 tablet:space-y-16">
           {sections["getting-started"].length > 0 && (
             <FAQSection
               title={t("page.help.gettingStarted")}
@@ -49,17 +49,14 @@ export default function HelpPage() {
               onToggle={toggleItem}
             />
           )}
-          <ContactSection
-            contactFAQs={sections.contact}
-            openItems={openItems}
-            onToggle={toggleItem}
-          />
 
-          {searchQuery && filteredCount === 0 && (
+          {searchQuery && filteredCount === 0 ? (
             <EmptyState
               title={t("page.help.notFoundQuery", { query: searchQuery })}
               message={t("page.help.tryChangingSearch")}
             />
+          ) : (
+            <ContactSection />
           )}
         </div>
       </div>

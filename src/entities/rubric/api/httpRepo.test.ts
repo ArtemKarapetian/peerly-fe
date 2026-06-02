@@ -41,7 +41,7 @@ describe("rubricHttpRepo", () => {
       rubrics: [{ id: 1, teacherId: 5, name: "Default" }],
     });
     const out = await rubricHttpRepo.listMine();
-    expect(httpMock.get.mock.calls[0][0]).toBe("/teacher/rubrics");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/teacher/rubrics");
     expect(out).toEqual([{ id: "1", teacherId: "5", name: "Default" }]);
   });
 
@@ -54,10 +54,10 @@ describe("rubricHttpRepo", () => {
       ],
     });
     const out = await rubricHttpRepo.getById("1");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/teacher/rubrics/1");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/teacher/rubrics/1");
     expect(out?.criteria.map((c) => c.id)).toEqual(["10", "11"]);
-    expect(out?.criteria[0].description).toBe("desc");
-    expect(out?.criteria[1].description).toBeNull();
+    expect(out?.criteria[0]!.description).toBe("desc");
+    expect(out?.criteria[1]!.description).toBeNull();
   });
 
   it("getById uses /student/rubrics for Student role", async () => {
@@ -67,7 +67,7 @@ describe("rubricHttpRepo", () => {
       criteria: [],
     });
     await rubricHttpRepo.getById("1");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/student/rubrics/1");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/student/rubrics/1");
   });
 
   it("getById returns null on 404", async () => {
@@ -90,8 +90,8 @@ describe("rubricHttpRepo", () => {
       ],
     });
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/rubrics");
-    expect(httpMock.post.mock.calls[0][1]).toEqual({
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/rubrics");
+    expect(httpMock.post.mock.calls[0]![1]).toEqual({
       name: "New",
       criteria: [
         { name: "A", description: undefined, maxScore: 5, commentRequired: false, position: 0 },
@@ -107,13 +107,13 @@ describe("rubricHttpRepo", () => {
       name: "Updated",
       criteria: [{ name: "A", maxScore: 5, commentRequired: false, position: 0 }],
     });
-    expect(httpMock.put.mock.calls[0][0]).toBe("/rubrics/7");
-    expect(httpMock.put.mock.calls[0][1].name).toBe("Updated");
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/rubrics/7");
+    expect(httpMock.put.mock.calls[0]![1]!.name).toBe("Updated");
   });
 
   it("delete DELETEs /rubrics/{id}", async () => {
     httpMock.delete.mockResolvedValueOnce(undefined);
     await rubricHttpRepo.delete("7");
-    expect(httpMock.delete.mock.calls[0][0]).toBe("/rubrics/7");
+    expect(httpMock.delete.mock.calls[0]![0]).toBe("/rubrics/7");
   });
 });

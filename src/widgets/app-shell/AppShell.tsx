@@ -1,14 +1,10 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, useRef, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
 
-import { SideNav } from "../navigation/SideNavRoleAware.tsx";
-import { TopBar } from "../navigation/TopBar.tsx";
-
-// Главный layout: sidebar на десктопе/планшете, drawer на мобиле
-// Брейкпоинты — desktop 1200+, tablet 800-1199, mobile <800
+import { SideNav, TopBar } from "@/widgets/navigation";
 
 interface AppShellProps {
   children: ReactNode;
@@ -22,6 +18,8 @@ const getInitialCollapsed = () => {
 
 export function AppShell({ children, title }: AppShellProps) {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
+  const mainRef = useRef<HTMLElement>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(getInitialCollapsed);
   const [windowWidth, setWindowWidth] = useState(
@@ -41,6 +39,10 @@ export function AppShell({ children, title }: AppShellProps) {
   useEffect(() => {
     document.title = title ? `${title} — Peerly` : "Peerly";
   }, [title]);
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [pathname]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -110,7 +112,7 @@ export function AppShell({ children, title }: AppShellProps) {
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {isMobile && <TopBar onMenuClick={() => setIsMobileMenuOpen(true)} title={title} />}
 
-        <main id="main-content" className="flex-1 overflow-y-auto" tabIndex={-1}>
+        <main ref={mainRef} id="main-content" className="flex-1 overflow-y-auto" tabIndex={-1}>
           <div className="w-full max-w-[1200px] mx-auto px-6 py-6 tablet:px-6 desktop:px-10 min-h-full">
             {children}
           </div>

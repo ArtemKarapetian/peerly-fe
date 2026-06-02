@@ -43,7 +43,7 @@ describe("useFileUploadDropzone", () => {
 
     expect(onFileSelected).not.toHaveBeenCalled();
     expect(onUploadError).toHaveBeenCalledTimes(1);
-    expect(onUploadError.mock.calls[0][0]).toContain("invalidFormat");
+    expect(onUploadError.mock.calls[0]![0]).toContain("invalidFormat");
   });
 
   it("rejects file exceeding maxSizeMB", () => {
@@ -60,7 +60,7 @@ describe("useFileUploadDropzone", () => {
 
     expect(onFileSelected).not.toHaveBeenCalled();
     expect(onUploadError).toHaveBeenCalledTimes(1);
-    expect(onUploadError.mock.calls[0][0]).toContain("fileTooLarge");
+    expect(onUploadError.mock.calls[0]![0]).toContain("fileTooLarge");
   });
 
   it("accepts a valid file and clears the error", () => {

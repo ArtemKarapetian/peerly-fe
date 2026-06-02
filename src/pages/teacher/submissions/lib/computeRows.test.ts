@@ -47,7 +47,7 @@ describe("computeRows", () => {
       },
       unknownStudentLabel: "?",
     });
-    expect(result[0].status).toBe("draft");
+    expect(result[0]!.status).toBe("draft");
   });
 
   it("marks on-time submitted as submitted", () => {
@@ -59,7 +59,7 @@ describe("computeRows", () => {
       },
       unknownStudentLabel: "?",
     });
-    expect(result[0].status).toBe("submitted");
+    expect(result[0]!.status).toBe("submitted");
   });
 
   it("marks late submissions when past deadline", () => {
@@ -71,7 +71,7 @@ describe("computeRows", () => {
       },
       unknownStudentLabel: "?",
     });
-    expect(result[0].status).toBe("late");
+    expect(result[0]!.status).toBe("late");
   });
 
   it("falls back to unknownStudentLabel when student not found", () => {
@@ -83,7 +83,7 @@ describe("computeRows", () => {
       },
       unknownStudentLabel: "(unknown)",
     });
-    expect(result[0].studentName).toBe("(unknown)");
+    expect(result[0]!.studentName).toBe("(unknown)");
   });
 
   it("prefers sub.studentName over unknownStudentLabel when user lookup fails", () => {
@@ -95,6 +95,6 @@ describe("computeRows", () => {
       },
       unknownStudentLabel: "?",
     });
-    expect(result[0].studentName).toBe("Frozen");
+    expect(result[0]!.studentName).toBe("Frozen");
   });
 });

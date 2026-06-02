@@ -5,23 +5,23 @@ import { toast } from "sonner";
 import { humanizeApiError } from "@/shared/api";
 import { useAsync } from "@/shared/lib/useAsync";
 
-import { groupRepo, type DemoGroup } from "@/entities/group";
+import { groupRepo, type Group } from "@/entities/group";
 
 interface UseCourseGroupsArgs {
   courseId: string;
 }
 
 export interface UseCourseGroupsResult {
-  groups: DemoGroup[];
+  groups: Group[];
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
   totalStudents: number;
   createGroup: (name: string) => Promise<boolean>;
-  renameGroup: (group: DemoGroup, name: string) => Promise<boolean>;
-  deleteGroup: (group: DemoGroup) => Promise<boolean>;
-  pendingDelete: DemoGroup | null;
-  setPendingDelete: (group: DemoGroup | null) => void;
+  renameGroup: (group: Group, name: string) => Promise<boolean>;
+  deleteGroup: (group: Group) => Promise<boolean>;
+  pendingDelete: Group | null;
+  setPendingDelete: (group: Group | null) => void;
 }
 
 export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGroupsResult {
@@ -30,7 +30,7 @@ export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGro
     () => groupRepo.listForCourse(courseId),
     [courseId],
   );
-  const [pendingDelete, setPendingDelete] = useState<DemoGroup | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Group | null>(null);
 
   const groups = useMemo(
     () => [...(data ?? [])].sort((a, b) => a.name.localeCompare(b.name, "ru")),
@@ -56,7 +56,7 @@ export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGro
   );
 
   const renameGroup = useCallback(
-    async (group: DemoGroup, name: string) => {
+    async (group: Group, name: string) => {
       const trimmed = name.trim();
       if (!trimmed || trimmed === group.name) return false;
       try {
@@ -73,7 +73,7 @@ export function useCourseGroups({ courseId }: UseCourseGroupsArgs): UseCourseGro
   );
 
   const deleteGroup = useCallback(
-    async (group: DemoGroup) => {
+    async (group: Group) => {
       try {
         await groupRepo.delete(group.id);
         toast.success(t("widget.groups.deleteSuccess"));

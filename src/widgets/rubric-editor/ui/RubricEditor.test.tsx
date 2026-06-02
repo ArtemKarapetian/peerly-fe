@@ -85,7 +85,7 @@ describe("RubricEditor", () => {
 
     const deleteButtons = screen.getAllByTitle(/deleteCriterion/i);
     expect(deleteButtons).toHaveLength(2);
-    await user.click(deleteButtons[0]);
+    await user.click(deleteButtons[0]!);
 
     expect(confirmSpy).toHaveBeenCalled();
     const remaining = screen.getAllByPlaceholderText(/criterionNamePlaceholder/i);
@@ -104,7 +104,7 @@ describe("RubricEditor", () => {
     await user.click(saveBtn);
 
     expect(onSave).toHaveBeenCalledTimes(1);
-    const saved = onSave.mock.calls[0][0] as RubricEditorData;
+    const saved = onSave.mock.calls[0]![0] as RubricEditorData;
     expect(saved.name).toBe("Test Rubric v2");
     expect(saved.criteria.map((c) => c.position)).toEqual([0, 1]);
   });
@@ -122,12 +122,12 @@ describe("RubricEditor", () => {
     const onSave = vi.fn();
     const rubric: RubricEditorData = {
       ...makeRubric(),
-      criteria: [makeRubric().criteria[0]],
+      criteria: [makeRubric().criteria[0]!],
     };
     render(<RubricEditor rubric={rubric} onSave={onSave} />);
 
     const deleteButtons = screen.getAllByTitle(/deleteCriterion/i);
-    await user.click(deleteButtons[0]);
+    await user.click(deleteButtons[0]!);
 
     expect(alertSpy).toHaveBeenCalled();
     expect(confirmSpy).not.toHaveBeenCalled();

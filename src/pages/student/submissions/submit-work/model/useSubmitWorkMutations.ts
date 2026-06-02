@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { assignmentKeys } from "@/shared/api/queryKeys";
+import { assignmentKeys, submissionKeys } from "@/shared/api/queryKeys";
 
 import { storageApi } from "@/entities/storage";
 import { workRepo } from "@/entities/work";
@@ -27,7 +27,7 @@ export function useSubmitWorkMutations({
 
   const refreshSubmission = () =>
     Promise.all([
-      queryClient.invalidateQueries({ queryKey: ["submissions", "mine", taskId] }),
+      queryClient.invalidateQueries({ queryKey: submissionKeys.all }),
       queryClient.invalidateQueries({ queryKey: assignmentKeys.detail(taskId) }),
     ]);
 
@@ -48,9 +48,7 @@ export function useSubmitWorkMutations({
         if (!existedBefore) {
           try {
             await workRepo.delete(id);
-          } catch {
-            // noop
-          }
+          } catch {}
           await refreshSubmission();
         }
         throw err;

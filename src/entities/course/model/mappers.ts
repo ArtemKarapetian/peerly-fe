@@ -1,6 +1,6 @@
 import type { CourseDto, CourseStatus, CourseTeacherDto } from "@/shared/api";
 
-import type { CourseTeacher, DemoCourse } from "./types";
+import type { CourseTeacher, Course } from "./types";
 
 const ARCHIVED_STATUSES: CourseStatus[] = ["canceled", "deleted", "finished"];
 
@@ -21,12 +21,11 @@ function uiStatus(s: CourseStatus): "draft" | "active" | "archived" {
 export function mapDtoToCourse(
   dto: CourseDto,
   counts: { studentCount: number; homeworkCount: number } = { studentCount: 0, homeworkCount: 0 },
-): DemoCourse {
+): Course {
   const archived = isArchivedStatus(dto.status);
   return {
     id: String(dto.id),
     name: dto.name,
-    title: dto.name,
     description: dto.description ?? "",
     teachers: (dto.teachers ?? []).map(mapDtoToTeacher),
     enrollmentCount: counts.studentCount,
@@ -34,6 +33,5 @@ export function mapDtoToCourse(
     status: uiStatus(dto.status),
     backendStatus: dto.status,
     archived,
-    createdAt: new Date(),
   };
 }

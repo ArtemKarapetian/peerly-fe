@@ -6,7 +6,7 @@ import { humanizeApiError } from "@/shared/api";
 import { ROUTES } from "@/shared/config/routes";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { useReviewState } from "../model/useReviewState";
 
@@ -37,11 +37,12 @@ export default function ReviewPage() {
     submitMutation,
   } = useReviewState();
 
+  const courseSuffix = inboxEntry?.courseName ? ` · ${inboxEntry.courseName}` : "";
   const breadcrumbItems = [
     { label: t("nav.reviews"), href: "/student/reviews" },
     {
       label: inboxEntry?.taskTitle
-        ? `${inboxEntry.taskTitle}${inboxEntry.courseName ? ` · ${inboxEntry.courseName}` : ""}`
+        ? `${inboxEntry.taskTitle}${courseSuffix}`
         : t("page.reviewFill.breadcrumbReview"),
     },
   ];

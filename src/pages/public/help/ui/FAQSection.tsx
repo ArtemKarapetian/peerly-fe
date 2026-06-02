@@ -1,3 +1,5 @@
+import { Card } from "@/shared/ui";
+
 import type { FAQEntry } from "../model/faq";
 
 import { FAQItemRow } from "./FAQItemRow";
@@ -12,8 +14,10 @@ interface FAQSectionProps {
 export function FAQSection({ title, items, openItems, onToggle }: FAQSectionProps) {
   return (
     <section>
-      <h2 className="text-2xl font-semibold text-foreground mb-6">{title}</h2>
-      <div className="space-y-3">
+      <h2 className="text-xl tablet:text-2xl font-semibold text-foreground mb-4 tablet:mb-6">
+        {title}
+      </h2>
+      <Card variant="section" className="p-0 divide-y divide-border overflow-hidden">
         {items.map((item) => (
           <FAQItemRow
             key={item.id}
@@ -23,7 +27,7 @@ export function FAQSection({ title, items, openItems, onToggle }: FAQSectionProp
             onToggle={() => onToggle(item.id)}
           />
         ))}
-      </div>
+      </Card>
     </section>
   );
 }

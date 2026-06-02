@@ -11,7 +11,7 @@ const { courseRepoMock } = vi.hoisted(() => ({
 
 vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
 
-vi.mock("@/widgets/app-shell/AppShell.tsx", () => ({
+vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
@@ -79,7 +79,7 @@ describe("TeacherCoursesPage", () => {
 
     await waitFor(() => expect(screen.getByText("Active One")).toBeInTheDocument());
 
-    await user.selectOptions(screen.getAllByRole("combobox")[0], "draft");
+    await user.selectOptions(screen.getAllByRole("combobox")[0]!, "draft");
 
     expect(screen.queryByText("Active One")).not.toBeInTheDocument();
     expect(screen.getByText("Draft One")).toBeInTheDocument();
@@ -96,7 +96,7 @@ describe("TeacherCoursesPage", () => {
 
     await waitFor(() => expect(screen.getByText("Active One")).toBeInTheDocument());
 
-    await user.selectOptions(screen.getAllByRole("combobox")[0], "active");
+    await user.selectOptions(screen.getAllByRole("combobox")[0]!, "active");
 
     expect(screen.getByText("Active One")).toBeInTheDocument();
     expect(screen.queryByText("Draft One")).not.toBeInTheDocument();

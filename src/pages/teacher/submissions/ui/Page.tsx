@@ -15,7 +15,7 @@ import { courseRepo } from "@/entities/course";
 import { storageApi } from "@/entities/storage";
 import { workRepo } from "@/entities/work";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { computeRows } from "../lib/computeRows";
 import type { StatusFilter } from "../model/types";
@@ -125,7 +125,7 @@ function PickerCard({
             <option value="">{t("teacher.submissions.coursePlaceholder")}</option>
             {(courses ?? []).map((c) => (
               <option key={c.id} value={c.id}>
-                {c.title}
+                {c.name}
               </option>
             ))}
           </Select>

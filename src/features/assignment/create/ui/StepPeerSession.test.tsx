@@ -29,7 +29,7 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const ranges = container.querySelectorAll("input[type='range']");
-    fireEvent.change(ranges[0], { target: { value: "5" } });
+    fireEvent.change(ranges[0]!, { target: { value: "5" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ reviewsPerSubmission: 5 });
   });
@@ -39,7 +39,7 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const numbers = container.querySelectorAll("input[type='number']");
-    fireEvent.change(numbers[0], { target: { value: "7" } });
+    fireEvent.change(numbers[0]!, { target: { value: "7" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ reviewsPerSubmission: 7 });
   });
@@ -49,7 +49,7 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const numbers = container.querySelectorAll("input[type='number']");
-    fireEvent.change(numbers[0], { target: { value: "999" } });
+    fireEvent.change(numbers[0]!, { target: { value: "999" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ reviewsPerSubmission: 10 });
   });
@@ -59,7 +59,7 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const ranges = container.querySelectorAll("input[type='range']");
-    fireEvent.change(ranges[1], { target: { value: "5" } });
+    fireEvent.change(ranges[1]!, { target: { value: "5" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 5 });
   });
@@ -69,7 +69,7 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const numbers = container.querySelectorAll("input[type='number']");
-    fireEvent.change(numbers[1], { target: { value: "500" } });
+    fireEvent.change(numbers[1]!, { target: { value: "500" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 10 });
   });
@@ -79,7 +79,7 @@ describe("StepPeerSession", () => {
     const { container } = render(<StepPeerSession data={makeData()} onUpdate={onUpdate} />);
 
     const numbers = container.querySelectorAll("input[type='number']");
-    fireEvent.change(numbers[1], { target: { value: "0" } });
+    fireEvent.change(numbers[1]!, { target: { value: "0" } });
 
     expect(onUpdate).toHaveBeenCalledWith({ discrepancyThreshold: 2 });
   });

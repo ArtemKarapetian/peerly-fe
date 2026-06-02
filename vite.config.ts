@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     visualizer({
-      filename: "dist/bundle-stats.html",
+      filename: "bundle-stats.html",
       gzipSize: true,
       brotliSize: true,
     }),
@@ -33,6 +33,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        chunkFileNames: (chunkInfo) => {
+          const slice = chunkInfo.facadeModuleId?.match(/\/src\/pages\/(.+)\/index\.ts$/)?.[1];
+          if (slice) {
+            return `assets/page-${slice.replace(/\//g, "-")}-[hash].js`;
+          }
+          return "assets/[name]-[hash].js";
+        },
         manualChunks: {
           vendor: [
             "react",

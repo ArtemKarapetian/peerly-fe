@@ -1,1 +1,1 @@
-export { default as TeacherRubricsPage } from "./ui/Page";
+export { default } from "./ui/Page";

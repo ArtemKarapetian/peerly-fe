@@ -1,4 +1,5 @@
 import {
+  ApiError,
   getSession,
   http,
   paged,
@@ -11,19 +12,14 @@ import {
 } from "@/shared/api";
 
 import { mapDtoToGroup, mapParticipants } from "../model/mappers";
-import type {
-  CreateGroupInput,
-  DemoGroup,
-  GroupParticipants,
-  UpdateGroupInput,
-} from "../model/types";
+import type { CreateGroupInput, Group, GroupParticipants, UpdateGroupInput } from "../model/types";
 
 function rolePrefix(): "student" | "teacher" {
   return getSession()?.role === "Teacher" ? "teacher" : "student";
 }
 
 export const groupHttpRepo = {
-  listForCourse: async (courseId: string): Promise<DemoGroup[]> => {
+  listForCourse: async (courseId: string): Promise<Group[]> => {
     const prefix = rolePrefix();
     const path =
       prefix === "teacher"
@@ -33,14 +29,15 @@ export const groupHttpRepo = {
     return (res?.groupInfos ?? []).map(mapDtoToGroup);
   },
 
-  getById: async (groupId: string): Promise<DemoGroup | undefined> => {
+  getById: async (groupId: string): Promise<Group | undefined> => {
     const prefix = rolePrefix();
     const path = prefix === "teacher" ? `/teacher/groups/${groupId}` : `/student/groups/${groupId}`;
     try {
       const res = await http.get<GetGroupResponse>(path);
       return mapDtoToGroup(res.groupInfo);
-    } catch {
-      return undefined;
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return undefined;
+      throw err;
     }
   },
 
@@ -49,7 +46,7 @@ export const groupHttpRepo = {
     return mapParticipants(res);
   },
 
-  create: async (input: CreateGroupInput): Promise<DemoGroup> => {
+  create: async (input: CreateGroupInput): Promise<Group> => {
     const body: CreateGroupRequestBody = { courseId: input.courseId, name: input.name };
     const res = await http.post<CreateGroupResponse>("/groups", body);
     return { id: String(res.groupId), name: input.name, studentCount: 0 };

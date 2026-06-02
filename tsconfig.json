@@ -12,6 +12,7 @@
     "types": ["vite/client"],
 
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "noEmit": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -27,5 +28,5 @@
     "cypress.config.ts",
     "tests"
   ],
-  "exclude": ["node_modules", "src/pages/_archived"]
+  "exclude": ["node_modules"]
 }

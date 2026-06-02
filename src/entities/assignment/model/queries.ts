@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { assignmentKeys } from "@/shared/api/queryKeys";
 
-import { assignmentRepo } from "..";
+import { assignmentHttpRepo as assignmentRepo } from "../api/httpRepo";
 
 export function useAssignments() {
   return useQuery({

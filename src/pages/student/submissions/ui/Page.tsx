@@ -11,7 +11,7 @@ import { useCourse } from "@/entities/course";
 import { useRubric } from "@/entities/rubric";
 import { useMySubmission } from "@/entities/work";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 
 import { useSubmissionDetail } from "../model/useSubmissionDetail";
 
@@ -36,7 +36,7 @@ export default function SubmissionsPage() {
   const [now] = useState(() => Date.now());
   const isDeadlinePassed = hw?.dueDate ? hw.dueDate.getTime() < now : false;
 
-  const courseName = course?.title ?? "";
+  const courseName = course?.name ?? "";
   const taskTitle = hw?.title ?? "";
   const reviews = submissionDetail.data?.submittedReviews ?? [];
   const finalMark = submissionDetail.data?.finalMark ?? null;

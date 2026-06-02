@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { Session } from "@/shared/api";
+import { ApiError, type Session } from "@/shared/api";
 
 import { courseHttpRepo } from "./httpRepo";
 
@@ -47,7 +47,7 @@ describe("courseHttpRepo", () => {
 
     const out = await courseHttpRepo.getAll();
 
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/student\/courses\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/student\/courses\?/);
     expect(out).toEqual([]);
   });
 
@@ -72,13 +72,13 @@ describe("courseHttpRepo", () => {
 
     const out = await courseHttpRepo.getAll();
 
-    expect(httpMock.get.mock.calls[0][0]).toMatch(/^\/teacher\/courses\?/);
+    expect(httpMock.get.mock.calls[0]![0]).toMatch(/^\/teacher\/courses\?/);
     expect(out).toHaveLength(1);
-    expect(out[0].id).toBe("c-1");
+    expect(out[0]!.id).toBe("c-1");
   });
 
-  it("getById returns undefined on error", async () => {
-    httpMock.get.mockRejectedValueOnce(new Error("nope"));
+  it("getById returns undefined on 404", async () => {
+    httpMock.get.mockRejectedValueOnce(new ApiError(404, null, "not found"));
     const out = await courseHttpRepo.getById("c-x");
     expect(out).toBeUndefined();
   });
@@ -105,7 +105,7 @@ describe("courseHttpRepo", () => {
 
     const out = await courseHttpRepo.getById("c-2");
 
-    expect(httpMock.get.mock.calls[0][0]).toBe("/teacher/courses/c-2");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/teacher/courses/c-2");
     expect(out?.enrollmentCount).toBe(5);
     expect(out?.homeworkCount).toBe(2);
   });
@@ -113,30 +113,30 @@ describe("courseHttpRepo", () => {
   it("getParticipants hits the shared participants endpoint", async () => {
     httpMock.get.mockResolvedValueOnce({ students: [], teachers: [] });
     await courseHttpRepo.getParticipants("c-3");
-    expect(httpMock.get.mock.calls[0][0]).toBe("/courses/c-3/participants");
+    expect(httpMock.get.mock.calls[0]![0]).toBe("/courses/c-3/participants");
   });
 
   it("create POSTs name+description and returns a synthesised course", async () => {
     httpMock.post.mockResolvedValueOnce({ courseId: 99 });
     const out = await courseHttpRepo.create({ title: "New", description: "Yo" });
 
-    expect(httpMock.post.mock.calls[0][0]).toBe("/courses");
-    expect(httpMock.post.mock.calls[0][1]).toEqual({ name: "New", description: "Yo" });
+    expect(httpMock.post.mock.calls[0]![0]).toBe("/courses");
+    expect(httpMock.post.mock.calls[0]![1]).toEqual({ name: "New", description: "Yo" });
     expect(out.id).toBe("99");
-    expect(out.title).toBe("New");
+    expect(out.name).toBe("New");
     expect(out.archived).toBe(false);
   });
 
   it("update PUTs /courses/:id with name and description", async () => {
     httpMock.put.mockResolvedValueOnce(undefined);
     await courseHttpRepo.update("c-9", { name: "Algebra", description: "desc" });
-    expect(httpMock.put.mock.calls[0][0]).toBe("/courses/c-9");
-    expect(httpMock.put.mock.calls[0][1]).toEqual({ name: "Algebra", description: "desc" });
+    expect(httpMock.put.mock.calls[0]![0]).toBe("/courses/c-9");
+    expect(httpMock.put.mock.calls[0]![1]).toEqual({ name: "Algebra", description: "desc" });
   });
 
   it("delete DELETEs /courses/:id", async () => {
     httpMock.delete.mockResolvedValueOnce(undefined);
     await courseHttpRepo.delete("c-10");
-    expect(httpMock.delete.mock.calls[0][0]).toBe("/courses/c-10");
+    expect(httpMock.delete.mock.calls[0]![0]).toBe("/courses/c-10");
   });
 });

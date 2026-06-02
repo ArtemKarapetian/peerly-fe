@@ -12,11 +12,7 @@ import {
 } from "@/shared/api";
 
 import { mapHomeworkToAssignment, mapInputToCreateBody } from "../model/mappers";
-import type {
-  CreateAssignmentInput,
-  DemoAssignment,
-  TeacherAssignmentDetail,
-} from "../model/types";
+import type { CreateAssignmentInput, Assignment, TeacherAssignmentDetail } from "../model/types";
 
 type RawListCourses = { courseInfos: CourseDto[] };
 type RawListStudentHomeworks = { studentHomeworkInfos: HomeworkDto[] };
@@ -40,13 +36,9 @@ async function findCourseIdForHomework(homeworkId: string): Promise<string | und
       try {
         const hws = await fetchCourseHomeworks(String(c.id));
         if (hws.some((h) => String(h.id) === homeworkId)) return String(c.id);
-      } catch {
-        // noop
-      }
+      } catch {}
     }
-  } catch {
-    // noop
-  }
+  } catch {}
   return undefined;
 }
 
@@ -69,7 +61,7 @@ export const assignmentHttpRepo = {
    * courses. Used by dashboards that need every assignment the user can
    * see.
    */
-  getAll: async (): Promise<DemoAssignment[]> => {
+  getAll: async (): Promise<Assignment[]> => {
     const prefix = rolePrefix();
     const raw = await http.get<RawListCourses>(paged(`/${prefix}/courses`));
     const lists = await Promise.all(
@@ -78,19 +70,19 @@ export const assignmentHttpRepo = {
           const hws = await fetchCourseHomeworks(String(c.id));
           return hws.map((h) => mapHomeworkToAssignment(h, { courseId: String(c.id) }));
         } catch {
-          return [] as DemoAssignment[];
+          return [] as Assignment[];
         }
       }),
     );
     return lists.flat();
   },
 
-  getByCourse: async (courseId: string): Promise<DemoAssignment[]> => {
+  getByCourse: async (courseId: string): Promise<Assignment[]> => {
     const hws = await fetchCourseHomeworks(courseId);
     return hws.map((h) => mapHomeworkToAssignment(h, { courseId }));
   },
 
-  getById: async (homeworkId: string): Promise<DemoAssignment | undefined> => {
+  getById: async (homeworkId: string): Promise<Assignment | undefined> => {
     const prefix = rolePrefix();
     try {
       if (prefix === "teacher") {

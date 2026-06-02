@@ -1,5 +1,5 @@
 export type {
-  DemoGroup,
+  Group,
   CreateGroupInput,
   UpdateGroupInput,
   GroupParticipants,

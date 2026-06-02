@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { DemoCourse } from "@/entities/course/model/types";
+import type { Course } from "@/entities/course";
 
 import { TeacherCourseSettings } from "./Settings";
 
@@ -28,10 +28,9 @@ function wrap(children: ReactNode) {
   return <QueryClientProvider client={qc}>{children}</QueryClientProvider>;
 }
 
-const course: DemoCourse = {
+const course: Course = {
   id: "c-1",
   name: "Algebra",
-  title: "Algebra",
   description: "Linear algebra basics",
   teachers: [],
   enrollmentCount: 0,
@@ -39,7 +38,6 @@ const course: DemoCourse = {
   status: "active",
   backendStatus: "inProgress",
   archived: false,
-  createdAt: new Date(),
 };
 
 beforeEach(() => {

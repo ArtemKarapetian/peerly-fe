@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import type { DemoGroup } from "@/entities/group";
+import type { Group } from "@/entities/group";
 
 import { GroupsSection } from "./GroupsSection";
 
@@ -19,7 +19,7 @@ vi.mock("@/features/group/manage-course-groups", () => ({
       <button onClick={onCancel}>cancel</button>
     </div>
   ),
-  GroupRow: ({ group }: { group: DemoGroup }) => <li data-testid="group-row">{group.name}</li>,
+  GroupRow: ({ group }: { group: Group }) => <li data-testid="group-row">{group.name}</li>,
 }));
 
 const baseHandlers = {
@@ -46,7 +46,7 @@ describe("GroupsSection", () => {
   });
 
   it("renders one GroupRow per group", () => {
-    const groups: DemoGroup[] = [
+    const groups: Group[] = [
       { id: "g1", name: "Alpha", studentCount: 2 },
       { id: "g2", name: "Beta", studentCount: 0 },
     ];

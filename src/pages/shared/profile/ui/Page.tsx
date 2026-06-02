@@ -4,7 +4,7 @@ import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { UserInfoCard } from "@/features/profile/edit-profile";
 
-import { AppShell } from "@/widgets/app-shell/AppShell.tsx";
+import { AppShell } from "@/widgets/app-shell";
 import { DangerZoneCard } from "@/widgets/profile-cards";
 
 export default function ProfilePage() {
