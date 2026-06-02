@@ -64,7 +64,7 @@ describe("ReviewForm", () => {
     const overall = textareas.at(-1)!;
     await user.type(overall, "a".repeat(40));
 
-    expect(onSubmit).not.toHaveBeenCalled();
+    expect(submit).toBeDisabled();
   });
 
   it("blocks Submit when commentRequired criterion has no comment", async () => {

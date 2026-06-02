@@ -12,7 +12,7 @@ function ScoreBadge({ value }: { value: number }) {
       ? "bg-success-light text-success"
       : value >= 3
         ? "bg-warning-light text-warning"
-        : "bg-destructive-light text-destructive";
+        : "bg-error-light text-error";
   return (
     <span
       className={`inline-flex items-center justify-center w-12 h-8 rounded-2sm text-sm font-medium ${tone}`}
@@ -28,7 +28,7 @@ function FinalScoreBadge({ value }: { value: number }) {
       ? "bg-success text-primary-foreground"
       : value >= 3
         ? "bg-warning text-primary-foreground"
-        : "bg-destructive text-primary-foreground";
+        : "bg-error text-primary-foreground";
   return (
     <span
       className={`inline-flex items-center justify-center w-14 h-9 rounded-sm text-15 font-medium ${tone}`}

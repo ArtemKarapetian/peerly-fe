@@ -73,7 +73,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
           />
         </div>
         {errors.submission && data.submissionDeadline !== null ? (
-          <p className="text-13 text-destructive mt-1">
+          <p className="text-13 text-error mt-1">
             {t(`feature.assignmentCreate.deadlines.errors.${errors.submission}`)}
           </p>
         ) : (
@@ -100,7 +100,7 @@ export function StepDeadlines({ data, onUpdate }: StepDeadlinesProps) {
           />
         </div>
         {errors.review && data.reviewDeadline !== null ? (
-          <p className="text-13 text-destructive mt-1">
+          <p className="text-13 text-error mt-1">
             {t(`feature.assignmentCreate.deadlines.errors.${errors.review}`)}
           </p>
         ) : (

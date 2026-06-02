@@ -246,38 +246,6 @@ describe("AuthProvider", () => {
     });
   });
 
-  it("switchRoleDev creates a dev session when none exists and updates role", () => {
-    renderProvider();
-
-    act(() => {
-      captured.value!.switchRoleDev("Admin");
-    });
-
-    expect(screen.getByTestId("role")).toHaveTextContent("Admin");
-    const stored = readStored();
-    expect(stored.role).toBe("Admin");
-    expect(stored.userId).toBe("dev-1");
-  });
-
-  it("switchRoleDev preserves session userId on an existing session", async () => {
-    authApiMock.login.mockResolvedValueOnce({ userId: "u-9" });
-    authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });
-
-    renderProvider();
-
-    await act(async () => {
-      await captured.value!.login({ email: "x@x", password: "pw" });
-    });
-
-    act(() => {
-      captured.value!.switchRoleDev("Teacher");
-    });
-
-    const stored = readStored();
-    expect(stored.userId).toBe("u-9");
-    expect(stored.role).toBe("Teacher");
-  });
-
   it("logout clears the session and navigates home", async () => {
     authApiMock.login.mockResolvedValueOnce({ userId: "u-1" });
     authApiMock.getMyRole.mockResolvedValueOnce({ role: "Student" });

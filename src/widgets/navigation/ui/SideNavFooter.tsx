@@ -5,26 +5,17 @@ import { Link } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
 
-import { RoleSwitcherPopover } from "../RoleSwitcherPopover.tsx";
-
 import { FOCUS_RING, FOOTER_ITEM_CLASS } from "./sidenav-styles";
 
 interface SideNavFooterProps {
   collapsed: boolean;
-  showRoleSwitcher: boolean;
   onItemClick?: () => void;
 }
 
-export function SideNavFooter({ collapsed, showRoleSwitcher, onItemClick }: SideNavFooterProps) {
+export function SideNavFooter({ collapsed, onItemClick }: SideNavFooterProps) {
   const { t } = useTranslation();
   return (
     <div className="shrink-0">
-      {showRoleSwitcher && (
-        <div className="border-t border-[--surface-border] pt-2">
-          <RoleSwitcherPopover collapsed={collapsed} />
-        </div>
-      )}
-
       <div className="border-t border-[--surface-border] px-2.5 py-2 space-y-0.5 pb-3">
         <FooterLink
           to={ROUTES.profile}

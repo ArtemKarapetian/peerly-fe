@@ -20,18 +20,10 @@ interface SideNavProps {
 
 export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: SideNavProps) {
   const { currentRole } = useRole();
-  const showRoleSwitcher = import.meta.env.DEV;
   const navItems = getNavItemsForRole(currentRole);
 
   if (variant === "mobile-drawer") {
-    return (
-      <MobileDrawerSideNav
-        isOpen={isOpen}
-        navItems={navItems}
-        showRoleSwitcher={showRoleSwitcher}
-        onClose={() => onClose?.()}
-      />
-    );
+    return <MobileDrawerSideNav isOpen={isOpen} navItems={navItems} onClose={() => onClose?.()} />;
   }
 
   const collapsed = variant === "desktop-collapsed" || variant === "tablet-collapsed";
@@ -40,7 +32,6 @@ export function SideNav({ variant, isOpen = false, onClose, onToggleCollapse }: 
     <DesktopSideNav
       collapsed={collapsed}
       showToggleButton
-      showRoleSwitcher={showRoleSwitcher}
       navItems={navItems}
       onToggleCollapse={onToggleCollapse}
     />

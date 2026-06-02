@@ -41,7 +41,7 @@ export function ActionsBar({
           {saving ? t("page.submitWork.saving") : t("page.submitWork.saveDraft")}
         </button>
       </div>
-      {errorMessage && <p className="text-13 text-destructive mt-3 text-center">{errorMessage}</p>}
+      {errorMessage && <p className="text-13 text-error mt-3 text-center">{errorMessage}</p>}
     </Card>
   );
 }

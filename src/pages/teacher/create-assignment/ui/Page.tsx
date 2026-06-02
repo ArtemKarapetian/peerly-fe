@@ -2,11 +2,10 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { useAsync } from "@/shared/lib/useAsync";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { assignmentRepo } from "@/entities/assignment";
+import { useAssignment } from "@/entities/assignment";
 
 import type { AssignmentFormData } from "@/features/assignment/create/model/types";
 
@@ -71,10 +70,7 @@ function CreateAssignment({
 function EditDraftAssignment({ editId }: { editId: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data, isLoading, error, refetch } = useAsync(
-    () => assignmentRepo.getById(editId),
-    [editId],
-  );
+  const { data, isLoading, error, refetch } = useAssignment(editId);
 
   if (isLoading) {
     return (
@@ -86,7 +82,7 @@ function EditDraftAssignment({ editId }: { editId: string }) {
   if (error) {
     return (
       <AppShell title={t("teacher.editAssignment.title")}>
-        <ErrorBanner error={error} onRetry={refetch} />
+        <ErrorBanner error={error} onRetry={() => void refetch()} />
       </AppShell>
     );
   }

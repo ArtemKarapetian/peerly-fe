@@ -12,12 +12,12 @@ vi.mock("react-i18next", () => ({
 describe("ErrorBanner", () => {
   it("renders error message", () => {
     render(<ErrorBanner message="Something went wrong" />);
-    expect(screen.getByText("Something went wrong")).toBeDefined();
+    expect(screen.getByText("Something went wrong")).toBeInTheDocument();
   });
 
   it("shows retry button when onRetry is provided", () => {
     render(<ErrorBanner message="Error" onRetry={() => {}} />);
-    expect(screen.getByRole("button")).toBeDefined();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
   it("does not show retry button when onRetry is undefined", () => {
@@ -42,7 +42,7 @@ describe("ErrorBanner", () => {
       "HTTP 400: /foo",
     );
     render(<ErrorBanner error={err} />);
-    expect(screen.getByText(/Name must not be empty/)).toBeDefined();
+    expect(screen.getByText(/Name must not be empty/)).toBeInTheDocument();
     expect(screen.queryByText(/HTTP 400/)).toBeNull();
   });
 });

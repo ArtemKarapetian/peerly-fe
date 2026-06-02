@@ -11,10 +11,9 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useAsync } from "@/shared/lib/useAsync";
 import { TextField } from "@/shared/ui";
 
-import { groupRepo, type Group } from "@/entities/group";
+import { useGroupParticipants, type Group } from "@/entities/group";
 
 interface GroupRowProps {
   group: Group;
@@ -36,14 +35,7 @@ export function GroupRow({
   const [renaming, setRenaming] = useState(false);
   const [draft, setDraft] = useState(group.name);
 
-  const {
-    data: participants,
-    isLoading,
-    error,
-  } = useAsync(
-    () => (expanded ? groupRepo.getParticipants(group.id) : Promise.resolve(null)),
-    [expanded, group.id],
-  );
+  const { data: participants, isLoading, error } = useGroupParticipants(group.id, expanded);
 
   const cancelRename = () => {
     setRenaming(false);
@@ -149,7 +141,7 @@ export function GroupRow({
           onClick={() => onDelete(group)}
           title={t("widget.groups.deleteGroup")}
           aria-label={t("widget.groups.deleteGroup")}
-          className="p-2 hover:bg-error-light rounded-sm transition-colors text-destructive"
+          className="p-2 hover:bg-error-light rounded-sm transition-colors text-error"
         >
           <Trash2 className="w-4 h-4" />
         </button>
@@ -159,7 +151,7 @@ export function GroupRow({
           {isLoading ? (
             <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
           ) : error ? (
-            <p className="text-sm text-destructive">{t("widget.groups.loadStudentsError")}</p>
+            <p className="text-sm text-error">{t("widget.groups.loadStudentsError")}</p>
           ) : !participants || participants.students.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("widget.groups.noStudents")}</p>
           ) : (

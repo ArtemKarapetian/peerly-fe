@@ -40,7 +40,6 @@ interface AuthContextType {
   logout: () => Promise<void>;
   refreshMe: () => Promise<void>;
   updateMyName: (name: string) => Promise<void>;
-  switchRoleDev: (role: Role) => void;
 }
 
 const Auth = createContext<AuthContextType | undefined>(undefined);
@@ -133,21 +132,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return next;
   }, []);
 
-  const switchRoleDev = useCallback<AuthContextType["switchRoleDev"]>((role) => {
-    setSessionState((prev) => {
-      const base = prev ?? {
-        userId: "dev-1",
-        userName: "Dev",
-        email: "dev@local",
-        role,
-      };
-      const next: Session = { ...base, role };
-      setSession(next);
-      return next;
-    });
-    setStatus("authenticated");
-  }, []);
-
   const refreshMe = useCallback<AuthContextType["refreshMe"]>(async () => {
     const current = getSession();
     if (!current) return;
@@ -197,7 +181,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         refreshMe,
         updateMyName,
-        switchRoleDev,
       }}
     >
       {children}

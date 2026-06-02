@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes.ts";
+import { Card } from "@/shared/ui";
 
 interface TaskSidebarProps {
   courseId: string;
@@ -21,7 +22,7 @@ export function TaskSidebar({
   const navigate = useNavigate();
 
   return (
-    <div className="bg-card border border-border shadow-sm rounded-lg p-5 space-y-3">
+    <Card variant="section" className="p-5 space-y-3">
       {hasSubmission ? (
         <>
           <button
@@ -42,7 +43,7 @@ export function TaskSidebar({
           )}
         </>
       ) : isDeadlinePassed ? (
-        <div className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-error-light text-destructive rounded-md text-15 font-medium">
+        <div className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-error-light text-error rounded-md text-15 font-medium">
           <Clock className="size-4" />
           {t("student.task.deadlinePassedSidebar")}
         </div>
@@ -55,6 +56,6 @@ export function TaskSidebar({
           {t("student.task.submitWork")}
         </button>
       )}
-    </div>
+    </Card>
   );
 }

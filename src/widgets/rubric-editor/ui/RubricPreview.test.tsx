@@ -47,7 +47,6 @@ describe("RubricPreview", () => {
   it("shows description only when present", () => {
     render(<RubricPreview rubric={makeRubric()} />);
     expect(screen.getByText("Writing clarity")).toBeInTheDocument();
-    expect(screen.queryByText("Writing clarity")).toBeInTheDocument();
   });
 
   it("flags commentRequired criteria with the warning badge", () => {

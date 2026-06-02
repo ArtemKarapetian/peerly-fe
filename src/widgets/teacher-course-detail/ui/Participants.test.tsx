@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
@@ -7,11 +8,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TeacherCourseParticipants } from "./Participants";
 
 function renderWithRouter(ui: ReactNode) {
-  return render(<MemoryRouter>{ui}</MemoryRouter>);
+  const qc = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={qc}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 }
 
-const { courseRepoMock, groupRepoMock, toastMock, confirmMock } = vi.hoisted(() => ({
-  courseRepoMock: { getParticipants: vi.fn() },
+const { useCourseParticipantsMock, groupRepoMock, toastMock, confirmMock } = vi.hoisted(() => ({
+  useCourseParticipantsMock: vi.fn(),
   groupRepoMock: {
     listForCourse: vi.fn(),
     create: vi.fn(),
@@ -23,12 +31,20 @@ const { courseRepoMock, groupRepoMock, toastMock, confirmMock } = vi.hoisted(() 
   confirmMock: vi.fn(),
 }));
 
-vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
+vi.mock("@/entities/course", () => ({
+  useCourseParticipants: () => useCourseParticipantsMock(),
+}));
 
-vi.mock("@/entities/group", async () => {
-  const actual = await vi.importActual<typeof import("@/entities/group")>("@/entities/group");
-  return { ...actual, groupRepo: groupRepoMock };
-});
+function mockParticipants(data: unknown) {
+  useCourseParticipantsMock.mockReturnValue({
+    data,
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  });
+}
+
+vi.mock("@/entities/group/api/httpRepo", () => ({ groupHttpRepo: groupRepoMock }));
 
 vi.mock("sonner", () => ({ toast: toastMock }));
 
@@ -49,7 +65,7 @@ vi.mock("react-i18next", () => ({
 }));
 
 beforeEach(() => {
-  courseRepoMock.getParticipants.mockReset();
+  useCourseParticipantsMock.mockReset();
   Object.values(groupRepoMock).forEach((m) => m.mockReset());
   toastMock.success.mockReset();
   toastMock.error.mockReset();
@@ -59,7 +75,7 @@ beforeEach(() => {
 
 describe("TeacherCourseParticipants", () => {
   it("renders teacher section above groups section", async () => {
-    courseRepoMock.getParticipants.mockResolvedValueOnce({
+    mockParticipants({
       students: [],
       teachers: [{ teacherId: 9, email: "prof@x", name: "Prof X" }],
     });
@@ -75,7 +91,7 @@ describe("TeacherCourseParticipants", () => {
   });
 
   it("lists groups sorted alphabetically with student counts", async () => {
-    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValueOnce([
       { id: "g-b", name: "Бета", studentCount: 5 },
       { id: "g-a", name: "Альфа", studentCount: 3 },
@@ -101,7 +117,7 @@ describe("TeacherCourseParticipants", () => {
 
   it("creates a new group via inline form", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValue([]);
     groupRepoMock.create.mockResolvedValueOnce({ id: "g-new", name: "G", studentCount: 0 });
 
@@ -124,7 +140,7 @@ describe("TeacherCourseParticipants", () => {
 
   it("expands a group to show members", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValueOnce([
       { id: "g-1", name: "Group A", studentCount: 1 },
     ]);
@@ -146,7 +162,7 @@ describe("TeacherCourseParticipants", () => {
 
   it("opens the import modal preselected for a specific group", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValueOnce([
       { id: "g-1", name: "Group A", studentCount: 0 },
     ]);
@@ -161,7 +177,7 @@ describe("TeacherCourseParticipants", () => {
 
   it("deletes a group after confirmation via ConfirmDialog", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValue([
       { id: "g-1", name: "Group A", studentCount: 0 },
     ]);
@@ -182,7 +198,7 @@ describe("TeacherCourseParticipants", () => {
   });
 
   it("shows empty state when course has no groups", async () => {
-    courseRepoMock.getParticipants.mockResolvedValueOnce({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValueOnce([]);
 
     renderWithRouter(<TeacherCourseParticipants courseId="c-1" />);
@@ -194,7 +210,7 @@ describe("TeacherCourseParticipants", () => {
 
   it("renames a group via inline pencil edit", async () => {
     const user = userEvent.setup();
-    courseRepoMock.getParticipants.mockResolvedValue({ students: [], teachers: [] });
+    mockParticipants({ students: [], teachers: [] });
     groupRepoMock.listForCourse.mockResolvedValue([
       { id: "g-1", name: "Group A", studentCount: 0 },
     ]);

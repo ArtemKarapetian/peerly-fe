@@ -73,7 +73,6 @@ vi.mock("@/entities/user", async () => {
       register: registerMock,
       login: vi.fn(),
       logout: vi.fn(),
-      switchRoleDev: vi.fn(),
     }),
   };
 });

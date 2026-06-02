@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+import { Card } from "@/shared/ui";
+
 import type { RubricCriterion } from "@/entities/rubric";
 
 import {
@@ -118,9 +120,9 @@ export function ReviewForm({
         />
 
         {!readonly && (
-          <div className="bg-card border border-border shadow-sm rounded-lg p-4">
+          <Card variant="section">
             <SubmitReviewButton canSubmit={canSubmit} onSubmit={handleSubmit} />
-          </div>
+          </Card>
         )}
       </div>
     </div>

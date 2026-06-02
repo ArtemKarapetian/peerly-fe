@@ -7,6 +7,15 @@ export const courseKeys = {
   participants: (courseId: string) => [...courseKeys.detail(courseId), "participants"] as const,
 };
 
+export const groupKeys = {
+  all: ["groups"] as const,
+  lists: () => [...groupKeys.all, "list"] as const,
+  list: (courseId: string) => [...groupKeys.lists(), courseId] as const,
+  details: () => [...groupKeys.all, "detail"] as const,
+  detail: (id: string) => [...groupKeys.details(), id] as const,
+  participants: (groupId: string) => [...groupKeys.detail(groupId), "participants"] as const,
+};
+
 export const assignmentKeys = {
   all: ["assignments"] as const,
   lists: () => [...assignmentKeys.all, "list"] as const,
@@ -33,6 +42,8 @@ export const rubricKeys = {
 
 export const submissionKeys = {
   all: ["submissions"] as const,
+  lists: () => [...submissionKeys.all, "list"] as const,
+  forHomework: (homeworkId: string) => [...submissionKeys.all, "homework", homeworkId] as const,
   mine: (homeworkId: string) => [...submissionKeys.all, "mine", homeworkId] as const,
   mineId: (homeworkId: string) => [...submissionKeys.all, "mine-id", homeworkId] as const,
   detail: (submissionId: string) => [...submissionKeys.all, "detail", submissionId] as const,

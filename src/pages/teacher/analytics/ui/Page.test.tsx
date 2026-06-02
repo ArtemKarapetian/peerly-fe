@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -11,10 +12,10 @@ const { courseRepoMock, assignmentRepoMock, workRepoMock, reviewRepoMock } = vi.
   reviewRepoMock: { getAll: vi.fn() },
 }));
 
-vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
-vi.mock("@/entities/assignment", () => ({ assignmentRepo: assignmentRepoMock }));
-vi.mock("@/entities/work", () => ({ workRepo: workRepoMock }));
-vi.mock("@/entities/review", () => ({ reviewRepo: reviewRepoMock }));
+vi.mock("@/entities/course/api/httpRepo", () => ({ courseHttpRepo: courseRepoMock }));
+vi.mock("@/entities/assignment/api/httpRepo", () => ({ assignmentHttpRepo: assignmentRepoMock }));
+vi.mock("@/entities/work/api/httpRepo", () => ({ workHttpRepo: workRepoMock }));
+vi.mock("@/entities/review/api/httpRepo", () => ({ reviewHttpRepo: reviewRepoMock }));
 
 vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -136,10 +137,13 @@ function setupData() {
 }
 
 function renderPage() {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <MemoryRouter>
-      <TeacherAnalyticsPage />
-    </MemoryRouter>,
+    <QueryClientProvider client={qc}>
+      <MemoryRouter>
+        <TeacherAnalyticsPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 

@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import { EmptyState } from "@/shared/ui";
+
 import { TaskListItem } from "@/entities/assignment";
 import type { TaskStatus } from "@/entities/assignment";
 
@@ -20,11 +22,7 @@ export function TaskList({ tasks, onTaskClick }: TaskListProps) {
   const { t } = useTranslation();
 
   if (tasks.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-sm text-muted-foreground">{t("feature.taskList.notFound")}</p>
-      </div>
-    );
+    return <EmptyState message={t("feature.taskList.notFound")} />;
   }
 
   return (

@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { formatDateTimeLong } from "@/shared/lib/formatDate";
+import { Card } from "@/shared/ui";
 
 interface DeadlinesCardProps {
   dueDate: Date;
@@ -12,7 +13,7 @@ interface DeadlinesCardProps {
 export function DeadlinesCard({ dueDate, reviewDeadline, locale }: DeadlinesCardProps) {
   const { t } = useTranslation();
   return (
-    <div className="mt-6 bg-card border border-border shadow-sm rounded-xl p-6">
+    <Card variant="section" className="mt-6 rounded-xl p-6">
       <div className="flex items-center gap-2 mb-4">
         <Calendar className="w-5 h-5 text-brand-primary" />
         <h2 className="text-xl font-medium text-foreground tracking-[-0.5px]">
@@ -32,7 +33,7 @@ export function DeadlinesCard({ dueDate, reviewDeadline, locale }: DeadlinesCard
           />
         )}
       </div>
-    </div>
+    </Card>
   );
 }
 

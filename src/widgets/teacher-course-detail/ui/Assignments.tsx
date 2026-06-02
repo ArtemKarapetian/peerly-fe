@@ -4,10 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ROUTES } from "@/shared/config/routes";
-import { useAsync } from "@/shared/lib/useAsync";
 import { EmptyState, StatusBadge } from "@/shared/ui";
 
-import { assignmentRepo } from "@/entities/assignment";
+import { useAssignmentsByCourse } from "@/entities/assignment";
 
 interface TeacherCourseAssignmentsProps {
   courseId: string;
@@ -16,10 +15,7 @@ interface TeacherCourseAssignmentsProps {
 export function TeacherCourseAssignments({ courseId }: TeacherCourseAssignmentsProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: assignments, isLoading } = useAsync(
-    () => assignmentRepo.getByCourse(courseId),
-    [courseId],
-  );
+  const { data: assignments, isLoading } = useAssignmentsByCourse(courseId);
 
   const getStatusBadge = (status: string) => {
     switch (status) {

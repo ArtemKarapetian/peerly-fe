@@ -11,7 +11,6 @@ import { SideNavList } from "./SideNavList";
 interface DesktopSideNavProps {
   collapsed: boolean;
   showToggleButton: boolean;
-  showRoleSwitcher: boolean;
   navItems: NavItem[];
   onToggleCollapse?: () => void;
 }
@@ -19,7 +18,6 @@ interface DesktopSideNavProps {
 export function DesktopSideNav({
   collapsed,
   showToggleButton,
-  showRoleSwitcher,
   navItems,
   onToggleCollapse,
 }: DesktopSideNavProps) {
@@ -51,7 +49,7 @@ export function DesktopSideNav({
 
       <SideNavList items={navItems} collapsed={collapsed} />
 
-      <SideNavFooter collapsed={collapsed} showRoleSwitcher={showRoleSwitcher} />
+      <SideNavFooter collapsed={collapsed} />
     </div>
   );
 }

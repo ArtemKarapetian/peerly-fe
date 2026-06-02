@@ -75,7 +75,7 @@ function FileRow({ file, disabled, onDownload, onDelete }: FileRowProps) {
         onClick={onDelete}
         disabled={disabled}
         title={t("common.delete")}
-        className="inline-flex items-center justify-center size-8 bg-error-light text-destructive hover:bg-error-light rounded-sm transition-colors disabled:opacity-50"
+        className="inline-flex items-center justify-center size-8 bg-error-light text-error hover:bg-error-light rounded-sm transition-colors disabled:opacity-50"
       >
         <Trash2 className="size-4" />
       </button>

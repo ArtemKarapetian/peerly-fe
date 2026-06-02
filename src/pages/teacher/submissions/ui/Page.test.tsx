@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
@@ -12,9 +13,9 @@ const { assignmentRepoMock, workRepoMock, courseRepoMock, storageApiMock } = vi.
   storageApiMock: { getDownloadUrl: vi.fn(), triggerDownload: vi.fn() },
 }));
 
-vi.mock("@/entities/assignment", () => ({ assignmentRepo: assignmentRepoMock }));
-vi.mock("@/entities/work", () => ({ workRepo: workRepoMock }));
-vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
+vi.mock("@/entities/assignment/api/httpRepo", () => ({ assignmentHttpRepo: assignmentRepoMock }));
+vi.mock("@/entities/work/api/httpRepo", () => ({ workHttpRepo: workRepoMock }));
+vi.mock("@/entities/course/api/httpRepo", () => ({ courseHttpRepo: courseRepoMock }));
 vi.mock("@/entities/storage", () => ({ storageApi: storageApiMock }));
 
 vi.mock("@/widgets/app-shell", () => ({
@@ -82,10 +83,13 @@ function setupCourseAndAssignments() {
 }
 
 function renderAt(url: string) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <MemoryRouter initialEntries={[url]}>
-      <TeacherSubmissionsPage />
-    </MemoryRouter>,
+    <QueryClientProvider client={qc}>
+      <MemoryRouter initialEntries={[url]}>
+        <TeacherSubmissionsPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 

@@ -6,7 +6,7 @@ import { Badge } from "./badge";
 describe("Badge", () => {
   it("renders children text", () => {
     render(<Badge>Hello</Badge>);
-    expect(screen.getByText("Hello")).toBeDefined();
+    expect(screen.getByText("Hello")).toBeInTheDocument();
   });
 
   it("has data-slot='badge' attribute", () => {
@@ -40,7 +40,7 @@ describe("Badge", () => {
 
     for (const variant of variants) {
       const { unmount } = render(<Badge variant={variant}>{variant}</Badge>);
-      expect(screen.getByText(variant)).toBeDefined();
+      expect(screen.getByText(variant)).toBeInTheDocument();
       unmount();
     }
   });

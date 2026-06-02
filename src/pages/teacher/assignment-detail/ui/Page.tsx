@@ -73,7 +73,7 @@ export default function TeacherAssignmentDetailsPage() {
       />
 
       {deleteError && (
-        <div className="mt-4 bg-destructive-light border border-destructive rounded-md p-4">
+        <div className="mt-4 bg-error-light border border-error/20 rounded-md p-4">
           <p className="text-13 text-foreground">{deleteError}</p>
         </div>
       )}

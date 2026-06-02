@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { useAssignment } from "@/entities/assignment";
 import { useCourse } from "@/entities/course";
@@ -29,7 +31,7 @@ export default function SubmissionsPage() {
 
   const { data: course } = useCourse(courseId);
   const { data: hw } = useAssignment(taskId);
-  const { data: submission, isLoading, isError } = useMySubmission(taskId);
+  const { data: submission, isLoading, isError, error, refetch } = useMySubmission(taskId);
   const submissionDetail = useSubmissionDetail(submission?.id);
   const { data: rubricDetail } = useRubric(hw?.rubricId ?? undefined);
 
@@ -54,9 +56,7 @@ export default function SubmissionsPage() {
     return (
       <AppShell title={t("student.submissions.title")}>
         <Breadcrumbs items={breadcrumbs} />
-        <div className="flex min-h-[300px] items-center justify-center text-muted-foreground">
-          {t("common.loading")}
-        </div>
+        <PageSkeleton />
       </AppShell>
     );
   }
@@ -65,9 +65,7 @@ export default function SubmissionsPage() {
     return (
       <AppShell title={t("student.submissions.title")}>
         <Breadcrumbs items={breadcrumbs} />
-        <div className="flex min-h-[300px] items-center justify-center text-destructive">
-          {t("student.submissions.loadError")}
-        </div>
+        <ErrorBanner error={error} onRetry={() => void refetch()} />
       </AppShell>
     );
   }

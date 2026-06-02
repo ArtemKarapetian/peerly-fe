@@ -66,9 +66,7 @@
   "roles": {
     "student": "Student",
     "teacher": "Teacher",
-    "admin": "Administrator",
-    "demoRole": "Demo: Role",
-    "switchRole": "Switch role"
+    "admin": "Administrator"
   },
   "demoTools": {
     "shown": "Demo tools shown",

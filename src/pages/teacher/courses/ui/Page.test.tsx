@@ -5,11 +5,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import TeacherCoursesPage from "./Page";
 
-const { courseRepoMock } = vi.hoisted(() => ({
-  courseRepoMock: { getAll: vi.fn() },
+const { useCoursesMock } = vi.hoisted(() => ({
+  useCoursesMock: vi.fn(),
 }));
 
-vi.mock("@/entities/course", () => ({ courseRepo: courseRepoMock }));
+vi.mock("@/entities/course", () => ({ useCourses: () => useCoursesMock() }));
+
+function mockCourses(courses: unknown[]) {
+  useCoursesMock.mockReturnValue({
+    data: courses,
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  });
+}
 
 vi.mock("@/widgets/app-shell", () => ({
   AppShell: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -24,7 +33,7 @@ vi.mock("react-i18next", () => ({
 }));
 
 beforeEach(() => {
-  courseRepoMock.getAll.mockReset();
+  useCoursesMock.mockReset();
 });
 
 function fakeCourse(
@@ -55,7 +64,7 @@ function renderPage() {
 
 describe("TeacherCoursesPage", () => {
   it("lists all courses by default so fresh drafts are visible", async () => {
-    courseRepoMock.getAll.mockResolvedValueOnce([
+    mockCourses([
       fakeCourse({ id: "c-1", title: "Active One" }),
       fakeCourse({ id: "c-2", title: "Draft One", status: "draft" }),
       fakeCourse({ id: "c-3", title: "Archived One", status: "archived" }),
@@ -70,7 +79,7 @@ describe("TeacherCoursesPage", () => {
   });
 
   it("filters by status when the user picks draft", async () => {
-    courseRepoMock.getAll.mockResolvedValueOnce([
+    mockCourses([
       fakeCourse({ id: "c-1", title: "Active One" }),
       fakeCourse({ id: "c-2", title: "Draft One", status: "draft" }),
     ]);
@@ -86,7 +95,7 @@ describe("TeacherCoursesPage", () => {
   });
 
   it("hides drafts/archived when the user picks active", async () => {
-    courseRepoMock.getAll.mockResolvedValueOnce([
+    mockCourses([
       fakeCourse({ id: "c-1", title: "Active One" }),
       fakeCourse({ id: "c-2", title: "Draft One", status: "draft" }),
       fakeCourse({ id: "c-3", title: "Archived One", status: "archived" }),
@@ -104,7 +113,7 @@ describe("TeacherCoursesPage", () => {
   });
 
   it("filters by search query against course names", async () => {
-    courseRepoMock.getAll.mockResolvedValueOnce([
+    mockCourses([
       fakeCourse({ id: "c-1", title: "Algebra" }),
       fakeCourse({ id: "c-2", title: "Biology" }),
     ]);
@@ -120,7 +129,7 @@ describe("TeacherCoursesPage", () => {
   });
 
   it("renders the empty state when no courses exist", async () => {
-    courseRepoMock.getAll.mockResolvedValueOnce([]);
+    mockCourses([]);
     renderPage();
 
     await waitFor(() => {

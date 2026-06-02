@@ -12,7 +12,10 @@ import { describe, expect, it } from "vitest";
  * has to chase the same regex across 30+ files again.
  */
 
-const CARD_SHELL = /bg-card[^"`]*border-2[^"`]*border-border[^"`]*rounded-xl/;
+const CARD_SHELLS = [
+  /bg-card[^"`]*border-2[^"`]*border-border[^"`]*rounded-xl/,
+  /bg-card[^"`]*border border-border[^"`]*shadow-sm[^"`]*rounded-(?:lg|xl)/,
+];
 
 const PROJECT_ROOT = join(__dirname, "..", "..");
 const ALLOWED_PATHS = new Set([
@@ -20,6 +23,8 @@ const ALLOWED_PATHS = new Set([
   // <section> wrapper in the Terms page intentionally keeps the card markup
   // inline so the semantic <section> tag is preserved.
   join(PROJECT_ROOT, "pages", "public", "terms", "ui", "AnchoredSection.tsx"),
+  // NavTile is an interactive <button> styled as a card; a Card div can't be a button.
+  join(PROJECT_ROOT, "pages", "teacher", "assignment-detail", "ui", "NavTilesRow.tsx"),
 ]);
 
 function* walk(dir: string): Generator<string> {
@@ -42,7 +47,7 @@ describe("design-system guard", () => {
       if (ALLOWED_PATHS.has(file)) continue;
       const lines = readFileSync(file, "utf8").split("\n");
       lines.forEach((line, i) => {
-        if (CARD_SHELL.test(line)) {
+        if (CARD_SHELLS.some((re) => re.test(line))) {
           offenders.push({ file, line: i + 1, snippet: line.trim() });
         }
       });

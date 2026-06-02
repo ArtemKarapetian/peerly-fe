@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import { EmptyState } from "@/shared/ui";
+
 interface Candidate {
   id: string;
   name: string;
@@ -28,11 +30,14 @@ export function CandidateList({
   }
   if (candidates.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground text-center py-8">
-        {hasQuery
-          ? t("feature.participantImport.noResults")
-          : t("feature.participantImport.startTyping")}
-      </p>
+      <EmptyState
+        className="py-8"
+        message={
+          hasQuery
+            ? t("feature.participantImport.noResults")
+            : t("feature.participantImport.startTyping")
+        }
+      />
     );
   }
 

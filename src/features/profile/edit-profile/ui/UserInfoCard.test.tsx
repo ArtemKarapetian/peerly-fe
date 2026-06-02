@@ -24,7 +24,7 @@ vi.mock("sonner", () => ({
 }));
 
 beforeEach(() => {
-  useRoleMock.mockReturnValue({ currentRole: "Student", setRole: vi.fn() });
+  useRoleMock.mockReturnValue({ currentRole: "Student" });
   refreshMeMock.mockResolvedValue(undefined);
   updateMyNameMock.mockResolvedValue(undefined);
   toastSuccess.mockReset();
@@ -55,7 +55,7 @@ describe("UserInfoCard", () => {
       updateMyName: updateMyNameMock,
     });
     render(<UserInfoCard />);
-    expect(screen.getAllByText("bob@x.com").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("bob@x.com")).toHaveLength(2);
   });
 
   it("enters edit mode and saves a new name via updateMyName", async () => {

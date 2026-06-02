@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { ApiError } from "@/shared/api";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
 import { ROUTES } from "@/shared/config/routes.ts";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
+import { ErrorBanner } from "@/shared/ui/ErrorBanner";
+import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
 import { useAssignment } from "@/entities/assignment";
 import { useCourse } from "@/entities/course";
@@ -18,17 +21,35 @@ export default function TaskPage() {
   const { t } = useTranslation();
   const CRUMBS = getCrumbs();
 
-  const { data: hw, isLoading: hwLoading } = useAssignment(taskId);
+  const { data: hw, isLoading, error, refetch } = useAssignment(taskId);
   const { data: course } = useCourse(courseId);
   const { data: submission } = useMySubmission(taskId);
   const [now] = useState(() => Date.now());
 
-  const courseName = course?.name ?? "";
-  const title = hw?.title ?? "";
-  const description = hw?.description ?? "";
-  const rubricId = hw?.rubricId ?? null;
+  if (isLoading) {
+    return (
+      <AppShell title={t("common.loading")}>
+        <Breadcrumbs items={[CRUMBS.courses, { label: t("common.loading") }]} />
+        <div className="mt-6">
+          <PageSkeleton />
+        </div>
+      </AppShell>
+    );
+  }
 
-  if (!hwLoading && !hw) {
+  const isMissing = error instanceof ApiError && error.status === 404;
+  if (error && !isMissing) {
+    return (
+      <AppShell title={t("common.error")}>
+        <Breadcrumbs items={[CRUMBS.courses, { label: t("common.error") }]} />
+        <div className="mt-6">
+          <ErrorBanner error={error} onRetry={() => void refetch()} />
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (!hw) {
     return (
       <AppShell title={t("student.task.notFound")}>
         <Breadcrumbs items={[CRUMBS.courses, { label: t("student.task.notFound") }]} />
@@ -37,39 +58,36 @@ export default function TaskPage() {
     );
   }
 
+  const courseName = course?.name ?? "";
   const hasSubmission = !!submission;
-  const isOverdue = hw?.dueDate ? hw.dueDate.getTime() < now : false;
-  const { statusLabel, statusColor } = pickStatus({
-    hasSubmission,
-    isOverdue,
-    t,
-  });
+  const isOverdue = hw.dueDate ? hw.dueDate.getTime() < now : false;
+  const { statusLabel, statusColor } = pickStatus({ hasSubmission, isOverdue, t });
 
   return (
-    <AppShell title={title || t("common.loading")}>
+    <AppShell title={hw.title}>
       <Breadcrumbs
         items={[
           CRUMBS.courses,
           { label: courseName, href: ROUTES.course(courseId) },
-          { label: title || t("common.loading") },
+          { label: hw.title },
         ]}
       />
 
       <div className="mt-6">
         <TaskHeader
-          title={title || t("common.loading")}
+          title={hw.title}
           courseName={courseName}
-          deadline={hw?.dueDate}
-          reviewDeadline={hw?.reviewDeadline}
-          reviewCount={hw?.reviewCount}
+          deadline={hw.dueDate}
+          reviewDeadline={hw.reviewDeadline}
+          reviewCount={hw.reviewCount}
           statusLabel={statusLabel}
           statusColor={statusColor}
         />
 
         <div className="task-layout">
           <div className="w-full min-w-0 flex flex-col gap-4 desktop:gap-6">
-            <TaskDescription description={description} />
-            <TaskRubric rubricId={rubricId} />
+            <TaskDescription description={hw.description ?? ""} />
+            <TaskRubric rubricId={hw.rubricId ?? null} />
           </div>
 
           <div className="w-full min-w-0 hide-below-desktop">

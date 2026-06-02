@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { humanizeApiError } from "@/shared/api";
 import { assignmentKeys, courseKeys } from "@/shared/api/queryKeys";
 import { getCrumbs } from "@/shared/config/breadcrumbs.ts";
+import { Card } from "@/shared/ui";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 
 import { assignmentRepo } from "@/entities/assignment";
@@ -173,7 +174,7 @@ export function WizardShell({
       <div className="mt-6 max-w-[1000px] mx-auto">
         <WizardStepper steps={STEPS} currentStep={currentStep} />
 
-        <div className="bg-card border border-border shadow-sm rounded-xl p-8 mb-6">
+        <Card variant="section" className="rounded-xl p-8 desktop:p-8 mb-6">
           <StepContent
             stepKey={currentStepKey}
             formData={formData}
@@ -186,7 +187,7 @@ export function WizardShell({
             isDirty={isDirty}
             onSubmit={(asDraft) => void handleSubmit(asDraft)}
           />
-        </div>
+        </Card>
 
         <WizardFooter
           currentStep={currentStep}

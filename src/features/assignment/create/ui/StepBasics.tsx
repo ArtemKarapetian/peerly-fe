@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
 
-import { useAsync } from "@/shared/lib/useAsync";
 import { Label, Select, TextField, Textarea } from "@/shared/ui";
 
-import { courseRepo } from "@/entities/course";
-import { groupRepo } from "@/entities/group";
+import { useCourses } from "@/entities/course";
+import { useGroupsByCourse } from "@/entities/group";
 
 import type { AssignmentFormData } from "../model/types";
 
@@ -17,7 +16,7 @@ interface StepBasicsProps {
 
 export function StepBasics({ data, onUpdate, lockCourse, lockGroup }: StepBasicsProps) {
   const { t } = useTranslation();
-  const { data: courses } = useAsync(() => courseRepo.getAll(), []);
+  const { data: courses } = useCourses();
 
   return (
     <div className="space-y-6">
@@ -90,10 +89,7 @@ interface GroupFieldProps {
 
 function GroupField({ courseId, value, onChange, disabled }: GroupFieldProps) {
   const { t } = useTranslation();
-  const { data: groups, isLoading } = useAsync(
-    () => (courseId ? groupRepo.listForCourse(courseId) : Promise.resolve([])),
-    [courseId],
-  );
+  const { data: groups, isLoading } = useGroupsByCourse(courseId);
 
   const selectDisabled = disabled || !courseId || isLoading;
 

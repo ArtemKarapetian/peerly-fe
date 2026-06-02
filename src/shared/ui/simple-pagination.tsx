@@ -107,10 +107,6 @@ export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
     }
   }, [items.length, currentPage, totalPages]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const handlePageSizeChange = (size: number) => {
     setPageSize(size);
     setCurrentPage(1);
@@ -123,6 +119,5 @@ export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
     pageSize,
     setCurrentPage,
     setPageSize: handlePageSizeChange,
-    handlePageChange,
   };
 }

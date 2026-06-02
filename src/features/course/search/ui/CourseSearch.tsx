@@ -1,5 +1,6 @@
-import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
+import { SearchInput } from "@/shared/ui";
 
 interface CourseSearchProps {
   value: string;
@@ -9,26 +10,11 @@ interface CourseSearchProps {
 
 export function CourseSearch({ value, onChange, placeholder }: CourseSearchProps) {
   const { t } = useTranslation();
-  const resolvedPlaceholder = placeholder ?? t("feature.courseSearch.placeholder");
   return (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={resolvedPlaceholder}
-        className="
-          w-full pl-9 pr-4 py-2.5
-          text-sm leading-[1.4] text-text-primary
-          placeholder:text-text-tertiary
-          bg-card
-          border border-surface-border rounded-[var(--radius-md)]
-          outline-none
-          transition-colors duration-150
-          focus:border-brand-primary focus:ring-2 focus:ring-ring/15
-        "
-      />
-    </div>
+    <SearchInput
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder ?? t("feature.courseSearch.placeholder")}
+    />
   );
 }

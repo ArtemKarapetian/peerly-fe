@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { Card, SectionHeader } from "@/shared/ui";
+import { Card, EmptyState, SectionHeader } from "@/shared/ui";
 
 import type { AssignmentMetrics } from "../model/types";
 
@@ -15,9 +15,7 @@ export function PerAssignmentTable({ metrics }: PerAssignmentTableProps) {
     <Card className="mb-6">
       <SectionHeader>{t("teacher.analytics.perAssignment")}</SectionHeader>
       {metrics.length === 0 ? (
-        <p className="text-sm text-muted-foreground text-center py-6">
-          {t("teacher.analytics.noAssignmentsYet")}
-        </p>
+        <EmptyState className="py-6" message={t("teacher.analytics.noAssignmentsYet")} />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

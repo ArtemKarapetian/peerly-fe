@@ -7,19 +7,15 @@ import type { UserRole } from "@/entities/user";
 import { SideNav } from "./SideNavRoleAware";
 
 const { useRoleMock } = vi.hoisted(() => ({
-  useRoleMock: vi.fn<() => { currentRole: UserRole; setRole: (r: UserRole) => void }>(),
+  useRoleMock: vi.fn<() => { currentRole: UserRole }>(),
 }));
 
 vi.mock("@/entities/user", () => ({
   useRole: useRoleMock,
 }));
 
-vi.mock("./RoleSwitcherPopover.tsx", () => ({
-  RoleSwitcherPopover: () => <div data-testid="role-switcher" />,
-}));
-
 function renderNav(role: UserRole) {
-  useRoleMock.mockReturnValue({ currentRole: role, setRole: vi.fn() });
+  useRoleMock.mockReturnValue({ currentRole: role });
   return render(
     <MemoryRouter>
       <SideNav variant="desktop-expanded" />

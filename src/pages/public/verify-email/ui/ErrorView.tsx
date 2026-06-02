@@ -27,8 +27,8 @@ export function ErrorView({
   const { t } = useTranslation();
   return (
     <VerifyShell>
-      <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
-        <AlertCircle className="w-8 h-8 text-destructive" />
+      <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto">
+        <AlertCircle className="w-8 h-8 text-error" />
       </div>
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold text-foreground">

@@ -1,3 +1,5 @@
+import { Card } from "@/shared/ui";
+
 import type { Assignment } from "@/entities/assignment";
 
 import { AssignmentMetricRow } from "./AssignmentMetricRow";
@@ -24,7 +26,7 @@ export function AssignmentHeaderCard({
   const reviewsTotal = submittedCount * assignment.reviewCount;
 
   return (
-    <div className="mt-6 bg-card border border-border shadow-sm rounded-xl p-6">
+    <Card variant="section" className="mt-6 rounded-xl p-6">
       <div className="flex items-start justify-between mb-4 gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -50,6 +52,6 @@ export function AssignmentHeaderCard({
         reviewCount={assignment.reviewCount}
         reviewsTotal={reviewsTotal}
       />
-    </div>
+    </Card>
   );
 }

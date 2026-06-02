@@ -3,16 +3,16 @@ import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
-import { useAsync } from "@/shared/lib/useAsync";
+import { useRedirectOnError } from "@/shared/lib/useRedirectOnError";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs.tsx";
 import { ErrorBanner } from "@/shared/ui/ErrorBanner";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { PageSkeleton } from "@/shared/ui/PageSkeleton";
 
-import { assignmentRepo } from "@/entities/assignment";
-import { courseRepo } from "@/entities/course";
-import { reviewRepo } from "@/entities/review";
-import { workRepo } from "@/entities/work";
+import { useAssignments } from "@/entities/assignment";
+import { useCourseParticipants, useCourses } from "@/entities/course";
+import { useAllReviews } from "@/entities/review";
+import { useAllSubmissions } from "@/entities/work";
 
 import { AppShell } from "@/widgets/app-shell";
 
@@ -32,19 +32,19 @@ import { PerAssignmentTable } from "./PerAssignmentTable";
 
 export default function TeacherAnalyticsPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useAsync(
-    async () => {
-      const [courses, assignments, submissions, reviews] = await Promise.all([
-        courseRepo.getAll(),
-        assignmentRepo.getAll(),
-        workRepo.getAll(),
-        reviewRepo.getAll(),
-      ]);
-      return { courses, assignments, submissions, reviews };
-    },
-    [],
-    { onError: "redirect" },
-  );
+  const coursesQuery = useCourses();
+  const assignmentsQuery = useAssignments();
+  const submissionsQuery = useAllSubmissions();
+  const reviewsQuery = useAllReviews();
+
+  const isLoading =
+    coursesQuery.isLoading ||
+    assignmentsQuery.isLoading ||
+    submissionsQuery.isLoading ||
+    reviewsQuery.isLoading;
+  const error =
+    coursesQuery.error ?? assignmentsQuery.error ?? submissionsQuery.error ?? reviewsQuery.error;
+  useRedirectOnError(error);
 
   if (isLoading)
     return (
@@ -55,11 +55,26 @@ export default function TeacherAnalyticsPage() {
   if (error)
     return (
       <AppShell title={t("teacher.analytics.title")}>
-        <ErrorBanner error={error} onRetry={refetch} />
+        <ErrorBanner
+          error={error}
+          onRetry={() => {
+            void coursesQuery.refetch();
+            void assignmentsQuery.refetch();
+            void submissionsQuery.refetch();
+            void reviewsQuery.refetch();
+          }}
+        />
       </AppShell>
     );
 
-  return <AnalyticsContent data={data!} />;
+  const data: AnalyticsRawData = {
+    courses: coursesQuery.data ?? [],
+    assignments: assignmentsQuery.data ?? [],
+    submissions: submissionsQuery.data ?? [],
+    reviews: reviewsQuery.data ?? [],
+  };
+
+  return <AnalyticsContent data={data} />;
 }
 
 function pickInitialCourse(
@@ -100,14 +115,8 @@ function AnalyticsContent({ data }: { data: AnalyticsRawData }) {
     setSelectedAssignmentId(null);
   }, []);
 
-  const { data: participants } = useAsync(
-    () =>
-      selectedCourse
-        ? courseRepo.getParticipants(selectedCourse).then((r) => r.students)
-        : Promise.resolve([]),
-    [selectedCourse],
-  );
-  const students = useMemo(() => participants ?? [], [participants]);
+  const { data: courseParticipants } = useCourseParticipants(selectedCourse);
+  const students = useMemo(() => courseParticipants?.students ?? [], [courseParticipants]);
 
   const filteredAssignments = useMemo(
     () =>
