@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import type {
-  AssignedReviewDto,
-  SubmittedReviewDto,
-  TeacherSubmittedReviewDto,
-} from "@/shared/api";
+import type { AssignedReviewDto, SubmittedReviewDto } from "@/shared/api";
 
 import { mapAssignedToReview, mapDtoToReview } from "./mappers";
 
@@ -27,17 +23,15 @@ describe("mapDtoToReview", () => {
     expect(result.status).toBe("submitted");
   });
 
-  it("prefers reviewerId from the teacher dto over the context value", () => {
-    const dto: TeacherSubmittedReviewDto = {
+  it("takes reviewerId from the context", () => {
+    const dto: SubmittedReviewDto = {
       id: "r-2",
       mark: 9,
       comment: "great",
       scores: [],
-      reviewerId: "real-r",
-      reviewerName: "Maria",
     };
     const result = mapDtoToReview(dto, { reviewerId: "ctx-r" });
-    expect(result.reviewerId).toBe("real-r");
+    expect(result.reviewerId).toBe("ctx-r");
   });
 
   it("falls back to empty context fields", () => {

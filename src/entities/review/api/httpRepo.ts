@@ -74,7 +74,10 @@ export const reviewHttpRepo = {
                   `/teacher/submissions/${s.id}`,
                 );
                 return det.submittedReviews.map((r) =>
-                  mapDtoToReview(r, { submissionId: String(s.id) }),
+                  mapDtoToReview(r.submittedReview, {
+                    submissionId: String(s.id),
+                    reviewerId: String(r.reviewer.studentId),
+                  }),
                 );
               } catch {
                 return [] as Review[];

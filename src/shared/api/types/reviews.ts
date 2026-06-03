@@ -1,8 +1,8 @@
 import type { Id } from "./common";
-import type { SubmissionForReviewDto, TeacherSubmittedReviewDto } from "./submissions";
+import type { SubmissionForReviewDto, SubmittedReviewDto } from "./submissions";
 
 export interface GetSubmittedReviewResponse {
-  submittedReview: TeacherSubmittedReviewDto;
+  submittedReview: SubmittedReviewDto;
 }
 
 export interface GetAssignedReviewResponse {

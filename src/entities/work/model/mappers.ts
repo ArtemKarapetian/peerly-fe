@@ -6,12 +6,6 @@ import {
 
 import type { Submission } from "./types";
 
-function uiStatusFromOverview(s: SubmittedHomeworkOverviewDto["submissionStatus"]) {
-  if (s === "draft") return "draft" as const;
-  if (s === "reviewed" || s === "finished") return "reviewed" as const;
-  return "submitted" as const;
-}
-
 export function mapDtoToSubmission(
   dto: SubmittedHomeworkDto,
   context: { assignmentId?: string; studentId?: string } = {},
@@ -30,16 +24,17 @@ export function mapOverviewToSubmission(
   dto: SubmittedHomeworkOverviewDto,
   context: { assignmentId?: string } = {},
 ): Submission {
+  const reviewed = dto.reviewersMark != null || dto.teacherMark != null;
   return {
     id: String(dto.id),
     assignmentId: context.assignmentId ?? "",
-    studentId: String(dto.studentId),
-    studentName: dto.studentName,
+    studentId: String(dto.student.studentId),
+    studentName: dto.student.name,
     content: "",
     files: [],
-    status: uiStatusFromOverview(dto.submissionStatus),
-    backendStatus: dto.submissionStatus,
-    studentMark: dto.studentMark,
+    status: reviewed ? "reviewed" : "submitted",
+    backendStatus: reviewed ? "reviewed" : "submitted",
+    studentMark: dto.reviewersMark,
     teacherMark: dto.teacherMark,
   };
 }

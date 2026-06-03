@@ -1,4 +1,4 @@
-import { Activity, AlertTriangle, FileText, TrendingUp, Users } from "lucide-react";
+import { Activity, AlertTriangle, ClipboardCheck, FileText, TrendingUp, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import type { OverallMetrics } from "../model/types";
@@ -31,7 +31,7 @@ export function OverallMetricsRow({ overall, studentCount }: OverallMetricsRowPr
   const { t } = useTranslation();
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
       <MetricCard
         icon={<FileText className="w-4 h-4 text-brand-primary" />}
         label={t("teacher.analytics.assignmentsCount")}
@@ -45,7 +45,7 @@ export function OverallMetricsRow({ overall, studentCount }: OverallMetricsRowPr
       <MetricCard
         icon={<TrendingUp className="w-4 h-4 text-brand-primary" />}
         label={t("teacher.analytics.avgScore")}
-        value={overall.avgScore > 0 ? `${overall.avgScore.toFixed(2)}/5` : "—"}
+        value={overall.avgScore > 0 ? overall.avgScore.toFixed(1) : "—"}
       />
       <MetricCard
         icon={<AlertTriangle className="w-4 h-4 text-warning" />}
@@ -55,9 +55,13 @@ export function OverallMetricsRow({ overall, studentCount }: OverallMetricsRowPr
       />
       <MetricCard
         icon={<Activity className="w-4 h-4 text-success" />}
-        label={t("teacher.analytics.activityLabel")}
-        value={`${Math.round(overall.avgSubmissionRate)}% / ${Math.round(overall.avgReviewCompletionRate)}%`}
-        hint={t("teacher.analytics.activityHint")}
+        label={t("teacher.analytics.submissionRate")}
+        value={`${Math.round(overall.avgSubmissionRate)}%`}
+      />
+      <MetricCard
+        icon={<ClipboardCheck className="w-4 h-4 text-success" />}
+        label={t("teacher.analytics.reviewCompletion")}
+        value={`${Math.round(overall.avgReviewCompletionRate)}%`}
       />
     </div>
   );
