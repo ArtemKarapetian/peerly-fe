@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import type {
-  SubmissionStatus,
-  SubmittedHomeworkDto,
-  SubmittedHomeworkOverviewDto,
-} from "@/shared/api";
+import type { SubmittedHomeworkDto, SubmittedHomeworkOverviewDto } from "@/shared/api";
 
 import { mapDtoToSubmission, mapOverviewToSubmission } from "./mappers";
 
@@ -42,14 +38,14 @@ describe("mapDtoToSubmission", () => {
 describe("mapOverviewToSubmission", () => {
   const baseOverview: SubmittedHomeworkOverviewDto = {
     id: "sub-9",
-    studentId: "st-9",
-    studentName: "Petr",
-    submissionStatus: "submitted",
-    studentMark: 80,
+    student: { studentId: "st-9", email: "petr@x", name: "Petr" },
+    reviewCount: 3,
+    reviewersMark: 80,
+    hasDiscrepancy: false,
     teacherMark: null,
   };
 
-  it("maps fields and forwards marks + studentName", () => {
+  it("maps nested student + forwards reviewers mark as studentMark", () => {
     const result = mapOverviewToSubmission(baseOverview, { assignmentId: "hw-9" });
     expect(result.id).toBe("sub-9");
     expect(result.assignmentId).toBe("hw-9");
@@ -57,19 +53,16 @@ describe("mapOverviewToSubmission", () => {
     expect(result.studentName).toBe("Petr");
     expect(result.studentMark).toBe(80);
     expect(result.teacherMark).toBeNull();
-    expect(result.backendStatus).toBe("submitted");
     expect(result.content).toBe("");
     expect(result.files).toEqual([]);
   });
 
-  it.each<[SubmissionStatus, "draft" | "submitted" | "reviewed"]>([
-    ["draft", "draft"],
-    ["submitted", "submitted"],
-    ["inReview", "submitted"],
-    ["reviewed", "reviewed"],
-    ["finished", "reviewed"],
-  ])("projects backend status %s to ui status %s", (be, ui) => {
-    const result = mapOverviewToSubmission({ ...baseOverview, submissionStatus: be });
-    expect(result.status).toBe(ui);
+  it("marks status reviewed when a reviewers/teacher mark exists", () => {
+    expect(mapOverviewToSubmission(baseOverview).status).toBe("reviewed");
+  });
+
+  it("marks status submitted when no marks exist", () => {
+    const noMarks = { ...baseOverview, reviewersMark: null, teacherMark: null };
+    expect(mapOverviewToSubmission(noMarks).status).toBe("submitted");
   });
 });

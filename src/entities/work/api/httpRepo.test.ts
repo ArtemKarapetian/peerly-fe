@@ -48,10 +48,10 @@ describe("workHttpRepo", () => {
       submittedHomeworks: [
         {
           id: "sub-1",
-          studentId: "st-1",
-          studentName: "S",
-          submissionStatus: "submitted",
-          studentMark: null,
+          student: { studentId: "st-1", email: "s@x", name: "S" },
+          reviewCount: 0,
+          reviewersMark: null,
+          hasDiscrepancy: null,
           teacherMark: null,
         },
       ],

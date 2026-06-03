@@ -11,10 +11,10 @@ export interface SubmittedHomeworkDto {
 
 export interface SubmittedHomeworkOverviewDto {
   id: Id;
-  studentId: Id;
-  studentName: string;
-  submissionStatus: SubmissionStatus;
-  studentMark: number | null;
+  student: { studentId: Id; email: string; name: string };
+  reviewCount: number;
+  reviewersMark: number | null;
+  hasDiscrepancy: boolean | null;
   teacherMark: number | null;
 }
 
@@ -32,13 +32,15 @@ export interface SubmittedReviewDto {
   scores: SubmittedReviewScoreDto[];
 }
 
+export interface TeacherReviewerDto {
+  studentId: Id;
+  email: string;
+  name: string;
+}
+
 export interface TeacherSubmittedReviewDto {
-  id: Id;
-  mark: number;
-  comment: string;
-  scores: SubmittedReviewScoreDto[];
-  reviewerId?: Id;
-  reviewerName?: string;
+  submittedReview: SubmittedReviewDto;
+  reviewer: TeacherReviewerDto;
 }
 
 export interface SubmissionForReviewDto {
